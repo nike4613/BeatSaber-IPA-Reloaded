@@ -23,7 +23,8 @@ To verify it worked, start the game with the `--verbose` flag. If a new console 
 2. Download a release and add **IllusionPlugin.dll** to your references
 3. Implement `IPlugin` or `IEnhancedPlugin`
 4. Build the project and copy the DLL into the Plugins folder of the game
-Note: You can use Console.Write() with the --verbose flag for debugging your plugins.
+  Note: You can use Console.Write() with the --verbose flag for debugging your plugins.
+
 ## How To Keep The Game Patched
 
 When patching, IPA automatically creates a shortcut that keeps everything up-to-date. This simply makes sure that your DLLs remain patched even after an update.
