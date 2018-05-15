@@ -62,5 +62,10 @@ namespace IllusionPlugin
         /// Gets invoked on ever physics update.
         /// </summary>
         void OnFixedUpdate();
+        
+        [Obsolete("Use OnSceneLoaded instead")]
+        void OnLevelWasLoaded(int level);
+        [Obsolete("Use OnSceneLoaded instead")]
+        void OnLevelWasInitialized(int level);
     }
 }

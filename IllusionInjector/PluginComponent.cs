@@ -9,6 +9,7 @@ namespace IllusionInjector
     public class PluginComponent : MonoBehaviour
     {
         private CompositePlugin plugins;
+        private bool freshlyLoaded = false;
         private bool quitting = false;
 
         public static PluginComponent Create()
@@ -27,9 +28,19 @@ namespace IllusionInjector
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
+        
+        void Start()
+        {
+            OnLevelWasLoaded(Application.loadedLevel);
+        }
 
         void Update()
         {
+            if (freshlyLoaded)
+            {
+                freshlyLoaded = false;
+                plugins.OnLevelWasInitialized(Application.loadedLevel);
+            }
             plugins.OnUpdate();
         }
 
@@ -60,6 +71,12 @@ namespace IllusionInjector
             plugins.OnApplicationQuit();
 
             quitting = true;
+        }
+        
+        void OnLevelWasLoaded(int level)
+        {
+            plugins.OnLevelWasLoaded(level);
+            freshlyLoaded = true;
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
