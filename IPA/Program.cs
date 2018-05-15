@@ -21,16 +21,22 @@ namespace IPA
             Unknown
         }
 
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
+            PatchContext context;
+            Console.WriteLine($"{args[0]}");
+            
             if(args.Length < 1 || !args[0].EndsWith(".exe"))
             {
-                Fail("Drag an (executable) file on the exe!");
+                //Fail("Drag an (executable) file on the exe!");
+                context = PatchContext.Create(new [] {"./Beat Saber.exe"});
+            }
+            else {
+                context = PatchContext.Create(args);
             }
 
             try
             {
-                var context = PatchContext.Create(args);
+                
                 bool isRevert = args.Contains("--revert") || Keyboard.IsKeyDown(Keys.LMenu);
                 // Sanitizing
                 Validate(context);

@@ -36,11 +36,15 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IEnhancedPlugin.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="ModPrefs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

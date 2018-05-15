@@ -15,6 +15,8 @@ namespace IllusionInjector
     {
         private static List<IPlugin> _Plugins = null;
 
+        internal static readonly Logger debugLogger = new Logger("IllusionInjector");
+        
         /// <summary>
         /// Gets the list of loaded plugins and loads them if necessary.
         /// </summary>
@@ -38,7 +40,7 @@ namespace IllusionInjector
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
-            Console.WriteLine(exeName);
+            debugLogger.Log(exeName);
             _Plugins = new List<IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
@@ -51,16 +53,15 @@ namespace IllusionInjector
             
 
             // DEBUG
-            Console.WriteLine("Running on Unity {0}", UnityEngine.Application.unityVersion);
-            Console.WriteLine("-----------------------------");
-            Console.WriteLine("Loading plugins from {0} and found {1}", pluginDirectory, _Plugins.Count);
-            Console.WriteLine("-----------------------------");
+            debugLogger.Log($"Running on Unity {UnityEngine.Application.unityVersion}");
+            debugLogger.Log("-----------------------------");
+            debugLogger.Log($"Loading plugins from {pluginDirectory} and found {_Plugins.Count}");
+            debugLogger.Log("-----------------------------");
             foreach (var plugin in _Plugins)
             {
-
-                Console.WriteLine(" {0}: {1}", plugin.Name, plugin.Version);
+                debugLogger.Log($"{plugin.Name}: {plugin.Version}");
             }
-            Console.WriteLine("-----------------------------");
+            debugLogger.Log("-----------------------------");
         }
 
         private static IEnumerable<IPlugin> LoadPluginsFromFile(string file, string exeName)
@@ -94,7 +95,7 @@ namespace IllusionInjector
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("[WARN] Could not load plugin {0} in {1}! {2}", t.FullName, Path.GetFileName(file), e);
+                            debugLogger.Exception($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
                         }
                     }
                 }
@@ -102,7 +103,7 @@ namespace IllusionInjector
             }
             catch (Exception e)
             {
-                Console.WriteLine("[ERROR] Could not load {0}! {1}", Path.GetFileName(file), e);
+                debugLogger.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
             return plugins;
