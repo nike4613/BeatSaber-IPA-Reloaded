@@ -56,6 +56,8 @@ namespace IPA
             if (!Directory.Exists(c.DataPathDst) || !File.Exists(c.EngineFile))
             {
                 Fail("Game does not seem to be a Unity project. Could not find the libraries to patch.");
+                Console.WriteLine($"DataPath: {c.DataPathDst}");
+                Console.WriteLine($"EngineFile: {c.EngineFile}");
             }
         }
 

@@ -89,7 +89,7 @@ namespace IllusionInjector
                                 filter = ((IEnhancedPlugin)pluginInstance).Filter;
                             }
                             
-                            if(filter == null || Enumerable.Contains(filter, exeName, StringComparer.OrdinalIgnoreCase))
+                            if(filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
                                 plugins.Add(pluginInstance);
                         }
                         catch (Exception e)
