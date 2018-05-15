@@ -80,6 +80,38 @@ namespace IllusionInjector {
             Invoke(plugin => plugin.OnFixedUpdate());
         }
 
+        [Obsolete("Use OnSceneLoaded instead")]
+        public void OnLevelWasLoaded(int level)
+        {
+            foreach (var plugin in plugins)
+            {
+                try
+                {
+                    plugin.OnLevelWasLoaded(level);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
+                }
+            }
+        }
+
+        [Obsolete("Use OnSceneLoaded instead")]
+        public void OnLevelWasInitialized(int level)
+        {
+            foreach (var plugin in plugins)
+            {
+                try
+                {
+                    plugin.OnLevelWasInitialized(level);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
+                }
+            }
+        }
+
 
         public string Name {
             get { throw new NotImplementedException(); }
