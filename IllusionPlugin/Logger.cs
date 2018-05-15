@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using IllusionPlugin;
 
@@ -11,6 +12,8 @@ namespace IllusionPlugin {
         private readonly Thread _watcherThread;
         private bool _threadRunning;
 
+        private string ModName;
+        
         private logMessage oldLog;
 
         struct logMessage {
@@ -24,18 +27,18 @@ namespace IllusionPlugin {
         }
         
         enum WarningLevel {
-            Log, Error, Exception
+            Log, Error, Exception, Warning
         }
         
-        Logger() {
+        public Logger(string modName = "Default") {
             _logQueue = new Queue<logMessage>();
-            _logFile = GetPath("Default");
+            _logFile = GetPath(modName);
             _watcherThread = new Thread(QueueWatcher) {IsBackground = true};
             _threadRunning = true;
             Start();
         }
         
-        public Logger(IPlugin plugin) {
+         public Logger(IPlugin plugin) {
             _logQueue = new Queue<logMessage>();
             _logFile = GetPath(plugin);
             _watcherThread = new Thread(QueueWatcher) {IsBackground = true};
@@ -45,22 +48,26 @@ namespace IllusionPlugin {
 
         public void Log(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[LOG @ {DateTime.Now:HH:mm:ss}] {msg}", WarningLevel.Log));
+            _logQueue.Enqueue(new logMessage($"[LOG @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Log));
         }
         
         public void Error(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[ERROR @ {DateTime.Now:HH:mm:ss}] {msg}", WarningLevel.Error));
+            _logQueue.Enqueue(new logMessage($"[ERROR @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Error));
         }
         
         public void Exception(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[EXCEPTION @ {DateTime.Now:HH:mm:ss}] {msg}", WarningLevel.Exception));
+            _logQueue.Enqueue(new logMessage($"[EXCEPTION @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Exception));
+        }
+        
+        public void Warning(string msg) {
+            if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
+            _logQueue.Enqueue(new logMessage($"[WARNING @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Warning));
         }
 
         void QueueWatcher() {
             _logFile.Create().Close();
-            SetConsoleColour(WarningLevel.Log);
             while (_threadRunning) {
                 if (_logQueue.Count > 0) {
                     _watcherThread.IsBackground = false;
@@ -70,8 +77,8 @@ namespace IllusionPlugin {
                             if (d.Message == oldLog.Message) return;
                             oldLog = d;
                             f.WriteLine(d.Message);
-                            if(d.WarningLevel != oldLog.WarningLevel) SetConsoleColour(d.WarningLevel);
-                            Console.WriteLine(d);
+                            Console.ForegroundColor = GetConsoleColour(d.WarningLevel);
+                            Console.WriteLine(d.Message);
                         }
                     }
 
@@ -87,22 +94,24 @@ namespace IllusionPlugin {
             _watcherThread.Join();
         }
 
-        void SetConsoleColour(WarningLevel level) {
+        ConsoleColor GetConsoleColour(WarningLevel level) {
             switch (level) {
                     case WarningLevel.Log:
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        break;
+                        return ConsoleColor.Green;
                     case WarningLevel.Error:
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        break;
+                        return ConsoleColor.Yellow;
                     case WarningLevel.Exception:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        break;
+                        return ConsoleColor.Red;
+                    case WarningLevel.Warning:
+                        return ConsoleColor.Blue;
+                    default:
+                        return ConsoleColor.Gray;
             }
         }
 
         FileInfo GetPath(IPlugin plugin) => GetPath(plugin.Name);
         FileInfo GetPath(string modName) {
+            ModName = modName;
             var logsDir = new DirectoryInfo($"./Logs/{modName}/{DateTime.Now:dd-MM-yy}");
             logsDir.Create();
             return new FileInfo($"{logsDir.FullName}/{logsDir.GetFiles().Length}.txt");

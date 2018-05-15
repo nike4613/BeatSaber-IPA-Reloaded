@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Logger = IllusionPlugin.Logger;
 
 namespace IllusionInjector {
     public class CompositePlugin : IPlugin {
@@ -11,6 +12,8 @@ namespace IllusionInjector {
 
         private delegate void CompositeCall(IPlugin plugin);
 
+        private Logger debugLogger => PluginManager.debugLogger;
+        
         public CompositePlugin(IEnumerable<IPlugin> plugins) {
             this.plugins = plugins;
         }
@@ -29,7 +32,7 @@ namespace IllusionInjector {
                     plugin.OnSceneLoaded(scene, sceneMode);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
                 }
             }
         }
@@ -40,7 +43,7 @@ namespace IllusionInjector {
                     plugin.OnSceneUnloaded(scene);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
                 }
             }
         }
@@ -51,7 +54,7 @@ namespace IllusionInjector {
                     plugin.OnActiveSceneChanged(prevScene, nextScene);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
                 }
             }
         }
@@ -63,7 +66,7 @@ namespace IllusionInjector {
                     callback(plugin);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
                 }
             }
         }
