@@ -60,6 +60,9 @@ namespace IllusionInjector
             foreach (var plugin in _Plugins)
             {
                 debugLogger.Log($"{plugin.Name}: {plugin.Version}");
+                if (!(plugin is IPluginNew)) {
+                    debugLogger.Warning($"{plugin.Name} uses a Deprecated Interface! This may cause errors!");
+                }
             }
             debugLogger.Log("-----------------------------");
         }
