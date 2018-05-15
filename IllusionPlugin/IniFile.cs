@@ -33,7 +33,7 @@ namespace IllusionPlugin
           string lpValue,
           string lpFileName);
 
-        private string _path = "";
+        /*private string _path = "";
         public string Path
         {
             get
@@ -46,15 +46,27 @@ namespace IllusionPlugin
                     File.WriteAllText(value, "", Encoding.Unicode);
                 _path = value;
             }
+        }*/
+
+        private FileInfo _iniFileInfo;
+        public FileInfo IniFileInfo {
+            get => _iniFileInfo;
+            set { 
+                _iniFileInfo = value;
+                if (_iniFileInfo.Exists) return;
+                _iniFileInfo.Directory?.Create();
+                _iniFileInfo.Create();
+            }
         }
 
         /// <summary>
         /// INIFile Constructor.
         /// </summary>
         /// <PARAM name="INIPath"></PARAM>
-        public IniFile(string INIPath)
+        public IniFile(string iniPath)
         {
-            this.Path = INIPath;
+            IniFileInfo = new FileInfo(iniPath);
+            //this.Path = INIPath;
         }
 
         /// <summary>
@@ -68,7 +80,7 @@ namespace IllusionPlugin
         /// Value Name
         public void IniWriteValue(string Section, string Key, string Value)
         {
-            WritePrivateProfileString(Section, Key, Value, this.Path);
+            WritePrivateProfileString(Section, Key, Value, IniFileInfo.FullName);
         }
 
         /// <summary>
@@ -82,7 +94,7 @@ namespace IllusionPlugin
         {
             const int MAX_CHARS = 1023;
             StringBuilder result = new StringBuilder(MAX_CHARS);
-            GetPrivateProfileString(Section, Key, "", result, MAX_CHARS, this.Path);
+            GetPrivateProfileString(Section, Key, "", result, MAX_CHARS, IniFileInfo.FullName);
             return result.ToString();
         }
     }

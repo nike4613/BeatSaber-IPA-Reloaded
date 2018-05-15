@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace IllusionInjector
 {
@@ -22,11 +23,10 @@ namespace IllusionInjector
 
             plugins = new CompositePlugin(PluginManager.Plugins);
             plugins.OnApplicationStart();
-        }
-
-        void Start()
-        {
-            OnLevelWasLoaded(Application.loadedLevel);
+            
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
 
         void Update()
@@ -34,7 +34,6 @@ namespace IllusionInjector
             if (freshlyLoaded)
             {
                 freshlyLoaded = false;
-                plugins.OnLevelWasInitialized(Application.loadedLevel);
             }
             plugins.OnUpdate();
         }
@@ -64,10 +63,18 @@ namespace IllusionInjector
             quitting = true;
         }
 
-        void OnLevelWasLoaded(int level)
+        void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
         {
-            plugins.OnLevelWasLoaded(level);
+            plugins.OnSceneLoaded(scene, sceneMode);
             freshlyLoaded = true;
+        }
+        
+        private void OnSceneUnloaded(Scene scene) {
+            plugins.OnSceneUnloaded(scene);
+        }
+
+        private void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
+            plugins.OnActiveSceneChanged(prevScene, nextScene);
         }
 
     }
