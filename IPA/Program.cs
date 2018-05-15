@@ -23,12 +23,12 @@ namespace IPA
 
         static void Main(string[] args) {
             PatchContext context;
-            Console.WriteLine($"{args[0]}");
             
             if(args.Length < 1 || !args[0].EndsWith(".exe"))
             {
                 //Fail("Drag an (executable) file on the exe!");
-                context = PatchContext.Create(new [] {"./Beat Saber.exe"});
+                context = PatchContext.Create(new [] {new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles().First(o => o.FullName.EndsWith(".exe"))
+                    .FullName});
             }
             else {
                 context = PatchContext.Create(args);
