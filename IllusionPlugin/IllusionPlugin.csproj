@@ -44,6 +44,7 @@
     <Compile Include="IEnhancedPlugin.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="IPluginNew.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ModPrefs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
