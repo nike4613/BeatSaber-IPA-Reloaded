@@ -1,6 +1,7 @@
 ﻿using IllusionPlugin;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,7 +28,8 @@ namespace IllusionInjector {
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-            foreach (var plugin in plugins) {
+            foreach (var plugin1 in plugins.Where(o => o is IPluginNew)) {
+                var plugin = (IPluginNew) plugin1;
                 try {
                     plugin.OnSceneLoaded(scene, sceneMode);
                 }
@@ -38,7 +40,8 @@ namespace IllusionInjector {
         }
 
         public void OnSceneUnloaded(Scene scene) {
-            foreach (var plugin in plugins) {
+            foreach (var plugin1 in plugins.Where(o => o is IPluginNew)) {
+                var plugin = (IPluginNew) plugin1;
                 try {
                     plugin.OnSceneUnloaded(scene);
                 }
@@ -49,7 +52,8 @@ namespace IllusionInjector {
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
-            foreach (var plugin in plugins) {
+            foreach (var plugin1 in plugins.Where(o => o is IPluginNew)) {
+                var plugin = (IPluginNew) plugin1;
                 try {
                     plugin.OnActiveSceneChanged(prevScene, nextScene);
                 }
