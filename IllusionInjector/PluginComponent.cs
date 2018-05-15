@@ -58,6 +58,10 @@ namespace IllusionInjector
         
         void OnApplicationQuit()
         {
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+            
             plugins.OnApplicationQuit();
 
             quitting = true;
