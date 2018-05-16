@@ -80,26 +80,37 @@ namespace IPA
                 var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) > 0;
                 if (isCurrentNewer) {
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine($"Preparing for update, {(patchedModule.Data.Version == null ? "UnPatched" : patchedModule.Data.Version.ToString())} => {Version}");
+                    Console.WriteLine(
+                        $"Preparing for update, {(patchedModule.Data.Version == null ? "UnPatched" : patchedModule.Data.Version.ToString())} => {Version}");
                     Console.WriteLine("--- Starting ---");
-                    Revert(context, new []{"newVersion"});
+                    Revert(context, new[] {"newVersion"});
+                    Console.ResetColor();
+
+
+                    // Copying
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine("Updating files... ");
+                    var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
+                    bool isFlat = Directory.Exists(nativePluginFolder) &&
+                                  Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
+                    bool force = !BackupManager.HasBackup(context) || context.Args.Contains("-f") ||
+                                 context.Args.Contains("--force");
+                    var architecture = DetectArchitecture(context.Executable);
+
+                    Console.WriteLine("Architecture: {0}", architecture);
+
+                    CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
+                        backup,
+                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
+                            architecture));
+
+                    Console.WriteLine("Successfully updated files!");
+                }
+                else {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Files up to date @ Version {Version}!");
                     Console.ResetColor();
                 }
-                
-                // Copying
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("Updating files... ");
-                var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
-                bool isFlat = Directory.Exists(nativePluginFolder) && Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
-                bool force = !BackupManager.HasBackup(context) || context.Args.Contains("-f") || context.Args.Contains("--force");
-                var architecture = DetectArchitecture(context.Executable);
-
-                Console.WriteLine("Architecture: {0}", architecture);
-
-                CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force, backup, 
-                    (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat, architecture) );
-
-                Console.WriteLine("Successfully updated files!");
 
                 if (!Directory.Exists(context.PluginsFolder))
                 {
