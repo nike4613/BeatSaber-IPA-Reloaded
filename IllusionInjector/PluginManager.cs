@@ -57,13 +57,20 @@ namespace IllusionInjector
                 }
             }
 
-            String[] files = Directory.GetFiles(pluginDirectory, "*.dll");
-            foreach (string s in files)
+            //Copy plugins to .cache
+            string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
+            foreach (string s in originalPlugins)
             {
-
                 string pluginCopy = pluginDirectory + "\\.cache" + s.Substring(s.LastIndexOf('\\'));
                 File.Copy(Path.Combine(pluginDirectory, s), pluginCopy);
-                _Plugins.AddRange(LoadPluginsFromFile(pluginCopy, exeName));
+            }
+
+            //Load copied plugins
+            string copiedPluginsDirectory = pluginDirectory + "\\.cache";
+            string[] copiedPlugins = Directory.GetFiles(copiedPluginsDirectory, "*.dll");
+            foreach (string s in copiedPlugins)
+            {
+                _Plugins.AddRange(LoadPluginsFromFile(s, exeName));
             }
 
 
