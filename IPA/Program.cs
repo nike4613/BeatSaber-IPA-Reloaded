@@ -21,6 +21,8 @@ namespace IPA
             Unknown
         }
 
+        private static Version Version => new Version(Application.ProductVersion);
+
         static void Main(string[] args) {
             PatchContext context;
             
@@ -72,8 +74,20 @@ namespace IPA
             try
             {
                 var backup = new BackupUnit(context);
-
+                
+                //new version check
+                var patchedModule = PatchedModule.Load(context.EngineFile);
+                var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) > 0;
+                if (isCurrentNewer) {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($"Preparing for update, {(patchedModule.Data.Version == null ? "UnPatched" : patchedModule.Data.Version.ToString())} => {Version}");
+                    Console.WriteLine("--- Starting ---");
+                    Revert(context, new []{"newVersion"});
+                    Console.ResetColor();
+                }
+                
                 // Copying
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("Updating files... ");
                 var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
                 bool isFlat = Directory.Exists(nativePluginFolder) && Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
@@ -92,32 +106,35 @@ namespace IPA
                     Console.WriteLine("Creating plugins folder... ");
                     Directory.CreateDirectory(context.PluginsFolder);
                 }
+                Console.ResetColor();
 
                 // Patching
-                var patchedModule = PatchedModule.Load(context.EngineFile);
-                if (!patchedModule.IsPatched)
+                if (!patchedModule.Data.IsPatched || isCurrentNewer)
                 {
-                    Console.Write("Patching UnityEngine.dll... ");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Patching UnityEngine.dll with Version {Application.ProductVersion}... ");
                     backup.Add(context.EngineFile);
-                    patchedModule.Patch();
+                    patchedModule.Patch(Version);
                     Console.WriteLine("Done!");
+                    Console.ResetColor();
                 }
 
                 // Virtualizing
                 if (File.Exists(context.AssemblyFile))
                 {
                     var virtualizedModule = VirtualizedModule.Load(context.AssemblyFile);
-                    if (!virtualizedModule.IsVirtualized)
-                    {
-                        Console.Write("Virtualizing Assembly-Csharp.dll... ");
+                    if (!virtualizedModule.IsVirtualized) {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("Virtualizing Assembly-Csharp.dll... ");
                         backup.Add(context.AssemblyFile);
                         virtualizedModule.Virtualize();
                         Console.WriteLine("Done!");
+                        Console.ResetColor();
                     }
                 }
 
                 // Creating shortcut
-                if(!File.Exists(context.ShortcutPath))
+                /*if(!File.Exists(context.ShortcutPath))
                 {
                     Console.Write("Creating shortcut to IPA ({0})... ",  context.IPA);
                     try
@@ -136,7 +153,7 @@ namespace IPA
                     {
                         Console.Error.WriteLine("Failed to create shortcut, but game was patched!");
                     }
-                }
+                }*/
             }
             catch (Exception e)
             {
@@ -147,11 +164,13 @@ namespace IPA
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Finished!");
             Console.ResetColor();
-
+            Console.ReadLine();
         }
 
-        private static void Revert(PatchContext context)
-        {
+        private static void Revert(PatchContext context, string[] args = null) {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            bool isNewVersion = (args != null && args.Contains("newVersion"));
+            
             Console.Write("Restoring backup... ");
             if(BackupManager.Restore(context))
             {
@@ -171,11 +190,12 @@ namespace IPA
             Console.WriteLine("");
             Console.WriteLine("--- Done reverting ---");
 
-            if (!Environment.CommandLine.Contains("--nowait"))
+            if (!Environment.CommandLine.Contains("--nowait") && !isNewVersion)
             {
                 Console.WriteLine("\n\n[Press any key to quit]");
                 Console.ReadKey();
             }
+            Console.ResetColor();
         }
 
         private static void StartIfNeedBe(PatchContext context)

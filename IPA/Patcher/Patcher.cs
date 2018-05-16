@@ -15,6 +15,11 @@ namespace IPA.Patcher
         private FileInfo _File;
         private ModuleDefinition _Module;
 
+        internal struct PatchData {
+            public bool IsPatched;
+            public Version Version;
+        }
+
         public static PatchedModule Load(string engineFile)
         {
             return new PatchedModule(engineFile);
@@ -39,23 +44,22 @@ namespace IPA.Patcher
             
             _Module = ModuleDefinition.ReadModule(_File.FullName, parameters);
         }
-
-        public bool IsPatched
+        
+        public PatchData Data
         {
             get
             {
-                foreach (var @ref in _Module.AssemblyReferences)
-                {
-                    if (@ref.Name == "IllusionInjector") return true;
+                foreach (var @ref in _Module.AssemblyReferences) {
+                    if (@ref.Name == "IllusionInjector") return new PatchData { IsPatched = true, Version = @ref.Version};
                 }
-                return false;
+                return new PatchData { IsPatched = false, Version = null};
             }
         }
 
-        public void Patch()
+        public void Patch(Version v)
         {
             // First, let's add the reference
-            var nameReference = new AssemblyNameReference("IllusionInjector", new Version(1, 0, 0, 0));
+            var nameReference = new AssemblyNameReference("IllusionInjector", v);
             var injectorPath = Path.Combine(_File.DirectoryName, "IllusionInjector.dll");
             var injector = ModuleDefinition.ReadModule(injectorPath);
 
