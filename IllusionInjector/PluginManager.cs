@@ -44,13 +44,35 @@ namespace IllusionInjector
             _Plugins = new List<IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
-            
-            String[] files = Directory.GetFiles(pluginDirectory, "*.dll");
-            foreach (var s in files)
+
+            if (!Directory.Exists(Path.Combine(pluginDirectory, ".cache")))
             {
-                _Plugins.AddRange(LoadPluginsFromFile(Path.Combine(pluginDirectory, s), exeName));
+                Directory.CreateDirectory(Path.Combine(pluginDirectory, ".cache"));
             }
-            
+            else
+            {
+                foreach (string plugin in Directory.GetFiles(Path.Combine(pluginDirectory, ".cache"), "*"))
+                {
+                    File.Delete(plugin);
+                }
+            }
+
+            //Copy plugins to .cache
+            string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
+            foreach (string s in originalPlugins)
+            {
+                string pluginCopy = pluginDirectory + "\\.cache" + s.Substring(s.LastIndexOf('\\'));
+                File.Copy(Path.Combine(pluginDirectory, s), pluginCopy);
+            }
+
+            //Load copied plugins
+            string copiedPluginsDirectory = pluginDirectory + "\\.cache";
+            string[] copiedPlugins = Directory.GetFiles(copiedPluginsDirectory, "*.dll");
+            foreach (string s in copiedPlugins)
+            {
+                _Plugins.AddRange(LoadPluginsFromFile(s, exeName));
+            }
+
 
             // DEBUG
             debugLogger.Log($"Running on Unity {UnityEngine.Application.unityVersion}");

@@ -24,7 +24,9 @@ To verify it worked, start the game with the `--verbose` flag. If a new console 
 3. Implement `IPlugin` or `IEnhancedPlugin`
 4. Build the project and copy the DLL into the Plugins folder of the game
 
-Note: You can use `Console.Write()` with the `--verbose` flag for debugging your plugins.
+Note: You can use the `Logger` class to debug your plugins. Either retrieve an instance using `this.GetLogger()` in your Plugin class or use `new Logger("Mod Name")`.
+
+Use the `--verbose` flag to access the console.
 
 ## How To Keep The Game Patched
 
