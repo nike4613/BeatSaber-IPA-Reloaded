@@ -69,6 +69,7 @@ namespace IPA {
 
                 var patchedModule = PatchedModule.Load(context.EngineFile);
                 var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) > 0;
+                Console.WriteLine($"Current: {Version} Patched: {patchedModule.Data.Version}");
                 if (isCurrentNewer) {
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(
@@ -191,7 +192,7 @@ namespace IPA {
                 Console.WriteLine("Done!");
             }
             else {
-                Console.WriteLine("Already vanilla!");
+                Console.WriteLine("Already vanilla or you removed your backups!");
             }
 
 
