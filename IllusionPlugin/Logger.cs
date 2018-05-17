@@ -85,8 +85,8 @@ namespace IllusionPlugin {
 
                     _watcherThread.IsBackground = true;
                 }
+                Thread.Sleep(5);
             }
-            Thread.Sleep(5);
         }
 
         void Start() => _watcherThread.Start();
