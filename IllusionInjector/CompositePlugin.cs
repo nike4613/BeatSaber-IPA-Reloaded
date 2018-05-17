@@ -28,8 +28,7 @@ namespace IllusionInjector {
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-            foreach (var plugin1 in plugins.Where(o => o is IPluginNew)) {
-                var plugin = (IPluginNew) plugin1;
+            foreach (var plugin in plugins) {
                 try {
                     plugin.OnSceneLoaded(scene, sceneMode);
                 }
@@ -40,8 +39,7 @@ namespace IllusionInjector {
         }
 
         public void OnSceneUnloaded(Scene scene) {
-            foreach (var plugin1 in plugins.Where(o => o is IPluginNew)) {
-                var plugin = (IPluginNew) plugin1;
+            foreach (var plugin in plugins) {
                 try {
                     plugin.OnSceneUnloaded(scene);
                 }
@@ -52,8 +50,7 @@ namespace IllusionInjector {
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
-            foreach (var plugin1 in plugins.Where(o => o is IPluginNew)) {
-                var plugin = (IPluginNew) plugin1;
+            foreach (var plugin in plugins) {
                 try {
                     plugin.OnActiveSceneChanged(prevScene, nextScene);
                 }
@@ -82,38 +79,6 @@ namespace IllusionInjector {
 
         public void OnFixedUpdate() {
             Invoke(plugin => plugin.OnFixedUpdate());
-        }
-
-        [Obsolete("Use OnSceneLoaded instead")]
-        public void OnLevelWasLoaded(int level)
-        {
-            foreach (var plugin in plugins)
-            {
-                try
-                {
-                    plugin.OnLevelWasLoaded(level);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
-                }
-            }
-        }
-
-        [Obsolete("Use OnSceneLoaded instead")]
-        public void OnLevelWasInitialized(int level)
-        {
-            foreach (var plugin in plugins)
-            {
-                try
-                {
-                    plugin.OnLevelWasInitialized(level);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("{0}: {1}", plugin.Name, ex);
-                }
-            }
         }
 
 
