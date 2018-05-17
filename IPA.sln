@@ -1,11 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Blend for Visual Studio 15
+VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA", "IPA\IPA.csproj", "{14092533-98BB-40A4-9AFC-27BB75672A70}"
 	ProjectSection(ProjectDependencies) = postProject
-		{D1390268-F68B-4A55-B50D-EAD25756C8EF} = {D1390268-F68B-4A55-B50D-EAD25756C8EF}
 		{D1C61AF5-0D2D-4752-8203-1C6929025F7C} = {D1C61AF5-0D2D-4752-8203-1C6929025F7C}
 		{E2848BFB-5432-42F4-8AE0-D2EC0CDF2F71} = {E2848BFB-5432-42F4-8AE0-D2EC0CDF2F71}
 	EndProjectSection
@@ -41,5 +40,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C7380FAB-02D6-4A2A-B428-B4BFCFE3A054}
 	EndGlobalSection
 EndGlobal

@@ -79,6 +79,7 @@ namespace IllusionPlugin {
                             f.WriteLine(d.Message);
                             Console.ForegroundColor = GetConsoleColour(d.WarningLevel);
                             Console.WriteLine(d.Message);
+                            Console.ResetColor();
                         }
                     }
 
