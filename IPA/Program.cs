@@ -54,8 +54,6 @@ namespace IPA {
         }
 
         private static void Validate(PatchContext c) {
-            if (!File.Exists(c.LauncherPathSrc))
-                Fail("Couldn't find DLLs! Make sure you extracted all contents of the release archive.");
             if (!Directory.Exists(c.DataPathDst) || !File.Exists(c.EngineFile)) {
                 Fail("Game does not seem to be a Unity project. Could not find the libraries to patch.");
                 Console.WriteLine($"DataPath: {c.DataPathDst}");
