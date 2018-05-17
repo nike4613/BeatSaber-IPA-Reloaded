@@ -14,10 +14,6 @@ namespace IPA
         /// </summary>
         public string Executable { get; private set; }
 
-        /// <summary>
-        /// Gets the path to the launcher executable (in the IPA folder)
-        /// </summary>
-        public string LauncherPathSrc { get; private set; }
         public string DataPathSrc { get; private set; }
         public string PluginsFolder { get; private set; }
         public string ProjectName { get; private set; }
@@ -43,7 +39,6 @@ namespace IPA
             context.ProjectRoot = new FileInfo(context.Executable).Directory.FullName;
             context.IPARoot = Path.Combine(context.ProjectRoot, "IPA");
             context.IPA = Assembly.GetExecutingAssembly().Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
-            context.LauncherPathSrc = Path.Combine(context.IPARoot, "Launcher.exe");
             context.DataPathSrc = Path.Combine(context.IPARoot, "Data");
             context.PluginsFolder = Path.Combine(context.ProjectRoot, "Plugins");
             context.ProjectName = Path.GetFileNameWithoutExtension(context.Executable);
