@@ -90,10 +90,8 @@
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
     <ItemGroup>
-      <Launcher Include="$(SolutionDir)Launcher\$(OutDir)Launcher.exe" />
       <Dlls Include="$(SolutionDir)IllusionInjector\$(OutDir)**\*" />
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\Data\Managed" />
-    <Copy SourceFiles="@(Launcher)" DestinationFolder="$(OutputPath)IPA" />
   </Target>
 </Project>
