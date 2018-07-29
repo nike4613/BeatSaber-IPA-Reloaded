@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
@@ -7,96 +8,119 @@ using IllusionPlugin;
 
 namespace IllusionPlugin {
     public class Logger {
-        private readonly Queue<logMessage> _logQueue;
+        private static BlockingCollection<logMessage> _logQueue;
+        private static Thread _watcherThread;
+        private static bool _threadRunning;
         private readonly FileInfo _logFile;
-        private readonly Thread _watcherThread;
-        private bool _threadRunning;
 
         private string ModName;
-        
-        private logMessage oldLog;
 
         struct logMessage {
+            public static readonly string logFormat = "[{3} @ {2:HH:mm:ss} | {1}] {0}";
+
             public WarningLevel WarningLevel;
+            public DateTime Time;
+            public Logger Log;
             public string Message;
 
-            public logMessage(string msg, WarningLevel wl) {
+            public logMessage(string msg, Logger log, DateTime time, WarningLevel wl) {
                 Message = msg;
                 WarningLevel = wl;
+                Log = log;
+                Time = time;
             }
         }
         
         enum WarningLevel {
             Log, Error, Exception, Warning
         }
-        
-        public Logger(string modName = "Default") {
-            _logQueue = new Queue<logMessage>();
-            _logFile = GetPath(modName);
-            _watcherThread = new Thread(QueueWatcher) {IsBackground = true};
-            _threadRunning = true;
-            Start();
+
+        static void SetupStatic()
+        {
+            if (_logQueue == null)
+                _logQueue = new BlockingCollection<logMessage>();
+            if (_watcherThread == null || !_watcherThread.IsAlive)
+            {
+                _watcherThread = new Thread(QueueWatcher); // { IsBackground = true };
+                _threadRunning = true;
+                _watcherThread.Start();
+            }
         }
-        
-         public Logger(IPlugin plugin) {
-            _logQueue = new Queue<logMessage>();
+
+        public Logger(string modName = "Default") {
+            SetupStatic();
+            _logFile = GetPath(modName);
+            _logFile.Create().Close();
+        }
+
+        public Logger(IPlugin plugin)
+        {
+            SetupStatic();
             _logFile = GetPath(plugin);
-            _watcherThread = new Thread(QueueWatcher) {IsBackground = true};
-            _threadRunning = true;
-            Start();
+            _logFile.Create().Close();
         }
 
         public void Log(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[LOG @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Log));
+            //_logQueue.Add(new logMessage($"[LOG @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Log));
+            _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Log));
         }
         
         public void Error(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[ERROR @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Error));
+            //_logQueue.Add(new logMessage($"[ERROR @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Error));
+            _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Error));
         }
         
         public void Exception(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[EXCEPTION @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Exception));
+            //_logQueue.Add(new logMessage($"[EXCEPTION @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Exception));
+            _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Exception));
         }
         
         public void Warning(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
-            _logQueue.Enqueue(new logMessage($"[WARNING @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Warning));
+            //_logQueue.Add(new logMessage($"[WARNING @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Warning));
+            _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Warning));
         }
 
-        void QueueWatcher() {
-            _logFile.Create().Close();
-            while (_threadRunning) {
-                if (_logQueue.Count > 0) {
-                    _watcherThread.IsBackground = false;
-                    using (var f = _logFile.AppendText()) {
-                        while (_logQueue.Count > 0) {
-                            var d = _logQueue.Dequeue();
-                            if (d.Message == oldLog.Message) return;
-                            oldLog = d;
-                            f.WriteLine(d.Message);
-                            Console.ForegroundColor = GetConsoleColour(d.WarningLevel);
-                            Console.WriteLine(d.Message);
-                            Console.ResetColor();
-                        }
-                    }
+        static void QueueWatcher() {
+            //StreamWriter wstream = null;
+            Dictionary<string, StreamWriter> wstreams = new Dictionary<string, StreamWriter>();
+            while (_threadRunning && _logQueue.TryTake(out logMessage message, Timeout.Infinite))
+            {
+                string msg = string.Format(logMessage.logFormat, message.Message, message.Log.ModName, message.Time, message.WarningLevel);
 
-                    _watcherThread.IsBackground = true;
+                wstreams[message.Log.ModName] = message.Log._logFile.AppendText();
+                wstreams[message.Log.ModName].WriteLine(msg);
+                Console.ForegroundColor = GetConsoleColour(message.WarningLevel);
+                Console.WriteLine(message.Message);
+                Console.ResetColor();
+
+                if (_logQueue.Count == 0)
+                { // no more messages
+                    foreach (var kvp in wstreams)
+                    {
+                        if (kvp.Value == null) continue;
+                        kvp.Value.Dispose();
+                        wstreams[kvp.Key] = null;
+                    }
                 }
-                Thread.Sleep(5);
+            }
+
+            foreach (var kvp in wstreams)
+            {
+                if (kvp.Value == null) continue;
+                kvp.Value.Dispose();
             }
         }
 
-        void Start() => _watcherThread.Start();
-
-        public void Stop() {
+        public static void Stop() {
             _threadRunning = false;
             _watcherThread.Join();
         }
 
-        ConsoleColor GetConsoleColour(WarningLevel level) {
+        static ConsoleColor GetConsoleColour(WarningLevel level) {
             switch (level) {
                     case WarningLevel.Log:
                         return ConsoleColor.Green;
@@ -120,7 +144,7 @@ namespace IllusionPlugin {
         }
     }
 
-    public static class DebugExtensions {
+    public static class LoggerExtensions {
         public static Logger GetLogger(this IPlugin plugin) {
             return new Logger(plugin);
         }
