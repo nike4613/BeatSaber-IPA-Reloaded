@@ -8,7 +8,8 @@ namespace IllusionInjector
 {
     public class PluginComponent : MonoBehaviour
     {
-        private CompositePlugin plugins;
+        private CompositeBSPlugin bsPlugins;
+        private CompositeIPAPlugin ipaPlugins;
         private bool quitting = false;
 
         public static PluginComponent Create()
@@ -20,8 +21,10 @@ namespace IllusionInjector
         {
             DontDestroyOnLoad(gameObject);
 
-            plugins = new CompositePlugin(PluginManager.Plugins);
-            plugins.OnApplicationStart();
+            bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
+            ipaPlugins = new CompositeIPAPlugin(PluginManager.IPAPlugins);
+            bsPlugins.OnApplicationStart();
+            ipaPlugins.OnApplicationStart();
             
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -30,17 +33,20 @@ namespace IllusionInjector
 
         void Update()
         {
-            plugins.OnUpdate();
+            bsPlugins.OnUpdate();
+            ipaPlugins.OnUpdate();
         }
 
         void LateUpdate()
         {
-            plugins.OnLateUpdate();
+            bsPlugins.OnLateUpdate();
+            ipaPlugins.OnLateUpdate();
         }
 
         void FixedUpdate()
         {
-            plugins.OnFixedUpdate();
+            bsPlugins.OnFixedUpdate();
+            ipaPlugins.OnFixedUpdate();
         }
 
         void OnDestroy()
@@ -57,22 +63,33 @@ namespace IllusionInjector
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             
-            plugins.OnApplicationQuit();
+            bsPlugins.OnApplicationQuit();
+            ipaPlugins.OnApplicationQuit();
 
             quitting = true;
         }
 
+        void OnLevelWasLoaded(int level)
+        {
+            ipaPlugins.OnLevelWasLoaded(level);
+        }
+
+        public void OnLevelWasInitialized(int level)
+        {
+            ipaPlugins.OnLevelWasInitialized(level);
+        }
+
         void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
         {
-            plugins.OnSceneLoaded(scene, sceneMode);
+            bsPlugins.OnSceneLoaded(scene, sceneMode);
         }
         
         private void OnSceneUnloaded(Scene scene) {
-            plugins.OnSceneUnloaded(scene);
+            bsPlugins.OnSceneUnloaded(scene);
         }
 
         private void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
-            plugins.OnActiveSceneChanged(prevScene, nextScene);
+            bsPlugins.OnActiveSceneChanged(prevScene, nextScene);
         }
 
     }

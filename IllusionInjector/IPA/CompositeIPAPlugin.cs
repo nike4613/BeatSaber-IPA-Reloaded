@@ -8,14 +8,16 @@ using UnityEngine.SceneManagement;
 using Logger = IllusionPlugin.Logger;
 
 namespace IllusionInjector {
-    public class CompositePlugin : IPlugin {
+#pragma warning disable CS0618 // Type or member is obsolete
+    public class CompositeIPAPlugin : IPlugin
+    {
         IEnumerable<IPlugin> plugins;
 
         private delegate void CompositeCall(IPlugin plugin);
 
         private Logger debugLogger => PluginManager.debugLogger;
         
-        public CompositePlugin(IEnumerable<IPlugin> plugins) {
+        public CompositeIPAPlugin(IEnumerable<IPlugin> plugins) {
             this.plugins = plugins;
         }
 
@@ -26,41 +28,7 @@ namespace IllusionInjector {
         public void OnApplicationQuit() {
             Invoke(plugin => plugin.OnApplicationQuit());
         }
-
-        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-            foreach (var plugin in plugins) {
-                try {
-                    plugin.OnSceneLoaded(scene, sceneMode);
-                }
-                catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
-                }
-            }
-        }
-
-        public void OnSceneUnloaded(Scene scene) {
-            foreach (var plugin in plugins) {
-                try {
-                    plugin.OnSceneUnloaded(scene);
-                }
-                catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
-                }
-            }
-        }
-
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
-            foreach (var plugin in plugins) {
-                try {
-                    plugin.OnActiveSceneChanged(prevScene, nextScene);
-                }
-                catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
-                }
-            }
-        }
-
-
+        
         private void Invoke(CompositeCall callback) {
             foreach (var plugin in plugins) {
                 try {
@@ -72,7 +40,6 @@ namespace IllusionInjector {
             }
         }
 
-
         public void OnUpdate() {
             Invoke(plugin => plugin.OnUpdate());
         }
@@ -80,8 +47,7 @@ namespace IllusionInjector {
         public void OnFixedUpdate() {
             Invoke(plugin => plugin.OnFixedUpdate());
         }
-
-
+        
         public string Name {
             get { throw new NotImplementedException(); }
         }
@@ -92,9 +58,20 @@ namespace IllusionInjector {
 
         public void OnLateUpdate() {
             Invoke(plugin => {
-                if (plugin is IEnhancedPlugin)
-                    ((IEnhancedPlugin) plugin).OnLateUpdate();
+                if (plugin is IEnhancedBeatSaberPlugin)
+                    ((IEnhancedBeatSaberPlugin) plugin).OnLateUpdate();
             });
         }
+
+        public void OnLevelWasLoaded(int level)
+        {
+            Invoke(plugin => plugin.OnLevelWasLoaded(level));
+        }
+
+        public void OnLevelWasInitialized(int level)
+        {
+            Invoke(plugin => plugin.OnLevelWasInitialized(level));
+        }
     }
+#pragma warning restore CS0618 // Type or member is obsolete
 }

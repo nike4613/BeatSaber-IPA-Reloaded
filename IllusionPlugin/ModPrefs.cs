@@ -11,11 +11,11 @@ namespace IllusionPlugin
     /// Allows to get and set preferences for your mod. 
     /// </summary>
     public class ModPrefs {
-        internal static Dictionary<IPlugin, ModPrefs> ModPrefses { get; set; } = new Dictionary<IPlugin, ModPrefs>();
+        internal static Dictionary<IBeatSaberPlugin, ModPrefs> ModPrefses { get; set; } = new Dictionary<IBeatSaberPlugin, ModPrefs>();
 
         private IniFile Instance;
 
-        public ModPrefs(IPlugin plugin) {
+        public ModPrefs(IBeatSaberPlugin plugin) {
             Instance = new IniFile(Path.Combine(Environment.CurrentDirectory, $"UserData/ModPrefs/{plugin.Name}.ini"));
             ModPrefses.Add(plugin, this);
         }
@@ -160,7 +160,7 @@ namespace IllusionPlugin
     }
     
     public static class ModPrefsExtensions {
-        public static ModPrefs GetModPrefs(this IPlugin plugin) {
+        public static ModPrefs GetModPrefs(this IBeatSaberPlugin plugin) {
             return ModPrefs.ModPrefses.First(o => o.Key == plugin).Value;
         }
     }

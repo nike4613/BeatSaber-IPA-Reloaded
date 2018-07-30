@@ -13,24 +13,38 @@ namespace IllusionInjector
 {
     public static class PluginManager
     {
-        private static List<IPlugin> _Plugins = null;
+#pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
 
         internal static readonly Logger debugLogger = new Logger("IllusionInjector");
         
         /// <summary>
         /// Gets the list of loaded plugins and loads them if necessary.
         /// </summary>
-        public static IEnumerable<IPlugin> Plugins
+        public static IEnumerable<IBeatSaberPlugin> BSPlugins
         {
             get
             {
-                if(_Plugins == null)
+                if(_bsPlugins == null)
                 {
                     LoadPlugins();
                 }
-                return _Plugins;
+                return _bsPlugins;
             }
         }
+        private static List<IBeatSaberPlugin> _bsPlugins = null;
+        
+        public static IEnumerable<IPlugin> IPAPlugins
+        {
+            get
+            {
+                if (_ipaPlugins == null)
+                {
+                    LoadPlugins();
+                }
+                return _ipaPlugins;
+            }
+        }
+        private static List<IPlugin> _ipaPlugins = null;
 
 
         private static void LoadPlugins()
@@ -41,17 +55,20 @@ namespace IllusionInjector
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             debugLogger.Log(exeName);
-            _Plugins = new List<IPlugin>();
+            _bsPlugins = new List<IBeatSaberPlugin>();
+            _ipaPlugins = new List<IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
 
-            if (!Directory.Exists(Path.Combine(pluginDirectory, ".cache")))
+            string cacheDir = Path.Combine(pluginDirectory, ".cache");
+
+            if (!Directory.Exists(cacheDir))
             {
-                Directory.CreateDirectory(Path.Combine(pluginDirectory, ".cache"));
+                Directory.CreateDirectory(cacheDir);
             }
             else
             {
-                foreach (string plugin in Directory.GetFiles(Path.Combine(pluginDirectory, ".cache"), "*"))
+                foreach (string plugin in Directory.GetFiles(cacheDir, "*"))
                 {
                     File.Delete(plugin);
                 }
@@ -61,37 +78,66 @@ namespace IllusionInjector
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
             foreach (string s in originalPlugins)
             {
-                string pluginCopy = pluginDirectory + "\\.cache" + s.Substring(s.LastIndexOf('\\'));
+                string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
                 File.Copy(Path.Combine(pluginDirectory, s), pluginCopy);
             }
 
             //Load copied plugins
-            string copiedPluginsDirectory = pluginDirectory + "\\.cache";
-            string[] copiedPlugins = Directory.GetFiles(copiedPluginsDirectory, "*.dll");
+            string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
             foreach (string s in copiedPlugins)
             {
-                _Plugins.AddRange(LoadPluginsFromFile(s, exeName));
+                var result = LoadPluginsFromFile(s, exeName);
+                _bsPlugins.AddRange(result.Item1);
+                _ipaPlugins.AddRange(result.Item2);
             }
 
 
             // DEBUG
             debugLogger.Log($"Running on Unity {UnityEngine.Application.unityVersion}");
             debugLogger.Log("-----------------------------");
-            debugLogger.Log($"Loading plugins from {pluginDirectory} and found {_Plugins.Count}");
+            debugLogger.Log($"Loading plugins from {pluginDirectory} and found {_bsPlugins.Count}");
             debugLogger.Log("-----------------------------");
-            foreach (var plugin in _Plugins)
+            foreach (var plugin in _bsPlugins)
             {
                 debugLogger.Log($"{plugin.Name}: {plugin.Version}");
             }
             debugLogger.Log("-----------------------------");
         }
 
-        private static IEnumerable<IPlugin> LoadPluginsFromFile(string file, string exeName)
+        private static Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
         {
-            List<IPlugin> plugins = new List<IPlugin>();
+            List<IBeatSaberPlugin> bsPlugins = new List<IBeatSaberPlugin>();
+            List<IPlugin> ipaPlugins = new List<IPlugin>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return plugins;
+                return new Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+
+            T OptionalGetPlugin<T>(Type t) where T : class
+            {
+                // use typeof() to allow for easier renaming (in an ideal world this compiles to a string, but ¯\_(ツ)_/¯)
+                if (t.GetInterface(typeof(T).Name) != null)
+                {
+                    try
+                    {
+                        T pluginInstance = Activator.CreateInstance(t) as T;
+                        string[] filter = null;
+
+                        if (pluginInstance is IGenericEnhancedPlugin)
+                        {
+                            filter = ((IGenericEnhancedPlugin)pluginInstance).Filter;
+                        }
+
+                        if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
+                            return pluginInstance;
+                    }
+                    catch (Exception e)
+                    {
+                        debugLogger.Exception($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
+                    }
+                }
+
+                return null;
+            }
 
             try
             {
@@ -99,25 +145,17 @@ namespace IllusionInjector
 
                 foreach (Type t in assembly.GetTypes())
                 {
-                    if (t.GetInterface("IPlugin") != null)
+                    IBeatSaberPlugin bsPlugin = OptionalGetPlugin<IBeatSaberPlugin>(t);
+                    if (bsPlugin != null)
                     {
-                        try
+                        bsPlugins.Add(bsPlugin);
+                    }
+                    else
+                    {
+                        IPlugin ipaPlugin = OptionalGetPlugin<IPlugin>(t);
+                        if (ipaPlugin != null)
                         {
-
-                            IPlugin pluginInstance = Activator.CreateInstance(t) as IPlugin;
-                            string[] filter = null;
-
-                            if (pluginInstance is IEnhancedPlugin)
-                            {
-                                filter = ((IEnhancedPlugin)pluginInstance).Filter;
-                            }
-                            
-                            if(filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
-                                plugins.Add(pluginInstance);
-                        }
-                        catch (Exception e)
-                        {
-                            debugLogger.Exception($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
+                            ipaPlugins.Add(ipaPlugin);
                         }
                     }
                 }
@@ -128,7 +166,7 @@ namespace IllusionInjector
                 debugLogger.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
-            return plugins;
+            return new Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
         }
 
         public class AppInfo
@@ -146,6 +184,6 @@ namespace IllusionInjector
                 }
             }
         }
-
+#pragma warning restore CS0618 // Type or member is obsolete (IPlugin)
     }
 }

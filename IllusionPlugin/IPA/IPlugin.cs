@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine.SceneManagement;
 
 namespace IllusionPlugin
 {
@@ -9,6 +8,7 @@ namespace IllusionPlugin
     /// Interface for generic Illusion unity plugins. Every class that implements this will be loaded if the DLL is placed at
     /// data/Managed/Plugins.
     /// </summary>
+    [Obsolete("When building plugins for Beat Saber, use IBeatSaberPlugin")]
     public interface IPlugin
     {
 
@@ -33,33 +33,26 @@ namespace IllusionPlugin
         void OnApplicationQuit();
 
         /// <summary>
+        /// Gets invoked whenever a level is loaded.
+        /// </summary>
+        /// <param name="level"></param>
+        void OnLevelWasLoaded(int level);
+
+        /// <summary>
+        /// Gets invoked after the first update cycle after a level was loaded.
+        /// </summary>
+        /// <param name="level"></param>
+        void OnLevelWasInitialized(int level);
+
+        /// <summary>
         /// Gets invoked on every graphic update.
         /// </summary>
         void OnUpdate();
+
 
         /// <summary>
         /// Gets invoked on ever physics update.
         /// </summary>
         void OnFixedUpdate();
-        
-        /// <summary>
-        /// Gets invoked whenever a scene is loaded.
-        /// </summary>
-        /// <param name="scene">The scene currently loaded</param>
-        /// <param name="sceneMode">The type of loading</param>
-        void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode);
-
-        /// <summary>
-        /// Gets invoked whenever a scene is unloaded
-        /// </summary>
-        /// <param name="scene">The unloaded scene</param>
-        void OnSceneUnloaded(Scene scene);
-
-        /// <summary>
-        /// Gets invoked whenever a scene is changed
-        /// </summary>
-        /// <param name="prevScene">The Scene that was previously loaded</param>
-        /// <param name="nextScene">The Scene being loaded</param>
-        void OnActiveSceneChanged(Scene prevScene, Scene nextScene);
     }
 }

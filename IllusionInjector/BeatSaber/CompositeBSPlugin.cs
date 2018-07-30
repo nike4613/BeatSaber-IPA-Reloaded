@@ -1,0 +1,98 @@
+﻿using IllusionPlugin;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using Logger = IllusionPlugin.Logger;
+
+namespace IllusionInjector {
+    public class CompositeBSPlugin : IBeatSaberPlugin
+    {
+        IEnumerable<IBeatSaberPlugin> plugins;
+
+        private delegate void CompositeCall(IBeatSaberPlugin plugin);
+
+        private Logger debugLogger => PluginManager.debugLogger;
+        
+        public CompositeBSPlugin(IEnumerable<IBeatSaberPlugin> plugins) {
+            this.plugins = plugins;
+        }
+
+        public void OnApplicationStart() {
+            Invoke(plugin => plugin.OnApplicationStart());
+        }
+
+        public void OnApplicationQuit() {
+            Invoke(plugin => plugin.OnApplicationQuit());
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
+            foreach (var plugin in plugins) {
+                try {
+                    plugin.OnSceneLoaded(scene, sceneMode);
+                }
+                catch (Exception ex) {
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                }
+            }
+        }
+
+        public void OnSceneUnloaded(Scene scene) {
+            foreach (var plugin in plugins) {
+                try {
+                    plugin.OnSceneUnloaded(scene);
+                }
+                catch (Exception ex) {
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                }
+            }
+        }
+
+        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
+            foreach (var plugin in plugins) {
+                try {
+                    plugin.OnActiveSceneChanged(prevScene, nextScene);
+                }
+                catch (Exception ex) {
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                }
+            }
+        }
+        
+        private void Invoke(CompositeCall callback) {
+            foreach (var plugin in plugins) {
+                try {
+                    callback(plugin);
+                }
+                catch (Exception ex) {
+                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                }
+            }
+        }
+        
+        public void OnUpdate() {
+            Invoke(plugin => plugin.OnUpdate());
+        }
+
+        public void OnFixedUpdate() {
+            Invoke(plugin => plugin.OnFixedUpdate());
+        }
+
+        public string Name {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string Version {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void OnLateUpdate() {
+            Invoke(plugin => {
+                if (plugin is IEnhancedBeatSaberPlugin)
+                    ((IEnhancedBeatSaberPlugin) plugin).OnLateUpdate();
+            });
+        }
+    }
+}
