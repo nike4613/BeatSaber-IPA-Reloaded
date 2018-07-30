@@ -15,6 +15,10 @@ namespace IllusionPlugin
 
         private IniFile Instance;
 
+        /// <summary>
+        /// Constructs a ModPrefs object for the provide plugin.
+        /// </summary>
+        /// <param name="plugin">the plugin to get the preferences file for</param>
         public ModPrefs(IBeatSaberPlugin plugin) {
             Instance = new IniFile(Path.Combine(Environment.CurrentDirectory, $"UserData/ModPrefs/{plugin.Name}.ini"));
             ModPrefses.Add(plugin, this);
@@ -159,7 +163,15 @@ namespace IllusionPlugin
         
     }
     
+    /// <summary>
+    /// An extension class for IBeatSaberPlugins.
+    /// </summary>
     public static class ModPrefsExtensions {
+        /// <summary>
+        /// Gets the ModPrefs object for the provided plugin.
+        /// </summary>
+        /// <param name="plugin">the plugin wanting the prefrences</param>
+        /// <returns>the ModPrefs object</returns>
         public static ModPrefs GetModPrefs(this IBeatSaberPlugin plugin) {
             return ModPrefs.ModPrefses.First(o => o.Key == plugin).Value;
         }

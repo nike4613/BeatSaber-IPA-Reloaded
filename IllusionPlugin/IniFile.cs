@@ -62,7 +62,7 @@ namespace IllusionPlugin
         /// <summary>
         /// INIFile Constructor.
         /// </summary>
-        /// <PARAM name="INIPath"></PARAM>
+        /// <PARAM name="iniPath"></PARAM>
         public IniFile(string iniPath)
         {
             IniFileInfo = new FileInfo(iniPath);
@@ -88,7 +88,6 @@ namespace IllusionPlugin
         /// </summary>
         /// <PARAM name="Section"></PARAM>
         /// <PARAM name="Key"></PARAM>
-        /// <PARAM name="Path"></PARAM>
         /// <returns></returns>
         public string IniReadValue(string Section, string Key)
         {
