@@ -53,7 +53,7 @@ namespace IllusionPlugin {
             _logFile.Create().Close();
         }
 
-        public Logger(IPlugin plugin)
+        public Logger(IBeatSaberPlugin plugin)
         {
             SetupStatic();
             _logFile = GetPath(plugin);
@@ -135,7 +135,7 @@ namespace IllusionPlugin {
             }
         }
 
-        FileInfo GetPath(IPlugin plugin) => GetPath(plugin.Name);
+        FileInfo GetPath(IBeatSaberPlugin plugin) => GetPath(plugin.Name);
         FileInfo GetPath(string modName) {
             ModName = modName;
             var logsDir = new DirectoryInfo($"./Logs/{modName}/{DateTime.Now:dd-MM-yy}");
@@ -145,7 +145,7 @@ namespace IllusionPlugin {
     }
 
     public static class LoggerExtensions {
-        public static Logger GetLogger(this IPlugin plugin) {
+        public static Logger GetLogger(this IBeatSaberPlugin plugin) {
             return new Logger(plugin);
         }
     }

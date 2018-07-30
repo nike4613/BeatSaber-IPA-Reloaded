@@ -47,9 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="CompositePlugin.cs" />
+    <Compile Include="BeatSaber\CompositeBSPlugin.cs" />
     <Compile Include="ConsoleWindow.cs" />
     <Compile Include="Injector.cs" />
+    <Compile Include="IPA\CompositeIPAPlugin.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PluginComponent.cs" />
