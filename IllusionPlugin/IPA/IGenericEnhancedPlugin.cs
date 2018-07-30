@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace IllusionPlugin
 {
+    /// <summary>
+    /// A generic interface for the modification for enhanced plugins.
+    /// </summary>
     public interface IGenericEnhancedPlugin
     {
         /// <summary>
@@ -14,6 +17,9 @@ namespace IllusionPlugin
         /// <example>{ "PlayClub", "PlayClubStudio" }</example>
         string[] Filter { get; }
 
+        /// <summary>
+        /// Called after Update.
+        /// </summary>
         void OnLateUpdate();
     }
 }

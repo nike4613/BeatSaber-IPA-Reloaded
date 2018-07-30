@@ -7,6 +7,9 @@ using System.Threading;
 using IllusionPlugin;
 
 namespace IllusionPlugin {
+    /// <summary>
+    /// A general purpose logging class for any plugin to use.
+    /// </summary>
     public class Logger {
         private static BlockingCollection<logMessage> _logQueue;
         private static Thread _watcherThread;
@@ -47,12 +50,20 @@ namespace IllusionPlugin {
             }
         }
 
+        /// <summary>
+        /// Creates a logger with the specified name.
+        /// </summary>
+        /// <param name="modName">the name of the logger</param>
         public Logger(string modName = "Default") {
             SetupStatic();
             _logFile = GetPath(modName);
             _logFile.Create().Close();
         }
 
+        /// <summary>
+        /// Creates a logger for the specified plugin.
+        /// </summary>
+        /// <param name="plugin">the plugin to associate the logger with</param>
         public Logger(IBeatSaberPlugin plugin)
         {
             SetupStatic();
@@ -60,24 +71,40 @@ namespace IllusionPlugin {
             _logFile.Create().Close();
         }
 
+        /// <summary>
+        /// Sends a message to the log.
+        /// </summary>
+        /// <param name="msg">the message to send</param>
         public void Log(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
             //_logQueue.Add(new logMessage($"[LOG @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Log));
             _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Log));
         }
-        
+
+        /// <summary>
+        /// Sends an error to the log.
+        /// </summary>
+        /// <param name="msg">the message to send</param>
         public void Error(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
             //_logQueue.Add(new logMessage($"[ERROR @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Error));
             _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Error));
         }
-        
+
+        /// <summary>
+        /// Sends an exception to the log.
+        /// </summary>
+        /// <param name="msg">the message to send</param>
         public void Exception(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
             //_logQueue.Add(new logMessage($"[EXCEPTION @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Exception));
             _logQueue.Add(new logMessage(msg, this, DateTime.Now, WarningLevel.Exception));
         }
         
+        /// <summary>
+        /// Sends a warning to the log.
+        /// </summary>
+        /// <param name="msg">the message to send</param>
         public void Warning(string msg) {
             if(!_watcherThread.IsAlive) throw new Exception("Logger is Closed!");
             //_logQueue.Add(new logMessage($"[WARNING @ {DateTime.Now:HH:mm:ss} | {ModName}] {msg}", WarningLevel.Warning));
@@ -114,7 +141,10 @@ namespace IllusionPlugin {
                 kvp.Value.Dispose();
             }
         }
-
+        
+        /// <summary>
+        /// Stops the logger background thread.
+        /// </summary>
         public static void Stop() {
             _threadRunning = false;
             _watcherThread.Join();
@@ -144,7 +174,15 @@ namespace IllusionPlugin {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class LoggerExtensions {
+        /// <summary>
+        /// Gets a logger for the provided plugin.
+        /// </summary>
+        /// <param name="plugin">the plugin to get a logger for</param>
+        /// <returns>a Logger instance</returns>
         public static Logger GetLogger(this IBeatSaberPlugin plugin) {
             return new Logger(plugin);
         }
