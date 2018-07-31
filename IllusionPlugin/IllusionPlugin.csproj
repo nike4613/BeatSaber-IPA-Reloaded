@@ -47,9 +47,10 @@
     <Compile Include="IniFile.cs" />
     <Compile Include="BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="IPA\IEnhancedPlugin.cs" />
-    <Compile Include="IPA\IGenericEnhancedPlugin.cs" />
+    <Compile Include="IGenericEnhancedPlugin.cs" />
     <Compile Include="IPA\IPlugin.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Logging\LogPrinter.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="ModPrefs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

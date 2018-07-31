@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Logger = IllusionPlugin.Logger;
+using Logger = IllusionInjector.Logging.Logger;
 
 namespace IllusionInjector {
     public class CompositeBSPlugin : IBeatSaberPlugin
@@ -13,8 +13,6 @@ namespace IllusionInjector {
         IEnumerable<IBeatSaberPlugin> plugins;
 
         private delegate void CompositeCall(IBeatSaberPlugin plugin);
-
-        private Logger debugLogger => PluginManager.debugLogger;
         
         public CompositeBSPlugin(IEnumerable<IBeatSaberPlugin> plugins) {
             this.plugins = plugins;
@@ -34,7 +32,7 @@ namespace IllusionInjector {
                     plugin.OnSceneLoaded(scene, sceneMode);
                 }
                 catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                    Logger.log.Error($"{plugin.Name}: {ex}");
                 }
             }
         }
@@ -45,7 +43,7 @@ namespace IllusionInjector {
                     plugin.OnSceneUnloaded(scene);
                 }
                 catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                    Logger.log.Error($"{plugin.Name}: {ex}");
                 }
             }
         }
@@ -56,7 +54,7 @@ namespace IllusionInjector {
                     plugin.OnActiveSceneChanged(prevScene, nextScene);
                 }
                 catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                    Logger.log.Error($"{plugin.Name}: {ex}");
                 }
             }
         }
@@ -67,7 +65,7 @@ namespace IllusionInjector {
                     callback(plugin);
                 }
                 catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                    Logger.log.Error($"{plugin.Name}: {ex}");
                 }
             }
         }
