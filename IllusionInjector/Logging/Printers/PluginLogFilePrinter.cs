@@ -10,7 +10,7 @@ namespace IllusionInjector.Logging.Printers
 {
     public class PluginLogFilePrinter : LogPrinter
     {
-        public override IllusionPlugin.Logging.Logger.LogLevel Filter { get; set; }
+        public override IllusionPlugin.Logging.Logger.LogLevel Filter { get; set; } = IllusionPlugin.Logging.Logger.LogLevel.All;
 
         private FileInfo fileInfo;
         private StreamWriter fileWriter;
@@ -19,7 +19,7 @@ namespace IllusionInjector.Logging.Printers
         {
             var logsDir = new DirectoryInfo(Path.Combine("Logs",modName));
             logsDir.Create();
-            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:YYYY.MM.DD.HH.MM}.log"));
+            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:yyyy.MM.dd.HH.MM}.log"));
             finfo.CreateText().Close();
             return finfo;
         }
@@ -42,6 +42,8 @@ namespace IllusionInjector.Logging.Printers
 
         public override void EndPrint()
         {
+            fileWriter.Flush();
+            fileWriter.Close();
             fileWriter.Dispose();
         }
     }

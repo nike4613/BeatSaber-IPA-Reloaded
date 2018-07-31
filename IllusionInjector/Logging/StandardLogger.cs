@@ -55,7 +55,7 @@ namespace IllusionInjector.Logging
                 Filter = LogLevel.CriticalOnly,
                 Color = ConsoleColor.Magenta,
             },
-            new GlobalZFIlePrinter()
+            new GlobalZFilePrinter()
         };
 
         private string logName;
@@ -104,22 +104,39 @@ namespace IllusionInjector.Logging
             while (_logQueue.TryTake(out LogMessage msg, Timeout.Infinite)) {
                 foreach (var printer in msg.logger.printers)
                 {
-                    if (((byte)msg.level & (byte)printer.Filter) != 0)
+                    try
                     {
-                        if (!started.Contains(printer))
-                        {
-                            printer.StartPrint();
-                            started.Add(printer);
-                        }
 
-                        printer.Print(msg.level, msg.time, msg.logger.logName, msg.message);
+                        if (((byte)msg.level & (byte)printer.Filter) != 0)
+                        {
+                            if (!started.Contains(printer))
+                            {
+                                printer.StartPrint();
+                                started.Add(printer);
+                            }
+
+                            printer.Print(msg.level, msg.time, msg.logger.logName, msg.message);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"printer errored {e}");
                     }
                 }
 
                 if (_logQueue.Count == 0)
                 {
                     foreach (var printer in started)
-                        printer.EndPrint();
+                    {
+                        try
+                        {
+                            printer.EndPrint();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"printer errored {e}");
+                        }
+                    }
                     started.Clear();
                 }
             }

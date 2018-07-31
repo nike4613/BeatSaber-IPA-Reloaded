@@ -1,44 +1,45 @@
 ﻿using IllusionPlugin.Logging;
+using Ionic.Zlib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using zlib;
 
 namespace IllusionInjector.Logging.Printers
 {
-    public class GlobalZFIlePrinter : LogPrinter
+    public class GlobalZFilePrinter : LogPrinter
     {
-        public override IllusionPlugin.Logging.Logger.LogLevel Filter { get; set; }
+        public override IllusionPlugin.Logging.Logger.LogLevel Filter { get; set; } = IllusionPlugin.Logging.Logger.LogLevel.All;
 
         private FileInfo fileInfo;
         private StreamWriter fileWriter;
+        private GZipStream zstream;
+        private FileStream fstream;
 
         private static FileInfo GetFileInfo()
         {
             var logsDir = new DirectoryInfo("Logs");
             logsDir.Create();
-            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:YYYY.MM.DD.HH.MM}.log.z"));
+            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:yyyy.MM.dd.HH.MM}.log.z"));
             finfo.Create().Close();
             return finfo;
         }
 
-        public GlobalZFIlePrinter()
+        public GlobalZFilePrinter()
         {
             fileInfo = GetFileInfo();
         }
 
         public override void StartPrint()
         {
-            fileWriter = new StreamWriter(
-                new ZOutputStream(fileInfo.Open(FileMode.Append, FileAccess.Write, FileShare.Read))
-                {
-                     FlushMode = zlibConst.Z_FULL_FLUSH
-                },
-                Encoding.UTF8
-            );
+            fstream = fileInfo.Open(FileMode.Append, FileAccess.Write);
+            zstream = new GZipStream(fstream, CompressionMode.Compress)
+            {
+                FlushMode = FlushType.Full
+            };
+            fileWriter = new StreamWriter(zstream, Encoding.UTF8);
         }
 
         public override void Print(IllusionPlugin.Logging.Logger.Level level, DateTime time, string logName, string message)
@@ -49,7 +50,15 @@ namespace IllusionInjector.Logging.Printers
 
         public override void EndPrint()
         {
+            fileWriter.Flush();
+            zstream.Flush();
+            fstream.Flush();
+            fileWriter.Close();
+            zstream.Close();
+            fstream.Close();
             fileWriter.Dispose();
+            zstream.Dispose();
+            fstream.Dispose();
         }
     }
 }

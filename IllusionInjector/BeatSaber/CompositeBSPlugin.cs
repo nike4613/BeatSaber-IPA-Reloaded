@@ -82,7 +82,7 @@ namespace IllusionInjector {
             get { throw new NotImplementedException(); }
         }
 
-        public string Version {
+        public Version Version {
             get { throw new NotImplementedException(); }
         }
 
