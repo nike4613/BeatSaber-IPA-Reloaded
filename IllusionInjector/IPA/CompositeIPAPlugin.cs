@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Logger = IllusionPlugin.Logger;
+using Logger = IllusionInjector.Logging.Logger;
 
 namespace IllusionInjector {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -14,8 +14,6 @@ namespace IllusionInjector {
         IEnumerable<IPlugin> plugins;
 
         private delegate void CompositeCall(IPlugin plugin);
-
-        private Logger debugLogger => PluginManager.debugLogger;
         
         public CompositeIPAPlugin(IEnumerable<IPlugin> plugins) {
             this.plugins = plugins;
@@ -35,7 +33,7 @@ namespace IllusionInjector {
                     callback(plugin);
                 }
                 catch (Exception ex) {
-                    debugLogger.Exception($"{plugin.Name}: {ex}");
+                    Logger.log.Error($"{plugin.Name}: {ex}");
                 }
             }
         }

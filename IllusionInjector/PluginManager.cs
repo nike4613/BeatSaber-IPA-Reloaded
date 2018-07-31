@@ -1,4 +1,5 @@
-﻿using IllusionPlugin;
+﻿using IllusionInjector.Logging;
+using IllusionPlugin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,8 +15,6 @@ namespace IllusionInjector
     public static class PluginManager
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
-
-        internal static readonly Logger debugLogger = new Logger("IllusionInjector");
         
         /// <summary>
         /// Gets the list of loaded plugins and loads them if necessary.
@@ -54,7 +53,7 @@ namespace IllusionInjector
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
-            debugLogger.Log(exeName);
+            Logger.log.Info(exeName);
             _bsPlugins = new List<IBeatSaberPlugin>();
             _ipaPlugins = new List<IPlugin>();
 
@@ -93,15 +92,15 @@ namespace IllusionInjector
 
 
             // DEBUG
-            debugLogger.Log($"Running on Unity {UnityEngine.Application.unityVersion}");
-            debugLogger.Log("-----------------------------");
-            debugLogger.Log($"Loading plugins from {pluginDirectory} and found {_bsPlugins.Count}");
-            debugLogger.Log("-----------------------------");
+            Logger.log.Info($"Running on Unity {UnityEngine.Application.unityVersion}");
+            Logger.log.Info("-----------------------------");
+            Logger.log.Info($"Loading plugins from {pluginDirectory} and found {_bsPlugins.Count}");
+            Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
-                debugLogger.Log($"{plugin.Name}: {plugin.Version}");
+                Logger.log.Info($"{plugin.Name}: {plugin.Version}");
             }
-            debugLogger.Log("-----------------------------");
+            Logger.log.Info("-----------------------------");
         }
 
         private static Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
@@ -132,7 +131,7 @@ namespace IllusionInjector
                     }
                     catch (Exception e)
                     {
-                        debugLogger.Exception($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
+                        Logger.log.Error($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
                     }
                 }
 
@@ -163,7 +162,7 @@ namespace IllusionInjector
             }
             catch (Exception e)
             {
-                debugLogger.Error($"Could not load {Path.GetFileName(file)}! {e}");
+                Logger.log.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
             return new Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
