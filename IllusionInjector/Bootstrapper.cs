@@ -13,10 +13,10 @@ namespace IllusionInjector
         
         void Awake()
         {
-            if (Environment.CommandLine.Contains("--verbose") && !Screen.fullScreen)
-            {
+            //if (Environment.CommandLine.Contains("--verbose"))
+            //{
                 Windows.GuiConsole.CreateConsole();
-            }
+            //}
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {

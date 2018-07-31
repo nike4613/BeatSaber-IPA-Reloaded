@@ -20,7 +20,7 @@ namespace IllusionPlugin
         /// <summary>
         /// Gets the version of the plugin.
         /// </summary>
-        string Version { get; }
+        Version Version { get; }
 
         /// <summary>
         /// Gets invoked when the application is started.

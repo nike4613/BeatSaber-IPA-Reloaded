@@ -101,6 +101,11 @@ namespace IllusionInjector
                 Logger.log.Info($"{plugin.Name}: {plugin.Version}");
             }
             Logger.log.Info("-----------------------------");
+            foreach (var plugin in _ipaPlugins)
+            {
+                Logger.log.Info($"{plugin.Name}: {plugin.Version}");
+            }
+            Logger.log.Info("-----------------------------");
         }
 
         private static Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)

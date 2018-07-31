@@ -34,6 +34,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zlib, Version=1.9.1.5, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ionic.Zlib.1.9.1.5\lib\Ionic.Zlib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -45,9 +48,6 @@
       <HintPath>..\Libs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>..\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
@@ -56,7 +56,7 @@
     <Compile Include="Injector.cs" />
     <Compile Include="IPA\CompositeIPAPlugin.cs" />
     <Compile Include="Logging\Printers\ColoredConsolePrinter.cs" />
-    <Compile Include="Logging\Printers\GlobalZFIlePrinter.cs" />
+    <Compile Include="Logging\Printers\GlobalZFilePrinter.cs" />
     <Compile Include="Logging\Printers\PluginLogFilePrinter.cs" />
     <Compile Include="Logging\StandardLogger.cs" />
     <Compile Include="Logging\UnityLogInterceptor.cs" />
