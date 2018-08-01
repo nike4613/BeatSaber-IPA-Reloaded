@@ -56,7 +56,8 @@
     <Compile Include="Injector.cs" />
     <Compile Include="IPA\CompositeIPAPlugin.cs" />
     <Compile Include="Logging\Printers\ColoredConsolePrinter.cs" />
-    <Compile Include="Logging\Printers\GlobalZFilePrinter.cs" />
+    <Compile Include="Logging\Printers\GlobalLogFilePrinter.cs" />
+    <Compile Include="Logging\Printers\GZFilePrinter.cs" />
     <Compile Include="Logging\Printers\PluginLogFilePrinter.cs" />
     <Compile Include="Logging\StandardLogger.cs" />
     <Compile Include="Logging\UnityLogInterceptor.cs" />
