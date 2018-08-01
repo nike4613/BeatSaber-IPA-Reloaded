@@ -5,46 +5,33 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LoggerBase = IllusionPlugin.Logging.Logger;
 
 namespace IllusionInjector.Logging.Printers
 {
-    public class PluginLogFilePrinter : LogPrinter
+    public class PluginLogFilePrinter : GZFilePrinter
     {
-        public override IllusionPlugin.Logging.Logger.LogLevel Filter { get; set; } = IllusionPlugin.Logging.Logger.LogLevel.All;
+        public override LoggerBase.LogLevel Filter { get; set; } = LoggerBase.LogLevel.All;
 
-        private FileInfo fileInfo;
-        private StreamWriter fileWriter;
+        private string name;
 
-        private static FileInfo GetFileInfo(string modName)
+        protected override FileInfo GetFileInfo()
         {
-            var logsDir = new DirectoryInfo(Path.Combine("Logs",modName));
+            var logsDir = new DirectoryInfo(Path.Combine("Logs",name));
             logsDir.Create();
-            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:yyyy.MM.dd.HH.MM}.log"));
-            finfo.CreateText().Close();
+            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:yyyy.MM.dd.HH.mm}.log"));
             return finfo;
         }
 
         public PluginLogFilePrinter(string name)
         {
-            fileInfo = GetFileInfo(name);
-        }
-
-        public override void StartPrint()
-        {
-            fileWriter = fileInfo.AppendText();
+            this.name = name;
         }
 
         public override void Print(IllusionPlugin.Logging.Logger.Level level, DateTime time, string logName, string message)
         {
             foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 fileWriter.WriteLine(string.Format("[{3} @ {2:HH:mm:ss}] {0}", line, logName, time, level.ToString().ToUpper()));
-        }
-
-        public override void EndPrint()
-        {
-            fileWriter.Flush();
-            fileWriter.Close();
-            fileWriter.Dispose();
         }
     }
 }

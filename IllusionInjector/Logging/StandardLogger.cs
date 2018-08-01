@@ -55,7 +55,7 @@ namespace IllusionInjector.Logging
                 Filter = LogLevel.CriticalOnly,
                 Color = ConsoleColor.Magenta,
             },
-            new GlobalZFilePrinter()
+            new GlobalLogFilePrinter()
         };
 
         private string logName;
