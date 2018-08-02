@@ -30,12 +30,13 @@ namespace IPA
 
         private PatchContext() { }
 
-        public static PatchContext Create(String[] args)
+        public static PatchContext Create(String[] args, string exe)
         {
-            var context = new PatchContext();
-            
-            context.Args = args;
-            context.Executable = args[0];
+            var context = new PatchContext
+            {
+                Args = args,
+                Executable = exe
+            };
             context.ProjectRoot = new FileInfo(context.Executable).Directory.FullName;
             context.IPARoot = Path.Combine(context.ProjectRoot, "IPA");
             context.IPA = Assembly.GetExecutingAssembly().Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
