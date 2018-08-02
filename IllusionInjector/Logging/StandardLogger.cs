@@ -1,4 +1,5 @@
 ﻿using IllusionInjector.Logging.Printers;
+using IllusionPlugin;
 using IllusionPlugin.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -59,8 +60,14 @@ namespace IllusionInjector.Logging
 
         private string logName;
         private static LogLevel showFilter = LogLevel.InfoUp;
-        public static LogLevel Filter { get => showFilter; set => showFilter = value; }
+        public static LogLevel PrintFilter { get => showFilter; set => showFilter = value; }
         private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
+
+        static StandardLogger()
+        {
+            if (ModPrefs.GetBool("IPA", "PrintDebug", false, true))
+                showFilter = LogLevel.All;
+        }
 
         internal StandardLogger(string name)
         {
