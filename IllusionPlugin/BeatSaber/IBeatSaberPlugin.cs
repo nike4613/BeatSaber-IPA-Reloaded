@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IllusionPlugin.BeatSaber;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.SceneManagement;
@@ -20,13 +21,20 @@ namespace IllusionPlugin
         /// <summary>
         /// Gets the version of the plugin.
         /// </summary>
-        Version Version { get; }
+        string Version { get; }
 
+#if OLD_UPDATER
         /// <summary>
         /// The URI to the update script for the plugin. May be <see langword="null"/>.
         /// Actually tho this does nothing I just don't want to try to remove it completely
         /// </summary>
         Uri UpdateUri { get; }
+#endif
+
+        /// <summary>
+        /// Gets the info for the Modsaber release of this plugin.
+        /// </summary>
+        ModsaberModInfo ModInfo { get; }
 
         /// <summary>
         /// Gets invoked when the application is started.

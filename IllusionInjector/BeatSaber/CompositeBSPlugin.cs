@@ -1,4 +1,5 @@
 ﻿using IllusionPlugin;
+using IllusionPlugin.BeatSaber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,15 +79,13 @@ namespace IllusionInjector {
             Invoke(plugin => plugin.OnFixedUpdate());
         }
 
-        public string Name {
-            get { throw new NotImplementedException(); }
-        }
+        public string Name => throw new NotImplementedException();
 
-        public Version Version {
-            get { throw new NotImplementedException(); }
-        }
+        public string Version => throw new NotImplementedException();
 
         public Uri UpdateUri => throw new NotImplementedException();
+
+        public ModsaberModInfo ModInfo => throw new NotImplementedException();
 
         public void OnLateUpdate() {
             Invoke(plugin => {

@@ -1,5 +1,6 @@
 ﻿using IllusionInjector.Logging;
 using IllusionPlugin;
+using IllusionPlugin.BeatSaber;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,11 +16,12 @@ namespace IllusionInjector
     public static class PluginManager
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
-        
+
         public class BSPluginMeta
         {
             public IBeatSaberPlugin Plugin { get; internal set; }
             public string Filename { get; internal set; }
+            public ModsaberModInfo ModsaberInfo { get; internal set; }
         }
 
         public static IEnumerable<IBeatSaberPlugin> BSPlugins
@@ -100,15 +102,16 @@ namespace IllusionInjector
             foreach (string s in copiedPlugins)
             {
                 var result = LoadPluginsFromFile(s, exeName);
-                _bsPlugins.AddRange(result.Item1.Select(p => new BSPluginMeta { Plugin = p, Filename = s }));
+                _bsPlugins.AddRange(result.Item1);
                 _ipaPlugins.AddRange(result.Item2);
             }
 
 
             // DEBUG
             Logger.log.Info($"Running on Unity {UnityEngine.Application.unityVersion}");
+            Logger.log.Info($"Game version {UnityEngine.Application.version}");
             Logger.log.Info("-----------------------------");
-            Logger.log.Info($"Loading plugins from {pluginDirectory} and found {_bsPlugins.Count}");
+            Logger.log.Info($"Loading plugins from {GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
@@ -122,13 +125,25 @@ namespace IllusionInjector
             Logger.log.Info("-----------------------------");
         }
 
-        private static Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
+        private static string GetRelativePath(string filespec, string folder)
         {
-            List<IBeatSaberPlugin> bsPlugins = new List<IBeatSaberPlugin>();
+            Uri pathUri = new Uri(filespec);
+            // Folders must end in a slash
+            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                folder += Path.DirectorySeparatorChar;
+            }
+            Uri folderUri = new Uri(folder);
+            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
+        }
+
+        private static Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
+        {
+            List<BSPluginMeta> bsPlugins = new List<BSPluginMeta>();
             List<IPlugin> ipaPlugins = new List<IPlugin>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return new Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+                return new Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
 
             T OptionalGetPlugin<T>(Type t) where T : class
             {
@@ -166,7 +181,12 @@ namespace IllusionInjector
                     IBeatSaberPlugin bsPlugin = OptionalGetPlugin<IBeatSaberPlugin>(t);
                     if (bsPlugin != null)
                     {
-                        bsPlugins.Add(bsPlugin);
+                        bsPlugins.Add(new BSPluginMeta
+                        {
+                            Plugin = bsPlugin,
+                            Filename = file,
+                            ModsaberInfo = bsPlugin.ModInfo
+                        });
                     }
                     else
                     {
@@ -184,7 +204,7 @@ namespace IllusionInjector
                 Logger.log.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
-            return new Tuple<IEnumerable<IBeatSaberPlugin>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+            return new Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
         }
 
         public class AppInfo

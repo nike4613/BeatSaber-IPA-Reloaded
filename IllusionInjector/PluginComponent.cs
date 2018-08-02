@@ -1,5 +1,4 @@
-﻿using IllusionInjector.Updating;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -27,6 +26,7 @@ namespace IllusionInjector
 
             // this has no relevance since there is a new mod updater system
             //gameObject.AddComponent<ModUpdater>(); // AFTER plugins are loaded, but before most things
+            gameObject.AddComponent<Updating.ModsaberML.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();

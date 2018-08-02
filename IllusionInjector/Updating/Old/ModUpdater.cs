@@ -17,6 +17,7 @@ using Logger = IllusionInjector.Logging.Logger;
 
 namespace IllusionInjector.Updating
 {
+#if OLD_UPDATER
     class ModUpdater : MonoBehaviour
     {
         public ModUpdater instance;
@@ -202,4 +203,5 @@ namespace IllusionInjector.Updating
             Logger.log.Info($"{item.Plugin.Plugin.Name} updated to {item.NewVersion}");
         }
     }
+#endif
 }
