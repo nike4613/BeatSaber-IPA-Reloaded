@@ -20,30 +20,56 @@ namespace IPA {
 
         private static Version Version => new Version(Application.ProductVersion);
 
-        static void Main(string[] args) {
-            PatchContext context;
+        static void Main(string[] args)
+        {
+            var ArgList = args.ToList();
 
-            if (args.Length < 1 || !args[0].EndsWith(".exe")) {
-                //Fail("Drag an (executable) file on the exe!");
-                context = PatchContext.Create(new[] {
-                    new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
-                        .First(o => o.FullName.EndsWith(".exe"))
-                        .FullName
-                });
-            }
-            else {
-                context = PatchContext.Create(args);
-            }
+            try
+            {
+                string arg = args.FirstOrDefault(s => s.StartsWith("--waitfor="));
+                if (arg != null)
+                {
+                    ArgList.Remove(arg);
+                    int pid = int.Parse(arg.Split('=').Last());
 
-            try {
-                bool isRevert = args.Contains("--revert") || Keyboard.IsKeyDown(Keys.LMenu);
+                    try
+                    { // wait for beat saber to exit (ensures we can modify the file)
+                        var parent = Process.GetProcessById(pid);
+
+                        Console.WriteLine($"Waiting for parent ({pid}) process to die...");
+
+                        parent.WaitForExit();
+                    }
+                    catch (Exception) { }
+                }
+
+                PatchContext context;
+
+                var argExeName = ArgList.FirstOrDefault(s => s.EndsWith(".exe"));
+
+                if (argExeName == null)
+                {
+                    //Fail("Drag an (executable) file on the exe!");
+                    context = PatchContext.Create(ArgList.ToArray(), 
+                        new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
+                            .First(o => o.FullName.EndsWith(".exe"))
+                            .FullName);
+                }
+                else
+                {
+                    context = PatchContext.Create(ArgList.ToArray(), argExeName);
+                }
+
+                bool isRevert = ArgList.Contains("--revert") || Keyboard.IsKeyDown(Keys.LMenu);
                 // Sanitizing
                 Validate(context);
 
-                if (isRevert) {
+                if (isRevert)
+                {
                     Revert(context);
                 }
-                else {
+                else
+                {
                     Install(context);
                     StartIfNeedBe(context);
                 }
@@ -213,13 +239,25 @@ namespace IPA {
         }
 
         private static void StartIfNeedBe(PatchContext context) {
-            var argList = context.Args.ToList();
-            bool launch = argList.Remove("--launch");
+            string startArg = context.Args.FirstOrDefault(s => s.StartsWith("--start="));
+            if (startArg != null)
+            {
+                var cmdlineSplit = startArg.Split('=').ToList();
+                cmdlineSplit.RemoveAt(0); // remove first
+                var cmdline = string.Join("=", cmdlineSplit);
+                Process.Start(context.Executable, cmdline);
+            }
+            else
+            {
+                var argList = context.Args.ToList();
+                bool launch = argList.Remove("--launch");
 
-            argList.RemoveAt(0);
+                argList.Remove(context.Executable);
 
-            if (launch) {
-                Process.Start(context.Executable, Args(argList.ToArray()));
+                if (launch)
+                {
+                    Process.Start(context.Executable, Args(argList.ToArray()));
+                }
             }
         }
 
