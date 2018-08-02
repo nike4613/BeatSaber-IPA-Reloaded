@@ -86,7 +86,7 @@ namespace IllusionInjector {
             get { throw new NotImplementedException(); }
         }
 
-        // public Uri UpdateUri => throw new NotImplementedException();
+        public Uri UpdateUri => throw new NotImplementedException();
 
         public void OnLateUpdate() {
             Invoke(plugin => {
