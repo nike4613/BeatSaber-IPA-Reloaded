@@ -68,8 +68,9 @@
     <Compile Include="PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PluginComponent.cs" />
-    <Compile Include="Updating\ModUpdater.cs" />
-    <Compile Include="Updating\UpdateScript.cs" />
+    <Compile Include="Updating\ModsaberML\ApiEndpoint.cs" />
+    <Compile Include="Updating\Old\ModUpdater.cs" />
+    <Compile Include="Updating\Old\UpdateScript.cs" />
     <Compile Include="Utilities\SimpleJson.cs" />
   </ItemGroup>
   <ItemGroup>
