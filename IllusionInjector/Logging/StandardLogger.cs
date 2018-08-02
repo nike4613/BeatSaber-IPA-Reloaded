@@ -1,6 +1,5 @@
 ﻿using IllusionInjector.Logging.Printers;
 using IllusionPlugin.Logging;
-using IllusionPlugin.Logging.Printers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace IllusionInjector.Logging
             get
             {
                 if (_log == null)
-                    _log = new StandardLogger("IllusionInjector");
+                    _log = new StandardLogger("IPA");
                 return _log;
             }
         }
