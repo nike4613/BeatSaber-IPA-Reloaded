@@ -19,7 +19,7 @@ namespace IllusionInjector.Logging.Printers
 
         public override void Print(LoggerBase.Level level, DateTime time, string logName, string message)
         {
-            if (((byte)level & (byte)Filter) == 0) return;
+            if (((byte)level & (byte)StandardLogger.PrintFilter) == 0) return;
             Console.ForegroundColor = color;
             foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 Console.WriteLine(string.Format(LoggerBase.LogFormat, line, logName, time, level.ToString().ToUpper()));
