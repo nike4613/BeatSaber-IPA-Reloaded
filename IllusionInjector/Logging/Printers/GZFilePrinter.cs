@@ -73,7 +73,7 @@ namespace IllusionInjector.Logging.Printers
             {
                 FlushMode = FlushType.Full
             };
-            fileWriter = new StreamWriter(zstream, Encoding.UTF8);
+            fileWriter = new StreamWriter(zstream, new UTF8Encoding(false));
         }
 
         public override sealed void EndPrint()
