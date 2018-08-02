@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IllusionInjector.Updating;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -23,6 +24,10 @@ namespace IllusionInjector
 
             bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
             ipaPlugins = new CompositeIPAPlugin(PluginManager.IPAPlugins);
+
+            // this has no relevance since there is a new mod updater system
+            //gameObject.AddComponent<ModUpdater>(); // AFTER plugins are loaded, but before most things
+
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();
             

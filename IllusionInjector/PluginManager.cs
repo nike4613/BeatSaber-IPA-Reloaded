@@ -16,9 +16,12 @@ namespace IllusionInjector
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
         
-        /// <summary>
-        /// Gets the list of loaded plugins and loads them if necessary.
-        /// </summary>
+        public class BSPluginMeta
+        {
+            public IBeatSaberPlugin Plugin { get; internal set; }
+            public string Filename { get; internal set; }
+        }
+
         public static IEnumerable<IBeatSaberPlugin> BSPlugins
         {
             get
@@ -27,10 +30,21 @@ namespace IllusionInjector
                 {
                     LoadPlugins();
                 }
+                return _bsPlugins.Select(p => p.Plugin);
+            }
+        }
+        private static List<BSPluginMeta> _bsPlugins = null;
+        internal static IEnumerable<BSPluginMeta> BSMetas
+        {
+            get
+            {
+                if (_bsPlugins == null)
+                {
+                    LoadPlugins();
+                }
                 return _bsPlugins;
             }
         }
-        private static List<IBeatSaberPlugin> _bsPlugins = null;
         
         public static IEnumerable<IPlugin> IPAPlugins
         {
@@ -54,7 +68,7 @@ namespace IllusionInjector
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             Logger.log.Info(exeName);
-            _bsPlugins = new List<IBeatSaberPlugin>();
+            _bsPlugins = new List<BSPluginMeta>();
             _ipaPlugins = new List<IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
@@ -86,7 +100,7 @@ namespace IllusionInjector
             foreach (string s in copiedPlugins)
             {
                 var result = LoadPluginsFromFile(s, exeName);
-                _bsPlugins.AddRange(result.Item1);
+                _bsPlugins.AddRange(result.Item1.Select(p => new BSPluginMeta { Plugin = p, Filename = s }));
                 _ipaPlugins.AddRange(result.Item2);
             }
 
@@ -98,7 +112,7 @@ namespace IllusionInjector
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
-                Logger.log.Info($"{plugin.Name}: {plugin.Version}");
+                Logger.log.Info($"{plugin.Plugin.Name}: {plugin.Plugin.Version}");
             }
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _ipaPlugins)
