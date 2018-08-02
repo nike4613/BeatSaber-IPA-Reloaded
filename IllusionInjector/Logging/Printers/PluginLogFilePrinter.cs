@@ -9,7 +9,7 @@ using LoggerBase = IllusionPlugin.Logging.Logger;
 
 namespace IllusionInjector.Logging.Printers
 {
-    public class PluginLogFilePrinter : GZFilePrinter
+    class PluginLogFilePrinter : GZFilePrinter
     {
         public override LoggerBase.LogLevel Filter { get; set; } = LoggerBase.LogLevel.All;
 
