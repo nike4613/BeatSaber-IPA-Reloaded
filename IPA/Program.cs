@@ -203,10 +203,13 @@ namespace IPA {
             }
 
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Finished!");
-            Console.ResetColor();
-            Console.ReadLine();
+            if (!Environment.CommandLine.Contains("--nowait"))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Finished!");
+                Console.ResetColor();
+                Console.ReadLine();
+            }
         }
 
         private static void Revert(PatchContext context, string[] args = null) {
