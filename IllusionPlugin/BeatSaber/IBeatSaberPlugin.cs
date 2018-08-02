@@ -23,6 +23,11 @@ namespace IllusionPlugin
         Version Version { get; }
 
         /// <summary>
+        /// The URI to the update script for the plugin. May be <see langword="null"/>.
+        /// </summary>
+        //Uri UpdateUri { get; }
+
+        /// <summary>
         /// Gets invoked when the application is started.
         /// </summary>
         void OnApplicationStart();
