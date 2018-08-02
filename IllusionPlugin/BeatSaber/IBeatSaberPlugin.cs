@@ -24,8 +24,9 @@ namespace IllusionPlugin
 
         /// <summary>
         /// The URI to the update script for the plugin. May be <see langword="null"/>.
+        /// Actually tho this does nothing I just don't want to try to remove it completely
         /// </summary>
-        //Uri UpdateUri { get; }
+        Uri UpdateUri { get; }
 
         /// <summary>
         /// Gets invoked when the application is started.
