@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IllusionPlugin.BeatSaber
 {
-    public class ModsaberModInfo
+    public struct ModsaberModInfo
     {
         public string InternalName { get; set; }
         public Version CurrentVersion { get; set; }

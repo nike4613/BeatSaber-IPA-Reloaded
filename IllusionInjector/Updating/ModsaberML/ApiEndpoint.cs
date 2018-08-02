@@ -10,8 +10,8 @@ namespace IllusionInjector.Updating.ModsaberML
     class ApiEndpoint
     {
 #if DEBUG
-        public const string ApiBase = "https://www.modsaber.ml/api/";
-        public const string GetApprovedEndpoint = "public/temp/approved";
+        public const string ApiBase = "file://Z:/Users/aaron/Source/Repos/IPA-Reloaded-BeatSaber/IPA.Tests/";
+        public const string GetApprovedEndpoint = "updater_test.json";
 #else
         public const string ApiBase = "https://www.modsaber.ml/api/";
         public const string GetApprovedEndpoint = "public/temp/approved";
