@@ -9,8 +9,13 @@ namespace IllusionInjector.Updating.ModsaberML
 {
     class ApiEndpoint
     {
-        const string ApiBase = "https://www.modsaber.ml/api/";
-        const string GetApprovedEndpoint = "public/temp/approved";
+#if DEBUG
+        public const string ApiBase = "https://www.modsaber.ml/api/";
+        public const string GetApprovedEndpoint = "public/temp/approved";
+#else
+        public const string ApiBase = "https://www.modsaber.ml/api/";
+        public const string GetApprovedEndpoint = "public/temp/approved";
+#endif
 
         public class Mod
         {
@@ -35,16 +40,21 @@ namespace IllusionInjector.Updating.ModsaberML
                     Author = obj["author"]
                 };
 
-                foreach (var item in obj["files"].Keys)
+                foreach (var item in obj["files"])
                 {
-                    var key = item as JSONString;
-                    if (key.Value == "steam")
-                        outp.SteamFile = obj[key.Value]["url"];
-                    if (key.Value == "oculus")
-                        outp.OculusFile = obj[key.Value]["url"];
+                    var key = item.Key;
+                    if (key == "steam")
+                        outp.SteamFile = item.Value["url"];
+                    if (key == "oculus")
+                        outp.OculusFile = item.Value["url"];
                 }
 
                 return outp;
+            }
+
+            public override string ToString()
+            {
+                return $"{{\"{Title} ({Name})\"v{Version} for {GameVersion} by {Author} with \"{SteamFile}\" and \"{OculusFile}\"}}";
             }
         }
 
