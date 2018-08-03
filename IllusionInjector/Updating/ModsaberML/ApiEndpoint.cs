@@ -25,8 +25,8 @@ namespace IllusionInjector.Updating.ModsaberML
             public string Title;
             public Version GameVersion;
             public string Author;
-            public string SteamFile;
-            public string OculusFile;
+            public string SteamFile = null;
+            public string OculusFile = null;
 
             public static Mod DecodeJSON(JSONObject obj)
             {
