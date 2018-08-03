@@ -175,7 +175,7 @@ namespace IllusionInjector.Updating.ModsaberML
 
         IEnumerator UpdateModCoroutine(string tempdir, UpdateStruct item)
         {
-            async Task DownloadPluginAsync(MemoryStream stream)
+            void DownloadPluginAsync(MemoryStream stream)
             { // embedded because i don't think unity likes it in the top level
 
                 Logger.log.Debug($"Getting ZIP file for {item.plugin.Plugin.Name}");
@@ -210,9 +210,9 @@ namespace IllusionInjector.Updating.ModsaberML
                     Stream = memStream
                 };
 
-                var downloadTask = Task.Run(async () =>
+                var downloadTask = Task.Run(() =>
                 { // use slightly more multithreaded approach than coroutines
-                    await DownloadPluginAsync(memStream);
+                    DownloadPluginAsync(memStream);
                 });
 
                 Logger.log.Debug("Sending request");
