@@ -98,4 +98,8 @@
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\Data\Managed" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
