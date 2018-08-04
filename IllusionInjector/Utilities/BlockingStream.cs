@@ -1,5 +1,7 @@
-﻿using System;
+﻿using IllusionInjector.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,11 +18,27 @@ namespace IllusionInjector.Utilities
 
         public Stream BaseStream { get; set; }
 
-        public override bool CanRead => BaseStream.CanRead;
+        private bool _open = true;
+        public bool Open {
+            get
+            {
+                return CanWrite;
+            }
+            set
+            {
+                if (!_open)
+                    throw new InvalidOperationException("Blocking stream has already been closed!");
+                else
+                    _open = value;
+            }
+        }
+
+        private bool canReadOverride = true;
+        public override bool CanRead => BaseStream.CanRead && canReadOverride;
 
         public override bool CanSeek => BaseStream.CanSeek;
 
-        public override bool CanWrite => BaseStream.CanWrite;
+        public override bool CanWrite => BaseStream.CanWrite && _open;
 
         public override long Length => BaseStream.Length;
 
@@ -34,13 +52,17 @@ namespace IllusionInjector.Utilities
         public override int Read(byte[] buffer, int offset, int count)
         {
             var read = 0;
-            do
+            while (read < count && Open)
             {
                 read += BaseStream.Read(buffer, read, count-read);
             }
-            while (read < count);
 
-            return count;
+            if (read == 0)
+            {
+                canReadOverride = false;
+            }
+
+            return read;
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -56,6 +78,11 @@ namespace IllusionInjector.Utilities
         public override void Write(byte[] buffer, int offset, int count)
         {
             BaseStream.Write(buffer, offset, count);
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()} ({BaseStream?.ToString()})";
         }
     }
 }

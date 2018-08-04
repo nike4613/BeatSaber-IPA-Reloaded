@@ -151,48 +151,75 @@ namespace IllusionInjector.Updating.ModsaberML
             }
         }
         
-        class StreamDownloadHandler : DownloadHandlerScript
+        public class StreamDownloadHandler : DownloadHandlerScript
         {
-            public MemoryStream Stream { get; set; }
+            public BlockingStream Stream { get; set; }
+
+            public StreamDownloadHandler(BlockingStream stream)
+            {
+                Stream = stream;
+            }
 
             protected void ReceiveContentLength(long contentLength)
             {
-                Stream.Capacity = (int)contentLength;
+                //(Stream.BaseStream as MemoryStream).Capacity = (int)contentLength;
                 Logger.log.Debug($"Got content length: {contentLength}");
             }
 
             protected void OnContentComplete()
             {
+                Stream.Open = false;
                 Logger.log.Debug("Download complete");
             }
 
             protected bool ReceiveData(byte[] data, long dataLength)
             {
+                Logger.log.Debug("ReceiveData");
+                if (data == null || data.Length < 1)
+                {
+                    Logger.log.Debug("CustomWebRequest :: ReceiveData - received a null/empty buffer");
+                    return false;
+                }
+
                 Stream.Write(data, 0, (int)dataLength);
                 return true;
             }
+
+            protected override byte[] GetData() { return null; }
+
+            protected override float GetProgress()
+            {
+                return 0f;
+            }
+
+            public override string ToString()
+            {
+                return $"{base.ToString()} ({Stream?.ToString()})";
+            }
+
+        }
+
+        private void DownloadPluginAsync(BlockingStream stream, UpdateStruct item, string tempdir)
+        {
+
+            Logger.log.Debug($"Getting ZIP file for {item.plugin.Plugin.Name}");
+            //var stream = await httpClient.GetStreamAsync(url);
+
+            using (var zipFile = new ZipInputStream(stream))
+            {
+                Logger.log.Debug("Streams opened");
+                ZipEntry entry;
+                while ((entry = zipFile.GetNextEntry()) != null)
+                {
+                    Logger.log.Debug(entry?.FileName ?? "NULL");
+                }
+            }
+
+            Logger.log.Debug("Downloader exited");
         }
 
         IEnumerator UpdateModCoroutine(string tempdir, UpdateStruct item)
         {
-            void DownloadPluginAsync(MemoryStream stream)
-            { // embedded because i don't think unity likes it in the top level
-
-                Logger.log.Debug($"Getting ZIP file for {item.plugin.Plugin.Name}");
-                //var stream = await httpClient.GetStreamAsync(url);
-
-                using (var zipFile = new ZipInputStream(new BlockingStream(stream)))
-                {
-                    Logger.log.Debug("Streams opened");
-                    ZipEntry entry;
-                    while ((entry = zipFile.GetNextEntry()) != null)
-                    {
-                        Logger.log.Debug(entry?.FileName);
-                    }
-                }
-
-                Logger.log.Debug("Downloader exited");
-            }
 
             string url;
             if (SteamCheck.IsAvailable || item.externInfo.OculusFile == null)
@@ -201,33 +228,45 @@ namespace IllusionInjector.Updating.ModsaberML
                 url = item.externInfo.OculusFile;
 
             Logger.log.Debug($"URL = {url}");
-
-            using (var req = UnityWebRequest.Get(url))
-            using (var memStream = new MemoryStream())
+            
+            using (var memStream = new EchoStream())
+            using (var stream = new BlockingStream(memStream))
+            using (var request = UnityWebRequest.Get(url))
+            using (var taskTokenSource = new CancellationTokenSource())
             {
-                req.downloadHandler = new StreamDownloadHandler
-                {
-                    Stream = memStream
-                };
+                var dlh = new StreamDownloadHandler(stream);
+                request.downloadHandler = dlh;
 
                 var downloadTask = Task.Run(() =>
                 { // use slightly more multithreaded approach than coroutines
-                    DownloadPluginAsync(memStream);
-                });
+                    DownloadPluginAsync(stream, item, tempdir);
+                }, taskTokenSource.Token);
 
                 Logger.log.Debug("Sending request");
-                yield return req.SendWebRequest();
+                Logger.log.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
+                yield return request.SendWebRequest();
+                Logger.log.Debug("Download finished");
 
-                if (req.isNetworkError)
+                if (stream.Open)
+                { // anti-hang
+                    Logger.log.Warn("Downloader failed to call DownloadHandler");
+                    stream.Open = false; // no more writing
+                    stream.BaseStream.Write(new byte[] { 0 }, 0, 1);
+                }
+
+                if (request.isNetworkError)
                 {
                     Logger.log.Error("Network error while trying to update mod");
-                    Logger.log.Error(req.error);
+                    Logger.log.Error(request.error);
+                    taskTokenSource.Cancel();
                     yield break;
                 }
-                if (req.isHttpError)
+                if (request.isHttpError)
                 {
                     Logger.log.Error($"Server returned an error code while trying to update mod");
-                    Logger.log.Error(req.error);
+                    Logger.log.Error(request.error);
+                    taskTokenSource.Cancel();
+                    yield break;
                 }
 
                 downloadTask.Wait(); // wait for the damn thing to finish
