@@ -4,6 +4,7 @@ using IllusionPlugin.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -60,6 +61,7 @@ namespace IllusionInjector.Logging
 
         private string logName;
         private static LogLevel showFilter = LogLevel.InfoUp;
+        private static bool showSourceClass = true;
         public static LogLevel PrintFilter { get => showFilter; set => showFilter = value; }
         private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
@@ -67,6 +69,7 @@ namespace IllusionInjector.Logging
         {
             if (ModPrefs.GetBool("IPA", "PrintDebug", false, true))
                 showFilter = LogLevel.All;
+            showSourceClass = ModPrefs.GetBool("IPA", "DebugShowCallSource", false, true);
         }
 
         internal StandardLogger(string name)
@@ -91,6 +94,15 @@ namespace IllusionInjector.Logging
                 logger = this,
                 time = DateTime.Now
             });
+        }
+
+        public override void Debug(string message)
+        { // add source to message
+            var stfm = new StackTrace().GetFrame(1).GetMethod();
+            if (showSourceClass)
+                base.Debug($"{{{stfm.DeclaringType.FullName}::{stfm.Name}}} {message}");
+            else
+                base.Debug(message);
         }
 
         internal struct LogMessage
