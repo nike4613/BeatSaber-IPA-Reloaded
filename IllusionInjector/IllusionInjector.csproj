@@ -81,6 +81,7 @@
     <Compile Include="Updating\Old\ModUpdater.cs" />
     <Compile Include="Updating\Old\UpdateScript.cs" />
     <Compile Include="Utilities\BlockingStream.cs" />
+    <Compile Include="Utilities\EchoStream.cs" />
     <Compile Include="Utilities\SimpleJson.cs" />
     <Compile Include="Utilities\SteamCheck.cs" />
   </ItemGroup>
