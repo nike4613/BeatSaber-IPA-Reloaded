@@ -19,14 +19,12 @@ To verify it worked, start the game with the `--verbose` flag. If a new console 
 
 ## How To Develop
 
-1. Create a new **Class Library** C# project (.NET 2.0 to 3.5 (for LINQ))
+1. Create a new **Class Library** C# project (.NET 4.6)
 2. Download a release and add **IllusionPlugin.dll** to your references
-3. Implement `IPlugin` or `IEnhancedPlugin`
-4. Build the project and copy the DLL into the Plugins folder of the game
+3. Implement `IBeatSaberPlugin` or `IEnhancedBeatSaberPlugin`
+4. Build the project and copy the DLL into the Plugins folder of the gam
 
-Note: You can use the `Logger` class to debug your plugins. Either retrieve an instance using `this.GetLogger()` in your Plugin class or use `new Logger("Mod Name")`.
-
-Use the `--verbose` flag to access the console.
+See [Developing](https://github.com/nike4613/IPA-Reloaded/wiki/Developing) for more information.
 
 ## How To Keep The Game Patched
 
