@@ -60,6 +60,7 @@ namespace IllusionInjector.Updating.ModsaberML
             foreach (var plugin in PluginManager.BSMetas)
             {
                 var info = plugin.ModsaberInfo;
+                if (info == null) continue;
 
                 using (var request = UnityWebRequest.Get(ApiEndpoint.ApiBase + string.Format(ApiEndpoint.GetApprovedEndpoint, info.InternalName)))
                 {

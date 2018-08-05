@@ -23,16 +23,8 @@ namespace IllusionPlugin
         /// </summary>
         string Version { get; }
 
-#if OLD_UPDATER
         /// <summary>
-        /// The URI to the update script for the plugin. May be <see langword="null"/>.
-        /// Actually tho this does nothing I just don't want to try to remove it completely
-        /// </summary>
-        Uri UpdateUri { get; }
-#endif
-
-        /// <summary>
-        /// Gets the info for the Modsaber release of this plugin.
+        /// Gets the info for the Modsaber release of this plugin. Return null if there is no Modsaber release.
         /// </summary>
         ModsaberModInfo ModInfo { get; }
 
