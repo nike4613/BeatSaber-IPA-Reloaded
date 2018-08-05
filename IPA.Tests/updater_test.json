@@ -15,32 +15,12 @@
       "conflictsWith": [],
       "files": {
         "steam": {
-          "hash": "b38f5f58b0131e10d4676cc94dad5315e2999aa8",
+          "hash": "a94e7eea2f656b2830a86000ee222b6cb06f8da5",
           "files": {
-            "CustomSongs/One More Time/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "CustomSongs/One More Time/cover.jpg": "95dbaecba1ac8165f4cd0a83950a31859931db27",
-            "CustomSongs/One More Time/Credits.txt": "d067a9f5e0e7c6301dd9f6e8e7a609e82815345c",
-            "CustomSongs/One More Time/Easy.json": "e93e234a6fd38afc3d216e6d0e1585f19cb49f69",
-            "CustomSongs/One More Time/Expert.json": "8bd7f7e0e0782dce7b77a3bc8bdbc091f2fd202f",
-            "CustomSongs/One More Time/Hard.json": "99e693c77d280c37a6cfd9f479f158cd6c84a354",
-            "CustomSongs/One More Time/info.json": "d214d1990af6debf38ccfdb7c57462926fb0995c",
-            "CustomSongs/One More Time/lyrics.srt": "b3ed8a5f4fc3595fb097943379fc8ea22548bd51",
-            "CustomSongs/One More Time/Normal.json": "0f7c68b29dfb8c5cfde34b0dc3238353e2f9b24b",
-            "CustomSongs/One More Time/One More Time.ogg": "4d74e9a58341439299512dce2155c97a00d3fb3b",
-            "IPA.exe": "57521373f240845798bb99723ceb19ee09774131",
-            "IPA/Backups/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "IPA/Data/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "IPA/Data/Managed/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "IPA/Data/Managed/IllusionInjector.dll": "b7f05f3c7abc052fab29787e97dfa5533ce8ff7d",
-            "IPA/Data/Managed/IllusionInjector.pdb": "a4ca3e2aada545eae600a6b8971ca892682b6693",
-            "IPA/Data/Managed/IllusionPlugin.dll": "c715be1506e16367c6cdb1c8e7b8bba845233f0f",
-            "IPA/Data/Managed/IllusionPlugin.pdb": "516f73cc420bfcdcd38a991c7664d62d7deb745a",
-            "IPA/Data/Managed/IllusionPlugin.xml": "e79c7cd5bc5369056d262fd963451e4fb22f8021",
-            "IPA/Launcher.exe": "76a68378dd0ef1fe660b87b96b18c5e77709e3ff",
-            "Mono.Cecil.dll": "762fb07e4d81722f0a766460289c6114cd4b7dae",
-            "Plugins/SongLoaderPlugin.dll": "f4ab080fbcc5abc6005a868cd965920bac46ddaf"
+            "Plugins/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "Plugins/RandomSong.dll": "64ee1ecfeda73c550004bdb5123c7ac47a45e428"
           },
-          "url": "file://Z:/Users/aaron/Source/Repos/IPA-Reloaded-BeatSaber/IPA/bin/Debug/Debug.zip"
+          "url": "https://www.modsaber.ml/cdn/randomsong/1.0.0-default.zip"
         }
       },
       "weight": 7,

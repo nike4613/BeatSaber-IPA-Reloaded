@@ -1,4 +1,5 @@
-﻿using SimpleJSON;
+﻿using IllusionInjector.Utilities;
+using SimpleJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,16 @@ namespace IllusionInjector.Updating.ModsaberML
             public string Title;
             public Version GameVersion;
             public string Author;
-            public string SteamFile = null;
-            public string OculusFile = null;
+
+            public class PlatformFile
+            {
+                public byte[] Hash = new byte[20]; // 20 byte because sha1 is fucky
+                public Dictionary<string, byte[]> FileHashes = new Dictionary<string, byte[]>();
+                public string DownloadPath = null;
+            }
+
+            public PlatformFile SteamFile = null;
+            public PlatformFile OculusFile = null;
 
             public static Mod DecodeJSON(JSONObject obj)
             {
@@ -43,10 +52,19 @@ namespace IllusionInjector.Updating.ModsaberML
                 foreach (var item in obj["files"])
                 {
                     var key = item.Key;
+                    var pfile = new PlatformFile()
+                    {
+                        DownloadPath = item.Value["url"],
+                        Hash = LoneFunctions.StringToByteArray(item.Value["hash"])
+                    };
+
+                    foreach (var file in item.Value["files"])
+                        pfile.FileHashes.Add(file.Key, LoneFunctions.StringToByteArray(file.Value));
+
                     if (key == "steam")
-                        outp.SteamFile = item.Value["url"];
+                        outp.SteamFile = pfile;
                     if (key == "oculus")
-                        outp.OculusFile = item.Value["url"];
+                        outp.OculusFile = pfile;
                 }
 
                 return outp;
