@@ -197,6 +197,8 @@ namespace IllusionInjector
                                     var ptype = param.ParameterType;
                                     if (ptype.IsAssignableFrom(typeof(LoggerBase)))
                                         initArgs.Add(new StandardLogger(bsPlugin.Name));
+                                    if (ptype.IsAssignableFrom(typeof(ModPrefs)))
+                                        initArgs.Add(new ModPrefs(bsPlugin));
                                     else
                                         initArgs.Add(ptype.GetDefault());
                                 }
