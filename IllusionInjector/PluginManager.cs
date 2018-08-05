@@ -1,4 +1,5 @@
 ﻿using IllusionInjector.Logging;
+using IllusionInjector.Updating;
 using IllusionInjector.Utilities;
 using IllusionPlugin;
 using IllusionPlugin.BeatSaber;
@@ -99,6 +100,15 @@ namespace IllusionInjector
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
                 File.Copy(Path.Combine(pluginDirectory, s), pluginCopy);
             }
+
+            var selfPlugin = new BSPluginMeta
+            {
+                Filename = Path.Combine(Environment.CurrentDirectory, "IPA.exe"),
+                Plugin = new SelfPlugin()
+            };
+            selfPlugin.ModsaberInfo = selfPlugin.Plugin.ModInfo;
+
+            _bsPlugins.Add(selfPlugin);
 
             //Load copied plugins
             string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
