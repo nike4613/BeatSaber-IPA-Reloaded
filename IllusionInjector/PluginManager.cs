@@ -1,4 +1,5 @@
 ﻿using IllusionInjector.Logging;
+using IllusionInjector.Utilities;
 using IllusionPlugin;
 using IllusionPlugin.BeatSaber;
 using System;
@@ -11,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using LoggerBase = IllusionPlugin.Logging.Logger;
 
 namespace IllusionInjector
 {
@@ -182,12 +184,37 @@ namespace IllusionInjector
                     IBeatSaberPlugin bsPlugin = OptionalGetPlugin<IBeatSaberPlugin>(t);
                     if (bsPlugin != null)
                     {
-                        bsPlugins.Add(new BSPluginMeta
+                        try
                         {
-                            Plugin = bsPlugin,
-                            Filename = file,
-                            ModsaberInfo = bsPlugin.ModInfo
-                        });
+                            var init = t.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
+                            if (init != null)
+                            {
+                                var initArgs = new List<object>();
+                                var initParams = init.GetParameters();
+
+                                foreach (var param in initParams)
+                                {
+                                    var ptype = param.ParameterType;
+                                    if (ptype.IsAssignableFrom(typeof(LoggerBase)))
+                                        initArgs.Add(new StandardLogger(bsPlugin.Name));
+                                    else
+                                        initArgs.Add(ptype.GetDefault());
+                                }
+
+                                init.Invoke(bsPlugin, initArgs.ToArray());
+                            }
+
+                            bsPlugins.Add(new BSPluginMeta
+                            {
+                                Plugin = bsPlugin,
+                                Filename = file,
+                                ModsaberInfo = bsPlugin.ModInfo
+                            });
+                        }
+                        catch (AmbiguousMatchException)
+                        {
+                            Logger.log.Error($"Only one Init allowed per plugin");
+                        }
                     }
                     else
                     {
