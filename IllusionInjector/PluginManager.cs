@@ -207,7 +207,7 @@ namespace IllusionInjector
                                     var ptype = param.ParameterType;
                                     if (ptype.IsAssignableFrom(typeof(LoggerBase)))
                                         initArgs.Add(new StandardLogger(bsPlugin.Name));
-                                    if (ptype.IsAssignableFrom(typeof(ModPrefs)))
+                                    else if (ptype.IsAssignableFrom(typeof(IModPrefs)))
                                         initArgs.Add(new ModPrefs(bsPlugin));
                                     else
                                         initArgs.Add(ptype.GetDefault());
@@ -219,7 +219,7 @@ namespace IllusionInjector
                             bsPlugins.Add(new BSPluginMeta
                             {
                                 Plugin = bsPlugin,
-                                Filename = file,
+                                Filename = file.Replace("\\.cache", ""), // quick and dirty fix
                                 ModsaberInfo = bsPlugin.ModInfo
                             });
                         }
