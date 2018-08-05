@@ -22,7 +22,6 @@ namespace IPA
         public string EngineFile { get; private set; }
         public string EngineWebRequestFile { get; private set; }
         public string AssemblyFile { get; private set; }
-        public string[] Args { get; private set; }
         public string ProjectRoot { get; private set; }
         public string IPARoot { get; private set; }
         public string ShortcutPath { get; private set; }
@@ -31,11 +30,10 @@ namespace IPA
 
         private PatchContext() { }
 
-        public static PatchContext Create(String[] args, string exe)
+        public static PatchContext Create(string exe)
         {
             var context = new PatchContext
             {
-                Args = args,
                 Executable = exe
             };
             context.ProjectRoot = new FileInfo(context.Executable).Directory.FullName;

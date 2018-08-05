@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arguments.cs" />
     <Compile Include="PatchContext.cs" />
     <Compile Include="Patcher\BackupManager.cs" />
     <Compile Include="Patcher\BackupUnit.cs" />
