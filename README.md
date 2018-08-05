@@ -3,8 +3,7 @@ Illusion Plugin Architecture (Reloaded) - let's you inject code into Unity proje
 
 ## How To Install
 
-1. Download a release (https://github.com/russianGecko/IPA-Reloaded/releases)
-  - Download older releases at (https://github.com/Eusth/IPA/releases)
+1. Download a release (https://github.com/nike4613/IPA-Reloaded/releases)
 2. Extract the contents into the game folder
 3. Drag & drop the game exe onto **IPA.exe**
 4. Start the game as usual (the generated shortcut is optional)
