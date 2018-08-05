@@ -55,68 +55,67 @@ namespace IllusionInjector.Updating.ModsaberML
             Logger.log.Info("Checking for mod updates...");
 
             var toUpdate = new List<UpdateStruct>();
-
-            var modList = new List<ApiEndpoint.Mod>();
-            using (var request = UnityWebRequest.Get(ApiEndpoint.ApiBase+ApiEndpoint.GetApprovedEndpoint))
-            {
-                yield return request.SendWebRequest();
-
-                if (request.isNetworkError)
-                {
-                    Logger.log.Error("Network error while trying to update mods");
-                    Logger.log.Error(request.error);
-                    yield break;
-                }
-                if (request.isHttpError)
-                {
-                    Logger.log.Error($"Server returned an error code while trying to update mods");
-                    Logger.log.Error(request.error);
-                }
-
-                var json = request.downloadHandler.text;
-
-                JSONObject obj = null;
-                try
-                {
-                    obj = JSON.Parse(json).AsObject;
-                }
-                catch (InvalidCastException)
-                {
-                    Logger.log.Error($"Parse error while trying to update mods");
-                    Logger.log.Error($"Response doesn't seem to be a JSON object");
-                    yield break;
-                }
-                catch (Exception e)
-                {
-                    Logger.log.Error($"Parse error while trying to update mods");
-                    Logger.log.Error(e);
-                    yield break;
-                }
-
-                foreach (var modObj in obj["mods"].AsArray.Children)
-                {
-                    try
-                    {
-                        modList.Add(ApiEndpoint.Mod.DecodeJSON(modObj.AsObject));
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.log.Error($"Parse error while trying to update mods");
-                        Logger.log.Error($"Response doesn't seem to be correctly formatted");
-                        Logger.log.Error(e);
-                        break;
-                    }
-                }
-            }
-
             var GameVersion = new Version(Application.version);
 
             foreach (var plugin in PluginManager.BSMetas)
             {
                 var info = plugin.ModsaberInfo;
-                var modRegistry = modList.FirstOrDefault(o => o.Name == info.InternalName);
-                if (modRegistry != null)
-                { // a.k.a we found it 
+
+                using (var request = UnityWebRequest.Get(ApiEndpoint.ApiBase + string.Format(ApiEndpoint.GetApprovedEndpoint, info.InternalName)))
+                {
+                    yield return request.SendWebRequest();
+
+                    if (request.isNetworkError)
+                    {
+                        Logger.log.Error("Network error while trying to update mods");
+                        Logger.log.Error(request.error);
+                        continue;
+                    }
+                    if (request.isHttpError)
+                    {
+                        if (request.responseCode == 404)
+                        {
+                            Logger.log.Error($"Mod {plugin.Plugin.Name} not found under name {info.InternalName}");
+                            continue;
+                        }
+
+                        Logger.log.Error($"Server returned an error code while trying to update mod {plugin.Plugin.Name}");
+                        Logger.log.Error(request.error);
+                        continue;
+                    }
+
+                    var json = request.downloadHandler.text;
+
+                    JSONObject obj = null;
+                    try
+                    {
+                        obj = JSON.Parse(json).AsObject;
+                    }
+                    catch (InvalidCastException)
+                    {
+                        Logger.log.Error($"Parse error while trying to update mods");
+                        Logger.log.Error($"Response doesn't seem to be a JSON object");
+                        continue;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.log.Error($"Parse error while trying to update mods");
+                        Logger.log.Error(e);
+                        continue;
+                    }
+
+                    ApiEndpoint.Mod modRegistry;
+                    try
+                    {
+                        modRegistry = ApiEndpoint.Mod.DecodeJSON(obj);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.log.Error($"Parse error while trying to update mods");
+                        Logger.log.Error(e);
+                        continue;
+                    }
+
                     Logger.log.Debug($"Found Modsaber.ML registration for {plugin.Plugin.Name} ({info.InternalName})");
                     Logger.log.Debug($"Installed version: {info.CurrentVersion}; Latest version: {modRegistry.Version}");
                     if (modRegistry.Version > info.CurrentVersion)
@@ -143,18 +142,14 @@ namespace IllusionInjector.Updating.ModsaberML
 
             if (toUpdate.Count == 0) yield break;
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-            Logger.log.Debug($"Created temp download dirtectory {tempDirectory}");
             foreach (var item in toUpdate)
             {
-                StartCoroutine(UpdateModCoroutine(tempDirectory, item));
+                StartCoroutine(UpdateModCoroutine(item));
             }
         }
 
         class StreamDownloadHandler : DownloadHandlerScript
         {
-
             public MemoryStream Stream { get; set; }
 
             public StreamDownloadHandler(MemoryStream stream) : base()
@@ -197,12 +192,11 @@ namespace IllusionInjector.Updating.ModsaberML
             {
                 return $"{base.ToString()} ({Stream?.ToString()})";
             }
-
         }
 
         private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo)
         {
-            Logger.log.Debug($"Getting ZIP file for {item.plugin.Plugin.Name}");
+            Logger.log.Debug($"Extracting ZIP file for {item.plugin.Plugin.Name}");
             //var stream = await httpClient.GetStreamAsync(url);
 
             var data = stream.GetBuffer();
@@ -216,8 +210,6 @@ namespace IllusionInjector.Updating.ModsaberML
                 Logger.log.Debug("Streams opened");
                 foreach (var entry in zipFile)
                 {
-                    Logger.log.Debug(entry?.FileName ?? "NULL");
-
                     if (entry.IsDirectory)
                     {
                         Logger.log.Debug($"Creating directory {entry.FileName}");
@@ -239,13 +231,12 @@ namespace IllusionInjector.Updating.ModsaberML
                             FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
                             if (targetFile.Exists)
                             {
-                                Logger.log.Debug($"Target file {targetFile.FullName} exists");
                             }
+
+                            Logger.log.Debug($"Extracting file {targetFile.FullName}");
 
                             var fstream = targetFile.Create();
                             ostream.CopyTo(fstream);
-
-                            Logger.log.Debug($"Wrote file {targetFile.FullName}");
                         }
                     }
                 }
@@ -254,7 +245,7 @@ namespace IllusionInjector.Updating.ModsaberML
             Logger.log.Debug("Downloader exited");
         }
 
-        IEnumerator UpdateModCoroutine(string tempdir, UpdateStruct item)
+        IEnumerator UpdateModCoroutine(UpdateStruct item)
         {
             ApiEndpoint.Mod.PlatformFile platformFile;
             if (SteamCheck.IsAvailable || item.externInfo.OculusFile == null)

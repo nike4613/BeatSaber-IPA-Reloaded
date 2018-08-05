@@ -1,32 +1,27 @@
 ﻿{
-  "mods": [
-    {
-      "name": "bsipa-test-plugin",
-      "version": "0.0.1",
-      "approved": true,
-      "title": "BSIPA Test Plugin",
-      "description": "",
-      "type": "mod",
-      "published": "2018-08-02T03:12:18.805Z",
-      "gameVersion": "0.11.2",
-      "gameVersionID": "5b626bb15d243a0008b8886e",
-      "oldVersions": [],
-      "dependsOn": [],
-      "conflictsWith": [],
+  "name": "bsipa-test-plugin",
+  "version": "0.0.1",
+  "approved": true,
+  "title": "BSIPA Test Plugin",
+  "description": "",
+  "type": "mod",
+  "published": "2018-08-02T03:12:18.805Z",
+  "gameVersion": "0.11.2",
+  "gameVersionID": "5b626bb15d243a0008b8886e",
+  "oldVersions": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "files": {
+    "steam": {
+      "hash": "a94e7eea2f656b2830a86000ee222b6cb06f8da5",
       "files": {
-        "steam": {
-          "hash": "a94e7eea2f656b2830a86000ee222b6cb06f8da5",
-          "files": {
-            "Plugins/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "Plugins/RandomSong.dll": "64ee1ecfeda73c550004bdb5123c7ac47a45e428"
-          },
-          "url": "https://www.modsaber.ml/cdn/randomsong/1.0.0-default.zip"
-        }
+        "Plugins/": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "Plugins/RandomSong.dll": "64ee1ecfeda73c550004bdb5123c7ac47a45e428"
       },
-      "weight": 7,
-      "author": "danike",
-      "authorID": "5b62723f288b110008291cb9"
+      "url": "https://www.modsaber.ml/cdn/randomsong/1.0.0-default.zip"
     }
-  ],
-  "lastPage": 0
+  },
+  "weight": 7,
+  "author": "danike",
+  "authorID": "5b62723f288b110008291cb9"
 }
