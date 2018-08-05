@@ -1,9 +1,11 @@
-﻿using IllusionInjector.Utilities;
+﻿using IllusionInjector.Updating.Backup;
+using IllusionInjector.Utilities;
 using Ionic.Zip;
 using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -143,9 +145,11 @@ namespace IllusionInjector.Updating.ModsaberML
 
             if (toUpdate.Count == 0) yield break;
 
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
             foreach (var item in toUpdate)
             {
-                StartCoroutine(UpdateModCoroutine(item));
+                StartCoroutine(UpdateModCoroutine(item, tempDirectory));
             }
         }
 
@@ -195,7 +199,7 @@ namespace IllusionInjector.Updating.ModsaberML
             }
         }
 
-        private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo)
+        private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo, string tempDirectory)
         {
             Logger.log.Debug($"Extracting ZIP file for {item.plugin.Plugin.Name}");
             //var stream = await httpClient.GetStreamAsync(url);
@@ -206,47 +210,83 @@ namespace IllusionInjector.Updating.ModsaberML
             if (!LoneFunctions.UnsafeCompare(hash, fileInfo.Hash))
                 throw new Exception("The hash for the file doesn't match what is defined");
 
-            using (var zipFile = ZipFile.Read(stream))
+            var newFiles = new List<FileInfo>();
+            var backup = new BackupUnit(tempDirectory, $"backup-{item.plugin.ModsaberInfo.InternalName}");
+
+            try
             {
-                Logger.log.Debug("Streams opened");
-                foreach (var entry in zipFile)
+                bool shouldDeleteOldFile = true;
+
+                using (var zipFile = ZipFile.Read(stream))
                 {
-                    if (entry.IsDirectory)
+                    Logger.log.Debug("Streams opened");
+                    foreach (var entry in zipFile)
                     {
-                        Logger.log.Debug($"Creating directory {entry.FileName}");
-                        Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, entry.FileName));
-                    }
-                    else
-                    {
-                        using (var ostream = new MemoryStream((int)entry.UncompressedSize))
+                        if (entry.IsDirectory)
                         {
-                            entry.Extract(ostream);
-                            ostream.Seek(0, SeekOrigin.Begin);
-
-                            sha = new SHA1CryptoServiceProvider();
-                            var fileHash = sha.ComputeHash(ostream);
-                            if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
-                                throw new Exception("The hash for the file doesn't match what is defined");
-
-                            ostream.Seek(0, SeekOrigin.Begin);
-                            FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
-                            if (targetFile.Exists)
+                            Logger.log.Debug($"Creating directory {entry.FileName}");
+                            Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+                        }
+                        else
+                        {
+                            using (var ostream = new MemoryStream((int)entry.UncompressedSize))
                             {
+                                entry.Extract(ostream);
+                                ostream.Seek(0, SeekOrigin.Begin);
+
+                                sha = new SHA1CryptoServiceProvider();
+                                var fileHash = sha.ComputeHash(ostream);
+                                if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
+                                    throw new Exception("The hash for the file doesn't match what is defined");
+
+                                ostream.Seek(0, SeekOrigin.Begin);
+                                FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+
+                                if (targetFile.FullName == item.plugin.Filename)
+                                    shouldDeleteOldFile = false; // overwriting old file, no need to delete
+
+                                if (targetFile.Exists)
+                                    backup.Add(targetFile);
+                                else
+                                    newFiles.Add(targetFile);
+
+                                Logger.log.Debug($"Extracting file {targetFile.FullName}");
+
+                                var fstream = targetFile.Create();
+                                ostream.CopyTo(fstream);
                             }
-
-                            Logger.log.Debug($"Extracting file {targetFile.FullName}");
-
-                            var fstream = targetFile.Create();
-                            ostream.CopyTo(fstream);
                         }
                     }
                 }
+
+                if (item.plugin.Plugin is SelfPlugin)
+                { // currently updating self
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = item.plugin.Filename,
+                        Arguments = $"--waitfor={Process.GetCurrentProcess().Id} --nowait",
+                        UseShellExecute = false
+                    });
+                }
+                else if (shouldDeleteOldFile)
+                    File.Delete(item.plugin.Filename);
             }
+            catch (Exception)
+            { // something failed; restore
+                foreach (var file in newFiles)
+                    file.Delete();
+                backup.Restore();
+                backup.Delete();
+
+                throw;
+            }
+
+            backup.Delete();
 
             Logger.log.Debug("Downloader exited");
         }
 
-        IEnumerator UpdateModCoroutine(UpdateStruct item)
+        IEnumerator UpdateModCoroutine(UpdateStruct item, string tempDirectory)
         {
             ApiEndpoint.Mod.PlatformFile platformFile;
             if (SteamCheck.IsAvailable || item.externInfo.OculusFile == null)
@@ -296,7 +336,7 @@ namespace IllusionInjector.Updating.ModsaberML
 
                     var downloadTask = Task.Run(() =>
                     { // use slightly more multithreaded approach than coroutines
-                        ExtractPluginAsync(stream, item, platformFile);
+                        ExtractPluginAsync(stream, item, platformFile, tempDirectory);
                     }, taskTokenSource.Token);
 
                     while (!(downloadTask.IsCompleted || downloadTask.IsCanceled || downloadTask.IsFaulted))
