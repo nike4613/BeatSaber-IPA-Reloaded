@@ -24,7 +24,6 @@ namespace IPA {
         {
             try
             {
-                string arg = args.FirstOrDefault(s => s.StartsWith("--waitfor="));
                 if (Arguments.Process.HasLongFlag("waitfor") && Arguments.Process.GetLongFlagValue("waitfor") != null)
                 {
                     int pid = int.Parse(Arguments.Process.GetLongFlagValue("waitfor"));
