@@ -20,6 +20,7 @@ namespace IPA
         public string DataPathDst { get; private set; }
         public string ManagedPath { get; private set; }
         public string EngineFile { get; private set; }
+        public string EngineWebRequestFile { get; private set; }
         public string AssemblyFile { get; private set; }
         public string[] Args { get; private set; }
         public string ProjectRoot { get; private set; }

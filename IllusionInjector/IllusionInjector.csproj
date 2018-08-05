@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -80,8 +81,7 @@
     <Compile Include="Updating\ModsaberML\Updater.cs" />
     <Compile Include="Updating\Old\ModUpdater.cs" />
     <Compile Include="Updating\Old\UpdateScript.cs" />
-    <Compile Include="Utilities\BlockingStream.cs" />
-    <Compile Include="Utilities\EchoStream.cs" />
+    <Compile Include="Utilities\LoneFunctions.cs" />
     <Compile Include="Utilities\SimpleJson.cs" />
     <Compile Include="Utilities\SteamCheck.cs" />
   </ItemGroup>

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -150,29 +151,29 @@ namespace IllusionInjector.Updating.ModsaberML
                 StartCoroutine(UpdateModCoroutine(tempDirectory, item));
             }
         }
-        
-        public class StreamDownloadHandler : DownloadHandlerScript
-        {
-            public BlockingStream Stream { get; set; }
 
-            public StreamDownloadHandler(BlockingStream stream)
+        class StreamDownloadHandler : DownloadHandlerScript
+        {
+
+            public MemoryStream Stream { get; set; }
+
+            public StreamDownloadHandler(MemoryStream stream) : base()
             {
                 Stream = stream;
             }
 
-            protected void ReceiveContentLength(long contentLength)
+            protected override void ReceiveContentLength(int contentLength)
             {
-                //(Stream.BaseStream as MemoryStream).Capacity = (int)contentLength;
+                Stream.Capacity = contentLength;
                 Logger.log.Debug($"Got content length: {contentLength}");
             }
 
-            protected void OnContentComplete()
+            protected override void CompleteContent()
             {
-                Stream.Open = false;
                 Logger.log.Debug("Download complete");
             }
 
-            protected bool ReceiveData(byte[] data, long dataLength)
+            protected override bool ReceiveData(byte[] data, int dataLength)
             {
                 Logger.log.Debug("ReceiveData");
                 if (data == null || data.Length < 1)
@@ -181,7 +182,7 @@ namespace IllusionInjector.Updating.ModsaberML
                     return false;
                 }
 
-                Stream.Write(data, 0, (int)dataLength);
+                Stream.Write(data, 0, dataLength);
                 return true;
             }
 
@@ -199,19 +200,54 @@ namespace IllusionInjector.Updating.ModsaberML
 
         }
 
-        private void DownloadPluginAsync(BlockingStream stream, UpdateStruct item, string tempdir)
+        private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo)
         {
-
             Logger.log.Debug($"Getting ZIP file for {item.plugin.Plugin.Name}");
             //var stream = await httpClient.GetStreamAsync(url);
 
-            using (var zipFile = new ZipInputStream(stream))
+            var data = stream.GetBuffer();
+            SHA1 sha = new SHA1CryptoServiceProvider();
+            var hash = sha.ComputeHash(data);
+            if (!LoneFunctions.UnsafeCompare(hash, fileInfo.Hash))
+                throw new Exception("The hash for the file doesn't match what is defined");
+
+            using (var zipFile = ZipFile.Read(stream))
             {
                 Logger.log.Debug("Streams opened");
-                ZipEntry entry;
-                while ((entry = zipFile.GetNextEntry()) != null)
+                foreach (var entry in zipFile)
                 {
                     Logger.log.Debug(entry?.FileName ?? "NULL");
+
+                    if (entry.IsDirectory)
+                    {
+                        Logger.log.Debug($"Creating directory {entry.FileName}");
+                        Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+                    }
+                    else
+                    {
+                        using (var ostream = new MemoryStream((int)entry.UncompressedSize))
+                        {
+                            entry.Extract(ostream);
+                            ostream.Seek(0, SeekOrigin.Begin);
+
+                            sha = new SHA1CryptoServiceProvider();
+                            var fileHash = sha.ComputeHash(ostream);
+                            if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
+                                throw new Exception("The hash for the file doesn't match what is defined");
+
+                            ostream.Seek(0, SeekOrigin.Begin);
+                            FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+                            if (targetFile.Exists)
+                            {
+                                Logger.log.Debug($"Target file {targetFile.FullName} exists");
+                            }
+
+                            var fstream = targetFile.Create();
+                            ostream.CopyTo(fstream);
+
+                            Logger.log.Debug($"Wrote file {targetFile.FullName}");
+                        }
+                    }
                 }
             }
 
@@ -220,59 +256,75 @@ namespace IllusionInjector.Updating.ModsaberML
 
         IEnumerator UpdateModCoroutine(string tempdir, UpdateStruct item)
         {
-
-            string url;
+            ApiEndpoint.Mod.PlatformFile platformFile;
             if (SteamCheck.IsAvailable || item.externInfo.OculusFile == null)
-                url = item.externInfo.SteamFile;
+                platformFile = item.externInfo.SteamFile;
             else
-                url = item.externInfo.OculusFile;
+                platformFile = item.externInfo.OculusFile;
+
+            string url = platformFile.DownloadPath;
 
             Logger.log.Debug($"URL = {url}");
-            
-            using (var memStream = new EchoStream())
-            using (var stream = new BlockingStream(memStream))
-            using (var request = UnityWebRequest.Get(url))
-            using (var taskTokenSource = new CancellationTokenSource())
+
+            const int MaxTries = 3;
+            int maxTries = MaxTries;
+            while (maxTries > 0)
             {
-                var dlh = new StreamDownloadHandler(stream);
-                request.downloadHandler = dlh;
+                if (maxTries-- != MaxTries)
+                    Logger.log.Info($"Re-trying download...");
 
-                var downloadTask = Task.Run(() =>
-                { // use slightly more multithreaded approach than coroutines
-                    DownloadPluginAsync(stream, item, tempdir);
-                }, taskTokenSource.Token);
-
-                Logger.log.Debug("Sending request");
-                Logger.log.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
-                yield return request.SendWebRequest();
-                Logger.log.Debug("Download finished");
-
-                if (stream.Open)
-                { // anti-hang
-                    Logger.log.Warn("Downloader failed to call DownloadHandler");
-                    stream.Open = false; // no more writing
-                    stream.BaseStream.Write(new byte[] { 0 }, 0, 1);
-                }
-
-                if (request.isNetworkError)
+                using (var stream = new MemoryStream())
+                using (var request = UnityWebRequest.Get(url))
+                using (var taskTokenSource = new CancellationTokenSource())
                 {
-                    Logger.log.Error("Network error while trying to update mod");
-                    Logger.log.Error(request.error);
-                    taskTokenSource.Cancel();
-                    yield break;
-                }
-                if (request.isHttpError)
-                {
-                    Logger.log.Error($"Server returned an error code while trying to update mod");
-                    Logger.log.Error(request.error);
-                    taskTokenSource.Cancel();
-                    yield break;
-                }
+                    var dlh = new StreamDownloadHandler(stream);
+                    request.downloadHandler = dlh;
 
-                downloadTask.Wait(); // wait for the damn thing to finish
+                    Logger.log.Debug("Sending request");
+                    //Logger.log.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
+                    yield return request.SendWebRequest();
+                    Logger.log.Debug("Download finished");
+
+                    if (request.isNetworkError)
+                    {
+                        Logger.log.Error("Network error while trying to update mod");
+                        Logger.log.Error(request.error);
+                        taskTokenSource.Cancel();
+                        continue;
+                    }
+                    if (request.isHttpError)
+                    {
+                        Logger.log.Error($"Server returned an error code while trying to update mod");
+                        Logger.log.Error(request.error);
+                        taskTokenSource.Cancel();
+                        continue;
+                    }
+
+                    stream.Seek(0, SeekOrigin.Begin); // reset to beginning
+
+                    var downloadTask = Task.Run(() =>
+                    { // use slightly more multithreaded approach than coroutines
+                        ExtractPluginAsync(stream, item, platformFile);
+                    }, taskTokenSource.Token);
+
+                    while (!(downloadTask.IsCompleted || downloadTask.IsCanceled || downloadTask.IsFaulted))
+                        yield return null; // pause coroutine until task is done
+
+                    if (downloadTask.IsFaulted)
+                    {
+                        Logger.log.Error($"Error downloading mod {item.plugin.Plugin.Name}");
+                        Logger.log.Error(downloadTask.Exception);
+                        continue;
+                    }
+
+                    break;
+                }
             }
 
-            yield return null;
+            if (maxTries == 0)
+                Logger.log.Warn($"Plugin download failed {MaxTries} times, not re-trying");
+            else
+                Logger.log.Debug("Download complete");
         }
     }
 }
