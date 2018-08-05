@@ -22,15 +22,12 @@ namespace IPA {
 
         static void Main(string[] args)
         {
-            var ArgList = args.ToList();
-
             try
             {
                 string arg = args.FirstOrDefault(s => s.StartsWith("--waitfor="));
-                if (arg != null)
+                if (Arguments.Process.HasLongFlag("waitfor") && Arguments.Process.GetLongFlagValue("waitfor") != null)
                 {
-                    ArgList.Remove(arg);
-                    int pid = int.Parse(arg.Split('=').Last());
+                    int pid = int.Parse(Arguments.Process.GetLongFlagValue("waitfor"));
 
                     try
                     { // wait for beat saber to exit (ensures we can modify the file)
@@ -45,22 +42,21 @@ namespace IPA {
 
                 PatchContext context;
 
-                var argExeName = ArgList.FirstOrDefault(s => s.EndsWith(".exe"));
+                var argExeName = Arguments.Process.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
 
                 if (argExeName == null)
                 {
                     //Fail("Drag an (executable) file on the exe!");
-                    context = PatchContext.Create(ArgList.ToArray(), 
-                        new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
+                    context = PatchContext.Create(new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
                             .First(o => o.FullName.EndsWith(".exe"))
                             .FullName);
                 }
                 else
                 {
-                    context = PatchContext.Create(ArgList.ToArray(), argExeName);
+                    context = PatchContext.Create(argExeName);
                 }
 
-                bool isRevert = ArgList.Contains("--revert") || Keyboard.IsKeyDown(Keys.LMenu);
+                bool isRevert = Arguments.Process.HasLongFlag("revert") || Keyboard.IsKeyDown(Keys.LMenu);
                 // Sanitizing
                 Validate(context);
 
@@ -112,8 +108,8 @@ namespace IPA {
                     var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
                     bool isFlat = Directory.Exists(nativePluginFolder) &&
                                   Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
-                    bool force = !BackupManager.HasBackup(context) || context.Args.Contains("-f") ||
-                                 context.Args.Contains("--force");
+                    bool force = !BackupManager.HasBackup(context) || Arguments.Process.HasFlag('f') ||
+                                 Arguments.Process.HasLongFlag("force");
                     var architecture = DetectArchitecture(context.Executable);
 
                     Console.WriteLine("Architecture: {0}", architecture);
@@ -203,7 +199,7 @@ namespace IPA {
             }
 
 
-            if (!Environment.CommandLine.Contains("--nowait"))
+            if (!Arguments.Process.HasLongFlag("nowait"))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Finished!");
@@ -233,7 +229,7 @@ namespace IPA {
             Console.WriteLine("");
             Console.WriteLine("--- Done reverting ---");
 
-            if (!Environment.CommandLine.Contains("--nowait") && !isNewVersion) {
+            if (!Arguments.Process.HasLongFlag("nowait") && !isNewVersion) {
                 Console.WriteLine("\n\n[Press any key to quit]");
                 Console.ReadKey();
             }
@@ -242,22 +238,17 @@ namespace IPA {
         }
 
         private static void StartIfNeedBe(PatchContext context) {
-            string startArg = context.Args.FirstOrDefault(s => s.StartsWith("--start="));
-            if (startArg != null)
+            if (Arguments.Process.HasLongFlag("start") && Arguments.Process.GetLongFlagValue("start") != null)
             {
-                var cmdlineSplit = startArg.Split('=').ToList();
-                cmdlineSplit.RemoveAt(0); // remove first
-                var cmdline = string.Join("=", cmdlineSplit);
-                Process.Start(context.Executable, cmdline);
+                Process.Start(context.Executable, Arguments.Process.GetLongFlagValue("start"));
             }
             else
             {
-                var argList = context.Args.ToList();
-                bool launch = argList.Remove("--launch");
+                var argList = Arguments.Process.PositionalArgs.ToList();
 
                 argList.Remove(context.Executable);
 
-                if (launch)
+                if (Arguments.Process.HasLongFlag("launch"))
                 {
                     Process.Start(context.Executable, Args(argList.ToArray()));
                 }
@@ -338,7 +329,7 @@ namespace IPA {
 
         static void Fail(string message) {
             Console.Error.Write("ERROR: " + message);
-            if (!Environment.CommandLine.Contains("--nowait")) {
+            if (!Arguments.Process.HasLongFlag("nowait")) {
                 Console.WriteLine("\n\n[Press any key to quit]");
                 Console.ReadKey();
             }
