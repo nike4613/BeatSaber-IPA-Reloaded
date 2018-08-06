@@ -22,7 +22,7 @@ namespace IllusionInjector
             DontDestroyOnLoad(gameObject);
 
             bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
-            ipaPlugins = new CompositeIPAPlugin(PluginManager.IPAPlugins);
+            ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 
             // this has no relevance since there is a new mod updater system
             //gameObject.AddComponent<ModUpdater>(); // AFTER plugins are loaded, but before most things

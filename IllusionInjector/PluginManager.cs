@@ -52,7 +52,7 @@ namespace IllusionInjector
             }
         }
         
-        public static IEnumerable<IPlugin> IPAPlugins
+        public static IEnumerable<IPlugin> Plugins
         {
             get
             {
