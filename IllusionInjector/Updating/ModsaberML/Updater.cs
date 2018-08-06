@@ -175,7 +175,6 @@ namespace IllusionInjector.Updating.ModsaberML
 
             protected override bool ReceiveData(byte[] data, int dataLength)
             {
-                Logger.log.Debug("ReceiveData");
                 if (data == null || data.Length < 1)
                 {
                     Logger.log.Debug("CustomWebRequest :: ReceiveData - received a null/empty buffer");
@@ -240,6 +239,7 @@ namespace IllusionInjector.Updating.ModsaberML
 
                                 ostream.Seek(0, SeekOrigin.Begin);
                                 FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+                                Directory.CreateDirectory(targetFile.DirectoryName);
 
                                 if (targetFile.FullName == item.plugin.Filename)
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
@@ -287,6 +287,8 @@ namespace IllusionInjector.Updating.ModsaberML
 
         IEnumerator UpdateModCoroutine(UpdateStruct item, string tempDirectory)
         {
+            Logger.log.Debug($"Steam avaliable: {SteamCheck.IsAvailable}");
+
             ApiEndpoint.Mod.PlatformFile platformFile;
             if (SteamCheck.IsAvailable || item.externInfo.OculusFile == null)
                 platformFile = item.externInfo.SteamFile;
