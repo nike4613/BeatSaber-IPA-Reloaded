@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IllusionInjector.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,9 +16,11 @@ namespace IllusionInjector.Utilities
 
         private static bool FindSteamVRAsset()
         {
-            SteamVRCamera = Type.GetType("SteamVR_Camera", false);
-            SteamVRExternalCamera = Type.GetType("SteamVR_ExternalCamera", false);
-            SteamVRFade = Type.GetType("SteamVR_Fade", false);
+            // these require assembly qualified names....
+            SteamVRCamera = Type.GetType("SteamVR_Camera, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
+            SteamVRExternalCamera = Type.GetType("SteamVR_ExternalCamera, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
+            SteamVRFade = Type.GetType("SteamVR_Fade, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
+
             return SteamVRCamera != null && SteamVRExternalCamera != null && SteamVRFade != null;
         }
     }

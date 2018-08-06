@@ -124,7 +124,6 @@ namespace IllusionInjector.Logging
                 {
                     try
                     {
-
                         if (((byte)msg.level & (byte)printer.Filter) != 0)
                         {
                             if (!started.Contains(printer))

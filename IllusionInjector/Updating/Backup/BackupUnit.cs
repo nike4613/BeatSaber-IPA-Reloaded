@@ -26,6 +26,7 @@ namespace IllusionInjector.Updating.Backup
         {
             Name = name;
             _BackupPath = new DirectoryInfo(Path.Combine(backupPath, Name));
+            _BackupPath.Create();
         }
         
         public static BackupUnit FromDirectory(DirectoryInfo directory, string backupPath)
@@ -71,7 +72,7 @@ namespace IllusionInjector.Updating.Backup
             backupPath.Directory.Create();
             if (file.Exists)
             {
-                file.CopyTo(backupPath.FullName);
+                file.CopyTo(backupPath.FullName, true);
             } else
             {
                 // Make empty file

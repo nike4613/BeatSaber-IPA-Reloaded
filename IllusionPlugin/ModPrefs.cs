@@ -125,7 +125,7 @@ namespace IllusionPlugin
             if (value != "")
                 return value;
             else if (autoSave)
-                SetString(section, name, defaultValue);
+                (this as IModPrefs).SetString(section, name, defaultValue);
 
             return defaultValue;
         }
@@ -145,7 +145,7 @@ namespace IllusionPlugin
             if (int.TryParse(Instance.IniReadValue(section, name), out var value))
                 return value;
             else if (autoSave)
-                SetInt(section, name, defaultValue);
+                (this as IModPrefs).SetInt(section, name, defaultValue);
                 
             return defaultValue;
         }
@@ -165,7 +165,7 @@ namespace IllusionPlugin
             if (float.TryParse(Instance.IniReadValue(section, name), out var value))
                 return value;
             else if (autoSave)
-                SetFloat(section, name, defaultValue);
+                (this as IModPrefs).SetFloat(section, name, defaultValue);
 
             return defaultValue;
         }
@@ -188,7 +188,7 @@ namespace IllusionPlugin
                 return sVal == "1";
             } else if (autoSave)
             {
-                SetBool(section, name, defaultValue);
+                (this as IModPrefs).SetBool(section, name, defaultValue);
             }
 
             return defaultValue;
@@ -214,7 +214,7 @@ namespace IllusionPlugin
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
         /// <returns></returns>
-        public bool HasKey(string section, string name) => StaticInstace.HasKey(section, name);
+        public static bool HasKey(string section, string name) => StaticInstace.HasKey(section, name);
 
         void IModPrefs.SetFloat(string section, string name, float value)
         {
