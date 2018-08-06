@@ -202,7 +202,6 @@ namespace IllusionInjector.Updating.ModsaberML
         private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo, string tempDirectory)
         {
             Logger.log.Debug($"Extracting ZIP file for {item.plugin.Plugin.Name}");
-            //var stream = await httpClient.GetStreamAsync(url);
 
             var data = stream.GetBuffer();
             SHA1 sha = new SHA1CryptoServiceProvider();
