@@ -124,7 +124,7 @@ namespace IllusionInjector
             Logger.log.Info($"Running on Unity {UnityEngine.Application.unityVersion}");
             Logger.log.Info($"Game version {UnityEngine.Application.version}");
             Logger.log.Info("-----------------------------");
-            Logger.log.Info($"Loading plugins from {GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
+            Logger.log.Info($"Loading plugins from {LoneFunctions.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
@@ -136,18 +136,6 @@ namespace IllusionInjector
                 Logger.log.Info($"{plugin.Name}: {plugin.Version}");
             }
             Logger.log.Info("-----------------------------");
-        }
-
-        private static string GetRelativePath(string filespec, string folder)
-        {
-            Uri pathUri = new Uri(filespec);
-            // Folders must end in a slash
-            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                folder += Path.DirectorySeparatorChar;
-            }
-            Uri folderUri = new Uri(folder);
-            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
         private static Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IllusionInjector.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -16,9 +17,7 @@ namespace IllusionInjector.Updating.Backup
 
         private DirectoryInfo _BackupPath;
         private List<string> _Files = new List<string>();
-
-
-
+        
         public BackupUnit(string backupPath) : this(backupPath, DateTime.Now.ToString("yyyy-MM-dd_h-mm-ss"))
         {
         }
@@ -58,13 +57,7 @@ namespace IllusionInjector.Updating.Backup
         /// <param name="path"></param>
         public void Add(FileInfo file)
         {
-            /*if(!file.FullName.StartsWith(_Context.ProjectRoot))
-            {
-                Console.Error.WriteLine("Invalid file path for backup! {0}", file);
-                return;
-            }*/
-
-            var relativePath = new Uri(Environment.CurrentDirectory, UriKind.Absolute).MakeRelativeUri(new Uri(file.FullName)).ToString();//file.FullName.Substring(_Context.ProjectRoot.Length + 1);
+            var relativePath = LoneFunctions.GetRelativePath(Environment.CurrentDirectory, file.FullName);
             var backupPath = new FileInfo(Path.Combine(_BackupPath.FullName, relativePath));
             
             if(_Files.Contains(relativePath))
@@ -96,7 +89,7 @@ namespace IllusionInjector.Updating.Backup
         {
             foreach(var relativePath in _Files)
             {
-                Console.WriteLine("Restoring {0}", relativePath);
+                //Console.WriteLine("Restoring {0}", relativePath);
                 // Original version
                 var backupFile = new FileInfo(Path.Combine(_BackupPath.FullName, relativePath));
                 var target = new FileInfo(Path.Combine(Environment.CurrentDirectory, relativePath));
@@ -105,19 +98,19 @@ namespace IllusionInjector.Updating.Backup
                 {
                     if (backupFile.Length > 0)
                     {
-                        Console.WriteLine("  {0} => {1}", backupFile.FullName, target.FullName);
+                        //Console.WriteLine("  {0} => {1}", backupFile.FullName, target.FullName);
                         target.Directory.Create();
                         backupFile.CopyTo(target.FullName, true);
                     } else
                     {
-                        Console.WriteLine("  x {0}", target.FullName);
+                        //Console.WriteLine("  x {0}", target.FullName);
                         if(target.Exists)
                         {
                             target.Delete();
                         }
                     }
                 } else {
-                    Console.Error.WriteLine("Backup not found!");
+                    //Console.Error.WriteLine("Backup not found!");
                 }
             }
         }
