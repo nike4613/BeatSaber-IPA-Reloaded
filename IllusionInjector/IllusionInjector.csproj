@@ -47,6 +47,9 @@
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -84,7 +87,6 @@
     <Compile Include="Updating\SelfPlugin.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\LoneFunctions.cs" />
-    <Compile Include="Utilities\SimpleJson.cs" />
     <Compile Include="Utilities\SteamCheck.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +98,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\Libs\System.Runtime.Serialization.dll">
+      <Link>RequiredMonoLibs\System.Runtime.Serialization.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

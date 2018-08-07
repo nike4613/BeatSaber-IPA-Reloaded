@@ -18,7 +18,7 @@ namespace IPA {
             Unknown
         }
 
-        private static Version Version => new Version(Application.ProductVersion);
+        private static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
         static void Main(string[] args)
         {
