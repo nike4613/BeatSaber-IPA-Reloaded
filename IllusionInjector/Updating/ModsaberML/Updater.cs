@@ -1,7 +1,7 @@
 ﻿using IllusionInjector.Updating.Backup;
 using IllusionInjector.Utilities;
 using Ionic.Zip;
-using SimpleJSON;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -89,28 +89,11 @@ namespace IllusionInjector.Updating.ModsaberML
 
                     var json = request.downloadHandler.text;
 
-                    JSONObject obj = null;
-                    try
-                    {
-                        obj = JSON.Parse(json).AsObject;
-                    }
-                    catch (InvalidCastException)
-                    {
-                        Logger.log.Error($"Parse error while trying to update mods");
-                        Logger.log.Error($"Response doesn't seem to be a JSON object");
-                        continue;
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.log.Error($"Parse error while trying to update mods");
-                        Logger.log.Error(e);
-                        continue;
-                    }
-
                     ApiEndpoint.Mod modRegistry;
                     try
                     {
-                        modRegistry = ApiEndpoint.Mod.DecodeJSON(obj);
+                        modRegistry = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(json);
+                        Logger.log.Debug(modRegistry.ToString());
                     }
                     catch (Exception e)
                     {
@@ -290,10 +273,10 @@ namespace IllusionInjector.Updating.ModsaberML
             Logger.log.Debug($"Steam avaliable: {SteamCheck.IsAvailable}");
 
             ApiEndpoint.Mod.PlatformFile platformFile;
-            if (SteamCheck.IsAvailable || item.externInfo.OculusFile == null)
-                platformFile = item.externInfo.SteamFile;
+            if (SteamCheck.IsAvailable || item.externInfo.Files.Oculus == null)
+                platformFile = item.externInfo.Files.Steam;
             else
-                platformFile = item.externInfo.OculusFile;
+                platformFile = item.externInfo.Files.Oculus;
 
             string url = platformFile.DownloadPath;
 
