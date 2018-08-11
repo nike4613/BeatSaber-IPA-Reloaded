@@ -57,7 +57,7 @@ namespace IllusionPlugin.Utils
         /// <returns>the return value</returns>
 		public static object InvokePrivateMethod(this object obj, string methodName, params object[] methodParams)
 		{
-			MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+			MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 			return dynMethod.Invoke(obj, methodParams);
 		}
 
@@ -78,13 +78,39 @@ namespace IllusionPlugin.Utils
         /// Copies a component of type originalType to a component of overridingType on the destination GameObject.
         /// </summary>
         /// <param name="original">the original component</param>
-        /// <param name="originalType">the original component's type</param>
         /// <param name="overridingType">the new component's type</param>
         /// <param name="destination">the destination GameObject</param>
-        /// <returns></returns>
-        public static Component CopyComponent(Component original, Type originalType, Type overridingType, GameObject destination)
+        /// <param name="originalTypeOverride">overrides the source component type (for example, to a superclass)</param>
+        /// <returns>the copied component</returns>
+        public static Component CopyComponent(this Component original, Type overridingType, GameObject destination, Type originalTypeOverride = null)
         {
             var copy = destination.AddComponent(overridingType);
+            var originalType = originalTypeOverride ?? original.GetType();
+
+            Type type = originalType;
+            while (type != typeof(MonoBehaviour))
+            {
+                CopyForType(type, original, copy);
+                type = type.BaseType;
+            }
+
+            return copy;
+        }
+
+        /// <summary>
+        /// A generic version of CopyComponent. 
+        /// <see cref="CopyComponent(Component, Type, GameObject, Type)"/>
+        /// </summary>
+        /// <typeparam name="T">the overriding type</typeparam>
+        /// <param name="original">the original component</param>
+        /// <param name="destination">the destination game object</param>
+        /// <param name="originalTypeOverride">overrides the source component type (for example, to a superclass)</param>
+        /// <returns>the copied component</returns>
+        public static T CopyComponent<T>(this Component original, GameObject destination, Type originalTypeOverride = null)
+            where T : Component
+        {
+            var copy = destination.AddComponent<T>();
+            var originalType = originalTypeOverride ?? original.GetType();
 
             Type type = originalType;
             while (type != typeof(MonoBehaviour))
@@ -104,6 +130,74 @@ namespace IllusionPlugin.Utils
             {
                 fi.SetValue(destination, fi.GetValue(source));
             }
+        }
+
+        /// <summary>
+        /// Calls an instance method on a type specified by functionClass and dependency.
+        /// <seealso cref="CallNonStaticMethod(Type, string, Type[], object[])"/>
+        /// </summary>
+        /// <param name="functionClass">the type name</param>
+        /// <param name="dependency">the assembly the type is in</param>
+        /// <param name="function">the name of the method to call</param>
+        /// <param name="methodSig">the type signature of the method</param>
+        /// <param name="parameters">the method parameters</param>
+        /// <returns>the result of the call</returns>
+        public static object CallNonStaticMethod(string functionClass, string dependency, string function, Type[] methodSig, params object[] parameters)
+        {
+            return CallNonStaticMethod(Type.GetType(string.Format("{0},{1}", functionClass, dependency)), function, methodSig, parameters);
+        }
+
+        /// <summary>
+        /// Calls an instance method on a new object.
+        /// </summary>
+        /// <param name="type">the object type</param>
+        /// <param name="function">the name of the method to call</param>
+        /// <param name="methodSig">the type signature</param>
+        /// <param name="parameters">the parameters</param>
+        /// <returns>the result of the call</returns>
+        public static object CallNonStaticMethod(this Type type, /*string functionClass, string dependency,*/ string function, Type[] methodSig, params object[] parameters)
+        {
+            //Type FunctionClass = Type.GetType(string.Format("{0},{1}", functionClass, dependency));
+            if (type != null)
+            {
+                object instance = Activator.CreateInstance(type);
+                if (instance != null)
+                {
+                    Type instType = instance.GetType();
+                    MethodInfo methodInfo = instType.GetMethod(function, methodSig);
+                    if (methodInfo != null)
+                    {
+                        return methodInfo.Invoke(instance, parameters);
+                    }
+                    else
+                    {
+                        throw new Exception("Method not found");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Unable to instantiate object of type");
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("type");
+            }
+        }
+
+        /// <summary>
+        /// Calls an instance method on a new object.
+        /// <seealso cref="CallNonStaticMethod(Type, string, Type[], object[])"/>
+        /// </summary>
+        /// <typeparam name="T">the return type</typeparam>
+        /// <param name="type">the object type</param>
+        /// <param name="function">the name of the method to call</param>
+        /// <param name="methodSig">the type signature</param>
+        /// <param name="parameters">the parameters</param>
+        /// <returns>the result of the call</returns>
+        public static T CallNonStaticMethod<T>(this Type type, string function, Type[] methodSig, params object[] parameters)
+        {
+            return (T)CallNonStaticMethod(type, function, methodSig, parameters);
         }
     }
 }
