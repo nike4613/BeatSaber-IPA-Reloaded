@@ -99,6 +99,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Libs\0Harmony.dll">
+      <Link>IncludedLibs\0Harmony.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Libs\System.Runtime.Serialization.dll">
       <Link>RequiredMonoLibs\System.Runtime.Serialization.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
