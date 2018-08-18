@@ -15,9 +15,11 @@ namespace IPA
         public string Executable { get; private set; }
 
         public string DataPathSrc { get; private set; }
+        public string LibsPathSrc { get; private set; }
         public string PluginsFolder { get; private set; }
         public string ProjectName { get; private set; }
         public string DataPathDst { get; private set; }
+        public string LibsPathDst { get; private set; }
         public string ManagedPath { get; private set; }
         public string EngineFile { get; private set; }
         public string EngineWebRequestFile { get; private set; }
@@ -40,9 +42,11 @@ namespace IPA
             context.IPARoot = Path.Combine(context.ProjectRoot, "IPA");
             context.IPA = Assembly.GetExecutingAssembly().Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
             context.DataPathSrc = Path.Combine(context.IPARoot, "Data");
+            context.LibsPathSrc = Path.Combine(context.IPARoot, "Libs");
             context.PluginsFolder = Path.Combine(context.ProjectRoot, "Plugins");
             context.ProjectName = Path.GetFileNameWithoutExtension(context.Executable);
             context.DataPathDst = Path.Combine(context.ProjectRoot, context.ProjectName + "_Data");
+            context.LibsPathDst = Path.Combine(context.ProjectRoot, "Libs");
             context.ManagedPath = Path.Combine(context.DataPathDst, "Managed");
             context.EngineFile = Path.Combine(context.ManagedPath, "UnityEngine.CoreModule.dll");
             context.AssemblyFile = Path.Combine(context.ManagedPath, "Assembly-CSharp.dll");

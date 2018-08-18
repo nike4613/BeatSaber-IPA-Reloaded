@@ -94,6 +94,11 @@
       <Project>{e2848bfb-5432-42f4-8ae0-d2ec0cdf2f71}</Project>
       <Name>IllusionPlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MSBuildTasks\MSBuildTasks.csproj">
+      <Project>{f08c3c7a-3221-432e-bab8-32bce58408c8}</Project>
+      <Name>MSBuildTasks</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -113,6 +118,9 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Target Name="AfterBuild">
+    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildProjectDirectory)\PostBuild.msbuild&quot; /property:OPath=$(OutputPath) /property:Configuration=$(Configuration) /property:SolDir=$(SolutionDir)" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

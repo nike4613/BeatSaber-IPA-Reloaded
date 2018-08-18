@@ -117,6 +117,10 @@ namespace IPA {
                         backup,
                         (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
                             architecture));
+                    CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
+                        backup,
+                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
+                            architecture));
 
                     Console.WriteLine("Successfully updated files!");
 
