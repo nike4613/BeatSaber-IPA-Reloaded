@@ -65,6 +65,7 @@ namespace IllusionInjector
         }
         private static List<IPlugin> _ipaPlugins = null;
 
+        
 
         private static void LoadPlugins()
         {
@@ -190,13 +191,21 @@ namespace IllusionInjector
                                 var initArgs = new List<object>();
                                 var initParams = init.GetParameters();
 
+                                LoggerBase modLogger = null;
+                                IModPrefs modPrefs = null;
+
                                 foreach (var param in initParams)
                                 {
                                     var ptype = param.ParameterType;
-                                    if (ptype.IsAssignableFrom(typeof(LoggerBase)))
-                                        initArgs.Add(new StandardLogger(bsPlugin.Name));
+                                    if (ptype.IsAssignableFrom(typeof(LoggerBase))) {
+                                        if (modLogger == null) modLogger = new StandardLogger(bsPlugin.Name);
+                                        initArgs.Add(modLogger);
+                                    }
                                     else if (ptype.IsAssignableFrom(typeof(IModPrefs)))
-                                        initArgs.Add(new ModPrefs(bsPlugin));
+                                    {
+                                        if (modPrefs == null) modPrefs = new ModPrefs(bsPlugin);
+                                        initArgs.Add(modPrefs);
+                                    }
                                     else
                                         initArgs.Add(ptype.GetDefault());
                                 }

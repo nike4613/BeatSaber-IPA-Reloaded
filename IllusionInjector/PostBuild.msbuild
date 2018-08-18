@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="PostBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <OPath></OPath>
+    <SolDir></SolDir>
+  </PropertyGroup>
+
+  <UsingTask TaskName="AssemblyRename" AssemblyFile="$(SolDir)MSBuildTasks\bin\$(Configuration)\MSBuildTasks.dll" />
+  
+  <Target Name="PostBuild">
+    <Message Text="Relocating" Importance="normal" />
+    <ItemGroup>
+      <SystemFiles Include="$(OPath)I18N.*" />
+      <SystemFiles Include="$(OPath)IllusionInjector.*" />
+      <SystemFiles Include="$(OPath)IllusionPlugin.*" />
+      <SystemFiles Include="$(OPath)RequiredMonoLibs\**\*" />
+      <OldLibFiles Include="$(OPath)Libs\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OPath)Data\Managed" />
+    <RemoveDir Directories="$(OPath)RequiredMonoLibs" />
+    
+    <Delete Files="@(OldLibFiles)" />
+    <RemoveDir Directories="$(OPath)Libs" />
+    <ItemGroup>
+      <LibFiles Include="$(OPath)**\*" Exclude="$(OPath)Data\**\*;$(OPath)Lib\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(LibFiles)" DestinationFolder="$(OPath)Libs\" />
+    <RemoveDir Directories="$(OPath)IncludedLibs" />
+    
+    <ItemGroup>
+      <ToRename Include="$(OPath)Libs\**\*.dll" />
+    </ItemGroup>
+    <AssemblyRename Assemblies="@(ToRename)" />
+  </Target>
+</Project>
