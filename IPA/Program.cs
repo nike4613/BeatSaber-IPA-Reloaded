@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using IPA.ArgParsing;
 
 namespace IPA {
     public class Program {
@@ -20,13 +21,29 @@ namespace IPA {
 
         private static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
+        public static ArgumentFlag ArgHelp      = new ArgumentFlag("--help", "-h")  { DocString = "prints this message" };
+        public static ArgumentFlag ArgWaitFor   = new ArgumentFlag("--waitfor")     { DocString = "waits for the specified PID to exit" };
+        public static ArgumentFlag ArgForce     = new ArgumentFlag("--force", "-f") { DocString = "forces the operation to go through" };
+        public static ArgumentFlag ArgRevert    = new ArgumentFlag("--revert")      { DocString = "reverts the IPA installation" };
+        public static ArgumentFlag ArgNoWait    = new ArgumentFlag("--nowait")      { DocString = "doesn't wait for user input after the operation" };
+        public static ArgumentFlag ArgStart     = new ArgumentFlag("--start")       { DocString = "uses value as arguments to start the game after the patch/unpatch" };
+        public static ArgumentFlag ArgLaunch    = new ArgumentFlag("--launch")      { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
+
         static void Main(string[] args)
         {
+            Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch).Process();
+
+            if (ArgHelp)
+            {
+                Arguments.CmdLine.PrintHelp();
+                return;
+            }
+
             try
             {
-                if (Arguments.Process.HasLongFlag("waitfor") && Arguments.Process.GetLongFlagValue("waitfor") != null)
+                if (ArgWaitFor && ArgWaitFor.Value != null)
                 {
-                    int pid = int.Parse(Arguments.Process.GetLongFlagValue("waitfor"));
+                    int pid = int.Parse(ArgWaitFor.Value);
 
                     try
                     { // wait for beat saber to exit (ensures we can modify the file)
@@ -41,7 +58,7 @@ namespace IPA {
 
                 PatchContext context;
 
-                var argExeName = Arguments.Process.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
+                var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
 
                 if (argExeName == null)
                 {
@@ -55,7 +72,7 @@ namespace IPA {
                     context = PatchContext.Create(argExeName);
                 }
 
-                bool isRevert = Arguments.Process.HasLongFlag("revert") || Keyboard.IsKeyDown(Keys.LMenu);
+                bool isRevert = ArgRevert || Keyboard.IsKeyDown(Keys.LMenu);
                 // Sanitizing
                 Validate(context);
 
@@ -107,8 +124,7 @@ namespace IPA {
                     var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
                     bool isFlat = Directory.Exists(nativePluginFolder) &&
                                   Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
-                    bool force = !BackupManager.HasBackup(context) || Arguments.Process.HasFlag('f') ||
-                                 Arguments.Process.HasLongFlag("force");
+                    bool force = !BackupManager.HasBackup(context) || ArgForce;
                     var architecture = DetectArchitecture(context.Executable);
 
                     Console.WriteLine("Architecture: {0}", architecture);
@@ -202,7 +218,7 @@ namespace IPA {
             }
 
 
-            if (!Arguments.Process.HasLongFlag("nowait"))
+            if (!ArgNoWait)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Finished!");
@@ -232,7 +248,7 @@ namespace IPA {
             Console.WriteLine("");
             Console.WriteLine("--- Done reverting ---");
 
-            if (!Arguments.Process.HasLongFlag("nowait") && !isNewVersion) {
+            if (!ArgNoWait && !isNewVersion) {
                 Console.WriteLine("\n\n[Press any key to quit]");
                 Console.ReadKey();
             }
@@ -241,17 +257,17 @@ namespace IPA {
         }
 
         private static void StartIfNeedBe(PatchContext context) {
-            if (Arguments.Process.HasLongFlag("start") && Arguments.Process.GetLongFlagValue("start") != null)
+            if (ArgStart && ArgStart.Value != null)
             {
-                Process.Start(context.Executable, Arguments.Process.GetLongFlagValue("start"));
+                Process.Start(context.Executable, ArgStart.Value);
             }
             else
             {
-                var argList = Arguments.Process.PositionalArgs.ToList();
+                var argList = Arguments.CmdLine.PositionalArgs.ToList();
 
                 argList.Remove(context.Executable);
 
-                if (Arguments.Process.HasLongFlag("launch"))
+                if (ArgLaunch)
                 {
                     Process.Start(context.Executable, Args(argList.ToArray()));
                 }
@@ -332,7 +348,7 @@ namespace IPA {
 
         static void Fail(string message) {
             Console.Error.Write("ERROR: " + message);
-            if (!Arguments.Process.HasLongFlag("nowait")) {
+            if (!ArgNoWait) {
                 Console.WriteLine("\n\n[Press any key to quit]");
                 Console.ReadKey();
             }
