@@ -110,7 +110,8 @@ namespace IPA.Patcher
                         Console.WriteLine("  {0} => {1}", backupFile.FullName, target.FullName);
                         target.Directory.Create();
                         backupFile.CopyTo(target.FullName, true);
-                    } else
+                    }
+                    else
                     {
                         Console.WriteLine("  x {0}", target.FullName);
                         if(target.Exists)
@@ -118,7 +119,8 @@ namespace IPA.Patcher
                             target.Delete();
                         }
                     }
-                } else {
+                } else
+                {
                     Console.Error.WriteLine("Backup not found!");
                 }
             }

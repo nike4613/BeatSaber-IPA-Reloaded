@@ -45,10 +45,12 @@ namespace IPA.Patcher
         /// <param name="module"></param>
         public void Virtualize()
         {
+
             foreach (var type in _Module.Types)
             {
                 VirtualizeType(type);
             }
+            Console.WriteLine();
 
             _Module.Write(_File.FullName);
         }
@@ -67,7 +69,10 @@ namespace IPA.Patcher
             // These two don't seem to work.
             if (type.Name == "SceneControl" || type.Name == "ConfigUI") return;
 
-            Console.WriteLine("Virtualizing {0}", type.Name);
+            //Console.CursorTop--;
+            Console.CursorLeft = 0;
+            Program.ClearLine();
+            Console.Write("Virtualizing {0}", type.Name);
             // Take care of sub types
             foreach (var subType in type.NestedTypes)
             {

@@ -21,13 +21,13 @@ namespace IPA {
 
         private static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
-        public static ArgumentFlag ArgHelp      = new ArgumentFlag("--help", "-h")  { DocString = "prints this message" };
-        public static ArgumentFlag ArgWaitFor   = new ArgumentFlag("--waitfor")     { DocString = "waits for the specified PID to exit" };
-        public static ArgumentFlag ArgForce     = new ArgumentFlag("--force", "-f") { DocString = "forces the operation to go through" };
-        public static ArgumentFlag ArgRevert    = new ArgumentFlag("--revert")      { DocString = "reverts the IPA installation" };
-        public static ArgumentFlag ArgNoWait    = new ArgumentFlag("--nowait")      { DocString = "doesn't wait for user input after the operation" };
-        public static ArgumentFlag ArgStart     = new ArgumentFlag("--start")       { DocString = "uses value as arguments to start the game after the patch/unpatch" };
-        public static ArgumentFlag ArgLaunch    = new ArgumentFlag("--launch")      { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
+        public static ArgumentFlag ArgHelp      = new ArgumentFlag("--help", "-h")      { DocString = "prints this message" };
+        public static ArgumentFlag ArgWaitFor   = new ArgumentFlag("--waitfor", "-w")   { DocString = "waits for the specified PID to exit", ValueString = "PID" };
+        public static ArgumentFlag ArgForce     = new ArgumentFlag("--force", "-f")     { DocString = "forces the operation to go through" };
+        public static ArgumentFlag ArgRevert    = new ArgumentFlag("--revert", "-r")    { DocString = "reverts the IPA installation" };
+        public static ArgumentFlag ArgNoWait    = new ArgumentFlag("--nowait", "-n")    { DocString = "doesn't wait for user input after the operation" };
+        public static ArgumentFlag ArgStart     = new ArgumentFlag("--start", "-s")     { DocString = "uses value as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
+        public static ArgumentFlag ArgLaunch    = new ArgumentFlag("--launch", "-l")    { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
 
         static void Main(string[] args)
         {
@@ -41,8 +41,8 @@ namespace IPA {
 
             try
             {
-                if (ArgWaitFor && ArgWaitFor.Value != null)
-                {
+                if (ArgWaitFor.HasValue)
+                { // wait for process if necessary
                     int pid = int.Parse(ArgWaitFor.Value);
 
                     try
@@ -57,29 +57,20 @@ namespace IPA {
                 }
 
                 PatchContext context;
-
+                
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
-
                 if (argExeName == null)
-                {
-                    //Fail("Drag an (executable) file on the exe!");
                     context = PatchContext.Create(new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
-                            .First(o => o.FullName.EndsWith(".exe"))
+                            .First(o => o.Extension == ".exe" && o.FullName != Assembly.GetCallingAssembly().Location)
                             .FullName);
-                }
                 else
-                {
                     context = PatchContext.Create(argExeName);
-                }
-
-                bool isRevert = ArgRevert || Keyboard.IsKeyDown(Keys.LMenu);
+                
                 // Sanitizing
                 Validate(context);
 
-                if (isRevert)
-                {
+                if (ArgRevert || Keyboard.IsKeyDown(Keys.LMenu))
                     Revert(context);
-                }
                 else
                 {
                     Install(context);
@@ -88,6 +79,19 @@ namespace IPA {
             }
             catch (Exception e) {
                 Fail(e.Message);
+            }
+
+            WaitForEnd();
+        }
+
+        private static void WaitForEnd()
+        {
+            if (!ArgNoWait)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("[Press any key to continue]");
+                Console.ResetColor();
+                Console.ReadLine();
             }
         }
 
@@ -113,7 +117,7 @@ namespace IPA {
                     Console.WriteLine(
                         $"Preparing for update, {(patchedModule.Data.Version == null ? "UnPatched" : patchedModule.Data.Version.ToString())} => {Version}");
                     Console.WriteLine("--- Starting ---");
-                    Revert(context, new[] {"newVersion"});
+                    Revert(context);
                     Console.ResetColor();
 
 
@@ -179,7 +183,7 @@ namespace IPA {
                 if (File.Exists(context.AssemblyFile)) {
                     var virtualizedModule = VirtualizedModule.Load(context.AssemblyFile);
                     if (!virtualizedModule.IsVirtualized) {
-                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Virtualizing Assembly-Csharp.dll... ");
                         backup.Add(context.AssemblyFile);
                         virtualizedModule.Virtualize();
@@ -191,45 +195,40 @@ namespace IPA {
                 #endregion
 
                 #region Creating shortcut
-                /*if(!File.Exists(context.ShortcutPath))
+                if(!File.Exists(context.ShortcutPath))
                 {
-                    Console.Write("Creating shortcut to IPA ({0})... ",  context.IPA);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("Creating shortcut to IPA ({0})... ",  context.IPA);
                     try
                     {
                         Shortcut.Create(
                             fileName: context.ShortcutPath,
                             targetPath: context.IPA,
-                            arguments: Args(context.Executable, "--launch"),
+                            arguments: Args(context.Executable, "-ln"),
                             workingDirectory: context.ProjectRoot,
                             description: "Launches the game and makes sure it's in a patched state",
                             hotkey: "",
                             iconPath: context.Executable
                         );
-                        Console.WriteLine("Created");
-                    } catch (Exception e)
+                    } catch (Exception)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Error.WriteLine("Failed to create shortcut, but game was patched!");
                     }
-                }*/
+                    Console.ResetColor();
+                }
                 #endregion
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Fail("Oops! This should not have happened.\n\n" + e);
             }
-
-
-            if (!ArgNoWait)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Finished!");
-                Console.ResetColor();
-                Console.ReadLine();
-            }
+            Console.ResetColor();
         }
 
-        private static void Revert(PatchContext context, string[] args = null) {
+        private static void Revert(PatchContext context) {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            bool isNewVersion = (args != null && args.Contains("newVersion"));
 
             Console.Write("Restoring backup... ");
             if (BackupManager.Restore(context)) {
@@ -248,16 +247,11 @@ namespace IPA {
             Console.WriteLine("");
             Console.WriteLine("--- Done reverting ---");
 
-            if (!ArgNoWait && !isNewVersion) {
-                Console.WriteLine("\n\n[Press any key to quit]");
-                Console.ReadKey();
-            }
-
             Console.ResetColor();
         }
 
         private static void StartIfNeedBe(PatchContext context) {
-            if (ArgStart && ArgStart.Value != null)
+            if (ArgStart.HasValue)
             {
                 Process.Start(context.Executable, ArgStart.Value);
             }
@@ -315,6 +309,14 @@ namespace IPA {
             }
         }
 
+        public static void ClearLine()
+        {
+            Console.SetCursorPosition(0, Console.CursorTop);
+            int tpos = Console.CursorTop;
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, tpos);
+        }
+
         private static IEnumerable<FileInfo> PassThroughInterceptor(FileInfo from, FileInfo to) {
             yield return to;
         }
@@ -331,6 +333,8 @@ namespace IPA {
                     if (!targetFile.Exists || targetFile.LastWriteTimeUtc < fi.LastWriteTimeUtc || aggressive) {
                         targetFile.Directory.Create();
 
+                        Console.CursorTop--;
+                        ClearLine();
                         Console.WriteLine(@"Copying {0}", targetFile.FullName);
                         backup.Add(targetFile);
                         fi.CopyTo(targetFile.FullName, true);
@@ -348,10 +352,8 @@ namespace IPA {
 
         static void Fail(string message) {
             Console.Error.Write("ERROR: " + message);
-            if (!ArgNoWait) {
-                Console.WriteLine("\n\n[Press any key to quit]");
-                Console.ReadKey();
-            }
+
+            WaitForEnd();
 
             Environment.Exit(1);
         }

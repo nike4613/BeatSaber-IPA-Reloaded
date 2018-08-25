@@ -21,7 +21,7 @@ namespace IPA.ArgParsing
 
         private Arguments(string[] args)
         {
-            toParse = args;
+            toParse = args.Skip(1).ToArray();
         }
 
         public Arguments Flags(params ArgumentFlag[] toAdd)
@@ -145,8 +145,8 @@ namespace IPA.ArgParsing
         public void PrintHelp()
         {
             const string indent = "    ";
-            string filename = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
-            string format = @"help:
+            string filename = Environment.GetCommandLineArgs()[0];
+            string format = @"usage:
 {2}{0} [FLAGS] [ARGUMENTS]
 
 flags:
@@ -154,9 +154,9 @@ flags:
             var flagsBuilder = new StringBuilder();
             foreach (var flag in flagObjects)
             {
-                flagsBuilder.AppendFormat("{2}{0}{1}", 
+                flagsBuilder.AppendFormat("{2}{0}{3}{1}", 
                     string.Join(", ", flag.shortFlags.Select(s => $"-{s}").Concat( flag.longFlags.Select(s => $"--{s}")) ), 
-                    Environment.NewLine, indent);
+                    Environment.NewLine, indent, flag.ValueString != null ? "=" + flag.ValueString : "");
                 flagsBuilder.AppendFormat("{2}{2}{0}{1}", flag.DocString, Environment.NewLine, indent);
             }
 
@@ -191,7 +191,10 @@ flags:
         public bool Exists => exists;
         public string Value => value;
 
+        public bool HasValue => Exists && Value != null;
+
         public string DocString { get; set; } = "";
+        public string ValueString { get; set; } = null;
 
         public static implicit operator bool(ArgumentFlag f)
         {

@@ -22,7 +22,6 @@ namespace IPA
         public string LibsPathDst { get; private set; }
         public string ManagedPath { get; private set; }
         public string EngineFile { get; private set; }
-        public string EngineWebRequestFile { get; private set; }
         public string AssemblyFile { get; private set; }
         public string ProjectRoot { get; private set; }
         public string IPARoot { get; private set; }
