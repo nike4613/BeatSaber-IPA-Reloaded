@@ -49,21 +49,34 @@ namespace IPA.Patcher
         {
             get
             {
+                var IIdata = new PatchData { IsPatched = false, Version = null };
                 foreach (var @ref in _Module.AssemblyReferences) {
-                    if (@ref.Name == "IllusionInjector") return new PatchData { IsPatched = true, Version = @ref.Version};
+                    if (@ref.Name == "IllusionInjector") IIdata = new PatchData { IsPatched = true, Version = new Version(0,0,0,0) };
+                    if (@ref.Name == "IllusionPlugin") return new PatchData { IsPatched = true, Version = @ref.Version };
                 }
-                return new PatchData { IsPatched = false, Version = null};
+                return IIdata;
             }
         }
 
         public void Patch(Version v)
         {
             // First, let's add the reference
-            var nameReference = new AssemblyNameReference("IllusionInjector", v);
+            var nameReference = new AssemblyNameReference("IllusionInjector", new Version(1,0,0,0));
+            var versionNameReference = new AssemblyNameReference("IllusionPlugin", v);
             var injectorPath = Path.Combine(_File.DirectoryName, "IllusionInjector.dll");
             var injector = ModuleDefinition.ReadModule(injectorPath);
 
+            for (int i = 0; i < _Module.AssemblyReferences.Count; i++)
+            {
+                if (_Module.AssemblyReferences[i].Name == "IllusionInjector")
+                    _Module.AssemblyReferences.RemoveAt(i--);
+                if (_Module.AssemblyReferences[i].Name == "IllusionPlugin")
+                    _Module.AssemblyReferences.RemoveAt(i--);
+            }
+
             _Module.AssemblyReferences.Add(nameReference);
+            _Module.AssemblyReferences.Add(versionNameReference);
+
             int patched = 0;
             foreach(var type in FindEntryTypes())
             {
