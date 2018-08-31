@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("400a540a-d21f-4609-966b-206059b6e73b")]
+[assembly: InternalsVisibleTo("IllusionPlugin")]
 
 // Version information for an assembly consists of the following four values:
 //
