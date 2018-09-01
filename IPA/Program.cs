@@ -19,7 +19,7 @@ namespace IPA {
             Unknown
         }
 
-        private static Version Version => Assembly.GetEntryAssembly().GetName().Version;
+        public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
         public static ArgumentFlag ArgHelp      = new ArgumentFlag("--help", "-h")      { DocString = "prints this message" };
         public static ArgumentFlag ArgWaitFor   = new ArgumentFlag("--waitfor", "-w")   { DocString = "waits for the specified PID to exit", ValueString = "PID" };
@@ -110,7 +110,7 @@ namespace IPA {
                 #region Patch Version Check
 
                 var patchedModule = PatchedModule.Load(context.EngineFile);
-                var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) > 0;
+                var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) >= 0;
                 Console.WriteLine($"Current: {Version} Patched: {patchedModule.Data.Version}");
                 if (isCurrentNewer) {
                     Console.ForegroundColor = ConsoleColor.White;
