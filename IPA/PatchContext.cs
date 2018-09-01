@@ -38,7 +38,7 @@ namespace IPA
                 Executable = exe
             };
             context.ProjectRoot = new FileInfo(context.Executable).Directory.FullName;
-            context.IPARoot = Path.Combine(context.ProjectRoot, "IPA");
+            context.IPARoot = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "IPA");
             context.IPA = Assembly.GetExecutingAssembly().Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
             context.DataPathSrc = Path.Combine(context.IPARoot, "Data");
             context.LibsPathSrc = Path.Combine(context.IPARoot, "Libs");

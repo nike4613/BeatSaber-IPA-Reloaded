@@ -30,9 +30,39 @@ namespace IPA.Patcher
             {
                 backup.Restore();
                 backup.Delete();
+                DeleteEmptyDirs(context.ProjectRoot);
                 return true;
             }
             return false;
+        }
+
+        public static void DeleteEmptyDirs(string dir)
+        {
+            if (string.IsNullOrEmpty(dir))
+                throw new ArgumentException(
+                    "Starting directory is a null reference or an empty string",
+                    "dir");
+
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(dir))
+                {
+                    DeleteEmptyDirs(d);
+                }
+
+                var entries = Directory.EnumerateFileSystemEntries(dir);
+
+                if (!entries.Any())
+                {
+                    try
+                    {
+                        Directory.Delete(dir);
+                    }
+                    catch (UnauthorizedAccessException) { }
+                    catch (DirectoryNotFoundException) { }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
         }
 
     }
