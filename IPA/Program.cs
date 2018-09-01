@@ -32,7 +32,7 @@ namespace IPA {
         static void Main(string[] args)
         {
             Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch).Process();
-
+           
             if (ArgHelp)
             {
                 Arguments.CmdLine.PrintHelp();
@@ -351,7 +351,7 @@ namespace IPA {
 
 
         static void Fail(string message) {
-            Console.Error.Write("ERROR: " + message);
+            Console.Error.WriteLine("ERROR: " + message);
 
             WaitForEnd();
 
