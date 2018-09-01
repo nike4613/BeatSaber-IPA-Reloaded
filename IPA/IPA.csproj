@@ -96,7 +96,7 @@
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
     <ItemGroup>
-      <Dlls Include="$(SolutionDir)IllusionInjector\$(OutDir)**\*" />
+      <Dlls Include="$(SolutionDir)IPA.Injector\$(OutDir)**\*" />
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
   </Target>
