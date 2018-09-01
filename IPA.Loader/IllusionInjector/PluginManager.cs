@@ -3,6 +3,7 @@ using IllusionInjector.Updating;
 using IllusionInjector.Utilities;
 using IllusionPlugin;
 using IllusionPlugin.BeatSaber;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -176,6 +177,18 @@ namespace IllusionInjector
 
             try
             {
+                var module = ModuleDefinition.ReadModule(file);
+                bool modifiedModule = false;
+                foreach (var @ref in module.AssemblyReferences)
+                {
+                    if (@ref.Name == "IllusionPlugin" || @ref.Name == "IllusionInjector")
+                    {
+                        @ref.Name = "IPA.Loader";
+                        modifiedModule = true;
+                    }
+                }
+                if (modifiedModule) module.Write(file);
+
                 Assembly assembly = Assembly.LoadFrom(file);
 
                 foreach (Type t in assembly.GetTypes())
