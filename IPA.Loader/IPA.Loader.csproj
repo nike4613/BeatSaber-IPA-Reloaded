@@ -51,7 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IllusionInjector\BeatSaber\CompositeBSPlugin.cs" />
+    <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\ModsaberModInfo.cs" />
@@ -59,27 +59,27 @@
     <Compile Include="IniFile.cs" />
     <Compile Include="PluginInterfaces\IPA\IEnhancedPlugin.cs" />
     <Compile Include="PluginInterfaces\IPA\IPlugin.cs" />
-    <Compile Include="IllusionPlugin\Logging\Logger.cs" />
-    <Compile Include="IllusionPlugin\Logging\LogPrinter.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogPrinter.cs" />
     <Compile Include="ModPrefs.cs" />
-    <Compile Include="IllusionPlugin\Utils\ReflectionUtil.cs" />
-    <Compile Include="IllusionInjector\IPA\CompositeIPAPlugin.cs" />
-    <Compile Include="IllusionInjector\Logging\Printers\ColoredConsolePrinter.cs" />
-    <Compile Include="IllusionInjector\Logging\Printers\GlobalLogFilePrinter.cs" />
-    <Compile Include="IllusionInjector\Logging\Printers\GZFilePrinter.cs" />
-    <Compile Include="IllusionInjector\Logging\Printers\PluginLogFilePrinter.cs" />
-    <Compile Include="IllusionInjector\Logging\StandardLogger.cs" />
-    <Compile Include="IllusionInjector\Logging\UnityLogInterceptor.cs" />
-    <Compile Include="IllusionInjector\PluginComponent.cs" />
-    <Compile Include="IllusionInjector\PluginManager.cs" />
+    <Compile Include="Utilities\ReflectionUtil.cs" />
+    <Compile Include="Loader\Composite\CompositeIPAPlugin.cs" />
+    <Compile Include="Logging\Printers\ColoredConsolePrinter.cs" />
+    <Compile Include="Logging\Printers\GlobalLogFilePrinter.cs" />
+    <Compile Include="Logging\Printers\GZFilePrinter.cs" />
+    <Compile Include="Logging\Printers\PluginLogFilePrinter.cs" />
+    <Compile Include="Logging\StandardLogger.cs" />
+    <Compile Include="Logging\UnityLogInterceptor.cs" />
+    <Compile Include="Loader\PluginComponent.cs" />
+    <Compile Include="Loader\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IllusionInjector\Updating\Backup\BackupUnit.cs" />
     <Compile Include="IllusionInjector\Updating\ModsaberML\ApiEndpoint.cs" />
     <Compile Include="IllusionInjector\Updating\ModsaberML\Updater.cs" />
     <Compile Include="IllusionInjector\Updating\SelfPlugin.cs" />
-    <Compile Include="IllusionInjector\Utilities\Extensions.cs" />
-    <Compile Include="IllusionInjector\Utilities\LoneFunctions.cs" />
-    <Compile Include="IllusionInjector\Utilities\SteamCheck.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\LoneFunctions.cs" />
+    <Compile Include="Utilities\SteamCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ionic.Zip">
@@ -91,6 +91,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IllusionInjector\Logging\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

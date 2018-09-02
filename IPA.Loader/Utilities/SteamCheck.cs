@@ -1,11 +1,10 @@
-﻿using IllusionInjector.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionInjector.Utilities
+namespace IPA.Utilities
 {
     public static class SteamCheck
     {
