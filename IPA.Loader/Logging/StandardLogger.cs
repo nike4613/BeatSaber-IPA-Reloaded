@@ -1,6 +1,4 @@
-﻿using IllusionInjector.Logging.Printers;
-using IllusionPlugin;
-using IllusionPlugin.Logging;
+﻿using IPA.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,25 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using IPA;
-using LoggerBase = IllusionPlugin.Logging.Logger;
+using LoggerBase = IPA.Logging.Logger;
+using IPA.Logging.Printers;
 
-namespace IllusionInjector.Logging
+namespace IPA.Logging
 {
-    internal static class Logger
-    {
-        private static LoggerBase _log;
-        internal static LoggerBase log
-        {
-            get
-            {
-                if (_log == null)
-                    _log = new StandardLogger("IPA");
-                return _log;
-            }
-        }
-        internal static bool LogCreated => _log != null;
-    }
-
     public class StandardLogger : LoggerBase
     {
         private static readonly IReadOnlyList<LogPrinter> defaultPrinters = new List<LogPrinter>()

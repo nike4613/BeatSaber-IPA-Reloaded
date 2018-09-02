@@ -1,5 +1,5 @@
-﻿using IllusionInjector.Logging;
-using IllusionInjector.Utilities;
+﻿using IPA.Logging;
+using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;

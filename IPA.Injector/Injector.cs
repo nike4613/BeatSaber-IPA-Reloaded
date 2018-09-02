@@ -1,11 +1,12 @@
 ﻿using IllusionInjector;
-using IllusionInjector.Logging;
+using IPA.Loader;
+using IPA.Logging;
 using System;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-using static IllusionPlugin.Logging.Logger;
-using Logger = IllusionInjector.Logging.Logger;
+using static IPA.Logging.Logger;
+using Logger = IPA.Logging.Logger;
 
 namespace IPA.Injector
 {

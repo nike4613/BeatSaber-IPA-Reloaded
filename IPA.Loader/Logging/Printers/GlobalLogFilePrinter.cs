@@ -4,19 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IllusionPlugin.Logging;
-using LoggerBase = IllusionPlugin.Logging.Logger;
+using IPA.Logging;
 
-namespace IllusionInjector.Logging.Printers
+namespace IPA.Logging.Printers
 {
     class GlobalLogFilePrinter : GZFilePrinter
     {
-        public override LoggerBase.LogLevel Filter { get; set; } = LoggerBase.LogLevel.All;
+        public override Logger.LogLevel Filter { get; set; } = Logger.LogLevel.All;
 
-        public override void Print(IllusionPlugin.Logging.Logger.Level level, DateTime time, string logName, string message)
+        public override void Print(IPA.Logging.Logger.Level level, DateTime time, string logName, string message)
         {
             foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                fileWriter.WriteLine(string.Format(LoggerBase.LogFormat, line, logName, time, level.ToString().ToUpper()));
+                fileWriter.WriteLine(string.Format(Logger.LogFormat, line, logName, time, level.ToString().ToUpper()));
         }
 
         protected override FileInfo GetFileInfo()

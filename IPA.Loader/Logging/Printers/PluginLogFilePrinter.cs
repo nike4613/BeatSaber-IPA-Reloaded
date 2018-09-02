@@ -1,17 +1,16 @@
-﻿using IllusionPlugin.Logging;
+﻿using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LoggerBase = IllusionPlugin.Logging.Logger;
 
-namespace IllusionInjector.Logging.Printers
+namespace IPA.Logging.Printers
 {
     class PluginLogFilePrinter : GZFilePrinter
     {
-        public override LoggerBase.LogLevel Filter { get; set; } = LoggerBase.LogLevel.All;
+        public override Logger.LogLevel Filter { get; set; } = Logger.LogLevel.All;
 
         private string name;
 
@@ -28,7 +27,7 @@ namespace IllusionInjector.Logging.Printers
             this.name = name;
         }
 
-        public override void Print(IllusionPlugin.Logging.Logger.Level level, DateTime time, string logName, string message)
+        public override void Print(IPA.Logging.Logger.Level level, DateTime time, string logName, string message)
         {
             foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 fileWriter.WriteLine(string.Format("[{3} @ {2:HH:mm:ss}] {0}", line, logName, time, level.ToString().ToUpper()));
