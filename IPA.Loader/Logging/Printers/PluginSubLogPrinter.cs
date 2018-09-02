@@ -11,7 +11,7 @@ namespace IPA.Logging.Printers
     /// <summary>
     /// Prints log messages to the file specified by the name.
     /// </summary>
-    public class PluginLogFilePrinter : GZFilePrinter
+    public class PluginSubLogPrinter : GZFilePrinter
     {
         /// <summary>
         /// Provides a filter for this specific printer.
@@ -19,6 +19,7 @@ namespace IPA.Logging.Printers
         public override Logger.LogLevel Filter { get; set; } = Logger.LogLevel.All;
 
         private string name;
+        private string mainName;
 
         /// <summary>
         /// Gets the <see cref="FileInfo"/> for the target file.
@@ -26,7 +27,7 @@ namespace IPA.Logging.Printers
         /// <returns></returns>
         protected override FileInfo GetFileInfo()
         {
-            var logsDir = new DirectoryInfo(Path.Combine("Logs",name));
+            var logsDir = new DirectoryInfo(Path.Combine("Logs", mainName, name));
             logsDir.Create();
             var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:yyyy.MM.dd.HH.mm}.log"));
             return finfo;
@@ -35,10 +36,12 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// Creates a new printer with the given name.
         /// </summary>
+        /// <param name="mainname">the name of the main logger</param>
         /// <param name="name">the name of the logger</param>
-        public PluginLogFilePrinter(string name)
+        public PluginSubLogPrinter(string mainname, string name)
         {
             this.name = name;
+            mainName = mainname;
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace IPA.Logging.Printers
         public override void Print(Logger.Level level, DateTime time, string logName, string message)
         {
             foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                fileWriter.WriteLine(string.Format(Logger.LogFormat, line, logName, time, level.ToString().ToUpper()));
+                fileWriter.WriteLine(string.Format("[{3} @ {2:HH:mm:ss}] {0}", line, logName, time, level.ToString().ToUpper()));
         }
     }
 }

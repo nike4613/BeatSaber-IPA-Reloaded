@@ -77,7 +77,7 @@ namespace IPA.Updating.Backup
 
             if (_Files.Contains(relativePath))
             {
-                Logger.log.Debug($"Skipping backup of {relativePath}");
+                Logger.updater.Debug($"Skipping backup of {relativePath}");
                 return;
             }
 
@@ -110,7 +110,7 @@ namespace IPA.Updating.Backup
         {
             foreach (var relativePath in _Files)
             {
-                Logger.log.Debug($"Restoring {relativePath}");
+                Logger.updater.Debug($"Restoring {relativePath}");
                 // Original version
                 var backupFile = new FileInfo(Path.Combine(_BackupPath.FullName, relativePath));
                 var target = new FileInfo(Path.Combine(Environment.CurrentDirectory, relativePath));
@@ -119,13 +119,13 @@ namespace IPA.Updating.Backup
                 {
                     if (backupFile.Length > 0)
                     {
-                        Logger.log.Debug($"  {backupFile.FullName} => {target.FullName}");
+                        Logger.updater.Debug($"  {backupFile.FullName} => {target.FullName}");
                         target.Directory.Create();
                         backupFile.CopyTo(target.FullName, true);
                     }
                     else
                     {
-                        Logger.log.Debug($"  x {target.FullName}");
+                        Logger.updater.Debug($"  x {target.FullName}");
                         if (target.Exists)
                         {
                             target.Delete();
@@ -134,7 +134,7 @@ namespace IPA.Updating.Backup
                 }
                 else
                 {
-                    Logger.log.Error("Backup not found!");
+                    Logger.updater.Error("Backup not found!");
                 }
             }
         }

@@ -44,7 +44,7 @@ namespace IPA.Injector
         }
         private static void Log(Level lvl, string message)
         { // multiple proxy methods to delay loading of assemblies until it's done
-            if (Logger.LogCreated)
+            if (LogCreated)
                 AssemblyLibLoaderCallLogger(lvl, message);
             else
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
@@ -52,7 +52,7 @@ namespace IPA.Injector
         }
         private static void AssemblyLibLoaderCallLogger(Level lvl, string message)
         {
-            Logger.log.Log(lvl, message);
+            libLoader.Log(lvl, message);
         }
 
         private static void Bootstrapper_Destroyed()
