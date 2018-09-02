@@ -19,8 +19,7 @@ namespace IPA.Patcher
         private List<string> _Files = new List<string>();
         private FileInfo _ManifestFile;
         private static string _ManifestFileName = "$manifest$.txt";
-
-
+        
         public BackupUnit(PatchContext context) : this(context, DateTime.Now.ToString("yyyy-MM-dd_h-mm-ss"))
         {
         }

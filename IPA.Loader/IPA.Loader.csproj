@@ -73,10 +73,10 @@
     <Compile Include="Loader\PluginComponent.cs" />
     <Compile Include="Loader\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IllusionInjector\Updating\Backup\BackupUnit.cs" />
-    <Compile Include="IllusionInjector\Updating\ModsaberML\ApiEndpoint.cs" />
-    <Compile Include="IllusionInjector\Updating\ModsaberML\Updater.cs" />
-    <Compile Include="IllusionInjector\Updating\SelfPlugin.cs" />
+    <Compile Include="Updating\Backup\BackupUnit.cs" />
+    <Compile Include="Updating\ModsaberML\ApiEndpoint.cs" />
+    <Compile Include="Updating\ModsaberML\Updater.cs" />
+    <Compile Include="Updating\SelfPlugin.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\LoneFunctions.cs" />
     <Compile Include="Utilities\SteamCheck.cs" />
@@ -92,8 +92,6 @@
       <Version>11.0.2</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IllusionInjector\Logging\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

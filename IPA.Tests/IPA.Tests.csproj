@@ -67,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="updater_test.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IPA\IPA.csproj">
