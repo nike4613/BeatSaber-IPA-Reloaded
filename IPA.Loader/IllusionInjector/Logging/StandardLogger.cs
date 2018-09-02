@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using IPA;
 using LoggerBase = IllusionPlugin.Logging.Logger;
 
 namespace IllusionInjector.Logging

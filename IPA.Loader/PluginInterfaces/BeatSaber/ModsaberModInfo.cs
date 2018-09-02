@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionPlugin.BeatSaber
+namespace IPA
 {
     /// <summary>
     /// A class to provide information about a mod on ModSaber.ML

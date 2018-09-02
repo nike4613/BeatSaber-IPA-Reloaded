@@ -1,6 +1,8 @@
 ﻿using IllusionPlugin;
 using System;
 using System.Collections.Generic;
+using IPA;
+using IPA.Old;
 using System.Linq;
 using System.Text;
 using UnityEngine;

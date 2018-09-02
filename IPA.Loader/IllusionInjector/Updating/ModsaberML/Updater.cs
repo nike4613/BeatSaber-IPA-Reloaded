@@ -1,5 +1,6 @@
 ﻿using IllusionInjector.Updating.Backup;
 using IllusionInjector.Utilities;
+using IPA.Loader;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using System;

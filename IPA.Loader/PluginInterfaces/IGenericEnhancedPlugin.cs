@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionPlugin
+namespace IPA
 {
     /// <summary>
     /// A generic interface for the modification for enhanced plugins.

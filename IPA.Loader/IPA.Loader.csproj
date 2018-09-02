@@ -7,7 +7,7 @@
     <ProjectGuid>{5AD344F0-01A0-4CA8-92E5-9D095737744D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IPA.Loader</RootNamespace>
+    <RootNamespace>IPA</RootNamespace>
     <AssemblyName>IPA.Loader</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -52,16 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IllusionInjector\BeatSaber\CompositeBSPlugin.cs" />
-    <Compile Include="IllusionPlugin\BeatSaber\IBeatSaberPlugin.cs" />
-    <Compile Include="IllusionPlugin\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
-    <Compile Include="IllusionPlugin\BeatSaber\ModsaberModInfo.cs" />
-    <Compile Include="IllusionPlugin\IGenericEnhancedPlugin.cs" />
-    <Compile Include="IllusionPlugin\IniFile.cs" />
-    <Compile Include="IllusionPlugin\IPA\IEnhancedPlugin.cs" />
-    <Compile Include="IllusionPlugin\IPA\IPlugin.cs" />
+    <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
+    <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
+    <Compile Include="PluginInterfaces\BeatSaber\ModsaberModInfo.cs" />
+    <Compile Include="PluginInterfaces\IGenericEnhancedPlugin.cs" />
+    <Compile Include="IniFile.cs" />
+    <Compile Include="PluginInterfaces\IPA\IEnhancedPlugin.cs" />
+    <Compile Include="PluginInterfaces\IPA\IPlugin.cs" />
     <Compile Include="IllusionPlugin\Logging\Logger.cs" />
     <Compile Include="IllusionPlugin\Logging\LogPrinter.cs" />
-    <Compile Include="IllusionPlugin\ModPrefs.cs" />
+    <Compile Include="ModPrefs.cs" />
     <Compile Include="IllusionPlugin\Utils\ReflectionUtil.cs" />
     <Compile Include="IllusionInjector\IPA\CompositeIPAPlugin.cs" />
     <Compile Include="IllusionInjector\Logging\Printers\ColoredConsolePrinter.cs" />

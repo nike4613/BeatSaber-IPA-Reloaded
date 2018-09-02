@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace IllusionPlugin
+namespace IPA
 {
     /// <summary>
     /// Allows to get and set preferences for your mod. 
