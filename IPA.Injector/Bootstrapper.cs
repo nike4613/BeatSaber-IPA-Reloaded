@@ -15,7 +15,7 @@ namespace IPA.Injector
         {
             //if (Environment.CommandLine.Contains("--verbose"))
             //{
-                Windows.GuiConsole.CreateConsole();
+            Ipa.Injector.Windows.GuiConsole.CreateConsole();
             //}
         }
 
