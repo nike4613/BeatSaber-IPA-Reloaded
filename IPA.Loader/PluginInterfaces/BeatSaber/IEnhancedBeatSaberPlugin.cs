@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IllusionPlugin
+namespace IPA
 {
     /// <summary>
     /// An enhanced version of a standard BeatSaber plugin.

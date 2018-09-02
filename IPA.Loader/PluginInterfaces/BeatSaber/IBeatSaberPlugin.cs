@@ -1,10 +1,9 @@
-﻿using IllusionPlugin.BeatSaber;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.SceneManagement;
 
-namespace IllusionPlugin
+namespace IPA
 {
     /// <summary>
     /// Interface for Beat Saber plugins. Every class that implements this will be loaded if the DLL is placed at

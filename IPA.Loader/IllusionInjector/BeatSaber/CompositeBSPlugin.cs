@@ -1,5 +1,5 @@
 ﻿using IllusionPlugin;
-using IllusionPlugin.BeatSaber;
+using IPA;
 using System;
 using System.Collections.Generic;
 using System.Linq;

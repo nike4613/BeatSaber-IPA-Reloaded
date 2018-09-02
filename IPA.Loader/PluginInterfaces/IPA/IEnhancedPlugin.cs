@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IllusionPlugin
+namespace IPA.Old
 {
     /// <summary>
     /// An enhanced version of the standard IPA plugin.

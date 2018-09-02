@@ -2,7 +2,8 @@
 using IllusionInjector.Updating;
 using IllusionInjector.Utilities;
 using IllusionPlugin;
-using IllusionPlugin.BeatSaber;
+using IPA;
+using IPA.Old;
 using Mono.Cecil;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LoggerBase = IllusionPlugin.Logging.Logger;
 
-namespace IllusionInjector
+namespace IPA.Loader
 {
     public static class PluginManager
     {
@@ -177,17 +178,36 @@ namespace IllusionInjector
 
             try
             {
+                #region Fix assemblies for refactor
+
                 var module = ModuleDefinition.ReadModule(file);
                 bool modifiedModule = false;
                 foreach (var @ref in module.AssemblyReferences)
-                {
+                { // fix assembly references
                     if (@ref.Name == "IllusionPlugin" || @ref.Name == "IllusionInjector")
                     {
                         @ref.Name = "IPA.Loader";
                         modifiedModule = true;
                     }
                 }
-                if (modifiedModule) module.Write(file);
+                if (modifiedModule)
+                { // types don't need to be fixed if it's already referencing the new version
+                    foreach (var @ref in module.GetTypeReferences())
+                    { // fix type references
+                        if (@ref.FullName == "IllusionPlugin.IPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
+                        if (@ref.FullName == "IllusionPlugin.IEnhancedPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionPlugin.IBeatSaberPlugin") @ref.Namespace = "IPA"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionPlugin.IEnhancedBeatSaberPlugin") @ref.Namespace = "IPA"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionPlugin.BeatSaber.ModsaberModInfo") @ref.Namespace = "IPA"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionPlugin.IniFile") @ref.Namespace = "IPA"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionPlugin.IModPrefs") @ref.Namespace = "IPA"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionPlugin.ModPrefs") @ref.Namespace = "IPA"; //@ref.Name = ""
+                        if (@ref.FullName == "IllusionInjector.PluginManager") @ref.Namespace = "IPA.Loader"; //@ref.Name = ""
+                    }
+                    module.Write(file);
+                }
+
+                #endregion
 
                 Assembly assembly = Assembly.LoadFrom(file);
 
