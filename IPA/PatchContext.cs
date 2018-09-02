@@ -39,7 +39,7 @@ namespace IPA
             };
             context.ProjectRoot = new FileInfo(context.Executable).Directory.FullName;
             context.IPARoot = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "IPA");
-            context.IPA = Assembly.GetExecutingAssembly().Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
+            context.IPA = Assembly.GetExecutingAssembly()?.Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
             context.DataPathSrc = Path.Combine(context.IPARoot, "Data");
             context.LibsPathSrc = Path.Combine(context.IPARoot, "Libs");
             context.PluginsFolder = Path.Combine(context.ProjectRoot, "Plugins");
@@ -49,7 +49,7 @@ namespace IPA
             context.ManagedPath = Path.Combine(context.DataPathDst, "Managed");
             context.EngineFile = Path.Combine(context.ManagedPath, "UnityEngine.CoreModule.dll");
             context.AssemblyFile = Path.Combine(context.ManagedPath, "Assembly-CSharp.dll");
-            context.BackupPath = Path.Combine(Path.Combine(context.IPARoot, "Backups"), context.ProjectName);
+            context.BackupPath = Path.Combine(context.IPARoot, "Backups", context.ProjectName);
             string shortcutName = $"{context.ProjectName} (Patch & Launch)";
             context.ShortcutPath = Path.Combine(context.ProjectRoot, shortcutName) + ".lnk";
 

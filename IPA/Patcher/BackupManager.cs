@@ -11,6 +11,7 @@ namespace IPA.Patcher
     {
         public static BackupUnit FindLatestBackup(PatchContext context)
         {
+            new DirectoryInfo(context.BackupPath).Create();
             return new DirectoryInfo(context.BackupPath)
                 .GetDirectories()
                 .OrderByDescending(p => p.Name)

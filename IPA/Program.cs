@@ -11,9 +11,12 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using IPA.ArgParsing;
 
-namespace IPA {
-    public class Program {
-        public enum Architecture {
+namespace IPA
+{
+    public class Program
+    {
+        public enum Architecture
+        {
             x86,
             x64,
             Unknown
@@ -21,18 +24,18 @@ namespace IPA {
 
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
-        public static ArgumentFlag ArgHelp      = new ArgumentFlag("--help", "-h")      { DocString = "prints this message" };
-        public static ArgumentFlag ArgWaitFor   = new ArgumentFlag("--waitfor", "-w")   { DocString = "waits for the specified PID to exit", ValueString = "PID" };
-        public static ArgumentFlag ArgForce     = new ArgumentFlag("--force", "-f")     { DocString = "forces the operation to go through" };
-        public static ArgumentFlag ArgRevert    = new ArgumentFlag("--revert", "-r")    { DocString = "reverts the IPA installation" };
-        public static ArgumentFlag ArgNoWait    = new ArgumentFlag("--nowait", "-n")    { DocString = "doesn't wait for user input after the operation" };
-        public static ArgumentFlag ArgStart     = new ArgumentFlag("--start", "-s")     { DocString = "uses value as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
-        public static ArgumentFlag ArgLaunch    = new ArgumentFlag("--launch", "-l")    { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
+        public static ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h") { DocString = "prints this message" };
+        public static ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w") { DocString = "waits for the specified PID to exit", ValueString = "PID" };
+        public static ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f") { DocString = "forces the operation to go through" };
+        public static ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r") { DocString = "reverts the IPA installation" };
+        public static ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n") { DocString = "doesn't wait for user input after the operation" };
+        public static ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s") { DocString = "uses value as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
+        public static ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l") { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
 
         static void Main(string[] args)
         {
             Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch).Process();
-           
+
             if (ArgHelp)
             {
                 Arguments.CmdLine.PrintHelp();
@@ -57,7 +60,7 @@ namespace IPA {
                 }
 
                 PatchContext context;
-                
+
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
                 if (argExeName == null)
                     context = PatchContext.Create(new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
@@ -65,7 +68,7 @@ namespace IPA {
                             .FullName);
                 else
                     context = PatchContext.Create(argExeName);
-                
+
                 // Sanitizing
                 Validate(context);
 
@@ -77,7 +80,8 @@ namespace IPA {
                     StartIfNeedBe(context);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Fail(e.Message);
             }
 
@@ -95,32 +99,40 @@ namespace IPA {
             }
         }
 
-        private static void Validate(PatchContext c) {
-            if (!Directory.Exists(c.DataPathDst) || !File.Exists(c.EngineFile)) {
+        private static void Validate(PatchContext c)
+        {
+            if (!Directory.Exists(c.DataPathDst) || !File.Exists(c.EngineFile))
+            {
                 Fail("Game does not seem to be a Unity project. Could not find the libraries to patch.");
                 Console.WriteLine($"DataPath: {c.DataPathDst}");
                 Console.WriteLine($"EngineFile: {c.EngineFile}");
             }
         }
 
-        private static void Install(PatchContext context) {
-            try {
+        private static void Install(PatchContext context)
+        {
+            try
+            {
                 var backup = new BackupUnit(context);
 
                 #region Patch Version Check
 
                 var patchedModule = PatchedModule.Load(context.EngineFile);
+#if DEBUG
                 var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) >= 0;
+#else
+                var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) > 0;
+#endif
                 Console.WriteLine($"Current: {Version} Patched: {patchedModule.Data.Version}");
-                if (isCurrentNewer) {
+                if (isCurrentNewer)
+                {
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(
                         $"Preparing for update, {(patchedModule.Data.Version == null ? "UnPatched" : patchedModule.Data.Version.ToString())} => {Version}");
                     Console.WriteLine("--- Starting ---");
                     Revert(context);
                     Console.ResetColor();
-
-
+                    
                     #region File Copying
 
                     Console.ForegroundColor = ConsoleColor.Magenta;
@@ -146,7 +158,8 @@ namespace IPA {
 
                     #endregion
                 }
-                else {
+                else
+                {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"Files up to date @ Version {Version}!");
                     Console.ResetColor();
@@ -156,7 +169,8 @@ namespace IPA {
 
                 #region Create Plugin Folder
 
-                if (!Directory.Exists(context.PluginsFolder)) {
+                if (!Directory.Exists(context.PluginsFolder))
+                {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("Creating plugins folder... ");
                     Directory.CreateDirectory(context.PluginsFolder);
@@ -167,7 +181,8 @@ namespace IPA {
 
                 #region Patching
 
-                if (!patchedModule.Data.IsPatched || isCurrentNewer) {
+                if (!patchedModule.Data.IsPatched || isCurrentNewer)
+                {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"Patching UnityEngine.dll with Version {Application.ProductVersion}... ");
                     backup.Add(context.EngineFile);
@@ -180,9 +195,11 @@ namespace IPA {
 
                 #region Virtualizing
 
-                if (File.Exists(context.AssemblyFile)) {
+                if (File.Exists(context.AssemblyFile))
+                {
                     var virtualizedModule = VirtualizedModule.Load(context.AssemblyFile);
-                    if (!virtualizedModule.IsVirtualized) {
+                    if (!virtualizedModule.IsVirtualized)
+                    {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Virtualizing Assembly-Csharp.dll... ");
                         backup.Add(context.AssemblyFile);
@@ -195,10 +212,10 @@ namespace IPA {
                 #endregion
 
                 #region Creating shortcut
-                if(!File.Exists(context.ShortcutPath))
+                if (!File.Exists(context.ShortcutPath))
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("Creating shortcut to IPA ({0})... ",  context.IPA);
+                    Console.WriteLine("Creating shortcut to IPA ({0})... ", context.IPA);
                     try
                     {
                         Shortcut.Create(
@@ -210,7 +227,8 @@ namespace IPA {
                             hotkey: "",
                             iconPath: context.Executable
                         );
-                    } catch (Exception)
+                    }
+                    catch (Exception)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Error.WriteLine("Failed to create shortcut, but game was patched!");
@@ -227,19 +245,23 @@ namespace IPA {
             Console.ResetColor();
         }
 
-        private static void Revert(PatchContext context) {
+        private static void Revert(PatchContext context)
+        {
             Console.ForegroundColor = ConsoleColor.Cyan;
 
             Console.Write("Restoring backup... ");
-            if (BackupManager.Restore(context)) {
+            if (BackupManager.Restore(context))
+            {
                 Console.WriteLine("Done!");
             }
-            else {
+            else
+            {
                 Console.WriteLine("Already vanilla or you removed your backups!");
             }
 
 
-            if (File.Exists(context.ShortcutPath)) {
+            if (File.Exists(context.ShortcutPath))
+            {
                 Console.WriteLine("Deleting shortcut...");
                 File.Delete(context.ShortcutPath);
             }
@@ -250,7 +272,8 @@ namespace IPA {
             Console.ResetColor();
         }
 
-        private static void StartIfNeedBe(PatchContext context) {
+        private static void StartIfNeedBe(PatchContext context)
+        {
             if (ArgStart.HasValue)
             {
                 Process.Start(context.Executable, ArgStart.Value);
@@ -269,42 +292,51 @@ namespace IPA {
         }
 
         public static IEnumerable<FileInfo> NativePluginInterceptor(FileInfo from, FileInfo to,
-            DirectoryInfo nativePluginFolder, bool isFlat, Architecture preferredArchitecture) {
-            if (to.FullName.StartsWith(nativePluginFolder.FullName)) {
+            DirectoryInfo nativePluginFolder, bool isFlat, Architecture preferredArchitecture)
+        {
+            if (to.FullName.StartsWith(nativePluginFolder.FullName))
+            {
                 var relevantBit = to.FullName.Substring(nativePluginFolder.FullName.Length + 1);
                 // Goes into the plugin folder!
                 bool isFileFlat = !relevantBit.StartsWith("x86");
-                if (isFlat && !isFileFlat) {
+                if (isFlat && !isFileFlat)
+                {
                     // Flatten structure
                     bool is64Bit = relevantBit.StartsWith("x86_64");
-                    if (!is64Bit && preferredArchitecture == Architecture.x86) {
+                    if (!is64Bit && preferredArchitecture == Architecture.x86)
+                    {
                         // 32 bit
                         yield return new FileInfo(Path.Combine(nativePluginFolder.FullName,
                             relevantBit.Substring("x86".Length + 1)));
                     }
                     else if (is64Bit && (preferredArchitecture == Architecture.x64 ||
-                                         preferredArchitecture == Architecture.Unknown)) {
+                                         preferredArchitecture == Architecture.Unknown))
+                    {
                         // 64 bit
                         yield return new FileInfo(Path.Combine(nativePluginFolder.FullName,
                             relevantBit.Substring("x86_64".Length + 1)));
                     }
-                    else {
+                    else
+                    {
                         // Throw away
                         yield break;
                     }
                 }
-                else if (!isFlat && isFileFlat) {
+                else if (!isFlat && isFileFlat)
+                {
                     // Deepen structure
                     yield return new FileInfo(Path.Combine(Path.Combine(nativePluginFolder.FullName, "x86"),
                         relevantBit));
                     yield return new FileInfo(Path.Combine(Path.Combine(nativePluginFolder.FullName, "x86_64"),
                         relevantBit));
                 }
-                else {
+                else
+                {
                     yield return to;
                 }
             }
-            else {
+            else
+            {
                 yield return to;
             }
         }
@@ -317,20 +349,26 @@ namespace IPA {
             Console.SetCursorPosition(0, tpos);
         }
 
-        private static IEnumerable<FileInfo> PassThroughInterceptor(FileInfo from, FileInfo to) {
+        private static IEnumerable<FileInfo> PassThroughInterceptor(FileInfo from, FileInfo to)
+        {
             yield return to;
         }
 
         public static void CopyAll(DirectoryInfo source, DirectoryInfo target, bool aggressive, BackupUnit backup,
-            Func<FileInfo, FileInfo, IEnumerable<FileInfo>> interceptor = null) {
-            if (interceptor == null) {
+            Func<FileInfo, FileInfo, IEnumerable<FileInfo>> interceptor = null)
+        {
+            if (interceptor == null)
+            {
                 interceptor = PassThroughInterceptor;
             }
 
             // Copy each file into the new directory.
-            foreach (FileInfo fi in source.GetFiles()) {
-                foreach (var targetFile in interceptor(fi, new FileInfo(Path.Combine(target.FullName, fi.Name)))) {
-                    if (!targetFile.Exists || targetFile.LastWriteTimeUtc < fi.LastWriteTimeUtc || aggressive) {
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                foreach (var targetFile in interceptor(fi, new FileInfo(Path.Combine(target.FullName, fi.Name))))
+                {
+                    if (!targetFile.Exists || targetFile.LastWriteTimeUtc < fi.LastWriteTimeUtc || aggressive)
+                    {
                         targetFile.Directory.Create();
 
                         Console.CursorTop--;
@@ -343,14 +381,16 @@ namespace IPA {
             }
 
             // Copy each subdirectory using recursion.
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories()) {
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
                 DirectoryInfo nextTargetSubDir = new DirectoryInfo(Path.Combine(target.FullName, diSourceSubDir.Name));
                 CopyAll(diSourceSubDir, nextTargetSubDir, aggressive, backup, interceptor);
             }
         }
 
 
-        static void Fail(string message) {
+        static void Fail(string message)
+        {
             Console.Error.WriteLine("ERROR: " + message);
 
             WaitForEnd();
@@ -358,7 +398,8 @@ namespace IPA {
             Environment.Exit(1);
         }
 
-        public static string Args(params string[] args) {
+        public static string Args(params string[] args)
+        {
             return string.Join(" ", args.Select(EncodeParameterArgument).ToArray());
         }
 
@@ -368,7 +409,8 @@ namespace IPA {
         /// <param name="original">The value that should be received by the program</param>
         /// <returns>The value which needs to be passed to the program for the original value 
         /// to come through</returns>
-        public static string EncodeParameterArgument(string original) {
+        public static string EncodeParameterArgument(string original)
+        {
             if (string.IsNullOrEmpty(original))
                 return original;
             string value = Regex.Replace(original, @"(\\*)" + "\"", @"$1\$0");
@@ -376,10 +418,13 @@ namespace IPA {
             return value;
         }
 
-        public static Architecture DetectArchitecture(string assembly) {
-            using (var reader = new BinaryReader(File.OpenRead(assembly))) {
+        public static Architecture DetectArchitecture(string assembly)
+        {
+            using (var reader = new BinaryReader(File.OpenRead(assembly)))
+            {
                 var header = reader.ReadUInt16();
-                if (header == 0x5a4d) {
+                if (header == 0x5a4d)
+                {
                     reader.BaseStream.Seek(60, SeekOrigin.Begin); // this location contains the offset for the PE header
                     var peOffset = reader.ReadUInt32();
 
@@ -395,16 +440,19 @@ namespace IPA {
                     else
                         return Architecture.Unknown;
                 }
-                else {
+                else
+                {
                     // Not a supported binary
                     return Architecture.Unknown;
                 }
             }
         }
 
-        public abstract class Keyboard {
+        public abstract class Keyboard
+        {
             [Flags]
-            private enum KeyStates {
+            private enum KeyStates
+            {
                 None = 0,
                 Down = 1,
                 Toggled = 2
@@ -413,10 +461,11 @@ namespace IPA {
             [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
             private static extern short GetKeyState(int keyCode);
 
-            private static KeyStates GetKeyState(Keys key) {
+            private static KeyStates GetKeyState(Keys key)
+            {
                 KeyStates state = KeyStates.None;
 
-                short retVal = GetKeyState((int) key);
+                short retVal = GetKeyState((int)key);
 
                 //If the high-order bit is 1, the key is down
                 //otherwise, it is up.
@@ -430,11 +479,13 @@ namespace IPA {
                 return state;
             }
 
-            public static bool IsKeyDown(Keys key) {
+            public static bool IsKeyDown(Keys key)
+            {
                 return KeyStates.Down == (GetKeyState(key) & KeyStates.Down);
             }
 
-            public static bool IsKeyToggled(Keys key) {
+            public static bool IsKeyToggled(Keys key)
+            {
                 return KeyStates.Toggled == (GetKeyState(key) & KeyStates.Toggled);
             }
         }
