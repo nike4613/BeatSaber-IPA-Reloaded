@@ -1,5 +1,4 @@
-﻿using IllusionInjector;
-using IPA.Loader;
+﻿using IPA.Loader;
 using IPA.Logging;
 using System;
 using System.IO;

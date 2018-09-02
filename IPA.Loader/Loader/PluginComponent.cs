@@ -34,7 +34,7 @@ namespace IPA.Loader
             bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
             
-            gameObject.AddComponent<IllusionInjector.Updating.ModsaberML.Updater>();
+            gameObject.AddComponent<Updating.ModsaberML.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();

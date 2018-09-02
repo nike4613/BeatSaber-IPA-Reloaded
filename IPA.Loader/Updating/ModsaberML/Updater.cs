@@ -1,5 +1,4 @@
-﻿using IllusionInjector.Updating.Backup;
-using IPA.Utilities;
+﻿using IPA.Utilities;
 using IPA.Loader;
 using Ionic.Zip;
 using Newtonsoft.Json;
@@ -17,6 +16,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Logger = IPA.Logging.Logger;
+using IPA.Updating.Backup;
 
 namespace IPA.Updating.ModsaberML
 {
