@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-namespace Ipa.Injector.Windows
+namespace IPA.Injector.Windows
 {
     // https://stackoverflow.com/a/48864902/3117125
     static class WinConsole
