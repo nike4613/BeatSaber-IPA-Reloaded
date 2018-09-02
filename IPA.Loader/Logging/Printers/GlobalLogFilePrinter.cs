@@ -8,16 +8,33 @@ using IPA.Logging;
 
 namespace IPA.Logging.Printers
 {
-    class GlobalLogFilePrinter : GZFilePrinter
+    /// <summary>
+    /// A printer for all messages to a unified log location.
+    /// </summary>
+    public class GlobalLogFilePrinter : GZFilePrinter
     {
+        /// <summary>
+        /// Provides a filter for this specific printer.
+        /// </summary>
         public override Logger.LogLevel Filter { get; set; } = Logger.LogLevel.All;
 
-        public override void Print(IPA.Logging.Logger.Level level, DateTime time, string logName, string message)
+        /// <summary>
+        /// Prints an entry to the associated file.
+        /// </summary>
+        /// <param name="level">the <see cref="Logger.Level"/> of the message</param>
+        /// <param name="time">the <see cref="DateTime"/> the message was recorded at</param>
+        /// <param name="logName">the name of the log that sent the message</param>
+        /// <param name="message">the message to print</param>
+        public override void Print(Logger.Level level, DateTime time, string logName, string message)
         {
             foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 fileWriter.WriteLine(string.Format(Logger.LogFormat, line, logName, time, level.ToString().ToUpper()));
         }
 
+        /// <summary>
+        /// Gets the <see cref="FileInfo"/> for the target file.
+        /// </summary>
+        /// <returns></returns>
         protected override FileInfo GetFileInfo()
         {
             var logsDir = new DirectoryInfo("Logs");

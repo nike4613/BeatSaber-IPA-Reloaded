@@ -69,7 +69,7 @@ namespace IPA.Updating.Backup
         /// <summary>
         /// Adds a file to the list of changed files and backups it.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="file"></param>
         public void Add(FileInfo file)
         {
             var relativePath = LoneFunctions.GetRelativePath(Environment.CurrentDirectory, file.FullName);

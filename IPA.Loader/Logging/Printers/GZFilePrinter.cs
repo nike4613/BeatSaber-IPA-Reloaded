@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace IPA.Logging.Printers
 {
+    /// <summary>
+    /// A <see cref="LogPrinter"/> abstract class that provides the utilities to write to a GZip file.
+    /// </summary>
     public abstract class GZFilePrinter : LogPrinter
     {
         [DllImport("Kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -20,13 +23,20 @@ namespace IPA.Logging.Printers
         );
 
         [DllImport("Kernel32.dll")]
-        static extern Int32 GetLastError();
+        static extern int GetLastError();
 
         private FileInfo fileInfo;
+        /// <summary>
+        /// The <see cref="StreamWriter"/> that writes to the GZip file.
+        /// </summary>
         protected StreamWriter fileWriter;
         private GZipStream zstream;
         private FileStream fstream;
 
+        /// <summary>
+        /// Gets the <see cref="FileInfo"/> for the file to write to without the .gz extension.
+        /// </summary>
+        /// <returns></returns>
         protected abstract FileInfo GetFileInfo();
 
         private void InitLog()
@@ -64,6 +74,9 @@ namespace IPA.Logging.Printers
             }
         }
 
+        /// <summary>
+        /// Called at the start of any print session.
+        /// </summary>
         public override sealed void StartPrint()
         {
             InitLog();
@@ -76,6 +89,9 @@ namespace IPA.Logging.Printers
             fileWriter = new StreamWriter(zstream, new UTF8Encoding(false));
         }
 
+        /// <summary>
+        /// Called at the end of any print session.
+        /// </summary>
         public override sealed void EndPrint()
         {
             fileWriter.Flush();

@@ -9,13 +9,13 @@ using IPA.Logging;
 
 namespace IPA.Loader
 {
-    public class PluginComponent : MonoBehaviour
+    internal class PluginComponent : MonoBehaviour
     {
         private CompositeBSPlugin bsPlugins;
         private CompositeIPAPlugin ipaPlugins;
         private bool quitting = false;
 
-        public static PluginComponent Create()
+        internal static PluginComponent Create()
         {
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
@@ -87,7 +87,7 @@ namespace IPA.Loader
             ipaPlugins.OnLevelWasLoaded(level);
         }
 
-        public void OnLevelWasInitialized(int level)
+        void OnLevelWasInitialized(int level)
         {
             ipaPlugins.OnLevelWasInitialized(level);
         }

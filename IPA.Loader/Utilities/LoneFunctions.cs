@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace IPA.Utilities
 {
+    /// <summary>
+    /// A class providing static utility functions that in any other language would just *exist*.
+    /// </summary>
     public static class LoneFunctions
     {
+        /// <summary>
+        /// Converts a hex string to a byte array.
+        /// </summary>
+        /// <param name="hex">the hex stream</param>
+        /// <returns>the corresponding byte array</returns>
         public static byte[] StringToByteArray(string hex)
         {
             int NumberChars = hex.Length;
@@ -18,6 +26,11 @@ namespace IPA.Utilities
             return bytes;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ba"></param>
+        /// <returns></returns>
         public static string ByteArrayToString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
@@ -30,6 +43,12 @@ namespace IPA.Utilities
         // Distributed under the MIT/X11 software license
         // Ref: http://www.opensource.org/licenses/mit-license.php.
         // From: https://stackoverflow.com/a/8808245/3117125
+        /// <summary>
+        /// Uses unsafe code to compare 2 byte arrays quickly.
+        /// </summary>
+        /// <param name="a1">array 1</param>
+        /// <param name="a2">array 2</param>
+        /// <returns>whether or not they are byte-for-byte equal</returns>
         public static unsafe bool UnsafeCompare(byte[] a1, byte[] a2)
         {
             if (a1 == a2) return true;
@@ -48,9 +67,15 @@ namespace IPA.Utilities
             }
         }
 
-        public static string GetRelativePath(string filespec, string folder)
+        /// <summary>
+        /// Gets a path relative to the provided folder.
+        /// </summary>
+        /// <param name="file">the file to relativize</param>
+        /// <param name="folder">the source folder</param>
+        /// <returns>a path to get from <paramref name="folder"/> to <paramref name="file"/></returns>
+        public static string GetRelativePath(string file, string folder)
         {
-            Uri pathUri = new Uri(filespec);
+            Uri pathUri = new Uri(file);
             // Folders must end in a slash
             if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {

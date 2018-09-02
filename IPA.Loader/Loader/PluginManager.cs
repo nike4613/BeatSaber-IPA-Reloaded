@@ -5,6 +5,7 @@ using IPA.Updating;
 using IPA.Utilities;
 using Mono.Cecil;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,17 +18,23 @@ using System.Threading.Tasks;
 
 namespace IPA.Loader
 {
+    /// <summary>
+    /// The manager class for all plugins.
+    /// </summary>
     public static class PluginManager
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
-
-        public class BSPluginMeta
+        
+        internal class BSPluginMeta
         {
             public IBeatSaberPlugin Plugin { get; internal set; }
             public string Filename { get; internal set; }
             public ModsaberModInfo ModsaberInfo { get; internal set; }
         }
 
+        /// <summary>
+        /// An <see cref="IEnumerable"/> of new Beat Saber plugins
+        /// </summary>
         public static IEnumerable<IBeatSaberPlugin> BSPlugins
         {
             get
@@ -52,6 +59,9 @@ namespace IPA.Loader
             }
         }
         
+        /// <summary>
+        /// An <see cref="IEnumerable"/> of old IPA plugins
+        /// </summary>
         public static IEnumerable<IPlugin> Plugins
         {
             get
@@ -288,7 +298,7 @@ namespace IPA.Loader
             return new Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
         }
 
-        public class AppInfo
+        internal class AppInfo
         {
             [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = false)]
             private static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);

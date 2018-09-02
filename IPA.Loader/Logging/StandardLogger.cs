@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using IPA;
-using LoggerBase = IPA.Logging.Logger;
 using IPA.Logging.Printers;
 
 namespace IPA.Logging
 {
-    public class StandardLogger : LoggerBase
+    /// <summary>
+    /// The default <see cref="Logger"/> implimentation.
+    /// </summary>
+    public class StandardLogger : Logger
     {
         private static readonly IReadOnlyList<LogPrinter> defaultPrinters = new List<LogPrinter>()
         {
@@ -47,6 +49,9 @@ namespace IPA.Logging
 
         private string logName;
         private static bool showSourceClass = true;
+        /// <summary>
+        /// All levels defined by this filter will be sent to loggers. All others will be ignored.
+        /// </summary>
         public static LogLevel PrintFilter { get; set; } = LogLevel.InfoUp;
         private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
@@ -70,6 +75,11 @@ namespace IPA.Logging
             }
         }
 
+        /// <summary>
+        /// Logs a specific message at a given level.
+        /// </summary>
+        /// <param name="level">the message level</param>
+        /// <param name="message">the message to log</param>
         public override void Log(Level level, string message)
         {
             _logQueue.Add(new LogMessage
@@ -80,7 +90,11 @@ namespace IPA.Logging
                 time = DateTime.Now
             });
         }
-
+        
+        /// <summary>
+        /// An override to <see cref="Logger.Debug(string)"/> which shows the method that called it.
+        /// </summary>
+        /// <param name="message">the message to log</param>
         public override void Debug(string message)
         { // add source to message
             var stfm = new StackTrace().GetFrame(1).GetMethod();
@@ -144,7 +158,7 @@ namespace IPA.Logging
             }
         }
 
-        public static void StopLogThread()
+        internal static void StopLogThread()
         {
             _logQueue.CompleteAdding();
             _logThread.Join();
