@@ -13,7 +13,7 @@ namespace IPA.Logging.Printers
     /// <summary>
     /// A <see cref="LogPrinter"/> abstract class that provides the utilities to write to a GZip file.
     /// </summary>
-    public abstract class GZFilePrinter : LogPrinter
+    public abstract class GZFilePrinter : LogPrinter, IDisposable
     {
         [DllImport("Kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern bool CreateHardLink(
@@ -21,9 +21,6 @@ namespace IPA.Logging.Printers
             string lpExistingFileName,
             IntPtr lpSecurityAttributes
         );
-
-        [DllImport("Kernel32.dll")]
-        static extern int GetLastError();
 
         private FileInfo fileInfo;
         /// <summary>
@@ -57,7 +54,8 @@ namespace IPA.Logging.Printers
                     {
                         if (!CreateHardLink(symlink.FullName, fileInfo.FullName, IntPtr.Zero))
                         {
-                            Logger.log.Error($"Hardlink creation failed {GetLastError()}");
+                            var error = Marshal.GetLastWin32Error();
+                            Logger.log.Error($"Hardlink creation failed ({error})");
                         }
                     }
                     catch (Exception e)
@@ -103,6 +101,35 @@ namespace IPA.Logging.Printers
             fileWriter.Dispose();
             zstream.Dispose();
             fstream.Dispose();
+        }
+
+        /// <summary>
+        /// Disposes the file printer. 
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposes the file printer.
+        /// </summary>
+        /// <param name="disposing">does nothing</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                fileWriter.Flush();
+                zstream.Flush();
+                fstream.Flush();
+                fileWriter.Close();
+                zstream.Close();
+                fstream.Close();
+                fileWriter.Dispose();
+                zstream.Dispose();
+                fstream.Dispose();
+            }
         }
     }
 }
