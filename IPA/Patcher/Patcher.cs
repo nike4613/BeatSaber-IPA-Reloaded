@@ -62,10 +62,11 @@ namespace IPA.Patcher
         public void Patch(Version v)
         {
             // First, let's add the reference
-            var nameReference = new AssemblyNameReference("IPA.Injector", Program.Version);
+            var nameReference = new AssemblyNameReference("IPA.Injector", v);
             var injectorPath = Path.Combine(_File.DirectoryName, "IPA.Injector.dll");
             var injector = ModuleDefinition.ReadModule(injectorPath);
 
+            bool hasIPAInjector = false;
             for (int i = 0; i < _Module.AssemblyReferences.Count; i++)
             {
                 if (_Module.AssemblyReferences[i].Name == "IllusionInjector")
@@ -73,26 +74,37 @@ namespace IPA.Patcher
                 if (_Module.AssemblyReferences[i].Name == "IllusionPlugin")
                     _Module.AssemblyReferences.RemoveAt(i--);
                 if (_Module.AssemblyReferences[i].Name == "IPA.Injector")
-                    _Module.AssemblyReferences.RemoveAt(i--);
-            }
-
-            _Module.AssemblyReferences.Add(nameReference);
-
-            int patched = 0;
-            foreach(var type in FindEntryTypes())
-            {
-                if(PatchType(type, injector))
                 {
-                    patched++;
+                    hasIPAInjector = true;
+                    _Module.AssemblyReferences[i].Version = v;
                 }
             }
-            
-            if(patched > 0)
+
+            if (!hasIPAInjector)
+            {
+                _Module.AssemblyReferences.Add(nameReference);
+
+                int patched = 0;
+                foreach (var type in FindEntryTypes())
+                {
+                    if (PatchType(type, injector))
+                    {
+                        patched++;
+                    }
+                }
+
+                if (patched > 0)
+                {
+                    _Module.Write(_File.FullName);
+                }
+                else
+                {
+                    throw new Exception("Could not find any entry type!");
+                }
+            }
+            else
             {
                 _Module.Write(_File.FullName);
-            } else
-            {
-                throw new Exception("Could not find any entry type!");
             }
         }
 
