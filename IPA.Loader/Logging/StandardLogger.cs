@@ -48,18 +48,36 @@ namespace IPA.Logging
         };
 
         private string logName;
-        private static bool showSourceClass = true;
+        private static readonly bool showSourceClass = true;
         /// <summary>
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
         public static LogLevel PrintFilter { get; set; } = LogLevel.InfoUp;
         private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
+        private Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
+
         static StandardLogger()
         {
             if (ModPrefs.GetBool("IPA", "PrintDebug", false, true))
                 PrintFilter = LogLevel.All;
             showSourceClass = ModPrefs.GetBool("IPA", "DebugShowCallSource", false, true);
+        }
+
+        private StandardLogger(string mainName, string subName, params LogPrinter[] inherited)
+        {
+            logName = $"{mainName}/{subName}";
+
+            printers = new List<LogPrinter>(inherited)
+            {
+                new PluginSubLogPrinter(mainName, subName)
+            };
+
+            if (_logThread == null || !_logThread.IsAlive)
+            {
+                _logThread = new Thread(LogThread);
+                _logThread.Start();
+            }
         }
 
         internal StandardLogger(string name)
@@ -73,6 +91,17 @@ namespace IPA.Logging
                 _logThread = new Thread(LogThread);
                 _logThread.Start();
             }
+        }
+
+        internal StandardLogger GetChild(string name)
+        {
+            if (!children.TryGetValue(name, out StandardLogger chld))
+            {
+                chld = new StandardLogger(logName, name, printers.ToArray());
+                children.Add(name, chld);
+            }
+
+            return chld;
         }
 
         /// <summary>
@@ -162,6 +191,30 @@ namespace IPA.Logging
         {
             _logQueue.CompleteAdding();
             _logThread.Join();
+        }
+    }
+
+    /// <summary>
+    /// A class providing extensions for various loggers.
+    /// </summary>
+    public static class LoggerExtensions
+    {
+        /// <summary>
+        /// Gets a child logger, if supported.
+        /// </summary>
+        /// <param name="logger">the parent <see cref="Logger"/></param>
+        /// <param name="name">the name of the child</param>
+        /// <returns>the child logger</returns>
+        public static Logger GetChildLogger(this Logger logger, string name)
+        {
+            if (logger is StandardLogger)
+            {
+                return (logger as StandardLogger).GetChild(name);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }

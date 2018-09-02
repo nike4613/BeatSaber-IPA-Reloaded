@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
+    <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\ModsaberModInfo.cs" />

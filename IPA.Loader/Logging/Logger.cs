@@ -21,6 +21,9 @@ namespace IPA.Logging
                 return _log;
             }
         }
+        internal static Logger updater => log.GetChildLogger("Upater");
+        internal static Logger libLoader => log.GetChildLogger("LibraryLoader");
+        internal static Logger loader => log.GetChildLogger("Loader");
         internal static bool LogCreated => _log != null;
 
         /// <summary>

@@ -177,7 +177,7 @@ namespace IPA.Loader
                     }
                     catch (Exception e)
                     {
-                        Logger.log.Error($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
+                        Logger.loader.Error($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
                     }
                 }
 
@@ -276,7 +276,7 @@ namespace IPA.Loader
                         }
                         catch (AmbiguousMatchException)
                         {
-                            Logger.log.Error($"Only one Init allowed per plugin");
+                            Logger.loader.Error($"Only one Init allowed per plugin");
                         }
                     }
                     else
@@ -292,7 +292,7 @@ namespace IPA.Loader
             }
             catch (Exception e)
             {
-                Logger.log.Error($"Could not load {Path.GetFileName(file)}! {e}");
+                Logger.loader.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
             return new Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);

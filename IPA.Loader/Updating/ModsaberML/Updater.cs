@@ -38,7 +38,7 @@ namespace IPA.Updating.ModsaberML
             }
             catch (Exception e)
             {
-                Logger.log.Error(e);
+                Logger.updater.Error(e);
             }
         }
 
@@ -55,7 +55,7 @@ namespace IPA.Updating.ModsaberML
             
         IEnumerator CheckForUpdatesCoroutine()
         {
-            Logger.log.Info("Checking for mod updates...");
+            Logger.updater.Info("Checking for mod updates...");
 
             var toUpdate = new List<UpdateStruct>();
             var GameVersion = new Version(Application.version);
@@ -71,20 +71,20 @@ namespace IPA.Updating.ModsaberML
 
                     if (request.isNetworkError)
                     {
-                        Logger.log.Error("Network error while trying to update mods");
-                        Logger.log.Error(request.error);
+                        Logger.updater.Error("Network error while trying to update mods");
+                        Logger.updater.Error(request.error);
                         continue;
                     }
                     if (request.isHttpError)
                     {
                         if (request.responseCode == 404)
                         {
-                            Logger.log.Error($"Mod {plugin.Plugin.Name} not found under name {info.InternalName}");
+                            Logger.updater.Error($"Mod {plugin.Plugin.Name} not found under name {info.InternalName}");
                             continue;
                         }
 
-                        Logger.log.Error($"Server returned an error code while trying to update mod {plugin.Plugin.Name}");
-                        Logger.log.Error(request.error);
+                        Logger.updater.Error($"Server returned an error code while trying to update mod {plugin.Plugin.Name}");
+                        Logger.updater.Error(request.error);
                         continue;
                     }
 
@@ -94,23 +94,23 @@ namespace IPA.Updating.ModsaberML
                     try
                     {
                         modRegistry = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(json);
-                        Logger.log.Debug(modRegistry.ToString());
+                        Logger.updater.Debug(modRegistry.ToString());
                     }
                     catch (Exception e)
                     {
-                        Logger.log.Error($"Parse error while trying to update mods");
-                        Logger.log.Error(e);
+                        Logger.updater.Error($"Parse error while trying to update mods");
+                        Logger.updater.Error(e);
                         continue;
                     }
 
-                    Logger.log.Debug($"Found Modsaber.ML registration for {plugin.Plugin.Name} ({info.InternalName})");
-                    Logger.log.Debug($"Installed version: {info.CurrentVersion}; Latest version: {modRegistry.Version}");
+                    Logger.updater.Debug($"Found Modsaber.ML registration for {plugin.Plugin.Name} ({info.InternalName})");
+                    Logger.updater.Debug($"Installed version: {info.CurrentVersion}; Latest version: {modRegistry.Version}");
                     if (modRegistry.Version > info.CurrentVersion)
                     {
-                        Logger.log.Debug($"{plugin.Plugin.Name} needs an update!");
+                        Logger.updater.Debug($"{plugin.Plugin.Name} needs an update!");
                         if (modRegistry.GameVersion == GameVersion)
                         {
-                            Logger.log.Debug($"Queueing update...");
+                            Logger.updater.Debug($"Queueing update...");
                             toUpdate.Add(new UpdateStruct
                             {
                                 plugin = plugin,
@@ -119,13 +119,13 @@ namespace IPA.Updating.ModsaberML
                         }
                         else
                         {
-                            Logger.log.Warn($"Update avaliable for {plugin.Plugin.Name}, but for a different Beat Saber version!");
+                            Logger.updater.Warn($"Update avaliable for {plugin.Plugin.Name}, but for a different Beat Saber version!");
                         }
                     }
                 }
             }
 
-            Logger.log.Info($"{toUpdate.Count} mods need updating");
+            Logger.updater.Info($"{toUpdate.Count} mods need updating");
 
             if (toUpdate.Count == 0) yield break;
 
@@ -149,19 +149,19 @@ namespace IPA.Updating.ModsaberML
             protected override void ReceiveContentLength(int contentLength)
             {
                 Stream.Capacity = contentLength;
-                Logger.log.Debug($"Got content length: {contentLength}");
+                Logger.updater.Debug($"Got content length: {contentLength}");
             }
 
             protected override void CompleteContent()
             {
-                Logger.log.Debug("Download complete");
+                Logger.updater.Debug("Download complete");
             }
 
             protected override bool ReceiveData(byte[] data, int dataLength)
             {
                 if (data == null || data.Length < 1)
                 {
-                    Logger.log.Debug("CustomWebRequest :: ReceiveData - received a null/empty buffer");
+                    Logger.updater.Debug("CustomWebRequest :: ReceiveData - received a null/empty buffer");
                     return false;
                 }
 
@@ -184,7 +184,7 @@ namespace IPA.Updating.ModsaberML
 
         private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo, string tempDirectory)
         {
-            Logger.log.Debug($"Extracting ZIP file for {item.plugin.Plugin.Name}");
+            Logger.updater.Debug($"Extracting ZIP file for {item.plugin.Plugin.Name}");
 
             var data = stream.GetBuffer();
             SHA1 sha = new SHA1CryptoServiceProvider();
@@ -201,12 +201,12 @@ namespace IPA.Updating.ModsaberML
 
                 using (var zipFile = ZipFile.Read(stream))
                 {
-                    Logger.log.Debug("Streams opened");
+                    Logger.updater.Debug("Streams opened");
                     foreach (var entry in zipFile)
                     {
                         if (entry.IsDirectory)
                         {
-                            Logger.log.Debug($"Creating directory {entry.FileName}");
+                            Logger.updater.Debug($"Creating directory {entry.FileName}");
                             Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, entry.FileName));
                         }
                         else
@@ -233,7 +233,7 @@ namespace IPA.Updating.ModsaberML
                                 else
                                     newFiles.Add(targetFile);
 
-                                Logger.log.Debug($"Extracting file {targetFile.FullName}");
+                                Logger.updater.Debug($"Extracting file {targetFile.FullName}");
 
                                 var fstream = targetFile.Create();
                                 ostream.CopyTo(fstream);
@@ -266,12 +266,12 @@ namespace IPA.Updating.ModsaberML
 
             backup.Delete();
 
-            Logger.log.Debug("Downloader exited");
+            Logger.updater.Debug("Downloader exited");
         }
 
         IEnumerator UpdateModCoroutine(UpdateStruct item, string tempDirectory)
         {
-            Logger.log.Debug($"Steam avaliable: {SteamCheck.IsAvailable}");
+            Logger.updater.Debug($"Steam avaliable: {SteamCheck.IsAvailable}");
 
             ApiEndpoint.Mod.PlatformFile platformFile;
             if (SteamCheck.IsAvailable || item.externInfo.Files.Oculus == null)
@@ -281,14 +281,14 @@ namespace IPA.Updating.ModsaberML
 
             string url = platformFile.DownloadPath;
 
-            Logger.log.Debug($"URL = {url}");
+            Logger.updater.Debug($"URL = {url}");
 
             const int MaxTries = 3;
             int maxTries = MaxTries;
             while (maxTries > 0)
             {
                 if (maxTries-- != MaxTries)
-                    Logger.log.Info($"Re-trying download...");
+                    Logger.updater.Info($"Re-trying download...");
 
                 using (var stream = new MemoryStream())
                 using (var request = UnityWebRequest.Get(url))
@@ -297,22 +297,22 @@ namespace IPA.Updating.ModsaberML
                     var dlh = new StreamDownloadHandler(stream);
                     request.downloadHandler = dlh;
 
-                    Logger.log.Debug("Sending request");
-                    //Logger.log.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
+                    Logger.updater.Debug("Sending request");
+                    //Logger.updater.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
                     yield return request.SendWebRequest();
-                    Logger.log.Debug("Download finished");
+                    Logger.updater.Debug("Download finished");
 
                     if (request.isNetworkError)
                     {
-                        Logger.log.Error("Network error while trying to update mod");
-                        Logger.log.Error(request.error);
+                        Logger.updater.Error("Network error while trying to update mod");
+                        Logger.updater.Error(request.error);
                         taskTokenSource.Cancel();
                         continue;
                     }
                     if (request.isHttpError)
                     {
-                        Logger.log.Error($"Server returned an error code while trying to update mod");
-                        Logger.log.Error(request.error);
+                        Logger.updater.Error($"Server returned an error code while trying to update mod");
+                        Logger.updater.Error(request.error);
                         taskTokenSource.Cancel();
                         continue;
                     }
@@ -329,8 +329,8 @@ namespace IPA.Updating.ModsaberML
 
                     if (downloadTask.IsFaulted)
                     {
-                        Logger.log.Error($"Error downloading mod {item.plugin.Plugin.Name}");
-                        Logger.log.Error(downloadTask.Exception);
+                        Logger.updater.Error($"Error downloading mod {item.plugin.Plugin.Name}");
+                        Logger.updater.Error(downloadTask.Exception);
                         continue;
                     }
 
@@ -339,9 +339,9 @@ namespace IPA.Updating.ModsaberML
             }
 
             if (maxTries == 0)
-                Logger.log.Warn($"Plugin download failed {MaxTries} times, not re-trying");
+                Logger.updater.Warn($"Plugin download failed {MaxTries} times, not re-trying");
             else
-                Logger.log.Debug("Download complete");
+                Logger.updater.Debug("Download complete");
         }
     }
 }
