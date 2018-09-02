@@ -13,13 +13,13 @@ namespace IPA.Patcher
     public class BackupUnit
     {
         public string Name { get; private set; }
-
+        
         private DirectoryInfo _BackupPath;
         private PatchContext _Context;
         private List<string> _Files = new List<string>();
-
-
-
+        private FileInfo _ManifestFile;
+        private static string _ManifestFileName = "$manifest$.txt";
+        
         public BackupUnit(PatchContext context) : this(context, DateTime.Now.ToString("yyyy-MM-dd_h-mm-ss"))
         {
         }
@@ -29,16 +29,28 @@ namespace IPA.Patcher
             Name = name;
             _Context = context;
             _BackupPath = new DirectoryInfo(Path.Combine(_Context.BackupPath, Name));
+            _ManifestFile = new FileInfo(Path.Combine(_BackupPath.FullName, _ManifestFileName));
         }
         
         public static BackupUnit FromDirectory(DirectoryInfo directory, PatchContext context)
         {
             var unit = new BackupUnit(context, directory.Name);
 
-            // Parse directory
-            foreach(var file in directory.GetFiles("*", SearchOption.AllDirectories)) {
-                var relativePath = file.FullName.Substring(directory.FullName.Length + 1);
-                unit._Files.Add(relativePath);
+            // Read Manifest
+            if (unit._ManifestFile.Exists)
+            {
+                string manifest = File.ReadAllText(unit._ManifestFile.FullName);
+                foreach (var line in manifest.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    unit._Files.Add(line);
+            }
+            else
+            {
+                foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
+                {
+                    if (file.Name == _ManifestFileName) continue;
+                    var relativePath = file.FullName.Substring(directory.FullName.Length + 1);
+                    unit._Files.Add(relativePath);
+                }
             }
 
             return unit;
@@ -74,18 +86,24 @@ namespace IPA.Patcher
                 Console.WriteLine("Skipping backup of {0}", relativePath);
                 return;
             }
-
-
+            
             // Copy over
             backupPath.Directory.Create();
             if (file.Exists)
             {
                 file.CopyTo(backupPath.FullName);
-            } else
+            }
+            else
             {
                 // Make empty file
                 backupPath.Create().Close();
             }
+
+            if (!File.Exists(_ManifestFile.FullName))
+                _ManifestFile.Create().Close();
+            var stream = _ManifestFile.AppendText();
+            stream.WriteLine(relativePath);
+            stream.Close();
 
             // Add to list
             _Files.Add(relativePath);
