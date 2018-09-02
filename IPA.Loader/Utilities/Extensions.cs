@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionInjector.Utilities
+namespace IPA.Utilities
 {
     public static class Extensions
     {

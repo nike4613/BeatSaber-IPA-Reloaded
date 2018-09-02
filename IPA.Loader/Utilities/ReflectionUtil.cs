@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace IllusionPlugin.Utils
+namespace IPA.Utilities
 {
     /// <summary>
     /// A utility class providing reflection helper methods.
