@@ -84,7 +84,6 @@ namespace IPA.Loader
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
-            Logger.log.Info(exeName);
             _bsPlugins = new List<BSPluginMeta>();
             _ipaPlugins = new List<IPlugin>();
 
@@ -129,9 +128,8 @@ namespace IPA.Loader
                 _bsPlugins.AddRange(result.Item1);
                 _ipaPlugins.AddRange(result.Item2);
             }
-
-
-            // DEBUG
+            
+            Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {UnityEngine.Application.unityVersion}");
             Logger.log.Info($"Game version {UnityEngine.Application.version}");
             Logger.log.Info("-----------------------------");
