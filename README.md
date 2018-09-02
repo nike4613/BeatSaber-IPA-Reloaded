@@ -19,7 +19,7 @@ To verify it worked, start the game with the `--verbose` flag. If a new console 
 ## How To Develop
 
 1. Create a new **Class Library** C# project (.NET 4.6)
-2. Download a release and add **IllusionPlugin.dll** to your references
+2. Download a release and add **IPA.Loader.dll** to your references
 3. Implement `IBeatSaberPlugin` or `IEnhancedBeatSaberPlugin`
 4. Build the project and copy the DLL into the Plugins folder of the gam
 
@@ -36,5 +36,6 @@ When patching, IPA automatically creates a shortcut that keeps everything up-to-
 - `--launch`: Launch the game after patching
 - `--revert`: Revert changes made by IPA (= unpatch the game)
 - `--nowait`: Never keep the console open
+- See `-h` or `--help` for more options.
 
 Unconsumed arguments will be passed on to the game in case of `--launch`.
