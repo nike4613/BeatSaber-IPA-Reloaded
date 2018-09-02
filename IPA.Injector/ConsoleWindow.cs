@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-namespace Windows
+namespace Ipa.Injector.Windows
 {
 
     class GuiConsole 
