@@ -300,7 +300,7 @@ namespace IPA.Loader
 
         internal class AppInfo
         {
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = false)]
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = false)]
             private static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);
             private static HandleRef NullHandleRef = new HandleRef(null, IntPtr.Zero);
             public static string StartupPath

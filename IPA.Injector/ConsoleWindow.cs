@@ -77,7 +77,7 @@ namespace Ipa.Injector.Windows
         [DllImport("kernel32.dll",
             EntryPoint = "CreateFileW",
             SetLastError = true,
-            CharSet = CharSet.Auto,
+            CharSet = CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr CreateFileW(
               string lpFileName,

@@ -32,6 +32,7 @@ namespace IPA
         public static ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s") { DocString = "uses value as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
         public static ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l") { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
 
+        [STAThread]
         static void Main(string[] args)
         {
             Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch).Process();
