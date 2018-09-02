@@ -186,7 +186,8 @@ namespace IPA
             if (sVal == "1" || sVal == "0")
             {
                 return sVal == "1";
-            } else if (autoSave)
+            }
+            else if (autoSave)
             {
                 (this as IModPrefs).SetBool(section, name, defaultValue);
             }

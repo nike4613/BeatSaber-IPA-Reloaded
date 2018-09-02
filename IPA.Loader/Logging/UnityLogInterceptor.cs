@@ -9,7 +9,15 @@ namespace IPA.Logging
 {
     internal class UnityLogInterceptor
     {
-        public static Logger UnityLogger = new StandardLogger("UnityEngine");
+        internal static Logger _logger;
+        public static Logger UnityLogger {
+            get
+            {
+                if (_logger == null)
+                    _logger = new StandardLogger("UnityEngine");
+                return _logger;
+            }
+        }
 
         public static Logger.Level LogTypeToLevel(LogType type)
         {
