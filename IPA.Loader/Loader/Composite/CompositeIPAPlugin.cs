@@ -11,7 +11,7 @@ using Logger = IPA.Logging.Logger;
 namespace IPA.Loader.Composite
 {
 #pragma warning disable CS0618 // Type or member is obsolete
-    public class CompositeIPAPlugin : IPlugin
+    internal class CompositeIPAPlugin : IPlugin
     {
         IEnumerable<IPlugin> plugins;
 

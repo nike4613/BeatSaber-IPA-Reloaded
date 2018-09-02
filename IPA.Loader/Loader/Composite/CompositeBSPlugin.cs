@@ -9,7 +9,7 @@ using Logger = IPA.Logging.Logger;
 
 namespace IPA.Loader.Composite
 {
-    public class CompositeBSPlugin : IBeatSaberPlugin
+    internal class CompositeBSPlugin : IBeatSaberPlugin
     {
         IEnumerable<IBeatSaberPlugin> plugins;
 

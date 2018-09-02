@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace IPA.Utilities
 {
+    /// <summary>
+    /// Provides a utility to test if this is a Steam build of Beat Saber.
+    /// </summary>
     public static class SteamCheck
     {
-        public static Type SteamVRCamera;
-        public static Type SteamVRExternalCamera;
-        public static Type SteamVRFade;
+        private static Type SteamVRCamera;
+        private static Type SteamVRExternalCamera;
+        private static Type SteamVRFade;
+        /// <summary>
+        /// Returns <see langword="true"/> when called on a Steam installation.
+        /// </summary>
         public static bool IsAvailable => FindSteamVRAsset();
 
         private static bool FindSteamVRAsset()
