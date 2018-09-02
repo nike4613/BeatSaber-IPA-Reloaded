@@ -18,7 +18,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Logger = IPA.Logging.Logger;
 
-namespace IllusionInjector.Updating.ModsaberML
+namespace IPA.Updating.ModsaberML
 {
     class Updater : MonoBehaviour
     {

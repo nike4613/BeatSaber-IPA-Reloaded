@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionInjector.Updating.ModsaberML
+namespace IPA.Updating.ModsaberML
 {
     class ApiEndpoint
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
-namespace IllusionInjector.Updating
+namespace IPA.Updating
 {
     internal class SelfPlugin : IBeatSaberPlugin
     {
