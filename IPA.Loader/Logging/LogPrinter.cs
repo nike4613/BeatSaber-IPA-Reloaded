@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionPlugin.Logging
+namespace IPA.Logging
 {
     /// <summary>
     /// The log printer's base class.

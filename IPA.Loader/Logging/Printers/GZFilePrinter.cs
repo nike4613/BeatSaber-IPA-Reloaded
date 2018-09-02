@@ -1,4 +1,4 @@
-﻿using IllusionPlugin.Logging;
+﻿using IPA.Logging;
 using Ionic.Zlib;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionInjector.Logging.Printers
+namespace IPA.Logging.Printers
 {
     public abstract class GZFilePrinter : LogPrinter
     {

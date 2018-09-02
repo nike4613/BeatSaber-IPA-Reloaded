@@ -4,13 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IllusionPlugin.Logging
+namespace IPA.Logging
 {
     /// <summary>
     /// The logger base class. Provides the format for console logs.
     /// </summary>
     public abstract class Logger
     {
+        private static Logger _log;
+        internal static Logger log
+        {
+            get
+            {
+                if (_log == null)
+                    _log = new StandardLogger("IPA");
+                return _log;
+            }
+        }
+        internal static bool LogCreated => _log != null;
+
         /// <summary>
         /// The standard format for log messages.
         /// </summary>
