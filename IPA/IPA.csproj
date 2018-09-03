@@ -117,6 +117,10 @@
       <Dlls Include="$(SolutionDir)IPA.Injector\$(OutDir)**\*" />
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
+    <ItemGroup>
+      <BadDlls Include="$(OutputPath)Mono.Cecil.*.dll" />
+    </ItemGroup>
+    <Delete Files="@(BadDlls)" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
