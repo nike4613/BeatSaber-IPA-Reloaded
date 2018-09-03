@@ -60,7 +60,23 @@ namespace IPA
                     catch (Exception) { }
                 }
 
-                PatchContext context;
+                PatchContext context = null;
+                
+                Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
+                {
+                    var libsDir = context.LibsPathSrc;
+
+                    var asmName = new AssemblyName(e.Name);
+                    var testFilen = Path.Combine(libsDir, $"{asmName.Name}.{asmName.Version}.dll");
+
+                    if (File.Exists(testFilen))
+                        return Assembly.LoadFile(testFilen);
+
+                    Console.WriteLine($"Could not load library {asmName}");
+
+                    return null;
+                }
+                AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
 
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
                 if (argExeName == null)

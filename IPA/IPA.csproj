@@ -118,7 +118,7 @@
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <ItemGroup>
-      <BadDlls Include="$(OutputPath)Mono.Cecil.*.dll" />
+      <BadDlls Include="$(OutputPath)Mono.Cecil.*" /> <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
     </ItemGroup>
     <Delete Files="@(BadDlls)" />
   </Target>
