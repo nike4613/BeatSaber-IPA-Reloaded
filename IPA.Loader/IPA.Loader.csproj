@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IConfigProvider.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
