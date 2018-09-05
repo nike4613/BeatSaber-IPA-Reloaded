@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace IPA
+namespace IPA.Config
 {
     /// <summary>
     /// Create a New INI file to store or load data

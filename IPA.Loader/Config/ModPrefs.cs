@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace IPA
+namespace IPA.Config
 {
     /// <summary>
     /// Allows to get and set preferences for your mod. 

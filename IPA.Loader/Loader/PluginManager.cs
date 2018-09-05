@@ -1,4 +1,6 @@
 ﻿using IPA;
+using IPA.Config;
+using IPA.Config.ConfigProviders;
 using IPA.Logging;
 using IPA.Old;
 using IPA.Updating;
@@ -75,7 +77,7 @@ namespace IPA.Loader
         }
         private static List<IPlugin> _ipaPlugins = null;
 
-        
+        internal static List<IConfigProvider> configProviders = new List<IConfigProvider>();
 
         private static void LoadPlugins()
         {
@@ -205,9 +207,9 @@ namespace IPA.Loader
                         if (@ref.FullName == "IllusionPlugin.IBeatSaberPlugin") @ref.Namespace = "IPA"; //@ref.Name = "";
                         if (@ref.FullName == "IllusionPlugin.IEnhancedBeatSaberPlugin") @ref.Namespace = "IPA"; //@ref.Name = "";
                         if (@ref.FullName == "IllusionPlugin.BeatSaber.ModsaberModInfo") @ref.Namespace = "IPA"; //@ref.Name = "";
-                        if (@ref.FullName == "IllusionPlugin.IniFile") @ref.Namespace = "IPA"; //@ref.Name = "";
-                        if (@ref.FullName == "IllusionPlugin.IModPrefs") @ref.Namespace = "IPA"; //@ref.Name = "";
-                        if (@ref.FullName == "IllusionPlugin.ModPrefs") @ref.Namespace = "IPA"; //@ref.Name = "";
+                        if (@ref.FullName == "IllusionPlugin.IniFile") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
+                        if (@ref.FullName == "IllusionPlugin.IModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
+                        if (@ref.FullName == "IllusionPlugin.ModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
                         if (@ref.FullName == "IllusionPlugin.Utils.ReflectionUtil") @ref.Namespace = "IPA.Utilities"; //@ref.Name = "";
                         if (@ref.FullName == "IllusionPlugin.Logging.Logger") @ref.Namespace = "IPA.Logging"; //@ref.Name = "";
                         if (@ref.FullName == "IllusionPlugin.Logging.LogPrinter") @ref.Namespace = "IPA.Logging"; //@ref.Name = "";
@@ -257,6 +259,12 @@ namespace IPA.Loader
                                     {
                                         if (modPrefs == null) modPrefs = new ModPrefs(bsPlugin);
                                         initArgs.Add(modPrefs);
+                                    }
+                                    else if (ptype.IsAssignableFrom(typeof(IConfigProvider)))
+                                    {
+                                        var configProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", $"{bsPlugin.Name}.{param.Name}") };
+                                        configProviders.Add(configProvider);
+                                        initArgs.Add(configProvider);
                                     }
                                     else
                                         initArgs.Add(ptype.GetDefault());
