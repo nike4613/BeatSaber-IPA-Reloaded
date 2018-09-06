@@ -17,8 +17,8 @@ namespace IPA
         public string InternalName { get; set; }
         
         /// <summary>
-        /// The version of the currently installed mod. Used to compare to the version on ModSaber.
+        /// The version of the currently installed mod. Used to compare to the version on ModSaber. Should be a valid SemVer version.
         /// </summary>
-        public Version CurrentVersion { get; set; }
+        public string CurrentVersion { get; set; }
     }
 }

@@ -69,6 +69,9 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogPrinter.cs" />
     <Compile Include="Config\ModPrefs.cs" />
+    <Compile Include="Updating\Converters\ModsaberDependencyConverter.cs" />
+    <Compile Include="Updating\Converters\SemverRangeConverter.cs" />
+    <Compile Include="Updating\Converters\SemverVersionConverter.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />
     <Compile Include="Loader\Composite\CompositeIPAPlugin.cs" />
     <Compile Include="Logging\Printers\ColoredConsolePrinter.cs" />
@@ -97,6 +100,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="SemanticVersioning">
+      <Version>1.2.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

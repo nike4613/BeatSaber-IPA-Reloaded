@@ -1,13 +1,16 @@
 ﻿using IPA.Logging;
+using IPA.Updating.Converters;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SemVer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Version = SemVer.Version;
 
 namespace IPA.Updating.ModsaberML
 {
@@ -71,18 +74,24 @@ namespace IPA.Updating.ModsaberML
 #pragma warning disable CS0649
             [JsonProperty("name")]
             public string Name;
+
             [JsonProperty("version"),
-             JsonConverter(typeof(VersionConverter))]
+             JsonConverter(typeof(SemverVersionConverter))]
             public Version Version;
+
             [JsonProperty("approved")]
             public bool Approved;
+
             [JsonProperty("title")]
             public string Title;
+
             [JsonProperty("gameVersion"), 
-             JsonConverter(typeof(VersionConverter))]
+             JsonConverter(typeof(SemverVersionConverter))]
             public Version GameVersion;
+
             [JsonProperty("author")]
             public string Author;
+
 #pragma warning restore CS0649
             [Serializable]
             public class PlatformFile
@@ -90,8 +99,10 @@ namespace IPA.Updating.ModsaberML
                 [JsonProperty("hash"),
                  JsonConverter(typeof(HexArrayConverter))]
                 public byte[] Hash = new byte[20];
+
                 [JsonProperty("files", ItemConverterType = typeof(HexArrayConverter))]
                 public Dictionary<string, byte[]> FileHashes = new Dictionary<string, byte[]>();
+
                 [JsonProperty("url")]
                 public string DownloadPath = null;
 
@@ -113,6 +124,15 @@ namespace IPA.Updating.ModsaberML
             [JsonProperty("files")]
             public FilesObject Files = null;
             
+            public class Dependency
+            {
+                public string Name = null;
+                public Range VersionRange = null;
+            }
+
+            [JsonProperty("dependsOn", ItemConverterType = typeof(ModsaberDependencyConverter))]
+            public Dependency[] Dependencies = new Dependency[0];
+
             public override string ToString()
             {
                 return $"{{\"{Title} ({Name})\"v{Version} for {GameVersion} by {Author} with \"{Files.Steam}\" and \"{Files.Oculus}\"}}";
