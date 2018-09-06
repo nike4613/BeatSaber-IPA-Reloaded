@@ -47,7 +47,7 @@ namespace IPA.Config.ConfigProviders
                     Logger.config.Error($"Error parsing JSON in file {Filename}.json; resetting to empty JSON");
                     Logger.config.Error(e);
                     jsonObj = new JObject();
-                    File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj));
+                    File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
                 }
             }
             else
@@ -91,7 +91,7 @@ namespace IPA.Config.ConfigProviders
 
             var finfo = new FileInfo(Filename + ".json");
 
-            File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj));
+            File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
 
             HasChanged = false;
         }
