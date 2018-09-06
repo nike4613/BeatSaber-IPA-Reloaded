@@ -63,7 +63,8 @@ namespace IPA.Updating.Backup
 
         internal void Delete()
         {
-            _BackupPath.Delete(true);
+            if (_BackupPath.Exists)
+                _BackupPath.Delete(true);
         }
 
         /// <summary>
