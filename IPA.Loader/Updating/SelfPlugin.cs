@@ -11,7 +11,7 @@ namespace IPA.Updating
     internal class SelfPlugin : IBeatSaberPlugin
     {
         internal const string IPA_Name = "Beat Saber IPA";
-        internal const string IPA_Version = "3.9.2";
+        internal const string IPA_Version = "3.10.0";
 
         public string Name => IPA_Name;
 
@@ -19,7 +19,7 @@ namespace IPA.Updating
 
         public ModsaberModInfo ModInfo => new ModsaberModInfo
         {
-            CurrentVersion = new Version(IPA_Version),
+            CurrentVersion = IPA_Version,
             InternalName = "beatsaber-ipa-reloaded"
         };
 

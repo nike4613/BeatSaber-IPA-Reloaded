@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Logger = IPA.Logging.Logger;
+using Version = SemVer.Version;
 using IPA.Updating.Backup;
 
 namespace IPA.Updating.ModsaberML
@@ -47,9 +48,30 @@ namespace IPA.Updating.ModsaberML
             StartCoroutine(CheckForUpdatesCoroutine());
         }
 
+        private class ParsedPluginMeta : PluginManager.BSPluginMeta
+        {
+            private Version _verCache = null;
+            public Version ModVersion
+            {
+                get
+                {
+                    if (_verCache == null)
+                        _verCache = new Version(ModsaberInfo.CurrentVersion);
+                    return _verCache;
+                }
+            }
+
+            public ParsedPluginMeta(PluginManager.BSPluginMeta meta)
+            {
+                this.Plugin = meta.Plugin;
+                this.ModsaberInfo = meta.ModsaberInfo;
+                this.Filename = meta.Filename;
+            }
+        }
+
         private struct UpdateStruct
         {
-            public PluginManager.BSPluginMeta plugin;
+            public ParsedPluginMeta plugin;
             public ApiEndpoint.Mod externInfo;
         }
             
@@ -60,8 +82,9 @@ namespace IPA.Updating.ModsaberML
             var toUpdate = new List<UpdateStruct>();
             var GameVersion = new Version(Application.version);
 
-            foreach (var plugin in PluginManager.BSMetas)
+            foreach (var _plugin in PluginManager.BSMetas)
             {
+                var plugin = new ParsedPluginMeta(_plugin);
                 var info = plugin.ModsaberInfo;
                 if (info == null) continue;
 
@@ -104,8 +127,8 @@ namespace IPA.Updating.ModsaberML
                     }
 
                     Logger.updater.Debug($"Found Modsaber.ML registration for {plugin.Plugin.Name} ({info.InternalName})");
-                    Logger.updater.Debug($"Installed version: {info.CurrentVersion}; Latest version: {modRegistry.Version}");
-                    if (modRegistry.Version > info.CurrentVersion)
+                    Logger.updater.Debug($"Installed version: {plugin.ModVersion}; Latest version: {modRegistry.Version}");
+                    if (modRegistry.Version > plugin.ModVersion)
                     {
                         Logger.updater.Debug($"{plugin.Plugin.Name} needs an update!");
                         if (modRegistry.GameVersion == GameVersion)
