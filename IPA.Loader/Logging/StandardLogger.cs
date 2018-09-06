@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IPA;
 using IPA.Logging.Printers;
+using IPA.Config;
 
 namespace IPA.Logging
 {

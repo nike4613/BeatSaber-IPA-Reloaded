@@ -32,6 +32,8 @@ namespace IPA.Config.ConfigProviders
 
         public void Load()
         {
+            Logger.config.Debug($"Loading file {Filename}.json");
+
             var finfo = new FileInfo(Filename + ".json");
             if (finfo.Exists)
             {
@@ -85,9 +87,13 @@ namespace IPA.Config.ConfigProviders
 
         public void Save()
         {
+            Logger.config.Debug($"Saving file {Filename}.json");
+
             var finfo = new FileInfo(Filename + ".json");
 
             File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj));
+
+            HasChanged = false;
         }
 
         public void Store<T>(T obj)

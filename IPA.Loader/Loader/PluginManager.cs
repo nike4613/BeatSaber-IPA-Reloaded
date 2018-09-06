@@ -247,6 +247,7 @@ namespace IPA.Loader
 
                                 Logger modLogger = null;
                                 IModPrefs modPrefs = null;
+                                IConfigProvider cfgProvider = null;
 
                                 foreach (var param in initParams)
                                 {
@@ -262,9 +263,13 @@ namespace IPA.Loader
                                     }
                                     else if (ptype.IsAssignableFrom(typeof(IConfigProvider)))
                                     {
-                                        var configProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", $"{bsPlugin.Name}.{param.Name}") };
-                                        configProviders.Add(configProvider);
-                                        initArgs.Add(configProvider);
+                                        if (cfgProvider == null)
+                                        {
+                                            cfgProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", $"{bsPlugin.Name}") };
+                                            configProviders.Add(cfgProvider);
+                                            cfgProvider.Load();
+                                        }
+                                        initArgs.Add(cfgProvider);
                                     }
                                     else
                                         initArgs.Add(ptype.GetDefault());
