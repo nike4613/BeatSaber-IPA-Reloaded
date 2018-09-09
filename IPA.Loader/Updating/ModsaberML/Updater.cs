@@ -62,6 +62,8 @@ namespace IPA.Updating.ModsaberML
             public bool Has { get; set; } = false;
             public HashSet<string> Consumers { get; set; } = new HashSet<string>();
 
+            public bool MetaRequestFailed { get; set; } = false;
+
             public BSPluginMeta LocalPluginMeta { get; set; } = null;
 
             public override string ToString()
@@ -169,6 +171,7 @@ namespace IPA.Updating.ModsaberML
                 {
                     Logger.updater.Error($"Error getting info for {dep.Name}");
                     Logger.updater.Error(e);
+                    dep.MetaRequestFailed = true;
                     continue;
                 }
 
@@ -233,6 +236,12 @@ namespace IPA.Updating.ModsaberML
             foreach(var dep in list.Value)
             {
                 dep.Has = dep.Version != null;// dep.Version is only not null if its already installed
+
+                if (dep.MetaRequestFailed)
+                {
+                    Logger.updater.Warn($"{dep.Name} info request failed, not trying again");
+                    continue;
+                }
 
                 var dict = new Ref<Dictionary<Version, Version>>(null);
                 yield return GetGameVersionMap(dep.Name, dict);
