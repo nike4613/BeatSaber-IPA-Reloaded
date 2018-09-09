@@ -57,7 +57,7 @@ namespace IPA.Logging
         private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
         private Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
-
+        
         static StandardLogger()
         {
             showSourceClass = ModPrefs.GetBool("IPA", "DebugShowCallSource", false, true);
@@ -102,6 +102,15 @@ namespace IPA.Logging
             }
 
             return chld;
+        }
+
+        /// <summary>
+        /// Adds a log printer to the logger.
+        /// </summary>
+        /// <param name="printer">the printer to add</param>
+        public void AddPrinter(LogPrinter printer)
+        {
+            printers.Add(printer);
         }
 
         /// <summary>
