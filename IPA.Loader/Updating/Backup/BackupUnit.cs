@@ -73,8 +73,10 @@ namespace IPA.Updating.Backup
         /// <param name="file"></param>
         public void Add(FileInfo file)
         {
-            var relativePath = LoneFunctions.GetRelativePath(Environment.CurrentDirectory, file.FullName);
+            var relativePath = LoneFunctions.GetRelativePath(file.FullName, Environment.CurrentDirectory);
             var backupPath = new FileInfo(Path.Combine(_BackupPath.FullName, relativePath));
+
+            Logger.updater.Debug($"rp={relativePath}, bp={backupPath}");
 
             if (_Files.Contains(relativePath))
             {

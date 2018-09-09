@@ -15,9 +15,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using SemVer;
 using Logger = IPA.Logging.Logger;
 using Version = SemVer.Version;
 using IPA.Updating.Backup;
+using System.Runtime.Serialization;
+using System.Reflection;
+using static IPA.Loader.PluginManager;
 
 namespace IPA.Updating.ModsaberML
 {
@@ -43,124 +47,327 @@ namespace IPA.Updating.ModsaberML
             }
         }
 
-        public void CheckForUpdates()
+        private void CheckForUpdates()
         {
             StartCoroutine(CheckForUpdatesCoroutine());
         }
 
-        private class ParsedPluginMeta : PluginManager.BSPluginMeta
+        private class DependencyObject
         {
-            private Version _verCache = null;
-            public Version ModVersion
-            {
-                get
-                {
-                    if (_verCache == null)
-                        _verCache = new Version(ModsaberInfo.CurrentVersion);
-                    return _verCache;
-                }
-            }
+            public string Name { get; set; }
+            public Version Version { get; set; } = null;
+            public Version ResolvedVersion { get; set; } = null;
+            public Range Requirement { get; set; } = null;
+            public bool Resolved { get; set; } = false;
+            public bool Has { get; set; } = false;
+            public HashSet<string> Consumers { get; set; } = new HashSet<string>();
 
-            public ParsedPluginMeta(PluginManager.BSPluginMeta meta)
+            public BSPluginMeta LocalPluginMeta { get; set; } = null;
+
+            public override string ToString()
             {
-                this.Plugin = meta.Plugin;
-                this.ModsaberInfo = meta.ModsaberInfo;
-                this.Filename = meta.Filename;
+                return $"{Name}@{Version}{(Resolved ? $" -> {ResolvedVersion}" : "")} - ({Requirement}) {(Has ? $" Already have" : "")}";
             }
         }
 
-        private struct UpdateStruct
+        private Dictionary<string, ApiEndpoint.Mod> requestCache = new Dictionary<string, ApiEndpoint.Mod>();
+        private IEnumerator DownloadModInfo(string name, string ver, Ref<ApiEndpoint.Mod> result)
         {
-            public ParsedPluginMeta plugin;
-            public ApiEndpoint.Mod externInfo;
-        }
-            
-        IEnumerator CheckForUpdatesCoroutine()
-        {
-            Logger.updater.Info("Checking for mod updates...");
+            var uri = ApiEndpoint.ApiBase + string.Format(ApiEndpoint.GetApprovedEndpoint, name, ver);
 
-            var toUpdate = new List<UpdateStruct>();
-            var GameVersion = new Version(Application.version);
-
-            foreach (var _plugin in PluginManager.BSMetas)
+            if (requestCache.TryGetValue(uri, out ApiEndpoint.Mod value))
             {
-                var plugin = new ParsedPluginMeta(_plugin);
-                var info = plugin.ModsaberInfo;
-                if (info == null) continue;
-
-                using (var request = UnityWebRequest.Get(ApiEndpoint.ApiBase + string.Format(ApiEndpoint.GetApprovedEndpoint, info.InternalName)))
+                result.Value = value;
+                yield break;
+            }
+            else
+            {
+                using (var request = UnityWebRequest.Get(uri))
                 {
                     yield return request.SendWebRequest();
 
                     if (request.isNetworkError)
                     {
-                        Logger.updater.Error("Network error while trying to update mods");
-                        Logger.updater.Error(request.error);
-                        continue;
+                        result.Error = new NetworkException($"Network error while trying to download: {request.error}");
+                        yield break;
                     }
                     if (request.isHttpError)
                     {
                         if (request.responseCode == 404)
                         {
-                            Logger.updater.Error($"Mod {plugin.Plugin.Name} not found under name {info.InternalName}");
-                            continue;
+                            result.Error = new NetworkException("Not found");
+                            yield break;
                         }
 
-                        Logger.updater.Error($"Server returned an error code while trying to update mod {plugin.Plugin.Name}");
-                        Logger.updater.Error(request.error);
-                        continue;
+                        result.Error = new NetworkException($"Server returned error {request.error} while getting data");
+                        yield break;
                     }
 
-                    var json = request.downloadHandler.text;
-
-                    ApiEndpoint.Mod modRegistry;
                     try
                     {
-                        modRegistry = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(json);
-                        Logger.updater.Debug(modRegistry.ToString());
+                        result.Value = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(request.downloadHandler.text);
+
+                        requestCache[uri] = result.Value;
                     }
                     catch (Exception e)
                     {
-                        Logger.updater.Error($"Parse error while trying to update mods");
-                        Logger.updater.Error(e);
-                        continue;
-                    }
-
-                    Logger.updater.Debug($"Found Modsaber.ML registration for {plugin.Plugin.Name} ({info.InternalName})");
-                    Logger.updater.Debug($"Installed version: {plugin.ModVersion}; Latest version: {modRegistry.Version}");
-                    if (modRegistry.Version > plugin.ModVersion)
-                    {
-                        Logger.updater.Debug($"{plugin.Plugin.Name} needs an update!");
-                        if (modRegistry.GameVersion == GameVersion)
-                        {
-                            Logger.updater.Debug($"Queueing update...");
-                            toUpdate.Add(new UpdateStruct
-                            {
-                                plugin = plugin,
-                                externInfo = modRegistry
-                            });
-                        }
-                        else
-                        {
-                            Logger.updater.Warn($"Update avaliable for {plugin.Plugin.Name}, but for a different Beat Saber version!");
-                        }
+                        result.Error = new Exception("Error decoding response", e);
+                        yield break;
                     }
                 }
             }
+        }
 
-            Logger.updater.Info($"{toUpdate.Count} mods need updating");
+        private IEnumerator CheckForUpdatesCoroutine()
+        {
+            var depList = new Ref<List<DependencyObject>>(new List<DependencyObject>());
 
-            if (toUpdate.Count == 0) yield break;
+            foreach (var plugin in BSMetas)
+            { // initialize with data to resolve (1.1)
+                if (plugin.ModsaberInfo != null)
+                { // updatable
+                    var msinfo = plugin.ModsaberInfo;
+                    depList.Value.Add(new DependencyObject {
+                        Name = msinfo.InternalName,
+                        Version = new Version(msinfo.CurrentVersion),
+                        Requirement = new Range($">={msinfo.CurrentVersion}"),
+                        LocalPluginMeta = plugin
+                    });
+                }
+            }
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-            foreach (var item in toUpdate)
+            foreach (var dep in depList.Value)
+                Logger.updater.Debug($"Phantom Dependency: {dep.ToString()}");
+
+            yield return DependencyResolveFirstPass(depList);
+            
+            foreach (var dep in depList.Value)
+                Logger.updater.Debug($"Dependency: {dep.ToString()}");
+
+            yield return DependencyResolveSecondPass(depList);
+
+            foreach (var dep in depList.Value)
+                Logger.updater.Debug($"Dependency: {dep.ToString()}");
+
+            DependendyResolveFinalPass(depList);
+        }
+
+        private IEnumerator DependencyResolveFirstPass(Ref<List<DependencyObject>> list)
+        {
+            for (int i = 0; i < list.Value.Count; i++)
+            { // Grab dependencies (1.2)
+                var dep = list.Value[i];
+
+                var mod = new Ref<ApiEndpoint.Mod>(null);
+
+                #region TEMPORARY get latest // SHOULD BE GREATEST OF VERSION
+                yield return DownloadModInfo(dep.Name, "", mod);
+                #endregion
+
+                try { mod.Verify(); }
+                catch (Exception e)
+                {
+                    Logger.updater.Error($"Error getting info for {dep.Name}");
+                    Logger.updater.Error(e);
+                    continue;
+                }
+
+                list.Value.AddRange(mod.Value.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string>() { dep.Name } }));
+            }
+
+            var depNames = new HashSet<string>();
+            var final = new List<DependencyObject>();
+
+            foreach (var dep in list.Value)
+            { // agregate ranges and the like (1.3)
+                if (!depNames.Contains(dep.Name))
+                { // should add it
+                    depNames.Add(dep.Name);
+                    final.Add(dep);
+                }
+                else
+                {
+                    var toMod = final.Where(d => d.Name == dep.Name).First();
+
+                    toMod.Requirement = toMod.Requirement.Intersect(dep.Requirement);
+                    foreach (var consume in dep.Consumers)
+                        toMod.Consumers.Add(consume);
+                }
+            }
+
+            list.Value = final;
+        }
+
+        private IEnumerator DependencyResolveSecondPass(Ref<List<DependencyObject>> list)
+        {
+            IEnumerator GetGameVersionMap(string modname, Ref<Dictionary<Version,Version>> map)
+            { // gets map of mod version -> game version (2.0) 
+                map.Value = new Dictionary<Version, Version>();
+
+                var mod = new Ref<ApiEndpoint.Mod>(null);
+                yield return DownloadModInfo(modname, "", mod);
+                try { mod.Verify(); }
+                catch (Exception)
+                {
+                    map.Value = null;
+                    map.Error = new Exception($"Error getting info for {modname}", mod.Error);
+                    yield break;
+                }
+
+                map.Value.Add(mod.Value.Version, mod.Value.GameVersion);
+
+                foreach (var ver in mod.Value.OldVersions)
+                {
+                    yield return DownloadModInfo(modname, ver.ToString(), mod);
+                    try { mod.Verify(); }
+                    catch (Exception e)
+                    {
+                        Logger.updater.Error($"Error getting info for {modname}v{ver}");
+                        Logger.updater.Error(e);
+                        continue;
+                    }
+                    map.Value.Add(mod.Value.Version, mod.Value.GameVersion);
+                }
+            }
+
+            foreach(var dep in list.Value)
             {
-                StartCoroutine(UpdateModCoroutine(item, tempDirectory));
+                dep.Has = dep.Version != null;// dep.Version is only not null if its already installed
+
+                var dict = new Ref<Dictionary<Version, Version>>(null);
+                yield return GetGameVersionMap(dep.Name, dict);
+                try { dict.Verify(); }
+                catch (Exception e)
+                {
+                    Logger.updater.Error($"Error getting map for {dep.Name}");
+                    Logger.updater.Error(e);
+                    continue;
+                }
+                
+                var ver = dep.Requirement.MaxSatisfying(dict.Value.Where(kvp => kvp.Value == BeatSaber.GameVersion).Select(kvp => kvp.Key)); // (2.1)
+                if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
+                dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
             }
         }
 
-        class StreamDownloadHandler : DownloadHandlerScript
+        private void DependendyResolveFinalPass(Ref<List<DependencyObject>> list)
+        { // also starts download of mods
+            var toDl = new List<DependencyObject>();
+
+            foreach (var dep in list.Value)
+            { // figure out which ones need to be downloaded (3.1)
+                if (dep.Resolved)
+                {
+                    Logger.updater.Debug($"Resolved: {dep.ToString()}");
+                    if (!dep.Has)
+                    {
+                        Logger.updater.Debug($"To Download: {dep.ToString()}");
+                        toDl.Add(dep);
+                    }
+                }
+                else if (!dep.Has)
+                {
+                    Logger.updater.Warn($"Could not resolve dependency {dep}");
+                }
+            }
+
+            Logger.updater.Debug($"To Download {string.Join(", ", toDl.Select(d => $"{d.Name}@{d.ResolvedVersion}"))}");
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+
+            Logger.updater.Debug($"Temp directory: {tempDirectory}");
+
+            foreach (var item in toDl)
+                StartCoroutine(UpdateModCoroutine(item, tempDirectory));
+        }
+
+        private IEnumerator UpdateModCoroutine(DependencyObject item, string tempDirectory)
+        { // (3.2)
+            Logger.updater.Debug($"Release: {BeatSaber.ReleaseType}");
+
+            var mod = new Ref<ApiEndpoint.Mod>(null);
+            yield return DownloadModInfo(item.Name, item.ResolvedVersion.ToString(), mod);
+            try { mod.Verify(); }
+            catch (Exception e)
+            {
+                Logger.updater.Error($"Error occurred while trying to get information for {item}");
+                Logger.updater.Error(e);
+                yield break;
+            }
+
+            ApiEndpoint.Mod.PlatformFile platformFile;
+            if (BeatSaber.ReleaseType == BeatSaber.Release.Steam || mod.Value.Files.Oculus == null)
+                platformFile = mod.Value.Files.Steam;
+            else
+                platformFile = mod.Value.Files.Oculus;
+
+            string url = platformFile.DownloadPath;
+
+            Logger.updater.Debug($"URL = {url}");
+
+            const int MaxTries = 3;
+            int maxTries = MaxTries;
+            while (maxTries > 0)
+            {
+                if (maxTries-- != MaxTries)
+                    Logger.updater.Debug($"Re-trying download...");
+
+                using (var stream = new MemoryStream())
+                using (var request = UnityWebRequest.Get(url))
+                using (var taskTokenSource = new CancellationTokenSource())
+                {
+                    var dlh = new StreamDownloadHandler(stream);
+                    request.downloadHandler = dlh;
+
+                    Logger.updater.Debug("Sending request");
+                    //Logger.updater.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
+                    yield return request.SendWebRequest();
+                    Logger.updater.Debug("Download finished");
+
+                    if (request.isNetworkError)
+                    {
+                        Logger.updater.Error("Network error while trying to update mod");
+                        Logger.updater.Error(request.error);
+                        taskTokenSource.Cancel();
+                        continue;
+                    }
+                    if (request.isHttpError)
+                    {
+                        Logger.updater.Error($"Server returned an error code while trying to update mod");
+                        Logger.updater.Error(request.error);
+                        taskTokenSource.Cancel();
+                        continue;
+                    }
+
+                    stream.Seek(0, SeekOrigin.Begin); // reset to beginning
+
+                    var downloadTask = Task.Run(() =>
+                    { // use slightly more multithreaded approach than coroutines
+                        ExtractPluginAsync(stream, item, platformFile, tempDirectory);
+                    }, taskTokenSource.Token);
+
+                    while (!(downloadTask.IsCompleted || downloadTask.IsCanceled || downloadTask.IsFaulted))
+                        yield return null; // pause coroutine until task is done
+
+                    if (downloadTask.IsFaulted)
+                    {
+                        Logger.updater.Error($"Error downloading mod {item.Name}");
+                        Logger.updater.Error(downloadTask.Exception);
+                        continue;
+                    }
+
+                    break;
+                }
+            }
+
+            if (maxTries == 0)
+                Logger.updater.Warn($"Plugin download failed {MaxTries} times, not re-trying");
+            else
+                Logger.updater.Debug("Download complete");
+        }
+
+        internal class StreamDownloadHandler : DownloadHandlerScript
         {
             public MemoryStream Stream { get; set; }
 
@@ -205,9 +412,9 @@ namespace IPA.Updating.ModsaberML
             }
         }
 
-        private void ExtractPluginAsync(MemoryStream stream, UpdateStruct item, ApiEndpoint.Mod.PlatformFile fileInfo, string tempDirectory)
-        {
-            Logger.updater.Debug($"Extracting ZIP file for {item.plugin.Plugin.Name}");
+        private void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.PlatformFile fileInfo, string tempDirectory)
+        { // (3.3)
+            Logger.updater.Debug($"Extracting ZIP file for {item.Name}");
 
             var data = stream.GetBuffer();
             SHA1 sha = new SHA1CryptoServiceProvider();
@@ -216,7 +423,7 @@ namespace IPA.Updating.ModsaberML
                 throw new Exception("The hash for the file doesn't match what is defined");
 
             var newFiles = new List<FileInfo>();
-            var backup = new BackupUnit(tempDirectory, $"backup-{item.plugin.ModsaberInfo.InternalName}");
+            var backup = new BackupUnit(tempDirectory, $"backup-{item.Name}");
 
             try
             {
@@ -248,7 +455,7 @@ namespace IPA.Updating.ModsaberML
                                 FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName);
 
-                                if (targetFile.FullName == item.plugin.Filename)
+                                if (targetFile.FullName == item.LocalPluginMeta?.Filename)
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 if (targetFile.Exists)
@@ -258,6 +465,7 @@ namespace IPA.Updating.ModsaberML
 
                                 Logger.updater.Debug($"Extracting file {targetFile.FullName}");
 
+                                targetFile.Delete();
                                 var fstream = targetFile.Create();
                                 ostream.CopyTo(fstream);
                             }
@@ -265,17 +473,17 @@ namespace IPA.Updating.ModsaberML
                     }
                 }
 
-                if (item.plugin.Plugin is SelfPlugin)
+                if (item.LocalPluginMeta?.Plugin is SelfPlugin)
                 { // currently updating self
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = item.plugin.Filename,
-                        Arguments = $"--waitfor={Process.GetCurrentProcess().Id} --nowait",
+                        FileName = item.LocalPluginMeta.Filename,
+                        Arguments = $"-nw={Process.GetCurrentProcess().Id}",
                         UseShellExecute = false
                     });
                 }
-                else if (shouldDeleteOldFile)
-                    File.Delete(item.plugin.Filename);
+                else if (shouldDeleteOldFile && item.LocalPluginMeta != null)
+                    File.Delete(item.LocalPluginMeta.Filename);
             }
             catch (Exception)
             { // something failed; restore
@@ -289,82 +497,28 @@ namespace IPA.Updating.ModsaberML
 
             backup.Delete();
 
-            Logger.updater.Debug("Downloader exited");
-        }
-
-        IEnumerator UpdateModCoroutine(UpdateStruct item, string tempDirectory)
-        {
-            Logger.updater.Debug($"Steam avaliable: {SteamCheck.IsAvailable}");
-
-            ApiEndpoint.Mod.PlatformFile platformFile;
-            if (SteamCheck.IsAvailable || item.externInfo.Files.Oculus == null)
-                platformFile = item.externInfo.Files.Steam;
-            else
-                platformFile = item.externInfo.Files.Oculus;
-
-            string url = platformFile.DownloadPath;
-
-            Logger.updater.Debug($"URL = {url}");
-
-            const int MaxTries = 3;
-            int maxTries = MaxTries;
-            while (maxTries > 0)
-            {
-                if (maxTries-- != MaxTries)
-                    Logger.updater.Info($"Re-trying download...");
-
-                using (var stream = new MemoryStream())
-                using (var request = UnityWebRequest.Get(url))
-                using (var taskTokenSource = new CancellationTokenSource())
-                {
-                    var dlh = new StreamDownloadHandler(stream);
-                    request.downloadHandler = dlh;
-
-                    Logger.updater.Debug("Sending request");
-                    //Logger.updater.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
-                    yield return request.SendWebRequest();
-                    Logger.updater.Debug("Download finished");
-
-                    if (request.isNetworkError)
-                    {
-                        Logger.updater.Error("Network error while trying to update mod");
-                        Logger.updater.Error(request.error);
-                        taskTokenSource.Cancel();
-                        continue;
-                    }
-                    if (request.isHttpError)
-                    {
-                        Logger.updater.Error($"Server returned an error code while trying to update mod");
-                        Logger.updater.Error(request.error);
-                        taskTokenSource.Cancel();
-                        continue;
-                    }
-
-                    stream.Seek(0, SeekOrigin.Begin); // reset to beginning
-
-                    var downloadTask = Task.Run(() =>
-                    { // use slightly more multithreaded approach than coroutines
-                        ExtractPluginAsync(stream, item, platformFile, tempDirectory);
-                    }, taskTokenSource.Token);
-
-                    while (!(downloadTask.IsCompleted || downloadTask.IsCanceled || downloadTask.IsFaulted))
-                        yield return null; // pause coroutine until task is done
-
-                    if (downloadTask.IsFaulted)
-                    {
-                        Logger.updater.Error($"Error downloading mod {item.plugin.Plugin.Name}");
-                        Logger.updater.Error(downloadTask.Exception);
-                        continue;
-                    }
-
-                    break;
-                }
-            }
-
-            if (maxTries == 0)
-                Logger.updater.Warn($"Plugin download failed {MaxTries} times, not re-trying");
-            else
-                Logger.updater.Debug("Download complete");
+            Logger.updater.Debug("Extractor exited");
         }
     }
+
+    [Serializable]
+    internal class NetworkException : Exception
+    {
+        public NetworkException()
+        {
+        }
+
+        public NetworkException(string message) : base(message)
+        {
+        }
+
+        public NetworkException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected NetworkException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
 }

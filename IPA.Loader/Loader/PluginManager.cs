@@ -156,7 +156,7 @@ namespace IPA.Loader
             var selfPlugin = new BSPluginMeta
             {
                 Filename = Path.Combine(Environment.CurrentDirectory, "IPA.exe"),
-                Plugin = new SelfPlugin()
+                Plugin = SelfPlugin.Instance
             };
             selfPlugin.ModsaberInfo = selfPlugin.Plugin.ModInfo;
 
@@ -173,7 +173,7 @@ namespace IPA.Loader
             
             Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {UnityEngine.Application.unityVersion}");
-            Logger.log.Info($"Game version {UnityEngine.Application.version}");
+            Logger.log.Info($"Game version {BeatSaber.GameVersion}");
             Logger.log.Info("-----------------------------");
             Logger.log.Info($"Loading plugins from {LoneFunctions.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
             Logger.log.Info("-----------------------------");
