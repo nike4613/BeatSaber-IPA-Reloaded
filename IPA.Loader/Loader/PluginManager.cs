@@ -77,6 +77,8 @@ namespace IPA.Loader
         }
         private static List<IPlugin> _ipaPlugins = null;
 
+        internal static IConfigProvider SelfConfigProvider { get; set; } = null;
+
         internal static List<IConfigProvider> configProviders = new List<IConfigProvider>();
 
         private static void LoadPlugins()
@@ -161,6 +163,9 @@ namespace IPA.Loader
             selfPlugin.ModsaberInfo = selfPlugin.Plugin.ModInfo;
 
             _bsPlugins.Add(selfPlugin);
+
+            configProviders.Add(SelfConfigProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", SelfPlugin.IPA_Name) });
+            SelfConfigProvider.Load();
 
             //Load copied plugins
             string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
