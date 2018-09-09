@@ -53,7 +53,7 @@ namespace IPA.Logging
         /// <summary>
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
-        public static LogLevel PrintFilter { get; set; } = ModPrefs.GetBool("IPA", "PrintDebug", false, true) ? LogLevel.All : LogLevel.InfoUp;
+        public static LogLevel PrintFilter { get; set; }
         private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
         private Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
@@ -61,6 +61,7 @@ namespace IPA.Logging
         static StandardLogger()
         {
             showSourceClass = ModPrefs.GetBool("IPA", "DebugShowCallSource", false, true);
+            PrintFilter = ModPrefs.GetBool("IPA", "PrintDebug", false, true) ? LogLevel.All : LogLevel.InfoUp;
         }
 
         private StandardLogger(string mainName, string subName, params LogPrinter[] inherited)
