@@ -13,6 +13,8 @@ namespace IPA.Updating
         internal const string IPA_Name = "Beat Saber IPA";
         internal const string IPA_Version = "3.10.0";
 
+        public static SelfPlugin Instance { get; set; } = new SelfPlugin();
+
         public string Name => IPA_Name;
 
         public string Version => IPA_Version;

@@ -21,7 +21,7 @@ namespace IPA.Updating.ModsaberML
         public const string GetApprovedEndpoint = "updater_test.json";
 #else
         public const string ApiBase = "https://www.modsaber.ml/";
-        public const string GetApprovedEndpoint = "registry/{0}";
+        public const string GetApprovedEndpoint = "registry/{0}/{1}";
 #endif
 
         class HexArrayConverter : JsonConverter
@@ -117,6 +117,7 @@ namespace IPA.Updating.ModsaberML
             {
                 [JsonProperty("steam")]
                 public PlatformFile Steam = null;
+
                 [JsonProperty("oculus")]
                 public PlatformFile Oculus = null;
             }
@@ -132,6 +133,9 @@ namespace IPA.Updating.ModsaberML
 
             [JsonProperty("dependsOn", ItemConverterType = typeof(ModsaberDependencyConverter))]
             public Dependency[] Dependencies = new Dependency[0];
+
+            [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]
+            public Version[] OldVersions = new Version[0];
 
             public override string ToString()
             {

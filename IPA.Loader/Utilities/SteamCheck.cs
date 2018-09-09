@@ -9,7 +9,8 @@ namespace IPA.Utilities
     /// <summary>
     /// Provides a utility to test if this is a Steam build of Beat Saber.
     /// </summary>
-    public static class SteamCheck
+    [Obsolete("Use BeatSaber.ReleaseType == BeatSaber.Release.Steam")]
+    internal static class SteamCheck
     {
         private static Type SteamVRCamera;
         private static Type SteamVRExternalCamera;

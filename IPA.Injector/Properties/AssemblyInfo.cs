@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using IPA.Injector;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -22,6 +23,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("2a1af16b-27f1-46e0-9a95-181516bc1cb7")]
 [assembly: InternalsVisibleTo("IPA.Loader")]
+[assembly: ForceAssemblyReference(typeof(SemVer.Version))]
 
 // Version information for an assembly consists of the following four values:
 //
