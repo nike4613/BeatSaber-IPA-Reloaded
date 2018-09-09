@@ -250,6 +250,7 @@ namespace IPA.Updating.ModsaberML
                 {
                     Logger.updater.Error($"Error getting map for {dep.Name}");
                     Logger.updater.Error(e);
+                    dep.MetaRequestFailed = true;
                     continue;
                 }
                 
