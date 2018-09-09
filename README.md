@@ -21,7 +21,7 @@ To verify it worked, start the game with the `--verbose` flag. If a new console 
 1. Create a new **Class Library** C# project (.NET 4.6)
 2. Download a release and add **IPA.Loader.dll** to your references
 3. Implement `IBeatSaberPlugin` or `IEnhancedBeatSaberPlugin`
-4. Build the project and copy the DLL into the Plugins folder of the gam
+4. Build the project and copy the DLL into the Plugins folder of the game.
 
 See [Developing](https://github.com/nike4613/IPA-Reloaded/wiki/Developing) for more information.
 
