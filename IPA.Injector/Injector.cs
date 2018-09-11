@@ -3,9 +3,9 @@ using IPA.Logging;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using static IPA.Logging.Logger;
-using Logger = IPA.Logging.Logger;
 
 namespace IPA.Injector
 {
@@ -17,12 +17,29 @@ namespace IPA.Injector
             if (!injected)
             {
                 injected = true;
+
+                #region Add Library load locations
                 AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
+                try
+                {
+                    if (!SetDllDirectory(Path.Combine(Environment.CurrentDirectory, "Libs", "Native")))
+                    {
+                        libLoader.Warn("Unable to add native library path to load path");
+                    }
+                }
+                catch (Exception) { }
+                #endregion
+
                 var bootstrapper = new GameObject("Bootstrapper").AddComponent<Bootstrapper>();
                 bootstrapper.Destroyed += Bootstrapper_Destroyed;
             }
         }
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetDllDirectory(string lpPathName);
+
+        #region Managed library loader
         private static string libsDir;
         private static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
         {
@@ -54,6 +71,7 @@ namespace IPA.Injector
         {
             libLoader.Log(lvl, message);
         }
+        #endregion
 
         private static void Bootstrapper_Destroyed()
         {
