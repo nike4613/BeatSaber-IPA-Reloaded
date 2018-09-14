@@ -39,6 +39,10 @@ namespace IPA.Config
         /// </summary>
         string Filename { set; }
         /// <summary>
+        /// Gets the last time the config was modified.
+        /// </summary>
+        DateTime LastModified { get; }
+        /// <summary>
         /// Saves configuration to file. Should error if not a root object.
         /// </summary>
         void Save();

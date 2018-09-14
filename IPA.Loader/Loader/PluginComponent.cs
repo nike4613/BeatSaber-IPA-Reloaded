@@ -44,7 +44,7 @@ namespace IPA.Loader
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
             foreach (var provider in PluginManager.configProviders)
-                if (provider.HasChanged) provider.Save();
+                if (provider.Item1.HasChanged) provider.Item1.Save();
         }
 
         void Update()
@@ -59,7 +59,10 @@ namespace IPA.Loader
             ipaPlugins.OnLateUpdate();
 
             foreach (var provider in PluginManager.configProviders)
-                if (provider.HasChanged) provider.Save();
+            {
+                if (provider.Item1.HasChanged) provider.Item1.Save();
+                else if (provider.Item1.LastModified > provider.Item2) provider.Item1.Load(); // auto reload if it changes
+            }
         }
 
         void FixedUpdate()
@@ -86,7 +89,7 @@ namespace IPA.Loader
             ipaPlugins.OnApplicationQuit();
 
             foreach (var provider in PluginManager.configProviders)
-                if (provider.HasChanged) provider.Save();
+                if (provider.Item1.HasChanged) provider.Item1.Save();
 
             quitting = true;
         }

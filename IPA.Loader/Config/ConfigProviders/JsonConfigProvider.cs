@@ -18,6 +18,8 @@ namespace IPA.Config.ConfigProviders
 
         public bool HasChanged { get; private set; } = false;
 
+        public DateTime LastModified => File.GetLastWriteTime(Filename + ".json");
+
         private string _filename = null;
         public string Filename
         {
