@@ -57,6 +57,9 @@
   <PropertyGroup>
     <StartupObject>IPA.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -118,7 +121,8 @@
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <ItemGroup>
-      <BadDlls Include="$(OutputPath)Mono.Cecil.*" /> <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
+      <BadDlls Include="$(OutputPath)Mono.Cecil.*" />
+      <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
     </ItemGroup>
     <Delete Files="@(BadDlls)" />
   </Target>

@@ -79,7 +79,7 @@ namespace IPA.Loader
 
         internal static IConfigProvider SelfConfigProvider { get; set; } = null;
 
-        internal static List<IConfigProvider> configProviders = new List<IConfigProvider>();
+        internal static List<Tuple<IConfigProvider,DateTime>> configProviders = new List<Tuple<IConfigProvider, DateTime>>();
 
         private static void LoadPlugins()
         {
@@ -164,7 +164,7 @@ namespace IPA.Loader
 
             _bsPlugins.Add(selfPlugin);
 
-            configProviders.Add(SelfConfigProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", SelfPlugin.IPA_Name) });
+            configProviders.Add(new Tuple<IConfigProvider, DateTime>(SelfConfigProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", SelfPlugin.IPA_Name) }, SelfConfigProvider.LastModified));
             SelfConfigProvider.Load();
 
             //Load copied plugins
@@ -268,7 +268,7 @@ namespace IPA.Loader
                                         if (cfgProvider == null)
                                         {
                                             cfgProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", $"{bsPlugin.Name}") };
-                                            configProviders.Add(cfgProvider);
+                                            configProviders.Add(new Tuple<IConfigProvider, DateTime>(cfgProvider, cfgProvider.LastModified));
                                             cfgProvider.Load();
                                         }
                                         initArgs.Add(cfgProvider);
