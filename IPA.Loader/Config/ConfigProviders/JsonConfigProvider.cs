@@ -14,6 +14,7 @@ namespace IPA.Config.ConfigProviders
     {
         private JObject jsonObj;
 
+        // TODO: create a wrapper that allows empty object creation
         public dynamic Dynamic => jsonObj;
 
         public bool HasChanged { get; private set; } = false;
