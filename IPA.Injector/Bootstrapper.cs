@@ -12,10 +12,6 @@ namespace IPA.Injector
         
         void Awake()
         {
-            //if (Environment.CommandLine.Contains("--verbose"))
-            //{
-            Windows.WinConsole.Initialize();
-            //}
         }
 
         void Start()
