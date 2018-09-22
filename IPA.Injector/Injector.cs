@@ -19,17 +19,24 @@ namespace IPA.Injector
           // aren't defined in mscorlib, we can control exactly what 
           // gets loaded.
 
-            // This loads AppDomain, System.IO, System.Collections.Generic, and System.Reflection.
-            // If kernel32.dll is not already loaded, this will also load it.
-            // This call also loads IPA.Loader and initializes the logging system. In the process
-            // it loads Ionic.Zip.
-            SetupLibraryLoading();
+            try
+            {
+                // This loads System.Runtime.InteropServices, and Microsoft.Win32.SafeHandles.
+                Windows.WinConsole.Initialize();
 
-            // This loads System.Runtime.InteropServices, and Microsoft.Win32.SafeHandles.
-            Windows.WinConsole.Initialize();
+                // This loads AppDomain, System.IO, System.Collections.Generic, and System.Reflection.
+                // If kernel32.dll is not already loaded, this will also load it.
+                // This call also loads IPA.Loader and initializes the logging system. In the process
+                // it loads Ionic.Zip.
+                SetupLibraryLoading();
 
-            // This will load Harmony and UnityEngine.CoreModule
-            InstallBootstrapPatch();
+                // This will load Harmony and UnityEngine.CoreModule
+                InstallBootstrapPatch();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void InstallBootstrapPatch()

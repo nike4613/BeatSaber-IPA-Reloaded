@@ -28,6 +28,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    
+    <OtherConfig></OtherConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <OtherConfig>Debug</OtherConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,6 +53,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <OtherConfig>Release</OtherConfig>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -59,6 +63,20 @@
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Verbose|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Verbose\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <OtherConfig>Debug</OtherConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Verbose_Release|AnyCPU'">
+    <OutputPath>bin\Verbose_Release\</OutputPath>
+    <OtherConfig>Release</OtherConfig>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -106,6 +124,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <!--<ProjectsToBuild Include="$(SolutionDir)Doorstop\Proxy\Proxy.vcxproj">
+      <DestDir>bin\Proxy\$(Configuration)</DestDir>
+    </ProjectsToBuild>-->
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -117,9 +140,12 @@
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
     <ItemGroup>
-      <Dlls Include="$(SolutionDir)IPA.Injector\$(OutDir)**\*" />
+      <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" />
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.dll" />
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.pdb" />
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
+    <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <ItemGroup>
       <BadDlls Include="$(OutputPath)Mono.Cecil.*" />
       <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
