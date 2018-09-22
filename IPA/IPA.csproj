@@ -146,6 +146,7 @@
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
+    <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
     <ItemGroup>
       <BadDlls Include="$(OutputPath)Mono.Cecil.*" />
       <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
