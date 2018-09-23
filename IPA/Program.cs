@@ -255,8 +255,8 @@ namespace IPA
                         backup,
                         null, false);
 
-                    backup.Add(context.AssemblyFile);
-                    backup.Add(context.EngineFile);
+                    //backup.Add(context.AssemblyFile);
+                    //backup.Add(context.EngineFile);
                 }
 
                 #region Create Plugin Folder
