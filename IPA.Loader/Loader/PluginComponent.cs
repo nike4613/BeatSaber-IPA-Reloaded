@@ -44,7 +44,16 @@ namespace IPA.Loader
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
             foreach (var provider in PluginManager.configProviders)
-                if (provider.Key.HasChanged) provider.Key.Save();
+                if (provider.Key.HasChanged)
+                    try
+                    {
+                        provider.Key.Save();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.Logger.log.Error("Error when trying to save config");
+                        Logging.Logger.log.Error(e);
+                    }
         }
 
         void Update()
@@ -60,11 +69,28 @@ namespace IPA.Loader
 
             foreach (var provider in PluginManager.configProviders)
             {
-                if (provider.Key.HasChanged) provider.Key.Save();
+                if (provider.Key.HasChanged)
+                    try
+                    {
+                        provider.Key.Save();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.Logger.log.Error("Error when trying to save config");
+                        Logging.Logger.log.Error(e);
+                    }
                 else if (provider.Key.LastModified > provider.Value.Value)
                 {
-                    provider.Key.Load(); // auto reload if it changes
-                    provider.Value.Value = provider.Key.LastModified;
+                    try
+                    {
+                        provider.Key.Load(); // auto reload if it changes
+                        provider.Value.Value = provider.Key.LastModified;
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.Logger.log.Error("Error when trying to load config");
+                        Logging.Logger.log.Error(e);
+                    }
                 }
             }
         }
@@ -93,7 +119,16 @@ namespace IPA.Loader
             ipaPlugins.OnApplicationQuit();
 
             foreach (var provider in PluginManager.configProviders)
-                if (provider.Key.HasChanged) provider.Key.Save();
+                if (provider.Key.HasChanged)
+                    try
+                    {
+                        provider.Key.Save();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.Logger.log.Error("Error when trying to save config");
+                        Logging.Logger.log.Error(e);
+                    }
 
             quitting = true;
         }
