@@ -254,6 +254,9 @@ namespace IPA
                     CopyAll(new DirectoryInfo(context.IPARoot), new DirectoryInfo(context.ProjectRoot), force,
                         backup,
                         null, false);
+
+                    backup.Add(context.AssemblyFile);
+                    backup.Add(context.EngineFile);
                 }
 
                 #region Create Plugin Folder
