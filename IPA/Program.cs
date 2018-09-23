@@ -270,7 +270,7 @@ namespace IPA
 
                 #region Virtualizing
 
-                if (File.Exists(context.AssemblyFile))
+                if (ArgDestructive && File.Exists(context.AssemblyFile))
                 {
                     var virtualizedModule = VirtualizedModule.Load(context.AssemblyFile);
                     if (!virtualizedModule.IsVirtualized)
