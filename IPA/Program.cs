@@ -229,7 +229,7 @@ namespace IPA
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("Restoring old version... ");
                     if (BackupManager.HasBackup(context))
                         BackupManager.Restore(context);

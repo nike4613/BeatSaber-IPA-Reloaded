@@ -22,9 +22,14 @@ namespace IPA.Injector.Windows
 
             if (consoleAttached)
             {
-                InitializeOutStream();
-                InitializeInStream();
+                InitializeStreams();
             }
+        }
+
+        public static void InitializeStreams()
+        {
+            InitializeOutStream();
+            InitializeInStream();
         }
 
         private static void InitializeOutStream()
