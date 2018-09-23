@@ -52,6 +52,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backups\BackupManager.cs" />
+    <Compile Include="Backups\BackupUnit.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ConsoleWindow.cs" />
     <Compile Include="Injector.cs" />

@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using Mono.Cecil;
@@ -49,6 +50,12 @@ namespace IPA.Injector
         private static void InstallBootstrapPatch()
         {
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
+
+            loader.Debug("Finding backup");
+            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA","Backups","Beat Saber");
+            var bkp = BackupManager.FindLatestBackup(backupPath);
+            if (bkp == null)
+                loader.Warn("No backup found! Was BSIPA installed using the installer?");
 
             loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
             #region Insert patch into UnityEngine.CoreModule.dll
@@ -110,6 +117,7 @@ namespace IPA.Injector
 
             if (modified)
             {
+                bkp?.Add(unityPath);
                 unityAsmDef.Write(unityPath);
             }
             #endregion
@@ -119,7 +127,7 @@ namespace IPA.Injector
             var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "Assembly-CSharp.dll");
             
             var ascModule = VirtualizedModule.Load(ascPath);
-            ascModule.Virtualize(cAsmName);
+            ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
             #endregion
         }
 
