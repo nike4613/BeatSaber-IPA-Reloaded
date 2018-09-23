@@ -1,12 +1,17 @@
 ﻿using Harmony;
 using IPA.Loader;
 using IPA.Logging;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using static IPA.Logging.Logger;
+using Logger = IPA.Logging.Logger;
+using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
 {
@@ -30,7 +35,9 @@ namespace IPA.Injector
                 // it loads Ionic.Zip.
                 SetupLibraryLoading();
 
-                // This will load Harmony and UnityEngine.CoreModule
+                loader.Debug("Prepping bootstrapper");
+
+                // // This will load Mono.Cecil
                 InstallBootstrapPatch();
             }
             catch (Exception e)
@@ -41,13 +48,79 @@ namespace IPA.Injector
 
         private static void InstallBootstrapPatch()
         {
-            var harmony = HarmonyInstance.Create("IPA_NonDestructive_Bootstrapper");
-            // patch the Application static constructor to create the bootstrapper after being called
-            harmony.Patch(typeof(Application).TypeInitializer, null, new HarmonyMethod(typeof(Injector).GetMethod(nameof(CreateBootstrapper), BindingFlags.NonPublic | BindingFlags.Static)));
+            var cAsmName = Assembly.GetExecutingAssembly().GetName();
+
+            #region Insert patch into UnityEngine.CoreModule.dll
+            var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "UnityEngine.CoreModule.dll");
+
+            var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath);
+            var unityModDef = unityAsmDef.MainModule;
+
+            bool modified = false;
+            foreach (var asmref in unityModDef.AssemblyReferences)
+            {
+                if (asmref.Name == cAsmName.Name)
+                {
+                    if (asmref.Version != cAsmName.Version)
+                    {
+                        asmref.Version = cAsmName.Version;
+                        modified = true;
+                    }
+                }
+            }
+
+            var application = unityModDef.GetType("UnityEngine", "Application");
+
+            MethodDefinition cctor = null;
+            foreach (var m in application.Methods)
+                if (m.IsRuntimeSpecialName && m.Name == ".cctor")
+                    cctor = m;
+
+            var cbs = unityModDef.Import(((Action)CreateBootstrapper).Method);
+
+            if (cctor == null)
+            {
+                cctor = new MethodDefinition(".cctor", MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName, unityModDef.TypeSystem.Void);
+                application.Methods.Add(cctor);
+                modified = true;
+
+                var ilp = cctor.Body.GetILProcessor();
+                ilp.Emit(OpCodes.Call, cbs);
+                ilp.Emit(OpCodes.Ret);
+            }
+            else
+            {
+                var ilp = cctor.Body.GetILProcessor();
+                for (int i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
+                {
+                    var ins = cctor.Body.Instructions[i];
+                    if (i == 0 && (ins.OpCode != OpCodes.Call || ins.Operand != cbs))
+                    {
+                        ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                        modified = true;
+                    }
+                    if (i == 1 && ins.OpCode != OpCodes.Ret)
+                    {
+                        ilp.Replace(ins, ilp.Create(OpCodes.Ret));
+                        modified = true;
+                    }
+                }
+            }
+
+            if (modified)
+                unityAsmDef.Write(unityPath);
+            #endregion
         }
 
+        private static bool bootstrapped = false;
         private static void CreateBootstrapper()
         {
+            if (bootstrapped) return;
+            bootstrapped = true;
+
+            // need to reinit streams singe Unity seems to redirect stdout
+            Windows.WinConsole.InitializeStreams();
+
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
