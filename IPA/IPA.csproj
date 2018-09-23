@@ -28,6 +28,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <Deterministic>true</Deterministic>
+    <PathMap>$(SolutionDir)=C:\</PathMap>
     <OtherConfig>
     </OtherConfig>
   </PropertyGroup>
@@ -137,16 +139,17 @@
     <ItemGroup>
       <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" />
       <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.dll" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.pdb" />
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.pdb"/>
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
-    <ItemGroup>
-      <BadDlls Include="$(OutputPath)Mono.Cecil.*" />
+    <ItemGroup> 
+      <BadFiles Include="$(OutputPath)Mono.Cecil.*" />
+      <BadFiles Include="$(OutputPath)**\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'"  />
       <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
     </ItemGroup>
-    <Delete Files="@(BadDlls)" />
+    <Delete Files="@(BadFiles)" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
