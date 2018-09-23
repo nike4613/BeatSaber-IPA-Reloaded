@@ -109,13 +109,15 @@ namespace IPA.Injector
             }
 
             if (modified)
+            {
                 unityAsmDef.Write(unityPath);
+            }
             #endregion
 
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
             #region Virtualize Assembly-CSharp.dll
             var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "Assembly-CSharp.dll");
-
+            
             var ascModule = VirtualizedModule.Load(ascPath);
             ascModule.Virtualize(cAsmName);
             #endregion

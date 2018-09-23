@@ -36,7 +36,7 @@ namespace IPA.Injector
         /// 
         /// </summary>
         /// <param name="module"></param>
-        public void Virtualize(AssemblyName selfName)
+        public void Virtualize(AssemblyName selfName, Action beforeChangeCallback = null)
         {
             bool changed = false;
             bool virtualize = true;
@@ -65,7 +65,10 @@ namespace IPA.Injector
             }
 
             if (changed)
+            {
+                beforeChangeCallback?.Invoke();
                 module.Write(file.FullName);
+            }
         }
 
         private void VirtualizeType(TypeDefinition type)
