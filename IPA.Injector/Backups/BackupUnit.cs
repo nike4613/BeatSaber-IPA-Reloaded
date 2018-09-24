@@ -79,6 +79,8 @@ namespace IPA.Injector.Backups
             backupPath.Directory.Create();
             if (file.Exists)
             {
+                if (File.Exists(backupPath.FullName))
+                    File.Delete(backupPath.FullName);
                 file.CopyTo(backupPath.FullName);
             }
             else
