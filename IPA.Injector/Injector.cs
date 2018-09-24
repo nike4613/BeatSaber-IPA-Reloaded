@@ -102,10 +102,22 @@ namespace IPA.Injector
                 for (int i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
                 {
                     var ins = cctor.Body.Instructions[i];
-                    if (i == 0 && (ins.OpCode != OpCodes.Call || ins.Operand != cbs))
+                    if (i == 0)
                     {
-                        ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                        modified = true;
+                        if (ins.OpCode != OpCodes.Call)
+                        {
+                            ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                            modified = true;
+                        }
+                        else
+                        {
+                            var mref = ins.Operand as MethodReference;
+                            if (mref.FullName != cbs.FullName)
+                            {
+                                ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                                modified = true;
+                            }
+                        }
                     }
                     if (i == 1 && ins.OpCode != OpCodes.Ret)
                     {
