@@ -16,13 +16,9 @@ namespace IPA.Updating.ModsaberML
 {
     class ApiEndpoint
     {
-#if DEBUG && UPDATETEST
-        public const string ApiBase = "file://Z:/Users/aaron/Source/Repos/IPA-Reloaded-BeatSaber/IPA.Tests/";
-        public const string GetApprovedEndpoint = "updater_test.json";
-#else
         public const string ApiBase = "https://www.modsaber.ml/";
-        public const string GetApprovedEndpoint = "registry/{0}/{1}";
-#endif
+        public const string GetModInfoEndpoint = "registry/{0}/{1}";
+        public const string GetModsWithSemver = "api/v1.0/mods/semver/{0}/{1}";
 
         class HexArrayConverter : JsonConverter
         {

@@ -11,7 +11,7 @@ namespace IPA.Updating
     internal class SelfPlugin : IBeatSaberPlugin
     {
         internal const string IPA_Name = "Beat Saber IPA";
-        internal const string IPA_Version = "3.10.4";
+        internal const string IPA_Version = "3.10.5";
 
         public static SelfPlugin Instance { get; set; } = new SelfPlugin();
 
