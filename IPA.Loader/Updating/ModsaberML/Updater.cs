@@ -72,19 +72,17 @@ namespace IPA.Updating.ModsaberML
             }
         }
 
-        private Dictionary<string, ApiEndpoint.Mod> requestCache = new Dictionary<string, ApiEndpoint.Mod>();
-        private IEnumerator DownloadModInfo(string name, string ver, Ref<ApiEndpoint.Mod> result)
+        private Dictionary<string, string> requestCache = new Dictionary<string, string>();
+        private IEnumerator GetModsaberEndpoint(string url, Ref<string> result)
         {
-            var uri = ApiEndpoint.ApiBase + string.Format(ApiEndpoint.GetApprovedEndpoint, name, ver);
-
-            if (requestCache.TryGetValue(uri, out ApiEndpoint.Mod value))
+            if (requestCache.TryGetValue(url, out string value))
             {
                 result.Value = value;
                 yield break;
             }
             else
             {
-                using (var request = UnityWebRequest.Get(uri))
+                using (var request = UnityWebRequest.Get(ApiEndpoint.ApiBase + url))
                 {
                     yield return request.SendWebRequest();
 
@@ -105,17 +103,69 @@ namespace IPA.Updating.ModsaberML
                         yield break;
                     }
 
-                    try
-                    {
-                        result.Value = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(request.downloadHandler.text);
+                    result.Value = request.downloadHandler.text;
 
-                        requestCache[uri] = result.Value;
-                    }
-                    catch (Exception e)
-                    {
-                        result.Error = new Exception("Error decoding response", e);
-                        yield break;
-                    }
+                    requestCache[url] = result.Value;
+                }
+            }
+        }
+
+        private Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
+        private IEnumerator GetModInfo(string name, string ver, Ref<ApiEndpoint.Mod> result)
+        {
+            var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeUriString(name), Uri.EscapeUriString(ver));
+
+            if (modCache.TryGetValue(uri, out ApiEndpoint.Mod value))
+            {
+                result.Value = value;
+                yield break;
+            }
+            else
+            {
+                Ref<string> reqResult = new Ref<string>("");
+
+                yield return GetModsaberEndpoint(uri, reqResult);
+
+                try
+                {
+                    result.Value = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(reqResult.Value);
+
+                    modCache[uri] = result.Value;
+                }
+                catch (Exception e)
+                {
+                    result.Error = new Exception("Error decoding response", e);
+                    yield break;
+                }
+            }
+        }
+
+        private Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
+        private IEnumerator GetModVersionsMatching(string name, string range, Ref<List<ApiEndpoint.Mod>> result)
+        {
+            var uri = string.Format(ApiEndpoint.GetModsWithSemver, Uri.EscapeUriString(name), Uri.EscapeUriString(range));
+
+            if (modVersionsCache.TryGetValue(uri, out List<ApiEndpoint.Mod> value))
+            {
+                result.Value = value;
+                yield break;
+            }
+            else
+            {
+                Ref<string> reqResult = new Ref<string>("");
+
+                yield return GetModsaberEndpoint(uri, reqResult);
+
+                try
+                {
+                    result.Value = JsonConvert.DeserializeObject<List<ApiEndpoint.Mod>>(reqResult.Value);
+
+                    modVersionsCache[uri] = result.Value;
+                }
+                catch (Exception e)
+                {
+                    result.Error = new Exception("Error decoding response", e);
+                    yield break;
                 }
             }
         }
@@ -162,8 +212,8 @@ namespace IPA.Updating.ModsaberML
 
                 var mod = new Ref<ApiEndpoint.Mod>(null);
 
-                #region TEMPORARY get latest // SHOULD BE GREATEST OF VERSION
-                yield return DownloadModInfo(dep.Name, "", mod);
+                #region TEMPORARY get latest // SHOULD BE GREATEST OF VERSION // not going to happen because of disagreements with ModSaber
+                yield return GetModInfo(dep.Name, "", mod);
                 #endregion
 
                 try { mod.Verify(); }
@@ -203,36 +253,6 @@ namespace IPA.Updating.ModsaberML
 
         private IEnumerator DependencyResolveSecondPass(Ref<List<DependencyObject>> list)
         {
-            IEnumerator GetGameVersionMap(string modname, Ref<Dictionary<Version,Version>> map)
-            { // gets map of mod version -> game version (2.0) 
-                map.Value = new Dictionary<Version, Version>();
-
-                var mod = new Ref<ApiEndpoint.Mod>(null);
-                yield return DownloadModInfo(modname, "", mod);
-                try { mod.Verify(); }
-                catch (Exception)
-                {
-                    map.Value = null;
-                    map.Error = new Exception($"Error getting info for {modname}", mod.Error);
-                    yield break;
-                }
-
-                map.Value.Add(mod.Value.Version, mod.Value.GameVersion);
-
-                foreach (var ver in mod.Value.OldVersions)
-                {
-                    yield return DownloadModInfo(modname, ver.ToString(), mod);
-                    try { mod.Verify(); }
-                    catch (Exception e)
-                    {
-                        Logger.updater.Error($"Error getting info for {modname}v{ver}");
-                        Logger.updater.Error(e);
-                        continue;
-                    }
-                    map.Value.Add(mod.Value.Version, mod.Value.GameVersion);
-                }
-            }
-
             foreach(var dep in list.Value)
             {
                 dep.Has = dep.Version != null;// dep.Version is only not null if its already installed
@@ -243,18 +263,18 @@ namespace IPA.Updating.ModsaberML
                     continue;
                 }
 
-                var dict = new Ref<Dictionary<Version, Version>>(null);
-                yield return GetGameVersionMap(dep.Name, dict);
-                try { dict.Verify(); }
+                var modsMatching = new Ref<List<ApiEndpoint.Mod>>(null);
+                yield return GetModVersionsMatching(dep.Name, dep.Requirement.ToString(), modsMatching);
+                try { modsMatching.Verify(); }
                 catch (Exception e)
                 {
-                    Logger.updater.Error($"Error getting map for {dep.Name}");
+                    Logger.updater.Error($"Error getting mod list for {dep.Name}");
                     Logger.updater.Error(e);
                     dep.MetaRequestFailed = true;
                     continue;
                 }
-                
-                var ver = dep.Requirement.MaxSatisfying(dict.Value.Where(kvp => kvp.Value == BeatSaber.GameVersion).Select(kvp => kvp.Key)); // (2.1)
+
+                var ver = modsMatching.Value.Where(val => val.GameVersion == BeatSaber.GameVersion && val.Approved).Select(mod => mod.Version).Max(); // (2.1)
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
                 dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
             }
@@ -297,7 +317,7 @@ namespace IPA.Updating.ModsaberML
             Logger.updater.Debug($"Release: {BeatSaber.ReleaseType}");
 
             var mod = new Ref<ApiEndpoint.Mod>(null);
-            yield return DownloadModInfo(item.Name, item.ResolvedVersion.ToString(), mod);
+            yield return GetModInfo(item.Name, item.ResolvedVersion.ToString(), mod);
             try { mod.Verify(); }
             catch (Exception e)
             {
@@ -362,6 +382,11 @@ namespace IPA.Updating.ModsaberML
 
                     if (downloadTask.IsFaulted)
                     {
+                        if (downloadTask.Exception.InnerExceptions.Where(e => e is ModsaberInterceptException).Any())
+                        { // any exception is an intercept exception
+                            Logger.updater.Error($"Modsaber did not return expected data for {item.Name}");
+                        }
+
                         Logger.updater.Error($"Error downloading mod {item.Name}");
                         Logger.updater.Error(downloadTask.Exception);
                         continue;
@@ -458,8 +483,16 @@ namespace IPA.Updating.ModsaberML
 
                                 sha = new SHA1CryptoServiceProvider();
                                 var fileHash = sha.ComputeHash(ostream);
-                                if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
-                                    throw new Exception("The hash for the file doesn't match what is defined");
+
+                                try
+                                {
+                                    if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
+                                        throw new Exception("The hash for the file doesn't match what is defined");
+                                }
+                                catch (KeyNotFoundException)
+                                {
+                                    throw new ModsaberInterceptException("ModSaber did not send the hashes for the zip's content!");
+                                }
 
                                 ostream.Seek(0, SeekOrigin.Begin);
                                 FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
@@ -527,6 +560,26 @@ namespace IPA.Updating.ModsaberML
         }
 
         protected NetworkException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+    
+    [Serializable]
+    internal class ModsaberInterceptException : Exception
+    {
+        public ModsaberInterceptException()
+        {
+        }
+
+        public ModsaberInterceptException(string message) : base(message)
+        {
+        }
+
+        public ModsaberInterceptException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected ModsaberInterceptException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
