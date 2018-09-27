@@ -38,8 +38,11 @@ namespace IPA.Injector
 
                 loader.Debug("Prepping bootstrapper");
 
-                // // This will load Mono.Cecil
+                // This will load Mono.Cecil
                 InstallBootstrapPatch();
+
+                // loads Assembly-CSharp-firstpass
+                PiracyChecks();
             }
             catch (Exception e)
             {
@@ -141,6 +144,14 @@ namespace IPA.Injector
             var ascModule = VirtualizedModule.Load(ascPath);
             ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
             #endregion
+        }
+
+        private static void PiracyChecks()
+        {
+            if (Utilities.AntiPiracy.PiracyChecks.IsPirated)
+            {
+                log.Critical("You are using a pirated copy of the game! You will not recieve support for any mods.");
+            }
         }
 
         private static bool bootstrapped = false;
