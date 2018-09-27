@@ -58,6 +58,7 @@ namespace IPA.Updating.ModsaberML
             public Version Version { get; set; } = null;
             public Version ResolvedVersion { get; set; } = null;
             public Range Requirement { get; set; } = null;
+            public Range Conflicts { get; set; } = null;
             public bool Resolved { get; set; } = false;
             public bool Has { get; set; } = false;
             public HashSet<string> Consumers { get; set; } = new HashSet<string>();
@@ -68,7 +69,7 @@ namespace IPA.Updating.ModsaberML
 
             public override string ToString()
             {
-                return $"{Name}@{Version}{(Resolved ? $" -> {ResolvedVersion}" : "")} - ({Requirement}) {(Has ? $" Already have" : "")}";
+                return $"{Name}@{Version}{(Resolved ? $" -> {ResolvedVersion}" : "")} - ({Requirement} ! {Conflicts}) {(Has ? $" Already have" : "")}";
             }
         }
 
@@ -226,6 +227,7 @@ namespace IPA.Updating.ModsaberML
                 }
 
                 list.Value.AddRange(mod.Value.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string>() { dep.Name } }));
+                list.Value.AddRange(mod.Value.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string>() { dep.Name } }));
             }
 
             var depNames = new HashSet<string>();
@@ -242,9 +244,19 @@ namespace IPA.Updating.ModsaberML
                 {
                     var toMod = final.Where(d => d.Name == dep.Name).First();
 
-                    toMod.Requirement = toMod.Requirement.Intersect(dep.Requirement);
-                    foreach (var consume in dep.Consumers)
-                        toMod.Consumers.Add(consume);
+                    if (dep.Requirement != null)
+                    {
+                        toMod.Requirement = toMod.Requirement.Intersect(dep.Requirement);
+                        foreach (var consume in dep.Consumers)
+                            toMod.Consumers.Add(consume);
+                    }
+                    else if (dep.Conflicts != null)
+                    {
+                        if (toMod.Conflicts == null)
+                            toMod.Conflicts = dep.Conflicts;
+                        else
+                            toMod.Conflicts = new Range($"{toMod.Conflicts} || {dep.Conflicts}"); // there should be a better way to do this
+                    }
                 }
             }
 
@@ -274,7 +286,7 @@ namespace IPA.Updating.ModsaberML
                     continue;
                 }
 
-                var ver = modsMatching.Value.Where(val => val.GameVersion == BeatSaber.GameVersion && val.Approved).Select(mod => mod.Version).Max(); // (2.1)
+                var ver = modsMatching.Value.Where(val => val.GameVersion == BeatSaber.GameVersion && val.Approved && !dep.Conflicts.IsSatisfied(val.Version)).Select(mod => mod.Version).Max(); // (2.1)
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
                 dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
             }

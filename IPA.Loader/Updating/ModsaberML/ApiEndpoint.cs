@@ -16,7 +16,7 @@ namespace IPA.Updating.ModsaberML
 {
     class ApiEndpoint
     {
-        public const string ApiBase = "https://www.modsaber.ml/";
+        public const string ApiBase = "https://www.modsaber.org/";
         public const string GetModInfoEndpoint = "registry/{0}/{1}";
         public const string GetModsWithSemver = "api/v1.0/mods/semver/{0}/{1}";
 
@@ -129,6 +129,9 @@ namespace IPA.Updating.ModsaberML
 
             [JsonProperty("dependsOn", ItemConverterType = typeof(ModsaberDependencyConverter))]
             public Dependency[] Dependencies = new Dependency[0];
+
+            [JsonProperty("conflictsWith", ItemConverterType = typeof(ModsaberDependencyConverter))]
+            public Dependency[] Conflicts = new Dependency[0];
 
             [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]
             public Version[] OldVersions = new Version[0];
