@@ -38,6 +38,9 @@
     <DocumentationFile>bin\Release\IPA.Loader.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\..\..\Game Library\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -73,6 +76,7 @@
     <Compile Include="Updating\Converters\ModsaberDependencyConverter.cs" />
     <Compile Include="Updating\Converters\SemverRangeConverter.cs" />
     <Compile Include="Updating\Converters\SemverVersionConverter.cs" />
+    <Compile Include="Utilities\AntiPiracy.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
     <Compile Include="Utilities\Ref.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />
