@@ -267,7 +267,7 @@ namespace IPA.Updating.ModsaberML
         {
             foreach(var dep in list.Value)
             {
-                dep.Has = dep.Version != null;// dep.Version is only not null if its already installed
+                dep.Has = dep.Version != null; // dep.Version is only not null if its already installed
 
                 if (dep.MetaRequestFailed)
                 {

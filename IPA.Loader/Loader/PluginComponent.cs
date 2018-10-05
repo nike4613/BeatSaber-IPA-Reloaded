@@ -17,13 +17,6 @@ namespace IPA.Loader
 
         internal static PluginComponent Create()
         {
-            Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
-            {
-                var level = UnityLogInterceptor.LogTypeToLevel(type);
-                UnityLogInterceptor.UnityLogger.Log(level, $"{condition.Trim()}");
-                UnityLogInterceptor.UnityLogger.Log(level, $"{stackTrace.Trim()}");
-            };
-
             return new GameObject("IPA_PluginManager").AddComponent<PluginComponent>();
         }
 
