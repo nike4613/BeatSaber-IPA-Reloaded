@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,15 @@ namespace IPA.Utilities
         /// Gets the <see cref="Release"/> type of this installation of Beat Saber
         /// </summary>
         public static Release ReleaseType => (_releaseCache ?? (_releaseCache = FindSteamVRAsset() ? Release.Steam : Release.Oculus)).Value;
+
+        /// <summary>
+        /// The path to the `Libs` folder. Use only if necessary.
+        /// </summary>
+        public static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
+        /// <summary>
+        /// The path to the `Libs\Native` folder. Use only if necessary.
+        /// </summary>
+        public static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
 
         private static bool FindSteamVRAsset()
         {

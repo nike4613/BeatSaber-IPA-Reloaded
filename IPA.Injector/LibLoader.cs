@@ -12,8 +12,8 @@ namespace IPA.Injector
 {
     internal class LibLoader
     {
-        public static string LibsDir { get; set; } = Path.Combine(Environment.CurrentDirectory, "Libs");
-        public static string NativeDir { get; set; } = Path.Combine(LibsDir, "Native");
+        public static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
+        public static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
         private static Dictionary<string, string> filenameLocations = null;
 
         public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
@@ -25,7 +25,7 @@ namespace IPA.Injector
             {
                 filenameLocations = new Dictionary<string, string>();
 
-                foreach (var fn in TraverseTree(LibsDir, s => s != NativeDir))
+                foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
                     filenameLocations.Add(fn.Name, fn.FullName);
             }
 

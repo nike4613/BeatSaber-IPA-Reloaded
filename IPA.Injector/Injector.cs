@@ -149,9 +149,16 @@ namespace IPA.Injector
             if (bootstrapped) return;
             bootstrapped = true;
 
+            Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
+            {
+                var level = UnityLogInterceptor.LogTypeToLevel(type);
+                UnityLogInterceptor.UnityLogger.Log(level, $"{condition.Trim()}");
+                UnityLogInterceptor.UnityLogger.Log(level, $"{stackTrace.Trim()}");
+            };
+
             // need to reinit streams singe Unity seems to redirect stdout
             Windows.WinConsole.InitializeStreams();
-
+            
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
@@ -176,14 +183,14 @@ namespace IPA.Injector
             loadingDone = true;
             #region Add Library load locations
             AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
-            try
+            /*try
             {
                 if (!SetDllDirectory(LibLoader.NativeDir))
                 {
                     libLoader.Warn("Unable to add native library path to load path");
                 }
             }
-            catch (Exception) { }
+            catch (Exception) { }*/
             #endregion
         }
 
