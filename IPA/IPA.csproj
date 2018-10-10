@@ -30,6 +30,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
+    <ProxyConfig>$(Configuration)</ProxyConfig>
     <OtherConfig>
     </OtherConfig>
   </PropertyGroup>
@@ -44,6 +45,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <OtherConfig>Debug</OtherConfig>
+    <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,6 +77,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <OtherConfig>Debug</OtherConfig>
+    <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Verbose_Release|AnyCPU'">
     <OutputPath>bin\Verbose_Release\</OutputPath>
@@ -88,6 +91,20 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj">
+	  <Project>{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>False</Private>
+	  <Name>Doorstop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj">
+	  <Project>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>False</Private>
+	  <Name>IPA.Injector</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
@@ -138,15 +155,15 @@
     <Message Text="Packing..." Importance="normal" />
     <ItemGroup>
       <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.dll" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(Configuration)\**\*.pdb"/>
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
     </ItemGroup>
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
-    <ItemGroup> 
-      <BadFiles Include="$(OutputPath)Mono.Cecil.*" />
-      <BadFiles Include="$(OutputPath)**\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'"  />
+    <ItemGroup>
+      <BadFiles Include="$(OutputPath)*.dll" />
+      <BadFiles Include="$(OutputPath)**\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
       <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
