@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Game Library\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\GameLibrary\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -66,6 +66,12 @@
     <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
       <Project>{5ad344f0-01a0-4ca8-92e5-9d095737744d}</Project>
       <Name>IPA.Loader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MSBuildTasks\MSBuildTasks.csproj">
+      <Project>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>False</Private>
+      <Name>MSBuildTasks</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
