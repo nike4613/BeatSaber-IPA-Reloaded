@@ -94,16 +94,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj">
-	  <Project>{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</Project>
+      <Project>{88609E16-731F-46C9-8139-6B1A7A83240D}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <Private>False</Private>
-	  <Name>Doorstop</Name>
+      <Name>proxy</Name>
     </ProjectReference>
     <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj">
-	  <Project>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Project>
+      <Project>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <Private>False</Private>
-	  <Name>IPA.Injector</Name>
+      <Name>IPA.Injector</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
