@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA.Injector", "IPA.Injecto
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "proxy", "Doorstop\Proxy\Proxy.vcxproj", "{88609E16-731F-46C9-8139-6B1A7A83240D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C79C2C3A-A7FC-40D6-A5CC-9752A661AFA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectDependencies", "CollectDependencies\CollectDependencies.csproj", "{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,9 +177,37 @@ Global
 		{88609E16-731F-46C9-8139-6B1A7A83240D}.Verbose|x64.Build.0 = Verbose_Release|x64
 		{88609E16-731F-46C9-8139-6B1A7A83240D}.Verbose|x86.ActiveCfg = Verbose|Win32
 		{88609E16-731F-46C9-8139-6B1A7A83240D}.Verbose|x86.Build.0 = Verbose|Win32
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug|x64.Build.0 = Debug|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release|x64.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release|x64.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release|x86.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release|Any CPU.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release|x64.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release|x64.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release|x86.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release|x86.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|Any CPU.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|Any CPU.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x64.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x64.Build.0 = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x86.ActiveCfg = Release|Any CPU
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F08C3C7A-3221-432E-BAB8-32BCE58408C8} = {C79C2C3A-A7FC-40D6-A5CC-9752A661AFA9}
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F} = {C79C2C3A-A7FC-40D6-A5CC-9752A661AFA9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7380FAB-02D6-4A2A-B428-B4BFCFE3A054}
