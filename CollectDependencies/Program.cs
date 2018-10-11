@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mono.Cecil;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,6 +76,32 @@ namespace CollectDependencies
                 }
 
                 files.Add(Pop());
+            }
+
+            foreach (var file in files)
+            {
+                var fparts = file.Split('?');
+                if (fparts.Length > 1 && fparts[1] == "virt")
+                {
+                    var module = VirtualizedModule.Load(fparts[0]);
+                    module.Virtualize(fparts[0] = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), Path.GetFileName(fparts[0])));
+                }
+                var modl = ModuleDefinition.ReadModule(fparts[0]);
+                foreach(var t in modl.Types)
+                {
+                    foreach (var m in t.Methods)
+                    {
+                        if (m.Body != null)
+                        {
+                            m.Body.Instructions.Clear();
+                            m.Body.InitLocals = false;
+                            m.Body.Variables.Clear();
+                        }
+                    }
+                }
+                var outp = Path.Combine(fdir, Path.GetFileName(fparts[0]));
+                Console.WriteLine($"Copying {fparts[0]} to {outp}");
+                modl.Write(outp);
             }
 
         }
