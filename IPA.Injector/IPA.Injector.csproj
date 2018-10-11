@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\GameLibrary\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\Refs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
