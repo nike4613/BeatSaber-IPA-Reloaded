@@ -27,17 +27,23 @@ namespace IPA.Loader
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
         
-        internal class BSPluginMeta
+        /// <summary>
+        /// A container object for all the data relating to a plugin.
+        /// </summary>
+        public class PluginInfo
         {
-            public IBeatSaberPlugin Plugin { get; internal set; }
-            public string Filename { get; internal set; }
+            internal IBeatSaberPlugin Plugin { get; set; }
+            internal string Filename { get; set; }
+            /// <summary>
+            /// The Modsaber updating info for the mod, or null.
+            /// </summary>
             public ModsaberModInfo ModsaberInfo { get; internal set; }
         }
 
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
         /// </summary>
-        public static IEnumerable<IBeatSaberPlugin> BSPlugins
+        internal static IEnumerable<IBeatSaberPlugin> BSPlugins
         {
             get
             {
@@ -48,8 +54,8 @@ namespace IPA.Loader
                 return _bsPlugins.Select(p => p.Plugin);
             }
         }
-        private static List<BSPluginMeta> _bsPlugins = null;
-        internal static IEnumerable<BSPluginMeta> BSMetas
+        private static List<PluginInfo> _bsPlugins = null;
+        internal static IEnumerable<PluginInfo> BSMetas
         {
             get
             {
@@ -60,10 +66,31 @@ namespace IPA.Loader
                 return _bsPlugins;
             }
         }
+
+        /// <summary>
+        /// Gets info about the plugin with the specified name.
+        /// </summary>
+        /// <param name="name">the name of the plugin to get (must be an exact match)</param>
+        /// <returns>the plugin info for the requested plugin or null</returns>
+        public static PluginInfo GetPlugin(string name)
+        {
+            return BSMetas.Where(p => p.Plugin.Name == name).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets info about the plugin with the specified modsaber name.
+        /// </summary>
+        /// <param name="name">the modsaber name of the plugin to get (must be an exact match)</param>
+        /// <returns>the plugin info for the requested plugin or null</returns>
+        public static PluginInfo GetPluginFromModsaberName(string name)
+        {
+            return BSMetas.Where(p => p.ModsaberInfo.InternalName == name).FirstOrDefault();
+        }
         
         /// <summary>
         /// An <see cref="IEnumerable"/> of old IPA plugins
         /// </summary>
+        [Obsolete("I mean, IPlugin shouldn't be used, so why should this? Not renaming to extend support for old plugins.")]
         public static IEnumerable<IPlugin> Plugins
         {
             get
@@ -88,7 +115,7 @@ namespace IPA.Loader
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
-            _bsPlugins = new List<BSPluginMeta>();
+            _bsPlugins = new List<PluginInfo>();
             _ipaPlugins = new List<IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
@@ -155,7 +182,7 @@ namespace IPA.Loader
                 #endregion
             }
 
-            var selfPlugin = new BSPluginMeta
+            var selfPlugin = new PluginInfo
             {
                 Filename = Path.Combine(Environment.CurrentDirectory, "IPA.exe"),
                 Plugin = SelfPlugin.Instance
@@ -194,13 +221,13 @@ namespace IPA.Loader
             Logger.log.Info("-----------------------------");
         }
 
-        private static Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
+        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
         {
-            List<BSPluginMeta> bsPlugins = new List<BSPluginMeta>();
+            List<PluginInfo> bsPlugins = new List<PluginInfo>();
             List<IPlugin> ipaPlugins = new List<IPlugin>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return new Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+                return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
 
             T OptionalGetPlugin<T>(Type t) where T : class
             {
@@ -280,7 +307,7 @@ namespace IPA.Loader
                                 init.Invoke(bsPlugin, initArgs.ToArray());
                             }
 
-                            bsPlugins.Add(new BSPluginMeta
+                            bsPlugins.Add(new PluginInfo
                             {
                                 Plugin = bsPlugin,
                                 Filename = file.Replace("\\.cache", ""), // quick and dirty fix
@@ -308,7 +335,7 @@ namespace IPA.Loader
                 Logger.loader.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
-            return new Tuple<IEnumerable<BSPluginMeta>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+            return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
         }
 
         internal class AppInfo
