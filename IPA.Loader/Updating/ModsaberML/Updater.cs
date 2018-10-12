@@ -65,7 +65,7 @@ namespace IPA.Updating.ModsaberML
 
             public bool MetaRequestFailed { get; set; } = false;
 
-            public BSPluginMeta LocalPluginMeta { get; set; } = null;
+            public PluginInfo LocalPluginMeta { get; set; } = null;
 
             public override string ToString()
             {
