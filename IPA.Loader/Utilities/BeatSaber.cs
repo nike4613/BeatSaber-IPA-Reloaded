@@ -41,9 +41,13 @@ namespace IPA.Utilities
         public static Release ReleaseType => (_releaseCache ?? (_releaseCache = FindSteamVRAsset() ? Release.Steam : Release.Oculus)).Value;
 
         /// <summary>
+        /// The path to the Beat Saber install dir
+        /// </summary>
+        public static string InstallPath => Environment.CurrentDirectory;
+        /// <summary>
         /// The path to the `Libs` folder. Use only if necessary.
         /// </summary>
-        public static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
+        public static string LibraryPath => Path.Combine(InstallPath, "Libs");
         /// <summary>
         /// The path to the `Libs\Native` folder. Use only if necessary.
         /// </summary>

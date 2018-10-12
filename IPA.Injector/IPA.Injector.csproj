@@ -59,6 +59,7 @@
     <Compile Include="Injector.cs" />
     <Compile Include="LibLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Updates.cs" />
     <Compile Include="Virtualizer.cs" />
     <Compile Include="WtfThisDoesntNeedToExist.cs" />
   </ItemGroup>

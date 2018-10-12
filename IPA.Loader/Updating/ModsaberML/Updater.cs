@@ -286,7 +286,10 @@ namespace IPA.Updating.ModsaberML
                     continue;
                 }
 
-                var ver = modsMatching.Value.Where(val => val.GameVersion == BeatSaber.GameVersion && val.Approved && !dep.Conflicts.IsSatisfied(val.Version)).Select(mod => mod.Version).Max(); // (2.1)
+                var ver = modsMatching.Value.Where(nullCheck => nullCheck != null)
+                    .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion && versionCheck.Approved)
+                    .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version))
+                    .Select(mod => mod.Version).Max(); // (2.1)
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
                 dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
             }
@@ -470,11 +473,17 @@ namespace IPA.Updating.ModsaberML
                 throw new Exception("The hash for the file doesn't match what is defined");
 
             var newFiles = new List<FileInfo>();
-            var backup = new BackupUnit(tempDirectory, $"backup-{item.Name}");
+
+            var targetDir = Path.Combine(BeatSaber.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
+            Directory.CreateDirectory(targetDir);
+
+            var eventualOutput = Path.Combine(BeatSaber.InstallPath, "IPA", "Pending");
+            if (!Directory.Exists(eventualOutput))
+                Directory.CreateDirectory(eventualOutput);
 
             try
             {
-                bool shouldDeleteOldFile = true;
+                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.Plugin is SelfPlugin);
 
                 using (var zipFile = ZipFile.Read(stream))
                 {
@@ -484,7 +493,7 @@ namespace IPA.Updating.ModsaberML
                         if (entry.IsDirectory)
                         {
                             Logger.updater.Debug($"Creating directory {entry.FileName}");
-                            Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+                            Directory.CreateDirectory(Path.Combine(targetDir, entry.FileName));
                         }
                         else
                         {
@@ -507,53 +516,60 @@ namespace IPA.Updating.ModsaberML
                                 }
 
                                 ostream.Seek(0, SeekOrigin.Begin);
-                                FileInfo targetFile = new FileInfo(Path.Combine(Environment.CurrentDirectory, entry.FileName));
+                                FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName);
 
-                                if (targetFile.FullName == item.LocalPluginMeta?.Filename)
+                                if (LoneFunctions.GetRelativePath(targetFile.FullName, targetDir) == LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Filename, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
-                                if (targetFile.Exists)
+                                /*if (targetFile.Exists)
                                     backup.Add(targetFile);
                                 else
-                                    newFiles.Add(targetFile);
+                                    newFiles.Add(targetFile);*/
 
                                 Logger.updater.Debug($"Extracting file {targetFile.FullName}");
 
                                 targetFile.Delete();
-                                var fstream = targetFile.Create();
-                                ostream.CopyTo(fstream);
+                                using (var fstream = targetFile.Create())
+                                    ostream.CopyTo(fstream);
                             }
                         }
                     }
                 }
-
-                if (item.LocalPluginMeta?.Plugin is SelfPlugin)
-                { // currently updating self
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = item.LocalPluginMeta.Filename,
-                        Arguments = $"-nw={Process.GetCurrentProcess().Id}",
-                        UseShellExecute = false
-                    });
-                }
-                else if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.Delete(item.LocalPluginMeta.Filename);
+                
+                if (shouldDeleteOldFile && item.LocalPluginMeta != null)
+                    File.AppendAllLines(Path.Combine(targetDir, _SpecialDeletionsFile), new string[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta.Filename, BeatSaber.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
-                foreach (var file in newFiles)
+                /*foreach (var file in newFiles)
                     file.Delete();
                 backup.Restore();
-                backup.Delete();
+                backup.Delete();*/
+                Directory.Delete(targetDir, true); // delete extraction site
 
                 throw;
             }
 
-            backup.Delete();
+            if (item.LocalPluginMeta?.Plugin is SelfPlugin)
+            { // currently updating self, so copy to working dir and update
+                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
+                if (File.Exists(Path.Combine(BeatSaber.InstallPath, _SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, _SpecialDeletionsFile));
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = item.LocalPluginMeta.Filename,
+                    Arguments = $"-nw={Process.GetCurrentProcess().Id}",
+                    UseShellExecute = false
+                });
+            }
+            else
+                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), _SpecialDeletionsFile);
+            Directory.Delete(targetDir, true); // delete extraction site
 
             Logger.updater.Debug("Extractor exited");
         }
+
+        internal const string _SpecialDeletionsFile = "$$delete";
     }
 
     [Serializable]
