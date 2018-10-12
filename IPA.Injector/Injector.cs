@@ -11,7 +11,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using static IPA.Logging.Logger;
-using Logger = IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
@@ -27,19 +26,15 @@ namespace IPA.Injector
 
             try
             {
-                // This loads System.Runtime.InteropServices, and Microsoft.Win32.SafeHandles.
                 Windows.WinConsole.Initialize();
 
-                // This loads AppDomain, System.IO, System.Collections.Generic, and System.Reflection.
-                // If kernel32.dll is not already loaded, this will also load it.
-                // This call also loads IPA.Loader and initializes the logging system. In the process
-                // it loads Ionic.Zip.
                 SetupLibraryLoading();
 
                 loader.Debug("Prepping bootstrapper");
-
-                // // This will load Mono.Cecil
+                
                 InstallBootstrapPatch();
+
+                Updates.InstallPendingUpdates();
             }
             catch (Exception e)
             {

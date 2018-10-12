@@ -84,5 +84,42 @@ namespace IPA.Utilities
             Uri folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
+
+        /// <summary>
+        /// Copies all files from <paramref name="source"/> to <paramref name="target"/>.
+        /// </summary>
+        /// <param name="source">the source directory</param>
+        /// <param name="target">the destination directory</param>
+        /// <param name="appendFileName"></param>
+        public static void CopyAll(DirectoryInfo source, DirectoryInfo target, string appendFileName = "")
+        {
+            if (source.FullName.ToLower() == target.FullName.ToLower())
+            {
+                return;
+            }
+
+            // Check if the target directory exists, if not, create it.
+            if (Directory.Exists(target.FullName) == false)
+            {
+                Directory.CreateDirectory(target.FullName);
+            }
+
+            // Copy each file into it's new directory.
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                if (fi.Name == appendFileName)
+                    File.AppendAllLines(Path.Combine(target.ToString(), fi.Name), File.ReadAllLines(fi.FullName));
+                else
+                    fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+            }
+
+            // Copy each subdirectory using recursion.
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyAll(diSourceSubDir, nextTargetSubDir, appendFileName);
+            }
+        }
     }
 }
