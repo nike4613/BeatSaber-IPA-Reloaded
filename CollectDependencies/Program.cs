@@ -81,27 +81,40 @@ namespace CollectDependencies
             foreach (var file in files)
             {
                 var fparts = file.Split('?');
-                if (fparts.Length > 1 && fparts[1] == "virt")
+                var fname = fparts[0];
+
+                if (fname == "") continue;
+
+                var outp = Path.Combine(fdir, Path.GetFileName(fname));
+                Console.WriteLine($"Copying \"{fname}\" to \"{outp}\"");
+                if (File.Exists(outp)) File.Delete(outp);
+
+                if (Path.GetExtension(fname).ToLower() == ".dll")
                 {
-                    var module = VirtualizedModule.Load(fparts[0]);
-                    module.Virtualize(fparts[0] = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), Path.GetFileName(fparts[0])));
-                }
-                var modl = ModuleDefinition.ReadModule(fparts[0]);
-                foreach(var t in modl.Types)
-                {
-                    foreach (var m in t.Methods)
+                    if (fparts.Length > 1 && fparts[1] == "virt")
                     {
-                        if (m.Body != null)
+                        var module = VirtualizedModule.Load(fname);
+                        module.Virtualize(fname = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), Path.GetFileName(fname)));
+                    }
+                    var modl = ModuleDefinition.ReadModule(fparts[0]);
+                    foreach (var t in modl.Types)
+                    {
+                        foreach (var m in t.Methods)
                         {
-                            m.Body.Instructions.Clear();
-                            m.Body.InitLocals = false;
-                            m.Body.Variables.Clear();
+                            if (m.Body != null)
+                            {
+                                m.Body.Instructions.Clear();
+                                m.Body.InitLocals = false;
+                                m.Body.Variables.Clear();
+                            }
                         }
                     }
+                    modl.Write(outp);
                 }
-                var outp = Path.Combine(fdir, Path.GetFileName(fparts[0]));
-                Console.WriteLine($"Copying {fparts[0]} to {outp}");
-                modl.Write(outp);
+                else
+                {
+                    File.Copy(fname, outp);
+                }
             }
 
         }

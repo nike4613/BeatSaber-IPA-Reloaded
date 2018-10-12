@@ -108,6 +108,13 @@
       <Version>1.2.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CollectDependencies\CollectDependencies.csproj">
+      <Project>{5f33b310-dc8d-4c0d-877e-bac3908de10f}</Project>
+      <Name>CollectDependencies</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
