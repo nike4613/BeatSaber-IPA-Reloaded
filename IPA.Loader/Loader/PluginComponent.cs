@@ -25,8 +25,10 @@ namespace IPA.Loader
             DontDestroyOnLoad(gameObject);
 
             bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
+#pragma warning disable CS0618 // Type or member is obsolete
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
-            
+#pragma warning restore CS0618 // Type or member is obsolete
+
             gameObject.AddComponent<Updating.ModsaberML.Updater>();
 
             bsPlugins.OnApplicationStart();

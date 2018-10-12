@@ -96,12 +96,12 @@ namespace IPA.Injector
                 // choice of which exceptions to catch depends entirely on the specific task 
                 // you are intending to perform and also on how much you know with certainty 
                 // about the systems on which this code will run.
-                catch (UnauthorizedAccessException e)
+                catch (UnauthorizedAccessException)
                 {
                     //Console.WriteLine(e.Message);
                     continue;
                 }
-                catch (System.IO.DirectoryNotFoundException e)
+                catch (System.IO.DirectoryNotFoundException)
                 {
                     //Console.WriteLine(e.Message);
                     continue;
@@ -113,14 +113,14 @@ namespace IPA.Injector
                     files = System.IO.Directory.GetFiles(currentDir);
                 }
 
-                catch (UnauthorizedAccessException e)
+                catch (UnauthorizedAccessException)
                 {
 
                     //Console.WriteLine(e.Message);
                     continue;
                 }
 
-                catch (System.IO.DirectoryNotFoundException e)
+                catch (System.IO.DirectoryNotFoundException)
                 {
                     //Console.WriteLine(e.Message);
                     continue;
@@ -142,7 +142,7 @@ namespace IPA.Injector
                         nextValue = new System.IO.FileInfo(file);
                         //Console.WriteLine("{0}: {1}, {2}", fi.Name, fi.Length, fi.CreationTime);
                     }
-                    catch (System.IO.FileNotFoundException e)
+                    catch (System.IO.FileNotFoundException)
                     {
                         // If file was deleted by a separate application
                         //  or thread since the call to TraverseTree()
