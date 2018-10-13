@@ -93,18 +93,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj">
-      <Project>{88609E16-731F-46C9-8139-6B1A7A83240D}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>False</Private>
-      <Name>proxy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj">
-      <Project>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>False</Private>
-      <Name>IPA.Injector</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />

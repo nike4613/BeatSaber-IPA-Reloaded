@@ -64,21 +64,9 @@
     <Compile Include="WtfThisDoesntNeedToExist.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CollectDependencies\CollectDependencies.csproj">
-      <Project>{5f33b310-dc8d-4c0d-877e-bac3908de10f}</Project>
-      <Name>CollectDependencies</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
       <Project>{5ad344f0-01a0-4ca8-92e5-9d095737744d}</Project>
       <Name>IPA.Loader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MSBuildTasks\MSBuildTasks.csproj">
-      <Project>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Private>False</Private>
-      <Name>MSBuildTasks</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
