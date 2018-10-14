@@ -15,7 +15,7 @@ artifacts:
   - path: IPA/bin/$(configuration)
 assembly_info:
   patch: true
-  file: IPA/Properties/AssemblyInfo.cs;IPA.Injector/Properties/AssemblyInfo.cs
+  file: IPA*/Properties/AssemblyInfo.cs
   assembly_version: '$(bsipa_version)'
   assembly_file_version: '$(bsipa_version)'
 build:
