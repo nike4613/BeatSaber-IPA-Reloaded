@@ -142,7 +142,7 @@
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
     <ItemGroup>
-      <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" />
+      <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
       <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
       <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
     </ItemGroup>
