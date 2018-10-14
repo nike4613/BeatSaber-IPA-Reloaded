@@ -18,8 +18,8 @@ build:
   project: BSIPA.sln
 deploy:
 - provider: GitHub
-  release: BSIPA $(bsipa_version)
-  tag: $(bsipa_version)
+  release: BSIPA $(bsipa_version)-pre
+  tag: $(bsipa_version)-pre
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
   artifact: IPA/Bin/$(configuration).zip
