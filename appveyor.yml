@@ -12,3 +12,4 @@ artifacts:
   - path: IPA/bin/$(configuration)
 build:
   verbosity: minimal
+  project: BSIPA.sln
