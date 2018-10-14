@@ -1,21 +1,21 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/fql702mky0d5bcky?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded)
 
-# IPA
-Illusion Plugin Architecture (Reloaded) - let's you inject code into Unity projects.
+# BSIPA [![Build status](https://ci.appveyor.com/api/projects/status/fql702mky0d5bcky?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded)
+
+Beat Saber IPA - The mod injector tailored for Beat Saber
 
 ## How To Install
 
-1. Download a release (https://github.com/nike4613/IPA-Reloaded/releases)
+1. Download a release (https://github.com/nike4613/BeatSaber-IPA-Reloaded/releases)
 2. Extract the contents into the game folder
-3. Drag & drop the game exe onto **IPA.exe**
-4. Start the game as usual (the generated shortcut is optional)
+3. Run **IPA.exe**
+4. Start the game as usual
 
-**Optional:** 
-To verify it worked, start the game with the `--verbose` flag. If a new console window opens with debug info, then you're good.
+A console window should open before the game starts if the installation was successful.
 
 ## How To Uninstall
 
 1. Drag & drop the game exe onto **IPA.exe** while holding <kbd>Alt</kbd>
+    - Or run `ipa -rn` in a command window
 2. Done
 
 ## How To Develop
@@ -25,11 +25,11 @@ To verify it worked, start the game with the `--verbose` flag. If a new console 
 3. Implement `IBeatSaberPlugin` or `IEnhancedBeatSaberPlugin`
 4. Build the project and copy the DLL into the Plugins folder of the game.
 
-See [Developing](https://github.com/nike4613/IPA-Reloaded/wiki/Developing) for more information.
+See [Developing](https://github.com/nike4613/BeatSaber-IPA-Reloaded/wiki/Developing) for more information.
 
 ## How To Keep The Game Patched
 
-When patching, IPA automatically creates a shortcut that keeps everything up-to-date. This simply makes sure that your DLLs remain patched even after an update.
+BSIPA will automatically repatch the game when it updates, as long as `winhttp.dll` is present in the install directory.
 
 ## Arguments
 
