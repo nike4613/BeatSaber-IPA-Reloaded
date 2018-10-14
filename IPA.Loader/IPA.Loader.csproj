@@ -92,7 +92,6 @@
     <Compile Include="Updating\SelfPlugin.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\LoneFunctions.cs" />
-    <Compile Include="Utilities\SteamCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ionic.Zip">
