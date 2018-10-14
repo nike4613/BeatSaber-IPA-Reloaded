@@ -16,6 +16,7 @@ artifacts:
 build:
   verbosity: normal
   project: BSIPA.sln
+skip_tags: true
 deploy:
 - provider: GitHub
   release: BSIPA $(bsipa_version)-draft
@@ -28,7 +29,7 @@ deploy:
 - provider: GitHub
   release: BSIPA $(bsipa_version)-pre
   tag: $(bsipa_version)-pre
-  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)$(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
   artifact: IPA/Bin/$(configuration).zip
