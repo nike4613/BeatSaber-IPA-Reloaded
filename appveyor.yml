@@ -1,7 +1,14 @@
 version: '{branch}-{build}'
 pull_requests:
   do_not_increment_build_number: true
+install:
+  - git submodule update --init --recursive
+image: Visual Studio 2017
 configuration: Release
 platform: x64
+cache:
+  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+artifacts:
+  - path: IPA/bin/$(configuration)
 build:
   verbosity: minimal
