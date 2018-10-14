@@ -14,3 +14,13 @@ artifacts:
 build:
   verbosity: normal
   project: BSIPA.sln
+deploy:
+- provider: GitHub
+  release: BSIPA {NEWVER}
+  auth_token:
+    secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
+  artifact: IPA\Bin\Release.zip
+  draft: true
+  force_update: true
+  on:
+    branch: master
