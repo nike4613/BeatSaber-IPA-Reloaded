@@ -1,4 +1,6 @@
-version: '{branch}-{build}'
+version: 'BSIPA-{branch}-{build}'
+environment:
+  bsipa_version: '3.11.1'
 pull_requests:
   do_not_increment_build_number: true
 install:
@@ -11,15 +13,21 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 artifacts:
   - path: IPA/bin/$(configuration)
+assembly_info:
+  patch: true
+  file: IPA/Properties/AssemblyInfo.cs;IPA.Injector/Properties/AssemblyInfo.cs
+  assembly_version: '$(bsipa_version)'
+  assembly_file_version: '$(bsipa_version)'
 build:
   verbosity: normal
   project: BSIPA.sln
 deploy:
 - provider: GitHub
-  release: BSIPA {NEWVER}
+  release: BSIPA $(bsipa_version)
+  tag: $(bsipa_version)
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
-  artifact: IPA\Bin\Release.zip
+  artifact: IPA/Bin/$(configuration).zip
   draft: true
   force_update: true
   on:
