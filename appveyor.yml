@@ -21,6 +21,11 @@ deploy:
 - provider: GitHub
   release: BSIPA $(bsipa_version)-draft
   tag: $(bsipa_version)-draft
+  description: |
+    **Build:** $(bsipa_version)-{build} ({branch}) [$(configuration)|$(platform)]
+    **Latest Commit:** #$(APPVEYOR_REPO_COMMIT)
+    - `$(APPVEYOR_REPO_COMMIT_MESSAGE)`
+    - `$(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)`
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
   artifact: IPA/Bin/$(configuration).zip
