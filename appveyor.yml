@@ -29,7 +29,9 @@ deploy:
 - provider: GitHub
   release: BSIPA $(bsipa_version)-pre
   tag: $(bsipa_version)-pre
-  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  description: |-4
+    [![Build status](https://ci.appveyor.com/api/projects/status/fql702mky0d5bcky?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded) 
+    $(APPVEYOR_REPO_COMMIT_MESSAGE)
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
   artifact: IPA/Bin/$(configuration).zip
