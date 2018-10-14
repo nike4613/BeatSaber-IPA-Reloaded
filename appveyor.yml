@@ -3,6 +3,7 @@ pull_requests:
   do_not_increment_build_number: true
 install:
   - git submodule update --init --recursive
+  - nuget restore
 image: Visual Studio 2017
 configuration: Release
 platform: x64
@@ -11,5 +12,5 @@ cache:
 artifacts:
   - path: IPA/bin/$(configuration)
 build:
-  verbosity: minimal
+  verbosity: normal
   project: BSIPA.sln
