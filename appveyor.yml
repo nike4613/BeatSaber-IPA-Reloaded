@@ -18,12 +18,21 @@ build:
   project: BSIPA.sln
 deploy:
 - provider: GitHub
-  release: BSIPA $(bsipa_version)-pre
-  tag: $(bsipa_version)-pre
+  release: BSIPA $(bsipa_version)-draft
+  tag: $(bsipa_version)-draft
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
   artifact: IPA/Bin/$(configuration).zip
   draft: true
+  force_update: true
+- provider: GitHub
+  release: BSIPA $(bsipa_version)-pre
+  tag: $(bsipa_version)-pre
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)$(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
+  auth_token:
+    secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
+  artifact: IPA/Bin/$(configuration).zip
+  prerelease: true
   force_update: true
   on:
     branch: master
