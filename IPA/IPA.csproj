@@ -152,9 +152,9 @@
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
       <BadFiles Include="$(OutputPath)**\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
-      <!-- Kill the Mono.Cecil stuff that get put in the root, don't want to dupe it -->
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
+    <RemoveDir Directories="$(OutputPath)Libraries\" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
