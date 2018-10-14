@@ -1,7 +1,7 @@
 
 # BSIPA [![Build status](https://ci.appveyor.com/api/projects/status/fql702mky0d5bcky?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded)
 
-Beat Saber IPA - 
+Beat Saber IPA - The mod injector tailored for Beat Saber
 
 ## How To Install
 
