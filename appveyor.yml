@@ -12,5 +12,5 @@ cache:
 artifacts:
   - path: IPA/bin/$(configuration)
 build:
-  verbosity: minimal
+  verbosity: normal
   project: BSIPA.sln
