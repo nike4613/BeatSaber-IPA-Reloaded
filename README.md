@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/fql702mky0d5bcky?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded)
+
 # IPA
 Illusion Plugin Architecture (Reloaded) - let's you inject code into Unity projects.
 
