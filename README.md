@@ -12,6 +12,8 @@ Beat Saber IPA - The mod injector tailored for Beat Saber
 
 A console window should open before the game starts if the installation was successful.
 
+To disable this console window, pass `--no-console` to the game.
+
 ## How To Uninstall
 
 1. Drag & drop the game exe onto **IPA.exe** while holding <kbd>Alt</kbd>

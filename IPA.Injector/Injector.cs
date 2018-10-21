@@ -6,6 +6,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -26,7 +27,8 @@ namespace IPA.Injector
 
             try
             {
-                Windows.WinConsole.Initialize();
+                if (!Environment.GetCommandLineArgs().Contains("--no-console"))
+                    Windows.WinConsole.Initialize();
 
                 SetupLibraryLoading();
 
