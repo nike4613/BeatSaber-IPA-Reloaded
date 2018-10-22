@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Mono.Cecil;
+﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Microsoft.Build.Framework;
+using Mono.Cecil;
+using System;
 using System.IO;
 
 namespace MSBuildTasks
 {
     public class AssemblyRename : Task
     {
-        private ITaskItem[] assemblies;
 
         [Required]
-        public ITaskItem[] Assemblies
-        {
-            get => assemblies;
-            set => assemblies = value;
-        }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public ITaskItem[] Assemblies { get; set; }
 
         public override bool Execute()
         {
@@ -47,7 +40,7 @@ namespace MSBuildTasks
                         var name = asmName.Name;
                         var version = asmName.Version;
                         var newFilen = $"{name}.{version}.dll";
-                        var newFilePath = Path.Combine(Path.GetDirectoryName(assembly.ItemSpec), newFilen);
+                        var newFilePath = Path.Combine(Path.GetDirectoryName(assembly.ItemSpec) ?? throw new InvalidOperationException(), newFilen);
 
                         Log.LogMessage(MessageImportance.Normal, $"Old file: {assembly.ItemSpec}, new file: {newFilePath}");
 

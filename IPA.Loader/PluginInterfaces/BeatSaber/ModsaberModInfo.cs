@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// ReSharper disable CheckNamespace
 
 namespace IPA
 {
     /// <summary>
     /// A class to provide information about a mod on ModSaber.ML
     /// </summary>
+    // ReSharper disable once IdentifierTypo
     public class ModsaberModInfo
     {
         /// <summary>
@@ -16,12 +14,12 @@ namespace IPA
         /// </summary>
         public string InternalName
         {
-            get => _InternalName;
+            get => _internalName;
             set
             {
-                if (_InternalName == null)
+                if (_internalName == null)
                 {
-                    _InternalName = value;
+                    _internalName = value;
                 }
                 else
                 {
@@ -29,19 +27,19 @@ namespace IPA
                 }
             }
         }
-        private string _InternalName = null;
+        private string _internalName;
 
         /// <summary>
         /// The version of the currently installed mod. Used to compare to the version on ModSaber. Should be a valid SemVer version.
         /// </summary>
         public string CurrentVersion
         {
-            get => _CurrentVersion;
+            get => _currentVersion;
             set
             {
-                if (_CurrentVersion == null)
+                if (_currentVersion == null)
                 {
-                    _CurrentVersion = value;
+                    _currentVersion = value;
                 }
                 else
                 {
@@ -49,6 +47,6 @@ namespace IPA
                 }
             }
         }
-        private string _CurrentVersion = null;
+        private string _currentVersion;
     }
 }

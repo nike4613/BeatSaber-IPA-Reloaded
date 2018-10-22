@@ -1,9 +1,5 @@
-﻿using IPA;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using Logger = IPA.Logging.Logger;
 
@@ -11,7 +7,7 @@ namespace IPA.Loader.Composite
 {
     internal class CompositeBSPlugin : IBeatSaberPlugin
     {
-        IEnumerable<IBeatSaberPlugin> plugins;
+        private readonly IEnumerable<IBeatSaberPlugin> plugins;
 
         private delegate void CompositeCall(IBeatSaberPlugin plugin);
         
@@ -83,14 +79,12 @@ namespace IPA.Loader.Composite
 
         public string Version => throw new NotImplementedException();
 
-        public Uri UpdateUri => throw new NotImplementedException();
-
         public ModsaberModInfo ModInfo => throw new NotImplementedException();
 
         public void OnLateUpdate() {
             Invoke(plugin => {
-                if (plugin is IEnhancedBeatSaberPlugin)
-                    ((IEnhancedBeatSaberPlugin) plugin).OnLateUpdate();
+                if (plugin is IEnhancedBeatSaberPlugin saberPlugin)
+                    saberPlugin.OnLateUpdate();
             });
         }
     }

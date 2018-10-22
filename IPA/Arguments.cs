@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace IPA.ArgParsing
+namespace IPA
 {
     public class Arguments
     {
-        public static Arguments CmdLine = new Arguments(Environment.GetCommandLineArgs());
+        public static readonly Arguments CmdLine = new Arguments(Environment.GetCommandLineArgs());
 
-        private List<string> positional = new List<string>();
-        private Dictionary<string, string> longFlags = new Dictionary<string, string>();
-        private Dictionary<char, string> flags = new Dictionary<char, string>();
-        private List<ArgumentFlag> flagObjects = new List<ArgumentFlag>();
+        private readonly List<string> positional = new List<string>();
+        private readonly Dictionary<string, string> longFlags = new Dictionary<string, string>();
+        private readonly Dictionary<char, string> flags = new Dictionary<char, string>();
+        private readonly List<ArgumentFlag> flagObjects = new List<ArgumentFlag>();
 
-        private string[] toParse = null;
+        private string[] toParse;
 
         private Arguments(string[] args)
         {
@@ -58,10 +55,10 @@ namespace IPA.ArgParsing
                 { // parse as flags
                     var argument = arg.Substring(1); // cut off first char
 
-                    StringBuilder subBuildState = new StringBuilder();
-                    bool parsingValue = false;
-                    char mainChar = ' ';
-                    foreach (char chr in argument)
+                    var subBuildState = new StringBuilder();
+                    var parsingValue = false;
+                    var mainChar = ' ';
+                    foreach (var chr in argument)
                     {
                         if (!parsingValue)
                         {
@@ -100,22 +97,20 @@ namespace IPA.ArgParsing
 
             foreach (var flag in flagObjects)
             {
-                foreach (var chflag in flag.shortFlags)
+                foreach (var charFlag in flag.ShortFlags)
                 {
-                    if (flag.exists = HasFlag(chflag))
-                    {
-                        flag.value = GetFlagValue(chflag);
-                        goto FoundValue; // continue to next flagObjects item
-                    }
+                    if (!(flag.exists_ = HasFlag(charFlag))) continue;
+
+                    flag.value_ = GetFlagValue(charFlag);
+                    goto FoundValue; // continue to next flagObjects item
                 }
 
-                foreach (var lflag in flag.longFlags)
+                foreach (var longFlag in flag.LongFlags)
                 {
-                    if (flag.exists = HasLongFlag(lflag))
-                    {
-                        flag.value = GetLongFlagValue(lflag);
-                        goto FoundValue; // continue to next flagObjects item
-                    }
+                    if (!(flag.exists_ = HasLongFlag(longFlag))) continue;
+
+                    flag.value_ = GetLongFlagValue(longFlag);
+                    goto FoundValue; // continue to next flagObjects item
                 }
 
                 FoundValue:;
@@ -145,8 +140,8 @@ namespace IPA.ArgParsing
         public void PrintHelp()
         {
             const string indent = "    ";
-            string filename = Environment.GetCommandLineArgs()[0];
-            string format = @"usage:
+            var filename = Environment.GetCommandLineArgs()[0];
+            const string format = @"usage:
 {2}{0} [FLAGS] [ARGUMENTS]
 
 flags:
@@ -155,12 +150,12 @@ flags:
             foreach (var flag in flagObjects)
             {
                 flagsBuilder.AppendFormat("{2}{0}{3}{1}", 
-                    string.Join(", ", flag.shortFlags.Select(s => $"-{s}").Concat( flag.longFlags.Select(s => $"--{s}")) ), 
+                    string.Join(", ", flag.ShortFlags.Select(s => $"-{s}").Concat( flag.LongFlags.Select(s => $"--{s}")) ), 
                     Environment.NewLine, indent, flag.ValueString != null ? "=" + flag.ValueString : "");
                 flagsBuilder.AppendFormat("{2}{2}{0}{1}", flag.DocString, Environment.NewLine, indent);
             }
 
-            Console.Write(string.Format(format, filename, flagsBuilder.ToString(), indent));
+            Console.Write(format, filename, flagsBuilder, indent);
         }
 
         public IReadOnlyList<string> PositionalArgs => positional;
@@ -168,11 +163,11 @@ flags:
 
     public class ArgumentFlag
     {
-        internal List<char> shortFlags = new List<char>();
-        internal List<string> longFlags = new List<string>();
+        internal readonly List<char> ShortFlags = new List<char>();
+        internal readonly List<string> LongFlags = new List<string>();
 
-        internal string value = null;
-        internal bool exists = false;
+        internal string value_;
+        internal bool exists_;
 
         public ArgumentFlag(params string[] flags)
         {
@@ -183,18 +178,18 @@ flags:
         private void AddPart(string flagPart)
         {
             if (flagPart.StartsWith("--"))
-                longFlags.Add(flagPart.Substring(2));
+                LongFlags.Add(flagPart.Substring(2));
             else if (flagPart.StartsWith("-"))
-                shortFlags.Add(flagPart[1]);
+                ShortFlags.Add(flagPart[1]);
         }
 
-        public bool Exists => exists;
-        public string Value => value;
+        public bool Exists => exists_;
+        public string Value => value_;
 
         public bool HasValue => Exists && Value != null;
 
         public string DocString { get; set; } = "";
-        public string ValueString { get; set; } = null;
+        public string ValueString { get; set; }
 
         public static implicit operator bool(ArgumentFlag f)
         {

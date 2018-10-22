@@ -1,20 +1,21 @@
-﻿using IPA.Patcher;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using IPA.ArgParsing;
+using IPA.Patcher;
 
 namespace IPA
 {
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public class Program
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Architecture
         {
             x86,
@@ -24,17 +25,17 @@ namespace IPA
 
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
-        public static ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h") { DocString = "prints this message" };
-        public static ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w") { DocString = "waits for the specified PID to exit", ValueString = "PID" };
-        public static ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f") { DocString = "forces the operation to go through" };
-        public static ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r") { DocString = "reverts the IPA installation" };
-        public static ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n") { DocString = "doesn't wait for user input after the operation" };
-        public static ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s") { DocString = "uses value as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
-        public static ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l") { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
-        public static ArgumentFlag ArgDestructive = new ArgumentFlag("--destructive", "-d") { DocString = "patches the game using the now outdated destructive methods" };
+        public static readonly ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h") { DocString = "prints this message" };
+        public static readonly ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w") { DocString = "waits for the specified PID to exit", ValueString = "PID" };
+        public static readonly ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f") { DocString = "forces the operation to go through" };
+        public static readonly ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r") { DocString = "reverts the IPA installation" };
+        public static readonly ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n") { DocString = "doesn't wait for user input after the operation" };
+        public static readonly ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s") { DocString = "uses value_ as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
+        public static readonly ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l") { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
+        public static readonly ArgumentFlag ArgDestructive = new ArgumentFlag("--destructive", "-d") { DocString = "patches the game using the now outdated destructive methods" };
 
         [STAThread]
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch, ArgDestructive).Process();
 
@@ -48,7 +49,7 @@ namespace IPA
             {
                 if (ArgWaitFor.HasValue)
                 { // wait for process if necessary
-                    int pid = int.Parse(ArgWaitFor.Value);
+                    var pid = int.Parse(ArgWaitFor.Value);
 
                     try
                     { // wait for beat saber to exit (ensures we can modify the file)
@@ -58,20 +59,26 @@ namespace IPA
 
                         parent.WaitForExit();
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
                 }
 
                 PatchContext context = null;
                 
                 Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
                 {
+                    // ReSharper disable AccessToModifiedClosure
+                    if (context == null) return null;
                     var libsDir = context.LibsPathSrc;
+                    // ReSharper enable AccessToModifiedClosure
 
                     var asmName = new AssemblyName(e.Name);
-                    var testFilen = Path.Combine(libsDir, $"{asmName.Name}.{asmName.Version}.dll");
+                    var testFile = Path.Combine(libsDir, $"{asmName.Name}.{asmName.Version}.dll");
 
-                    if (File.Exists(testFilen))
-                        return Assembly.LoadFile(testFilen);
+                    if (File.Exists(testFile))
+                        return Assembly.LoadFile(testFile);
 
                     Console.WriteLine($"Could not load library {asmName}");
 
@@ -369,11 +376,6 @@ namespace IPA
                         yield return new FileInfo(Path.Combine(nativePluginFolder.FullName,
                             relevantBit.Substring("x86_64".Length + 1)));
                     }
-                    else
-                    {
-                        // Throw away
-                        yield break;
-                    }
                 }
                 else if (!isFlat && isFileFlat)
                 {
@@ -416,34 +418,35 @@ namespace IPA
             }
 
             // Copy each file into the new directory.
-            foreach (FileInfo fi in source.GetFiles())
+            foreach (var fi in source.GetFiles())
             {
                 foreach (var targetFile in interceptor(fi, new FileInfo(Path.Combine(target.FullName, fi.Name))))
                 {
-                    if (!targetFile.Exists || targetFile.LastWriteTimeUtc < fi.LastWriteTimeUtc || aggressive)
-                    {
-                        targetFile.Directory.Create();
+                    if (targetFile.Exists && targetFile.LastWriteTimeUtc >= fi.LastWriteTimeUtc && !aggressive)
+                        continue;
 
-                        Console.CursorTop--;
-                        ClearLine();
-                        Console.WriteLine(@"Copying {0}", targetFile.FullName);
-                        backup.Add(targetFile);
-                        fi.CopyTo(targetFile.FullName, true);
-                    }
+                    Debug.Assert(targetFile.Directory != null, "targetFile.Directory != null");
+                    targetFile.Directory.Create();
+
+                    Console.CursorTop--;
+                    ClearLine();
+                    Console.WriteLine(@"Copying {0}", targetFile.FullName);
+                    backup.Add(targetFile);
+                    fi.CopyTo(targetFile.FullName, true);
                 }
             }
 
             // Copy each subdirectory using recursion.
-            if (recurse)
-                foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
-                {
-                    DirectoryInfo nextTargetSubDir = new DirectoryInfo(Path.Combine(target.FullName, diSourceSubDir.Name));
-                    CopyAll(diSourceSubDir, nextTargetSubDir, aggressive, backup, interceptor, recurse);
-                }
+            if (!recurse) return;
+            foreach (var diSourceSubDir in source.GetDirectories())
+            {
+                var nextTargetSubDir = new DirectoryInfo(Path.Combine(target.FullName, diSourceSubDir.Name));
+                CopyAll(diSourceSubDir, nextTargetSubDir, aggressive, backup, interceptor);
+            }
         }
 
 
-        static void Fail(string message)
+        private static void Fail(string message)
         {
             Console.Error.WriteLine("ERROR: " + message);
 
@@ -460,8 +463,8 @@ namespace IPA
         /// <summary>
         /// Encodes an argument for passing into a program
         /// </summary>
-        /// <param name="original">The value that should be received by the program</param>
-        /// <returns>The value which needs to be passed to the program for the original value 
+        /// <param name="original">The value_ that should be received by the program</param>
+        /// <returns>The value_ which needs to be passed to the program for the original value_ 
         /// to come through</returns>
         public static string EncodeParameterArgument(string original)
         {
@@ -487,18 +490,15 @@ namespace IPA
 
                     if (machine == 0x8664) // IMAGE_FILE_MACHINE_AMD64
                         return Architecture.x64;
-                    else if (machine == 0x014c) // IMAGE_FILE_MACHINE_I386
+                    if (machine == 0x014c) // IMAGE_FILE_MACHINE_I386
                         return Architecture.x86;
-                    else if (machine == 0x0200) // IMAGE_FILE_MACHINE_IA64
+                    if (machine == 0x0200) // IMAGE_FILE_MACHINE_IA64
                         return Architecture.x64;
-                    else
-                        return Architecture.Unknown;
-                }
-                else
-                {
-                    // Not a supported binary
                     return Architecture.Unknown;
                 }
+
+                // Not a supported binary
+                return Architecture.Unknown;
             }
         }
 

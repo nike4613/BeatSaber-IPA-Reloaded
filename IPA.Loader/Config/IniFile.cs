@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -72,28 +70,28 @@ namespace IPA.Config
         /// <summary>
         /// Write Data to the INI File
         /// </summary>
-        /// <PARAM name="Section"></PARAM>
+        /// <PARAM name="section"></PARAM>
         /// Section name
-        /// <PARAM name="Key"></PARAM>
+        /// <PARAM name="key"></PARAM>
         /// Key Name
-        /// <PARAM name="Value"></PARAM>
+        /// <PARAM name="value"></PARAM>
         /// Value Name
-        public void IniWriteValue(string Section, string Key, string Value)
+        public void IniWriteValue(string section, string key, string value)
         {
-            WritePrivateProfileString(Section, Key, Value, IniFileInfo.FullName);
+            WritePrivateProfileString(section, key, value, IniFileInfo.FullName);
         }
 
         /// <summary>
         /// Read Data Value From the Ini File
         /// </summary>
-        /// <PARAM name="Section"></PARAM>
-        /// <PARAM name="Key"></PARAM>
+        /// <PARAM name="section"></PARAM>
+        /// <PARAM name="key"></PARAM>
         /// <returns></returns>
-        public string IniReadValue(string Section, string Key)
+        public string IniReadValue(string section, string key)
         {
-            const int MAX_CHARS = 1023;
-            StringBuilder result = new StringBuilder(MAX_CHARS);
-            GetPrivateProfileString(Section, Key, "", result, MAX_CHARS, IniFileInfo.FullName);
+            const int maxChars = 1023;
+            StringBuilder result = new StringBuilder(maxChars);
+            GetPrivateProfileString(section, key, "", result, maxChars, IniFileInfo.FullName);
             return result.ToString();
         }
     }

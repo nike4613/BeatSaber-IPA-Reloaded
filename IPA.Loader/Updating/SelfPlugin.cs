@@ -1,17 +1,11 @@
-﻿using IPA;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 namespace IPA.Updating
 {
     internal class SelfPlugin : IBeatSaberPlugin
     {
         internal const string IPA_Name = "Beat Saber IPA";
-        internal const string IPA_Version = "3.11.1";
+        internal const string IPA_Version = "3.11.2";
 
         public static SelfPlugin Instance { get; set; } = new SelfPlugin();
 

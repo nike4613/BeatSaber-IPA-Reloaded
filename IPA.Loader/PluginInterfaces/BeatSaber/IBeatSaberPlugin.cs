@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
+// ReSharper disable CheckNamespace
 
 namespace IPA
 {
@@ -23,7 +21,7 @@ namespace IPA
         string Version { get; }
 
         /// <summary>
-        /// Gets the info for the Modsaber release of this plugin. Return null if there is no Modsaber release.
+        /// Gets the info for the ModSaber release of this plugin. Return null if there is no ModSaber release.
         /// </summary>
         ModsaberModInfo ModInfo { get; }
 

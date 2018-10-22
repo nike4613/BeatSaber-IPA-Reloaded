@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace IPA.Config
 {
@@ -85,43 +84,37 @@ namespace IPA.Config
         void SetBool(string section, string name, bool value);
     }
 
+    /// <inheritdoc />
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
     public class ModPrefs : IModPrefs
     {
-        private static ModPrefs _staticInstance = null;
-        private static IModPrefs StaticInstace
-        {
-            get
-            {
-                if (_staticInstance == null)
-                    _staticInstance = new ModPrefs();
-                return _staticInstance;
-            }
-        }
+        private static ModPrefs _staticInstance;
+        private static IModPrefs StaticInstance => _staticInstance ?? (_staticInstance = new ModPrefs());
 
-        internal static Dictionary<IBeatSaberPlugin, ModPrefs> ModPrefses { get; set; } = new Dictionary<IBeatSaberPlugin, ModPrefs>();
+        // ReSharper disable once IdentifierTypo
+        internal static Dictionary<IBeatSaberPlugin, ModPrefs> ModPrefss { get; set; } = new Dictionary<IBeatSaberPlugin, ModPrefs>();
 
-        private IniFile Instance;
+        private readonly IniFile _instance;
 
         /// <summary>
         /// Constructs a ModPrefs object for the provide plugin.
         /// </summary>
         /// <param name="plugin">the plugin to get the preferences file for</param>
         public ModPrefs(IBeatSaberPlugin plugin) {
-            Instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "ModPrefs", $"{plugin.Name}.ini"));
-            ModPrefses.Add(plugin, this);
+            _instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "ModPrefs", $"{plugin.Name}.ini"));
+            ModPrefss.Add(plugin, this);
         }
 
         private ModPrefs()
         {
-            Instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "modprefs.ini"));
+            _instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "modprefs.ini"));
         }
 
         string IModPrefs.GetString(string section, string name, string defaultValue, bool autoSave)
         {
-            var value = Instance.IniReadValue(section, name);
+            var value = _instance.IniReadValue(section, name);
             if (value != "")
                 return value;
             else if (autoSave)
@@ -138,11 +131,11 @@ namespace IPA.Config
         /// <param name="autoSave">Whether or not the default value should be written if no value is found.</param>
         /// <returns></returns>
         public static string GetString(string section, string name, string defaultValue = "", bool autoSave = false)
-            => StaticInstace.GetString(section, name, defaultValue, autoSave);
+            => StaticInstance.GetString(section, name, defaultValue, autoSave);
 
         int IModPrefs.GetInt(string section, string name, int defaultValue, bool autoSave)
         {
-            if (int.TryParse(Instance.IniReadValue(section, name), out var value))
+            if (int.TryParse(_instance.IniReadValue(section, name), out var value))
                 return value;
             else if (autoSave)
                 (this as IModPrefs).SetInt(section, name, defaultValue);
@@ -158,11 +151,11 @@ namespace IPA.Config
         /// <param name="autoSave">Whether or not the default value should be written if no value is found.</param>
         /// <returns></returns>
         public static int GetInt(string section, string name, int defaultValue = 0, bool autoSave = false)
-            => StaticInstace.GetInt(section, name, defaultValue, autoSave);
+            => StaticInstance.GetInt(section, name, defaultValue, autoSave);
 
         float IModPrefs.GetFloat(string section, string name, float defaultValue, bool autoSave)
         {
-            if (float.TryParse(Instance.IniReadValue(section, name), out var value))
+            if (float.TryParse(_instance.IniReadValue(section, name), out var value))
                 return value;
             else if (autoSave)
                 (this as IModPrefs).SetFloat(section, name, defaultValue);
@@ -178,7 +171,7 @@ namespace IPA.Config
         /// <param name="autoSave">Whether or not the default value should be written if no value is found.</param>
         /// <returns></returns>
         public static float GetFloat(string section, string name, float defaultValue = 0f, bool autoSave = false)
-            => StaticInstace.GetFloat(section, name, defaultValue, autoSave);
+            => StaticInstance.GetFloat(section, name, defaultValue, autoSave);
 
         bool IModPrefs.GetBool(string section, string name, bool defaultValue, bool autoSave)
         {
@@ -203,11 +196,11 @@ namespace IPA.Config
         /// <param name="autoSave">Whether or not the default value should be written if no value is found.</param>
         /// <returns></returns>
         public static bool GetBool(string section, string name, bool defaultValue = false, bool autoSave = false)
-            => StaticInstace.GetBool(section, name, defaultValue, autoSave);
+            => StaticInstance.GetBool(section, name, defaultValue, autoSave);
 
         bool IModPrefs.HasKey(string section, string name)
         {
-            return Instance.IniReadValue(section, name) != null;
+            return _instance.IniReadValue(section, name) != null;
         }
         /// <summary>
         /// Checks whether or not a key exists in the ini.
@@ -215,11 +208,11 @@ namespace IPA.Config
         /// <param name="section">Section of the key.</param>
         /// <param name="name">Name of the key.</param>
         /// <returns></returns>
-        public static bool HasKey(string section, string name) => StaticInstace.HasKey(section, name);
+        public static bool HasKey(string section, string name) => StaticInstance.HasKey(section, name);
 
         void IModPrefs.SetFloat(string section, string name, float value)
         {
-            Instance.IniWriteValue(section, name, value.ToString());
+            _instance.IniWriteValue(section, name, value.ToString(CultureInfo.InvariantCulture));
         }
         /// <summary>
         /// Sets a float in the ini.
@@ -228,11 +221,11 @@ namespace IPA.Config
         /// <param name="name">Name of the key.</param>
         /// <param name="value">Value that should be written.</param>
         public static void SetFloat(string section, string name, float value)
-            => StaticInstace.SetFloat(section, name, value);
+            => StaticInstance.SetFloat(section, name, value);
 
         void IModPrefs.SetInt(string section, string name, int value)
         {
-            Instance.IniWriteValue(section, name, value.ToString());
+            _instance.IniWriteValue(section, name, value.ToString());
         }
         /// <summary>
         /// Sets an int in the ini.
@@ -241,11 +234,11 @@ namespace IPA.Config
         /// <param name="name">Name of the key.</param>
         /// <param name="value">Value that should be written.</param>
         public static void SetInt(string section, string name, int value)
-            => StaticInstace.SetInt(section, name, value);
+            => StaticInstance.SetInt(section, name, value);
 
         void IModPrefs.SetString(string section, string name, string value)
         {
-            Instance.IniWriteValue(section, name, value);
+            _instance.IniWriteValue(section, name, value);
         }
         /// <summary>
         /// Sets a string in the ini.
@@ -254,11 +247,11 @@ namespace IPA.Config
         /// <param name="name">Name of the key.</param>
         /// <param name="value">Value that should be written.</param>
         public static void SetString(string section, string name, string value)
-            => StaticInstace.SetString(section, name, value);
+            => StaticInstance.SetString(section, name, value);
 
         void IModPrefs.SetBool(string section, string name, bool value)
         {
-            Instance.IniWriteValue(section, name, value ? "1" : "0");
+            _instance.IniWriteValue(section, name, value ? "1" : "0");
         }
         /// <summary>
         /// Sets a bool in the ini.
@@ -267,7 +260,7 @@ namespace IPA.Config
         /// <param name="name">Name of the key.</param>
         /// <param name="value">Value that should be written.</param>
         public static void SetBool(string section, string name, bool value)
-            => StaticInstace.SetBool(section, name, value);
+            => StaticInstance.SetBool(section, name, value);
     }
     
     /// <summary>
@@ -280,7 +273,7 @@ namespace IPA.Config
         /// <param name="plugin">the plugin wanting the prefrences</param>
         /// <returns>the ModPrefs object</returns>
         public static IModPrefs GetModPrefs(this IBeatSaberPlugin plugin) {
-            return ModPrefs.ModPrefses.First(o => o.Key == plugin).Value;
+            return ModPrefs.ModPrefss.First(o => o.Key == plugin).Value;
         }
     }
 }

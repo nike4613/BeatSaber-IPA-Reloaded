@@ -1,18 +1,13 @@
-﻿using IPA.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using IPA.Updating.Converters;
 using IPA.Utilities;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SemVer;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Version = SemVer.Version;
 
-namespace IPA.Updating.ModsaberML
+namespace IPA.Updating.ModSaber
 {
     class ApiEndpoint
     {
@@ -100,7 +95,7 @@ namespace IPA.Updating.ModsaberML
                 public Dictionary<string, byte[]> FileHashes = new Dictionary<string, byte[]>();
 
                 [JsonProperty("url")]
-                public string DownloadPath = null;
+                public string DownloadPath;
 
                 public override string ToString()
                 {
@@ -112,14 +107,14 @@ namespace IPA.Updating.ModsaberML
             public class FilesObject
             {
                 [JsonProperty("steam")]
-                public PlatformFile Steam = null;
+                public PlatformFile Steam;
 
                 [JsonProperty("oculus")]
-                public PlatformFile Oculus = null;
+                public PlatformFile Oculus;
             }
             
             [JsonProperty("files")]
-            public FilesObject Files = null;
+            public FilesObject Files;
             
             public class Dependency
             {
@@ -127,10 +122,10 @@ namespace IPA.Updating.ModsaberML
                 public Range VersionRange = null;
             }
 
-            [JsonProperty("dependsOn", ItemConverterType = typeof(ModsaberDependencyConverter))]
+            [JsonProperty("dependsOn", ItemConverterType = typeof(ModSaberDependencyConverter))]
             public Dependency[] Dependencies = new Dependency[0];
 
-            [JsonProperty("conflictsWith", ItemConverterType = typeof(ModsaberDependencyConverter))]
+            [JsonProperty("conflictsWith", ItemConverterType = typeof(ModSaberDependencyConverter))]
             public Dependency[] Conflicts = new Dependency[0];
 
             [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]

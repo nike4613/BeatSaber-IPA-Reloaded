@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace IPA.Patcher
 {
-    public class BackupManager
+    public static class BackupManager
     {
         public static BackupUnit FindLatestBackup(PatchContext context)
         {
@@ -42,7 +39,7 @@ namespace IPA.Patcher
             if (string.IsNullOrEmpty(dir))
                 throw new ArgumentException(
                     "Starting directory is a null reference or an empty string",
-                    "dir");
+                    nameof(dir));
 
             try
             {
@@ -53,15 +50,13 @@ namespace IPA.Patcher
 
                 var entries = Directory.EnumerateFileSystemEntries(dir);
 
-                if (!entries.Any())
+                if (entries.Any()) return;
+                try
                 {
-                    try
-                    {
-                        Directory.Delete(dir);
-                    }
-                    catch (UnauthorizedAccessException) { }
-                    catch (DirectoryNotFoundException) { }
+                    Directory.Delete(dir);
                 }
+                catch (UnauthorizedAccessException) { }
+                catch (DirectoryNotFoundException) { }
             }
             catch (UnauthorizedAccessException) { }
         }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IPA.Utilities
 {
@@ -19,9 +16,9 @@ namespace IPA.Utilities
         /// <returns>the corresponding byte array</returns>
         public static byte[] StringToByteArray(string hex)
         {
-            int NumberChars = hex.Length;
-            byte[] bytes = new byte[NumberChars / 2];
-            for (int i = 0; i < NumberChars; i += 2)
+            int numberChars = hex.Length;
+            byte[] bytes = new byte[numberChars / 2];
+            for (int i = 0; i < numberChars; i += 2)
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             return bytes;
         }
@@ -62,7 +59,7 @@ namespace IPA.Utilities
                     if (*((long*)x1) != *((long*)x2)) return false;
                 if ((l & 4) != 0) { if (*((int*)x1) != *((int*)x2)) return false; x1 += 4; x2 += 4; }
                 if ((l & 2) != 0) { if (*((short*)x1) != *((short*)x2)) return false; x1 += 2; x2 += 2; }
-                if ((l & 1) != 0) if (*((byte*)x1) != *((byte*)x2)) return false;
+                if ((l & 1) != 0) if (*x1 != *x2) return false;
                 return true;
             }
         }

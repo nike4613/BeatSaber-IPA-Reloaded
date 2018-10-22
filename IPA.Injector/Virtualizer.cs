@@ -1,19 +1,14 @@
 ﻿using Mono.Cecil;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace IPA.Injector
 {
     internal class VirtualizedModule
     {
-        private const string ENTRY_TYPE = "Display";
-
-        public FileInfo file;
-        public ModuleDefinition module;
+        private readonly FileInfo file;
+        private ModuleDefinition module;
 
         public static VirtualizedModule Load(string engineFile)
         {
@@ -35,11 +30,10 @@ namespace IPA.Injector
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="module"></param>
         public void Virtualize(AssemblyName selfName, Action beforeChangeCallback = null)
         {
-            bool changed = false;
-            bool virtualize = true;
+            var changed = false;
+            var virtualize = true;
             foreach (var r in module.AssemblyReferences)
             {
                 if (r.Name == selfName.Name)

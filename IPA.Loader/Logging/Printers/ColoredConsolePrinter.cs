@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IPA.Logging;
 
 namespace IPA.Logging.Printers
 {
@@ -35,8 +29,8 @@ namespace IPA.Logging.Printers
         {
             if (((byte)level & (byte)StandardLogger.PrintFilter) == 0) return;
             Console.ForegroundColor = Color;
-            foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                Console.WriteLine(string.Format(Logger.LogFormat, line, logName, time, level.ToString().ToUpper()));
+            foreach (var line in message.Split(new[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                Console.WriteLine(Logger.LogFormat, line, logName, time, level.ToString().ToUpper());
             Console.ResetColor();
         }
     }

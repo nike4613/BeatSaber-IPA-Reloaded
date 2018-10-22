@@ -1,20 +1,15 @@
-﻿using IPA.Logging;
+﻿using IPA.Config;
+using IPA.Logging.Printers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using IPA;
-using IPA.Logging.Printers;
-using IPA.Config;
 
 namespace IPA.Logging
 {
     /// <summary>
-    /// The default <see cref="Logger"/> implimentation.
+    /// The default <see cref="Logger"/> implementation.
     /// </summary>
     public class StandardLogger : Logger
     {
@@ -48,8 +43,8 @@ namespace IPA.Logging
             new GlobalLogFilePrinter()
         };
 
-        private string logName;
-        private static readonly bool showSourceClass = true;
+        private readonly string logName;
+        private static readonly bool showSourceClass;
         /// <summary>
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
@@ -122,32 +117,33 @@ namespace IPA.Logging
         {
             _logQueue.Add(new LogMessage
             {
-                level = level,
-                message = message,
-                logger = this,
-                time = DateTime.Now
+                Level = level,
+                Message = message,
+                Logger = this,
+                Time = DateTime.Now
             });
         }
         
+        /// <inheritdoc />
         /// <summary>
-        /// An override to <see cref="Logger.Debug(string)"/> which shows the method that called it.
+        /// An override to <see cref="M:IPA.Logging.Logger.Debug(System.String)" /> which shows the method that called it.
         /// </summary>
         /// <param name="message">the message to log</param>
         public override void Debug(string message)
-        { // add source to message
-            var stfm = new StackTrace().GetFrame(1).GetMethod();
-            if (showSourceClass)
-                base.Debug($"{{{stfm.DeclaringType.FullName}::{stfm.Name}}} {message}");
-            else
-                base.Debug(message);
+        {
+            // add source to message
+            var stackFrame = new StackTrace().GetFrame(1).GetMethod();
+            base.Debug(showSourceClass
+                ? $"{{{stackFrame.DeclaringType?.FullName}::{stackFrame.Name}}} {message}"
+                : message);
         }
 
-        internal struct LogMessage
+        private struct LogMessage
         {
-            public Level level;
-            public StandardLogger logger;
-            public string message;
-            public DateTime time;
+            public Level Level;
+            public StandardLogger Logger;
+            public string Message;
+            public DateTime Time;
         }
 
         private static BlockingCollection<LogMessage> _logQueue = new BlockingCollection<LogMessage>();
@@ -157,11 +153,11 @@ namespace IPA.Logging
         {
             HashSet<LogPrinter> started = new HashSet<LogPrinter>();
             while (_logQueue.TryTake(out LogMessage msg, Timeout.Infinite)) {
-                foreach (var printer in msg.logger.printers)
+                foreach (var printer in msg.Logger.printers)
                 {
                     try
                     {
-                        if (((byte)msg.level & (byte)printer.Filter) != 0)
+                        if (((byte)msg.Level & (byte)printer.Filter) != 0)
                         {
                             if (!started.Contains(printer))
                             {
@@ -169,7 +165,7 @@ namespace IPA.Logging
                                 started.Add(printer);
                             }
 
-                            printer.Print(msg.level, msg.time, msg.logger.logName, msg.message);
+                            printer.Print(msg.Level, msg.Time, msg.Logger.logName, msg.Message);
                         }
                     }
                     catch (Exception e)

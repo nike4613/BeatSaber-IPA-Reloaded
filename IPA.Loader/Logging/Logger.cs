@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// ReSharper disable InconsistentNaming
 
 namespace IPA.Logging
 {
@@ -25,7 +22,7 @@ namespace IPA.Logging
         internal static Logger libLoader => log.GetChildLogger("LibraryLoader");
         internal static Logger loader => log.GetChildLogger("Loader");
         internal static Logger config => log.GetChildLogger("Config");
-        internal static bool LogCreated => _log != null || UnityLogInterceptor._logger != null;
+        internal static bool LogCreated => _log != null || UnityLogInterceptor.Logger != null;
 
         /// <summary>
         /// The standard format for log messages.

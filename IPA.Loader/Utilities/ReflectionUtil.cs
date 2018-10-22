@@ -18,7 +18,7 @@ namespace IPA.Utilities
 		public static void SetPrivateField(this object obj, string fieldName, object value)
 		{
 			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			prop.SetValue(obj, value);
+			prop?.SetValue(obj, value);
 		}
 		
         /// <summary>
@@ -31,7 +31,7 @@ namespace IPA.Utilities
 		public static T GetPrivateField<T>(this object obj, string fieldName)
 		{
 			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-			var value = prop.GetValue(obj);
+			var value = prop?.GetValue(obj);
 			return (T) value;
 		}
 		
@@ -45,7 +45,7 @@ namespace IPA.Utilities
 		{
 			var prop = obj.GetType()
 				.GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			prop.SetValue(obj, value, null);
+			prop?.SetValue(obj, value, null);
 		}
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace IPA.Utilities
 		public static object InvokePrivateMethod(this object obj, string methodName, params object[] methodParams)
 		{
 			MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			return dynMethod.Invoke(obj, methodParams);
+			return dynMethod?.Invoke(obj, methodParams);
 		}
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace IPA.Utilities
             while (type != typeof(MonoBehaviour))
             {
                 CopyForType(type, original, copy);
-                type = type.BaseType;
+                type = type?.BaseType;
             }
 
             return copy;
@@ -116,7 +116,7 @@ namespace IPA.Utilities
             while (type != typeof(MonoBehaviour))
             {
                 CopyForType(type, original, copy);
-                type = type.BaseType;
+                type = type?.BaseType;
             }
 
             return copy;
@@ -161,7 +161,6 @@ namespace IPA.Utilities
             if (type != null)
             {
                 object instance = Activator.CreateInstance(type);
-                if (instance != null)
                 {
                     Type instType = instance.GetType();
                     MethodInfo methodInfo = instType.GetMethod(function, methodSig);
@@ -169,20 +168,12 @@ namespace IPA.Utilities
                     {
                         return methodInfo.Invoke(instance, parameters);
                     }
-                    else
-                    {
-                        throw new Exception("Method not found");
-                    }
-                }
-                else
-                {
-                    throw new Exception("Unable to instantiate object of type");
+
+                    throw new Exception("Method not found");
                 }
             }
-            else
-            {
-                throw new ArgumentNullException("type");
-            }
+
+            throw new ArgumentNullException(nameof(type));
         }
 
         /// <summary>

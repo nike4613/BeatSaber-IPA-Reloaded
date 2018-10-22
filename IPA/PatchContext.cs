@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace IPA
 {
@@ -37,12 +34,12 @@ namespace IPA
             {
                 Executable = exe
             };
-            context.ProjectRoot = new FileInfo(context.Executable).Directory.FullName;
-            context.IPARoot = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "IPA");
-            context.IPA = Assembly.GetExecutingAssembly()?.Location ?? Path.Combine(context.ProjectRoot, "IPA.exe");
+            context.ProjectRoot = new FileInfo(context.Executable).Directory?.FullName;
+            context.IPARoot = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? throw new InvalidOperationException(), "IPA");
+            context.IPA = Assembly.GetExecutingAssembly().Location;
             context.DataPathSrc = Path.Combine(context.IPARoot, "Data");
             context.LibsPathSrc = Path.Combine(context.IPARoot, "Libs");
-            context.PluginsFolder = Path.Combine(context.ProjectRoot, "Plugins");
+            context.PluginsFolder = Path.Combine(context.ProjectRoot ?? throw new InvalidOperationException(), "Plugins");
             context.ProjectName = Path.GetFileNameWithoutExtension(context.Executable);
             context.DataPathDst = Path.Combine(context.ProjectRoot, context.ProjectName + "_Data");
             context.LibsPathDst = Path.Combine(context.ProjectRoot, "Libs");

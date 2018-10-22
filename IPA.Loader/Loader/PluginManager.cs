@@ -1,4 +1,11 @@
-﻿using IPA;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 using IPA.Config;
 using IPA.Config.ConfigProviders;
 using IPA.Logging;
@@ -6,17 +13,8 @@ using IPA.Old;
 using IPA.Updating;
 using IPA.Utilities;
 using Mono.Cecil;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
+using Logger = IPA.Logging.Logger;
 
 namespace IPA.Loader
 {
@@ -35,9 +33,9 @@ namespace IPA.Loader
             internal IBeatSaberPlugin Plugin { get; set; }
             internal string Filename { get; set; }
             /// <summary>
-            /// The Modsaber updating info for the mod, or null.
+            /// The ModSaber updating info for the mod, or null.
             /// </summary>
-            public ModsaberModInfo ModsaberInfo { get; internal set; }
+            public ModsaberModInfo ModSaberInfo { get; internal set; }
         }
 
         /// <summary>
@@ -51,10 +49,10 @@ namespace IPA.Loader
                 {
                     LoadPlugins();
                 }
-                return _bsPlugins.Select(p => p.Plugin);
+                return (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
             }
         }
-        private static List<PluginInfo> _bsPlugins = null;
+        private static List<PluginInfo> _bsPlugins;
         internal static IEnumerable<PluginInfo> BSMetas
         {
             get
@@ -74,17 +72,17 @@ namespace IPA.Loader
         /// <returns>the plugin info for the requested plugin or null</returns>
         public static PluginInfo GetPlugin(string name)
         {
-            return BSMetas.Where(p => p.Plugin.Name == name).FirstOrDefault();
+            return BSMetas.FirstOrDefault(p => p.Plugin.Name == name);
         }
 
         /// <summary>
-        /// Gets info about the plugin with the specified modsaber name.
+        /// Gets info about the plugin with the specified ModSaber name.
         /// </summary>
-        /// <param name="name">the modsaber name of the plugin to get (must be an exact match)</param>
+        /// <param name="name">the ModSaber name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin info for the requested plugin or null</returns>
-        public static PluginInfo GetPluginFromModsaberName(string name)
+        public static PluginInfo GetPluginFromModSaberName(string name)
         {
-            return BSMetas.Where(p => p.ModsaberInfo.InternalName == name).FirstOrDefault();
+            return BSMetas.FirstOrDefault(p => p.ModSaberInfo.InternalName == name);
         }
         
         /// <summary>
@@ -102,11 +100,11 @@ namespace IPA.Loader
                 return _ipaPlugins;
             }
         }
-        private static List<IPlugin> _ipaPlugins = null;
+        private static List<IPlugin> _ipaPlugins;
 
-        internal static IConfigProvider SelfConfigProvider { get; set; } = null;
+        internal static IConfigProvider SelfConfigProvider { get; set; }
 
-        internal static List<KeyValuePair<IConfigProvider,Ref<DateTime>>> configProviders = new List<KeyValuePair<IConfigProvider, Ref<DateTime>>>();
+        internal static readonly List<KeyValuePair<IConfigProvider,Ref<DateTime>>> configProviders = new List<KeyValuePair<IConfigProvider, Ref<DateTime>>>();
 
         private static void LoadPlugins()
         {
@@ -175,7 +173,7 @@ namespace IPA.Loader
                     if (@ref.FullName == "IllusionInjector.Updating.Backup.BackupUnit") @ref.Namespace = "IPA.Updating.Backup"; //@ref.Name = "";
                     if (@ref.Namespace == "IllusionInjector.Utilities") @ref.Namespace = "IPA.Utilities"; //@ref.Name = "";
                     if (@ref.Namespace == "IllusionInjector.Logging.Printers") @ref.Namespace = "IPA.Logging.Printers"; //@ref.Name = "";
-                    if (@ref.Namespace == "IllusionInjector.Updating.ModsaberML") @ref.Namespace = "IPA.Updating.ModsaberML"; //@ref.Name = "";
+                    if (@ref.Namespace == "IllusionInjector.Updating.ModsaberML") @ref.Namespace = "IPA.Updating.ModSaber"; //@ref.Name = "";
                 }
                 module.Write(pluginCopy);
 
@@ -187,11 +185,11 @@ namespace IPA.Loader
                 Filename = Path.Combine(Environment.CurrentDirectory, "IPA.exe"),
                 Plugin = SelfPlugin.Instance
             };
-            selfPlugin.ModsaberInfo = selfPlugin.Plugin.ModInfo;
+            selfPlugin.ModSaberInfo = selfPlugin.Plugin.ModInfo;
 
             _bsPlugins.Add(selfPlugin);
 
-            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(SelfConfigProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", SelfPlugin.IPA_Name) }, new Ref<DateTime>(SelfConfigProvider.LastModified)));
+            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(SelfConfigProvider = new JsonConfigProvider { Filename = Path.Combine("UserData", SelfPlugin.IPA_Name) }, new Ref<DateTime>(SelfConfigProvider.LastModified)));
             SelfConfigProvider.Load();
 
             //Load copied plugins
@@ -204,7 +202,7 @@ namespace IPA.Loader
             }
             
             Logger.log.Info(exeName);
-            Logger.log.Info($"Running on Unity {UnityEngine.Application.unityVersion}");
+            Logger.log.Info($"Running on Unity {Application.unityVersion}");
             Logger.log.Info($"Game version {BeatSaber.GameVersion}");
             Logger.log.Info("-----------------------------");
             Logger.log.Info($"Loading plugins from {LoneFunctions.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
@@ -294,7 +292,7 @@ namespace IPA.Loader
                                     {
                                         if (cfgProvider == null)
                                         {
-                                            cfgProvider = new JsonConfigProvider() { Filename = Path.Combine("UserData", $"{bsPlugin.Name}") };
+                                            cfgProvider = new JsonConfigProvider { Filename = Path.Combine("UserData", $"{bsPlugin.Name}") };
                                             configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(cfgProvider, new Ref<DateTime>(cfgProvider.LastModified)));
                                             cfgProvider.Load();
                                         }
@@ -311,12 +309,12 @@ namespace IPA.Loader
                             {
                                 Plugin = bsPlugin,
                                 Filename = file.Replace("\\.cache", ""), // quick and dirty fix
-                                ModsaberInfo = bsPlugin.ModInfo
+                                ModSaberInfo = bsPlugin.ModInfo
                             });
                         }
                         catch (AmbiguousMatchException)
                         {
-                            Logger.loader.Error($"Only one Init allowed per plugin");
+                            Logger.loader.Error("Only one Init allowed per plugin");
                         }
                     }
                     else

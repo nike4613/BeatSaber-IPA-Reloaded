@@ -1,12 +1,8 @@
-﻿using IPA.Logging;
-using Ionic.Zlib;
+﻿using Ionic.Zlib;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IPA.Logging.Printers
 {
@@ -26,7 +22,7 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// The <see cref="StreamWriter"/> that writes to the GZip file.
         /// </summary>
-        protected StreamWriter fileWriter;
+        protected StreamWriter FileWriter;
         private GZipStream zstream;
         private FileStream fstream;
 
@@ -47,7 +43,7 @@ namespace IPA.Logging.Printers
                     fileInfo = new FileInfo(fileInfo.FullName + ".gz");
                     fileInfo.Create().Close();
 
-                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName, $"latest{ext}.gz"));
+                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName ?? throw new InvalidOperationException(), $"latest{ext}.gz"));
                     if (symlink.Exists) symlink.Delete();
 
                     try
@@ -75,7 +71,7 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// Called at the start of any print session.
         /// </summary>
-        public override sealed void StartPrint()
+        public sealed override void StartPrint()
         {
             InitLog();
 
@@ -84,21 +80,21 @@ namespace IPA.Logging.Printers
             {
                 FlushMode = FlushType.Full
             };
-            fileWriter = new StreamWriter(zstream, new UTF8Encoding(false));
+            FileWriter = new StreamWriter(zstream, new UTF8Encoding(false));
         }
 
         /// <summary>
         /// Called at the end of any print session.
         /// </summary>
-        public override sealed void EndPrint()
+        public sealed override void EndPrint()
         {
-            fileWriter.Flush();
+            FileWriter.Flush();
             zstream.Flush();
             fstream.Flush();
-            fileWriter.Close();
+            FileWriter.Close();
             zstream.Close();
             fstream.Close();
-            fileWriter.Dispose();
+            FileWriter.Dispose();
             zstream.Dispose();
             fstream.Dispose();
         }
@@ -120,13 +116,13 @@ namespace IPA.Logging.Printers
         {
             if (disposing)
             {
-                fileWriter.Flush();
+                FileWriter.Flush();
                 zstream.Flush();
                 fstream.Flush();
-                fileWriter.Close();
+                FileWriter.Close();
                 zstream.Close();
                 fstream.Close();
-                fileWriter.Dispose();
+                FileWriter.Dispose();
                 zstream.Dispose();
                 fstream.Dispose();
             }

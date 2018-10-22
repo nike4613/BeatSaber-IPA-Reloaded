@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace IPA
 {
-    public class Shortcut
+    public static class Shortcut
     {
-        private static Type m_type = Type.GetTypeFromProgID("WScript.Shell");
-        private static object m_shell = Activator.CreateInstance(m_type);
+        private static readonly Type MType = Type.GetTypeFromProgID("WScript.Shell");
+        private static readonly object MShell = Activator.CreateInstance(MType);
 
-        [ComImport, TypeLibType((short)0x1040), Guid("F935DC23-1CF0-11D0-ADB9-00C04FD58A0B")]
+        [ComImport, TypeLibType(0x1040), Guid("F935DC23-1CF0-11D0-ADB9-00C04FD58A0B")]
         private interface IWshShortcut
         {
             [DispId(0)]
@@ -38,8 +39,8 @@ namespace IPA
             [DispId(0x3ef)]
             string WorkingDirectory { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3ef)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3ef)] set; }
 
-            [TypeLibFunc((short)0x40), DispId(0x7d0)]
-            void Load([In, MarshalAs(UnmanagedType.BStr)] string PathLink);
+            [TypeLibFunc(0x40), DispId(0x7d0)]
+            void Load([In, MarshalAs(UnmanagedType.BStr)] string pathLink);
 
             [DispId(0x7d1)]
             void Save();
@@ -47,7 +48,7 @@ namespace IPA
 
         public static void Create(string fileName, string targetPath, string arguments, string workingDirectory, string description, string hotkey, string iconPath)
         {
-            IWshShortcut shortcut = (IWshShortcut)m_type.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, m_shell, new object[] { fileName });
+            IWshShortcut shortcut = (IWshShortcut)MType.InvokeMember("CreateShortcut", BindingFlags.InvokeMethod, null, MShell, new object[] { fileName });
             shortcut.Description = description;
             shortcut.Hotkey = hotkey;
             shortcut.TargetPath = targetPath;
