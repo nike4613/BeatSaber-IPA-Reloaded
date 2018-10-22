@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IPA.Logging;
 
 namespace IPA.Logging.Printers
 {
@@ -27,8 +22,8 @@ namespace IPA.Logging.Printers
         /// <param name="message">the message to print</param>
         public override void Print(Logger.Level level, DateTime time, string logName, string message)
         {
-            foreach (var line in message.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                fileWriter.WriteLine(string.Format(Logger.LogFormat, line, logName, time, level.ToString().ToUpper()));
+            foreach (var line in message.Split(new[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                FileWriter.WriteLine(Logger.LogFormat, line, logName, time, level.ToString().ToUpper());
         }
 
         /// <summary>

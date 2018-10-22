@@ -1,43 +1,40 @@
-﻿using IPA.Utilities;
-using IPA.Loader;
-using Ionic.Zip;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Ionic.Zip;
+using IPA.Utilities;
+using Newtonsoft.Json;
+using SemVer;
 using UnityEngine;
 using UnityEngine.Networking;
-using SemVer;
+using static IPA.Loader.PluginManager;
 using Logger = IPA.Logging.Logger;
 using Version = SemVer.Version;
-using IPA.Updating.Backup;
-using System.Runtime.Serialization;
-using System.Reflection;
-using static IPA.Loader.PluginManager;
 
-namespace IPA.Updating.ModsaberML
+namespace IPA.Updating.ModSaber
 {
-    class Updater : MonoBehaviour
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    internal class Updater : MonoBehaviour
     {
-        public static Updater instance;
+        public static Updater Instance;
 
         public void Awake()
         {
             try
             {
-                if (instance != null)
+                if (Instance != null)
                     Destroy(this);
                 else
                 {
-                    instance = this;
+                    Instance = this;
                     CheckForUpdates();
                 }
             }
@@ -55,21 +52,21 @@ namespace IPA.Updating.ModsaberML
         private class DependencyObject
         {
             public string Name { get; set; }
-            public Version Version { get; set; } = null;
-            public Version ResolvedVersion { get; set; } = null;
-            public Range Requirement { get; set; } = null;
-            public Range Conflicts { get; set; } = null;
-            public bool Resolved { get; set; } = false;
-            public bool Has { get; set; } = false;
+            public Version Version { get; set; }
+            public Version ResolvedVersion { get; set; }
+            public Range Requirement { get; set; }
+            public Range Conflicts { get; set; }
+            public bool Resolved { get; set; }
+            public bool Has { get; set; }
             public HashSet<string> Consumers { get; set; } = new HashSet<string>();
 
-            public bool MetaRequestFailed { get; set; } = false;
+            public bool MetaRequestFailed { get; set; }
 
-            public PluginInfo LocalPluginMeta { get; set; } = null;
+            public PluginInfo LocalPluginMeta { get; set; }
 
             public override string ToString()
             {
-                return $"{Name}@{Version}{(Resolved ? $" -> {ResolvedVersion}" : "")} - ({Requirement} ! {Conflicts}) {(Has ? $" Already have" : "")}";
+                return $"{Name}@{Version}{(Resolved ? $" -> {ResolvedVersion}" : "")} - ({Requirement} ! {Conflicts}) {(Has ? " Already have" : "")}";
             }
         }
 
@@ -79,7 +76,6 @@ namespace IPA.Updating.ModsaberML
             if (requestCache.TryGetValue(url, out string value))
             {
                 result.Value = value;
-                yield break;
             }
             else
             {
@@ -111,15 +107,14 @@ namespace IPA.Updating.ModsaberML
             }
         }
 
-        private Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
-        private IEnumerator GetModInfo(string name, string ver, Ref<ApiEndpoint.Mod> result)
+        private readonly Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
+        private IEnumerator GetModInfo(string modName, string ver, Ref<ApiEndpoint.Mod> result)
         {
-            var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeUriString(name), Uri.EscapeUriString(ver));
+            var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeUriString(modName), Uri.EscapeUriString(ver));
 
             if (modCache.TryGetValue(uri, out ApiEndpoint.Mod value))
             {
                 result.Value = value;
-                yield break;
             }
             else
             {
@@ -136,20 +131,18 @@ namespace IPA.Updating.ModsaberML
                 catch (Exception e)
                 {
                     result.Error = new Exception("Error decoding response", e);
-                    yield break;
                 }
             }
         }
 
-        private Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
-        private IEnumerator GetModVersionsMatching(string name, string range, Ref<List<ApiEndpoint.Mod>> result)
+        private readonly Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
+        private IEnumerator GetModVersionsMatching(string modName, string range, Ref<List<ApiEndpoint.Mod>> result)
         {
-            var uri = string.Format(ApiEndpoint.GetModsWithSemver, Uri.EscapeUriString(name), Uri.EscapeUriString(range));
+            var uri = string.Format(ApiEndpoint.GetModsWithSemver, Uri.EscapeUriString(modName), Uri.EscapeUriString(range));
 
             if (modVersionsCache.TryGetValue(uri, out List<ApiEndpoint.Mod> value))
             {
                 result.Value = value;
-                yield break;
             }
             else
             {
@@ -166,7 +159,6 @@ namespace IPA.Updating.ModsaberML
                 catch (Exception e)
                 {
                     result.Error = new Exception("Error decoding response", e);
-                    yield break;
                 }
             }
         }
@@ -177,9 +169,9 @@ namespace IPA.Updating.ModsaberML
 
             foreach (var plugin in BSMetas)
             { // initialize with data to resolve (1.1)
-                if (plugin.ModsaberInfo != null)
+                if (plugin.ModSaberInfo != null)
                 { // updatable
-                    var msinfo = plugin.ModsaberInfo;
+                    var msinfo = plugin.ModSaberInfo;
                     depList.Value.Add(new DependencyObject {
                         Name = msinfo.InternalName,
                         Version = new Version(msinfo.CurrentVersion),
@@ -190,17 +182,17 @@ namespace IPA.Updating.ModsaberML
             }
 
             foreach (var dep in depList.Value)
-                Logger.updater.Debug($"Phantom Dependency: {dep.ToString()}");
+                Logger.updater.Debug($"Phantom Dependency: {dep}");
 
             yield return DependencyResolveFirstPass(depList);
             
             foreach (var dep in depList.Value)
-                Logger.updater.Debug($"Dependency: {dep.ToString()}");
+                Logger.updater.Debug($"Dependency: {dep}");
 
             yield return DependencyResolveSecondPass(depList);
 
             foreach (var dep in depList.Value)
-                Logger.updater.Debug($"Dependency: {dep.ToString()}");
+                Logger.updater.Debug($"Dependency: {dep}");
 
             DependendyResolveFinalPass(depList);
         }
@@ -226,8 +218,8 @@ namespace IPA.Updating.ModsaberML
                     continue;
                 }
 
-                list.Value.AddRange(mod.Value.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string>() { dep.Name } }));
-                list.Value.AddRange(mod.Value.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string>() { dep.Name } }));
+                list.Value.AddRange(mod.Value.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
+                list.Value.AddRange(mod.Value.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
             }
 
             var depNames = new HashSet<string>();
@@ -290,6 +282,7 @@ namespace IPA.Updating.ModsaberML
                     .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion && versionCheck.Approved)
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version))
                     .Select(mod => mod.Version).Max(); // (2.1)
+                // ReSharper disable once AssignmentInConditionalExpression
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
                 dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
             }
@@ -303,10 +296,10 @@ namespace IPA.Updating.ModsaberML
             { // figure out which ones need to be downloaded (3.1)
                 if (dep.Resolved)
                 {
-                    Logger.updater.Debug($"Resolved: {dep.ToString()}");
+                    Logger.updater.Debug($"Resolved: {dep}");
                     if (!dep.Has)
                     {
-                        Logger.updater.Debug($"To Download: {dep.ToString()}");
+                        Logger.updater.Debug($"To Download: {dep}");
                         toDl.Add(dep);
                     }
                 }
@@ -324,10 +317,10 @@ namespace IPA.Updating.ModsaberML
             Logger.updater.Debug($"Temp directory: {tempDirectory}");
 
             foreach (var item in toDl)
-                StartCoroutine(UpdateModCoroutine(item, tempDirectory));
+                StartCoroutine(UpdateModCoroutine(item));
         }
 
-        private IEnumerator UpdateModCoroutine(DependencyObject item, string tempDirectory)
+        private IEnumerator UpdateModCoroutine(DependencyObject item)
         { // (3.2)
             Logger.updater.Debug($"Release: {BeatSaber.ReleaseType}");
 
@@ -351,12 +344,12 @@ namespace IPA.Updating.ModsaberML
 
             Logger.updater.Debug($"URL = {url}");
 
-            const int MaxTries = 3;
-            int maxTries = MaxTries;
-            while (maxTries > 0)
+            const int maxTries = 3;
+            int tries = maxTries;
+            while (tries > 0)
             {
-                if (maxTries-- != MaxTries)
-                    Logger.updater.Debug($"Re-trying download...");
+                if (tries-- != maxTries)
+                    Logger.updater.Debug("Re-trying download...");
 
                 using (var stream = new MemoryStream())
                 using (var request = UnityWebRequest.Get(url))
@@ -379,7 +372,7 @@ namespace IPA.Updating.ModsaberML
                     }
                     if (request.isHttpError)
                     {
-                        Logger.updater.Error($"Server returned an error code while trying to update mod");
+                        Logger.updater.Error("Server returned an error code while trying to update mod");
                         Logger.updater.Error(request.error);
                         taskTokenSource.Cancel();
                         continue;
@@ -388,16 +381,17 @@ namespace IPA.Updating.ModsaberML
                     stream.Seek(0, SeekOrigin.Begin); // reset to beginning
 
                     var downloadTask = Task.Run(() =>
-                    { // use slightly more multithreaded approach than coroutines
-                        ExtractPluginAsync(stream, item, platformFile, tempDirectory);
+                    { // use slightly more multi threaded approach than co-routines
+                        // ReSharper disable once AccessToDisposedClosure
+                        ExtractPluginAsync(stream, item, platformFile);
                     }, taskTokenSource.Token);
 
                     while (!(downloadTask.IsCompleted || downloadTask.IsCanceled || downloadTask.IsFaulted))
-                        yield return null; // pause coroutine until task is done
+                        yield return null; // pause co-routine until task is done
 
                     if (downloadTask.IsFaulted)
                     {
-                        if (downloadTask.Exception.InnerExceptions.Where(e => e is ModsaberInterceptException).Any())
+                        if (downloadTask.Exception != null && downloadTask.Exception.InnerExceptions.Any(e => e is ModsaberInterceptException))
                         { // any exception is an intercept exception
                             Logger.updater.Error($"Modsaber did not return expected data for {item.Name}");
                         }
@@ -411,8 +405,8 @@ namespace IPA.Updating.ModsaberML
                 }
             }
 
-            if (maxTries == 0)
-                Logger.updater.Warn($"Plugin download failed {MaxTries} times, not re-trying");
+            if (tries == 0)
+                Logger.updater.Warn($"Plugin download failed {maxTries} times, not re-trying");
             else
                 Logger.updater.Debug("Download complete");
         }
@@ -421,7 +415,7 @@ namespace IPA.Updating.ModsaberML
         {
             public MemoryStream Stream { get; set; }
 
-            public StreamDownloadHandler(MemoryStream stream) : base()
+            public StreamDownloadHandler(MemoryStream stream)
             {
                 Stream = stream;
             }
@@ -437,15 +431,15 @@ namespace IPA.Updating.ModsaberML
                 Logger.updater.Debug("Download complete");
             }
 
-            protected override bool ReceiveData(byte[] data, int dataLength)
+            protected override bool ReceiveData(byte[] rData, int dataLength)
             {
-                if (data == null || data.Length < 1)
+                if (rData == null || rData.Length < 1)
                 {
                     Logger.updater.Debug("CustomWebRequest :: ReceiveData - received a null/empty buffer");
                     return false;
                 }
 
-                Stream.Write(data, 0, dataLength);
+                Stream.Write(rData, 0, dataLength);
                 return true;
             }
 
@@ -458,11 +452,11 @@ namespace IPA.Updating.ModsaberML
 
             public override string ToString()
             {
-                return $"{base.ToString()} ({Stream?.ToString()})";
+                return $"{base.ToString()} ({Stream})";
             }
         }
 
-        private void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.PlatformFile fileInfo, string tempDirectory)
+        private void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.PlatformFile fileInfo)
         { // (3.3)
             Logger.updater.Debug($"Extracting ZIP file for {item.Name}");
 
@@ -471,8 +465,6 @@ namespace IPA.Updating.ModsaberML
             var hash = sha.ComputeHash(data);
             if (!LoneFunctions.UnsafeCompare(hash, fileInfo.Hash))
                 throw new Exception("The hash for the file doesn't match what is defined");
-
-            var newFiles = new List<FileInfo>();
 
             var targetDir = Path.Combine(BeatSaber.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
             Directory.CreateDirectory(targetDir);
@@ -517,7 +509,7 @@ namespace IPA.Updating.ModsaberML
 
                                 ostream.Seek(0, SeekOrigin.Begin);
                                 FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
-                                Directory.CreateDirectory(targetFile.DirectoryName);
+                                Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
                                 if (LoneFunctions.GetRelativePath(targetFile.FullName, targetDir) == LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Filename, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
@@ -538,7 +530,7 @@ namespace IPA.Updating.ModsaberML
                 }
                 
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.AppendAllLines(Path.Combine(targetDir, _SpecialDeletionsFile), new string[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta.Filename, BeatSaber.InstallPath) });
+                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta.Filename, BeatSaber.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
@@ -554,7 +546,7 @@ namespace IPA.Updating.ModsaberML
             if (item.LocalPluginMeta?.Plugin is SelfPlugin)
             { // currently updating self, so copy to working dir and update
                 LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
-                if (File.Exists(Path.Combine(BeatSaber.InstallPath, _SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, _SpecialDeletionsFile));
+                if (File.Exists(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile));
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = item.LocalPluginMeta.Filename,
@@ -563,13 +555,13 @@ namespace IPA.Updating.ModsaberML
                 });
             }
             else
-                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), _SpecialDeletionsFile);
+                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), SpecialDeletionsFile);
             Directory.Delete(targetDir, true); // delete extraction site
 
             Logger.updater.Debug("Extractor exited");
         }
 
-        internal const string _SpecialDeletionsFile = "$$delete";
+        internal const string SpecialDeletionsFile = "$$delete";
     }
 
     [Serializable]

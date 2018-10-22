@@ -1,17 +1,13 @@
 ﻿using IPA.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static IPA.Logging.Logger;
 
 namespace IPA.Injector
 {
-    class Updates
+    internal static class Updates
     {
-        public const string DeleteFileName = Updating.ModsaberML.Updater._SpecialDeletionsFile;
+        private const string DeleteFileName = Updating.ModSaber.Updater.SpecialDeletionsFile;
         public static void InstallPendingUpdates()
         {
             var pendingDir = Path.Combine(BeatSaber.InstallPath, "IPA", "Pending");

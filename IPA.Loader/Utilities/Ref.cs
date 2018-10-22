@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IPA.Utilities
 {
@@ -28,7 +24,7 @@ namespace IPA.Utilities
             set => _value = value;
         }
 
-        private Exception _error = null;
+        private Exception _error;
         /// <summary>
         /// An exception that was generated while creating the value.
         /// </summary>
@@ -64,14 +60,14 @@ namespace IPA.Utilities
     
     internal static class ExceptionUtilities
     {
-        private static readonly FieldInfo STACK_TRACE_STRING_FI = typeof(Exception).GetField("_stackTraceString", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly Type TRACE_FORMAT_TI = Type.GetType("System.Diagnostics.StackTrace").GetNestedType("TraceFormat", BindingFlags.NonPublic);
-        private static readonly MethodInfo TRACE_TO_STRING_MI = typeof(StackTrace).GetMethod("ToString", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { TRACE_FORMAT_TI }, null);
+        private static readonly FieldInfo StackTraceStringFi = typeof(Exception).GetField("_stackTraceString", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly Type TraceFormatTi = Type.GetType("System.Diagnostics.StackTrace")?.GetNestedType("TraceFormat", BindingFlags.NonPublic);
+        private static readonly MethodInfo TraceToStringMi = typeof(StackTrace).GetMethod("ToString", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { TraceFormatTi }, null);
 
         public static Exception SetStackTrace(this Exception target, StackTrace stack)
         {
-            var getStackTraceString = TRACE_TO_STRING_MI.Invoke(stack, new object[] { Enum.GetValues(TRACE_FORMAT_TI).GetValue(0) });
-            STACK_TRACE_STRING_FI.SetValue(target, getStackTraceString);
+            var getStackTraceString = TraceToStringMi.Invoke(stack, new[] { Enum.GetValues(TraceFormatTi).GetValue(0) });
+            StackTraceStringFi.SetValue(target, getStackTraceString);
             return target;
         }
     }

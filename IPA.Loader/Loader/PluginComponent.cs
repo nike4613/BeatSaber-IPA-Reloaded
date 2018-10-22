@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using IPA.Loader.Composite;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using IPA.Loader;
-using IPA.Loader.Composite;
-using IPA.Logging;
+// ReSharper disable UnusedMember.Local
 
 namespace IPA.Loader
 {
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     internal class PluginComponent : MonoBehaviour
     {
         private CompositeBSPlugin bsPlugins;
         private CompositeIPAPlugin ipaPlugins;
-        private bool quitting = false;
+        private bool quitting;
 
         internal static PluginComponent Create()
         {
@@ -29,7 +28,7 @@ namespace IPA.Loader
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            gameObject.AddComponent<Updating.ModsaberML.Updater>();
+            gameObject.AddComponent<Updating.ModSaber.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();

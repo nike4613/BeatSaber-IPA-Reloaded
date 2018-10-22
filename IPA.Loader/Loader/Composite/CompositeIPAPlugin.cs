@@ -1,11 +1,6 @@
-﻿using System;
+﻿using IPA.Old;
+using System;
 using System.Collections.Generic;
-using IPA;
-using IPA.Old;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using Logger = IPA.Logging.Logger;
 
 namespace IPA.Loader.Composite
@@ -13,7 +8,7 @@ namespace IPA.Loader.Composite
 #pragma warning disable CS0618 // Type or member is obsolete
     internal class CompositeIPAPlugin : IPlugin
     {
-        IEnumerable<IPlugin> plugins;
+        private readonly IEnumerable<IPlugin> plugins;
 
         private delegate void CompositeCall(IPlugin plugin);
         
@@ -48,18 +43,14 @@ namespace IPA.Loader.Composite
             Invoke(plugin => plugin.OnFixedUpdate());
         }
         
-        public string Name {
-            get { throw new NotImplementedException(); }
-        }
+        public string Name => throw new NotImplementedException();
 
-        public string Version {
-            get { throw new NotImplementedException(); }
-        }
+        public string Version => throw new NotImplementedException();
 
         public void OnLateUpdate() {
             Invoke(plugin => {
-                if (plugin is IEnhancedBeatSaberPlugin)
-                    ((IEnhancedBeatSaberPlugin) plugin).OnLateUpdate();
+                if (plugin is IEnhancedPlugin saberPlugin)
+                    saberPlugin.OnLateUpdate();
             });
         }
 

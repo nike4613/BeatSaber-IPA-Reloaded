@@ -1,12 +1,10 @@
-﻿using IPA.Logging;
+﻿using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using IPA.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IPA.Config.ConfigProviders
 {
@@ -17,11 +15,11 @@ namespace IPA.Config.ConfigProviders
         // TODO: create a wrapper that allows empty object creation
         public dynamic Dynamic => jsonObj;
 
-        public bool HasChanged { get; private set; } = false;
+        public bool HasChanged { get; private set; }
 
         public DateTime LastModified => File.GetLastWriteTime(Filename + ".json");
 
-        private string _filename = null;
+        private string _filename;
         public string Filename
         {
             get => _filename;
@@ -37,10 +35,10 @@ namespace IPA.Config.ConfigProviders
         {
             Logger.config.Debug($"Loading file {Filename}.json");
 
-            var finfo = new FileInfo(Filename + ".json");
-            if (finfo.Exists)
+            var fileInfo = new FileInfo(Filename + ".json");
+            if (fileInfo.Exists)
             {
-                string json = finfo.OpenText().ReadToEnd();
+                var json = fileInfo.OpenText().ReadToEnd();
                 try
                 {
                     jsonObj = JObject.Parse(json);
@@ -50,7 +48,7 @@ namespace IPA.Config.ConfigProviders
                     Logger.config.Error($"Error parsing JSON in file {Filename}.json; resetting to empty JSON");
                     Logger.config.Error(e);
                     jsonObj = new JObject();
-                    File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
+                    File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
                 }
             }
             else
@@ -68,17 +66,17 @@ namespace IPA.Config.ConfigProviders
             jsonObj.CollectionChanged += JsonObj_CollectionChanged;
         }
 
-        private void JsonObj_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void JsonObj_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HasChanged = true;
         }
 
-        private void JsonObj_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        private void JsonObj_ListChanged(object sender, ListChangedEventArgs e)
         {
             HasChanged = true;
         }
 
-        private void JsonObj_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void JsonObj_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             HasChanged = true;
         }
@@ -92,9 +90,9 @@ namespace IPA.Config.ConfigProviders
         {
             Logger.config.Debug($"Saving file {Filename}.json");
 
-            var finfo = new FileInfo(Filename + ".json");
+            var fileInfo = new FileInfo(Filename + ".json");
 
-            File.WriteAllText(finfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
+            File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
 
             HasChanged = false;
         }

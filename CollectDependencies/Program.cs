@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CollectDependencies
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -34,7 +32,7 @@ namespace CollectDependencies
                     return v2;
                 }
 
-                foreach (var line in depsfile.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                foreach (var line in depsfile.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
                 {
                     var parts = line.Split('"');
                     var path = parts.Last();
@@ -48,7 +46,7 @@ namespace CollectDependencies
                         var arglist = string.Join(" ", parts);
                         if (command == "from")
                         { // an "import" type command
-                            path = File.ReadAllText(Path.Combine(fdir, arglist));
+                            path = File.ReadAllText(Path.Combine(fdir ?? throw new InvalidOperationException(), arglist));
                         }
                         else if (command == "prompt")
                         {
@@ -85,16 +83,17 @@ namespace CollectDependencies
 
                 if (fname == "") continue;
 
-                var outp = Path.Combine(fdir, Path.GetFileName(fname));
+                var outp = Path.Combine(fdir ?? throw new InvalidOperationException(), Path.GetFileName(fname) ?? throw new InvalidOperationException());
                 Console.WriteLine($"Copying \"{fname}\" to \"{outp}\"");
                 if (File.Exists(outp)) File.Delete(outp);
 
-                if (Path.GetExtension(fname).ToLower() == ".dll")
+                if (Path.GetExtension(fname)?.ToLower() == ".dll")
                 {
+                    // ReSharper disable once StringLiteralTypo
                     if (fparts.Length > 1 && fparts[1] == "virt")
                     {
                         var module = VirtualizedModule.Load(fname);
-                        module.Virtualize(fname = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), Path.GetFileName(fname)));
+                        module.Virtualize(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), Path.GetFileName(fname) ?? throw new InvalidOperationException()));
                     }
                     var modl = ModuleDefinition.ReadModule(fparts[0]);
                     foreach (var t in modl.Types)

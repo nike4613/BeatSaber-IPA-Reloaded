@@ -1,23 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IPA.Logging
 {
-    internal class UnityLogInterceptor
+    internal static class UnityLogInterceptor
     {
-        internal static Logger _logger;
-        public static Logger UnityLogger {
-            get
-            {
-                if (_logger == null)
-                    _logger = new StandardLogger("UnityEngine");
-                return _logger;
-            }
-        }
+        internal static Logger Logger;
+        public static Logger UnityLogger => Logger ?? (Logger = new StandardLogger("UnityEngine"));
 
         public static Logger.Level LogTypeToLevel(LogType type)
         {

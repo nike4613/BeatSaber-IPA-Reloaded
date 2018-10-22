@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections;
-using System.Runtime.InteropServices;
 using System.IO;
-using System.Text;
+using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace IPA.Injector.Windows
+namespace IPA.Injector
 {
     // https://stackoverflow.com/a/48864902/3117125
-    static class WinConsole
+    internal static class WinConsole
     {
-        static public void Initialize(bool alwaysCreateNewConsole = true)
+        public static void Initialize(bool alwaysCreateNewConsole = true)
         {
             bool consoleAttached = true;
             if (alwaysCreateNewConsole
-                || (AttachConsole(ATTACH_PARRENT) == 0
-                && Marshal.GetLastWin32Error() != ERROR_ACCESS_DENIED))
+                || (AttachConsole(AttachParent) == 0
+                && Marshal.GetLastWin32Error() != ErrorAccessDenied))
             {
                 consoleAttached = AllocConsole() != 0;
             }
@@ -34,7 +32,7 @@ namespace IPA.Injector.Windows
 
         private static void InitializeOutStream()
         {
-            var fs = CreateFileStream("CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, FileAccess.Write);
+            var fs = CreateFileStream("CONOUT$", GenericWrite, FileShareWrite, FileAccess.Write);
             if (fs != null)
             {
                 var writer = new StreamWriter(fs) { AutoFlush = true };
@@ -45,7 +43,7 @@ namespace IPA.Injector.Windows
 
         private static void InitializeInStream()
         {
-            var fs = CreateFileStream("CONIN$", GENERIC_READ, FILE_SHARE_READ, FileAccess.Read);
+            var fs = CreateFileStream("CONIN$", GenericRead, FileShareRead, FileAccess.Read);
             if (fs != null)
             {
                 Console.SetIn(new StreamReader(fs));
@@ -55,7 +53,7 @@ namespace IPA.Injector.Windows
         private static FileStream CreateFileStream(string name, uint win32DesiredAccess, uint win32ShareMode,
                                 FileAccess dotNetFileAccess)
         {
-            var file = new SafeFileHandle(CreateFileW(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero), true);
+            var file = new SafeFileHandle(CreateFileW(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OpenExisting, FileAttributeNormal, IntPtr.Zero), true);
             if (!file.IsInvalid)
             {
                 var fs = new FileStream(file, dotNetFileAccess);
@@ -77,7 +75,7 @@ namespace IPA.Injector.Windows
             SetLastError = true,
             CharSet = CharSet.Auto,
             CallingConvention = CallingConvention.StdCall)]
-        private static extern UInt32 AttachConsole(UInt32 dwProcessId);
+        private static extern uint AttachConsole(uint dwProcessId);
 
         [DllImport("kernel32.dll",
             EntryPoint = "CreateFileW",
@@ -86,23 +84,23 @@ namespace IPA.Injector.Windows
             CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr CreateFileW(
               string lpFileName,
-              UInt32 dwDesiredAccess,
-              UInt32 dwShareMode,
+              uint dwDesiredAccess,
+              uint dwShareMode,
               IntPtr lpSecurityAttributes,
-              UInt32 dwCreationDisposition,
-              UInt32 dwFlagsAndAttributes,
+              uint dwCreationDisposition,
+              uint dwFlagsAndAttributes,
               IntPtr hTemplateFile
             );
 
-        private const UInt32 GENERIC_WRITE = 0x40000000;
-        private const UInt32 GENERIC_READ = 0x80000000;
-        private const UInt32 FILE_SHARE_READ = 0x00000001;
-        private const UInt32 FILE_SHARE_WRITE = 0x00000002;
-        private const UInt32 OPEN_EXISTING = 0x00000003;
-        private const UInt32 FILE_ATTRIBUTE_NORMAL = 0x80;
-        private const UInt32 ERROR_ACCESS_DENIED = 5;
-
-        private const UInt32 ATTACH_PARRENT = 0xFFFFFFFF;
+        private const uint GenericWrite = 0x40000000;
+        private const uint GenericRead = 0x80000000;
+        private const uint FileShareRead = 0x00000001;
+        private const uint FileShareWrite = 0x00000002;
+        private const uint OpenExisting = 0x00000003;
+        private const uint FileAttributeNormal = 0x80;
+        private const uint ErrorAccessDenied = 5;
+        
+        private const uint AttachParent = 0xFFFFFFFF;
 
         #endregion
     }

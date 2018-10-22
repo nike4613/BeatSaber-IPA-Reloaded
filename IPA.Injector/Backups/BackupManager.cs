@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace IPA.Injector.Backups
 {
-    public class BackupManager
+    public static class BackupManager
     {
         public static BackupUnit FindLatestBackup(string dir)
         {

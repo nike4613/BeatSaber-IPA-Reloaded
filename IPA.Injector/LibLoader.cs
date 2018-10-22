@@ -1,20 +1,17 @@
-﻿using IPA.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using IPA.Logging;
 using static IPA.Logging.Logger;
 
 namespace IPA.Injector
 {
-    internal class LibLoader
+    internal static class LibLoader
     {
-        public static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
-        public static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        private static Dictionary<string, string> filenameLocations = null;
+        private static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
+        private static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
+        private static Dictionary<string, string> filenameLocations;
 
         public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
         {
@@ -29,20 +26,18 @@ namespace IPA.Injector
                     filenameLocations.Add(fn.Name, fn.FullName);
             }
 
-            var testFilen = $"{asmName.Name}.{asmName.Version}.dll";
-            Log(Level.Debug, $"Looking for file {testFilen}");
+            var testFile = $"{asmName.Name}.{asmName.Version}.dll";
+            Log(Level.Debug, $"Looking for file {testFile}");
 
-            if (filenameLocations.TryGetValue(testFilen, out string path))
+            if (filenameLocations.TryGetValue(testFile, out string path))
             {
-                Log(Level.Debug, $"Found file {testFilen} as {path}");
+                Log(Level.Debug, $"Found file {testFile} as {path}");
                 if (File.Exists(path))
                 {
                     return Assembly.LoadFrom(path);
                 }
-                else
-                {
-                    Log(Level.Critical, $"but {path} no longer exists!");
-                }
+
+                Log(Level.Critical, $"but {path} no longer exists!");
             }
             
             Log(Level.Critical, $"No library {asmName} found");
@@ -67,13 +62,13 @@ namespace IPA.Injector
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
         private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool> dirValidator = null)
         {
-            if (dirValidator == null) dirValidator = (s) => true;
+            if (dirValidator == null) dirValidator = s => true;
 
             // Data structure to hold names of subfolders to be
             // examined for files.
             Stack<string> dirs = new Stack<string>(32);
 
-            if (!System.IO.Directory.Exists(root))
+            if (!Directory.Exists(root))
             {
                 throw new ArgumentException();
             }
@@ -85,7 +80,7 @@ namespace IPA.Injector
                 string[] subDirs;
                 try
                 {
-                    subDirs = System.IO.Directory.GetDirectories(currentDir);
+                    subDirs = Directory.GetDirectories(currentDir);
                 }
                 // An UnauthorizedAccessException exception will be thrown if we do not have
                 // discovery permission on a folder or file. It may or may not be acceptable 
@@ -101,16 +96,16 @@ namespace IPA.Injector
                     //Console.WriteLine(e.Message);
                     continue;
                 }
-                catch (System.IO.DirectoryNotFoundException)
+                catch (DirectoryNotFoundException)
                 {
                     //Console.WriteLine(e.Message);
                     continue;
                 }
 
-                string[] files = null;
+                string[] files;
                 try
                 {
-                    files = System.IO.Directory.GetFiles(currentDir);
+                    files = Directory.GetFiles(currentDir);
                 }
 
                 catch (UnauthorizedAccessException)
@@ -120,7 +115,7 @@ namespace IPA.Injector
                     continue;
                 }
 
-                catch (System.IO.DirectoryNotFoundException)
+                catch (DirectoryNotFoundException)
                 {
                     //Console.WriteLine(e.Message);
                     continue;
@@ -135,14 +130,14 @@ namespace IPA.Injector
                 // Modify this block to perform your required task.
                 foreach (string file in files)
                 {
-                    FileInfo nextValue = null;
+                    FileInfo nextValue;
                     try
                     {
                         // Perform whatever action is required in your scenario.
-                        nextValue = new System.IO.FileInfo(file);
+                        nextValue = new FileInfo(file);
                         //Console.WriteLine("{0}: {1}, {2}", fi.Name, fi.Length, fi.CreationTime);
                     }
-                    catch (System.IO.FileNotFoundException)
+                    catch (FileNotFoundException)
                     {
                         // If file was deleted by a separate application
                         //  or thread since the call to TraverseTree()

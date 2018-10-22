@@ -1,5 +1,4 @@
-﻿using IPA.Injector;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -23,7 +22,6 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("2a1af16b-27f1-46e0-9a95-181516bc1cb7")]
 [assembly: InternalsVisibleTo("IPA.Loader")]
-[assembly: ForceAssemblyReference(typeof(SemVer.Version))]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,5 +33,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.11.1")] // will be patched by AppVeyor
-[assembly: AssemblyFileVersion("3.11.1")] // will be patched by AppVeyor
+[assembly: AssemblyVersion("3.11.2")]
+[assembly: AssemblyFileVersion("3.11.2")]

@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
 
 namespace IPA.Injector
 {
-    class Bootstrapper : MonoBehaviour
+    internal class Bootstrapper : MonoBehaviour
     {
         public event Action Destroyed = delegate {};
-        
-        void Awake()
+
+        public void Awake()
         {
         }
 
-        void Start()
+        public void Start()
         {
             Destroy(gameObject);
         }
-        void OnDestroy()
+
+        public void OnDestroy()
         {
             Destroyed();
         }

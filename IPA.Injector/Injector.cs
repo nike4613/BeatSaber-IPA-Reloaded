@@ -1,23 +1,23 @@
-﻿using Harmony;
-using IPA.Injector.Backups;
+﻿using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class Injector
     {
+        // ReSharper disable once UnusedParameter.Global
         public static void Main(string[] args)
         { // entry point for doorstop
           // At this point, literally nothing but mscorlib is loaded,
@@ -28,7 +28,7 @@ namespace IPA.Injector
             try
             {
                 if (!Environment.GetCommandLineArgs().Contains("--no-console"))
-                    Windows.WinConsole.Initialize();
+                    WinConsole.Initialize();
 
                 SetupLibraryLoading();
 
@@ -96,30 +96,30 @@ namespace IPA.Injector
             else
             {
                 var ilp = cctor.Body.GetILProcessor();
-                for (int i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
+                for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
                 {
                     var ins = cctor.Body.Instructions[i];
-                    if (i == 0)
+                    switch (i)
                     {
-                        if (ins.OpCode != OpCodes.Call)
-                        {
+                        case 0 when ins.OpCode != OpCodes.Call:
                             ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
                             modified = true;
-                        }
-                        else
+                            break;
+                        case 0:
                         {
-                            var mref = ins.Operand as MethodReference;
-                            if (mref.FullName != cbs.FullName)
+                            var methodRef = ins.Operand as MethodReference;
+                            if (methodRef?.FullName != cbs.FullName)
                             {
                                 ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
                                 modified = true;
                             }
+
+                            break;
                         }
-                    }
-                    if (i == 1 && ins.OpCode != OpCodes.Ret)
-                    {
-                        ilp.Replace(ins, ilp.Create(OpCodes.Ret));
-                        modified = true;
+                        case 1 when ins.OpCode != OpCodes.Ret:
+                            ilp.Replace(ins, ilp.Create(OpCodes.Ret));
+                            modified = true;
+                            break;
                     }
                 }
             }
@@ -140,11 +140,11 @@ namespace IPA.Injector
             #endregion
         }
 
-        private static bool bootstrapped = false;
+        private static bool _bootstrapped;
         private static void CreateBootstrapper()
         {
-            if (bootstrapped) return;
-            bootstrapped = true;
+            if (_bootstrapped) return;
+            _bootstrapped = true;
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
@@ -154,30 +154,31 @@ namespace IPA.Injector
             };
 
             // need to reinit streams singe Unity seems to redirect stdout
-            Windows.WinConsole.InitializeStreams();
+            WinConsole.InitializeStreams();
             
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
 
-        private static bool injected = false;
+        private static bool _injected;
         public static void Inject()
         {
-            if (!injected)
+            if (!_injected)
             {
-                injected = true;
-                Windows.WinConsole.Initialize();
+                _injected = true;
+                WinConsole.Initialize();
                 SetupLibraryLoading();
                 var bootstrapper = new GameObject("Bootstrapper").AddComponent<Bootstrapper>();
                 bootstrapper.Destroyed += Bootstrapper_Destroyed;
             }
         }
 
-        private static bool loadingDone = false;
-        public static void SetupLibraryLoading()
+        private static bool _loadingDone;
+
+        private static void SetupLibraryLoading()
         {
-            if (loadingDone) return;
-            loadingDone = true;
+            if (_loadingDone) return;
+            _loadingDone = true;
             #region Add Library load locations
             AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
             /*try
@@ -191,9 +192,11 @@ namespace IPA.Injector
             #endregion
         }
 
+/*
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetDllDirectory(string lpPathName);
+*/
 
         private static void Bootstrapper_Destroyed()
         {

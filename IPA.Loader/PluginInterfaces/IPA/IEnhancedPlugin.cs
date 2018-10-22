@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+// ReSharper disable CheckNamespace
 
 namespace IPA.Old
 {
+    /// <inheritdoc cref="IPlugin" />
     /// <summary>
     /// An enhanced version of the standard IPA plugin.
     /// </summary>

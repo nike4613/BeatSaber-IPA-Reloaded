@@ -1,29 +1,25 @@
-﻿using IPA.Updating.ModsaberML;
+﻿using System;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static IPA.Updating.ModsaberML.ApiEndpoint.Mod;
+using SemVer;
+using static IPA.Updating.ModSaber.ApiEndpoint.Mod;
 
 namespace IPA.Updating.Converters
 {
-    internal class ModsaberDependencyConverter : JsonConverter<Dependency>
+    internal class ModSaberDependencyConverter : JsonConverter<Dependency>
     {
         public override Dependency ReadJson(JsonReader reader, Type objectType, Dependency existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var parts = (reader.Value as string).Split('@');
-            return new Dependency()
+            var parts = (reader.Value as string)?.Split('@');
+            return new Dependency
             {
-                Name = parts[0],
-                VersionRange = new SemVer.Range(parts[1])
+                Name = parts?[0],
+                VersionRange = new Range(parts?[1])
             };
         }
 
         public override void WriteJson(JsonWriter writer, Dependency value, JsonSerializer serializer)
         {
-            writer.WriteValue($"{value.Name}@{value.VersionRange.ToString()}");
+            writer.WriteValue($"{value.Name}@{value.VersionRange}");
         }
     }
 }

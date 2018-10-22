@@ -1,18 +1,14 @@
 ﻿using Mono.Cecil;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace IPA.Patcher
 {
     class VirtualizedModule
     {
-        private const string ENTRY_TYPE = "Display";
-
-        private FileInfo _File;
-        private ModuleDefinition _Module;
+        private readonly FileInfo _file;
+        private ModuleDefinition _module;
 
         public static VirtualizedModule Load(string engineFile)
         {
@@ -21,7 +17,7 @@ namespace IPA.Patcher
 
         private VirtualizedModule(string assemblyFile)
         {
-            _File = new FileInfo(assemblyFile);
+            _file = new FileInfo(assemblyFile);
 
             LoadModules();
         }
@@ -29,30 +25,29 @@ namespace IPA.Patcher
         private void LoadModules()
         {
             var resolver = new DefaultAssemblyResolver();
-            resolver.AddSearchDirectory(_File.DirectoryName);
+            resolver.AddSearchDirectory(_file.DirectoryName);
 
             var parameters = new ReaderParameters
             {
                 AssemblyResolver = resolver,
             };
 
-            _Module = ModuleDefinition.ReadModule(_File.FullName, parameters);
+            _module = ModuleDefinition.ReadModule(_file.FullName, parameters);
         }
         
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="module"></param>
         public void Virtualize()
         {
 
-            foreach (var type in _Module.Types)
+            foreach (var type in _module.Types)
             {
                 VirtualizeType(type);
             }
             Console.WriteLine();
 
-            _Module.Write(_File.FullName);
+            _module.Write(_file.FullName);
         }
 
         private void VirtualizeType(TypeDefinition type)
@@ -110,10 +105,11 @@ namespace IPA.Patcher
         {
             get
             {
-                var awakeMethods = _Module.GetTypes().SelectMany(t => t.Methods.Where(m => m.Name == "Awake"));
-                if (awakeMethods.Count() == 0) return false;
+                var awakeMethods = _module.GetTypes().SelectMany(t => t.Methods.Where(m => m.Name == "Awake"));
+                var methodDefinitions = awakeMethods as MethodDefinition[] ?? awakeMethods.ToArray();
+                if (!methodDefinitions.Any()) return false;
 
-                return ((float)awakeMethods.Count(m => m.IsVirtual) / awakeMethods.Count()) > 0.5f;
+                return ((float)methodDefinitions.Count(m => m.IsVirtual) / methodDefinitions.Count()) > 0.5f;
             }
         }
     }

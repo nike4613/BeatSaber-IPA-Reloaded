@@ -4,16 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace IPA.Patcher
 {
-    class PatchedModule
+    internal class PatchedModule
     {
-        private static readonly string[] ENTRY_TYPES = { "Input", "Display" };
+        private static readonly string[] EntryTypes = { "Input", "Display" };
 
-        private FileInfo _File;
-        private ModuleDefinition _Module;
+        private readonly FileInfo _file;
+        private ModuleDefinition _module;
 
         internal struct PatchData {
             public bool IsPatched;
@@ -27,7 +26,7 @@ namespace IPA.Patcher
 
         private PatchedModule(string engineFile)
         {
-            _File = new FileInfo(engineFile);
+            _file = new FileInfo(engineFile);
 
             LoadModules();
         }
@@ -35,27 +34,33 @@ namespace IPA.Patcher
         private void LoadModules()
         {
             var resolver = new DefaultAssemblyResolver();
-            resolver.AddSearchDirectory(_File.DirectoryName);
+            resolver.AddSearchDirectory(_file.DirectoryName);
 
             var parameters = new ReaderParameters
             {
                 AssemblyResolver = resolver,
             };
             
-            _Module = ModuleDefinition.ReadModule(_File.FullName, parameters);
+            _module = ModuleDefinition.ReadModule(_file.FullName, parameters);
         }
         
         public PatchData Data
         {
             get
             {
-                var IIdata = new PatchData { IsPatched = false, Version = null };
-                foreach (var @ref in _Module.AssemblyReferences) {
-                    if (@ref.Name == "IllusionInjector") IIdata = new PatchData { IsPatched = true, Version = new Version(0, 0, 0, 0) }; 
-                    if (@ref.Name == "IllusionPlugin") IIdata = new PatchData { IsPatched = true, Version = new Version(0, 0, 0, 0) };
-                    if (@ref.Name == "IPA.Injector") return new PatchData { IsPatched = true, Version = @ref.Version };
+                var data = new PatchData { IsPatched = false, Version = null };
+                foreach (var @ref in _module.AssemblyReferences) {
+                    switch (@ref.Name)
+                    {
+                        case "IllusionInjector":
+                        case "IllusionPlugin":
+                            data = new PatchData { IsPatched = true, Version = new Version(0, 0, 0, 0) };
+                            break;
+                        case "IPA.Injector":
+                            return new PatchData { IsPatched = true, Version = @ref.Version };
+                    }
                 }
-                return IIdata;
+                return data;
             }
         }
 
@@ -63,26 +68,26 @@ namespace IPA.Patcher
         {
             // First, let's add the reference
             var nameReference = new AssemblyNameReference("IPA.Injector", v);
-            var injectorPath = Path.Combine(_File.DirectoryName, "IPA.Injector.dll");
+            var injectorPath = Path.Combine(_file.DirectoryName ?? throw new InvalidOperationException(), "IPA.Injector.dll");
             var injector = ModuleDefinition.ReadModule(injectorPath);
 
             bool hasIPAInjector = false;
-            for (int i = 0; i < _Module.AssemblyReferences.Count; i++)
+            for (int i = 0; i < _module.AssemblyReferences.Count; i++)
             {
-                if (_Module.AssemblyReferences[i].Name == "IllusionInjector")
-                    _Module.AssemblyReferences.RemoveAt(i--);
-                if (_Module.AssemblyReferences[i].Name == "IllusionPlugin")
-                    _Module.AssemblyReferences.RemoveAt(i--);
-                if (_Module.AssemblyReferences[i].Name == "IPA.Injector")
+                if (_module.AssemblyReferences[i].Name == "IllusionInjector")
+                    _module.AssemblyReferences.RemoveAt(i--);
+                if (_module.AssemblyReferences[i].Name == "IllusionPlugin")
+                    _module.AssemblyReferences.RemoveAt(i--);
+                if (_module.AssemblyReferences[i].Name == "IPA.Injector")
                 {
                     hasIPAInjector = true;
-                    _Module.AssemblyReferences[i].Version = v;
+                    _module.AssemblyReferences[i].Version = v;
                 }
             }
 
             if (!hasIPAInjector)
             {
-                _Module.AssemblyReferences.Add(nameReference);
+                _module.AssemblyReferences.Add(nameReference);
 
                 int patched = 0;
                 foreach (var type in FindEntryTypes())
@@ -95,7 +100,7 @@ namespace IPA.Patcher
 
                 if (patched > 0)
                 {
-                    _Module.Write(_File.FullName);
+                    _module.Write(_file.FullName);
                 }
                 else
                 {
@@ -104,7 +109,7 @@ namespace IPA.Patcher
             }
             else
             {
-                _Module.Write(_File.FullName);
+                _module.Write(_file.FullName);
             }
         }
 
@@ -113,7 +118,7 @@ namespace IPA.Patcher
             var targetMethod = targetType.Methods.FirstOrDefault(m => m.IsConstructor && m.IsStatic);
             if (targetMethod != null)
             {
-                var methodReference = _Module.Import(injector.GetType("IPA.Injector.Injector").Methods.First(m => m.Name == "Inject"));
+                var methodReference = _module.Import(injector.GetType("IPA.Injector.Injector").Methods.First(m => m.Name == "Inject"));
                 targetMethod.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, methodReference));
                 return true;
             }
@@ -123,7 +128,7 @@ namespace IPA.Patcher
 
         private IEnumerable<TypeDefinition> FindEntryTypes()
         {
-            return _Module.GetTypes().Where(m => ENTRY_TYPES.Contains(m.Name));
+            return _module.GetTypes().Where(m => EntryTypes.Contains(m.Name));
         }
     }
 }
