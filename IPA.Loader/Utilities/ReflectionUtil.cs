@@ -36,7 +36,7 @@ namespace IPA.Utilities
 		}
 		
         /// <summary>
-        /// Sets a (potentially) private propert on the target object.
+        /// Sets a (potentially) private property on the target object.
         /// </summary>
         /// <param name="obj">the target object instance</param>
         /// <param name="propertyName">the name of the property</param>
