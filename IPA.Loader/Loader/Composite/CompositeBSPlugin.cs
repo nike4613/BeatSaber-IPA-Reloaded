@@ -24,36 +24,15 @@ namespace IPA.Loader.Composite
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) {
-            foreach (var plugin in plugins) {
-                try {
-                    plugin.OnSceneLoaded(scene, sceneMode);
-                }
-                catch (Exception ex) {
-                    Logger.log.Error($"{plugin.Name}: {ex}");
-                }
-            }
+            Invoke(plugin => plugin.OnSceneLoaded(scene, sceneMode));
         }
 
         public void OnSceneUnloaded(Scene scene) {
-            foreach (var plugin in plugins) {
-                try {
-                    plugin.OnSceneUnloaded(scene);
-                }
-                catch (Exception ex) {
-                    Logger.log.Error($"{plugin.Name}: {ex}");
-                }
-            }
+            Invoke(plugin => plugin.OnSceneUnloaded(scene));
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) {
-            foreach (var plugin in plugins) {
-                try {
-                    plugin.OnActiveSceneChanged(prevScene, nextScene);
-                }
-                catch (Exception ex) {
-                    Logger.log.Error($"{plugin.Name}: {ex}");
-                }
-            }
+            Invoke(plugin => plugin.OnActiveSceneChanged(prevScene, nextScene));
         }
         
         private void Invoke(CompositeCall callback) {
