@@ -24,10 +24,10 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Converts a byte array to a hex string.
         /// </summary>
-        /// <param name="ba"></param>
-        /// <returns></returns>
+        /// <param name="ba">the byte array</param>
+        /// <returns>the hex form of the array</returns>
         public static string ByteArrayToString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
