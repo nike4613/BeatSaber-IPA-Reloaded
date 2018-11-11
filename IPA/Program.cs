@@ -426,7 +426,7 @@ namespace IPA
                         continue;
 
                     Debug.Assert(targetFile.Directory != null, "targetFile.Directory != null");
-                    targetFile.Directory.Create();
+                    targetFile.Directory?.Create();
 
                     Console.CursorTop--;
                     ClearLine();
