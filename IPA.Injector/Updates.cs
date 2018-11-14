@@ -1,6 +1,8 @@
 ﻿using IPA.Utilities;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using static IPA.Logging.Logger;
 
 namespace IPA.Injector
@@ -38,13 +40,57 @@ namespace IPA.Injector
             }
 
             #region Self Protection
-            if (Directory.Exists(Path.Combine(pendingDir, "IPA")))
-                Directory.Delete(Path.Combine(pendingDir, "IPA"), true);
-            if (File.Exists(Path.Combine(pendingDir, "IPA.exe")))
+
+            string path;
+            if (Directory.Exists(path = Path.Combine(pendingDir, "IPA")))
             {
-                File.Delete(Path.Combine(pendingDir, "IPA.exe"));
-                if (File.Exists(Path.Combine(pendingDir, "Mono.Cecil.dll")))
-                    File.Delete(Path.Combine(pendingDir, "Mono.Cecil.dll"));
+                var dirs = new Stack<string>(20);
+                
+                dirs.Push(path);
+
+                while (dirs.Count > 0)
+                {
+                    var currentDir = dirs.Pop();
+                    string[] subDirs;
+                    string[] files;
+                    try
+                    {
+                        subDirs = Directory.GetDirectories(currentDir);
+                        files = Directory.GetFiles(currentDir);
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+                        updater.Error(e);
+                        continue;
+                    }
+                    catch (DirectoryNotFoundException e)
+                    {
+                        updater.Error(e);
+                        continue;
+                    }
+
+                    foreach (var file in files)
+                    {
+                        try
+                        {
+                            if (!LoneFunctions.GetRelativePath(file, path).Split(Path.PathSeparator).Contains("Pending"))
+                                File.Delete(file);
+                        }
+                        catch (FileNotFoundException e)
+                        {
+                            updater.Error(e);
+                        }
+                    }
+                    
+                    foreach (var str in subDirs)
+                        dirs.Push(str);
+                }
+            }
+            if (File.Exists(path = Path.Combine(pendingDir, "IPA.exe")))
+            {
+                File.Delete(path);
+                if (File.Exists(path = Path.Combine(pendingDir, "Mono.Cecil.dll")))
+                    File.Delete(path);
             }
 
             #endregion
