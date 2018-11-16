@@ -97,7 +97,10 @@
       <Version>1.9.1.8</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
-      <Version>0.9.6.4</Version>
+      <Version>0.10.1</Version>
+    </PackageReference>
+    <PackageReference Include="Mono.Unofficial.pdb2mdb">
+      <Version>4.2.3.4</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

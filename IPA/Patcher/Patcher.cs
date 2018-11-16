@@ -118,7 +118,7 @@ namespace IPA.Patcher
             var targetMethod = targetType.Methods.FirstOrDefault(m => m.IsConstructor && m.IsStatic);
             if (targetMethod != null)
             {
-                var methodReference = _module.Import(injector.GetType("IPA.Injector.Injector").Methods.First(m => m.Name == "Inject"));
+                var methodReference = _module.ImportReference(injector.GetType("IPA.Injector.Injector").Methods.First(m => m.Name == "Inject"));
                 targetMethod.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, methodReference));
                 return true;
             }
