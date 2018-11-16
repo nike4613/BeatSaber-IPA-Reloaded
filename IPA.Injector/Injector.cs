@@ -81,7 +81,7 @@ namespace IPA.Injector
                 if (m.IsRuntimeSpecialName && m.Name == ".cctor")
                     cctor = m;
 
-            var cbs = unityModDef.Import(((Action)CreateBootstrapper).Method);
+            var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
 
             if (cctor == null)
             {
