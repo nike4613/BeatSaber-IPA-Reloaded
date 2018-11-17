@@ -126,7 +126,7 @@ namespace CollectDependencies
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"{args[0]}({file.Item2}): error: {e}");
+                    Console.WriteLine($"{Path.Combine(Environment.CurrentDirectory, args[0])}({file.Item2}): error: {e}");
                 }
             }
 
