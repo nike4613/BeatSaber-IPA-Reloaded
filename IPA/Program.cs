@@ -120,7 +120,7 @@ namespace IPA
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("[Press any key to continue]");
                 Console.ResetColor();
-                Console.ReadLine();
+                Console.ReadKey();
             }
         }
 
