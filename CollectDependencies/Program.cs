@@ -10,21 +10,21 @@ namespace CollectDependencies
     {
         static void Main(string[] args)
         {
-            string depsfile = File.ReadAllText(args[0]);
-            string fdir = Path.GetDirectoryName(args[0]);
-            
-            List<string> files = new List<string>();
+            var depsFile = File.ReadAllText(args[0]);
+            var directoryName = Path.GetDirectoryName(args[0]);
+
+            var files = new List<Tuple<string, int>>();
             { // Create files from stuff in depsfile
-                Stack<string> fstack = new Stack<string>();
+                var stack = new Stack<string>();
 
                 void Push(string val)
                 {
                     string pre = "";
-                    if (fstack.Count > 0)
-                        pre = fstack.First();
-                    fstack.Push(pre + val);
+                    if (stack.Count > 0)
+                        pre = stack.First();
+                    stack.Push(pre + val);
                 }
-                string Pop() => fstack.Pop();
+                string Pop() => stack.Pop();
                 string Replace(string val)
                 {
                     var v2 = Pop();
@@ -32,7 +32,8 @@ namespace CollectDependencies
                     return v2;
                 }
 
-                foreach (var line in depsfile.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+                var lineNo = 0;
+                foreach (var line in depsFile.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
                 {
                     var parts = line.Split('"');
                     var path = parts.Last();
@@ -46,7 +47,7 @@ namespace CollectDependencies
                         var arglist = string.Join(" ", parts);
                         if (command == "from")
                         { // an "import" type command
-                            path = File.ReadAllText(Path.Combine(fdir ?? throw new InvalidOperationException(), arglist));
+                            path = File.ReadAllText(Path.Combine(directoryName ?? throw new InvalidOperationException(), arglist));
                         }
                         else if (command == "prompt")
                         {
@@ -60,59 +61,72 @@ namespace CollectDependencies
                         }
                     }
 
-                    if (level > fstack.Count - 1)
+                    if (level > stack.Count - 1)
                         Push(path);
-                    else if (level == fstack.Count - 1)
-                        files.Add(Replace(path));
-                    else if (level < fstack.Count - 1)
+                    else if (level == stack.Count - 1)
+                        files.Add(new Tuple<string, int>(Replace(path), lineNo));
+                    else if (level < stack.Count - 1)
                     {
-                        files.Add(Pop());
-                        while (level < fstack.Count)
+                        files.Add(new Tuple<string, int>(Pop(), lineNo));
+                        while (level < stack.Count)
                             Pop();
                         Push(path);
                     }
+
+                    lineNo++;
                 }
 
-                files.Add(Pop());
+                files.Add(new Tuple<string, int>(Pop(), lineNo));
             }
 
             foreach (var file in files)
             {
-                var fparts = file.Split('?');
-                var fname = fparts[0];
-
-                if (fname == "") continue;
-
-                var outp = Path.Combine(fdir ?? throw new InvalidOperationException(), Path.GetFileName(fname) ?? throw new InvalidOperationException());
-                Console.WriteLine($"Copying \"{fname}\" to \"{outp}\"");
-                if (File.Exists(outp)) File.Delete(outp);
-
-                if (Path.GetExtension(fname)?.ToLower() == ".dll")
+                try
                 {
-                    // ReSharper disable once StringLiteralTypo
-                    if (fparts.Length > 1 && fparts[1] == "virt")
+                    var fparts = file.Item1.Split('?');
+                    var fname = fparts[0];
+
+                    if (fname == "") continue;
+
+                    var outp = Path.Combine(directoryName ?? throw new InvalidOperationException(),
+                        Path.GetFileName(fname) ?? throw new InvalidOperationException());
+                    Console.WriteLine($"Copying \"{fname}\" to \"{outp}\"");
+                    if (File.Exists(outp)) File.Delete(outp);
+
+                    if (Path.GetExtension(fname)?.ToLower() == ".dll")
                     {
-                        var module = VirtualizedModule.Load(fname);
-                        module.Virtualize(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), Path.GetFileName(fname) ?? throw new InvalidOperationException()));
-                    }
-                    var modl = ModuleDefinition.ReadModule(fparts[0]);
-                    foreach (var t in modl.Types)
-                    {
-                        foreach (var m in t.Methods)
+                        // ReSharper disable once StringLiteralTypo
+                        if (fparts.Length > 1 && fparts[1] == "virt")
                         {
-                            if (m.Body != null)
+                            var module = VirtualizedModule.Load(fname);
+                            module.Virtualize(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(),
+                                Path.GetFileName(fname) ?? throw new InvalidOperationException()));
+                        }
+
+                        var modl = ModuleDefinition.ReadModule(fparts[0]);
+                        foreach (var t in modl.Types)
+                        {
+                            foreach (var m in t.Methods)
                             {
-                                m.Body.Instructions.Clear();
-                                m.Body.InitLocals = false;
-                                m.Body.Variables.Clear();
+                                if (m.Body != null)
+                                {
+                                    m.Body.Instructions.Clear();
+                                    m.Body.InitLocals = false;
+                                    m.Body.Variables.Clear();
+                                }
                             }
                         }
+
+                        modl.Write(outp);
                     }
-                    modl.Write(outp);
+                    else
+                    {
+                        File.Copy(fname, outp);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    File.Copy(fname, outp);
+                    Console.WriteLine($"{args[0]}({file.Item2}): error: {e}");
                 }
             }
 

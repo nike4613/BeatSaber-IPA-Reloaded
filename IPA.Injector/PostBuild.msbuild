@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <UsingTask TaskName="AssemblyRename" AssemblyFile="$(SolDir)MSBuildTasks\bin\$(Configuration)\MSBuildTasks.dll" />
+  <UsingTask TaskName="PdbToMdb" AssemblyFile="$(SolDir)MSBuildTasks\bin\$(Configuration)\MSBuildTasks.dll" />
   
   <Target Name="PostBuild">
     <Message Text="Relocating" Importance="normal" />
@@ -29,7 +30,9 @@
     
     <ItemGroup>
       <ToRename Include="$(OPath)Libs\**\*.dll" />
+      <ToMdb Include="$(OPath)**\*.pdb" />
     </ItemGroup>
     <AssemblyRename Assemblies="@(ToRename)" />
+    <PdbToMdb Binaries="@(ToMdb)" />
   </Target>
 </Project>

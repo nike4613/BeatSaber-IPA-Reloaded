@@ -58,7 +58,12 @@ namespace IPA.Injector
             #region Insert patch into UnityEngine.CoreModule.dll
             var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "UnityEngine.CoreModule.dll");
 
-            var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath);
+            var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
+            {
+                ReadWrite = false,
+                InMemory = true,
+                ReadingMode = ReadingMode.Immediate
+            });
             var unityModDef = unityAsmDef.MainModule;
 
             bool modified = false;

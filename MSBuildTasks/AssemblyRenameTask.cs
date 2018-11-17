@@ -42,12 +42,23 @@ namespace MSBuildTasks
                         var newFilen = $"{name}.{version}.dll";
                         var newFilePath = Path.Combine(Path.GetDirectoryName(assembly.ItemSpec) ?? throw new InvalidOperationException(), newFilen);
 
+                        module.Dispose();
+
                         Log.LogMessage(MessageImportance.Normal, $"Old file: {assembly.ItemSpec}, new file: {newFilePath}");
 
                         if (File.Exists(newFilePath))
                             File.Delete(newFilePath);
 
-                        File.Move(assembly.ItemSpec, newFilePath);
+                        Log.LogMessage(MessageImportance.Normal, "Moving");
+                        try
+                        {
+                            File.Move(assembly.ItemSpec, newFilePath);
+                        }
+                        catch (Exception)
+                        {
+                            File.Copy(assembly.ItemSpec, newFilePath);
+                            File.Delete(assembly.ItemSpec);
+                        }
                     }
                     catch (Exception e)
                     {

@@ -24,7 +24,17 @@ namespace IPA.Injector
 
         private void LoadModules()
         {
-            module = ModuleDefinition.ReadModule(file.FullName);
+            module = ModuleDefinition.ReadModule(file.FullName, new ReaderParameters
+            {
+                ReadWrite = false,
+                InMemory = true,
+                ReadingMode = ReadingMode.Immediate
+            });
+        }
+
+        ~VirtualizedModule()
+        {
+            module?.Dispose();
         }
         
         /// <summary>
