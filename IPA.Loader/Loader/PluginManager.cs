@@ -137,7 +137,6 @@ namespace IPA.Loader
             foreach (string s in originalPlugins)
             {
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
-                File.Copy(Path.Combine(pluginDirectory, s), pluginCopy);
 
                 #region Fix assemblies for refactor
 
@@ -182,7 +181,7 @@ namespace IPA.Loader
 
             var selfPlugin = new PluginInfo
             {
-                Filename = Path.Combine(Environment.CurrentDirectory, "IPA.exe"),
+                Filename = Path.Combine(BeatSaber.InstallPath, "IPA.exe"),
                 Plugin = SelfPlugin.Instance
             };
             selfPlugin.ModSaberInfo = selfPlugin.Plugin.ModInfo;
@@ -237,10 +236,10 @@ namespace IPA.Loader
                         T pluginInstance = Activator.CreateInstance(t) as T;
                         string[] filter = null;
 
-                        if (pluginInstance is IGenericEnhancedPlugin)
-                        {
-                            filter = ((IGenericEnhancedPlugin)pluginInstance).Filter;
-                        }
+                        if (typeof(T) == typeof(IPlugin) && pluginInstance is IEnhancedPlugin enhancedPlugin)
+                            filter = enhancedPlugin.Filter;
+                        else if (pluginInstance is IGenericEnhancedPlugin plugin)
+                            filter = plugin.Filter;
 
                         if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
                             return pluginInstance;
