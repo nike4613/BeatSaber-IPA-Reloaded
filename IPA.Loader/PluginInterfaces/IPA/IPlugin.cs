@@ -10,7 +10,6 @@ namespace IPA.Old
     [Obsolete("When building plugins for Beat Saber, use IBeatSaberPlugin")]
     public interface IPlugin
     {
-
         /// <summary>
         /// Gets the name of the plugin.
         /// </summary>
@@ -47,7 +46,6 @@ namespace IPA.Old
         /// Gets invoked on every graphic update.
         /// </summary>
         void OnUpdate();
-
 
         /// <summary>
         /// Gets invoked on ever physics update.

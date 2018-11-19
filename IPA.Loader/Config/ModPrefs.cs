@@ -103,7 +103,8 @@ namespace IPA.Config
         /// </summary>
         /// <param name="plugin">the plugin to get the preferences file for</param>
         public ModPrefs(IBeatSaberPlugin plugin) {
-            _instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "ModPrefs", $"{plugin.Name}.ini"));
+            _instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "ModPrefs",
+                $"{plugin.Name}.ini"));
             ModPrefss.Add(plugin, this);
         }
 
