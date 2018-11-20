@@ -49,9 +49,9 @@ namespace IPA.Logging
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
         public static LogLevel PrintFilter { get; set; }
-        private List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
+        private readonly List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
-        private Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
+        private readonly Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
         
         static StandardLogger()
         {
@@ -68,10 +68,10 @@ namespace IPA.Logging
                 new PluginSubLogPrinter(mainName, subName)
             };
 
-            if (_logThread == null || !_logThread.IsAlive)
+            if (logThread == null || !logThread.IsAlive)
             {
-                _logThread = new Thread(LogThread);
-                _logThread.Start();
+                logThread = new Thread(LogThread);
+                logThread.Start();
             }
         }
 
@@ -81,22 +81,22 @@ namespace IPA.Logging
 
             printers.Add(new PluginLogFilePrinter(name));
 
-            if (_logThread == null || !_logThread.IsAlive)
+            if (logThread == null || !logThread.IsAlive)
             {
-                _logThread = new Thread(LogThread);
-                _logThread.Start();
+                logThread = new Thread(LogThread);
+                logThread.Start();
             }
         }
 
         internal StandardLogger GetChild(string name)
         {
-            if (!children.TryGetValue(name, out StandardLogger chld))
+            if (!children.TryGetValue(name, out var child))
             {
-                chld = new StandardLogger(logName, name, printers.ToArray());
-                children.Add(name, chld);
+                child = new StandardLogger(logName, name, printers.ToArray());
+                children.Add(name, child);
             }
 
-            return chld;
+            return child;
         }
 
         /// <summary>
@@ -115,7 +115,10 @@ namespace IPA.Logging
         /// <param name="message">the message to log</param>
         public override void Log(Level level, string message)
         {
-            _logQueue.Add(new LogMessage
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            logQueue.Add(new LogMessage
             {
                 Level = level,
                 Message = message,
@@ -132,9 +135,12 @@ namespace IPA.Logging
         public override void Debug(string message)
         {
             // add source to message
-            var stackFrame = new StackTrace().GetFrame(1).GetMethod();
+            var stackFrame = new StackTrace().GetFrame(1);
+            var method = stackFrame.GetMethod();
+            var lineNo = stackFrame.GetFileLineNumber();
+            var lineOffs = stackFrame.GetFileColumnNumber();
             base.Debug(showSourceClass
-                ? $"{{{stackFrame.DeclaringType?.FullName}::{stackFrame.Name}}} {message}"
+                ? $"{{{method.DeclaringType?.FullName}::{method.Name}({lineNo}:{lineOffs})}} {message}"
                 : message);
         }
 
@@ -146,13 +152,13 @@ namespace IPA.Logging
             public DateTime Time;
         }
 
-        private static BlockingCollection<LogMessage> _logQueue = new BlockingCollection<LogMessage>();
-        private static Thread _logThread;
+        private static readonly BlockingCollection<LogMessage> logQueue = new BlockingCollection<LogMessage>();
+        private static Thread logThread;
 
         private static void LogThread()
         {
-            HashSet<LogPrinter> started = new HashSet<LogPrinter>();
-            while (_logQueue.TryTake(out LogMessage msg, Timeout.Infinite)) {
+            var started = new HashSet<LogPrinter>();
+            while (logQueue.TryTake(out var msg, Timeout.Infinite)) {
                 foreach (var printer in msg.Logger.printers)
                 {
                     try
@@ -170,11 +176,11 @@ namespace IPA.Logging
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"printer errored {e}");
+                        Console.WriteLine($"printer errored: {e}");
                     }
                 }
 
-                if (_logQueue.Count == 0)
+                if (logQueue.Count == 0)
                 {
                     foreach (var printer in started)
                     {
@@ -184,7 +190,7 @@ namespace IPA.Logging
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"printer errored {e}");
+                            Console.WriteLine($"printer errored: {e}");
                         }
                     }
                     started.Clear();
@@ -194,8 +200,8 @@ namespace IPA.Logging
 
         internal static void StopLogThread()
         {
-            _logQueue.CompleteAdding();
-            _logThread.Join();
+            logQueue.CompleteAdding();
+            logThread.Join();
         }
     }
 
@@ -212,9 +218,9 @@ namespace IPA.Logging
         /// <returns>the child logger</returns>
         public static Logger GetChildLogger(this Logger logger, string name)
         {
-            if (logger is StandardLogger)
+            if (logger is StandardLogger standardLogger)
             {
-                return (logger as StandardLogger).GetChild(name);
+                return standardLogger.GetChild(name);
             }
             else
             {
