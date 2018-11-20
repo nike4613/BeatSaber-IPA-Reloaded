@@ -119,8 +119,8 @@ namespace IPA.Logging
         /// A basic log function taking an exception to log.
         /// </summary>
         /// <param name="level">the level of the message</param>
-        /// <param name="exeption">the exception to log</param>
-        public virtual void Log(Level level, Exception exeption) => Log(level, exeption.ToString());
+        /// <param name="e">the exception to log</param>
+        public virtual void Log(Level level, Exception e) => Log(level, e.ToString());
         /// <summary>
         /// Sends a debug message. 
         /// Equivalent to Log(Level.Debug, message);
