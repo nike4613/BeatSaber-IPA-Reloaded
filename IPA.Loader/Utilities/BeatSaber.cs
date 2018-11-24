@@ -14,7 +14,7 @@ namespace IPA.Utilities
         /// <summary>
         /// Provides the current game version
         /// </summary>
-        public static Version GameVersion => _gameVersion ?? (_gameVersion = new Version(Application.version));
+        public static Version GameVersion => _gameVersion ?? (_gameVersion = new Version(Application.version, true));
 
         /// <summary>
         /// The different types of releases of the game.
