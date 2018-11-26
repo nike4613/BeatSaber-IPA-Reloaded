@@ -1,4 +1,6 @@
 ﻿using System;
+using Version = SemVer.Version;
+
 // ReSharper disable CheckNamespace
 
 namespace IPA
@@ -39,7 +41,9 @@ namespace IPA
             {
                 if (_currentVersion == null)
                 {
+                    var version = new Version(value); // check for valid version
                     _currentVersion = value;
+                    _semverVersion = version;
                 }
                 else
                 {
@@ -48,5 +52,7 @@ namespace IPA
             }
         }
         private string _currentVersion;
+
+        internal Version _semverVersion = null;
     }
 }

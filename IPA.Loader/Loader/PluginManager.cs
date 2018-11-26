@@ -188,7 +188,9 @@ namespace IPA.Loader
 
             _bsPlugins.Add(selfPlugin);
 
-            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(SelfConfigProvider = new JsonConfigProvider { Filename = Path.Combine("UserData", SelfPlugin.IPA_Name) }, new Ref<DateTime>(SelfConfigProvider.LastModified)));
+            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(
+                SelfConfigProvider = new JsonConfigProvider {Filename = Path.Combine("UserData", SelfPlugin.IPA_Name)},
+                new Ref<DateTime>(SelfConfigProvider.LastModified)));
             SelfConfigProvider.Load();
 
             //Load copied plugins

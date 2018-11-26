@@ -70,7 +70,7 @@ namespace IPA.Updating.ModSaber
             }
         }
 
-        private Dictionary<string, string> requestCache = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> requestCache = new Dictionary<string, string>();
         private IEnumerator GetModsaberEndpoint(string url, Ref<string> result)
         {
             if (requestCache.TryGetValue(url, out string value))
@@ -174,7 +174,7 @@ namespace IPA.Updating.ModSaber
                     var msinfo = plugin.ModSaberInfo;
                     depList.Value.Add(new DependencyObject {
                         Name = msinfo.InternalName,
-                        Version = new Version(msinfo.CurrentVersion),
+                        Version = msinfo._semverVersion,
                         Requirement = new Range($">={msinfo.CurrentVersion}"),
                         LocalPluginMeta = plugin
                     });
@@ -234,7 +234,7 @@ namespace IPA.Updating.ModSaber
                 }
                 else
                 {
-                    var toMod = final.Where(d => d.Name == dep.Name).First();
+                    var toMod = final.First(d => d.Name == dep.Name);
 
                     if (dep.Requirement != null)
                     {
@@ -244,10 +244,9 @@ namespace IPA.Updating.ModSaber
                     }
                     else if (dep.Conflicts != null)
                     {
-                        if (toMod.Conflicts == null)
-                            toMod.Conflicts = dep.Conflicts;
-                        else
-                            toMod.Conflicts = new Range($"{toMod.Conflicts} || {dep.Conflicts}"); // there should be a better way to do this
+                        toMod.Conflicts = toMod.Conflicts == null
+                            ? dep.Conflicts
+                            : new Range($"{toMod.Conflicts} || {dep.Conflicts}");
                     }
                 }
             }
