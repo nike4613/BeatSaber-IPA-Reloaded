@@ -174,7 +174,7 @@ namespace IPA.Updating.ModSaber
                     var msinfo = plugin.ModSaberInfo;
                     depList.Value.Add(new DependencyObject {
                         Name = msinfo.InternalName,
-                        Version = msinfo._semverVersion,
+                        Version = msinfo.SemverVersion,
                         Requirement = new Range($">={msinfo.CurrentVersion}"),
                         LocalPluginMeta = plugin
                     });

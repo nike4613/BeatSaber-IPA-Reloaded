@@ -43,7 +43,7 @@ namespace IPA
                 {
                     var version = new Version(value); // check for valid version
                     _currentVersion = value;
-                    _semverVersion = version;
+                    SemverVersion = version;
                 }
                 else
                 {
@@ -53,6 +53,6 @@ namespace IPA
         }
         private string _currentVersion;
 
-        internal Version _semverVersion = null;
+        internal Version SemverVersion;
     }
 }
