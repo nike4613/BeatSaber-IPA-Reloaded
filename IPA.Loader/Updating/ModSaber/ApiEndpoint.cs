@@ -13,7 +13,7 @@ namespace IPA.Updating.ModSaber
     {
         public const string ApiBase = "https://www.modsaber.org/";
         public const string GetModInfoEndpoint = "registry/{0}/{1}";
-        public const string GetModsWithSemver = "api/v1.0/mods/semver/{0}/{1}";
+        public const string GetModsWithSemver = "api/v1.1/mods/semver/{0}/{1}";
 
         class HexArrayConverter : JsonConverter
         {
@@ -36,10 +36,11 @@ namespace IPA.Updating.ModSaber
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Error parsing version string: {0}", reader.Value), ex);
+                        throw new Exception($"Error parsing version string: {reader.Value}", ex);
                     }
                 }
-                throw new Exception(string.Format("Unexpected token or value when parsing hex string. Token: {0}, Value: {1}", reader.TokenType, reader.Value));
+                throw new Exception(
+                    $"Unexpected token or value when parsing hex string. Token: {reader.TokenType}, Value: {reader.Value}");
             }
 
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -54,7 +55,7 @@ namespace IPA.Updating.ModSaber
                     {
                         throw new JsonSerializationException("Expected byte[] object value");
                     }
-                    writer.WriteValue(LoneFunctions.ByteArrayToString(value as byte[]));
+                    writer.WriteValue(LoneFunctions.ByteArrayToString((byte[]) value));
                 }
             }
         }
@@ -70,18 +71,58 @@ namespace IPA.Updating.ModSaber
              JsonConverter(typeof(SemverVersionConverter))]
             public Version Version;
 
-            [JsonProperty("approved")]
-            public bool Approved;
+            [Serializable]
+            public class AuthorType
+            {
+                [JsonProperty("name")]
+                public string Name;
+                [JsonProperty("id")]
+                public string Id;
 
-            [JsonProperty("title")]
-            public string Title;
+                public override string ToString() => Name;
+            }
+
+            [Serializable]
+            public class DetailsData
+            {
+                [JsonProperty("author")]
+                public AuthorType Author;
+                [JsonProperty("title")]
+                public string Title;
+                [JsonProperty("description")]
+                public string Description;
+                [JsonProperty("published")]
+                public string Published;
+            }
+
+            [JsonProperty("details")]
+            public DetailsData Details;
+
+            [Serializable]
+            public class ApprovalStatus
+            {
+                [JsonProperty("status")]
+                public bool Status;
+                [JsonProperty("modified")]
+                public string LastModified;
+            }
+
+            [JsonProperty("approval")]
+            public ApprovalStatus Approval;
+            
+            [Serializable]
+            public class GameVersionType
+            {
+                [JsonProperty("value"),
+                 JsonConverter(typeof(SemverVersionConverter))]
+                public Version Version;
+                [JsonProperty("manifest")]
+                public string Manifest;
+            }
 
             [JsonProperty("gameVersion"), 
              JsonConverter(typeof(SemverVersionConverter))]
-            public Version GameVersion;
-
-            [JsonProperty("author")]
-            public string Author;
+            public GameVersionType GameVersion;
 
 #pragma warning restore CS0649
             [Serializable]
@@ -97,10 +138,8 @@ namespace IPA.Updating.ModSaber
                 [JsonProperty("url")]
                 public string DownloadPath;
 
-                public override string ToString()
-                {
-                    return $"{LoneFunctions.ByteArrayToString(Hash)}@{DownloadPath}({string.Join(",",FileHashes.Select(o=>$"\"{o.Key}\":\"{LoneFunctions.ByteArrayToString(o.Value)}\""))})";
-                }
+                public override string ToString() =>
+                    $"{LoneFunctions.ByteArrayToString(Hash)}@{DownloadPath}({string.Join(",", FileHashes.Select(o => $"\"{o.Key}\":\"{LoneFunctions.ByteArrayToString(o.Value)}\""))})";
             }
 
             [Serializable]
@@ -122,18 +161,25 @@ namespace IPA.Updating.ModSaber
                 public Range VersionRange = null;
             }
 
-            [JsonProperty("dependsOn", ItemConverterType = typeof(ModSaberDependencyConverter))]
-            public Dependency[] Dependencies = new Dependency[0];
+            [Serializable]
+            public class LinksType
+            {
+                [JsonProperty("dependencies", ItemConverterType = typeof(ModSaberDependencyConverter))]
+                public Dependency[] Dependencies = new Dependency[0];
 
-            [JsonProperty("conflictsWith", ItemConverterType = typeof(ModSaberDependencyConverter))]
-            public Dependency[] Conflicts = new Dependency[0];
+                [JsonProperty("conflicts", ItemConverterType = typeof(ModSaberDependencyConverter))]
+                public Dependency[] Conflicts = new Dependency[0];
+            }
+
+            [JsonProperty("links")]
+            public LinksType Links;
 
             [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]
             public Version[] OldVersions = new Version[0];
 
             public override string ToString()
             {
-                return $"{{\"{Title} ({Name})\"v{Version} for {GameVersion} by {Author} with \"{Files.Steam}\" and \"{Files.Oculus}\"}}";
+                return $"{{\"{Details.Title} ({Name})\"v{Version} for {GameVersion.Version} by {Details.Author} with \"{Files.Steam}\" and \"{Files.Oculus}\"}}";
             }
         }
 

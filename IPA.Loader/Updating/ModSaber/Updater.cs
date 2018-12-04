@@ -218,8 +218,8 @@ namespace IPA.Updating.ModSaber
                     continue;
                 }
 
-                list.Value.AddRange(mod.Value.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
-                list.Value.AddRange(mod.Value.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
+                list.Value.AddRange(mod.Value.Links.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
+                list.Value.AddRange(mod.Value.Links.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
             }
 
             var depNames = new HashSet<string>();
@@ -278,7 +278,7 @@ namespace IPA.Updating.ModSaber
                 }
 
                 var ver = modsMatching.Value.Where(nullCheck => nullCheck != null)
-                    .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion && versionCheck.Approved)
+                    .Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion && versionCheck.Approval.Status)
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version))
                     .Select(mod => mod.Version).Max(); // (2.1)
                 // ReSharper disable once AssignmentInConditionalExpression
