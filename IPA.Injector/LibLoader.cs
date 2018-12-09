@@ -23,7 +23,9 @@ namespace IPA.Injector
                 filenameLocations = new Dictionary<string, string>();
 
                 foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
-                    filenameLocations.Add(fn.Name, fn.FullName);
+                    if (filenameLocations.ContainsKey(fn.Name))
+                        Log(Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
+                    else filenameLocations.Add(fn.Name, fn.FullName);
             }
 
             var testFile = $"{asmName.Name}.{asmName.Version}.dll";
