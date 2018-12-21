@@ -515,7 +515,7 @@ namespace IPA
             [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
             private static extern short GetKeyState(int keyCode);
 
-            private static KeyStates GetKeyState(Keys key)
+            private static KeyStates KeyState(Keys key)
             {
                 KeyStates state = KeyStates.None;
 
@@ -535,12 +535,12 @@ namespace IPA
 
             public static bool IsKeyDown(Keys key)
             {
-                return KeyStates.Down == (GetKeyState(key) & KeyStates.Down);
+                return KeyStates.Down == (KeyState(key) & KeyStates.Down);
             }
 
             public static bool IsKeyToggled(Keys key)
             {
-                return KeyStates.Toggled == (GetKeyState(key) & KeyStates.Toggled);
+                return KeyStates.Toggled == (KeyState(key) & KeyStates.Toggled);
             }
         }
     }
