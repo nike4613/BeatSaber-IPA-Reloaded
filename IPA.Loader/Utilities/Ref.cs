@@ -50,11 +50,31 @@ namespace IPA.Utilities
         }
 
         /// <summary>
+        /// Converts to referenced type, returning the stored reference.
+        /// </summary>
+        /// <param name="self">the object to be de-referenced</param>
+        /// <returns>the value referenced by the object</returns>
+        public static implicit operator T(Ref<T> self)
+        {
+            return self.Value;
+        }
+
+        /// <summary>
+        /// Converts a value T to a reference to that object. Will overwrite the reference in the left hand expression if there is one.
+        /// </summary>
+        /// <param name="toConvert">the value to wrap in the Ref</param>
+        /// <returns>the Ref wrapping the value</returns>
+        public static implicit operator Ref<T>(T toConvert)
+        {
+            return new Ref<T>(toConvert);
+        }
+
+        /// <summary>
         /// Throws error if one was set.
         /// </summary>
         public void Verify()
         {
-            if (Error != null) throw new Exception("Found error", Error);
+            if (Error != null) throw Error;
         }
     }
     
