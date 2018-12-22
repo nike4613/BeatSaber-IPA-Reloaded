@@ -4,8 +4,8 @@ namespace IPA.Updating
 {
     internal class SelfPlugin : IBeatSaberPlugin
     {
-        internal const string IPA_Name = "Beat Saber IPA";
-        internal const string IPA_Version = "3.11.6";
+        internal const string IPA_Name = "Beat Saber IPA - Builtin manifest support";
+        internal const string IPA_Version = "3.12.0";
 
         public static SelfPlugin Instance { get; set; } = new SelfPlugin();
 
