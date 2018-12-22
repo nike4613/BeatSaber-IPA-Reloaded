@@ -32,12 +32,12 @@ namespace IPA
         public static readonly ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n") { DocString = "doesn't wait for user input after the operation" };
         public static readonly ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s") { DocString = "uses value_ as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
         public static readonly ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l") { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
-        public static readonly ArgumentFlag ArgDestructive = new ArgumentFlag("--destructive", "-d") { DocString = "patches the game using the now outdated destructive methods" };
+        //public static readonly ArgumentFlag ArgDestructive = new ArgumentFlag("--destructive", "-d") { DocString = "patches the game using the now outdated destructive methods" };
 
         [STAThread]
         public static void Main(string[] args)
         {
-            Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch, ArgDestructive).Process();
+            Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch/*, ArgDestructive*/).Process();
 
             if (ArgHelp)
             {
@@ -139,132 +139,35 @@ namespace IPA
             try
             {
                 var backup = new BackupUnit(context);
+                
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("Restoring old version... ");
+                if (BackupManager.HasBackup(context))
+                    BackupManager.Restore(context);
 
-                if (ArgDestructive)
-                {
-                    #region Patch Version Check
+                var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
+                bool isFlat = Directory.Exists(nativePluginFolder) &&
+                              Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
+                bool force = !BackupManager.HasBackup(context) || ArgForce;
+                var architecture = DetectArchitecture(context.Executable);
 
-                    var patchedModule = PatchedModule.Load(context.EngineFile);
-#if DEBUG
-                    var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) >= 0;
-#else
-                    var isCurrentNewer = Version.CompareTo(patchedModule.Data.Version) > 0;
-#endif
-                    Console.WriteLine($"Current: {Version} Patched: {patchedModule.Data.Version}");
-                    if (isCurrentNewer)
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine(
-                            $"Preparing for update, {(patchedModule.Data.Version == null ? "UnPatched" : patchedModule.Data.Version.ToString())} => {Version}");
-                        Console.WriteLine("--- Starting ---");
-                        Revert(context);
-                        Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("Installing files... ");
 
-                        #region File Copying
-
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.WriteLine("Updating files... ");
-                        var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
-                        bool isFlat = Directory.Exists(nativePluginFolder) &&
-                                      Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
-                        bool force = !BackupManager.HasBackup(context) || ArgForce;
-                        var architecture = DetectArchitecture(context.Executable);
-
-                        Console.WriteLine("Architecture: {0}", architecture);
-
-                        CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
-                            backup,
-                            (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                                architecture));
-                        CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
-                            backup,
-                            (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                                architecture));
-
-                        Console.WriteLine("Successfully updated files!");
-
-                        #endregion
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Files up to date @ Version {Version}!");
-                        Console.ResetColor();
-                    }
-
-                    #endregion
-
-                    #region Patching
-
-                    if (!patchedModule.Data.IsPatched || isCurrentNewer)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"Patching UnityEngine.dll with Version {Application.ProductVersion}... ");
-                        backup.Add(context.EngineFile);
-                        patchedModule.Patch(Version);
-                        Console.WriteLine("Done!");
-                        Console.ResetColor();
-                    }
-
-                    #endregion
-
-                    #region Creating shortcut
-                    if (!File.Exists(context.ShortcutPath))
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        Console.WriteLine("Creating shortcut to IPA ({0})... ", context.IPA);
-                        try
-                        {
-                            Shortcut.Create(
-                                fileName: context.ShortcutPath,
-                                targetPath: context.IPA,
-                                arguments: Args(context.Executable, "-ln"),
-                                workingDirectory: context.ProjectRoot,
-                                description: "Launches the game and makes sure it's in a patched state",
-                                hotkey: "",
-                                iconPath: context.Executable
-                            );
-                        }
-                        catch (Exception)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Error.WriteLine("Failed to create shortcut, but game was patched!");
-                        }
-                        Console.ResetColor();
-                    }
-                    #endregion
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("Restoring old version... ");
-                    if (BackupManager.HasBackup(context))
-                        BackupManager.Restore(context);
-
-                    var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
-                    bool isFlat = Directory.Exists(nativePluginFolder) &&
-                                  Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
-                    bool force = !BackupManager.HasBackup(context) || ArgForce;
-                    var architecture = DetectArchitecture(context.Executable);
-
-                    Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.WriteLine("Installing files... ");
-
-                    CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
-                        backup,
-                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                            architecture));
-                    CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
-                        backup,
-                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                            architecture));
-                    CopyAll(new DirectoryInfo(context.IPARoot), new DirectoryInfo(context.ProjectRoot), force,
-                        backup,
-                        null, false);
+                CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
+                    backup,
+                    (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
+                        architecture));
+                CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
+                    backup,
+                    (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
+                        architecture));
+                CopyAll(new DirectoryInfo(context.IPARoot), new DirectoryInfo(context.ProjectRoot), force,
+                    backup,
+                    null, false);
 
                     //backup.Add(context.AssemblyFile);
                     //backup.Add(context.EngineFile);
-                }
 
                 #region Create Plugin Folder
 
@@ -274,24 +177,6 @@ namespace IPA
                     Console.WriteLine("Creating plugins folder... ");
                     Directory.CreateDirectory(context.PluginsFolder);
                     Console.ResetColor();
-                }
-
-                #endregion
-
-                #region Virtualizing
-
-                if (ArgDestructive && File.Exists(context.AssemblyFile))
-                {
-                    var virtualizedModule = VirtualizedModule.Load(context.AssemblyFile);
-                    if (!virtualizedModule.IsVirtualized)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Virtualizing Assembly-Csharp.dll... ");
-                        backup.Add(context.AssemblyFile);
-                        virtualizedModule.Virtualize();
-                        Console.WriteLine("Done!");
-                        Console.ResetColor();
-                    }
                 }
 
                 #endregion
