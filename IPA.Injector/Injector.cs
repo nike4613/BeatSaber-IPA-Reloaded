@@ -14,7 +14,6 @@ using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class Injector
     {
         // ReSharper disable once UnusedParameter.Global
@@ -163,19 +162,6 @@ namespace IPA.Injector
             
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
-        }
-
-        private static bool _injected;
-        public static void Inject()
-        {
-            if (!_injected)
-            {
-                _injected = true;
-                WinConsole.Initialize();
-                SetupLibraryLoading();
-                var bootstrapper = new GameObject("Bootstrapper").AddComponent<Bootstrapper>();
-                bootstrapper.Destroyed += Bootstrapper_Destroyed;
-            }
         }
 
         private static bool _loadingDone;

@@ -120,8 +120,7 @@ namespace IPA.Updating.ModSaber
                 public string Manifest;
             }
 
-            [JsonProperty("gameVersion"), 
-             JsonConverter(typeof(SemverVersionConverter))]
+            [JsonProperty("gameVersion")]
             public GameVersionType GameVersion;
 
 #pragma warning restore CS0649
