@@ -4,7 +4,6 @@ using IPA.Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +13,7 @@ using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
 {
+    // ReSharper disable once UnusedMember.Global
     public static class Injector
     {
         // ReSharper disable once UnusedParameter.Global

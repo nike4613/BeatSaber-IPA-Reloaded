@@ -59,6 +59,7 @@
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
+    <Compile Include="Loader\PluginLoader.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
