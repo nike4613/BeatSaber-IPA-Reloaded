@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
@@ -16,6 +17,8 @@ namespace IPA.Injector
     // ReSharper disable once UnusedMember.Global
     public static class Injector
     {
+        private static Task pluginAsyncLoadTask;
+
         // ReSharper disable once UnusedParameter.Global
         public static void Main(string[] args)
         { // entry point for doorstop
@@ -36,6 +39,8 @@ namespace IPA.Injector
                 InstallBootstrapPatch();
 
                 Updates.InstallPendingUpdates();
+
+                pluginAsyncLoadTask = PluginLoader.LoadTask();
             }
             catch (Exception e)
             {
@@ -170,28 +175,16 @@ namespace IPA.Injector
         {
             if (_loadingDone) return;
             _loadingDone = true;
-            #region Add Library load locations
             AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
-            /*try
-            {
-                if (!SetDllDirectory(LibLoader.NativeDir))
-                {
-                    libLoader.Warn("Unable to add native library path to load path");
-                }
-            }
-            catch (Exception) { }*/
-            #endregion
         }
-
-/*
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetDllDirectory(string lpPathName);
-*/
-
+        
         private static void Bootstrapper_Destroyed()
         {
-            PluginComponent.Create();
+            // wait for plugins to finish loading
+            pluginAsyncLoadTask.Wait();
+            log.Debug("Plugins loaded");
+            log.Debug(string.Join(", ", PluginLoader.PluginsMetadata));
+            //PluginComponent.Create();
         }
     }
 }

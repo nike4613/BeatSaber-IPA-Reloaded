@@ -13,8 +13,10 @@ using IPA.Old;
 using IPA.Updating;
 using IPA.Utilities;
 using Mono.Cecil;
+using SemVer;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
+using static IPA.Loader.PluginLoader;
 
 namespace IPA.Loader
 {
@@ -25,18 +27,7 @@ namespace IPA.Loader
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
         
-        /// <summary>
-        /// A container object for all the data relating to a plugin.
-        /// </summary>
-        public class PluginInfo
-        {
-            internal IBeatSaberPlugin Plugin { get; set; }
-            internal string Filename { get; set; }
-            /// <summary>
-            /// The ModSaber updating info for the mod, or null.
-            /// </summary>
-            public ModsaberModInfo ModSaberInfo { get; internal set; }
-        }
+        
 
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
@@ -82,7 +73,7 @@ namespace IPA.Loader
         /// <returns>the plugin info for the requested plugin or null</returns>
         public static PluginInfo GetPluginFromModSaberName(string name)
         {
-            return BSMetas.FirstOrDefault(p => p.ModSaberInfo.InternalName == name);
+            return BSMetas.FirstOrDefault(p => p.Metadata.Id == name);
         }
         
         /// <summary>
@@ -136,6 +127,7 @@ namespace IPA.Loader
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
             foreach (string s in originalPlugins)
             {
+                if (PluginLoader.PluginsMetadata.Select(m => m.File.Name).Contains(s)) continue;
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
 
                 #region Fix assemblies for refactor
@@ -184,7 +176,16 @@ namespace IPA.Loader
                 Filename = Path.Combine(BeatSaber.InstallPath, "IPA.exe"),
                 Plugin = SelfPlugin.Instance
             };
-            selfPlugin.ModSaberInfo = selfPlugin.Plugin.ModInfo;
+            selfPlugin.Metadata.Manifest = new PluginManifest
+            {
+                Author = "DaNike",
+                Features = new string[0],
+                Description = "",
+                Version = new SemVer.Version(SelfPlugin.IPA_Version),
+                GameVersion = BeatSaber.GameVersion,
+                Id = "beatsaber-ipa-reloaded"
+            };
+            selfPlugin.Metadata.File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe"));
 
             _bsPlugins.Add(selfPlugin);
 
@@ -236,15 +237,15 @@ namespace IPA.Loader
                     try
                     {
                         T pluginInstance = Activator.CreateInstance(t) as T;
-                        string[] filter = null;
+                        /*string[] filter = null;
 
                         if (typeof(T) == typeof(IPlugin) && pluginInstance is IEnhancedPlugin enhancedPlugin)
                             filter = enhancedPlugin.Filter;
                         else if (pluginInstance is IGenericEnhancedPlugin plugin)
-                            filter = plugin.Filter;
+                            filter = plugin.Filter;*/
 
-                        if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
-                            return pluginInstance;
+                        //if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
+                        return pluginInstance;
                     }
                     catch (Exception e)
                     {
@@ -310,7 +311,7 @@ namespace IPA.Loader
                             {
                                 Plugin = bsPlugin,
                                 Filename = file.Replace("\\.cache", ""), // quick and dirty fix
-                                ModSaberInfo = bsPlugin.ModInfo
+                                //ModSaberInfo = bsPlugin.ModInfo
                             });
                         }
                         catch (AmbiguousMatchException)

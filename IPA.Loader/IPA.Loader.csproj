@@ -60,6 +60,7 @@
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
     <Compile Include="Loader\PluginLoader.cs" />
+    <Compile Include="Loader\PluginManifest.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
@@ -71,9 +72,9 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogPrinter.cs" />
     <Compile Include="Config\ModPrefs.cs" />
-    <Compile Include="Updating\Converters\ModSaberDependencyConverter.cs" />
-    <Compile Include="Updating\Converters\SemverRangeConverter.cs" />
-    <Compile Include="Updating\Converters\SemverVersionConverter.cs" />
+    <Compile Include="JsonConverters\ModSaberDependencyConverter.cs" />
+    <Compile Include="JsonConverters\SemverRangeConverter.cs" />
+    <Compile Include="JsonConverters\SemverVersionConverter.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
     <Compile Include="Utilities\Ref.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />

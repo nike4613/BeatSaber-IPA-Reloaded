@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IPA.Updating.Converters;
+using IPA.JsonConverters;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SemVer;
