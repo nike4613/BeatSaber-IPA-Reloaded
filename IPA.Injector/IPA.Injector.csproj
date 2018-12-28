@@ -89,6 +89,9 @@
       <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Libraries\Mono\Mono.Debugger.Soft.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Mono.Unofficial.pdb2mdb">

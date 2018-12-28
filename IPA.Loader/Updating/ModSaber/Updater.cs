@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using IPA.Loader;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SemVer;
@@ -62,7 +63,7 @@ namespace IPA.Updating.ModSaber
 
             public bool MetaRequestFailed { get; set; }
 
-            public PluginInfo LocalPluginMeta { get; set; }
+            public PluginLoader.PluginInfo LocalPluginMeta { get; set; }
 
             public override string ToString()
             {
@@ -169,13 +170,13 @@ namespace IPA.Updating.ModSaber
 
             foreach (var plugin in BSMetas)
             { // initialize with data to resolve (1.1)
-                if (plugin.ModSaberInfo != null)
+                if (plugin.Metadata.Id != null)
                 { // updatable
-                    var msinfo = plugin.ModSaberInfo;
+                    var msinfo = plugin.Metadata;
                     depList.Value.Add(new DependencyObject {
-                        Name = msinfo.InternalName,
-                        Version = msinfo.SemverVersion,
-                        Requirement = new Range($">={msinfo.CurrentVersion}"),
+                        Name = msinfo.Id,
+                        Version = msinfo.Version,
+                        Requirement = new Range($">={msinfo.Version}"),
                         LocalPluginMeta = plugin
                     });
                 }
