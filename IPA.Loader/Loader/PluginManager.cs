@@ -13,7 +13,6 @@ using IPA.Old;
 using IPA.Updating;
 using IPA.Utilities;
 using Mono.Cecil;
-using SemVer;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using static IPA.Loader.PluginLoader;
@@ -127,7 +126,7 @@ namespace IPA.Loader
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
             foreach (string s in originalPlugins)
             {
-                if (PluginLoader.PluginsMetadata.Select(m => m.File.Name).Contains(s)) continue;
+                if (PluginsMetadata.Select(m => m.File.Name).Contains(s)) continue;
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
 
                 #region Fix assemblies for refactor
@@ -198,7 +197,7 @@ namespace IPA.Loader
             string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
             foreach (string s in copiedPlugins)
             {
-                var result = LoadPluginsFromFile(s, exeName);
+                var result = LoadPluginsFromFile(s);
                 _bsPlugins.AddRange(result.Item1);
                 _ipaPlugins.AddRange(result.Item2);
             }
@@ -221,7 +220,7 @@ namespace IPA.Loader
             Logger.log.Info("-----------------------------");
         }
 
-        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
+        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file)
         {
             List<PluginInfo> bsPlugins = new List<PluginInfo>();
             List<IPlugin> ipaPlugins = new List<IPlugin>();

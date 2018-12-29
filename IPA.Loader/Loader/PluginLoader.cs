@@ -24,7 +24,9 @@ namespace IPA.Loader
         internal static Task LoadTask() => Task.Run(() =>
         {
             LoadMetadata();
+            Logger.log.Debug(string.Join(", ", PluginsMetadata));
             Resolve();
+            Logger.log.Debug(string.Join(", ", PluginsMetadata));
             ComputeLoadOrder();
         });
 
@@ -79,7 +81,7 @@ namespace IPA.Loader
             }
 
             /// <inheritdoc />
-            public override string ToString() => $"{Name}({Id}@{Version})({PluginType.AssemblyQualifiedName}) from '{File.Name}'";
+            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.AssemblyQualifiedName}) from '{File.Name}'";
         }
 
         /// <summary>
@@ -101,7 +103,32 @@ namespace IPA.Loader
         {
             string[] plugins = Directory.GetFiles(PluginsDirectory, "*.dll");
 
-            Assembly.ReflectionOnlyLoadFrom(Assembly.GetExecutingAssembly().Location); // load self as reflection only
+            try
+            {
+                var selfmeta = new PluginMetadata
+                {
+                    Assembly = Assembly.ReflectionOnlyLoadFrom(Assembly.GetExecutingAssembly()
+                        .Location), // load self as reflection only
+                    File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe")),
+                    PluginType = null
+                };
+
+                string manifest;
+                using (var manifestReader =
+                    new StreamReader(
+                        selfmeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ??
+                        throw new InvalidOperationException()))
+                    manifest = manifestReader.ReadToEnd();
+
+                selfmeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+
+                PluginsMetadata.Add(selfmeta);
+            }
+            catch (Exception e)
+            {
+                Logger.loader.Critical("Error loading own manifest");
+                Logger.loader.Critical(e);
+            }
 
             foreach (var plugin in plugins)
             { // should probably do patching first /shrug
@@ -134,7 +161,7 @@ namespace IPA.Loader
 
                     if (metadata.PluginType == null)
                     {
-                        Logger.log.Warn($"Could not find plugin type for {Path.GetFileName(plugin)}");
+                        Logger.loader.Warn($"Could not find plugin type for {Path.GetFileName(plugin)}");
                         continue;
                     }
 
@@ -144,13 +171,13 @@ namespace IPA.Loader
                         metadataStream = assembly.GetManifestResourceStream(metadata.PluginType, "manifest.json");
                         if (metadataStream == null)
                         {
-                            Logger.log.Error($"manifest.json not found in plugin {Path.GetFileName(plugin)}");
+                            Logger.loader.Error($"manifest.json not found in plugin {Path.GetFileName(plugin)}");
                             continue;
                         }
                     }
                     catch (FileNotFoundException)
                     {
-                        Logger.log.Error($"manifest.json not found in plugin {Path.GetFileName(plugin)}");
+                        Logger.loader.Error($"manifest.json not found in plugin {Path.GetFileName(plugin)}");
                         continue;
                     }
 
@@ -164,8 +191,8 @@ namespace IPA.Loader
                 }
                 catch (Exception e)
                 {
-                    Logger.log.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
-                    Logger.log.Error(e);
+                    Logger.loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
+                    Logger.loader.Error(e);
                 }
             }
         }
@@ -173,7 +200,7 @@ namespace IPA.Loader
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
-
+            
             var ids = new HashSet<string>();
             var ignore = new HashSet<PluginMetadata>();
             var resolved = new List<PluginMetadata>(PluginsMetadata.Count);
@@ -183,7 +210,8 @@ namespace IPA.Loader
                 {
                     if (ids.Contains(meta.Id))
                     {
-                        Logger.log.Warn($"Found duplicates of {meta.Id}, using newest");
+                        Logger.loader.Warn($"Found duplicates of {meta.Id}, using newest");
+                        ignore.Add(meta);
                         continue; // because of sorted order, hightest order will always be the first one
                     }
 
@@ -196,27 +224,24 @@ namespace IPA.Loader
                             processedLater = true;
                             continue;
                         }
-                        if (meta2.Manifest.Conflicts.ContainsKey(meta.Id))
+
+                        if (!meta2.Manifest.Conflicts.ContainsKey(meta.Id)) continue;
+
+                        var range = meta2.Manifest.Conflicts[meta.Id];
+                        if (!range.IsSatisfied(meta.Version)) continue;
+
+                        Logger.loader.Warn($"{meta.Id}@{meta.Version} conflicts with {meta2.Name}");
+
+                        if (processedLater)
                         {
-                            var range = meta2.Manifest.Conflicts[meta.Id];
-                            if (range.IsSatisfied(meta.Version))
-                            {
-                                //TODO: actually choose the one most depended on
-
-                                Logger.log.Warn($"{meta.Id}@{meta.Version} conflicts with {meta2.Name}");
-
-                                if (processedLater)
-                                {
-                                    Logger.log.Warn($"Ignoring {meta2.Name}");
-                                    ignore.Add(meta2);
-                                }
-                                else
-                                {
-                                    Logger.log.Warn($"Ignoring {meta.Name}");
-                                    ignore.Add(meta);
-                                    break;
-                                }
-                            }
+                            Logger.loader.Warn($"Ignoring {meta2.Name}");
+                            ignore.Add(meta2);
+                        }
+                        else
+                        {
+                            Logger.loader.Warn($"Ignoring {meta.Name}");
+                            ignore.Add(meta);
+                            break;
                         }
                     }
                 }
@@ -237,17 +262,41 @@ namespace IPA.Loader
                 if (a.Id == b.Id) return 0;
                 if (a.Id != null)
                 {
-                    if (b.Manifest.Dependencies.ContainsKey(a.Id) || b.Manifest.LoadAfter.Contains(a.Id)) return 1;
-                    if (b.Manifest.LoadBefore.Contains(a.Id)) return -1;
+                    if (b.Manifest.Dependencies.ContainsKey(a.Id) || b.Manifest.LoadAfter.Contains(a.Id)) return -1;
+                    if (b.Manifest.LoadBefore.Contains(a.Id)) return 1;
                 }
                 if (b.Id != null)
                 {
-                    if (a.Manifest.Dependencies.ContainsKey(b.Id) || a.Manifest.LoadAfter.Contains(b.Id)) return -1;
-                    if (a.Manifest.LoadBefore.Contains(b.Id)) return 1;
+                    if (a.Manifest.Dependencies.ContainsKey(b.Id) || a.Manifest.LoadAfter.Contains(b.Id)) return 1;
+                    if (a.Manifest.LoadBefore.Contains(b.Id)) return -1;
                 }
 
                 return 0;
             });
+            Logger.log.Debug(string.Join(", ", PluginsMetadata));
+
+            var metadata = new List<PluginMetadata>();
+            var pluginsToLoad = new Dictionary<string, Version>();
+            foreach (var meta in PluginsMetadata)
+            {
+                bool load = true;
+                foreach (var dep in meta.Manifest.Dependencies)
+                {
+                    if (pluginsToLoad.ContainsKey(dep.Key) && dep.Value.IsSatisfied(pluginsToLoad[dep.Key])) continue;
+
+                    load = false;
+                    Logger.loader.Warn($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
+                }
+
+                if (load)
+                {
+                    metadata.Add(meta);
+                    if (meta.Id != null)
+                        pluginsToLoad.Add(meta.Id, meta.Version);
+                }
+            }
+
+            PluginsMetadata = metadata;
         }
 
         internal static void LoadPlugins()
