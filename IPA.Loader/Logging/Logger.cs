@@ -107,6 +107,11 @@ namespace IPA.Logging
             /// Shows all messages.
             /// </summary>
             All = DebugOnly | InfoUp,
+
+            /// <summary>
+            /// Used for when the level is undefined.
+            /// </summary>
+            Undefined = Byte.MaxValue
         }
 
         /// <summary>

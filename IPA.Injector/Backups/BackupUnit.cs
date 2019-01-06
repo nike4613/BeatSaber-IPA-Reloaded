@@ -1,5 +1,4 @@
-﻿using IPA.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -68,7 +67,7 @@ namespace IPA.Injector.Backups
         /// <param name="file"></param>
         public void Add(FileInfo file)
         {
-            var relativePath = LoneFunctions.GetRelativePath(file.FullName, Environment.CurrentDirectory);
+            var relativePath = Utilities.LoneFunctions.GetRelativePath(file.FullName, Environment.CurrentDirectory);
             var backupPath = new FileInfo(Path.Combine(_backupPath.FullName, relativePath));
             
             // Copy over
