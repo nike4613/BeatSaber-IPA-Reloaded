@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using IPA.Config;
 using UnityEngine;
 using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
@@ -33,6 +34,8 @@ namespace IPA.Injector
                     WinConsole.Initialize();
 
                 SetupLibraryLoading();
+
+                SelfConfig.Set();
 
                 loader.Debug("Prepping bootstrapper");
                 
@@ -184,7 +187,7 @@ namespace IPA.Injector
             pluginAsyncLoadTask.Wait();
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata));
-            //PluginComponent.Create();
+            PluginComponent.Create();
         }
     }
 }

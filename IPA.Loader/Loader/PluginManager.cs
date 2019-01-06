@@ -94,8 +94,6 @@ namespace IPA.Loader
 
         internal static IConfigProvider SelfConfigProvider { get; set; }
 
-        internal static readonly List<KeyValuePair<IConfigProvider,Ref<DateTime>>> configProviders = new List<KeyValuePair<IConfigProvider, Ref<DateTime>>>();
-
         private static void LoadPlugins()
         {
             string pluginDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
@@ -180,18 +178,13 @@ namespace IPA.Loader
                 Author = "DaNike",
                 Features = new string[0],
                 Description = "",
-                Version = new SemVer.Version(SelfPlugin.IPA_Version),
+                Version = new SemVer.Version(SelfConfig.IPA_Version),
                 GameVersion = BeatSaber.GameVersion,
                 Id = "beatsaber-ipa-reloaded"
             };
             selfPlugin.Metadata.File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe"));
 
             _bsPlugins.Add(selfPlugin);
-
-            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(
-                SelfConfigProvider = new JsonConfigProvider {Filename = Path.Combine("UserData", SelfPlugin.IPA_Name)},
-                new Ref<DateTime>(SelfConfigProvider.LastModified)));
-            SelfConfigProvider.Load();
 
             //Load copied plugins
             string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
@@ -294,7 +287,7 @@ namespace IPA.Loader
                                         if (cfgProvider == null)
                                         {
                                             cfgProvider = new JsonConfigProvider { Filename = Path.Combine("UserData", $"{bsPlugin.Name}") };
-                                            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(cfgProvider, new Ref<DateTime>(cfgProvider.LastModified)));
+                                            //configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(cfgProvider, new Ref<DateTime>(cfgProvider.LastModified)));
                                             cfgProvider.Load();
                                         }
                                         initArgs.Add(cfgProvider);

@@ -1,5 +1,4 @@
 ﻿using IPA.Loader.Composite;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,9 +23,9 @@ namespace IPA.Loader
             DontDestroyOnLoad(gameObject);
 
             bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
-#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable 618
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
-#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore 618
 
             gameObject.AddComponent<Updating.ModSaber.Updater>();
 
@@ -37,23 +36,15 @@ namespace IPA.Loader
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-            foreach (var provider in PluginManager.configProviders)
-                if (provider.Key.HasChanged)
-                    try
-                    {
-                        provider.Key.Save();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.log.Error("Error when trying to save config");
-                        Logging.Logger.log.Error(e);
-                    }
+            Config.Config.Save();
         }
 
         void Update()
         {
             bsPlugins.OnUpdate();
             ipaPlugins.OnUpdate();
+
+            Config.Config.Update();
         }
 
         void LateUpdate()
@@ -61,32 +52,7 @@ namespace IPA.Loader
             bsPlugins.OnLateUpdate();
             ipaPlugins.OnLateUpdate();
 
-            foreach (var provider in PluginManager.configProviders)
-            {
-                if (provider.Key.HasChanged)
-                    try
-                    {
-                        provider.Key.Save();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.log.Error("Error when trying to save config");
-                        Logging.Logger.log.Error(e);
-                    }
-                else if (provider.Key.LastModified > provider.Value.Value)
-                {
-                    try
-                    {
-                        provider.Key.Load(); // auto reload if it changes
-                        provider.Value.Value = provider.Key.LastModified;
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.log.Error("Error when trying to load config");
-                        Logging.Logger.log.Error(e);
-                    }
-                }
-            }
+            //Config.Config.Update();
         }
 
         void FixedUpdate()
@@ -112,17 +78,7 @@ namespace IPA.Loader
             bsPlugins.OnApplicationQuit();
             ipaPlugins.OnApplicationQuit();
 
-            foreach (var provider in PluginManager.configProviders)
-                if (provider.Key.HasChanged)
-                    try
-                    {
-                        provider.Key.Save();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.log.Error("Error when trying to save config");
-                        Logging.Logger.log.Error(e);
-                    }
+            Config.Config.Save();
 
             quitting = true;
         }

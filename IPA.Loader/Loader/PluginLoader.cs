@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using IPA.Config;
 using IPA.Logging;
 using IPA.Utilities;
 using Newtonsoft.Json;
@@ -16,17 +17,10 @@ namespace IPA.Loader
     /// </summary>
     public class PluginLoader
     {
-        /// <summary>
-        /// The directory to load plugins from.
-        /// </summary>
-        public static string PluginsDirectory => Path.Combine(BeatSaber.InstallPath, "Plugins");
-
         internal static Task LoadTask() => Task.Run(() =>
         {
             LoadMetadata();
-            Logger.log.Debug(string.Join(", ", PluginsMetadata));
             Resolve();
-            Logger.log.Debug(string.Join(", ", PluginsMetadata));
             ComputeLoadOrder();
         });
 
@@ -81,7 +75,7 @@ namespace IPA.Loader
             }
 
             /// <inheritdoc />
-            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.AssemblyQualifiedName}) from '{File.Name}'";
+            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.AssemblyQualifiedName}) from '{LoneFunctions.GetRelativePath(File.FullName, BeatSaber.InstallPath)}'";
         }
 
         /// <summary>
@@ -101,7 +95,7 @@ namespace IPA.Loader
 
         internal static void LoadMetadata()
         {
-            string[] plugins = Directory.GetFiles(PluginsDirectory, "*.dll");
+            string[] plugins = Directory.GetFiles(BeatSaber.PluginsPath, "*.dll");
 
             try
             {
@@ -273,7 +267,6 @@ namespace IPA.Loader
 
                 return 0;
             });
-            Logger.log.Debug(string.Join(", ", PluginsMetadata));
 
             var metadata = new List<PluginMetadata>();
             var pluginsToLoad = new Dictionary<string, Version>();
@@ -302,6 +295,76 @@ namespace IPA.Loader
         internal static void LoadPlugins()
         {
 
+        }
+
+        internal static PluginInfo LoadPlugin(PluginMetadata meta)
+        {
+            var info = new PluginInfo();
+
+            try
+            {
+                Logger.loader.Debug(meta.Assembly.GetName().ToString());
+                meta.Assembly = Assembly.Load(meta.Assembly.GetName());
+
+                var type = meta.PluginType;
+                var instance = (IBeatSaberPlugin)Activator.CreateInstance(type);
+
+                info.Metadata = meta;
+                info.Filename = meta.File.FullName;
+                info.Plugin = instance;
+
+                { 
+                    var init = type.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
+                    if (init != null)
+                    {
+                        var initArgs = new List<object>();
+                        var initParams = init.GetParameters();
+
+                        Logger modLogger = null;
+                        IModPrefs modPrefs = null;
+                        IConfigProvider cfgProvider = null;
+
+                        foreach (var param in initParams)
+                        {
+                            var ptype = param.ParameterType;
+                            if (ptype.IsAssignableFrom(typeof(Logger)))
+                            {
+                                if (modLogger == null) modLogger = new StandardLogger(meta.Name);
+                                initArgs.Add(modLogger);
+                            }
+                            else if (ptype.IsAssignableFrom(typeof(IModPrefs)))
+                            {
+                                if (modPrefs == null) modPrefs = new ModPrefs(instance);
+                                initArgs.Add(modPrefs);
+                            }
+                            else if (ptype.IsAssignableFrom(typeof(IConfigProvider)))
+                            {
+                                if (cfgProvider == null)
+                                {
+                                    cfgProvider = Config.Config.GetProviderFor(Path.Combine("UserData", $"{meta.Name}"), param);
+                                }
+                                initArgs.Add(cfgProvider);
+                            }
+                            else
+                                initArgs.Add(ptype.GetDefault());
+                        }
+
+                        init.Invoke(instance, initArgs.ToArray());
+                    }
+                }
+            }
+            catch (AmbiguousMatchException)
+            {
+                Logger.loader.Error($"Only one Init allowed per plugin (ambiguous match in {meta.Name})");
+                return null;
+            }
+            catch (Exception e)
+            {
+                Logger.loader.Error($"Could not init plugin {meta.Name}: {e}");
+                return null;
+            }
+
+            return info;
         }
     }
 }

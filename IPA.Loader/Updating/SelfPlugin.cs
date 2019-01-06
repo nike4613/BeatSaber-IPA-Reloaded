@@ -1,21 +1,21 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System;
+using IPA.Config;
+using UnityEngine.SceneManagement;
 
 namespace IPA.Updating
 {
+    [Obsolete("Only used for old updating system, replaced with a PluginMeta for teh embedded manifest")]
     internal class SelfPlugin : IBeatSaberPlugin
     {
-        internal const string IPA_Name = "Beat Saber IPA - Builtin manifest support";
-        internal const string IPA_Version = "3.12.0";
-
         public static SelfPlugin Instance { get; set; } = new SelfPlugin();
 
-        public string Name => IPA_Name;
+        public string Name => SelfConfig.IPA_Name;
 
-        public string Version => IPA_Version;
+        public string Version => SelfConfig.IPA_Version;
 
         public ModsaberModInfo ModInfo => new ModsaberModInfo
         {
-            CurrentVersion = IPA_Version,
+            CurrentVersion = SelfConfig.IPA_Version,
             InternalName = "beatsaber-ipa-reloaded"
         };
 

@@ -44,25 +44,25 @@ namespace IPA.Logging
         };
 
         private readonly string logName;
-        private static readonly bool showSourceClass;
+        private static bool showSourceClass;
+
         /// <summary>
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
-        public static LogLevel PrintFilter { get; set; }
+        public static LogLevel PrintFilter { get; set; } = LogLevel.All;
         private readonly List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
 
         private readonly Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
         
-        static StandardLogger()
+        internal static void Configure(SelfConfig cfg)
         {
-            showSourceClass = ModPrefs.GetBool("IPA", "DebugShowCallSource", false, true);
-            PrintFilter = ModPrefs.GetBool("IPA", "PrintDebug", false, true) ? LogLevel.All : LogLevel.InfoUp;
+            showSourceClass = cfg.Debug.ShowCallSource;
+            PrintFilter = cfg.Debug.ShowDebug ? LogLevel.All : LogLevel.InfoUp;
         }
 
         private StandardLogger(string mainName, string subName, params LogPrinter[] inherited)
         {
             logName = $"{mainName}/{subName}";
-
             printers = new List<LogPrinter>(inherited)
             {
                 new PluginSubLogPrinter(mainName, subName)
@@ -78,7 +78,6 @@ namespace IPA.Logging
         internal StandardLogger(string name)
         {
             logName = name;
-
             printers.Add(new PluginLogFilePrinter(name));
 
             if (logThread == null || !logThread.IsAlive)
@@ -219,13 +218,9 @@ namespace IPA.Logging
         public static Logger GetChildLogger(this Logger logger, string name)
         {
             if (logger is StandardLogger standardLogger)
-            {
                 return standardLogger.GetChild(name);
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            throw new InvalidOperationException();
         }
     }
 }
