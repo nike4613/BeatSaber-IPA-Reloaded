@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using IPA.Config;
 using IPA.Logging;
 using IPA.Utilities;
+using Mono.Cecil;
 using Newtonsoft.Json;
 using Version = SemVer.Version;
 
@@ -29,16 +30,14 @@ namespace IPA.Loader
         /// </summary>
         public class PluginMetadata
         {
-            //TODO: rework this to load using Mono.Cecil to prevent multiples of each module being loaded into memory
-            // ReSharper disable once UnusedAutoPropertyAccessor.Global
             /// <summary>
             /// The assembly the plugin was loaded from.
             /// </summary>
             public Assembly Assembly { get; internal set; }
             /// <summary>
-            /// The Type that is the main type for the plugin.
+            /// The TypeDefinition for the main type of the plugin.
             /// </summary>
-            public Type PluginType { get; internal set; }
+            public TypeDefinition PluginType { get; internal set; }
             /// <summary>
             /// The human readable name of the plugin.
             /// </summary>
@@ -76,7 +75,7 @@ namespace IPA.Loader
             }
 
             /// <inheritdoc />
-            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.AssemblyQualifiedName}) from '{LoneFunctions.GetRelativePath(File.FullName, BeatSaber.InstallPath)}'";
+            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{LoneFunctions.GetRelativePath(File?.FullName, BeatSaber.InstallPath)}'";
         }
 
         /// <summary>
@@ -99,10 +98,9 @@ namespace IPA.Loader
 
             try
             {
-                var selfmeta = new PluginMetadata
+                var selfMeta = new PluginMetadata
                 {
-                    Assembly = Assembly.ReflectionOnlyLoadFrom(Assembly.GetExecutingAssembly()
-                        .Location), // load self as reflection only
+                    Assembly = Assembly.GetExecutingAssembly(),
                     File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe")),
                     PluginType = null
                 };
@@ -110,13 +108,13 @@ namespace IPA.Loader
                 string manifest;
                 using (var manifestReader =
                     new StreamReader(
-                        selfmeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ??
+                        selfMeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ??
                         throw new InvalidOperationException()))
                     manifest = manifestReader.ReadToEnd();
 
-                selfmeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                selfMeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
 
-                PluginsMetadata.Add(selfmeta);
+                PluginsMetadata.Add(selfMeta);
             }
             catch (Exception e)
             {
@@ -125,32 +123,35 @@ namespace IPA.Loader
             }
 
             foreach (var plugin in plugins)
-            { // should probably do patching first /shrug
+            {
                 try
                 {
-                    var metadata = new PluginMetadata();
-
-                    var assembly = Assembly.ReflectionOnlyLoadFrom(plugin);
-                    metadata.Assembly = assembly;
-                    metadata.File = new FileInfo(plugin);
-
-                    Type[] types;
-                    try
+                    var metadata = new PluginMetadata
                     {
-                        types = assembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException e)
-                    {
-                        types = e.Types;
-                    }
-                    foreach (var type in types)
-                    {
-                        if (type == null) continue;
+                        File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, plugin))
+                    };
 
-                        var iInterface = type.GetInterface(nameof(IBeatSaberPlugin));
-                        if (iInterface == null) continue;
-                        metadata.PluginType = type;
-                        break;
+                    var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
+                    {
+                       ReadingMode = ReadingMode.Immediate,
+                       ReadWrite = false
+                    }).MainModule;
+
+                    var iBeatSaberPlugin = pluginModule.ImportReference(typeof(IBeatSaberPlugin));
+                    foreach (var type in pluginModule.Types)
+                    {
+                        foreach (var inter in type.Interfaces)
+                        {
+                            var ifType = inter.InterfaceType;
+
+                            if (iBeatSaberPlugin.FullName == ifType.FullName)
+                            {
+                                metadata.PluginType = type;
+                                break;
+                            }
+                        }
+
+                        if (metadata.PluginType != null) break;
                     }
 
                     if (metadata.PluginType == null)
@@ -159,27 +160,18 @@ namespace IPA.Loader
                         continue;
                     }
 
-                    Stream metadataStream;
-                    try
+                    foreach (var resource in pluginModule.Resources)
                     {
-                        metadataStream = assembly.GetManifestResourceStream(metadata.PluginType, "manifest.json");
-                        if (metadataStream == null)
-                        {
-                            Logger.loader.Error($"manifest.json not found in plugin {Path.GetFileName(plugin)}");
-                            continue;
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Logger.loader.Error($"manifest.json not found in plugin {Path.GetFileName(plugin)}");
-                        continue;
-                    }
+                        if (!(resource is EmbeddedResource embedded) ||
+                            embedded.Name != $"{metadata.PluginType.Namespace}.manifest.json") continue;
 
-                    string manifest;
-                    using (var manifestReader = new StreamReader(metadataStream))
-                        manifest = manifestReader.ReadToEnd();
+                        string manifest;
+                        using (var manifestReader = new StreamReader(embedded.GetResourceStream()))
+                            manifest = manifestReader.ReadToEnd();
 
-                    metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                        metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                        break;
+                    }
 
                     PluginsMetadata.Add(metadata);
                 }
@@ -312,10 +304,10 @@ namespace IPA.Loader
 
             try
             {
-                Logger.loader.Debug(meta.Assembly.GetName().ToString());
-                meta.Assembly = Assembly.Load(meta.Assembly.GetName());
+                Logger.loader.Debug(meta.File.FullName);
+                meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
 
-                var type = meta.PluginType;
+                var type = meta.Assembly.GetType(meta.PluginType.FullName);
                 var instance = (IBeatSaberPlugin)Activator.CreateInstance(type);
 
                 info.Metadata = meta;
@@ -334,18 +326,18 @@ namespace IPA.Loader
 
                         foreach (var param in initParams)
                         {
-                            var ptype = param.ParameterType;
-                            if (ptype.IsAssignableFrom(typeof(Logger)))
+                            var paramType = param.ParameterType;
+                            if (paramType.IsAssignableFrom(typeof(Logger)))
                             {
                                 if (modLogger == null) modLogger = new StandardLogger(meta.Name);
                                 initArgs.Add(modLogger);
                             }
-                            else if (ptype.IsAssignableFrom(typeof(IModPrefs)))
+                            else if (paramType.IsAssignableFrom(typeof(IModPrefs)))
                             {
                                 if (modPrefs == null) modPrefs = new ModPrefs(instance);
                                 initArgs.Add(modPrefs);
                             }
-                            else if (ptype.IsAssignableFrom(typeof(IConfigProvider)))
+                            else if (paramType.IsAssignableFrom(typeof(IConfigProvider)))
                             {
                                 if (cfgProvider == null)
                                 {
@@ -354,7 +346,7 @@ namespace IPA.Loader
                                 initArgs.Add(cfgProvider);
                             }
                             else
-                                initArgs.Add(ptype.GetDefault());
+                                initArgs.Add(paramType.GetDefault());
                         }
 
                         init.Invoke(instance, initArgs.ToArray());
