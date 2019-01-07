@@ -511,7 +511,7 @@ namespace IPA.Updating.ModSaber
                                 FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
-                                if (LoneFunctions.GetRelativePath(targetFile.FullName, targetDir) == LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Filename, BeatSaber.InstallPath))
+                                if (LoneFunctions.GetRelativePath(targetFile.FullName, targetDir) == LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 /*if (targetFile.Exists)
@@ -530,7 +530,7 @@ namespace IPA.Updating.ModSaber
                 }
                 
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta.Filename, BeatSaber.InstallPath) });
+                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
@@ -549,7 +549,7 @@ namespace IPA.Updating.ModSaber
                 if (File.Exists(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile));
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = item.LocalPluginMeta.Filename,
+                    FileName = item.LocalPluginMeta?.Metadata.File.FullName,
                     Arguments = $"-nw={Process.GetCurrentProcess().Id}",
                     UseShellExecute = false
                 });

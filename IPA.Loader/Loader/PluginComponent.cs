@@ -1,5 +1,6 @@
 ﻿using IPA.Loader.Composite;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 // ReSharper disable UnusedMember.Local
@@ -22,7 +23,7 @@ namespace IPA.Loader
         {
             DontDestroyOnLoad(gameObject);
 
-            bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins);
+            bsPlugins = new CompositeBSPlugin(PluginManager.BSPlugins.Where(p => p != null));
 #pragma warning disable 618
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
