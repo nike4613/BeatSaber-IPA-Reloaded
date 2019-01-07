@@ -29,6 +29,7 @@ namespace IPA.Loader
         /// </summary>
         public class PluginMetadata
         {
+            //TODO: rework this to load using Mono.Cecil to prevent multiples of each module being loaded into memory
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             /// <summary>
             /// The assembly the plugin was loaded from.
@@ -84,7 +85,6 @@ namespace IPA.Loader
         public class PluginInfo
         {
             internal IBeatSaberPlugin Plugin { get; set; }
-            internal string Filename { get; set; }
             /// <summary>
             /// Metadata for the plugin.
             /// </summary>
@@ -292,13 +292,22 @@ namespace IPA.Loader
             PluginsMetadata = metadata;
         }
 
-        internal static void LoadPlugins()
+        internal static List<PluginInfo> LoadPlugins()
         {
+            var list = PluginsMetadata.Select(LoadPlugin).Where(p => p != null).ToList();
 
+            return list;
         }
 
         internal static PluginInfo LoadPlugin(PluginMetadata meta)
         {
+            if (meta.PluginType == null)
+                return new PluginInfo()
+                {
+                    Metadata = meta,
+                    Plugin = null
+                };
+
             var info = new PluginInfo();
 
             try
@@ -310,7 +319,6 @@ namespace IPA.Loader
                 var instance = (IBeatSaberPlugin)Activator.CreateInstance(type);
 
                 info.Metadata = meta;
-                info.Filename = meta.File.FullName;
                 info.Plugin = instance;
 
                 { 
