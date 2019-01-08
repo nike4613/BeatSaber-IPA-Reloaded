@@ -128,8 +128,8 @@ namespace IPA.Config
             return GetProviderFor(filename, prefs);
         }
 
-        private static SortedDictionary<IConfigProvider, Action> linkedProviders =
-            new SortedDictionary<IConfigProvider, Action>();
+        private static Dictionary<IConfigProvider, Action> linkedProviders =
+            new Dictionary<IConfigProvider, Action>();
 
         /// <summary>
         /// Creates a linked <see cref="Ref{T}"/> for the config provider. This <see cref="Ref{T}"/> will be automatically updated whenever the file on-disk changes.

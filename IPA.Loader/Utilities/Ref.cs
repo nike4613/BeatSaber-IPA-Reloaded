@@ -8,7 +8,7 @@ namespace IPA.Utilities
     /// A class to store a reference for passing to methods which cannot take ref parameters.
     /// </summary>
     /// <typeparam name="T">the type of the value</typeparam>
-    public class Ref<T>
+    public class Ref<T> : IComparable<T>, IComparable<Ref<T>>
     {
         private T _value;
         /// <summary>
@@ -75,6 +75,20 @@ namespace IPA.Utilities
         public void Verify()
         {
             if (Error != null) throw Error;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(T other)
+        {
+            if (Value is IComparable<T> compare)
+                return compare.CompareTo(other);
+            return Equals(Value, other) ? 0 : -1;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(Ref<T> other)
+        {
+            return CompareTo(other.Value);
         }
     }
     
