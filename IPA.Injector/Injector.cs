@@ -51,6 +51,13 @@ namespace IPA.Injector
             }
         }
 
+        private static void SetupLibraryLoading()
+        {
+            if (_loadingDone) return;
+            _loadingDone = true;
+            AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
+        }
+
         private static void InstallBootstrapPatch()
         {
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
@@ -62,93 +69,103 @@ namespace IPA.Injector
                 loader.Warn("No backup found! Was BSIPA installed using the installer?");
 
             loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
+
             #region Insert patch into UnityEngine.CoreModule.dll
-            var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "UnityEngine.CoreModule.dll");
-
-            var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
             {
-                ReadWrite = false,
-                InMemory = true,
-                ReadingMode = ReadingMode.Immediate
-            });
-            var unityModDef = unityAsmDef.MainModule;
+                var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
+                    "UnityEngine.CoreModule.dll");
 
-            bool modified = false;
-            foreach (var asmref in unityModDef.AssemblyReferences)
-            {
-                if (asmref.Name == cAsmName.Name)
+                var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
                 {
-                    if (asmref.Version != cAsmName.Version)
+                    ReadWrite = false,
+                    InMemory = true,
+                    ReadingMode = ReadingMode.Immediate
+                });
+                var unityModDef = unityAsmDef.MainModule;
+
+                bool modified = false;
+                foreach (var asmref in unityModDef.AssemblyReferences)
+                {
+                    if (asmref.Name == cAsmName.Name)
                     {
-                        asmref.Version = cAsmName.Version;
-                        modified = true;
+                        if (asmref.Version != cAsmName.Version)
+                        {
+                            asmref.Version = cAsmName.Version;
+                            modified = true;
+                        }
                     }
                 }
-            }
 
-            var application = unityModDef.GetType("UnityEngine", "Application");
+                var application = unityModDef.GetType("UnityEngine", "Application");
 
-            MethodDefinition cctor = null;
-            foreach (var m in application.Methods)
-                if (m.IsRuntimeSpecialName && m.Name == ".cctor")
-                    cctor = m;
+                MethodDefinition cctor = null;
+                foreach (var m in application.Methods)
+                    if (m.IsRuntimeSpecialName && m.Name == ".cctor")
+                        cctor = m;
 
-            var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
+                var cbs = unityModDef.ImportReference(((Action) CreateBootstrapper).Method);
 
-            if (cctor == null)
-            {
-                cctor = new MethodDefinition(".cctor", MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName, unityModDef.TypeSystem.Void);
-                application.Methods.Add(cctor);
-                modified = true;
-
-                var ilp = cctor.Body.GetILProcessor();
-                ilp.Emit(OpCodes.Call, cbs);
-                ilp.Emit(OpCodes.Ret);
-            }
-            else
-            {
-                var ilp = cctor.Body.GetILProcessor();
-                for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
+                if (cctor == null)
                 {
-                    var ins = cctor.Body.Instructions[i];
-                    switch (i)
+                    cctor = new MethodDefinition(".cctor",
+                        MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName,
+                        unityModDef.TypeSystem.Void);
+                    application.Methods.Add(cctor);
+                    modified = true;
+
+                    var ilp = cctor.Body.GetILProcessor();
+                    ilp.Emit(OpCodes.Call, cbs);
+                    ilp.Emit(OpCodes.Ret);
+                }
+                else
+                {
+                    var ilp = cctor.Body.GetILProcessor();
+                    for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
                     {
-                        case 0 when ins.OpCode != OpCodes.Call:
-                            ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                            modified = true;
-                            break;
-                        case 0:
+                        var ins = cctor.Body.Instructions[i];
+                        switch (i)
                         {
-                            var methodRef = ins.Operand as MethodReference;
-                            if (methodRef?.FullName != cbs.FullName)
-                            {
+                            case 0 when ins.OpCode != OpCodes.Call:
                                 ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
                                 modified = true;
-                            }
+                                break;
+                            case 0:
+                            {
+                                var methodRef = ins.Operand as MethodReference;
+                                if (methodRef?.FullName != cbs.FullName)
+                                {
+                                    ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                                    modified = true;
+                                }
 
-                            break;
+                                break;
+                            }
+                            case 1 when ins.OpCode != OpCodes.Ret:
+                                ilp.Replace(ins, ilp.Create(OpCodes.Ret));
+                                modified = true;
+                                break;
                         }
-                        case 1 when ins.OpCode != OpCodes.Ret:
-                            ilp.Replace(ins, ilp.Create(OpCodes.Ret));
-                            modified = true;
-                            break;
                     }
                 }
-            }
 
-            if (modified)
-            {
-                bkp?.Add(unityPath);
-                unityAsmDef.Write(unityPath);
+                if (modified)
+                {
+                    bkp?.Add(unityPath);
+                    unityAsmDef.Write(unityPath);
+                }
             }
             #endregion
 
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
+
             #region Virtualize Assembly-CSharp.dll
-            var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "Assembly-CSharp.dll");
-            
-            var ascModule = VirtualizedModule.Load(ascPath);
-            ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+            {
+                var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
+                    "Assembly-CSharp.dll");
+
+                var ascModule = VirtualizedModule.Load(ascPath);
+                ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+            }
             #endregion
         }
 
@@ -173,14 +190,6 @@ namespace IPA.Injector
         }
 
         private static bool _loadingDone;
-
-        private static void SetupLibraryLoading()
-        {
-            if (_loadingDone) return;
-            _loadingDone = true;
-            AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
-        }
-        
         private static void Bootstrapper_Destroyed()
         {
             // wait for plugins to finish loading

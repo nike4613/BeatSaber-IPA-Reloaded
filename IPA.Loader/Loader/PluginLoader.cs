@@ -284,13 +284,6 @@ namespace IPA.Loader
             PluginsMetadata = metadata;
         }
 
-        internal static List<PluginInfo> LoadPlugins()
-        {
-            var list = PluginsMetadata.Select(LoadPlugin).Where(p => p != null).ToList();
-
-            return list;
-        }
-
         internal static PluginInfo LoadPlugin(PluginMetadata meta)
         {
             if (meta.PluginType == null)
@@ -313,7 +306,7 @@ namespace IPA.Loader
                 info.Metadata = meta;
                 info.Plugin = instance;
 
-                { 
+                {
                     var init = type.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
                     if (init != null)
                     {
@@ -342,6 +335,7 @@ namespace IPA.Loader
                                 if (cfgProvider == null)
                                 {
                                     cfgProvider = Config.Config.GetProviderFor(Path.Combine("UserData", $"{meta.Name}"), param);
+                                    cfgProvider.Load();
                                 }
                                 initArgs.Add(cfgProvider);
                             }
@@ -365,6 +359,13 @@ namespace IPA.Loader
             }
 
             return info;
+        }
+
+        internal static List<PluginInfo> LoadPlugins()
+        {
+            var list = PluginsMetadata.Select(LoadPlugin).Where(p => p != null).ToList();
+
+            return list;
         }
     }
 }
