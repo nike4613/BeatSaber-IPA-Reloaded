@@ -1,14 +1,15 @@
-﻿using System;
+﻿using IPA.Config;
+using IPA.Loader.Features;
+using IPA.Logging;
+using IPA.Utilities;
+using Mono.Cecil;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using IPA.Config;
-using IPA.Logging;
-using IPA.Utilities;
-using Mono.Cecil;
-using Newtonsoft.Json;
 using Version = SemVer.Version;
 
 namespace IPA.Loader
@@ -34,33 +35,42 @@ namespace IPA.Loader
             /// The assembly the plugin was loaded from.
             /// </summary>
             public Assembly Assembly { get; internal set; }
+
             /// <summary>
             /// The TypeDefinition for the main type of the plugin.
             /// </summary>
             public TypeDefinition PluginType { get; internal set; }
+
             /// <summary>
             /// The human readable name of the plugin.
             /// </summary>
             public string Name { get; internal set; }
+
             /// <summary>
             /// The ModSaber ID of the plugin, or null if it doesn't have one.
             /// </summary>
             public string Id { get; internal set; }
+
             /// <summary>
             /// The version of the plugin.
             /// </summary>
             public Version Version { get; internal set; }
+
             /// <summary>
             /// The file the plugin was loaded from.
             /// </summary>
             public FileInfo File { get; internal set; }
+
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             /// <summary>
             /// The features this plugin requests.
             /// </summary>
-            public string[] Features { get; internal set; }
+            public IReadOnlyList<Feature> Features => InternalFeatures;
+
+            internal List<Feature> InternalFeatures = new List<Feature>();
 
             private PluginManifest manifest;
+
             internal PluginManifest Manifest
             {
                 get => manifest;
@@ -70,7 +80,6 @@ namespace IPA.Loader
                     Name = value.Name;
                     Version = value.Version;
                     Id = value.Id;
-                    Features = value.Features;
                 }
             }
 
@@ -84,6 +93,7 @@ namespace IPA.Loader
         public class PluginInfo
         {
             internal IBeatSaberPlugin Plugin { get; set; }
+
             /// <summary>
             /// Metadata for the plugin.
             /// </summary>
@@ -133,8 +143,8 @@ namespace IPA.Loader
 
                     var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
                     {
-                       ReadingMode = ReadingMode.Immediate,
-                       ReadWrite = false
+                        ReadingMode = ReadingMode.Immediate,
+                        ReadWrite = false
                     }).MainModule;
 
                     var iBeatSaberPlugin = pluginModule.ImportReference(typeof(IBeatSaberPlugin));
@@ -186,7 +196,7 @@ namespace IPA.Loader
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
-            
+
             var ids = new HashSet<string>();
             var ignore = new HashSet<PluginMetadata>();
             var resolved = new List<PluginMetadata>(PluginsMetadata.Count);
@@ -284,7 +294,13 @@ namespace IPA.Loader
             PluginsMetadata = metadata;
         }
 
-        internal static PluginInfo LoadPlugin(PluginMetadata meta)
+        internal static void Load(PluginMetadata meta)
+        {
+            if (meta.Assembly == null)
+                meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
+        }
+
+        internal static PluginInfo InitPlugin(PluginMetadata meta)
         {
             if (meta.PluginType == null)
                 return new PluginInfo()
@@ -297,8 +313,7 @@ namespace IPA.Loader
 
             try
             {
-                Logger.loader.Debug(meta.File.FullName);
-                meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
+                Load(meta);
 
                 var type = meta.Assembly.GetType(meta.PluginType.FullName);
                 var instance = (IBeatSaberPlugin)Activator.CreateInstance(type);
@@ -361,11 +376,6 @@ namespace IPA.Loader
             return info;
         }
 
-        internal static List<PluginInfo> LoadPlugins()
-        {
-            var list = PluginsMetadata.Select(LoadPlugin).Where(p => p != null).ToList();
-
-            return list;
-        }
+        internal static List<PluginInfo> LoadPlugins() => PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
     }
 }
