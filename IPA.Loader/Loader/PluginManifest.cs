@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using IPA.JsonConverters;
+﻿using IPA.JsonConverters;
 using Newtonsoft.Json;
 using SemVer;
+using System.Collections.Generic;
 
 namespace IPA.Loader
 {
@@ -24,7 +24,7 @@ namespace IPA.Loader
 
         [JsonProperty("author", Required = Required.Always)]
         public string Author;
-        
+
         [JsonProperty("dependsOn", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
         public Dictionary<string, Range> Dependencies = new Dictionary<string, Range>();
 

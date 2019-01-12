@@ -1,5 +1,5 @@
-﻿using System;
-using IPA.Config;
+﻿using IPA.Config;
+using System;
 using UnityEngine.SceneManagement;
 
 namespace IPA.Updating

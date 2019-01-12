@@ -1,4 +1,5 @@
-﻿using IPA.Injector.Backups;
+﻿using IPA.Config;
+using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using Mono.Cecil;
@@ -8,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using IPA.Config;
 using UnityEngine;
 using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
@@ -24,8 +24,8 @@ namespace IPA.Injector
         public static void Main(string[] args)
         { // entry point for doorstop
           // At this point, literally nothing but mscorlib is loaded,
-          // and since this class doesn't have any static fields that 
-          // aren't defined in mscorlib, we can control exactly what 
+          // and since this class doesn't have any static fields that
+          // aren't defined in mscorlib, we can control exactly what
           // gets loaded.
 
             try
@@ -38,7 +38,7 @@ namespace IPA.Injector
                 SelfConfig.Set();
 
                 loader.Debug("Prepping bootstrapper");
-                
+
                 InstallBootstrapPatch();
 
                 Updates.InstallPendingUpdates();
@@ -63,7 +63,7 @@ namespace IPA.Injector
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
 
             loader.Debug("Finding backup");
-            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA","Backups","Beat Saber");
+            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", "Beat Saber");
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
                 loader.Warn("No backup found! Was BSIPA installed using the installer?");
@@ -71,6 +71,7 @@ namespace IPA.Injector
             loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
 
             #region Insert patch into UnityEngine.CoreModule.dll
+
             {
                 var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
                     "UnityEngine.CoreModule.dll");
@@ -103,7 +104,7 @@ namespace IPA.Injector
                     if (m.IsRuntimeSpecialName && m.Name == ".cctor")
                         cctor = m;
 
-                var cbs = unityModDef.ImportReference(((Action) CreateBootstrapper).Method);
+                var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
 
                 if (cctor == null)
                 {
@@ -129,17 +130,18 @@ namespace IPA.Injector
                                 ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
                                 modified = true;
                                 break;
-                            case 0:
-                            {
-                                var methodRef = ins.Operand as MethodReference;
-                                if (methodRef?.FullName != cbs.FullName)
-                                {
-                                    ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                                    modified = true;
-                                }
 
-                                break;
-                            }
+                            case 0:
+                                {
+                                    var methodRef = ins.Operand as MethodReference;
+                                    if (methodRef?.FullName != cbs.FullName)
+                                    {
+                                        ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                                        modified = true;
+                                    }
+
+                                    break;
+                                }
                             case 1 when ins.OpCode != OpCodes.Ret:
                                 ilp.Replace(ins, ilp.Create(OpCodes.Ret));
                                 modified = true;
@@ -154,11 +156,13 @@ namespace IPA.Injector
                     unityAsmDef.Write(unityPath);
                 }
             }
-            #endregion
+
+            #endregion Insert patch into UnityEngine.CoreModule.dll
 
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
 
             #region Virtualize Assembly-CSharp.dll
+
             {
                 var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
                     "Assembly-CSharp.dll");
@@ -166,10 +170,12 @@ namespace IPA.Injector
                 var ascModule = VirtualizedModule.Load(ascPath);
                 ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
             }
-            #endregion
+
+            #endregion Virtualize Assembly-CSharp.dll
         }
 
         private static bool _bootstrapped;
+
         private static void CreateBootstrapper()
         {
             if (_bootstrapped) return;
@@ -184,12 +190,13 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             WinConsole.InitializeStreams();
-            
+
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
 
         private static bool _loadingDone;
+
         private static void Bootstrapper_Destroyed()
         {
             // wait for plugins to finish loading

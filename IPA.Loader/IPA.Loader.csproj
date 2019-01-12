@@ -61,6 +61,7 @@
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
+    <Compile Include="Loader\Features\Feature.cs" />
     <Compile Include="Loader\PluginLoader.cs" />
     <Compile Include="Loader\PluginManifest.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />

@@ -1,6 +1,6 @@
-﻿using System.IO;
-using IPA.Logging;
+﻿using IPA.Logging;
 using IPA.Utilities;
+using System.IO;
 
 namespace IPA.Config
 {
@@ -28,6 +28,7 @@ namespace IPA.Config
         }
 
         public static Ref<SelfConfig> SelfConfigRef;
+
         public static void Set()
         {
             LoaderConfig = Config.GetProviderFor(Path.Combine("UserData", IPA_Name), "toml", "json");
@@ -43,6 +44,7 @@ namespace IPA.Config
             public bool ShowCallSource = false;
             public bool ShowDebug = false;
         }
+
         public DebugObject Debug = new DebugObject();
     }
 }

@@ -51,6 +51,10 @@ namespace IPA.Logging
             new GlobalLogFilePrinter()
         };
 
+        /// <summary>
+        /// Adds to the default printer pool that all printers inherit from. Printers added this way will be passed every message from every logger.
+        /// </summary>
+        /// <param name="printer"></param>
         internal static void AddDefaultPrinter(LogPrinter printer)
         {
             defaultPrinters.Add(printer);
@@ -63,11 +67,16 @@ namespace IPA.Logging
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
         public static LogLevel PrintFilter { get; set; } = LogLevel.All;
+
         private readonly List<LogPrinter> printers = new List<LogPrinter>();
         private readonly StandardLogger parent;
 
         private readonly Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
-        
+
+        /// <summary>
+        /// Configures internal debug settings based on the config passed in.
+        /// </summary>
+        /// <param name="cfg"></param>
         internal static void Configure(SelfConfig cfg)
         {
             showSourceClass = cfg.Debug.ShowCallSource;
@@ -102,6 +111,11 @@ namespace IPA.Logging
             }
         }
 
+        /// <summary>
+        /// Gets a child printer with the given name, either constructing a new one or using one that was already made.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>a child <see cref="StandardLogger"/> with the given sub-name</returns>
         internal StandardLogger GetChild(string name)
         {
             if (!children.TryGetValue(name, out var child))
@@ -140,7 +154,7 @@ namespace IPA.Logging
                 Time = DateTime.Now
             });
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// An override to <see cref="M:IPA.Logging.Logger.Debug(System.String)" /> which shows the method that called it.
@@ -169,6 +183,9 @@ namespace IPA.Logging
         private static readonly BlockingCollection<LogMessage> logQueue = new BlockingCollection<LogMessage>();
         private static Thread logThread;
 
+        /// <summary>
+        /// The log printer thread for <see cref="StandardLogger"/>.
+        /// </summary>
         private static void LogThread()
         {
             var started = new HashSet<LogPrinter>();
@@ -222,6 +239,9 @@ namespace IPA.Logging
             }
         }
 
+        /// <summary>
+        /// Stops and joins the log printer thread.
+        /// </summary>
         internal static void StopLogThread()
         {
             logQueue.CompleteAdding();
