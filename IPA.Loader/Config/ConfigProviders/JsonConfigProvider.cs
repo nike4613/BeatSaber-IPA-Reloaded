@@ -1,10 +1,10 @@
-﻿using System;
+﻿using IPA.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using IPA.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IPA.Config.ConfigProviders
 {
@@ -20,13 +20,14 @@ namespace IPA.Config.ConfigProviders
 
         // TODO: create a wrapper that allows empty object creation
         public dynamic Dynamic => jsonObj;
-        
+
         public bool HasChanged { get; private set; }
         public bool InMemoryChanged { get; set; }
 
         public DateTime LastModified => File.GetLastWriteTime(Filename + ".json");
 
         private string _filename;
+
         public string Filename
         {
             get => _filename;

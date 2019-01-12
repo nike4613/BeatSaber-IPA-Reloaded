@@ -12,17 +12,19 @@ namespace IPA.Logging.Printers
     public abstract class GZFilePrinter : LogPrinter, IDisposable
     {
         [DllImport("Kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        static extern bool CreateHardLink(
+        private static extern bool CreateHardLink(
             string lpFileName,
             string lpExistingFileName,
             IntPtr lpSecurityAttributes
         );
 
         private FileInfo fileInfo;
+
         /// <summary>
         /// The <see cref="StreamWriter"/> that writes to the GZip file.
         /// </summary>
         protected StreamWriter FileWriter;
+
         private GZipStream zstream;
         private FileStream fstream;
 
@@ -99,9 +101,7 @@ namespace IPA.Logging.Printers
             fstream.Dispose();
         }
 
-        /// <summary>
-        /// Disposes the file printer. 
-        /// </summary>
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
