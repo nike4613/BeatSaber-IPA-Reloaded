@@ -4,16 +4,24 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace IPA.Logging
 {
     /// <summary>
-    /// The default <see cref="Logger"/> implementation.
+    /// The default (and standard) <see cref="Logger"/> implementation.
     /// </summary>
+    /// <remarks>
+    /// <see cref="StandardLogger"/> uses a multi-threaded approach to logging. All actual I/O is done on another thread,
+    /// where all messaged are guaranteed to be logged in the order they appeared. It is up to the printers to format them.
+    ///
+    /// This logger supports child loggers. Use <see cref="LoggerExtensions.GetChildLogger"/> to safely get a child.
+    /// The modification of printers on a parent are reflected down the chain.
+    /// </remarks>
     public class StandardLogger : Logger
     {
-        private static readonly IReadOnlyList<LogPrinter> defaultPrinters = new List<LogPrinter>()
+        private static readonly List<LogPrinter> defaultPrinters = new List<LogPrinter>()
         {
             new ColoredConsolePrinter()
             {
@@ -43,6 +51,11 @@ namespace IPA.Logging
             new GlobalLogFilePrinter()
         };
 
+        internal static void AddDefaultPrinter(LogPrinter printer)
+        {
+            defaultPrinters.Add(printer);
+        }
+
         private readonly string logName;
         private static bool showSourceClass;
 
@@ -50,7 +63,8 @@ namespace IPA.Logging
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
         public static LogLevel PrintFilter { get; set; } = LogLevel.All;
-        private readonly List<LogPrinter> printers = new List<LogPrinter>(defaultPrinters);
+        private readonly List<LogPrinter> printers = new List<LogPrinter>();
+        private readonly StandardLogger parent;
 
         private readonly Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
         
@@ -60,12 +74,13 @@ namespace IPA.Logging
             PrintFilter = cfg.Debug.ShowDebug ? LogLevel.All : LogLevel.InfoUp;
         }
 
-        private StandardLogger(string mainName, string subName, params LogPrinter[] inherited)
+        private StandardLogger(StandardLogger parent, string subName)
         {
-            logName = $"{mainName}/{subName}";
-            printers = new List<LogPrinter>(inherited)
+            logName = $"{parent.logName}/{subName}";
+            this.parent = parent;
+            printers = new List<LogPrinter>()
             {
-                new PluginSubLogPrinter(mainName, subName)
+                new PluginSubLogPrinter(parent.logName, subName)
             };
 
             if (logThread == null || !logThread.IsAlive)
@@ -91,7 +106,7 @@ namespace IPA.Logging
         {
             if (!children.TryGetValue(name, out var child))
             {
-                child = new StandardLogger(logName, name, printers.ToArray());
+                child = new StandardLogger(this, name);
                 children.Add(name, child);
             }
 
@@ -157,8 +172,18 @@ namespace IPA.Logging
         private static void LogThread()
         {
             var started = new HashSet<LogPrinter>();
-            while (logQueue.TryTake(out var msg, Timeout.Infinite)) {
-                foreach (var printer in msg.Logger.printers)
+            while (logQueue.TryTake(out var msg, Timeout.Infinite))
+            {
+                var logger = msg.Logger;
+                IEnumerable<LogPrinter> printers = logger.printers;
+                do
+                {
+                    logger = logger.parent;
+                    if (logger != null)
+                        printers = printers.Concat(logger.printers);
+                } while (logger != null);
+
+                foreach (var printer in printers.Concat(defaultPrinters))
                 {
                     try
                     {
@@ -210,7 +235,7 @@ namespace IPA.Logging
     public static class LoggerExtensions
     {
         /// <summary>
-        /// Gets a child logger, if supported.
+        /// Gets a child logger, if supported. Currently the only defined and supported logger is <see cref="StandardLogger"/>, and most plugins will only ever receive this anyway.
         /// </summary>
         /// <param name="logger">the parent <see cref="Logger"/></param>
         /// <param name="name">the name of the child</param>
