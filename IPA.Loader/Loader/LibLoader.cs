@@ -3,62 +3,87 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using IPA.Logging;
-using static IPA.Logging.Logger;
+using Mono.Cecil;
 
-namespace IPA.Injector
+namespace IPA.Loader
 {
+    internal class CecilLibLoader : BaseAssemblyResolver
+    {
+        public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
+        {
+            LibLoader.SetupAssemblyFilenames();
+
+            var testFile = $"{name.Name}.{name.Version}.dll";
+
+            if (LibLoader.filenameLocations.TryGetValue(testFile, out string path))
+            {
+                if (File.Exists(path))
+                {
+                    return AssemblyDefinition.ReadAssembly(path, parameters);
+                }
+            }
+
+            return base.Resolve(name, parameters);
+        }
+    }
+
     internal static class LibLoader
     {
-        private static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
-        private static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        private static Dictionary<string, string> filenameLocations;
+        internal static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
+        internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
+        internal static Dictionary<string, string> filenameLocations;
 
-        public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
+        internal static void SetupAssemblyFilenames()
         {
-            var asmName = new AssemblyName(e.Name);
-            Log(Level.Debug, $"Resolving library {asmName}");
-
             if (filenameLocations == null)
             {
                 filenameLocations = new Dictionary<string, string>();
 
                 foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
                     if (filenameLocations.ContainsKey(fn.Name))
-                        Log(Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
+                        Log(Logger.Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
                     else filenameLocations.Add(fn.Name, fn.FullName);
             }
+        }
+
+        public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
+        {
+            var asmName = new AssemblyName(e.Name);
+            Log(Logger.Level.Debug, $"Resolving library {asmName}");
+
+            SetupAssemblyFilenames();
 
             var testFile = $"{asmName.Name}.{asmName.Version}.dll";
-            Log(Level.Debug, $"Looking for file {testFile}");
+            Log(Logger.Level.Debug, $"Looking for file {testFile}");
 
             if (filenameLocations.TryGetValue(testFile, out string path))
             {
-                Log(Level.Debug, $"Found file {testFile} as {path}");
+                Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 if (File.Exists(path))
                 {
                     return Assembly.LoadFrom(path);
                 }
 
-                Log(Level.Critical, $"but {path} no longer exists!");
+                Log(Logger.Level.Critical, $"but {path} no longer exists!");
             }
             
-            Log(Level.Critical, $"No library {asmName} found");
+            Log(Logger.Level.Critical, $"No library {asmName} found");
 
             return null;
         }
 
-        private static void Log(Level lvl, string message)
+        internal static void Log(Logger.Level lvl, string message)
         { // multiple proxy methods to delay loading of assemblies until it's done
-            if (LogCreated)
+            if (Logger.LogCreated)
                 AssemblyLibLoaderCallLogger(lvl, message);
             else
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
                     Console.WriteLine($"[{lvl}] {message}");
         }
 
-        private static void AssemblyLibLoaderCallLogger(Level lvl, string message)
+        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message)
         {
-            libLoader.Log(lvl, message);
+            Logger.libLoader.Log(lvl, message);
         }
 
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
@@ -152,5 +177,7 @@ namespace IPA.Injector
                 }
             }
         }
+
+        
     }
 }
