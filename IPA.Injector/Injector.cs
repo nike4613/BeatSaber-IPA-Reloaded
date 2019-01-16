@@ -35,6 +35,8 @@ namespace IPA.Injector
 
                 SetupLibraryLoading();
 
+                log.Debug("Initializing logger");
+
                 SelfConfig.Set();
 
                 loader.Debug("Prepping bootstrapper");
@@ -53,8 +55,8 @@ namespace IPA.Injector
 
         private static void SetupLibraryLoading()
         {
-            if (_loadingDone) return;
-            _loadingDone = true;
+            if (loadingDone) return;
+            loadingDone = true;
             AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
         }
 
@@ -174,12 +176,12 @@ namespace IPA.Injector
             #endregion Virtualize Assembly-CSharp.dll
         }
 
-        private static bool _bootstrapped;
+        private static bool bootstrapped;
 
         private static void CreateBootstrapper()
         {
-            if (_bootstrapped) return;
-            _bootstrapped = true;
+            if (bootstrapped) return;
+            bootstrapped = true;
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
@@ -195,7 +197,7 @@ namespace IPA.Injector
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
 
-        private static bool _loadingDone;
+        private static bool loadingDone;
 
         private static void Bootstrapper_Destroyed()
         {

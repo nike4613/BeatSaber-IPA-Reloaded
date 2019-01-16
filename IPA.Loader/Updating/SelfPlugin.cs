@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace IPA.Updating
 {
-    [Obsolete("Only used for old updating system, replaced with a PluginMeta for teh embedded manifest")]
+    [Obsolete("Only used for old updating system, replaced with a PluginMeta for the embedded manifest")]
     internal class SelfPlugin : IBeatSaberPlugin
     {
         public static SelfPlugin Instance { get; set; } = new SelfPlugin();
