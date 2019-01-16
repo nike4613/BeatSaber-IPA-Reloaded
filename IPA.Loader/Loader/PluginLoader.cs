@@ -143,8 +143,9 @@ namespace IPA.Loader
 
                     var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
                     {
-                        ReadingMode = ReadingMode.Immediate,
-                        ReadWrite = false
+                       ReadingMode = ReadingMode.Immediate,
+                       ReadWrite = false,
+                       AssemblyResolver = new CecilLibLoader() 
                     }).MainModule;
 
                     var iBeatSaberPlugin = pluginModule.ImportReference(typeof(IBeatSaberPlugin));
@@ -183,6 +184,7 @@ namespace IPA.Loader
                         break;
                     }
 
+                    Logger.loader.Debug($"Adding info for {Path.GetFileName(plugin)}");
                     PluginsMetadata.Add(metadata);
                 }
                 catch (Exception e)
@@ -196,7 +198,7 @@ namespace IPA.Loader
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
-
+            
             var ids = new HashSet<string>();
             var ignore = new HashSet<PluginMetadata>();
             var resolved = new List<PluginMetadata>(PluginsMetadata.Count);
@@ -377,5 +379,5 @@ namespace IPA.Loader
         }
 
         internal static List<PluginInfo> LoadPlugins() => PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
-    }
+        }
 }
