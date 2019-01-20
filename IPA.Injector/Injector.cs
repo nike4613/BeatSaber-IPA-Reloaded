@@ -35,7 +35,9 @@ namespace IPA.Injector
 
                 SetupLibraryLoading();
 
-                log.Debug("Initializing logger");
+                EnsureUserData();
+
+                //log.Debug("Initializing logger");
 
                 SelfConfig.Set();
 
@@ -51,6 +53,13 @@ namespace IPA.Injector
             {
                 Console.WriteLine(e);
             }
+        }
+
+        private static void EnsureUserData()
+        {
+            string path;
+            if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "UserData")))
+                Directory.CreateDirectory(path);
         }
 
         private static void SetupLibraryLoading()
