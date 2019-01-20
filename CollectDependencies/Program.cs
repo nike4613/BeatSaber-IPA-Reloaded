@@ -33,7 +33,7 @@ namespace CollectDependencies
                 }
 
                 var lineNo = 0;
-                foreach (var line in depsFile.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+                foreach (var line in depsFile.Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.None))
                 {
                     var parts = line.Split('"');
                     var path = parts.Last();
