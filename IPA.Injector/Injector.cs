@@ -37,7 +37,18 @@ namespace IPA.Injector
 
                 EnsureUserData();
 
-                //log.Debug("Initializing logger");
+                // this is weird, but it prevents Mono from having issues loading the type.
+                // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
+                var unused = StandardLogger.PrintFilter;
+                #region // Above hack explaination
+                /* 
+                 * Due to an unknown bug in the version of Mono that Unity 2018.1.8 uses, if the first access to StandardLogger
+                 * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
+                 * the above static property (or maybe any, but I don't really know) it behaves as expected and works fine.
+                 */
+                #endregion
+
+                log.Debug("Initializing logger");
 
                 SelfConfig.Set();
 
