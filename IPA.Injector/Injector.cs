@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
@@ -54,7 +55,34 @@ namespace IPA.Injector
 
                 loader.Debug("Prepping bootstrapper");
 
-                InstallBootstrapPatch();
+                // The whole mess that follows is an attempt to work around Mono failing to
+                // call the library load routine for Mono.Cecil when the debugger is attached.
+                bool runProperly = false;
+                while (!runProperly) // retry until it finishes, or errors
+                    try
+                    {
+                        InstallBootstrapPatch();
+                        runProperly = true;
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        var asmName = e.FileName;
+
+                        AssemblyName name;
+                        try
+                        { // try to parse as an AssemblyName, if it isn't, rethrow the outer exception
+                            name = new AssemblyName(asmName);
+                        }
+                        catch (Exception)
+                        {
+                            ExceptionDispatchInfo.Capture(e).Throw();
+                            throw;
+                        }
+
+                        // name is failed lookup, try to manually load it
+                        LibLoader.AssemblyLibLoader(null,
+                                                    new ResolveEventArgs(name.FullName, Assembly.GetExecutingAssembly()));
+                    }
 
                 Updates.InstallPendingUpdates();
 
@@ -205,9 +233,9 @@ namespace IPA.Injector
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
-                var level = UnityLogInterceptor.LogTypeToLevel(type);
-                UnityLogInterceptor.UnityLogger.Log(level, $"{condition.Trim()}");
-                UnityLogInterceptor.UnityLogger.Log(level, $"{stackTrace.Trim()}");
+                var level = UnityLogRedirector.LogTypeToLevel(type);
+                UnityLogProvider.UnityLogger.Log(level, $"{condition.Trim()}");
+                UnityLogProvider.UnityLogger.Log(level, $"{stackTrace.Trim()}");
             };
 
             // need to reinit streams singe Unity seems to redirect stdout

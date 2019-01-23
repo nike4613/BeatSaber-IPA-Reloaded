@@ -2,11 +2,14 @@
 
 namespace IPA.Logging
 {
-    internal static class UnityLogInterceptor
+    internal static class UnityLogProvider
     {
         internal static Logger Logger;
         public static Logger UnityLogger => Logger ?? (Logger = new StandardLogger("UnityEngine"));
+    }
 
+    internal static class UnityLogRedirector
+    {
         public static Logger.Level LogTypeToLevel(LogType type)
         {
             switch (type)
