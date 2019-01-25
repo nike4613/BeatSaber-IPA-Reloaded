@@ -54,13 +54,14 @@ namespace IPA.Injector
                 SelfConfig.Set();
 
                 loader.Debug("Prepping bootstrapper");
-
+                
                 // The whole mess that follows is an attempt to work around Mono failing to
                 // call the library load routine for Mono.Cecil when the debugger is attached.
                 bool runProperly = false;
                 while (!runProperly) // retry until it finishes, or errors
-                    try
-                    {
+                    try // TODO: fix this mess
+                    {   // currently it gets stuck in an infinite loop because Mono refuses
+                        // to use Mono.Cecil even if it is loaded when the debugger is attached.
                         InstallBootstrapPatch();
                         runProperly = true;
                     }
