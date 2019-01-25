@@ -163,12 +163,12 @@ namespace IPA.Logging
         public override void Debug(string message)
         {
             // add source to message
-            var stackFrame = new StackTrace().GetFrame(1);
+            var stackFrame = new StackTrace(true).GetFrame(1);
             var method = stackFrame.GetMethod();
             var lineNo = stackFrame.GetFileLineNumber();
-            var lineOffs = stackFrame.GetFileColumnNumber();
+            var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
             base.Debug(showSourceClass
-                ? $"{{{method.DeclaringType?.FullName}::{method.Name}({lineNo}:{lineOffs})}} {message}"
+                ? $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString}):{lineNo}}} {message}"
                 : message);
         }
 
