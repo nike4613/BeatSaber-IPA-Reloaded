@@ -188,38 +188,48 @@ namespace IPA.Logging
         /// </summary>
         private static void LogThread()
         {
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+            {
+                StopLogThread();
+            };
+
             var started = new HashSet<LogPrinter>();
             while (logQueue.TryTake(out var msg, Timeout.Infinite))
             {
-                var logger = msg.Logger;
-                IEnumerable<LogPrinter> printers = logger.printers;
                 do
                 {
-                    logger = logger.parent;
-                    if (logger != null)
-                        printers = printers.Concat(logger.printers);
-                } while (logger != null);
-
-                foreach (var printer in printers.Concat(defaultPrinters))
-                {
-                    try
+                    var logger = msg.Logger;
+                    IEnumerable<LogPrinter> printers = logger.printers;
+                    do
                     {
-                        if (((byte)msg.Level & (byte)printer.Filter) != 0)
-                        {
-                            if (!started.Contains(printer))
-                            {
-                                printer.StartPrint();
-                                started.Add(printer);
-                            }
+                        logger = logger.parent;
+                        if (logger != null)
+                            printers = printers.Concat(logger.printers);
+                    } while (logger != null);
 
-                            printer.Print(msg.Level, msg.Time, msg.Logger.logName, msg.Message);
+                    foreach (var printer in printers.Concat(defaultPrinters))
+                    {
+                        try
+                        {
+                            if (((byte) msg.Level & (byte) printer.Filter) != 0)
+                            {
+                                if (!started.Contains(printer))
+                                {
+                                    printer.StartPrint();
+                                    started.Add(printer);
+                                }
+
+                                printer.Print(msg.Level, msg.Time, msg.Logger.logName, msg.Message);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"printer errored: {e}");
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"printer errored: {e}");
-                    }
                 }
+                // wait for messages for 500ms before ending the prints
+                while (logQueue.TryTake(out msg, TimeSpan.FromMilliseconds(500)));
 
                 if (logQueue.Count == 0)
                 {
