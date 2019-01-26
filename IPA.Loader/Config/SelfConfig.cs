@@ -17,11 +17,10 @@ namespace IPA.Config
                 value.Load();
                 SelfConfigRef = value.MakeLink<SelfConfig>((c, v) =>
                 {
-                    var val = v.Value;
-                    if (val.Regenerate)
-                        c.Store(val = new SelfConfig { Regenerate = false });
+                    if (v.Value.Regenerate)
+                        c.Store(v.Value = new SelfConfig { Regenerate = false });
 
-                    StandardLogger.Configure(val);
+                    StandardLogger.Configure(v.Value);
                 });
                 _loaderConfig = value;
             }
@@ -31,10 +30,10 @@ namespace IPA.Config
 
         public static void Set()
         {
-            LoaderConfig = Config.GetProviderFor(Path.Combine("UserData", IPA_Name), "toml", "json");
+            LoaderConfig = Config.GetProviderFor(Path.Combine("UserData", IPA_Name), "json");
         }
 
-        internal const string IPA_Name = "Beat Saber IPA - Builtin manifest support";
+        internal const string IPA_Name = "Beat Saber IPA";
         internal const string IPA_Version = "3.12.0";
 
         public bool Regenerate = true;

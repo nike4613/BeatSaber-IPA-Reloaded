@@ -183,6 +183,8 @@ namespace IPA.Logging
         private static readonly BlockingCollection<LogMessage> logQueue = new BlockingCollection<LogMessage>();
         private static Thread logThread;
 
+        private static StandardLogger loggerLogger;
+
         /// <summary>
         /// The log printer thread for <see cref="StandardLogger"/>.
         /// </summary>
@@ -192,6 +194,9 @@ namespace IPA.Logging
             {
                 StopLogThread();
             };
+
+            loggerLogger = new StandardLogger("Log Subsystem");
+            loggerLogger.printers.Clear();
 
             var started = new HashSet<LogPrinter>();
             while (logQueue.TryTake(out var msg, Timeout.Infinite))
@@ -226,6 +231,33 @@ namespace IPA.Logging
                         {
                             Console.WriteLine($"printer errored: {e}");
                         }
+                    }
+
+                    if (logQueue.Count > 512)
+                    {
+                        loggerLogger.printers.Clear();
+                        printers = new LogPrinter[0];
+                        // clear the queue
+                        while (logQueue.TryTake(out var message))
+                        {
+                            var messageLogger = message.Logger;
+                            printers = printers.Concat(messageLogger.printers);
+                            do
+                            {
+                                messageLogger = messageLogger.parent;
+                                if (messageLogger != null)
+                                    printers = printers.Concat(messageLogger.printers);
+                            } while (messageLogger != null);
+                        }
+                        // HashSet-ify to make the elements unique
+                        loggerLogger.printers.AddRange(new HashSet<LogPrinter>(printers));
+                        logQueue.Add(new LogMessage
+                        {
+                            Level = Level.Warning,
+                            Logger = loggerLogger,
+                            Message = "Messages omitted to improve performance",
+                            Time = DateTime.Now
+                        });
                     }
                 }
                 // wait for messages for 500ms before ending the prints
