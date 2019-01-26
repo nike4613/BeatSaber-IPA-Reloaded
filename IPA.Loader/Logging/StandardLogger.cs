@@ -146,6 +146,8 @@ namespace IPA.Logging
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
+            // make sure that the queue isn't being cleared
+            logWaitEvent.Wait();
             logQueue.Add(new LogMessage
             {
                 Level = level,
@@ -180,10 +182,13 @@ namespace IPA.Logging
             public DateTime Time;
         }
 
+        private static ManualResetEventSlim logWaitEvent = new ManualResetEventSlim(true);
         private static readonly BlockingCollection<LogMessage> logQueue = new BlockingCollection<LogMessage>();
         private static Thread logThread;
 
         private static StandardLogger loggerLogger;
+
+        private const int LogCloseTimeout = 500;
 
         /// <summary>
         /// The log printer thread for <see cref="StandardLogger"/>.
@@ -197,6 +202,8 @@ namespace IPA.Logging
 
             loggerLogger = new StandardLogger("Log Subsystem");
             loggerLogger.printers.Clear();
+
+             var timeout = TimeSpan.FromMilliseconds(LogCloseTimeout);
 
             var started = new HashSet<LogPrinter>();
             while (logQueue.TryTake(out var msg, Timeout.Infinite))
@@ -224,6 +231,7 @@ namespace IPA.Logging
                                     started.Add(printer);
                                 }
 
+                                printer.LastUse = DateTime.Now;
                                 printer.Print(msg.Level, msg.Time, msg.Logger.logName, msg.Message);
                             }
                         }
@@ -235,33 +243,59 @@ namespace IPA.Logging
 
                     if (logQueue.Count > 512)
                     {
+                        logWaitEvent.Reset();
+
                         loggerLogger.printers.Clear();
-                        printers = new LogPrinter[0];
+                        var prints = new HashSet<LogPrinter>();
                         // clear the queue
                         while (logQueue.TryTake(out var message))
                         {
                             var messageLogger = message.Logger;
-                            printers = printers.Concat(messageLogger.printers);
+                            foreach (var print in messageLogger.printers)
+                                prints.Add(print);
                             do
                             {
                                 messageLogger = messageLogger.parent;
                                 if (messageLogger != null)
-                                    printers = printers.Concat(messageLogger.printers);
+                                    foreach (var print in messageLogger.printers)
+                                        prints.Add(print);
                             } while (messageLogger != null);
                         }
-                        // HashSet-ify to make the elements unique
-                        loggerLogger.printers.AddRange(new HashSet<LogPrinter>(printers));
+                        
+                        loggerLogger.printers.AddRange(prints);
                         logQueue.Add(new LogMessage
                         {
                             Level = Level.Warning,
                             Logger = loggerLogger,
-                            Message = "Messages omitted to improve performance",
+                            Message = $"{loggerLogger.logName.ToUpper()}: Messages omitted to improve performance",
                             Time = DateTime.Now
                         });
+
+                        logWaitEvent.Set();
+                    }
+
+                    var now = DateTime.Now;
+                    var copy = new List<LogPrinter>(started);
+                    foreach (var printer in copy)
+                    {
+                        // close printer after 500ms from its last use
+                        if (now - printer.LastUse > timeout)
+                        {
+                            try
+                            {
+                                printer.EndPrint();
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"printer errored: {e}");
+                            }
+
+                            started.Remove(printer);
+                        }
                     }
                 }
                 // wait for messages for 500ms before ending the prints
-                while (logQueue.TryTake(out msg, TimeSpan.FromMilliseconds(500)));
+                while (logQueue.TryTake(out msg, timeout));
 
                 if (logQueue.Count == 0)
                 {

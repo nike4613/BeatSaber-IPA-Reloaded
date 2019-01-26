@@ -32,5 +32,7 @@ namespace IPA.Logging
         /// Use this to dispose file handles and the like.
         /// </summary>
         public virtual void EndPrint() { }
+
+        internal DateTime LastUse { get; set; }
     }
 }
