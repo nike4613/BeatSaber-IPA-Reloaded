@@ -32,7 +32,7 @@ namespace IPA.Updating.ModSaber
                 {
                     try
                     {
-                        return LoneFunctions.StringToByteArray((string)reader.Value);
+                        return Utils.StringToByteArray((string)reader.Value);
                     }
                     catch (Exception ex)
                     {
@@ -55,7 +55,7 @@ namespace IPA.Updating.ModSaber
                     {
                         throw new JsonSerializationException("Expected byte[] object value");
                     }
-                    writer.WriteValue(LoneFunctions.ByteArrayToString((byte[]) value));
+                    writer.WriteValue(Utils.ByteArrayToString((byte[]) value));
                 }
             }
         }
@@ -138,7 +138,7 @@ namespace IPA.Updating.ModSaber
                 public string DownloadPath;
 
                 public override string ToString() =>
-                    $"{LoneFunctions.ByteArrayToString(Hash)}@{DownloadPath}({string.Join(",", FileHashes.Select(o => $"\"{o.Key}\":\"{LoneFunctions.ByteArrayToString(o.Value)}\""))})";
+                    $"{Utils.ByteArrayToString(Hash)}@{DownloadPath}({string.Join(",", FileHashes.Select(o => $"\"{o.Key}\":\"{Utils.ByteArrayToString(o.Value)}\""))})";
             }
 
             [Serializable]
