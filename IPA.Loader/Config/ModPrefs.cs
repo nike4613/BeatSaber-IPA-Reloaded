@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
+using IPA.Loader;
 
 namespace IPA.Config
 {
@@ -93,19 +92,15 @@ namespace IPA.Config
         private static ModPrefs _staticInstance;
         private static IModPrefs StaticInstance => _staticInstance ?? (_staticInstance = new ModPrefs());
 
-        // ReSharper disable once IdentifierTypo
-        internal static Dictionary<IBeatSaberPlugin, ModPrefs> ModPrefss { get; set; } = new Dictionary<IBeatSaberPlugin, ModPrefs>();
-
         private readonly IniFile _instance;
 
         /// <summary>
         /// Constructs a ModPrefs object for the provide plugin.
         /// </summary>
         /// <param name="plugin">the plugin to get the preferences file for</param>
-        public ModPrefs(IBeatSaberPlugin plugin) {
+        public ModPrefs(PluginLoader.PluginMetadata plugin) {
             _instance = new IniFile(Path.Combine(Environment.CurrentDirectory, "UserData", "ModPrefs",
                 $"{plugin.Name}.ini"));
-            ModPrefss.Add(plugin, this);
         }
 
         private ModPrefs()
@@ -262,19 +257,5 @@ namespace IPA.Config
         /// <param name="value">Value that should be written.</param>
         public static void SetBool(string section, string name, bool value)
             => StaticInstance.SetBool(section, name, value);
-    }
-    
-    /// <summary>
-    /// An extension class for IBeatSaberPlugins.
-    /// </summary>
-    public static class ModPrefsExtensions {
-        /// <summary>
-        /// Gets the ModPrefs object for the provided plugin.
-        /// </summary>
-        /// <param name="plugin">the plugin wanting the prefrences</param>
-        /// <returns>the ModPrefs object</returns>
-        public static IModPrefs GetModPrefs(this IBeatSaberPlugin plugin) {
-            return ModPrefs.ModPrefss.First(o => o.Key == plugin).Value;
-        }
     }
 }

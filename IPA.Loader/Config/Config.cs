@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using IPA.Config.ConfigProviders;
@@ -65,6 +66,29 @@ namespace IPA.Config
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Specifies a preferred config name, instead of using the plugin's name.
+        /// </summary>
+        public class NameAttribute : Attribute
+        {
+            /// <summary>
+            /// The name to use for the config.
+            /// </summary>
+            // ReSharper disable once UnusedAutoPropertyAccessor.Global
+            public string Name { get; private set; }
+
+            /// <inheritdoc />
+            /// <summary>
+            /// Constructs the attribute with a specific name.
+            /// </summary>
+            /// <param name="name">the name to use for the config.</param>
+            public NameAttribute(string name)
+            {
+                Name = name;
+            }
+        }
+
         private static readonly Dictionary<string, Type> registeredProviders = new Dictionary<string, Type>();
 
         /// <summary>
@@ -96,36 +120,32 @@ namespace IPA.Config
         /// <summary>
         /// Gets an <see cref="IConfigProvider"/> using the specified list pf preferred config types.
         /// </summary>
-        /// <param name="filename">the name of the file to associate it with</param>
+        /// <param name="configName">the name of the mod for this config</param>
         /// <param name="extensions">the preferred config types to try to get</param>
         /// <returns>an <see cref="IConfigProvider"/> of the requested type, or of type JSON.</returns>
-        public static IConfigProvider GetProviderFor(string filename, params string[] extensions)
+        public static IConfigProvider GetProviderFor(string configName, params string[] extensions)
         {
             var chosenExt = extensions.FirstOrDefault(s => registeredProviders.ContainsKey(s)) ?? "json";
             var type = registeredProviders[chosenExt];
             var provider = Activator.CreateInstance(type) as IConfigProvider;
             if (provider != null)
             {
-                provider.Filename = filename;
+                provider.Filename = Path.Combine(BeatSaber.UserDataPath, configName);
                 configProviders.Add(provider.LastModified, provider);
             }
 
             return provider;
         }
-
-        /// <summary>
-        /// Gets an <see cref="IConfigProvider"/> using the specified list pf preferred config types.
-        /// </summary>
-        /// <param name="filename">the name of the file to associate it with</param>
-        /// <param name="info">the parameter info to try and get info for</param>
-        /// <returns>an <see cref="IConfigProvider"/> of the requested type, or of type JSON.</returns>
-        public static IConfigProvider GetProviderFor(string filename, ParameterInfo info)
+        
+        internal static IConfigProvider GetProviderFor(string modName, ParameterInfo info)
         {
             var prefs = new string[0];
-            if (info.GetCustomAttribute(typeof(PreferAttribute)) is PreferAttribute prefer)
+            if (info.GetCustomAttribute<PreferAttribute>() is PreferAttribute prefer)
                 prefs = prefer.PreferenceOrder;
+            if (info.GetCustomAttribute<NameAttribute>() is NameAttribute name)
+                modName = name.Name;
 
-            return GetProviderFor(filename, prefs);
+            return GetProviderFor(modName, prefs);
         }
 
         private static Dictionary<IConfigProvider, Action> linkedProviders =
