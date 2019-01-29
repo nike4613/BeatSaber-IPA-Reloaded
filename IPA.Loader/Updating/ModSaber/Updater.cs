@@ -463,7 +463,7 @@ namespace IPA.Updating.ModSaber
             var data = stream.GetBuffer();
             SHA1 sha = new SHA1CryptoServiceProvider();
             var hash = sha.ComputeHash(data);
-            if (!LoneFunctions.UnsafeCompare(hash, fileInfo.Hash))
+            if (!Utils.UnsafeCompare(hash, fileInfo.Hash))
                 throw new Exception("The hash for the file doesn't match what is defined");
 
             var targetDir = Path.Combine(BeatSaber.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
@@ -499,7 +499,7 @@ namespace IPA.Updating.ModSaber
 
                                 try
                                 {
-                                    if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
+                                    if (!Utils.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
                                         throw new Exception("The hash for the file doesn't match what is defined");
                                 }
                                 catch (KeyNotFoundException)
@@ -511,7 +511,7 @@ namespace IPA.Updating.ModSaber
                                 FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
-                                if (LoneFunctions.GetRelativePath(targetFile.FullName, targetDir) == LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
+                                if (Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 /*if (targetFile.Exists)
@@ -530,7 +530,7 @@ namespace IPA.Updating.ModSaber
                 }
                 
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath) });
+                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
@@ -545,7 +545,7 @@ namespace IPA.Updating.ModSaber
 
             if (item.LocalPluginMeta?.Plugin is SelfPlugin)
             { // currently updating self, so copy to working dir and update
-                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
+                Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
                 if (File.Exists(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile));
                 Process.Start(new ProcessStartInfo
                 {
@@ -555,7 +555,7 @@ namespace IPA.Updating.ModSaber
                 });
             }
             else
-                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), SpecialDeletionsFile);
+                Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), SpecialDeletionsFile);
             Directory.Delete(targetDir, true); // delete extraction site
 
             Logger.updater.Debug("Extractor exited");

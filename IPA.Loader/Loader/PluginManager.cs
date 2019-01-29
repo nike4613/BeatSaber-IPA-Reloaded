@@ -196,7 +196,7 @@ namespace IPA.Loader
             Logger.log.Info($"Running on Unity {Application.unityVersion}");
             Logger.log.Info($"Game version {BeatSaber.GameVersion}");
             Logger.log.Info("-----------------------------");
-            Logger.log.Info($"Loading plugins from {LoneFunctions.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
+            Logger.log.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
