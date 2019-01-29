@@ -1,5 +1,4 @@
-﻿using IPA.Config;
-using IPA.Loader.Features;
+﻿using IPA.Loader.Features;
 using IPA.Logging;
 using IPA.Utilities;
 using Mono.Cecil;
@@ -24,6 +23,7 @@ namespace IPA.Loader
             LoadMetadata();
             Resolve();
             ComputeLoadOrder();
+            InitFeatures();
         });
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace IPA.Loader
             }
 
             /// <inheritdoc />
-            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{LoneFunctions.GetRelativePath(File?.FullName, BeatSaber.InstallPath)}'";
+            public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName, BeatSaber.InstallPath)}'";
         }
 
         /// <summary>
@@ -296,6 +296,58 @@ namespace IPA.Loader
             PluginsMetadata = metadata;
         }
 
+        internal static void InitFeatures()
+        {
+            var parsedFeatures = PluginsMetadata.Select(m =>
+                    Tuple.Create(m,
+                        m.Manifest.Features.Select(f => 
+                            Tuple.Create(f, Ref.Create<Feature.FeatureParse?>(null))
+                        ).ToList()
+                    )
+                ).ToList();
+
+            while (DefineFeature.NewFeature)
+            {
+                DefineFeature.NewFeature = false;
+
+                foreach (var plugin in parsedFeatures)
+                    for (var i = 0; i < plugin.Item2.Count; i++)
+                    {
+                        var feature = plugin.Item2[i];
+
+                        var success = Feature.TryParseFeature(feature.Item1, plugin.Item1, out var featureObj,
+                            out var exception, out var valid, out var parsed, feature.Item2.Value);
+
+                        if (!success && !valid && featureObj == null && exception == null) // no feature of type found
+                            feature.Item2.Value = parsed;
+                        else if (success)
+                        {
+                            if (valid)
+                                plugin.Item1.InternalFeatures.Add(featureObj);
+                            else
+                                Logger.features.Warn(
+                                    $"Feature not valid on {plugin.Item1.Name}: {featureObj.InvalidMessage}");
+                            plugin.Item2.RemoveAt(i--);
+                        }
+                        else
+                        {
+                            Logger.features.Error($"Error parsing feature definition on {plugin.Item1.Name}");
+                            Logger.features.Error(exception);
+                            plugin.Item2.RemoveAt(i--);
+                        }
+                    }
+            }
+
+            foreach (var plugin in parsedFeatures)
+            {
+                if (plugin.Item2.Count <= 0) continue;
+
+                Logger.features.Warn($"On plugin {plugin.Item1.Name}:");
+                foreach (var feature in plugin.Item2)
+                    Logger.features.Warn($"    Feature not found with name {feature.Item1}");
+            }
+        }
+
         internal static void Load(PluginMetadata meta)
         {
             if (meta.Assembly == null)
@@ -317,52 +369,43 @@ namespace IPA.Loader
             {
                 Load(meta);
 
+                Feature denyingFeature = null;
+                if (!meta.Features.All(f => (denyingFeature = f).BeforeLoad(meta)))
+                {
+                    Logger.loader.Warn(
+                        $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from loading! {denyingFeature?.InvalidMessage}");
+                    return null;
+                }
+
                 var type = meta.Assembly.GetType(meta.PluginType.FullName);
                 var instance = (IBeatSaberPlugin)Activator.CreateInstance(type);
 
                 info.Metadata = meta;
                 info.Plugin = instance;
 
+                var init = type.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
+                if (init != null)
                 {
-                    var init = type.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
-                    if (init != null)
+                    denyingFeature = null;
+                    if (!meta.Features.All(f => (denyingFeature = f).BeforeInit(info)))
                     {
-                        var initArgs = new List<object>();
-                        var initParams = init.GetParameters();
-
-                        Logger modLogger = null;
-                        IModPrefs modPrefs = null;
-                        IConfigProvider cfgProvider = null;
-
-                        foreach (var param in initParams)
-                        {
-                            var paramType = param.ParameterType;
-                            if (paramType.IsAssignableFrom(typeof(Logger)))
-                            {
-                                if (modLogger == null) modLogger = new StandardLogger(meta.Name);
-                                initArgs.Add(modLogger);
-                            }
-                            else if (paramType.IsAssignableFrom(typeof(IModPrefs)))
-                            {
-                                if (modPrefs == null) modPrefs = new ModPrefs(instance);
-                                initArgs.Add(modPrefs);
-                            }
-                            else if (paramType.IsAssignableFrom(typeof(IConfigProvider)))
-                            {
-                                if (cfgProvider == null)
-                                {
-                                    cfgProvider = Config.Config.GetProviderFor(Path.Combine("UserData", $"{meta.Name}"), param);
-                                    cfgProvider.Load();
-                                }
-                                initArgs.Add(cfgProvider);
-                            }
-                            else
-                                initArgs.Add(paramType.GetDefault());
-                        }
-
-                        init.Invoke(instance, initArgs.ToArray());
+                        Logger.loader.Warn(
+                            $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from initializing! {denyingFeature?.InvalidMessage}");
+                        return null;
                     }
+
+                    PluginInitInjector.Inject(init, info);
                 }
+
+                foreach (var feature in meta.Features)
+                    try
+                    {
+                        feature.AfterInit(info);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
+                    }
             }
             catch (AmbiguousMatchException)
             {
@@ -379,5 +422,5 @@ namespace IPA.Loader
         }
 
         internal static List<PluginInfo> LoadPlugins() => PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
-        }
+    }
 }
