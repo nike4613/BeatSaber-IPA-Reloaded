@@ -7,6 +7,8 @@
   "name": "BSIPA",
   "version": "3.12.0",
   "features": [
-    "early-load"
+    "define-feature(print, IPA.Loader.Features.PrintFeature)",
+    "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
+    "print(YO! Howz it goin\\, its ya boi desinc here)"
   ]
 }

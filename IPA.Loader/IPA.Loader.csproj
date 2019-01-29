@@ -14,6 +14,7 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,6 +62,10 @@
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
+    <Compile Include="Loader\Features\DefineFeature.cs" />
+    <Compile Include="Loader\Features\NoUpdateFeature.cs" />
+    <Compile Include="Loader\Features\PrintFeature.cs" />
+    <Compile Include="Loader\PluginInitInjector.cs" />
     <Compile Include="Loader\LibLoader.cs" />
     <Compile Include="Loader\Features\Feature.cs" />
     <Compile Include="Loader\PluginLoader.cs" />
@@ -96,7 +101,7 @@
     <Compile Include="Updating\ModSaber\Updater.cs" />
     <Compile Include="Updating\SelfPlugin.cs" />
     <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\LoneFunctions.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ionic.Zip">

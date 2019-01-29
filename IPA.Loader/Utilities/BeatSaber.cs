@@ -52,6 +52,10 @@ namespace IPA.Utilities
         /// The directory to load plugins from.
         /// </summary>
         public static string PluginsPath => Path.Combine(InstallPath, "Plugins");
+        /// <summary>
+        /// The path to the `UserData` folder.
+        /// </summary>
+        public static string UserDataPath => Path.Combine(InstallPath, "UserData");
 
         private static bool FindSteamVRAsset()
         {

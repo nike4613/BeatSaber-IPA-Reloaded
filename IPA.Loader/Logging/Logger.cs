@@ -24,6 +24,7 @@ namespace IPA.Logging
         internal static Logger updater => log.GetChildLogger("Updater");
         internal static Logger libLoader => log.GetChildLogger("LibraryLoader");
         internal static Logger loader => log.GetChildLogger("Loader");
+        internal static Logger features => loader.GetChildLogger("Features");
         internal static Logger config => log.GetChildLogger("Config");
         internal static bool LogCreated => _log != null || UnityLogProvider.Logger != null;
 
