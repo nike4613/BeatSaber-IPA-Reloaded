@@ -103,6 +103,8 @@ namespace IPA.Config.ConfigProviders
         public void Save()
         {
             Logger.config.Debug($"Saving file {Filename}.json");
+            if (!Directory.Exists(Path.GetDirectoryName(Filename)))
+                Directory.CreateDirectory(Path.GetDirectoryName(Filename) ?? throw new InvalidOperationException());
             File.WriteAllText(Filename + ".json", JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
 
             HasChanged = false;
