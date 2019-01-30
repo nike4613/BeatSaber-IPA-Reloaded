@@ -1,6 +1,5 @@
 ﻿using IPA.Logging;
 using IPA.Utilities;
-using System.IO;
 
 namespace IPA.Config
 {
@@ -30,7 +29,7 @@ namespace IPA.Config
 
         public static void Set()
         {
-            LoaderConfig = Config.GetProviderFor(Path.Combine("UserData", IPA_Name), "json");
+            LoaderConfig = Config.GetProviderFor(IPA_Name, "json");
         }
 
         internal const string IPA_Name = "Beat Saber IPA";
