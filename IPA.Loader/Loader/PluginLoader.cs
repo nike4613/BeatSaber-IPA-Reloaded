@@ -322,9 +322,9 @@ namespace IPA.Loader
                             feature.Item2.Value = parsed;
                         else if (success)
                         {
-                            if (valid)
+                            if (valid && featureObj.StoreOnPlugin)
                                 plugin.Item1.InternalFeatures.Add(featureObj);
-                            else
+                            else if (!valid)
                                 Logger.features.Warn(
                                     $"Feature not valid on {plugin.Item1.Name}: {featureObj.InvalidMessage}");
                             plugin.Item2.RemoveAt(i--);
@@ -336,6 +336,10 @@ namespace IPA.Loader
                             plugin.Item2.RemoveAt(i--);
                         }
                     }
+
+                foreach (var plugin in PluginsMetadata)
+                foreach (var feature in plugin.Features)
+                    feature.Evaluate();
             }
 
             foreach (var plugin in parsedFeatures)

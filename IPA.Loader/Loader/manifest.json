@@ -8,7 +8,10 @@
   "version": "3.12.0",
   "features": [
     "define-feature(print, IPA.Loader.Features.PrintFeature)",
+    "define-feature(debug, IPA.Loader.Features.DebugFeature)",
+    "define-feature(warn, IPA.Loader.Features.WarnFeature)",
     "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
+    "define-feature(add-in, IPA.Loader.Features.AddInFeature)",
     "print(YO! Howz it goin\\, its ya boi desinc here)"
   ]
 }
