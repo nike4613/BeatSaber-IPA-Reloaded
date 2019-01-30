@@ -11,4 +11,22 @@ namespace IPA.Loader.Features
             return true;
         }
     }
+
+    internal class DebugFeature : Feature
+    {
+        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        {
+            Logger.features.Debug($"{meta.Name}: {string.Join(" ", parameters)}");
+            return true;
+        }
+    }
+
+    internal class WarnFeature : Feature
+    {
+        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        {
+            Logger.features.Debug($"{meta.Name}: {string.Join(" ", parameters)}");
+            return true;
+        }
+    }
 }

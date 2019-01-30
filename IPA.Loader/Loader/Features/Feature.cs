@@ -26,6 +26,14 @@ namespace IPA.Loader.Features
         public abstract bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters);
 
         /// <summary>
+        /// Evaluates the Feature for use in conditional meta-Features. This should be re-calculated on every call, unless it can be proven to not change.
+        ///
+        /// This will be called on every feature that returns <see langword="true" /> from <see cref="Initialize"/>
+        /// </summary>
+        /// <returns>the truthiness of the Feature.</returns>
+        public virtual bool Evaluate() => true;
+
+        /// <summary>
         /// The message to be logged when the feature is not valid for a plugin.
         /// This should also be set whenever either <see cref="BeforeLoad"/> or <see cref="BeforeInit"/> returns false.
         /// </summary>
@@ -61,10 +69,14 @@ namespace IPA.Loader.Features
         /// <param name="plugin">the plugin to ensure is loaded.</param>
         protected void RequireLoaded(PluginLoader.PluginMetadata plugin) => PluginLoader.Load(plugin);
 
+        internal virtual bool StoreOnPlugin => true;
+
         private static readonly Dictionary<string, Type> featureTypes = new Dictionary<string, Type>
         {
             { "define-feature", typeof(DefineFeature) }
         };
+
+        internal static bool HasFeature(string name) => featureTypes.ContainsKey(name);
 
         internal static bool RegisterFeature(string name, Type type)
         {
@@ -103,7 +115,7 @@ namespace IPA.Loader.Features
                 var parameters = new List<string>();
 
                 bool escape = false;
-                bool readingParams = false;
+                int parens = 0;
                 bool removeWhitespace = true;
                 foreach (var chr in featureString)
                 {
@@ -119,18 +131,20 @@ namespace IPA.Loader.Features
                             case '\\':
                                 escape = true;
                                 break;
-                            case '(' when !readingParams:
+                            case '(':
+                                parens++;
+                                if (parens != 1) goto default;
                                 removeWhitespace = true;
-                                readingParams = true;
                                 name = builder.ToString();
                                 builder.Clear();
                                 break;
-                            case ')' when readingParams:
-                                readingParams = false;
+                            case ')':
+                                parens--;
+                                if (parens != 0) goto default;
                                 goto case ',';
                             case ',':
+                                if (parens > 1) goto default;
                                 parameters.Add(builder.ToString());
-                                if (!readingParams) break;
                                 builder.Clear();
                                 removeWhitespace = true;
                                 break;
@@ -149,7 +163,7 @@ namespace IPA.Loader.Features
 
                 parsed = new FeatureParse(name, parameters.ToArray());
 
-                if (readingParams)
+                if (parens != 0)
                 {
                     failException = new Exception("Malformed feature definition");
                     return false;
