@@ -17,5 +17,11 @@
         {
             return plugin != selfMeta;
         }
+
+        public override string InvalidMessage
+        {
+            get => "Plugin is an add-in for some other mod, therefore should not be loaded.";
+            protected set { }
+        }
     }
 }
