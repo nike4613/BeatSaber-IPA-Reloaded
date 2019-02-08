@@ -67,7 +67,9 @@ namespace IPA.Loader
             /// </summary>
             public IReadOnlyList<Feature> Features => InternalFeatures;
 
-            internal List<Feature> InternalFeatures = new List<Feature>();
+            internal readonly List<Feature> InternalFeatures = new List<Feature>();
+
+            internal bool IsSelf;
 
             private PluginManifest manifest;
 
@@ -112,7 +114,8 @@ namespace IPA.Loader
                 {
                     Assembly = Assembly.GetExecutingAssembly(),
                     File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe")),
-                    PluginType = null
+                    PluginType = null,
+                    IsSelf = true
                 };
 
                 string manifest;
@@ -138,7 +141,8 @@ namespace IPA.Loader
                 {
                     var metadata = new PluginMetadata
                     {
-                        File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, plugin))
+                        File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, plugin)),
+                        IsSelf = false
                     };
 
                     var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters

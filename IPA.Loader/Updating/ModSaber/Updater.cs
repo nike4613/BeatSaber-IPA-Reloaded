@@ -56,13 +56,13 @@ namespace IPA.Updating.ModSaber
             public Version Version { get; set; }
             public Version ResolvedVersion { get; set; }
             public Range Requirement { get; set; }
-            public Range Conflicts { get; set; }
+            public Range Conflicts { get; set; } // a range of versions that are not allowed to be downloaded
             public bool Resolved { get; set; }
             public bool Has { get; set; }
             public HashSet<string> Consumers { get; set; } = new HashSet<string>();
 
             public bool MetaRequestFailed { get; set; }
-
+            
             public PluginLoader.PluginInfo LocalPluginMeta { get; set; }
 
             public override string ToString()
@@ -205,10 +205,8 @@ namespace IPA.Updating.ModSaber
                 var dep = list.Value[i];
 
                 var mod = new Ref<ApiEndpoint.Mod>(null);
-
-                #region TEMPORARY get latest // SHOULD BE GREATEST OF VERSION // not going to happen because of disagreements with ModSaber
+                
                 yield return GetModInfo(dep.Name, "", mod);
-                #endregion
 
                 try { mod.Verify(); }
                 catch (Exception e)
@@ -278,10 +276,12 @@ namespace IPA.Updating.ModSaber
                     continue;
                 }
 
-                var ver = modsMatching.Value.Where(nullCheck => nullCheck != null)
-                    .Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion && versionCheck.Approval.Status)
-                    .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version))
-                    .Select(mod => mod.Version).Max(); // (2.1)
+                var ver = modsMatching.Value
+                    .Where(nullCheck => nullCheck != null) // entry is not null
+                    .Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion) // game version matches
+                    .Where(approvalCheck => approvalCheck.Approval.Status) // version approved
+                    .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version
+                    .Select(mod => mod.Version).Max(); // (2.1) get the max version
                 // ReSharper disable once AssignmentInConditionalExpression
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
                 dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
@@ -310,11 +310,6 @@ namespace IPA.Updating.ModSaber
             }
 
             Logger.updater.Debug($"To Download {string.Join(", ", toDl.Select(d => $"{d.Name}@{d.ResolvedVersion}"))}");
-
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-
-            Logger.updater.Debug($"Temp directory: {tempDirectory}");
 
             foreach (var item in toDl)
                 StartCoroutine(UpdateModCoroutine(item));
@@ -475,7 +470,7 @@ namespace IPA.Updating.ModSaber
 
             try
             {
-                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.Plugin is SelfPlugin);
+                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.Metadata.IsSelf).Unwrap();
 
                 using (var zipFile = ZipFile.Read(stream))
                 {
@@ -543,13 +538,15 @@ namespace IPA.Updating.ModSaber
                 throw;
             }
 
-            if (item.LocalPluginMeta?.Plugin is SelfPlugin)
+            if ((item.LocalPluginMeta?.Metadata.IsSelf).Unwrap())
             { // currently updating self, so copy to working dir and update
                 Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
-                if (File.Exists(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile));
+                var deleteFile = Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile);
+                if (File.Exists(deleteFile)) File.Delete(deleteFile);
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = item.LocalPluginMeta?.Metadata.File.FullName,
+                    // will never actually be null
+                    FileName = item.LocalPluginMeta?.Metadata.File.FullName ?? throw new InvalidOperationException(),
                     Arguments = $"-nw={Process.GetCurrentProcess().Id}",
                     UseShellExecute = false
                 });
