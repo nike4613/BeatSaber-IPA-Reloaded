@@ -1,28 +1,32 @@
-﻿using IPA.Injector.Backups;
+﻿using IPA.Config;
+using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    // ReSharper disable once UnusedMember.Global
     public static class Injector
     {
+        private static Task pluginAsyncLoadTask;
+
         // ReSharper disable once UnusedParameter.Global
         public static void Main(string[] args)
         { // entry point for doorstop
           // At this point, literally nothing but mscorlib is loaded,
-          // and since this class doesn't have any static fields that 
-          // aren't defined in mscorlib, we can control exactly what 
+          // and since this class doesn't have any static fields that
+          // aren't defined in mscorlib, we can control exactly what
           // gets loaded.
 
             try
@@ -32,11 +36,58 @@ namespace IPA.Injector
 
                 SetupLibraryLoading();
 
+                EnsureUserData();
+
+                // this is weird, but it prevents Mono from having issues loading the type.
+                // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
+                var unused = StandardLogger.PrintFilter;
+                #region // Above hack explaination
+                /* 
+                 * Due to an unknown bug in the version of Mono that Unity 2018.1.8 uses, if the first access to StandardLogger
+                 * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
+                 * the above static property (or maybe any, but I don't really know) it behaves as expected and works fine.
+                 */
+                #endregion
+
+                log.Debug("Initializing logger");
+
+                SelfConfig.Set();
+
                 loader.Debug("Prepping bootstrapper");
                 
-                InstallBootstrapPatch();
+                // The whole mess that follows is an attempt to work around Mono failing to
+                // call the library load routine for Mono.Cecil when the debugger is attached.
+                bool runProperly = false;
+                while (!runProperly) // retry until it finishes, or errors
+                    try // TODO: fix this mess
+                    {   // currently it gets stuck in an infinite loop because Mono refuses
+                        // to use Mono.Cecil even if it is loaded when the debugger is attached.
+                        InstallBootstrapPatch();
+                        runProperly = true;
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        var asmName = e.FileName;
+
+                        AssemblyName name;
+                        try
+                        { // try to parse as an AssemblyName, if it isn't, rethrow the outer exception
+                            name = new AssemblyName(asmName);
+                        }
+                        catch (Exception)
+                        {
+                            ExceptionDispatchInfo.Capture(e).Throw();
+                            throw;
+                        }
+
+                        // name is failed lookup, try to manually load it
+                        LibLoader.AssemblyLibLoader(null,
+                                                    new ResolveEventArgs(name.FullName, Assembly.GetExecutingAssembly()));
+                    }
 
                 Updates.InstallPendingUpdates();
+
+                pluginAsyncLoadTask = PluginLoader.LoadTask();
             }
             catch (Exception e)
             {
@@ -44,167 +95,165 @@ namespace IPA.Injector
             }
         }
 
+        private static void EnsureUserData()
+        {
+            string path;
+            if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "UserData")))
+                Directory.CreateDirectory(path);
+        }
+
+        private static void SetupLibraryLoading()
+        {
+            if (loadingDone) return;
+            loadingDone = true;
+            AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
+        }
+
         private static void InstallBootstrapPatch()
         {
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
 
             loader.Debug("Finding backup");
-            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA","Backups","Beat Saber");
+            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", "Beat Saber");
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
                 loader.Warn("No backup found! Was BSIPA installed using the installer?");
 
             loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
+
             #region Insert patch into UnityEngine.CoreModule.dll
-            var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "UnityEngine.CoreModule.dll");
 
-            var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
             {
-                ReadWrite = false,
-                InMemory = true,
-                ReadingMode = ReadingMode.Immediate
-            });
-            var unityModDef = unityAsmDef.MainModule;
+                var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
+                    "UnityEngine.CoreModule.dll");
 
-            bool modified = false;
-            foreach (var asmref in unityModDef.AssemblyReferences)
-            {
-                if (asmref.Name == cAsmName.Name)
+                var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
                 {
-                    if (asmref.Version != cAsmName.Version)
+                    ReadWrite = false,
+                    InMemory = true,
+                    ReadingMode = ReadingMode.Immediate
+                });
+                var unityModDef = unityAsmDef.MainModule;
+
+                bool modified = false;
+                foreach (var asmref in unityModDef.AssemblyReferences)
+                {
+                    if (asmref.Name == cAsmName.Name)
                     {
-                        asmref.Version = cAsmName.Version;
-                        modified = true;
+                        if (asmref.Version != cAsmName.Version)
+                        {
+                            asmref.Version = cAsmName.Version;
+                            modified = true;
+                        }
                     }
                 }
-            }
 
-            var application = unityModDef.GetType("UnityEngine", "Application");
+                var application = unityModDef.GetType("UnityEngine", "Application");
 
-            MethodDefinition cctor = null;
-            foreach (var m in application.Methods)
-                if (m.IsRuntimeSpecialName && m.Name == ".cctor")
-                    cctor = m;
+                MethodDefinition cctor = null;
+                foreach (var m in application.Methods)
+                    if (m.IsRuntimeSpecialName && m.Name == ".cctor")
+                        cctor = m;
 
-            var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
+                var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
 
-            if (cctor == null)
-            {
-                cctor = new MethodDefinition(".cctor", MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName, unityModDef.TypeSystem.Void);
-                application.Methods.Add(cctor);
-                modified = true;
-
-                var ilp = cctor.Body.GetILProcessor();
-                ilp.Emit(OpCodes.Call, cbs);
-                ilp.Emit(OpCodes.Ret);
-            }
-            else
-            {
-                var ilp = cctor.Body.GetILProcessor();
-                for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
+                if (cctor == null)
                 {
-                    var ins = cctor.Body.Instructions[i];
-                    switch (i)
+                    cctor = new MethodDefinition(".cctor",
+                        MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName,
+                        unityModDef.TypeSystem.Void);
+                    application.Methods.Add(cctor);
+                    modified = true;
+
+                    var ilp = cctor.Body.GetILProcessor();
+                    ilp.Emit(OpCodes.Call, cbs);
+                    ilp.Emit(OpCodes.Ret);
+                }
+                else
+                {
+                    var ilp = cctor.Body.GetILProcessor();
+                    for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
                     {
-                        case 0 when ins.OpCode != OpCodes.Call:
-                            ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                            modified = true;
-                            break;
-                        case 0:
+                        var ins = cctor.Body.Instructions[i];
+                        switch (i)
                         {
-                            var methodRef = ins.Operand as MethodReference;
-                            if (methodRef?.FullName != cbs.FullName)
-                            {
+                            case 0 when ins.OpCode != OpCodes.Call:
                                 ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
                                 modified = true;
-                            }
+                                break;
 
-                            break;
+                            case 0:
+                                {
+                                    var methodRef = ins.Operand as MethodReference;
+                                    if (methodRef?.FullName != cbs.FullName)
+                                    {
+                                        ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                                        modified = true;
+                                    }
+
+                                    break;
+                                }
+                            case 1 when ins.OpCode != OpCodes.Ret:
+                                ilp.Replace(ins, ilp.Create(OpCodes.Ret));
+                                modified = true;
+                                break;
                         }
-                        case 1 when ins.OpCode != OpCodes.Ret:
-                            ilp.Replace(ins, ilp.Create(OpCodes.Ret));
-                            modified = true;
-                            break;
                     }
+                }
+
+                if (modified)
+                {
+                    bkp?.Add(unityPath);
+                    unityAsmDef.Write(unityPath);
                 }
             }
 
-            if (modified)
-            {
-                bkp?.Add(unityPath);
-                unityAsmDef.Write(unityPath);
-            }
-            #endregion
+            #endregion Insert patch into UnityEngine.CoreModule.dll
 
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
+
             #region Virtualize Assembly-CSharp.dll
-            var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed", "Assembly-CSharp.dll");
-            
-            var ascModule = VirtualizedModule.Load(ascPath);
-            ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
-            #endregion
+
+            {
+                var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
+                    "Assembly-CSharp.dll");
+
+                var ascModule = VirtualizedModule.Load(ascPath);
+                ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+            }
+
+            #endregion Virtualize Assembly-CSharp.dll
         }
 
-        private static bool _bootstrapped;
+        private static bool bootstrapped;
+
         private static void CreateBootstrapper()
         {
-            if (_bootstrapped) return;
-            _bootstrapped = true;
+            if (bootstrapped) return;
+            bootstrapped = true;
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
-                var level = UnityLogInterceptor.LogTypeToLevel(type);
-                UnityLogInterceptor.UnityLogger.Log(level, $"{condition.Trim()}");
-                UnityLogInterceptor.UnityLogger.Log(level, $"{stackTrace.Trim()}");
+                var level = UnityLogRedirector.LogTypeToLevel(type);
+                UnityLogProvider.UnityLogger.Log(level, $"{condition.Trim()}");
+                UnityLogProvider.UnityLogger.Log(level, $"{stackTrace.Trim()}");
             };
 
             // need to reinit streams singe Unity seems to redirect stdout
             WinConsole.InitializeStreams();
-            
+
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
 
-        private static bool _injected;
-        public static void Inject()
-        {
-            if (!_injected)
-            {
-                _injected = true;
-                WinConsole.Initialize();
-                SetupLibraryLoading();
-                var bootstrapper = new GameObject("Bootstrapper").AddComponent<Bootstrapper>();
-                bootstrapper.Destroyed += Bootstrapper_Destroyed;
-            }
-        }
-
-        private static bool _loadingDone;
-
-        private static void SetupLibraryLoading()
-        {
-            if (_loadingDone) return;
-            _loadingDone = true;
-            #region Add Library load locations
-            AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
-            /*try
-            {
-                if (!SetDllDirectory(LibLoader.NativeDir))
-                {
-                    libLoader.Warn("Unable to add native library path to load path");
-                }
-            }
-            catch (Exception) { }*/
-            #endregion
-        }
-
-/*
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetDllDirectory(string lpPathName);
-*/
+        private static bool loadingDone;
 
         private static void Bootstrapper_Destroyed()
         {
+            // wait for plugins to finish loading
+            pluginAsyncLoadTask.Wait();
+            log.Debug("Plugins loaded");
+            log.Debug(string.Join(", ", PluginLoader.PluginsMetadata));
             PluginComponent.Create();
         }
     }

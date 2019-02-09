@@ -13,10 +13,11 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
+    <DebugType>portable</DebugType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -56,9 +57,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
+    <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
+    <Compile Include="Loader\Features\AddInFeature.cs" />
+    <Compile Include="Loader\Features\DefineFeature.cs" />
+    <Compile Include="Loader\Features\NoUpdateFeature.cs" />
+    <Compile Include="Loader\Features\PrintFeature.cs" />
+    <Compile Include="Loader\PluginInitInjector.cs" />
+    <Compile Include="Loader\LibLoader.cs" />
+    <Compile Include="Loader\Features\Feature.cs" />
+    <Compile Include="Loader\PluginLoader.cs" />
+    <Compile Include="Loader\PluginManifest.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
@@ -70,9 +82,9 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogPrinter.cs" />
     <Compile Include="Config\ModPrefs.cs" />
-    <Compile Include="Updating\Converters\ModSaberDependencyConverter.cs" />
-    <Compile Include="Updating\Converters\SemverRangeConverter.cs" />
-    <Compile Include="Updating\Converters\SemverVersionConverter.cs" />
+    <Compile Include="JsonConverters\ModSaberDependencyConverter.cs" />
+    <Compile Include="JsonConverters\SemverRangeConverter.cs" />
+    <Compile Include="JsonConverters\SemverVersionConverter.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
     <Compile Include="Utilities\Ref.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />
@@ -82,7 +94,7 @@
     <Compile Include="Logging\Printers\GZFilePrinter.cs" />
     <Compile Include="Logging\Printers\PluginLogFilePrinter.cs" />
     <Compile Include="Logging\StandardLogger.cs" />
-    <Compile Include="Logging\UnityLogInterceptor.cs" />
+    <Compile Include="Logging\UnityLogProvider.cs" />
     <Compile Include="Loader\PluginComponent.cs" />
     <Compile Include="Loader\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,14 +102,14 @@
     <Compile Include="Updating\ModSaber\Updater.cs" />
     <Compile Include="Updating\SelfPlugin.cs" />
     <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\LoneFunctions.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ionic.Zip">
       <Version>1.9.1.8</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
-      <Version>0.10.1</Version>
+      <Version>0.10.3</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.1</Version>
@@ -106,6 +118,8 @@
       <Version>1.2.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Loader\manifest.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

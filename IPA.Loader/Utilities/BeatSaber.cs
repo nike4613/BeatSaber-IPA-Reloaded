@@ -48,6 +48,14 @@ namespace IPA.Utilities
         /// The path to the `Libs\Native` folder. Use only if necessary.
         /// </summary>
         public static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
+        /// <summary>
+        /// The directory to load plugins from.
+        /// </summary>
+        public static string PluginsPath => Path.Combine(InstallPath, "Plugins");
+        /// <summary>
+        /// The path to the `UserData` folder.
+        /// </summary>
+        public static string UserDataPath => Path.Combine(InstallPath, "UserData");
 
         private static bool FindSteamVRAsset()
         {

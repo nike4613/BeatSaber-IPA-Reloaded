@@ -1,25 +1,33 @@
-﻿using System;
+﻿using IPA.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using IPA.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IPA.Config.ConfigProviders
 {
+    [Config.Type("json")]
     internal class JsonConfigProvider : IConfigProvider
     {
+        public static void RegisterConfig()
+        {
+            Config.Register<JsonConfigProvider>();
+        }
+
         private JObject jsonObj;
 
         // TODO: create a wrapper that allows empty object creation
         public dynamic Dynamic => jsonObj;
 
         public bool HasChanged { get; private set; }
+        public bool InMemoryChanged { get; set; }
 
         public DateTime LastModified => File.GetLastWriteTime(Filename + ".json");
 
         private string _filename;
+
         public string Filename
         {
             get => _filename;
@@ -38,7 +46,7 @@ namespace IPA.Config.ConfigProviders
             var fileInfo = new FileInfo(Filename + ".json");
             if (fileInfo.Exists)
             {
-                var json = fileInfo.OpenText().ReadToEnd();
+                string json = File.ReadAllText(fileInfo.FullName);
                 try
                 {
                     jsonObj = JObject.Parse(json);
@@ -57,6 +65,7 @@ namespace IPA.Config.ConfigProviders
             }
 
             SetupListeners();
+            InMemoryChanged = true;
         }
 
         private void SetupListeners()
@@ -69,30 +78,34 @@ namespace IPA.Config.ConfigProviders
         private void JsonObj_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HasChanged = true;
+            InMemoryChanged = true;
         }
 
         private void JsonObj_ListChanged(object sender, ListChangedEventArgs e)
         {
             HasChanged = true;
+            InMemoryChanged = true;
         }
 
         private void JsonObj_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             HasChanged = true;
+            InMemoryChanged = true;
         }
 
         public T Parse<T>()
         {
+            if (jsonObj == null)
+                return default(T);
             return jsonObj.ToObject<T>();
         }
 
         public void Save()
         {
             Logger.config.Debug($"Saving file {Filename}.json");
-
-            var fileInfo = new FileInfo(Filename + ".json");
-
-            File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
+            if (!Directory.Exists(Path.GetDirectoryName(Filename)))
+                Directory.CreateDirectory(Path.GetDirectoryName(Filename) ?? throw new InvalidOperationException());
+            File.WriteAllText(Filename + ".json", JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
 
             HasChanged = false;
         }
@@ -102,6 +115,7 @@ namespace IPA.Config.ConfigProviders
             jsonObj = JObject.FromObject(obj);
             SetupListeners();
             HasChanged = true;
+            InMemoryChanged = true;
         }
     }
 }

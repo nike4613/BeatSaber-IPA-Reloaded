@@ -5,10 +5,27 @@ using System.Reflection;
 namespace IPA.Utilities
 {
     /// <summary>
+    /// Utilities to create <see cref="Ref{T}"/> using type inference.
+    /// </summary>
+    public static class Ref
+    {
+        /// <summary>
+        /// Creates a <see cref="Ref{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">the type to reference.</typeparam>
+        /// <param name="val">the default value.</param>
+        /// <returns>the new <see cref="Ref{T}"/>.</returns>
+        public static Ref<T> Create<T>(T val)
+        {
+            return new Ref<T>(val);
+        }
+    }
+
+    /// <summary>
     /// A class to store a reference for passing to methods which cannot take ref parameters.
     /// </summary>
     /// <typeparam name="T">the type of the value</typeparam>
-    public class Ref<T>
+    public class Ref<T> : IComparable<T>, IComparable<Ref<T>>
     {
         private T _value;
         /// <summary>
@@ -75,6 +92,20 @@ namespace IPA.Utilities
         public void Verify()
         {
             if (Error != null) throw Error;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(T other)
+        {
+            if (Value is IComparable<T> compare)
+                return compare.CompareTo(other);
+            return Equals(Value, other) ? 0 : -1;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(Ref<T> other)
+        {
+            return CompareTo(other.Value);
         }
     }
     

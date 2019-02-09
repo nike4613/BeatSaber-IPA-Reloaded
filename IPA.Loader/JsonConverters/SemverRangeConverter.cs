@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using SemVer;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
+using SemVer;
 
-namespace IPA.Updating.Converters
+namespace IPA.JsonConverters
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     internal class SemverRangeConverter : JsonConverter<Range>

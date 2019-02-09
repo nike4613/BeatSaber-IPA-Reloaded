@@ -32,7 +32,11 @@ namespace IPA.Config
         /// </summary>
         bool HasChanged { get; }
         /// <summary>
-        /// Will be set with the filename (no extension) to save to. When saving, the implimentation should add the appropriate extension. Should error if set multiple times.
+        /// Returns <see langword="true"/> if the data in memory has been changed - notably including loads.
+        /// </summary>
+        bool InMemoryChanged { get; set; }
+        /// <summary>
+        /// Will be set with the filename (no extension) to save to. When saving, the implementation should add the appropriate extension. Should error if set multiple times.
         /// </summary>
         string Filename { set; }
         /// <summary>

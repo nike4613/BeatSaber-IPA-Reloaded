@@ -73,7 +73,7 @@ namespace IPA.Injector
                     {
                         try
                         {
-                            if (!LoneFunctions.GetRelativePath(file, path).Split(Path.PathSeparator).Contains("Pending"))
+                            if (!Utils.GetRelativePath(file, path).Split(Path.PathSeparator).Contains("Pending"))
                                 File.Delete(file);
                         }
                         catch (FileNotFoundException e)
@@ -97,7 +97,7 @@ namespace IPA.Injector
 
             try
             {
-                LoneFunctions.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(BeatSaber.InstallPath));
+                Utils.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(BeatSaber.InstallPath));
             }
             catch (Exception e)
             {

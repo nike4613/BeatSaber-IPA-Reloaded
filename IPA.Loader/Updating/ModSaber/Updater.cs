@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using IPA.Loader;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SemVer;
@@ -55,14 +56,14 @@ namespace IPA.Updating.ModSaber
             public Version Version { get; set; }
             public Version ResolvedVersion { get; set; }
             public Range Requirement { get; set; }
-            public Range Conflicts { get; set; }
+            public Range Conflicts { get; set; } // a range of versions that are not allowed to be downloaded
             public bool Resolved { get; set; }
             public bool Has { get; set; }
             public HashSet<string> Consumers { get; set; } = new HashSet<string>();
 
             public bool MetaRequestFailed { get; set; }
-
-            public PluginInfo LocalPluginMeta { get; set; }
+            
+            public PluginLoader.PluginInfo LocalPluginMeta { get; set; }
 
             public override string ToString()
             {
@@ -169,13 +170,13 @@ namespace IPA.Updating.ModSaber
 
             foreach (var plugin in BSMetas)
             { // initialize with data to resolve (1.1)
-                if (plugin.ModSaberInfo != null)
+                if (plugin.Metadata.Id != null)
                 { // updatable
-                    var msinfo = plugin.ModSaberInfo;
+                    var msinfo = plugin.Metadata;
                     depList.Value.Add(new DependencyObject {
-                        Name = msinfo.InternalName,
-                        Version = msinfo.SemverVersion,
-                        Requirement = new Range($">={msinfo.CurrentVersion}"),
+                        Name = msinfo.Id,
+                        Version = msinfo.Version,
+                        Requirement = new Range($">={msinfo.Version}"),
                         LocalPluginMeta = plugin
                     });
                 }
@@ -204,10 +205,8 @@ namespace IPA.Updating.ModSaber
                 var dep = list.Value[i];
 
                 var mod = new Ref<ApiEndpoint.Mod>(null);
-
-                #region TEMPORARY get latest // SHOULD BE GREATEST OF VERSION // not going to happen because of disagreements with ModSaber
+                
                 yield return GetModInfo(dep.Name, "", mod);
-                #endregion
 
                 try { mod.Verify(); }
                 catch (Exception e)
@@ -277,10 +276,12 @@ namespace IPA.Updating.ModSaber
                     continue;
                 }
 
-                var ver = modsMatching.Value.Where(nullCheck => nullCheck != null)
-                    .Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion && versionCheck.Approval.Status)
-                    .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version))
-                    .Select(mod => mod.Version).Max(); // (2.1)
+                var ver = modsMatching.Value
+                    .Where(nullCheck => nullCheck != null) // entry is not null
+                    .Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion) // game version matches
+                    .Where(approvalCheck => approvalCheck.Approval.Status) // version approved
+                    .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version
+                    .Select(mod => mod.Version).Max(); // (2.1) get the max version
                 // ReSharper disable once AssignmentInConditionalExpression
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
                 dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
@@ -309,11 +310,6 @@ namespace IPA.Updating.ModSaber
             }
 
             Logger.updater.Debug($"To Download {string.Join(", ", toDl.Select(d => $"{d.Name}@{d.ResolvedVersion}"))}");
-
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-
-            Logger.updater.Debug($"Temp directory: {tempDirectory}");
 
             foreach (var item in toDl)
                 StartCoroutine(UpdateModCoroutine(item));
@@ -462,7 +458,7 @@ namespace IPA.Updating.ModSaber
             var data = stream.GetBuffer();
             SHA1 sha = new SHA1CryptoServiceProvider();
             var hash = sha.ComputeHash(data);
-            if (!LoneFunctions.UnsafeCompare(hash, fileInfo.Hash))
+            if (!Utils.UnsafeCompare(hash, fileInfo.Hash))
                 throw new Exception("The hash for the file doesn't match what is defined");
 
             var targetDir = Path.Combine(BeatSaber.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
@@ -474,7 +470,7 @@ namespace IPA.Updating.ModSaber
 
             try
             {
-                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.Plugin is SelfPlugin);
+                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.Metadata.IsSelf).Unwrap();
 
                 using (var zipFile = ZipFile.Read(stream))
                 {
@@ -498,7 +494,7 @@ namespace IPA.Updating.ModSaber
 
                                 try
                                 {
-                                    if (!LoneFunctions.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
+                                    if (!Utils.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
                                         throw new Exception("The hash for the file doesn't match what is defined");
                                 }
                                 catch (KeyNotFoundException)
@@ -510,7 +506,7 @@ namespace IPA.Updating.ModSaber
                                 FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
-                                if (LoneFunctions.GetRelativePath(targetFile.FullName, targetDir) == LoneFunctions.GetRelativePath(item.LocalPluginMeta?.Filename, BeatSaber.InstallPath))
+                                if (Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 /*if (targetFile.Exists)
@@ -529,7 +525,7 @@ namespace IPA.Updating.ModSaber
                 }
                 
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { LoneFunctions.GetRelativePath(item.LocalPluginMeta.Filename, BeatSaber.InstallPath) });
+                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
@@ -542,19 +538,21 @@ namespace IPA.Updating.ModSaber
                 throw;
             }
 
-            if (item.LocalPluginMeta?.Plugin is SelfPlugin)
+            if ((item.LocalPluginMeta?.Metadata.IsSelf).Unwrap())
             { // currently updating self, so copy to working dir and update
-                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
-                if (File.Exists(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile))) File.Delete(Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile));
+                Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
+                var deleteFile = Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile);
+                if (File.Exists(deleteFile)) File.Delete(deleteFile);
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = item.LocalPluginMeta.Filename,
+                    // will never actually be null
+                    FileName = item.LocalPluginMeta?.Metadata.File.FullName ?? throw new InvalidOperationException(),
                     Arguments = $"-nw={Process.GetCurrentProcess().Id}",
                     UseShellExecute = false
                 });
             }
             else
-                LoneFunctions.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), SpecialDeletionsFile);
+                Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(eventualOutput), SpecialDeletionsFile);
             Directory.Delete(targetDir, true); // delete extraction site
 
             Logger.updater.Debug("Extractor exited");

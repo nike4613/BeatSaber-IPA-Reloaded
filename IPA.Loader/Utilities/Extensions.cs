@@ -16,5 +16,12 @@ namespace IPA.Utilities
         {
             return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
+
+        /// <summary>
+        /// Unwraps a <see cref="Nullable{T}"/> where T is <see cref="bool"/> such that if the value is null, it gives <see langword="false"/>.
+        /// </summary>
+        /// <param name="self">the bool? to unwrap</param>
+        /// <returns>the unwrapped value, or <see langword="false"/> if it was <see langword="null"/></returns>
+        public static bool Unwrap(this bool? self) => self != null && self.Value;
     }
 }
