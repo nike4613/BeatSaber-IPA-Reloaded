@@ -7,14 +7,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using IPA.Config;
-using IPA.Config.ConfigProviders;
-using IPA.Logging;
 using IPA.Old;
-using IPA.Updating;
 using IPA.Utilities;
 using Mono.Cecil;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
+using static IPA.Loader.PluginLoader;
 
 namespace IPA.Loader
 {
@@ -25,18 +23,7 @@ namespace IPA.Loader
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
         
-        /// <summary>
-        /// A container object for all the data relating to a plugin.
-        /// </summary>
-        public class PluginInfo
-        {
-            internal IBeatSaberPlugin Plugin { get; set; }
-            internal string Filename { get; set; }
-            /// <summary>
-            /// The ModSaber updating info for the mod, or null.
-            /// </summary>
-            public ModsaberModInfo ModSaberInfo { get; internal set; }
-        }
+        
 
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
@@ -72,7 +59,7 @@ namespace IPA.Loader
         /// <returns>the plugin info for the requested plugin or null</returns>
         public static PluginInfo GetPlugin(string name)
         {
-            return BSMetas.FirstOrDefault(p => p.Plugin.Name == name);
+            return BSMetas.FirstOrDefault(p => p.Metadata.Name == name);
         }
 
         /// <summary>
@@ -82,7 +69,7 @@ namespace IPA.Loader
         /// <returns>the plugin info for the requested plugin or null</returns>
         public static PluginInfo GetPluginFromModSaberName(string name)
         {
-            return BSMetas.FirstOrDefault(p => p.ModSaberInfo.InternalName == name);
+            return BSMetas.FirstOrDefault(p => p.Metadata.Id == name);
         }
         
         /// <summary>
@@ -103,8 +90,6 @@ namespace IPA.Loader
         private static List<IPlugin> _ipaPlugins;
 
         internal static IConfigProvider SelfConfigProvider { get; set; }
-
-        internal static readonly List<KeyValuePair<IConfigProvider,Ref<DateTime>>> configProviders = new List<KeyValuePair<IConfigProvider, Ref<DateTime>>>();
 
         private static void LoadPlugins()
         {
@@ -136,6 +121,7 @@ namespace IPA.Loader
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
             foreach (string s in originalPlugins)
             {
+                if (PluginsMetadata.Select(m => m.File.Name).Contains(s)) continue;
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
 
                 #region Fix assemblies for refactor
@@ -179,38 +165,42 @@ namespace IPA.Loader
                 #endregion
             }
 
-            var selfPlugin = new PluginInfo
+            /*var selfPlugin = new PluginInfo
             {
                 Filename = Path.Combine(BeatSaber.InstallPath, "IPA.exe"),
                 Plugin = SelfPlugin.Instance
             };
-            selfPlugin.ModSaberInfo = selfPlugin.Plugin.ModInfo;
+            selfPlugin.Metadata.Manifest = new PluginManifest
+            {
+                Author = "DaNike",
+                Features = new string[0],
+                Description = "",
+                Version = new SemVer.Version(SelfConfig.IPA_Version),
+                GameVersion = BeatSaber.GameVersion,
+                Id = "beatsaber-ipa-reloaded"
+            };
+            selfPlugin.Metadata.File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe"));
 
-            _bsPlugins.Add(selfPlugin);
-
-            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(
-                SelfConfigProvider = new JsonConfigProvider {Filename = Path.Combine("UserData", SelfPlugin.IPA_Name)},
-                new Ref<DateTime>(SelfConfigProvider.LastModified)));
-            SelfConfigProvider.Load();
+            _bsPlugins.Add(selfPlugin);*/
 
             //Load copied plugins
             string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
             foreach (string s in copiedPlugins)
             {
-                var result = LoadPluginsFromFile(s, exeName);
-                _bsPlugins.AddRange(result.Item1);
+                var result = LoadPluginsFromFile(s);
                 _ipaPlugins.AddRange(result.Item2);
             }
+            _bsPlugins.AddRange(PluginLoader.LoadPlugins());
             
             Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {Application.unityVersion}");
             Logger.log.Info($"Game version {BeatSaber.GameVersion}");
             Logger.log.Info("-----------------------------");
-            Logger.log.Info($"Loading plugins from {LoneFunctions.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
+            Logger.log.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
-                Logger.log.Info($"{plugin.Plugin.Name}: {plugin.Plugin.Version}");
+                Logger.log.Info($"{plugin.Metadata.Name}: {plugin.Metadata.Version}");
             }
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _ipaPlugins)
@@ -220,13 +210,12 @@ namespace IPA.Loader
             Logger.log.Info("-----------------------------");
         }
 
-        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file, string exeName)
+        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file)
         {
-            List<PluginInfo> bsPlugins = new List<PluginInfo>();
             List<IPlugin> ipaPlugins = new List<IPlugin>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+                return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(null, ipaPlugins);
 
             T OptionalGetPlugin<T>(Type t) where T : class
             {
@@ -236,15 +225,15 @@ namespace IPA.Loader
                     try
                     {
                         T pluginInstance = Activator.CreateInstance(t) as T;
-                        string[] filter = null;
+                        /*string[] filter = null;
 
                         if (typeof(T) == typeof(IPlugin) && pluginInstance is IEnhancedPlugin enhancedPlugin)
                             filter = enhancedPlugin.Filter;
                         else if (pluginInstance is IGenericEnhancedPlugin plugin)
-                            filter = plugin.Filter;
+                            filter = plugin.Filter;*/
 
-                        if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
-                            return pluginInstance;
+                        //if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
+                        return pluginInstance;
                     }
                     catch (Exception e)
                     {
@@ -257,74 +246,15 @@ namespace IPA.Loader
 
             try
             {
-
                 Assembly assembly = Assembly.LoadFrom(file);
 
                 foreach (Type t in assembly.GetTypes())
                 {
-                    IBeatSaberPlugin bsPlugin = OptionalGetPlugin<IBeatSaberPlugin>(t);
-                    if (bsPlugin != null)
+                       
+                    IPlugin ipaPlugin = OptionalGetPlugin<IPlugin>(t);
+                    if (ipaPlugin != null)
                     {
-                        try
-                        {
-                            var init = t.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
-                            if (init != null)
-                            {
-                                var initArgs = new List<object>();
-                                var initParams = init.GetParameters();
-
-                                Logger modLogger = null;
-                                IModPrefs modPrefs = null;
-                                IConfigProvider cfgProvider = null;
-
-                                foreach (var param in initParams)
-                                {
-                                    var ptype = param.ParameterType;
-                                    if (ptype.IsAssignableFrom(typeof(Logger))) {
-                                        if (modLogger == null) modLogger = new StandardLogger(bsPlugin.Name);
-                                        initArgs.Add(modLogger);
-                                    }
-                                    else if (ptype.IsAssignableFrom(typeof(IModPrefs)))
-                                    {
-                                        if (modPrefs == null) modPrefs = new ModPrefs(bsPlugin);
-                                        initArgs.Add(modPrefs);
-                                    }
-                                    else if (ptype.IsAssignableFrom(typeof(IConfigProvider)))
-                                    {
-                                        if (cfgProvider == null)
-                                        {
-                                            cfgProvider = new JsonConfigProvider { Filename = Path.Combine("UserData", $"{bsPlugin.Name}") };
-                                            configProviders.Add(new KeyValuePair<IConfigProvider, Ref<DateTime>>(cfgProvider, new Ref<DateTime>(cfgProvider.LastModified)));
-                                            cfgProvider.Load();
-                                        }
-                                        initArgs.Add(cfgProvider);
-                                    }
-                                    else
-                                        initArgs.Add(ptype.GetDefault());
-                                }
-
-                                init.Invoke(bsPlugin, initArgs.ToArray());
-                            }
-
-                            bsPlugins.Add(new PluginInfo
-                            {
-                                Plugin = bsPlugin,
-                                Filename = file.Replace("\\.cache", ""), // quick and dirty fix
-                                ModSaberInfo = bsPlugin.ModInfo
-                            });
-                        }
-                        catch (AmbiguousMatchException)
-                        {
-                            Logger.loader.Error("Only one Init allowed per plugin");
-                        }
-                    }
-                    else
-                    {
-                        IPlugin ipaPlugin = OptionalGetPlugin<IPlugin>(t);
-                        if (ipaPlugin != null)
-                        {
-                            ipaPlugins.Add(ipaPlugin);
-                        }
+                        ipaPlugins.Add(ipaPlugin);
                     }
                 }
 
@@ -334,7 +264,7 @@ namespace IPA.Loader
                 Logger.loader.Error($"Could not load {Path.GetFileName(file)}! {e}");
             }
 
-            return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(bsPlugins, ipaPlugins);
+            return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(null, ipaPlugins);
         }
 
         internal class AppInfo

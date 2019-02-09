@@ -54,11 +54,11 @@ namespace IPA.Loader.Composite
             Invoke(plugin => plugin.OnFixedUpdate());
         }
 
-        public string Name => throw new NotImplementedException();
+        public string Name => throw new InvalidOperationException();
 
-        public string Version => throw new NotImplementedException();
+        public string Version => throw new InvalidOperationException();
 
-        public ModsaberModInfo ModInfo => throw new NotImplementedException();
+        public ModsaberModInfo ModInfo => throw new InvalidOperationException();
 
         public void OnLateUpdate() {
             Invoke(plugin => {

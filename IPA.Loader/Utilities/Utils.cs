@@ -7,7 +7,7 @@ namespace IPA.Utilities
     /// <summary>
     /// A class providing static utility functions that in any other language would just *exist*.
     /// </summary>
-    public static class LoneFunctions
+    public static class Utils
     {
         /// <summary>
         /// Converts a hex string to a byte array.
