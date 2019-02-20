@@ -9,22 +9,6 @@ namespace IPA
     /// </summary>
     public interface IBeatSaberPlugin
     {
-
-        /// <summary>
-        /// Gets the name of the plugin.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Gets the version of the plugin.
-        /// </summary>
-        string Version { get; }
-
-        /// <summary>
-        /// Gets the info for the ModSaber release of this plugin. Return null if there is no ModSaber release.
-        /// </summary>
-        ModsaberModInfo ModInfo { get; }
-
         /// <summary>
         /// Gets invoked when the application is started.
         /// </summary>
