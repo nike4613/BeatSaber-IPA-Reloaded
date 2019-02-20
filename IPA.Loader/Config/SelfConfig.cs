@@ -29,11 +29,11 @@ namespace IPA.Config
 
         public static void Set()
         {
-            LoaderConfig = Config.GetProviderFor(IPA_Name, "json");
+            LoaderConfig = Config.GetProviderFor(IPAName, "json");
         }
 
-        internal const string IPA_Name = "Beat Saber IPA";
-        internal const string IPA_Version = "3.12.0";
+        internal const string IPAName = "Beat Saber IPA";
+        internal const string IPAVersion = "3.12.2";
 
         public bool Regenerate = true;
 

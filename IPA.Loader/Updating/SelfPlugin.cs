@@ -9,13 +9,13 @@ namespace IPA.Updating
     {
         public static SelfPlugin Instance { get; set; } = new SelfPlugin();
 
-        public string Name => SelfConfig.IPA_Name;
+        public string Name => SelfConfig.IPAName;
 
-        public string Version => SelfConfig.IPA_Version;
+        public string Version => SelfConfig.IPAVersion;
 
         public ModsaberModInfo ModInfo => new ModsaberModInfo
         {
-            CurrentVersion = SelfConfig.IPA_Version,
+            CurrentVersion = SelfConfig.IPAVersion,
             InternalName = "beatsaber-ipa-reloaded"
         };
 
