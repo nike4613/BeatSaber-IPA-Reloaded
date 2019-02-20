@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
@@ -55,35 +54,7 @@ namespace IPA.Injector
 
                 loader.Debug("Prepping bootstrapper");
                 
-                // The whole mess that follows is an attempt to work around Mono failing to
-                // call the library load routine for Mono.Cecil when the debugger is attached.
-                bool runProperly = false;
-                while (!runProperly) // retry until it finishes, or errors
-                    try // TODO: fix this mess
-                    {   // currently it gets stuck in an infinite loop because Mono refuses
-                        // to use Mono.Cecil even if it is loaded when the debugger is attached.
-                        InstallBootstrapPatch();
-                        runProperly = true;
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        var asmName = e.FileName;
-
-                        AssemblyName name;
-                        try
-                        { // try to parse as an AssemblyName, if it isn't, rethrow the outer exception
-                            name = new AssemblyName(asmName);
-                        }
-                        catch (Exception)
-                        {
-                            ExceptionDispatchInfo.Capture(e).Throw();
-                            throw;
-                        }
-
-                        // name is failed lookup, try to manually load it
-                        LibLoader.AssemblyLibLoader(null,
-                                                    new ResolveEventArgs(name.FullName, Assembly.GetExecutingAssembly()));
-                    }
+                InstallBootstrapPatch();
 
                 Updates.InstallPendingUpdates();
 
