@@ -38,7 +38,8 @@ namespace IPA.Loader.Composite
         private void Invoke(CompositeCall callback) {
             foreach (var plugin in plugins) {
                 try {
-                    callback(plugin);
+                    if (plugin.Plugin != null)
+                        callback(plugin);
                 }
                 catch (Exception ex) {
                     Logger.log.Error($"{plugin.Metadata.Name}: {ex}");
