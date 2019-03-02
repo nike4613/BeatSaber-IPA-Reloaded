@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -50,6 +51,11 @@ namespace IPA.Logging
             },
             new GlobalLogFilePrinter()
         };
+
+        /// <summary>
+        /// The <see cref="TextWriter"/> for writing directly to the console window, or stdout if no window open.
+        /// </summary>
+        public static TextWriter ConsoleWriter { get; internal set; } = Console.Out;
 
         /// <summary>
         /// Adds to the default printer pool that all printers inherit from. Printers added this way will be passed every message from every logger.

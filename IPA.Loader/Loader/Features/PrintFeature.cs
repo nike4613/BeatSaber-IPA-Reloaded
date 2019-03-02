@@ -25,7 +25,7 @@ namespace IPA.Loader.Features
     {
         public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
         {
-            Logger.features.Debug($"{meta.Name}: {string.Join(" ", parameters)}");
+            Logger.features.Warn($"{meta.Name}: {string.Join(" ", parameters)}");
             return true;
         }
     }

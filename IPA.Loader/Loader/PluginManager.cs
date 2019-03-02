@@ -117,11 +117,14 @@ namespace IPA.Loader
                 }
             }
 
+            // initialize BSIPA plugins first
+            _bsPlugins.AddRange(PluginLoader.LoadPlugins());
+
             //Copy plugins to .cache
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
             foreach (string s in originalPlugins)
             {
-                if (PluginsMetadata.Select(m => m.File.Name).Contains(s)) continue;
+                if (PluginsMetadata.Select(m => m.File.FullName).Contains(s)) continue;
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
 
                 #region Fix assemblies for refactor
@@ -190,7 +193,6 @@ namespace IPA.Loader
                 var result = LoadPluginsFromFile(s);
                 _ipaPlugins.AddRange(result.Item2);
             }
-            _bsPlugins.AddRange(PluginLoader.LoadPlugins());
             
             Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {Application.unityVersion}");
