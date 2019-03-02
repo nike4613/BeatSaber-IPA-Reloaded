@@ -5,7 +5,7 @@
   "gameVersion": "0.12.2",
   "id": "beatsaber-ipa-reloaded",
   "name": "BSIPA",
-  "version": "3.12.2",
+  "version": "3.12.3",
   "features": [
     "define-feature(print, IPA.Loader.Features.PrintFeature)",
     "define-feature(debug, IPA.Loader.Features.DebugFeature)",
