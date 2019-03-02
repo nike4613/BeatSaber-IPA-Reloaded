@@ -15,7 +15,7 @@ namespace IPA.Loader
 
             var testFile = $"{name.Name}.{name.Version}.dll";
 
-            if (LibLoader.filenameLocations.TryGetValue(testFile, out string path))
+            if (LibLoader.FilenameLocations.TryGetValue(testFile, out string path))
             {
                 if (File.Exists(path))
                 {
@@ -31,18 +31,18 @@ namespace IPA.Loader
     {
         internal static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
         internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        internal static Dictionary<string, string> filenameLocations;
+        internal static Dictionary<string, string> FilenameLocations;
 
         internal static void SetupAssemblyFilenames()
         {
-            if (filenameLocations == null)
+            if (FilenameLocations == null)
             {
-                filenameLocations = new Dictionary<string, string>();
+                FilenameLocations = new Dictionary<string, string>();
 
                 foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
-                    if (filenameLocations.ContainsKey(fn.Name))
+                    if (FilenameLocations.ContainsKey(fn.Name))
                         Log(Logger.Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
-                    else filenameLocations.Add(fn.Name, fn.FullName);
+                    else FilenameLocations.Add(fn.Name, fn.FullName);
             }
         }
 
@@ -56,7 +56,7 @@ namespace IPA.Loader
             var testFile = $"{asmName.Name}.{asmName.Version}.dll";
             Log(Logger.Level.Debug, $"Looking for file {testFile}");
 
-            if (filenameLocations.TryGetValue(testFile, out string path))
+            if (FilenameLocations.TryGetValue(testFile, out string path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 if (File.Exists(path))
