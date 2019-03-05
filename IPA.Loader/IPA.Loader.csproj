@@ -64,6 +64,7 @@
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
     <Compile Include="Loader\Features\AddInFeature.cs" />
     <Compile Include="Loader\Features\DefineFeature.cs" />
+    <Compile Include="Loader\Features\InitInjectorFeature.cs" />
     <Compile Include="Loader\Features\NoUpdateFeature.cs" />
     <Compile Include="Loader\Features\PrintFeature.cs" />
     <Compile Include="Loader\PluginInitInjector.cs" />
