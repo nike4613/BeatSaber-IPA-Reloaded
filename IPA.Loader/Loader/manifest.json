@@ -11,6 +11,7 @@
     "define-feature(debug, IPA.Loader.Features.DebugFeature)",
     "define-feature(warn, IPA.Loader.Features.WarnFeature)",
     "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
-    "define-feature(add-in, IPA.Loader.Features.AddInFeature)"
+    "define-feature(add-in, IPA.Loader.Features.AddInFeature)",
+    "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)"
   ]
 }

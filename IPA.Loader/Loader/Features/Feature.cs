@@ -69,7 +69,10 @@ namespace IPA.Loader.Features
         /// <param name="plugin">the plugin to ensure is loaded.</param>
         protected void RequireLoaded(PluginLoader.PluginMetadata plugin) => PluginLoader.Load(plugin);
 
-        internal virtual bool StoreOnPlugin => true;
+        /// <summary>
+        /// Defines whether or not this feature will be accessible from the plugin metadata once loaded.
+        /// </summary>
+        protected internal virtual bool StoreOnPlugin => true;
 
         private static readonly Dictionary<string, Type> featureTypes = new Dictionary<string, Type>
         {

@@ -7,7 +7,7 @@ namespace IPA.Loader.Features
     {
         public static bool NewFeature = true;
 
-        internal override bool StoreOnPlugin => false;
+        protected internal override bool StoreOnPlugin => false;
 
         public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
         { // parameters should be (name, fully qualified type)
