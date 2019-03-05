@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using IPA.Logging;
 using Microsoft.Win32.SafeHandles;
 
 namespace IPA.Injector
