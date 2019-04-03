@@ -63,6 +63,7 @@
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
     <Compile Include="Loader\Features\AddInFeature.cs" />
+    <Compile Include="Loader\Features\ConfigProviderFeature.cs" />
     <Compile Include="Loader\Features\DefineFeature.cs" />
     <Compile Include="Loader\Features\InitInjectorFeature.cs" />
     <Compile Include="Loader\Features\NoUpdateFeature.cs" />

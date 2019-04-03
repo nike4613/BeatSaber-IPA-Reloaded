@@ -2,16 +2,17 @@
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
   "author": "DaNike",
   "description": "A mod loader specifically for Beat Saber.",
-  "gameVersion": "0.12.2",
+  "gameVersion": "0.13.1",
   "id": "beatsaber-ipa-reloaded",
   "name": "BSIPA",
-  "version": "3.12.3",
+  "version": "3.12.4",
   "features": [
     "define-feature(print, IPA.Loader.Features.PrintFeature)",
     "define-feature(debug, IPA.Loader.Features.DebugFeature)",
     "define-feature(warn, IPA.Loader.Features.WarnFeature)",
     "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
     "define-feature(add-in, IPA.Loader.Features.AddInFeature)",
-    "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)"
+    "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
+    "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)"
   ]
 }
