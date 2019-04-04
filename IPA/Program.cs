@@ -283,10 +283,13 @@ namespace IPA
 
         public static void ClearLine()
         {
-            Console.SetCursorPosition(0, Console.CursorTop);
-            int tpos = Console.CursorTop;
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, tpos);
+            if (IsConsole)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                int tpos = Console.CursorTop;
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, tpos);
+            }
         }
 
         private static IEnumerable<FileInfo> PassThroughInterceptor(FileInfo from, FileInfo to)
@@ -313,7 +316,7 @@ namespace IPA
                     Debug.Assert(targetFile.Directory != null, "targetFile.Directory != null");
                     targetFile.Directory?.Create();
 
-                    Console.CursorTop--;
+                    LineBack();
                     ClearLine();
                     Console.WriteLine(@"Copying {0}", targetFile.FullName);
                     backup.Add(targetFile);
@@ -384,6 +387,36 @@ namespace IPA
 
                 // Not a supported binary
                 return Architecture.Unknown;
+            }
+        }
+
+        public static void ResetLine()
+        {
+            if (IsConsole)
+                Console.CursorLeft = 0;
+            else
+                Console.Write("\r");
+        }
+
+        public static void LineBack()
+        {
+            if (IsConsole)
+                Console.CursorTop--;
+            else
+                Console.Write("\x1b[1A");
+        }
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetConsoleWindow();
+
+        private static bool? isConsole;
+        public static bool IsConsole
+        {
+            get
+            {
+                if (isConsole == null)
+                    isConsole = GetConsoleWindow() != IntPtr.Zero;
+                return isConsole.Value;
             }
         }
 

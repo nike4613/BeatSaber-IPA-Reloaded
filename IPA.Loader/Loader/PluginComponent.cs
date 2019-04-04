@@ -27,7 +27,8 @@ namespace IPA.Loader
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
-            gameObject.AddComponent<Updating.ModSaber.Updater>();
+            /* kill this for now, until theres a new system */
+            //gameObject.AddComponent<Updating.ModSaber.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();
