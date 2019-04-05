@@ -188,6 +188,13 @@ namespace IPA.Loader
                         break;
                     }
 
+                    if (metadata.Manifest == null)
+                    {
+                        Logger.loader.Error("Could not find manifest.json in namespace " +
+                            $"{metadata.PluginType.Namespace} for {Path.GetFileName(plugin)}");
+                        continue;
+                    }
+
                     Logger.loader.Debug($"Adding info for {Path.GetFileName(plugin)}");
                     PluginsMetadata.Add(metadata);
                 }

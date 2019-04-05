@@ -31,8 +31,8 @@ namespace IPA.Loader
         [JsonProperty("conflictsWith", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
         public Dictionary<string, Range> Conflicts = new Dictionary<string, Range>();
 
-        [JsonProperty("features", Required = Required.Always)]
-        public string[] Features;
+        [JsonProperty("features", Required = Required.DisallowNull)]
+        public string[] Features = new string[0];
 
         [JsonProperty("loadBefore", Required = Required.DisallowNull)]
         public string[] LoadBefore = new string[0];
