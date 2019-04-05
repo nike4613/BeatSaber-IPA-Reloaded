@@ -82,6 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Verbose_Release|AnyCPU'">
     <OutputPath>bin\Verbose_Release\</OutputPath>
     <OtherConfig>Release</OtherConfig>
+    <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -148,7 +149,8 @@
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
-      <BadFiles Include="$(OutputPath)**\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
     <RemoveDir Directories="$(OutputPath)Libraries\" />
