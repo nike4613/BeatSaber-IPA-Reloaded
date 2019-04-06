@@ -97,7 +97,12 @@ namespace IPA.Injector
 
             try
             {
-                Utils.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(BeatSaber.InstallPath));
+                Utils.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(BeatSaber.InstallPath), onCopyException: (e, f) =>
+                {
+                    updater.Error($"Error copying file {Utils.GetRelativePath(f.FullName, pendingDir)} from Pending:");
+                    updater.Error(e);
+                    return true;
+                });
             }
             catch (Exception e)
             {

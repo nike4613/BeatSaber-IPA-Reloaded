@@ -87,8 +87,10 @@ namespace IPA.Utilities
         /// </summary>
         /// <param name="source">the source directory</param>
         /// <param name="target">the destination directory</param>
-        /// <param name="appendFileName"></param>
-        public static void CopyAll(DirectoryInfo source, DirectoryInfo target, string appendFileName = "")
+        /// <param name="appendFileName">the filename of the file to append together</param>
+        /// <param name="onCopyException">a delegate called when there is an error copying. Return true to keep going.</param>
+        public static void CopyAll(DirectoryInfo source, DirectoryInfo target, string appendFileName = "",
+            Func<Exception, FileInfo, bool> onCopyException = null)
         {
             if (source.FullName.ToLower() == target.FullName.ToLower())
             {
@@ -104,10 +106,19 @@ namespace IPA.Utilities
             // Copy each file into it's new directory.
             foreach (FileInfo fi in source.GetFiles())
             {
-                if (fi.Name == appendFileName)
-                    File.AppendAllLines(Path.Combine(target.ToString(), fi.Name), File.ReadAllLines(fi.FullName));
-                else
-                    fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                try
+                {
+                    if (fi.Name == appendFileName)
+                        File.AppendAllLines(Path.Combine(target.ToString(), fi.Name), File.ReadAllLines(fi.FullName));
+                    else
+                        fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                }
+                catch (Exception e)
+                {
+                    var keepOn = onCopyException?.Invoke(e, fi);
+                    if (!keepOn.Unwrap())
+                        throw;
+                }
             }
 
             // Copy each subdirectory using recursion.
@@ -115,7 +126,7 @@ namespace IPA.Utilities
             {
                 DirectoryInfo nextTargetSubDir =
                     target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAll(diSourceSubDir, nextTargetSubDir, appendFileName);
+                CopyAll(diSourceSubDir, nextTargetSubDir, appendFileName, onCopyException);
             }
         }
     }
