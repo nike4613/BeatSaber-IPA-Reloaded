@@ -36,6 +36,11 @@ namespace IPA.Logging
             },
             new ColoredConsolePrinter()
             {
+                Filter = LogLevel.NoticeOnly,
+                Color = ConsoleColor.Cyan
+            },
+            new ColoredConsolePrinter()
+            {
                 Filter = LogLevel.WarningOnly,
                 Color = ConsoleColor.Yellow,
             },
