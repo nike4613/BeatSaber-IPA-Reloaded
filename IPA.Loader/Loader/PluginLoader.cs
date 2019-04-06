@@ -171,7 +171,13 @@ namespace IPA.Loader
 
                     if (metadata.PluginType == null)
                     {
-                        Logger.loader.Warn($"Could not find plugin type for {Path.GetFileName(plugin)}");
+                        Logger.loader.Notice(
+                        #if DIRE_LOADER_WARNINGS
+                            $"Could not find plugin type for {Path.GetFileName(plugin)}"
+                        #else
+                            $"New plugin type not present in {Path.GetFileName(plugin)}; maybe an old plugin?"
+                        #endif
+                            );
                         continue;
                     }
 

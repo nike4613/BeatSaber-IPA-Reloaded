@@ -54,6 +54,11 @@ namespace IPA.Logging
             Info = 2,
 
             /// <summary>
+            /// A notice. More significant than Info, but less than a warning.
+            /// </summary>
+            Notice = 32,
+
+            /// <summary>
             /// A warning message.
             /// </summary>
             Warning = 4,
@@ -91,6 +96,11 @@ namespace IPA.Logging
             InfoOnly = Level.Info,
 
             /// <summary>
+            /// Only shows notice messages.
+            /// </summary>
+            NoticeOnly = Level.Notice,
+
+            /// <summary>
             /// Only shows Warning messages.
             /// </summary>
             WarningOnly = Level.Warning,
@@ -116,9 +126,14 @@ namespace IPA.Logging
             WarningUp = WarningOnly | ErrorUp,
 
             /// <summary>
+            /// Shows all messages Notice and up.
+            /// </summary>
+            NoticeUp = WarningUp | NoticeOnly,
+
+            /// <summary>
             /// Shows all messages info and up.
             /// </summary>
-            InfoUp = InfoOnly | WarningUp,
+            InfoUp = InfoOnly | NoticeUp,
 
             /// <summary>
             /// Shows all messages.
@@ -176,6 +191,22 @@ namespace IPA.Logging
         /// </summary>
         /// <param name="e">the exception to log</param>
         public virtual void Info(Exception e) => Log(Level.Info, e);
+        
+        /// <summary>
+        /// Sends a notice message.
+        /// Equivalent to Log(Level.Notice, message).
+        /// <see cref="Log(Level, string)"/>
+        /// </summary>
+        /// <param name="message">the message to log</param>
+        public virtual void Notice(string message) => Log(Level.Notice, message);
+
+        /// <summary>
+        /// Sends an exception as a notice message.
+        /// Equivalent to Log(Level.Notice, e);
+        /// <see cref="Log(Level, Exception)"/>
+        /// </summary>
+        /// <param name="e">the exception to log</param>
+        public virtual void Notice(Exception e) => Log(Level.Notice, e);
 
         /// <summary>
         /// Sends a warning message.
