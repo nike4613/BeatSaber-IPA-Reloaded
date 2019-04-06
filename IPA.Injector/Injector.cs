@@ -177,23 +177,49 @@ namespace IPA.Injector
                     bkp?.Add(unityPath);
                     unityAsmDef.Write(unityPath);
                 }
+                else
+                    return; // shortcut
             }
 
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
-
-            #region Virtualize Assembly-CSharp.dll
-
+            
             {
                 var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
                     "Assembly-CSharp.dll");
 
-                var ascModule = VirtualizedModule.Load(ascPath);
-                ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
-            }
+                #region Virtualize Assembly-CSharp.dll
 
-            #endregion Virtualize Assembly-CSharp.dll
+                {
+                    var ascModule = VirtualizedModule.Load(ascPath);
+                    ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+                }
+
+                #endregion Virtualize Assembly-CSharp.dll
+
+                #region Anti-Yeet
+
+                if (SelfConfig.SelfConfigRef.Value.ApplyAntiYeet)
+                {
+                    loader.Debug("Applying anti-yeet patch");
+                    
+                    var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
+                    {
+                        ReadWrite = false,
+                        InMemory = true,
+                        ReadingMode = ReadingMode.Immediate
+                    });
+                    var ascModDef = ascAsmDef.MainModule;
+
+                    var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
+                    deleter.Methods.Clear(); // delete all methods
+
+                    ascAsmDef.Write(ascPath);
+                }
+
+                #endregion
+            }
         }
 
         private static bool bootstrapped;
