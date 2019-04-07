@@ -71,7 +71,12 @@ namespace IPA.Loader
         {
             return BSMetas.FirstOrDefault(p => p.Metadata.Id == name);
         }
-        
+
+        /// <summary>
+        /// Gets a list of all BSIPA plugins.
+        /// </summary>
+        public static IEnumerable<PluginInfo> AllPlugins => BSMetas;
+
         /// <summary>
         /// An <see cref="IEnumerable"/> of old IPA plugins
         /// </summary>
