@@ -24,38 +24,56 @@ namespace IPA.Logging
     {
         private static readonly List<LogPrinter> defaultPrinters = new List<LogPrinter>()
         {
-            new ColoredConsolePrinter()
-            {
-                Filter = LogLevel.DebugOnly,
-                Color = ConsoleColor.Green,
-            },
-            new ColoredConsolePrinter()
-            {
-                Filter = LogLevel.InfoOnly,
-                Color = ConsoleColor.White,
-            },
-            new ColoredConsolePrinter()
-            {
-                Filter = LogLevel.NoticeOnly,
-                Color = ConsoleColor.Cyan
-            },
-            new ColoredConsolePrinter()
-            {
-                Filter = LogLevel.WarningOnly,
-                Color = ConsoleColor.Yellow,
-            },
-            new ColoredConsolePrinter()
-            {
-                Filter = LogLevel.ErrorOnly,
-                Color = ConsoleColor.Red,
-            },
-            new ColoredConsolePrinter()
-            {
-                Filter = LogLevel.CriticalOnly,
-                Color = ConsoleColor.Magenta,
-            },
             new GlobalLogFilePrinter()
         };
+
+        static StandardLogger()
+        {
+            ConsoleColorSupport();
+        }
+
+        private static bool addedConsolePrinters;
+        private static bool finalizedDefaultPrinters;
+        internal static void ConsoleColorSupport()
+        {
+            if (!addedConsolePrinters && !finalizedDefaultPrinters && WinConsole.IsInitialized )
+            {
+                defaultPrinters.AddRange(new []
+                {
+                    new ColoredConsolePrinter()
+                    {
+                        Filter = LogLevel.DebugOnly,
+                        Color = ConsoleColor.Green,
+                    },
+                    new ColoredConsolePrinter()
+                    {
+                        Filter = LogLevel.InfoOnly,
+                        Color = ConsoleColor.White,
+                    },
+                    new ColoredConsolePrinter()
+                    {
+                        Filter = LogLevel.NoticeOnly,
+                        Color = ConsoleColor.Cyan
+                    },
+                    new ColoredConsolePrinter()
+                    {
+                        Filter = LogLevel.WarningOnly,
+                        Color = ConsoleColor.Yellow,
+                    },
+                    new ColoredConsolePrinter()
+                    {
+                        Filter = LogLevel.ErrorOnly,
+                        Color = ConsoleColor.Red,
+                    },
+                    new ColoredConsolePrinter()
+                    {
+                        Filter = LogLevel.CriticalOnly,
+                        Color = ConsoleColor.Magenta,
+                    }
+                });
+                addedConsolePrinters = true;
+            }
+        }
 
         /// <summary>
         /// The <see cref="TextWriter"/> for writing directly to the console window, or stdout if no window open.
@@ -112,6 +130,15 @@ namespace IPA.Logging
 
         internal StandardLogger(string name)
         {
+            ConsoleColorSupport();
+            if (!finalizedDefaultPrinters)
+            {
+                if (!addedConsolePrinters)
+                    AddDefaultPrinter(new ColorlessConsolePrinter());
+
+                finalizedDefaultPrinters = true;
+            }
+
             logName = name;
             printers.Add(new PluginLogFilePrinter(name));
 

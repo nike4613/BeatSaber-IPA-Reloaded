@@ -3,11 +3,22 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace IPA.Injector
+namespace IPA.Logging
 {
     // https://stackoverflow.com/a/48864902/3117125
     internal static class WinConsole
     {
+        internal static TextWriter ConOut;
+        internal static TextReader ConIn;
+
+        private static SafeFileHandle outHandle;
+        private static SafeFileHandle inHandle;
+
+        internal static IntPtr OutHandle => outHandle.DangerousGetHandle();
+        internal static IntPtr InHandle => inHandle.DangerousGetHandle();
+
+        internal static bool IsInitialized;
+
         public static void Initialize(bool alwaysCreateNewConsole = true)
         {
             bool consoleAttached = true;
@@ -21,6 +32,7 @@ namespace IPA.Injector
             if (consoleAttached)
             {
                 InitializeStreams();
+                IsInitialized = true;
             }
         }
 
@@ -32,10 +44,11 @@ namespace IPA.Injector
 
         private static void InitializeOutStream()
         {
-            var fs = CreateFileStream("CONOUT$", GenericWrite, FileShareWrite, FileAccess.Write);
+            var fs = CreateFileStream("CONOUT$", GenericWrite, FileShareWrite, FileAccess.Write, out outHandle);
             if (fs != null)
             {
                 var writer = new StreamWriter(fs) { AutoFlush = true };
+                ConOut = writer;
                 Console.SetOut(writer);
                 Console.SetError(writer);
             }
@@ -43,22 +56,25 @@ namespace IPA.Injector
 
         private static void InitializeInStream()
         {
-            var fs = CreateFileStream("CONIN$", GenericRead, FileShareRead, FileAccess.Read);
+            var fs = CreateFileStream("CONIN$", GenericRead, FileShareRead, FileAccess.Read, out inHandle);
             if (fs != null)
             {
-                Console.SetIn(new StreamReader(fs));
+                Console.SetIn(ConIn = new StreamReader(fs));
             }
         }
 
         private static FileStream CreateFileStream(string name, uint win32DesiredAccess, uint win32ShareMode,
-                                FileAccess dotNetFileAccess)
+                                FileAccess dotNetFileAccess, out SafeFileHandle handle)
         {
             var file = new SafeFileHandle(CreateFileW(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OpenExisting, FileAttributeNormal, IntPtr.Zero), true);
             if (!file.IsInvalid)
             {
+                handle = file;
                 var fs = new FileStream(file, dotNetFileAccess);
                 return fs;
             }
+
+            handle = null;
             return null;
         }
 
