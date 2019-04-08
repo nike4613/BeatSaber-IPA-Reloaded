@@ -73,6 +73,8 @@
     <Compile Include="Loader\Features\Feature.cs" />
     <Compile Include="Loader\PluginLoader.cs" />
     <Compile Include="Loader\PluginManifest.cs" />
+    <Compile Include="Logging\ConsoleWindow.cs" />
+    <Compile Include="Logging\Printers\ColorlessConsolePrinter.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
