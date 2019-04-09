@@ -183,6 +183,20 @@ namespace IPA.Updating.BeatMods
                 }
             }
 
+            foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null))
+            {
+                depList.Value.Add(new DependencyObject
+                {
+                    Name = meta.Id,
+                    Version = meta.Version,
+                    Requirement = new Range($">={meta.Version}"),
+                    LocalPluginMeta = new PluginLoader.PluginInfo
+                    {
+                        Metadata = meta, Plugin = null
+                    }
+                });
+            }
+
             foreach (var dep in depList.Value)
                 Logger.updater.Debug($"Phantom Dependency: {dep}");
 

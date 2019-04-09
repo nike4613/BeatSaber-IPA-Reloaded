@@ -212,6 +212,9 @@ namespace IPA.Loader
             }
         }
 
+        // keep track of these for the updater; it should still be able to update mods not loaded
+        internal static HashSet<PluginMetadata> ignoredPlugins = new HashSet<PluginMetadata>();
+
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
@@ -227,6 +230,7 @@ namespace IPA.Loader
                     {
                         Logger.loader.Warn($"Found duplicates of {meta.Id}, using newest");
                         ignore.Add(meta);
+                        ignoredPlugins.Add(meta);
                         continue; // because of sorted order, hightest order will always be the first one
                     }
 
@@ -261,8 +265,13 @@ namespace IPA.Loader
                     }
                 }
 
-                if (ignore.Contains(meta)) continue;
-                if (meta.Id != null) ids.Add(meta.Id);
+                if (ignore.Contains(meta))
+                {
+                    ignoredPlugins.Add(meta);
+                    continue;
+                }
+                if (meta.Id != null)
+                    ids.Add(meta.Id);
 
                 resolved.Add(meta);
             }
@@ -296,7 +305,8 @@ namespace IPA.Loader
                 bool load = true;
                 foreach (var dep in meta.Manifest.Dependencies)
                 {
-                    if (pluginsToLoad.ContainsKey(dep.Key) && dep.Value.IsSatisfied(pluginsToLoad[dep.Key])) continue;
+                    if (pluginsToLoad.ContainsKey(dep.Key) && dep.Value.IsSatisfied(pluginsToLoad[dep.Key]))
+                        continue;
 
                     load = false;
                     Logger.loader.Warn($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
@@ -308,6 +318,8 @@ namespace IPA.Loader
                     if (meta.Id != null)
                         pluginsToLoad.Add(meta.Id, meta.Version);
                 }
+                else
+                    ignoredPlugins.Add(meta);
             }
 
             PluginsMetadata = metadata;
@@ -355,8 +367,8 @@ namespace IPA.Loader
                     }
 
                 foreach (var plugin in PluginsMetadata)
-                foreach (var feature in plugin.Features)
-                    feature.Evaluate();
+                    foreach (var feature in plugin.Features)
+                        feature.Evaluate();
             }
 
             foreach (var plugin in parsedFeatures)
@@ -395,6 +407,7 @@ namespace IPA.Loader
                 {
                     Logger.loader.Warn(
                         $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from loading! {denyingFeature?.InvalidMessage}");
+                    ignoredPlugins.Add(meta);
                     return null;
                 }
 
@@ -412,6 +425,7 @@ namespace IPA.Loader
                     {
                         Logger.loader.Warn(
                             $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from initializing! {denyingFeature?.InvalidMessage}");
+                        ignoredPlugins.Add(meta);
                         return null;
                     }
 
@@ -431,11 +445,14 @@ namespace IPA.Loader
             catch (AmbiguousMatchException)
             {
                 Logger.loader.Error($"Only one Init allowed per plugin (ambiguous match in {meta.Name})");
+                // not adding to ignoredPlugins here because this should only happen in a development context
+                // if someone fucks this up on release thats on them
                 return null;
             }
             catch (Exception e)
             {
                 Logger.loader.Error($"Could not init plugin {meta.Name}: {e}");
+                ignoredPlugins.Add(meta);
                 return null;
             }
 

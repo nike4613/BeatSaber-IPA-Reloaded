@@ -23,8 +23,6 @@ namespace IPA.Loader
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
         
-        
-
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
         /// </summary>
