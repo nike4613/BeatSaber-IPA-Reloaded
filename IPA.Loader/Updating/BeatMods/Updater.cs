@@ -177,7 +177,7 @@ namespace IPA.Updating.BeatMods
                     depList.Value.Add(new DependencyObject {
                         Name = msinfo.Id,
                         Version = msinfo.Version,
-                        Requirement = new Range($">={msinfo.Version}"),
+                        Requirement = new Range($">{msinfo.Version}"),
                         LocalPluginMeta = plugin
                     });
                 }
@@ -189,7 +189,7 @@ namespace IPA.Updating.BeatMods
                 {
                     Name = meta.Id,
                     Version = meta.Version,
-                    Requirement = new Range($">={meta.Version}"),
+                    Requirement = new Range($">{meta.Version}"),
                     LocalPluginMeta = new PluginLoader.PluginInfo
                     {
                         Metadata = meta, Plugin = null
@@ -235,7 +235,7 @@ namespace IPA.Updating.BeatMods
                 list.Value.AddRange(mod.Value.Dependencies.Select(m => new DependencyObject
                 {
                     Name = m.Name,
-                    Requirement = new Range($">={m.Version}"),
+                    Requirement = new Range($"^{m.Version}"),
                     Consumers = new HashSet<string> { dep.Name }
                 }));
                 // currently no conflicts exist in BeatMods
@@ -533,7 +533,8 @@ namespace IPA.Updating.BeatMods
                                 FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
-                                if (Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
+                                if (item.LocalPluginMeta != null && 
+                                    Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 /*if (targetFile.Exists)
