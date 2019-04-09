@@ -30,7 +30,7 @@ namespace IPA.Injector
 
             try
             {
-                if (!Environment.GetCommandLineArgs().Contains("--no-console"))
+                if (Environment.GetCommandLineArgs().Contains("--verbose"))
                     WinConsole.Initialize();
 
                 SetupLibraryLoading();
