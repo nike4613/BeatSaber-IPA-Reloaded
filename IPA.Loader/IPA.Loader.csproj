@@ -89,7 +89,6 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogPrinter.cs" />
     <Compile Include="Config\ModPrefs.cs" />
-    <Compile Include="JsonConverters\ModSaberDependencyConverter.cs" />
     <Compile Include="JsonConverters\SemverRangeConverter.cs" />
     <Compile Include="JsonConverters\SemverVersionConverter.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
@@ -105,8 +104,8 @@
     <Compile Include="Loader\PluginComponent.cs" />
     <Compile Include="Loader\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Updating\ModSaber\ApiEndpoint.cs" />
-    <Compile Include="Updating\ModSaber\Updater.cs" />
+    <Compile Include="Updating\BeatMods\ApiEndpoint.cs" />
+    <Compile Include="Updating\BeatMods\Updater.cs" />
     <Compile Include="Updating\SelfPlugin.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\Utils.cs" />

@@ -7,13 +7,14 @@ using Newtonsoft.Json;
 using SemVer;
 using Version = SemVer.Version;
 
-namespace IPA.Updating.ModSaber
+namespace IPA.Updating.BeatMods
 {
     class ApiEndpoint
     {
-        public const string ApiBase = "https://www.modsaber.org/";
-        public const string GetModInfoEndpoint = "registry/{0}/{1}";
-        public const string GetModsWithSemver = "api/v1.1/mods/semver/{0}/{1}";
+        public const string BeatModBase = "https://beatmods.com";
+        public const string ApiBase = BeatModBase + "/api/v1/mod";
+        public const string GetModInfoEndpoint = "?name={0}&version={1}";
+        public const string GetModsByName = "?name={0}";
 
         class HexArrayConverter : JsonConverter
         {
@@ -64,6 +65,15 @@ namespace IPA.Updating.ModSaber
         public class Mod
         {
 #pragma warning disable CS0649
+            /// <summary>
+            /// Will be a useless string of characters. Do not use.
+            /// </summary>
+            [JsonProperty("_id")]
+            public string Id;
+
+            [JsonProperty("required")]
+            public bool Required;
+
             [JsonProperty("name")]
             public string Name;
 
@@ -74,15 +84,18 @@ namespace IPA.Updating.ModSaber
             [Serializable]
             public class AuthorType
             {
-                [JsonProperty("name")]
+                [JsonProperty("username")]
                 public string Name;
-                [JsonProperty("id")]
+                [JsonProperty("_id")]
                 public string Id;
 
                 public override string ToString() => Name;
             }
 
-            [Serializable]
+            [JsonProperty("author")]
+            public AuthorType Author;
+
+            /*[Serializable]
             public class DetailsData
             {
                 [JsonProperty("author")]
@@ -96,35 +109,23 @@ namespace IPA.Updating.ModSaber
             }
 
             [JsonProperty("details")]
-            public DetailsData Details;
+            public DetailsData Details;*/
 
-            [Serializable]
-            public class ApprovalStatus
-            {
-                [JsonProperty("status")]
-                public bool Status;
-                [JsonProperty("modified")]
-                public string LastModified;
-            }
+            [JsonProperty("status")]
+            public string Status;
+            public const string ApprovedStatus = "approved";
 
-            [JsonProperty("approval")]
-            public ApprovalStatus Approval;
+            [JsonProperty("description")]
+            public string Description;
+
+            [JsonProperty("category")]
+            public string Category;
+
+            [JsonProperty("link")]
+            public Uri Link;
             
-            [Serializable]
-            public class GameVersionType
-            {
-                [JsonProperty("value"),
-                 JsonConverter(typeof(SemverVersionConverter))]
-                public Version Version;
-                [JsonProperty("manifest")]
-                public string Manifest;
-            }
-
-            [JsonProperty("gameVersion")]
-            public GameVersionType GameVersion;
-
 #pragma warning restore CS0649
-            [Serializable]
+            /*[Serializable]
             public class PlatformFile
             {
                 [JsonProperty("hash"),
@@ -152,9 +153,42 @@ namespace IPA.Updating.ModSaber
             }
             
             [JsonProperty("files")]
-            public FilesObject Files;
-            
-            public class Dependency
+            public FilesObject Files;*/
+
+            [Serializable]
+            public class DownloadsObject
+            {
+                public const string TypeUniversal = "universal";
+                public const string TypeSteam = "steam";
+                public const string TypeOculus = "oculus";
+
+                [JsonProperty("type")]
+                public string Type;
+
+                [JsonProperty("url")]
+                public string Path;
+
+                [Serializable]
+                public class HashObject
+                {
+                    [JsonProperty("hash"), JsonConverter(typeof(HexArrayConverter))]
+                    public byte[] Hash;
+
+                    [JsonProperty("file")]
+                    public string File;
+                }
+
+                /// <summary>
+                /// Hashes stored are MD5
+                /// </summary>
+                [JsonProperty("hashMd5")]
+                public HashObject[] Hashes;
+            }
+
+            [JsonProperty("downloads")]
+            public DownloadsObject[] Downloads;
+
+            /*public class Dependency
             {
                 public string Name = null;
                 public Range VersionRange = null;
@@ -174,11 +208,14 @@ namespace IPA.Updating.ModSaber
             public LinksType Links;
 
             [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]
-            public Version[] OldVersions = new Version[0];
+            public Version[] OldVersions = new Version[0];*/
+
+            [JsonProperty("dependencies")]
+            public Mod[] Dependencies;
 
             public override string ToString()
             {
-                return $"{{\"{Details.Title} ({Name})\"v{Version} for {GameVersion.Version} by {Details.Author} with \"{Files.Steam}\" and \"{Files.Oculus}\"}}";
+                return $"{{\"{Name}\"v{Version} by {Author} files for {string.Join(", ", Downloads.Select(d => d.Type))}}}";
             }
         }
 

@@ -9,7 +9,7 @@ namespace IPA.Injector
 {
     internal static class Updates
     {
-        private const string DeleteFileName = Updating.ModSaber.Updater.SpecialDeletionsFile;
+        private const string DeleteFileName = Updating.BeatMods.Updater.SpecialDeletionsFile;
         public static void InstallPendingUpdates()
         {
             var pendingDir = Path.Combine(BeatSaber.InstallPath, "IPA", "Pending");
