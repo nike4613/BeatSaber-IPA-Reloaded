@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace IPA.Logging.Printers
 {
@@ -17,6 +18,8 @@ namespace IPA.Logging.Printers
             string lpExistingFileName,
             IntPtr lpSecurityAttributes
         );
+
+        internal static Regex removeControlCodes = new Regex("\x1b\\[\\d+m", RegexOptions.Compiled);
 
         private FileInfo fileInfo;
 
@@ -45,7 +48,7 @@ namespace IPA.Logging.Printers
                     fileInfo = new FileInfo(fileInfo.FullName + ".gz");
                     fileInfo.Create().Close();
 
-                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName ?? throw new InvalidOperationException(), $"latest{ext}.gz"));
+                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName ?? throw new InvalidOperationException(), $"_latest{ext}.gz"));
                     if (symlink.Exists) symlink.Delete();
 
                     try

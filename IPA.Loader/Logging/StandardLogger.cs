@@ -71,6 +71,7 @@ namespace IPA.Logging
                         Color = ConsoleColor.Magenta,
                     }
                 });
+
                 addedConsolePrinters = true;
             }
         }
@@ -135,7 +136,8 @@ namespace IPA.Logging
             {
                 if (!addedConsolePrinters)
                     AddDefaultPrinter(new ColorlessConsolePrinter());
-
+                
+                StdoutInterceptor.Intercept();
                 finalizedDefaultPrinters = true;
             }
 

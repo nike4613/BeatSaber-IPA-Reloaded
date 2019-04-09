@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
@@ -51,6 +52,16 @@ namespace IPA.Logging
                 ConOut = writer;
                 Console.SetOut(writer);
                 Console.SetError(writer);
+
+                var handle = GetStdHandle(-11); // get stdout handle (should be CONOUT$ at this point)
+                if (GetConsoleMode(handle, out var mode))
+                {
+                    mode |= EnableVTProcessing;
+                    if (!SetConsoleMode(handle, mode))
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+                else
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
             }
         }
 
@@ -107,6 +118,17 @@ namespace IPA.Logging
               uint dwFlagsAndAttributes,
               IntPtr hTemplateFile
             );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetStdHandle(int nStdHandle);
+
+        private const uint EnableVTProcessing = 0x0004;
 
         private const uint GenericWrite = 0x40000000;
         private const uint GenericRead = 0x80000000;

@@ -21,6 +21,18 @@ namespace IPA.Logging
             }
         }
 
+        private static StandardLogger _stdout;
+
+        internal static StandardLogger stdout
+        {
+            get
+            {
+                if (_stdout == null)
+                    _stdout = new StandardLogger("_");
+                return _stdout;
+            }
+        }
+
         internal static Logger updater => log.GetChildLogger("Updater");
         internal static Logger libLoader => log.GetChildLogger("LibraryLoader");
         internal static Logger loader => log.GetChildLogger("Loader");
