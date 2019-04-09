@@ -234,8 +234,8 @@ namespace IPA.Injector
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
                 var level = UnityLogRedirector.LogTypeToLevel(type);
-                UnityLogProvider.UnityLogger.Log(level, $"{condition.Trim()}");
-                UnityLogProvider.UnityLogger.Log(level, $"{stackTrace.Trim()}");
+                UnityLogProvider.UnityLogger.Log(level, $"{condition}");
+                UnityLogProvider.UnityLogger.Log(level, $"{stackTrace}");
             };
 
             // need to reinit streams singe Unity seems to redirect stdout
