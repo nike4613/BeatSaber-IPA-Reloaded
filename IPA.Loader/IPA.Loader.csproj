@@ -14,7 +14,6 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +38,9 @@
     <DocumentationFile>bin\Release\IPA.Loader.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\Libs\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +78,7 @@
     <Compile Include="Logging\ConsoleWindow.cs" />
     <Compile Include="Logging\Printers\ColorlessConsolePrinter.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
+    <Compile Include="Logging\StdoutInterceptor.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\ModsaberModInfo.cs" />

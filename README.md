@@ -47,9 +47,9 @@ BSIPA will automatically repatch the game when it updates, as long as `winhttp.d
 
 ### Prerequisites 
 
-- Microsoft Visual Studio 2017 or later
-- Tools for C/C++ (MSVC)
-- .NET 4.6 SDK and .NET 4.7.1 SDK
+- Microsoft Visual Studio 2019 or later
+- Tools for C/C++ (MSVC) v142
+- .NET 4.6.1 SDK and .NET 4.7.2 SDK
 
 ### Building
 

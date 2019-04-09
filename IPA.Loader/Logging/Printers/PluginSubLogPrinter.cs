@@ -48,7 +48,7 @@ namespace IPA.Logging.Printers
         /// <param name="message">the message to print</param>
         public override void Print(Logger.Level level, DateTime time, string logName, string message)
         {
-            foreach (var line in message.Split(new[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var line in removeControlCodes.Replace(message, "").Split(new[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 FileWriter.WriteLine("[{2} @ {1:HH:mm:ss}] {0}", line, time, level.ToString().ToUpper());
         }
     }

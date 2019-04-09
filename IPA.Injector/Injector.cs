@@ -239,7 +239,7 @@ namespace IPA.Injector
             };
 
             // need to reinit streams singe Unity seems to redirect stdout
-            WinConsole.InitializeStreams();
+            StdoutInterceptor.RedirectConsole();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
