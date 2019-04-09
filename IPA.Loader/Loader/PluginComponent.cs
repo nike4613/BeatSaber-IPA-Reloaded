@@ -28,7 +28,7 @@ namespace IPA.Loader
 #pragma warning restore 618
 
             /* kill this for now, until theres a new system */
-            //gameObject.AddComponent<Updating.ModSaber.Updater>();
+            gameObject.AddComponent<Updating.BeatMods.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();

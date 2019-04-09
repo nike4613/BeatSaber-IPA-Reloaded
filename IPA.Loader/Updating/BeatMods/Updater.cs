@@ -20,7 +20,7 @@ using static IPA.Loader.PluginManager;
 using Logger = IPA.Logging.Logger;
 using Version = SemVer.Version;
 
-namespace IPA.Updating.ModSaber
+namespace IPA.Updating.BeatMods
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     internal class Updater : MonoBehaviour
@@ -72,7 +72,7 @@ namespace IPA.Updating.ModSaber
         }
 
         private readonly Dictionary<string, string> requestCache = new Dictionary<string, string>();
-        private IEnumerator GetModsaberEndpoint(string url, Ref<string> result)
+        private IEnumerator GetBeatModsEndpoint(string url, Ref<string> result)
         {
             if (requestCache.TryGetValue(url, out string value))
             {
@@ -121,11 +121,11 @@ namespace IPA.Updating.ModSaber
             {
                 Ref<string> reqResult = new Ref<string>("");
 
-                yield return GetModsaberEndpoint(uri, reqResult);
+                yield return GetBeatModsEndpoint(uri, reqResult);
 
                 try
                 {
-                    result.Value = JsonConvert.DeserializeObject<ApiEndpoint.Mod>(reqResult.Value);
+                    result.Value = JsonConvert.DeserializeObject<List<ApiEndpoint.Mod>>(reqResult.Value).First();
 
                     modCache[uri] = result.Value;
                 }
@@ -137,9 +137,9 @@ namespace IPA.Updating.ModSaber
         }
 
         private readonly Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
-        private IEnumerator GetModVersionsMatching(string modName, string range, Ref<List<ApiEndpoint.Mod>> result)
+        private IEnumerator GetModVersionsMatching(string modName, Range range, Ref<List<ApiEndpoint.Mod>> result)
         {
-            var uri = string.Format(ApiEndpoint.GetModsWithSemver, Uri.EscapeUriString(modName), Uri.EscapeUriString(range));
+            var uri = string.Format(ApiEndpoint.GetModsByName, Uri.EscapeUriString(modName));
 
             if (modVersionsCache.TryGetValue(uri, out List<ApiEndpoint.Mod> value))
             {
@@ -149,11 +149,12 @@ namespace IPA.Updating.ModSaber
             {
                 Ref<string> reqResult = new Ref<string>("");
 
-                yield return GetModsaberEndpoint(uri, reqResult);
+                yield return GetBeatModsEndpoint(uri, reqResult);
 
                 try
                 {
-                    result.Value = JsonConvert.DeserializeObject<List<ApiEndpoint.Mod>>(reqResult.Value);
+                    result.Value = JsonConvert.DeserializeObject<List<ApiEndpoint.Mod>>(reqResult.Value)
+                        .Where(m => range.IsSatisfied(m.Version)).ToList();
 
                     modVersionsCache[uri] = result.Value;
                 }
@@ -217,8 +218,15 @@ namespace IPA.Updating.ModSaber
                     continue;
                 }
 
-                list.Value.AddRange(mod.Value.Links.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
-                list.Value.AddRange(mod.Value.Links.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
+                list.Value.AddRange(mod.Value.Dependencies.Select(m => new DependencyObject
+                {
+                    Name = m.Name,
+                    Requirement = new Range($">={m.Version}"),
+                    Consumers = new HashSet<string> { dep.Name }
+                }));
+                // currently no conflicts exist in BeatMods
+                //list.Value.AddRange(mod.Value.Links.Dependencies.Select(d => new DependencyObject { Name = d.Name, Requirement = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
+                //list.Value.AddRange(mod.Value.Links.Conflicts.Select(d => new DependencyObject { Name = d.Name, Conflicts = d.VersionRange, Consumers = new HashSet<string> { dep.Name } }));
             }
 
             var depNames = new HashSet<string>();
@@ -266,7 +274,7 @@ namespace IPA.Updating.ModSaber
                 }
 
                 var modsMatching = new Ref<List<ApiEndpoint.Mod>>(null);
-                yield return GetModVersionsMatching(dep.Name, dep.Requirement.ToString(), modsMatching);
+                yield return GetModVersionsMatching(dep.Name, dep.Requirement, modsMatching);
                 try { modsMatching.Verify(); }
                 catch (Exception e)
                 {
@@ -278,8 +286,8 @@ namespace IPA.Updating.ModSaber
 
                 var ver = modsMatching.Value
                     .Where(nullCheck => nullCheck != null) // entry is not null
-                    .Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion) // game version matches
-                    .Where(approvalCheck => approvalCheck.Approval.Status) // version approved
+                    //.Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion) // game version matches
+                    .Where(approvalCheck => approvalCheck.Status == ApiEndpoint.Mod.ApprovedStatus) // version approved
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version
                     .Select(mod => mod.Version).Max(); // (2.1) get the max version
                 // ReSharper disable once AssignmentInConditionalExpression
@@ -329,13 +337,18 @@ namespace IPA.Updating.ModSaber
                 yield break;
             }
 
-            ApiEndpoint.Mod.PlatformFile platformFile;
+            /*
+            ApiEndpoint.Mod.DownloadsObject platformFile;
             if (BeatSaber.ReleaseType == BeatSaber.Release.Steam || mod.Value.Files.Oculus == null)
                 platformFile = mod.Value.Files.Steam;
             else
-                platformFile = mod.Value.Files.Oculus;
+                platformFile = mod.Value.Files.Oculus;*/
 
-            string url = platformFile.DownloadPath;
+            var releaseName = BeatSaber.ReleaseType == BeatSaber.Release.Steam 
+                ? ApiEndpoint.Mod.DownloadsObject.TypeSteam : ApiEndpoint.Mod.DownloadsObject.TypeOculus;
+            var platformFile = mod.Value.Downloads.First(f => f.Type == ApiEndpoint.Mod.DownloadsObject.TypeUniversal || f.Type == releaseName);
+
+            string url = ApiEndpoint.BeatModBase + platformFile.Path;
 
             Logger.updater.Debug($"URL = {url}");
 
@@ -386,7 +399,7 @@ namespace IPA.Updating.ModSaber
 
                     if (downloadTask.IsFaulted)
                     {
-                        if (downloadTask.Exception != null && downloadTask.Exception.InnerExceptions.Any(e => e is ModsaberInterceptException))
+                        if (downloadTask.Exception != null && downloadTask.Exception.InnerExceptions.Any(e => e is BeatmodsInterceptException))
                         { // any exception is an intercept exception
                             Logger.updater.Error($"Modsaber did not return expected data for {item.Name}");
                         }
@@ -451,15 +464,15 @@ namespace IPA.Updating.ModSaber
             }
         }
 
-        private void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.PlatformFile fileInfo)
+        private void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.DownloadsObject fileInfo)
         { // (3.3)
             Logger.updater.Debug($"Extracting ZIP file for {item.Name}");
 
-            var data = stream.GetBuffer();
+            /*var data = stream.GetBuffer();
             SHA1 sha = new SHA1CryptoServiceProvider();
             var hash = sha.ComputeHash(data);
             if (!Utils.UnsafeCompare(hash, fileInfo.Hash))
-                throw new Exception("The hash for the file doesn't match what is defined");
+                throw new Exception("The hash for the file doesn't match what is defined");*/
 
             var targetDir = Path.Combine(BeatSaber.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
             Directory.CreateDirectory(targetDir);
@@ -489,17 +502,17 @@ namespace IPA.Updating.ModSaber
                                 entry.Extract(ostream);
                                 ostream.Seek(0, SeekOrigin.Begin);
 
-                                sha = new SHA1CryptoServiceProvider();
-                                var fileHash = sha.ComputeHash(ostream);
+                                var md5 = new MD5CryptoServiceProvider();
+                                var fileHash = md5.ComputeHash(ostream);
 
                                 try
                                 {
-                                    if (!Utils.UnsafeCompare(fileHash, fileInfo.FileHashes[entry.FileName]))
+                                    if (!Utils.UnsafeCompare(fileHash, fileInfo.Hashes.Where(h => h.File == entry.FileName).Select(h => h.Hash).First()))
                                         throw new Exception("The hash for the file doesn't match what is defined");
                                 }
                                 catch (KeyNotFoundException)
                                 {
-                                    throw new ModsaberInterceptException("ModSaber did not send the hashes for the zip's content!");
+                                    throw new BeatmodsInterceptException("BeatMods did not send the hashes for the zip's content!");
                                 }
 
                                 ostream.Seek(0, SeekOrigin.Begin);
@@ -582,21 +595,21 @@ namespace IPA.Updating.ModSaber
     }
     
     [Serializable]
-    internal class ModsaberInterceptException : Exception
+    internal class BeatmodsInterceptException : Exception
     {
-        public ModsaberInterceptException()
+        public BeatmodsInterceptException()
         {
         }
 
-        public ModsaberInterceptException(string message) : base(message)
+        public BeatmodsInterceptException(string message) : base(message)
         {
         }
 
-        public ModsaberInterceptException(string message, Exception innerException) : base(message, innerException)
+        public BeatmodsInterceptException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
-        protected ModsaberInterceptException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected BeatmodsInterceptException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
