@@ -204,14 +204,23 @@ namespace IPA.Logging
         /// <param name="message">the message to log</param>
         public override void Debug(string message)
         {
-            // add source to message
-            var stackFrame = new StackTrace(true).GetFrame(1);
-            var method = stackFrame.GetMethod();
-            var lineNo = stackFrame.GetFileLineNumber();
-            var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
-            base.Debug(showSourceClass
-                ? $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString}):{lineNo}}} {message}"
-                : message);
+            if (showSourceClass)
+            {
+                // add source to message
+                var stackFrame = new StackTrace(true).GetFrame(1);
+                var method = stackFrame.GetMethod();
+                var lineNo = stackFrame.GetFileLineNumber();
+                var fileName = stackFrame.GetFileName();
+                var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
+
+                message = lineNo == 0 ? // no symbols
+                    $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString})}} {message}" : 
+                    $"{{{fileName}:{lineNo}}} {message}";
+
+                base.Debug(message);
+            }
+            else
+                base.Debug(message);
         }
 
         private struct LogMessage
