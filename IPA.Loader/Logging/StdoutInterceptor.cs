@@ -19,29 +19,32 @@ namespace IPA.Logging
         }
 
         private string lineBuffer = "";
+        private object bufferLock = new object();
 
         public override void Write(string value)
         {
-            lineBuffer += value;
+            lock (bufferLock)
+            { // avoid threading issues
+                lineBuffer += value;
 
-            var parts = lineBuffer.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.None);
-            for (int i = 0; i < parts.Length; i++)
-            {
-                if (i + 1 == parts.Length) // last element
-                    lineBuffer = parts[i];
-                else
+                var parts = lineBuffer.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.None);
+                for (int i = 0; i < parts.Length; i++)
                 {
-                    var str = parts[i];
-                    if (string.IsNullOrEmpty(str)) continue;
-                    if (!isStdErr && WinConsole.IsInitialized)
-                        str = ConsoleColorToForegroundSet(currentColor) + str;
-
-                    if (isStdErr)
-                        Logger.stdout.Error(str);
+                    if (i + 1 == parts.Length) // last element
+                        lineBuffer = parts[i];
                     else
-                        Logger.stdout.Info(str);
-                }
+                    {
+                        var str = parts[i];
+                        if (string.IsNullOrEmpty(str)) continue;
+                        if (!isStdErr && WinConsole.IsInitialized)
+                            str = ConsoleColorToForegroundSet(currentColor) + str;
 
+                        if (isStdErr)
+                            Logger.stdout.Error(str);
+                        else
+                            Logger.stdout.Info(str);
+                    }
+                }
             }
         }
 
