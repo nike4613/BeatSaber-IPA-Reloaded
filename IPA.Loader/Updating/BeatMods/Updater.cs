@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
 using IPA.Loader;
+using IPA.Loader.Features;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SemVer;
@@ -169,7 +170,8 @@ namespace IPA.Updating.BeatMods
         {
             var depList = new Ref<List<DependencyObject>>(new List<DependencyObject>());
 
-            foreach (var plugin in BSMetas)
+            foreach (var plugin in BSMetas
+                .Where(m => m.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null))
             { // initialize with data to resolve (1.1)
                 if (plugin.Metadata.Id != null)
                 { // updatable
@@ -183,7 +185,8 @@ namespace IPA.Updating.BeatMods
                 }
             }
 
-            foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null))
+            foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null)
+                .Where(m => m.Features.FirstOrDefault(f => f is NoUpdateFeature) != null))
             {
                 depList.Value.Add(new DependencyObject
                 {
