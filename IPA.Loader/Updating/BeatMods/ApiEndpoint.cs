@@ -4,6 +4,7 @@ using System.Linq;
 using IPA.JsonConverters;
 using IPA.Utilities;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SemVer;
 using Version = SemVer.Version;
 
@@ -60,6 +61,23 @@ namespace IPA.Updating.BeatMods
                 }
             }
         }
+        class ModMultiformatJsonConverter : JsonConverter<Mod>
+        {
+            public override Mod ReadJson(JsonReader reader, Type objectType, Mod existingValue, bool hasExistingValue, JsonSerializer serializer)
+            {
+                if (reader.TokenType == JsonToken.String)
+                    return new Mod { Id = reader.Value as string, IsIdReference = true };
+                else
+                {
+                    if (reader.TokenType != JsonToken.StartObject)
+                        return null;
+
+                    return serializer.Deserialize<Mod>(reader);
+                }
+            }
+
+            public override void WriteJson(JsonWriter writer, Mod value, JsonSerializer serializer) => serializer.Serialize(writer, value);
+        }
 
         [Serializable]
         public class Mod
@@ -70,6 +88,9 @@ namespace IPA.Updating.BeatMods
             /// </summary>
             [JsonProperty("_id")]
             public string Id;
+
+            [JsonIgnore]
+            public bool IsIdReference = false;
 
             [JsonProperty("required")]
             public bool Required;
@@ -210,7 +231,7 @@ namespace IPA.Updating.BeatMods
             [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]
             public Version[] OldVersions = new Version[0];*/
 
-            [JsonProperty("dependencies")]
+            [JsonProperty("dependencies", ItemConverterType = typeof(ModMultiformatJsonConverter))]
             public Mod[] Dependencies;
 
             public override string ToString()

@@ -170,34 +170,53 @@ namespace IPA.Updating.BeatMods
         {
             var depList = new Ref<List<DependencyObject>>(new List<DependencyObject>());
 
-            foreach (var plugin in BSMetas
-                .Where(m => m.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null))
+            foreach (var plugin in BSMetas)
+                //.Where(m => m.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null))
             { // initialize with data to resolve (1.1)
                 if (plugin.Metadata.Id != null)
                 { // updatable
                     var msinfo = plugin.Metadata;
-                    depList.Value.Add(new DependencyObject {
+                    var dep = new DependencyObject
+                    {
                         Name = msinfo.Id,
                         Version = msinfo.Version,
-                        Requirement = new Range($">{msinfo.Version}"),
+                        Requirement = new Range($">={msinfo.Version}"),
                         LocalPluginMeta = plugin
-                    });
+                    };
+
+                    if (msinfo.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
+                    { // disable updating, by only matching self, so that dependencies can still be resolved
+                        dep.Requirement = new Range(msinfo.Version.ToString());
+                    }
+
+                    depList.Value.Add(dep);
                 }
             }
 
-            foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null)
-                .Where(m => m.Features.FirstOrDefault(f => f is NoUpdateFeature) != null))
+            foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null))
+            //.Where(m => m.Features.FirstOrDefault(f => f is NoUpdateFeature) == null))
             {
-                depList.Value.Add(new DependencyObject
-                {
-                    Name = meta.Id,
-                    Version = meta.Version,
-                    Requirement = new Range($">{meta.Version}"),
-                    LocalPluginMeta = new PluginLoader.PluginInfo
+                if (meta.Id != null)
+                { // updatable
+                    var dep = new DependencyObject
                     {
-                        Metadata = meta, Plugin = null
+                        Name = meta.Id,
+                        Version = meta.Version,
+                        Requirement = new Range($">={meta.Version}"),
+                        LocalPluginMeta = new PluginLoader.PluginInfo
+                        {
+                            Metadata = meta,
+                            Plugin = null
+                        }
+                    };
+
+                    if (meta.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
+                    { // disable updating, by only matching self
+                        dep.Requirement = new Range(meta.Version.ToString());
                     }
-                });
+
+                    depList.Value.Add(dep);
+                }
             }
 
             foreach (var dep in depList.Value)
