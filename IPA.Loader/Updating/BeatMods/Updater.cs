@@ -46,10 +46,7 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private void CheckForUpdates()
-        {
-            StartCoroutine(CheckForUpdatesCoroutine());
-        }
+        public void CheckForUpdates() => StartCoroutine(CheckForUpdatesCoroutine());
 
         private class DependencyObject
         {
