@@ -56,17 +56,23 @@ namespace IPA.Loader
             var testFile = $"{asmName.Name}.{asmName.Version}.dll";
             Log(Logger.Level.Debug, $"Looking for file {testFile}");
 
-            if (FilenameLocations.TryGetValue(testFile, out string path))
+            if (FilenameLocations.TryGetValue(testFile, out var path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 if (File.Exists(path))
-                {
                     return Assembly.LoadFrom(path);
-                }
 
                 Log(Logger.Level.Critical, $"but {path} no longer exists!");
             }
-            
+            else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.dll", out path))
+            {
+                Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
+                if (File.Exists(path))
+                    return Assembly.LoadFrom(path);
+
+                Log(Logger.Level.Critical, $"but {path} no longer exists!");
+            }
+
             Log(Logger.Level.Critical, $"No library {asmName} found");
 
             return null;
