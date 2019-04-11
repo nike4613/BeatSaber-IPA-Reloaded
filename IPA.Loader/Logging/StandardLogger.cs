@@ -208,19 +208,21 @@ namespace IPA.Logging
             {
                 // add source to message
                 var stackFrame = new StackTrace(true).GetFrame(1);
-                var method = stackFrame.GetMethod();
                 var lineNo = stackFrame.GetFileLineNumber();
-                var fileName = stackFrame.GetFileName();
-                var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
 
-                message = lineNo == 0 ? // no symbols
-                    $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString})}} {message}" : 
-                    $"{{{fileName}:{lineNo}}} {message}";
+                if (lineNo == 0)
+                { // no debug info
+                    var method = stackFrame.GetMethod();
+                    var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
 
-                base.Debug(message);
+                    message = $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString})}} {message}";
+                }
+                else
+                    message = $"{{{stackFrame.GetFileName()}:{lineNo}}} {message}";
+
             }
-            else
-                base.Debug(message);
+
+            base.Debug(message);
         }
 
         private struct LogMessage
