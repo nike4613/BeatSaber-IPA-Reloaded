@@ -346,7 +346,10 @@ namespace IPA.Updating.BeatMods
                 }
                 else if (!dep.Has)
                 {
-                    Logger.updater.Warn($"Could not resolve dependency {dep}");
+                    if (dep.Requirement.IsSatisfied(dep.Version))
+                        Logger.updater.Notice($"Mod {dep.Name} running a newer version than is on BeatMods ({dep.Version})");
+                    else
+                        Logger.updater.Warn($"Could not resolve dependency {dep}");
                 }
             }
 
