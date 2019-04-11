@@ -1,4 +1,5 @@
-﻿using IPA.Loader.Composite;
+﻿using IPA.Config;
+using IPA.Loader.Composite;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,8 +28,8 @@ namespace IPA.Loader
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
-            /* kill this for now, until theres a new system */
-            gameObject.AddComponent<Updating.BeatMods.Updater>();
+            if (SelfConfig.SelfConfigRef.Value.AutoUpdate)
+                gameObject.AddComponent<Updating.BeatMods.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();

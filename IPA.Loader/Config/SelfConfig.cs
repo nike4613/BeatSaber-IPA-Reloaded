@@ -39,6 +39,8 @@ namespace IPA.Config
 
         public bool ApplyAntiYeet = false;
 
+        public bool AutoUpdate = true;
+
         public class DebugObject
         {
             public bool ShowCallSource = false;
