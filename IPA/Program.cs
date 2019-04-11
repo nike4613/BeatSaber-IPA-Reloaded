@@ -23,6 +23,8 @@ namespace IPA
             Unknown
         }
 
+        public const string FileVersion = "3.12.10";
+
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
         public static readonly ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h") { DocString = "prints this message" };
@@ -138,36 +140,56 @@ namespace IPA
         {
             try
             {
-                var backup = new BackupUnit(context);
-                
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("Restoring old version... ");
-                if (BackupManager.HasBackup(context))
-                    BackupManager.Restore(context);
+                bool installFiles = true;
+                // first, check currently installed version, if any
+                if (File.Exists(Path.Combine(context.ProjectRoot, "winhttp.dll")))
+                { // installed, so check version of installed assembly
+                    string injectorPath = Path.Combine(context.ManagedPath, "IPA.Injector.dll");
+                    if (File.Exists(injectorPath))
+                    {
+                        var verInfo = FileVersionInfo.GetVersionInfo(injectorPath);
+                        var fileVersion = new Version(verInfo.FileVersion);
 
-                var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
-                bool isFlat = Directory.Exists(nativePluginFolder) &&
-                              Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
-                bool force = !BackupManager.HasBackup(context) || ArgForce;
-                var architecture = DetectArchitecture(context.Executable);
+                        if (fileVersion > Version)
+                            installFiles = false;
+                    }
+                }
 
-                Console.ForegroundColor = ConsoleColor.DarkCyan;
-                Console.WriteLine("Installing files... ");
+                if (installFiles || ArgForce)
+                {
+                    var backup = new BackupUnit(context);
 
-                CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
-                    backup,
-                    (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                        architecture));
-                CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
-                    backup,
-                    (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                        architecture));
-                CopyAll(new DirectoryInfo(context.IPARoot), new DirectoryInfo(context.ProjectRoot), force,
-                    backup,
-                    null, false);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("Restoring old version... ");
+                    if (BackupManager.HasBackup(context))
+                        BackupManager.Restore(context);
 
-                    //backup.Add(context.AssemblyFile);
-                    //backup.Add(context.EngineFile);
+                    var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
+                    bool isFlat = Directory.Exists(nativePluginFolder) &&
+                                  Directory.GetFiles(nativePluginFolder).Any(f => f.EndsWith(".dll"));
+                    bool force = !BackupManager.HasBackup(context) || ArgForce;
+                    var architecture = DetectArchitecture(context.Executable);
+
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    Console.WriteLine("Installing files... ");
+
+                    CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
+                        backup,
+                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
+                            architecture));
+                    CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
+                        backup,
+                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
+                            architecture));
+                    CopyAll(new DirectoryInfo(context.IPARoot), new DirectoryInfo(context.ProjectRoot), force,
+                        backup,
+                        null, false);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Not copying files because newer version already installed");
+                }
 
                 #region Create Plugin Folder
 
