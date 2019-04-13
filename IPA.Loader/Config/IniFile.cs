@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -7,6 +8,7 @@ namespace IPA.Config
     /// <summary>
     /// Create a New INI file to store or load data
     /// </summary>
+    [Obsolete("Jesus, this uses old 16-bit system calls!")]
     internal class IniFile
     {
         [DllImport("KERNEL32.DLL", EntryPoint = "GetPrivateProfileStringW",

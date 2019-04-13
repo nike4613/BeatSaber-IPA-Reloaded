@@ -8,6 +8,7 @@ namespace IPA.Config
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
+    [Obsolete("This uses IniFile")]
     public interface IModPrefs
     {
         /// <summary>
@@ -87,6 +88,7 @@ namespace IPA.Config
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
+    [Obsolete("This uses IniFile, which is dumb")]
     public class ModPrefs : IModPrefs
     {
         private static ModPrefs _staticInstance;
