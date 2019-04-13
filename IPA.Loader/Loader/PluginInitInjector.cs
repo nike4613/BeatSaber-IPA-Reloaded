@@ -36,7 +36,9 @@ namespace IPA.Loader
         private static readonly List<Tuple<Type, InjectParameter>> injectors = new List<Tuple<Type, InjectParameter>>
         {
             new Tuple<Type, InjectParameter>(typeof(Logger), (prev, param, meta) => prev ?? new StandardLogger(meta.Name)),
+#pragma warning disable CS0618 // Type or member is obsolete
             new Tuple<Type, InjectParameter>(typeof(IModPrefs), (prev, param, meta) => prev ?? new ModPrefs(meta)),
+#pragma warning restore CS0618 // Type or member is obsolete
             new Tuple<Type, InjectParameter>(typeof(IConfigProvider), (prev, param, meta) =>
             {
                 if (prev != null) return prev;
