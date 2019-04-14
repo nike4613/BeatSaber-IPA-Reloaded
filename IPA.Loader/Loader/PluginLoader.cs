@@ -73,6 +73,8 @@ namespace IPA.Loader
 
             private PluginManifest manifest;
 
+            internal HashSet<PluginMetadata> Dependencies { get; } = new HashSet<PluginMetadata>();
+
             internal PluginManifest Manifest
             {
                 get => manifest;
@@ -281,30 +283,76 @@ namespace IPA.Loader
 
         internal static void ComputeLoadOrder()
         {
-            PluginsMetadata.Sort((a, b) =>
-            {
-                if (a.Id == b.Id) return 0;
-                if (a.Id != null)
+#if DEBUG
+            Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString())));
+#endif
+
+            bool InsertInto(HashSet<PluginMetadata> root, PluginMetadata meta, bool isRoot = false)
+            { // this is slow, and hella recursive
+                bool inserted = false;
+                foreach (var sr in root)
                 {
-                    if (b.Manifest.Dependencies.ContainsKey(a.Id) || b.Manifest.LoadAfter.Contains(a.Id)) return -1;
-                    if (b.Manifest.LoadBefore.Contains(a.Id)) return 1;
-                }
-                if (b.Id != null)
-                {
-                    if (a.Manifest.Dependencies.ContainsKey(b.Id) || a.Manifest.LoadAfter.Contains(b.Id)) return 1;
-                    if (a.Manifest.LoadBefore.Contains(b.Id)) return -1;
+                    inserted = inserted || InsertInto(sr.Dependencies, meta);
+
+                    if (meta.Id != null)
+                        if (sr.Manifest.Dependencies.ContainsKey(meta.Id) || sr.Manifest.LoadAfter.Contains(meta.Id))
+                            inserted = inserted || sr.Dependencies.Add(meta);
+                    if (sr.Id != null)
+                        if (meta.Manifest.LoadBefore.Contains(sr.Id))
+                            inserted = inserted || sr.Dependencies.Add(meta);
                 }
 
-                return 0;
-            });
+                if (isRoot)
+                {
+                    foreach (var sr in root)
+                    {
+                        InsertInto(meta.Dependencies, sr);
+
+                        if (sr.Id != null)
+                            if (meta.Manifest.Dependencies.ContainsKey(sr.Id) || meta.Manifest.LoadAfter.Contains(sr.Id))
+                                meta.Dependencies.Add(sr);
+                        if (meta.Id != null)
+                            if (sr.Manifest.LoadBefore.Contains(meta.Id))
+                                meta.Dependencies.Add(sr);
+                    }
+
+                    root.Add(meta);
+                }
+
+                return inserted;
+            }
+
+            var pluginTree = new HashSet<PluginMetadata>();
+            foreach (var meta in PluginsMetadata)
+                InsertInto(pluginTree, meta, true);
+
+            void DeTree(List<PluginMetadata> into, HashSet<PluginMetadata> tree)
+            {
+                foreach (var st in tree)
+                    if (!into.Contains(st))
+                    {
+                        DeTree(into, st.Dependencies);
+                        into.Add(st);
+                    }
+            }
+
+            var deTreed = new List<PluginMetadata>();
+            DeTree(deTreed, pluginTree);
+
+#if DEBUG
+            Logger.loader.Debug(string.Join(", ", deTreed.Select(p => p.ToString())));
+#endif
 
             var metadata = new List<PluginMetadata>();
             var pluginsToLoad = new Dictionary<string, Version>();
-            foreach (var meta in PluginsMetadata)
+            foreach (var meta in deTreed)
             {
                 bool load = true;
                 foreach (var dep in meta.Manifest.Dependencies)
                 {
+#if DEBUG
+                    Logger.loader.Debug($"Looking for dependency {dep.Key} with version range {dep.Value.Intersect(new SemVer.Range("*.*.*"))}");
+#endif
                     if (pluginsToLoad.ContainsKey(dep.Key) && dep.Value.IsSatisfied(pluginsToLoad[dep.Key]))
                         continue;
 
