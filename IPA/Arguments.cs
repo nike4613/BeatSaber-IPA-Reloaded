@@ -86,6 +86,13 @@ namespace IPA
                             }
                         }
                     }
+
+                    if (parsingValue)
+                    {
+                        parsingValue = false;
+                        flags[mainChar] = subBuildState.ToString();
+                        subBuildState = new StringBuilder();
+                    }
                 }
                 else
                 { // parse as positional
