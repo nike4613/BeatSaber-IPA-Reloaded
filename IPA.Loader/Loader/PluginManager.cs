@@ -171,24 +171,6 @@ namespace IPA.Loader
                 #endregion
             }
 
-            /*var selfPlugin = new PluginInfo
-            {
-                Filename = Path.Combine(BeatSaber.InstallPath, "IPA.exe"),
-                Plugin = SelfPlugin.Instance
-            };
-            selfPlugin.Metadata.Manifest = new PluginManifest
-            {
-                Author = "DaNike",
-                Features = new string[0],
-                Description = "",
-                Version = new SemVer.Version(SelfConfig.IPA_Version),
-                GameVersion = BeatSaber.GameVersion,
-                Id = "beatsaber-ipa-reloaded"
-            };
-            selfPlugin.Metadata.File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe"));
-
-            _bsPlugins.Add(selfPlugin);*/
-
             //Load copied plugins
             string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
             foreach (string s in copiedPlugins)
@@ -230,14 +212,6 @@ namespace IPA.Loader
                     try
                     {
                         T pluginInstance = Activator.CreateInstance(t) as T;
-                        /*string[] filter = null;
-
-                        if (typeof(T) == typeof(IPlugin) && pluginInstance is IEnhancedPlugin enhancedPlugin)
-                            filter = enhancedPlugin.Filter;
-                        else if (pluginInstance is IGenericEnhancedPlugin plugin)
-                            filter = plugin.Filter;*/
-
-                        //if (filter == null || filter.Contains(exeName, StringComparer.OrdinalIgnoreCase))
                         return pluginInstance;
                     }
                     catch (Exception e)
