@@ -264,9 +264,15 @@ namespace IPA.Loader
                 }
 
             }
+            catch (ReflectionTypeLoadException e)
+            {
+                Logger.loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
+                Logger.loader.Error($"  {string.Join(", ", e.Types.Select(t => t.FullName))}");
+            }
             catch (Exception e)
             {
-                Logger.loader.Error($"Could not load {Path.GetFileName(file)}! {e}");
+                Logger.loader.Error($"Could not load {Path.GetFileName(file)}!");
+                Logger.loader.Error(e);
             }
 
             return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(null, ipaPlugins);
