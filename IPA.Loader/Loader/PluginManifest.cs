@@ -39,5 +39,8 @@ namespace IPA.Loader
 
         [JsonProperty("loadAfter", Required = Required.DisallowNull)]
         public string[] LoadAfter = new string[0];
+
+        [JsonProperty("icon", Required = Required.DisallowNull)]
+        public string IconPath = null;
     }
 }

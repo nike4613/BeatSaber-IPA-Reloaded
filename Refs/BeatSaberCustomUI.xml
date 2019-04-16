@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BeatSaberCustomUI</name>
+    </assembly>
+    <members>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.DisplayKeyboard(System.String,System.String,System.Action{System.String},System.Action{System.String},System.Action)">
+            <summary>
+            Display a keyboard interface to accept user input.
+            </summary>
+            <param name="title">The title to be displayed above the keyboard.</param>
+            <param name="initialValue">The starting value of the keyboard.</param>
+            <param name="TextChangedEvent">Callback when the text is modified by the user (when any key is pressed basically).</param>
+            <param name="TextEntrySuccessEvent">Callback when the user successfully submits the changed text.</param>
+            <param name="TextEntryCancelledEvent">Callback when the user presses the cancel button.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateUIButton(UnityEngine.RectTransform,System.String,UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Events.UnityAction,System.String,UnityEngine.Sprite)">
+            <summary>
+            Creates a copy of a template button and returns it.
+            </summary>
+            <param name="parent">The transform to parent the button to.</param>
+            <param name="buttonTemplate">The name of the button to make a copy of. Example: "QuitButton", "PlayButton", etc.</param>
+            <param name="anchoredPosition">The position the button should be anchored to.</param>
+            <param name="sizeDelta">The size of the buttons RectTransform.</param>
+            <param name="onClick">Callback for when the button is pressed.</param>
+            <param name="buttonText">The text that should be shown on the button.</param>
+            <param name="icon">The icon that should be shown on the button.</param>
+            <returns>The newly created button.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateUIButton(UnityEngine.RectTransform,System.String,UnityEngine.Vector2,UnityEngine.Events.UnityAction,System.String,UnityEngine.Sprite)">
+            <summary>
+            Creates a copy of a template button and returns it.
+            </summary>
+            <param name="parent">The transform to parent the button to.</param>
+            <param name="buttonTemplate">The name of the button to make a copy of. Example: "QuitButton", "PlayButton", etc.</param>
+            <param name="anchoredPosition">The position the button should be anchored to.</param>
+            <param name="onClick">Callback for when the button is pressed.</param>
+            <param name="buttonText">The text that should be shown on the button.</param>
+            <param name="icon">The icon that should be shown on the button.</param>
+            <returns>The newly created button.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateUIButton(UnityEngine.RectTransform,System.String,UnityEngine.Events.UnityAction,System.String,UnityEngine.Sprite)">
+            <summary>
+            Creates a copy of a template button and returns it.
+            </summary>
+            <param name="parent">The transform to parent the button to.</param>
+            <param name="buttonTemplate">The name of the button to make a copy of. Example: "QuitButton", "PlayButton", etc.</param>
+            <param name="onClick">Callback for when the button is pressed.</param>
+            <param name="buttonText">The text that should be shown on the button.</param>
+            <param name="icon">The icon that should be shown on the button.</param>
+            <returns>The newly created button.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateBackButton(UnityEngine.RectTransform,UnityEngine.Events.UnityAction)">
+            <summary>
+            Creates a copy of a back button.
+            </summary>
+            <param name="parent">The transform to parent the new button to.</param>
+            <param name="onClick">Callback for when the button is pressed.</param>
+            <returns>The newly created back button.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateViewController``1">
+            <summary>
+            Creates a VRUIViewController of type T, and marks it to not be destroyed.
+            </summary>
+            <typeparam name="T">The variation of VRUIViewController you want to create.</typeparam>
+            <returns>The newly created VRUIViewController of type T.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateCustomMenu``1(System.String)">
+            <summary>
+            Creates a CustomMenu, which is basically a custom panel that handles UI transitions for you automatically.
+            </summary>
+            <typeparam name="T">The type of CustomMenu to instantiate.</typeparam>
+            <param name="title">The title of the new CustomMenu.</param>
+            <returns>The newly created CustomMenu of type T.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateLoadingSpinner(UnityEngine.Transform)">
+            <summary>
+            Creates a loading spinner.
+            </summary>
+            <param name="parent">The transform to parent the new loading spinner to.</param>
+            <returns>The newly created loading spinner.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateText(UnityEngine.RectTransform,System.String,UnityEngine.Vector2)">
+            <summary>
+            Creates a TextMeshProUGUI component.
+            </summary>
+            <param name="parent">Thet ransform to parent the new TextMeshProUGUI component to.</param>
+            <param name="text">The text to be displayed.</param>
+            <param name="anchoredPosition">The position the button should be anchored to.</param>
+            <returns>The newly created TextMeshProUGUI component.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateText(UnityEngine.RectTransform,System.String,UnityEngine.Vector2,UnityEngine.Vector2)">
+            <summary>
+            Creates a TextMeshProUGUI component.
+            </summary>
+            <param name="parent">Thet transform to parent the new TextMeshProUGUI component to.</param>
+            <param name="text">The text to be displayed.</param>
+            <param name="anchoredPosition">The position the text component should be anchored to.</param>
+            <param name="sizeDelta">The size of the text components RectTransform.</param>
+            <returns>The newly created TextMeshProUGUI component.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.AddHintText(UnityEngine.RectTransform,System.String)">
+            <summary>
+            Adds hint text to any component that handles pointer events.
+            </summary>
+            <param name="parent">Thet transform to parent the new HoverHint component to.</param>
+            <param name="text">The text to be displayed on the HoverHint panel.</param>
+            <returns>The newly created HoverHint component.</returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateUISlider(UnityEngine.Transform,System.Single,System.Single,System.Single,System.Boolean,UnityEngine.Events.UnityAction{System.Single})">
+            <summary>
+            Creates a custom slider.
+            </summary>
+            <param name="parent">Thet transform to parent the new slider component to.</param>
+            <param name="min">The minimum value of the slider.</param>
+            <param name="max">The maximum value of the slider.</param>
+            <param name="increment">The amount to increment the slider by.</param>
+            <param name="intValues">True if the value represented by the slider is an int, false if it's a float.</param>
+            <param name="onValueChanged">Callback when the sliders value changes.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateColorPicker(UnityEngine.RectTransform,UnityEngine.Vector2,UnityEngine.Vector2)">
+            <summary>
+            Creates a color picker.
+            </summary>
+            <param name="parent">Thet transform to parent the new color picker to.</param>
+            <param name="anchoredPosition">The position the color picker should be anchored to.</param>
+            <param name="sizeDelta">The size of the color picker's RectTransform.</param>
+            <returns></returns>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomFlowCoordinator.parentFlowCoordinator">
+            <summary>
+            The FlowCoordinator that presented this FlowCoordinator
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomFlowCoordinator.customPanel">
+            <summary>
+            The CustomMenu this FlowCoordinator is representing.
+            </summary>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomFlowCoordinator.Dismiss(System.Boolean)">
+            <summary>
+            Back out to the previous flow coordinator.
+            </summary>
+            <param name="immediately">If set to true, no animation will be shown and the transition will be instant.</param>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomFlowCoordinator.Dismiss">
+            <summary>
+            Back out to the previous flow coordinator with an animation.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController.includePageButtons">
+            <summary>
+            Whether or not to include a back button when the ViewController is activated.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController._pageUpButton">
+            <summary>
+            A reference to the page up button, if it exists.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController._pageDownButton">
+            <summary>
+            A reference to the page down button, if it exists.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController._customListTableView">
+            <summary>
+            The TableView associated with the current CustomListViewController.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController.Data">
+            <summary>
+            The data to be displayed in the table.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController.DidSelectRowEvent">
+            <summary>
+            An event fired when the user selects a cell in the TableView.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController.reuseIdentifier">
+            <summary>
+            The reuse identifier, which is used to recycle cells instead of instantiating new instances of them.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomListViewController._songListTableCellInstance">
+            <summary>
+            The prefab used to instantiate new table cells.
+            </summary>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomListViewController.GetTableCell(System.Int32,System.Boolean)">
+            <summary>
+            Instantiates a new LevelListTableCell (or recycles an old one).
+            </summary>
+            <param name="row">This param does nothing, and was left in by mistake.</param>
+            <param name="beatmapCharacteristicImages">If set to false, the BeatmapCharacteristicImages will be destroyed.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomListViewController.GetTableCell(System.Boolean)">
+            <summary>
+            Instantiates a new LevelListTableCell (or recycles an old one).
+            </summary>
+            <param name="beatmapCharacteristicImages">If set to false, the BeatmapCharacteristicImages will be destroyed.</param>
+            <returns></returns>
+        </member>
+        <member name="P:CustomUI.BeatSaber.CustomMenu.customFlowCoordinator">
+            <summary>
+            The CustomFlowCoordinator associated with this CustomMenu. This will not be populated if you have no main CustomViewController.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomMenu.mainViewController">
+            <summary>
+            The main CustomViewController associated with this menu.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomMenu.leftViewController">
+            <summary>
+            The left CustomViewController associated with this menu.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomMenu.rightViewController">
+            <summary>
+            The right CustomViewController associated with this menu.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomMenu.bottomViewController">
+            <summary>
+            The bottom CustomViewController associated with this menu.
+            </summary>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.SetMainViewController(CustomUI.BeatSaber.CustomViewController,System.Boolean,System.Action{System.Boolean,VRUI.VRUIViewController.ActivationType},System.Action{VRUI.VRUIViewController.DeactivationType})">
+            <summary>
+            Sets up the main CustomViewController.
+            </summary>
+            <param name="viewController">The viewcontroller to set.</param>
+            <param name="includeBackButton">Whether or not to generate a back button.</param>
+            <param name="DidActivate">Optional, a callback when the ViewController becomes active (when you open it).</param>
+            <param name="DidDeactivate">Optional, a callback when the ViewController becomes inactive (when you close it).</param>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.SetLeftViewController(CustomUI.BeatSaber.CustomViewController,System.Boolean,System.Action{System.Boolean,VRUI.VRUIViewController.ActivationType},System.Action{VRUI.VRUIViewController.DeactivationType})">
+            <summary>
+            Sets up the left CustomViewController.
+            </summary>
+            <param name="viewController">The viewcontroller to set.</param>
+            <param name="includeBackButton">Whether or not to generate a back button.</param>
+            <param name="DidActivate">Optional, a callback when the ViewController becomes active (when you open it).</param>
+            <param name="DidDeactivate">Optional, a callback when the ViewController becomes inactive (when you close it).</param>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.SetRightViewController(CustomUI.BeatSaber.CustomViewController,System.Boolean,System.Action{System.Boolean,VRUI.VRUIViewController.ActivationType},System.Action{VRUI.VRUIViewController.DeactivationType})">
+            <summary>
+            Sets up the right CustomViewController.
+            </summary>
+            <param name="viewController">The viewcontroller to set.</param>
+            <param name="includeBackButton">Whether or not to generate a back button.</param>
+            <param name="DidActivate">Optional, a callback when the ViewController becomes active (when you open it).</param>
+            <param name="DidDeactivate">Optional, a callback when the ViewController becomes inactive (when you close it).</param>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.SetBottomViewController(CustomUI.BeatSaber.CustomViewController,System.Boolean,System.Action{System.Boolean,VRUI.VRUIViewController.ActivationType},System.Action{VRUI.VRUIViewController.DeactivationType})">
+            <summary>
+            Sets up the bottom CustomViewController.
+            </summary>
+            <param name="viewController">The viewcontroller to set.</param>
+            <param name="includeBackButton">Whether or not to generate a back button.</param>
+            <param name="DidActivate">Optional, a callback when the ViewController becomes active (when you open it).</param>
+            <param name="DidDeactivate">Optional, a callback when the ViewController becomes inactive (when you close it).</param>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.Present(System.Boolean)">
+            <summary>
+            Opens the menu.
+            </summary>
+            <param name="immediately">If set to true, no animation will be shown and the transition will be instant.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.Present">
+            <summary>
+            Opens the menu with an animation.
+            </summary>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.Dismiss(System.Boolean)">
+            <summary>
+            Closes the menu.
+            </summary>
+            <param name="immediately">If set to true, no animation will be shown and the transition will be instant.</param>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomMenu.Dismiss">
+            <summary>
+            Closes the menu with an animation.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomViewController.backButtonPressed">
+            <summary>
+            The event that's fired when the back button is pressed.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomViewController._backButton">
+            <summary>
+            A reference to the current back button, if it exists.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomViewController.includeBackButton">
+            <summary>
+            When set to true, a back button will be automatically generated.
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomViewController.DidActivateEvent">
+            <summary>
+            The event that's fired when the CustomViewController is activated (when you open it).
+            </summary>
+        </member>
+        <member name="F:CustomUI.BeatSaber.CustomViewController.DidDeactivateEvent">
+            <summary>
+            The event that's fired when the CustomViewController is deactivated (when you close it).
+            </summary>
+        </member>
+        <member name="M:CustomUI.BeatSaber.CustomViewController.ClearBackButtonCallbacks">
+            <summary>
+            Clears any back button callbacks.
+            </summary>
+        </member>
+        <member name="M:CustomUI.UIElements.ColorPicker.SetPreviewColor(UnityEngine.Color)">
+            <summary>
+            Sets the <see cref="F:CustomUI.UIElements.ColorPicker.ColorPickerPreview"/> color while also updating all associated <see cref="T:CustomUI.UIElements.CustomSlider"/> components.
+            </summary>
+            <param name="color">The <see cref="T:UnityEngine.Color"/> to set the preview image</param>
+        </member>
+        <member name="M:CustomUI.UIElements.ColorPicker.GetSelectedColorFromImage(UnityEngine.EventSystems.PointerEventData,HMUI.Image)">
+            <summary>
+            Get the color of a sprite contained in an <see cref="T:HMUI.Image"/> on pointer click
+            </summary>
+            <param name="pointerData">The <see cref="T:UnityEngine.EventSystems.PointerEventData"/> given by OnPointerDown</param>
+            <param name="image">The <see cref="T:HMUI.Image"/> instance</param>
+        </member>
+        <member name="M:CustomUI.UIElements.ColorPickerCore.Initialize(System.Action{UnityEngine.Color})">
+            <summary>
+            Initialize the <see cref="T:CustomUI.UIElements.ColorPickerCore"/> (should be called after assigning the <see cref="F:CustomUI.UIElements.ColorPickerCore.ColorPickerPreview"/> variable)
+            </summary>
+        </member>
+        <member name="M:CustomUI.UIElements.ColorPickerCore.OnPointerDown(UnityEngine.EventSystems.PointerEventData)">
+            <summary>
+            Method called when the pointer is clicked inside the <see cref="T:CustomUI.UIElements.ColorPickerCore"/>
+            </summary>
+            <param name="eventData">Some informations about the pointer</param>
+        </member>
+        <member name="M:CustomUI.UIElements.ColorPickerCore.OnPointerUp(UnityEngine.EventSystems.PointerEventData)">
+            <summary>
+            Method called when the pointer is released inside the <see cref="T:CustomUI.UIElements.ColorPickerCore"/>
+            </summary>
+            <param name="eventData">Some informations about the pointer</param>
+        </member>
+        <member name="M:CustomUI.UIElements.ColorPickerCore.OnPointerExit(UnityEngine.EventSystems.PointerEventData)">
+            <summary>
+            Method called when the pointer is exiting the <see cref="T:CustomUI.UIElements.ColorPickerCore"/>
+            </summary>
+            <param name="eventData">Some informations about the pointer</param>
+        </member>
+    </members>
+</doc>
