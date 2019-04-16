@@ -39,6 +39,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyRenameStep", "BuildTools\AssemblyRenameStep\AssemblyRenameStep.csproj", "{E2CCDD2F-1D4F-4B06-9CD4-E0D2B9AE543A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSIPA-ModList", "BSIPA-ModList\BSIPA-ModList.csproj", "{23AB2621-A05C-4377-8418-85E6012C0BBE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F} = {5F33B310-DC8D-4C0D-877E-BAC3908DE10F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
