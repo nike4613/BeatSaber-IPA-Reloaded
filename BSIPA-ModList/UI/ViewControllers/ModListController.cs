@@ -6,6 +6,7 @@ using HMUI;
 using IPA.Loader;
 using IPA.Old;
 using UnityEngine;
+using VRUI;
 
 namespace BSIPA_ModList.UI
 {
@@ -99,8 +100,10 @@ namespace BSIPA_ModList.UI
         }
 #pragma warning restore
 
+        private BackButtonNavigationController navigation;
+
 #pragma warning disable CS0618
-        public void Init(IEnumerable<PluginLoader.PluginInfo> bsipaPlugins, IEnumerable<PluginLoader.PluginMetadata> ignoredPlugins, IEnumerable<IPlugin> ipaPlugins)
+        public void Init(BackButtonNavigationController navigation, IEnumerable<PluginLoader.PluginInfo> bsipaPlugins, IEnumerable<PluginLoader.PluginMetadata> ignoredPlugins, IEnumerable<IPlugin> ipaPlugins)
         {
             Logger.log.Debug("List Controller Init");
 
@@ -108,6 +111,7 @@ namespace BSIPA_ModList.UI
             DidSelectRowEvent = DidSelectRow;
 
             includePageButtons = true;
+            this.navigation = navigation;
 
             reuseIdentifier = "BSIPAModListTableCell";
 

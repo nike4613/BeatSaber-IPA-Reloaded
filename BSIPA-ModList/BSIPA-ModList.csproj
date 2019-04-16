@@ -51,12 +51,22 @@
       <HintPath>..\Refs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\Refs\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\Refs\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\ModListController.cs" />
-    <Compile Include="UI\ModListMenu.cs" />
+    <Compile Include="UI\ModListFlowCoordinator.cs" />
+    <Compile Include="UI\ViewControllers\BackButtonNavigationController.cs" />
+    <Compile Include="UI\ViewControllers\ModInfoViewController.cs" />
+    <Compile Include="UI\ViewControllers\ModListController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">

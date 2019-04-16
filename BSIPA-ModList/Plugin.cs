@@ -5,6 +5,8 @@ using CustomUI.BeatSaber;
 using BSIPA_ModList.UI;
 using CustomUI.MenuButton;
 using UnityEngine.Events;
+using UnityEngine;
+using System.Linq;
 
 namespace BSIPA_ModList
 {
@@ -29,7 +31,8 @@ namespace BSIPA_ModList
         {
         }
 
-        private ModListMenu menu;
+        private MainFlowCoordinator mainFlow;
+        private ModListFlowCoordinator menuFlow;
         private MenuButton button;
 
         public void OnApplicationStart()
@@ -43,14 +46,18 @@ namespace BSIPA_ModList
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
         {
-            if (scene.name == "MenuCore" && button == null)
+            if (scene.name == "MenuCore")
             {
-                menu = BeatSaberUI.CreateCustomMenu<ModListMenu>("Installed Mods");
-                button = MenuButtonUI.AddButton("All Mods", "Shows all installed mods, along with controls for updating them.", () =>
-                {
-                    Logger.log.Debug("Presenting menu");
-                    menu.Present();
-                });
+                if (mainFlow == null)
+                    mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
+                if (menuFlow == null)
+                    menuFlow = new GameObject("BSIPA Mod List Flow Coordinator").AddComponent<ModListFlowCoordinator>();
+                if (button == null)
+                    button = MenuButtonUI.AddButton("Mod List", "Look at installed mods, and control updating", () =>
+                    {
+                        Logger.log.Debug("Presenting own flow controller");
+                        menuFlow.PresentOn(mainFlow);
+                    });
             }
         }
 
