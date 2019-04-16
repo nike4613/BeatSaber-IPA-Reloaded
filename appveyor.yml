@@ -13,6 +13,9 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 artifacts:
   - path: IPA/bin/$(configuration)
+    name: BSIPA
+  - path: BSIPA-ModList/bin/$(configuration)
+    name: ModList
 build:
   verbosity: normal
   project: BSIPA.sln
@@ -28,7 +31,7 @@ deploy:
     - `$(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)`
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
-  artifact: IPA/Bin/$(configuration).zip
+  artifact: /.*\.zip/
   draft: true
   force_update: true
   on:

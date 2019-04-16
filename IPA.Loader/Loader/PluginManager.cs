@@ -252,7 +252,7 @@ namespace IPA.Loader
             return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(null, ipaPlugins);
         }
 
-        internal class AppInfo
+        internal static class AppInfo
         {
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = false)]
             private static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);

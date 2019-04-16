@@ -6,6 +6,7 @@
   "id": "BSIPA",
   "name": "Beat Saber IPA",
   "version": "3.12.13",
+  "icon": "IPA.icon.png",
   "features": [
     "define-feature(print, IPA.Loader.Features.PrintFeature)",
     "define-feature(debug, IPA.Loader.Features.DebugFeature)",
