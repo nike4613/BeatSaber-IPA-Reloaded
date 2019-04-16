@@ -1,0 +1,15 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
+  "author": "DaNike",
+  "description": "An in-game interface client for BSIPA.",
+  "gameVersion": "0.13.2",
+  "id": "BSIPA-ModList",
+  "name": "BSIPA Mod List",
+  "version": "1.0.0",
+  "icon": "BSIPA_ModList.Icons.self.png",
+  "dependsOn": {
+    "BSIPA": "^3.12.13",
+    "CustomUI": "^1.5.4"
+  },
+  "features": []
+}
