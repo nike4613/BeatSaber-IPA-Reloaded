@@ -131,7 +131,7 @@ namespace IPA.Config
             if (provider != null)
             {
                 provider.Filename = Path.Combine(BeatSaber.UserDataPath, configName);
-                configProviders.Add(provider.LastModified, provider);
+                configProviders.Add(Ref.Create(provider.LastModified), provider);
             }
 
             return provider;
