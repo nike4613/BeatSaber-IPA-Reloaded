@@ -31,13 +31,8 @@ namespace BSIPA_ModList
         {
         }
 
-        private MainFlowCoordinator mainFlow;
-        private ModListFlowCoordinator menuFlow;
-        private MenuButton button;
-
         public void OnApplicationStart()
         {
-            Logger.log.Debug("Creating Menu");
         }
 
         public void OnFixedUpdate()
@@ -48,16 +43,11 @@ namespace BSIPA_ModList
         {
             if (scene.name == "MenuCore")
             {
-                if (mainFlow == null)
-                    mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-                if (menuFlow == null)
-                    menuFlow = new GameObject("BSIPA Mod List Flow Coordinator").AddComponent<ModListFlowCoordinator>();
-                if (button == null)
-                    button = MenuButtonUI.AddButton("Mod List", "Look at installed mods, and control updating", () =>
-                    {
-                        Logger.log.Debug("Presenting own flow controller");
-                        menuFlow.PresentOn(mainFlow);
-                    });
+                if (ButtonUI.Instance == null)
+                {
+                    Logger.log.Debug("Creating Menu");
+                    new GameObject("BSIPA Mod List Object").AddComponent<ButtonUI>().Init();
+                }
             }
         }
 

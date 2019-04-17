@@ -25,7 +25,7 @@ namespace BSIPA_ModList.UI
                 navigationController.didFinishEvent += backButton_DidFinish;
 
                 modList = BeatSaberUI.CreateViewController<ModListController>();
-                modList.Init(navigationController, PluginManager.AllPlugins, PluginLoader.ignoredPlugins, PluginManager.Plugins);
+                modList.Init(this, PluginManager.AllPlugins, PluginLoader.ignoredPlugins, PluginManager.Plugins);
 
                 PushViewControllerToNavigationController(navigationController, modList);
             }
@@ -49,10 +49,54 @@ namespace BSIPA_ModList.UI
             presentFlow(main, this, finished, immediate, replaceTop);
         }
 
+        public bool HasSelected { get; private set; } = false;
+
+        public void SetSelected(VRUIViewController selected, Action callback = null, bool immediate = false)
+        {
+            if (immediate)
+            {
+                if (HasSelected)
+                    PopViewController(immediate: true);
+                PushViewController(selected, callback, true);
+            }
+            else
+            {
+                if (HasSelected)
+                    PopViewController(() => PushViewController(selected, callback, immediate), immediate);
+                else
+                    PushViewController(selected, callback, immediate);
+            }
+        }
+
+        public void ClearSelected(Action callback = null, bool immediate = false)
+        {
+            if (HasSelected) PopViewController(callback, immediate);
+        }
+
+        public void PushViewController(VRUIViewController controller, Action callback = null, bool immediate = false)
+        {
+            PushViewControllerToNavigationController(navigationController, controller, callback, immediate);
+        }
+
+        public void PopViewController(Action callback = null, bool immediate = false)
+        {
+            PopViewControllerFromNavigationController(navigationController, callback, immediate);
+        }
+
+        private delegate void DismissFlowDel(FlowCoordinator self, FlowCoordinator newF, Action finished, bool immediate);
+        private static DismissFlowDel dismissFlow;
+
         private void backButton_DidFinish()
         {
+            if (dismissFlow == null)
+            {
+                var ty = typeof(FlowCoordinator);
+                var m = ty.GetMethod("DismissFlowCoordinator", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                dismissFlow = (DismissFlowDel)Delegate.CreateDelegate(typeof(DismissFlowDel), m);
+            }
+
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-            mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);
+            dismissFlow(mainFlow, this, null, false);
         }
     }
 }
