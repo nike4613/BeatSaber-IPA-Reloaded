@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using CustomUI.BeatSaber;
 using CustomUI.Utilities;
@@ -7,6 +8,7 @@ using IPA.Loader;
 using IPA.Old;
 using UnityEngine;
 using VRUI;
+using IPA.Loader.Features;
 
 namespace BSIPA_ModList.UI
 {
@@ -31,11 +33,13 @@ namespace BSIPA_ModList.UI
             }
 
             internal PluginLoader.PluginInfo Plugin;
+            private ModListController list;
 
-            public BSIPAModCell(PluginLoader.PluginInfo plugin) 
+            public BSIPAModCell(ModListController list, PluginLoader.PluginInfo plugin) 
                 : base($"{plugin.Metadata.Name} <size=60%>v{plugin.Metadata.Version}", plugin.Metadata.Manifest.Author, null)
             {
                 Plugin = plugin;
+                this.list = list;
 
                 if (plugin.Metadata.Manifest.IconPath != null)
                     icon = UIUtilities.LoadSpriteRaw(UIUtilities.GetResource(plugin.Metadata.Assembly, plugin.Metadata.Manifest.IconPath));
@@ -45,20 +49,33 @@ namespace BSIPA_ModList.UI
                 Logger.log.Debug($"BSIPAModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
             }
 
+            private ModInfoViewController infoView;
+
             public void OnSelect(ModListController cntrl)
             {
                 Logger.log.Debug($"Selected BSIPAModCell {Plugin.Metadata.Name} {Plugin.Metadata.Version}");
+
+                if (infoView == null)
+                {
+                    infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
+                    infoView.Init(icon, Plugin.Metadata.Name, Plugin.Metadata.Version.ToString(), Plugin.Metadata.Manifest.Author,
+                        Plugin.Metadata.Manifest.Description, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                }
+
+                list.flow.SetSelected(infoView);
             }
         }
 
         private class BSIPAIgnoredModCell : CustomCellInfo, IClickableCell
         {
             internal PluginLoader.PluginMetadata Plugin;
+            private ModListController list;
 
-            public BSIPAIgnoredModCell(PluginLoader.PluginMetadata plugin)
+            public BSIPAIgnoredModCell(ModListController list, PluginLoader.PluginMetadata plugin)
                 : base($"<color=#878787>{plugin.Name} <size=60%>v{plugin.Version}", $"{plugin.Manifest.Author} <color=#BFBFBF>- <i>Not loaded</i>", BSIPAModCell.DefaultIcon)
             {
                 Plugin = plugin;
+                this.list = list;
 
                 Logger.log.Debug($"BSIPAIgnoredModCell {plugin.Name} {plugin.Version}");
             }
@@ -66,6 +83,7 @@ namespace BSIPA_ModList.UI
             public void OnSelect(ModListController cntrl)
             {
                 Logger.log.Debug($"Selected BSIPAIgnoredModCell {Plugin.Name} {Plugin.Version}");
+
             }
         }
 
@@ -84,11 +102,13 @@ namespace BSIPA_ModList.UI
             }
 
             internal IPlugin Plugin;
+            private ModListController list;
 
-            public IPAModCell(IPlugin plugin)
+            public IPAModCell(ModListController list, IPlugin plugin)
                 : base($"{plugin.Name} <size=60%>{plugin.Version}", "<color=#BFBFBF><i>Legacy</i>", DefaultIcon)
             {
                 Plugin = plugin;
+                this.list = list;
 
                 Logger.log.Debug($"IPAModCell {plugin.Name} {plugin.Version}");
             }
@@ -100,10 +120,10 @@ namespace BSIPA_ModList.UI
         }
 #pragma warning restore
 
-        private BackButtonNavigationController navigation;
+        private ModListFlowCoordinator flow;
 
 #pragma warning disable CS0618
-        public void Init(BackButtonNavigationController navigation, IEnumerable<PluginLoader.PluginInfo> bsipaPlugins, IEnumerable<PluginLoader.PluginMetadata> ignoredPlugins, IEnumerable<IPlugin> ipaPlugins)
+        public void Init(ModListFlowCoordinator flow, IEnumerable<PluginLoader.PluginInfo> bsipaPlugins, IEnumerable<PluginLoader.PluginMetadata> ignoredPlugins, IEnumerable<IPlugin> ipaPlugins)
         {
             Logger.log.Debug("List Controller Init");
 
@@ -111,16 +131,16 @@ namespace BSIPA_ModList.UI
             DidSelectRowEvent = DidSelectRow;
 
             includePageButtons = true;
-            this.navigation = navigation;
+            this.flow = flow;
 
             reuseIdentifier = "BSIPAModListTableCell";
 
             foreach (var plugin in bsipaPlugins)
-                Data.Add(new BSIPAModCell(plugin));
+                Data.Add(new BSIPAModCell(this, plugin));
             foreach (var plugin in ignoredPlugins)
-                Data.Add(new BSIPAIgnoredModCell(plugin));
+                Data.Add(new BSIPAIgnoredModCell(this, plugin));
             foreach (var plugin in ipaPlugins)
-                Data.Add(new IPAModCell(plugin));
+                Data.Add(new IPAModCell(this, plugin));
         }
 
 #pragma warning restore
