@@ -8,7 +8,7 @@ namespace IPA.Config
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
-    [Obsolete("This uses IniFile")]
+    [Obsolete("Uses IniFile, which uses 16 bit system calls. Use BS Utils INI system for now.")]
     public interface IModPrefs
     {
         /// <summary>
@@ -88,7 +88,7 @@ namespace IPA.Config
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
-    [Obsolete("This uses IniFile, which is dumb")]
+    [Obsolete("Uses IniFile, which uses 16 bit system calls. Use BS Utils INI system for now.")]
     public class ModPrefs : IModPrefs
     {
         private static ModPrefs _staticInstance;
