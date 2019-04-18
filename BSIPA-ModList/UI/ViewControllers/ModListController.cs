@@ -58,11 +58,11 @@ namespace BSIPA_ModList.UI
                 if (infoView == null)
                 {
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
-                    infoView.Init(icon, Plugin.Metadata.Name, Plugin.Metadata.Version.ToString(), Plugin.Metadata.Manifest.Author,
+                    infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), Plugin.Metadata.Manifest.Author,
                         Plugin.Metadata.Manifest.Description, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
                 }
 
-                list.flow.SetSelected(infoView);
+                list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
             }
         }
 
@@ -84,6 +84,7 @@ namespace BSIPA_ModList.UI
             {
                 Logger.log.Debug($"Selected BSIPAIgnoredModCell {Plugin.Name} {Plugin.Version}");
 
+                list.flow.ClearSelected();
             }
         }
 
@@ -116,6 +117,8 @@ namespace BSIPA_ModList.UI
             public void OnSelect(ModListController cntrl)
             {
                 Logger.log.Debug($"Selected IPAModCell {Plugin.Name} {Plugin.Version}");
+
+                list.flow.ClearSelected();
             }
         }
 #pragma warning restore
@@ -129,6 +132,9 @@ namespace BSIPA_ModList.UI
 
             DidActivateEvent = DidActivate;
             DidSelectRowEvent = DidSelectRow;
+
+            rectTransform.anchorMin = new Vector2(0f, 0f);
+            rectTransform.anchorMax = new Vector2(.4f, 1f);
 
             includePageButtons = true;
             this.flow = flow;
@@ -153,7 +159,9 @@ namespace BSIPA_ModList.UI
 
         private new void DidActivate(bool first, ActivationType type)
         {
-
+            var rt = _customListTableView.transform as RectTransform;
+            rt.anchorMin = new Vector2(.1f, 0f);
+            rt.anchorMax = new Vector2(.9f, 1f);
         }
     }
 }
