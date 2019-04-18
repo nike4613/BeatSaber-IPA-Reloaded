@@ -187,7 +187,7 @@ namespace IPA.Loader
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
-                Logger.log.Info($"{plugin.Metadata.Name}: {plugin.Metadata.Version}");
+                Logger.log.Info($"{plugin.Metadata.Name} ({plugin.Metadata.Id}): {plugin.Metadata.Version}");
             }
             Logger.log.Info("-----------------------------");
             foreach (var plugin in _ipaPlugins)
