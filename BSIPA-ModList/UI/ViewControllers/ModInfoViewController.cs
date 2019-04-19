@@ -73,7 +73,7 @@ namespace BSIPA_ModList.UI
             titleText.fontSize = 6f;
             authorText = BeatSaberUI.CreateText(rectTransform, controller.Author, new Vector2(11f, 22f));
             authorText.fontSize = 4.5f;
-            descText = BeatSaberUI.CreateText(rectTransform, controller.Description, new Vector2(-4.5f, 12.5f));
+            descText = BeatSaberUI.CreateText(rectTransform, controller.Description, new Vector2(-4.5f, 12f));
             descText.enableWordWrapping = true;
             descText.overflowMode = TextOverflowModes.ScrollRect;
 
@@ -141,7 +141,7 @@ namespace BSIPA_ModList.UI
 
             Logger.log.Debug($"Position now at {rt.anchoredPosition}");
 #endif
-
+#if ADJUST_INFO_ICON_UI_KEYS
             var rt = icon.rectTransform;
             if (Input.GetKey(KeyCode.Z))
             { // adjust anchormin
@@ -215,9 +215,8 @@ namespace BSIPA_ModList.UI
 
                 Logger.log.Debug($"Position now at {rt.anchoredPosition}");
             }
-
-
+#endif
         }
 #endif
-    }
+        }
 }

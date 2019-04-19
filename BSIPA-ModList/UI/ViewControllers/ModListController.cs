@@ -42,6 +42,9 @@ namespace BSIPA_ModList.UI
                 Plugin = plugin;
                 this.list = list;
 
+                if (string.IsNullOrWhiteSpace(subtext))
+                    subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
+
                 if (plugin.Metadata.Manifest.IconPath != null)
                     icon = UIUtilities.LoadSpriteRaw(UIUtilities.GetResource(plugin.Metadata.Assembly, plugin.Metadata.Manifest.IconPath));
                 else
@@ -58,9 +61,13 @@ namespace BSIPA_ModList.UI
 
                 if (infoView == null)
                 {
+                    var desc = Plugin.Metadata.Manifest.Description;
+                    if (string.IsNullOrWhiteSpace(desc))
+                        desc = "<color=#BFBFBF><i>No description</i>";
+
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
-                    infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), Plugin.Metadata.Manifest.Author,
-                        Plugin.Metadata.Manifest.Description, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                    infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
+                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -72,20 +79,43 @@ namespace BSIPA_ModList.UI
             internal PluginLoader.PluginMetadata Plugin;
             private ModListController list;
 
+            private const string authorFormat = "{0}  <color=#BFBFBF>- <i>Not loaded</i>";
+
+            private string authorText;
+
             public BSIPAIgnoredModCell(ModListController list, PluginLoader.PluginMetadata plugin)
-                : base($"<color=#878787>{plugin.Name} <size=60%>v{plugin.Version}", $"{plugin.Manifest.Author} <color=#BFBFBF>- <i>Not loaded</i>", BSIPAModCell.DefaultIcon)
+                : base($"<color=#878787>{plugin.Name} <size=60%>v{plugin.Version}", "", BSIPAModCell.DefaultIcon)
             {
                 Plugin = plugin;
                 this.list = list;
 
+                if (string.IsNullOrWhiteSpace(plugin.Manifest.Author))
+                    authorText = "<color=#BFBFBF><i>Unspecified Author</i>";
+                else
+                    authorText = plugin.Manifest.Author;
+                subtext = string.Format(authorFormat, authorText);
+
                 Logger.log.Debug($"BSIPAIgnoredModCell {plugin.Name} {plugin.Version}");
             }
+
+            private ModInfoViewController infoView;
 
             public void OnSelect(ModListController cntrl)
             {
                 Logger.log.Debug($"Selected BSIPAIgnoredModCell {Plugin.Name} {Plugin.Version}");
 
-                list.flow.ClearSelected();
+                if (infoView == null)
+                {
+                    var desc = Plugin.Manifest.Description;
+                    if (string.IsNullOrWhiteSpace(desc))
+                        desc = "<color=#BFBFBF><i>No description</i>";
+
+                    infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
+                    infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), authorText,
+                        desc, Plugin.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                }
+
+                list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
             }
         }
 
@@ -115,11 +145,21 @@ namespace BSIPA_ModList.UI
                 Logger.log.Debug($"IPAModCell {plugin.Name} {plugin.Version}");
             }
 
+            private ModInfoViewController infoView;
+
             public void OnSelect(ModListController cntrl)
             {
                 Logger.log.Debug($"Selected IPAModCell {Plugin.Name} {Plugin.Version}");
 
-                list.flow.ClearSelected();
+                if (infoView == null)
+                {
+                    infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
+                    infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), "<color=#BFBFBF><i>Unknown Author</i>",
+                        "<color=#A0A0A0>This mod was written for IPA Reloaded. No metadata is avaliable for this mod. " +
+                        "Please contact the mod author and ask them to port it to BSIPA to provide more information.", false);
+                }
+
+                list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
             }
         }
 #pragma warning restore
