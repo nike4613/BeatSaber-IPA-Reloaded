@@ -74,6 +74,7 @@ namespace BSIPA_ModList.UI
             authorText = BeatSaberUI.CreateText(rectTransform, controller.Author, new Vector2(11f, 22f));
             authorText.fontSize = 4.5f;
             descText = BeatSaberUI.CreateText(rectTransform, controller.Description, new Vector2(-4.5f, 12f));
+            descText.fontSize = 3.5f;
             descText.enableWordWrapping = true;
             descText.overflowMode = TextOverflowModes.ScrollRect;
 
