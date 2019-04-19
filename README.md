@@ -1,11 +1,11 @@
 
-# BSIPA [![Build status](https://ci.appveyor.com/api/projects/status/fql702mky0d5bcky?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded)
+# BSIPA [![Build status](https://ci.appveyor.com/api/projects/status/1ruhnnfeudrrd097?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb)
 
 Beat Saber IPA - The mod injector tailored for Beat Saber
 
 ## How To Install
 
-1. Download a release (https://github.com/nike4613/BeatSaber-IPA-Reloaded/releases)
+1. Download a release (https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases)
 2. Extract the contents into the game folder
 3. Run **IPA.exe**
 4. Start the game as usual
@@ -37,7 +37,7 @@ Unconsumed arguments will be passed on to the game in case of `--launch`.
 3. Implement `IBeatSaberPlugin` or `IEnhancedBeatSaberPlugin`
 4. Build the project and copy the DLL into the Plugins folder of the game.
 
-See [Developing](https://github.com/nike4613/BeatSaber-IPA-Reloaded/wiki/Developing) for more information.
+See [Developing](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/wiki/Developing) for more information.
 
 ## How To Keep The Game Patched
 
@@ -53,7 +53,7 @@ BSIPA will automatically repatch the game when it updates, as long as `winhttp.d
 
 ### Building
 
-1. Clone with `git clone https://github.com/nike4613/BeatSaber-IPA-Reloaded.git --recursive`
+1. Clone with `git clone https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git --recursive`
 2. Create a file, `bsinstalldir.txt` in the solution root. Do NOT create this in Visual Studio; VS adds a BOM at the begginning of the file that the tools used cannot read. It should contain the path to your Beat Saber installation, using forward slashes with a trailing slash. e.g. 
 ```
 C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/
