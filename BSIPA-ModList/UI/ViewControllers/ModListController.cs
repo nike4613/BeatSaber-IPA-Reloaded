@@ -9,6 +9,7 @@ using IPA.Old;
 using UnityEngine;
 using VRUI;
 using IPA.Loader.Features;
+using TMPro;
 
 namespace BSIPA_ModList.UI
 {
@@ -122,6 +123,14 @@ namespace BSIPA_ModList.UI
             }
         }
 #pragma warning restore
+
+        public override TableCell CellForIdx(int idx)
+        {
+            var cell = base.CellForIdx(idx) as LevelListTableCell;
+            var nameText = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
+            nameText.overflowMode = TextOverflowModes.Overflow;
+            return cell;
+        }
 
         private ModListFlowCoordinator flow;
 
