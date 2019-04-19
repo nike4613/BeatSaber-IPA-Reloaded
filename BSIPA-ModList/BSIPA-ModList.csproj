@@ -100,21 +100,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
-    <!--<ItemGroup>
-      <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
-    </ItemGroup>
-    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
-    <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
-    <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
-    <ItemGroup>
-      <BadFiles Include="$(OutputPath)*.dll" />
-      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
-      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
-    </ItemGroup>
-    <Delete Files="@(BadFiles)" />
-    <RemoveDir Directories="$(OutputPath)Libraries\" />-->
     <ItemGroup>
       <BadFiles Include="$(OutputPath)**/*" Exclude="$(OutputPath)**/$(AssemblyName).*" />
     </ItemGroup>
