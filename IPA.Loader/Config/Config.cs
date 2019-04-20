@@ -115,7 +115,7 @@ namespace IPA.Config
             registeredProviders.Add(ext.Extension, type);
         }
 
-        private static SortedList<Ref<DateTime>, IConfigProvider> configProviders = new SortedList<Ref<DateTime>, IConfigProvider>();
+        private static List<Tuple<Ref<DateTime>, IConfigProvider>> configProviders = new List<Tuple<Ref<DateTime>, IConfigProvider>>();
 
         /// <summary>
         /// Gets an <see cref="IConfigProvider"/> using the specified list pf preferred config types.
@@ -131,7 +131,7 @@ namespace IPA.Config
             if (provider != null)
             {
                 provider.Filename = Path.Combine(BeatSaber.UserDataPath, configName);
-                configProviders.Add(Ref.Create(provider.LastModified), provider);
+                configProviders.Add(Tuple.Create(Ref.Create(provider.LastModified), provider));
             }
 
             return provider;
@@ -192,12 +192,12 @@ namespace IPA.Config
             foreach (var provider in configProviders)
             {
                 
-                if (provider.Value.LastModified > provider.Key.Value)
+                if (provider.Item2.LastModified > provider.Item1.Value)
                 {
                     try
                     {
-                        provider.Value.Load(); // auto reload if it changes
-                        provider.Key.Value = provider.Value.LastModified;
+                        provider.Item2.Load(); // auto reload if it changes
+                        provider.Item1.Value = provider.Item2.LastModified;
                     }
                     catch (Exception e)
                     {
@@ -205,12 +205,12 @@ namespace IPA.Config
                         Logging.Logger.config.Error(e);
                     }
                 }
-                if (provider.Value.HasChanged)
+                if (provider.Item2.HasChanged)
                 {
                     try
                     {
-                        provider.Value.Save();
-                        provider.Key.Value = DateTime.Now;
+                        provider.Item2.Save();
+                        provider.Item1.Value = DateTime.Now;
                     }
                     catch (Exception e)
                     {
@@ -219,13 +219,13 @@ namespace IPA.Config
                     }
                 }
 
-                if (provider.Value.InMemoryChanged)
+                if (provider.Item2.InMemoryChanged)
                 {
-                    provider.Value.InMemoryChanged = false;
+                    provider.Item2.InMemoryChanged = false;
                     try
                     {
-                        if (linkedProviders.ContainsKey(provider.Value))
-                            linkedProviders[provider.Value]();
+                        if (linkedProviders.ContainsKey(provider.Item2))
+                            linkedProviders[provider.Item2]();
                     }
                     catch (Exception e)
                     {
@@ -239,10 +239,10 @@ namespace IPA.Config
         internal static void Save()
         {
             foreach (var provider in configProviders)
-                if (provider.Value.HasChanged)
+                if (provider.Item2.HasChanged)
                     try
                     {
-                        provider.Value.Save();
+                        provider.Item2.Save();
                     }
                     catch (Exception e)
                     {
