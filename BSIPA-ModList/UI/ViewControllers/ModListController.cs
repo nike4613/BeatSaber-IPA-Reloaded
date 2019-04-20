@@ -46,8 +46,19 @@ namespace BSIPA_ModList.UI
                     subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
 
                 if (plugin.Metadata.Manifest.IconPath != null)
-                    icon = UIUtilities.LoadSpriteRaw(UIUtilities.GetResource(plugin.Metadata.Assembly, plugin.Metadata.Manifest.IconPath));
-                else
+                {
+                    try
+                    {
+                        icon = UIUtilities.LoadSpriteRaw(UIUtilities.GetResource(plugin.Metadata.Assembly, plugin.Metadata.Manifest.IconPath));
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.log.Error($"Error loading icon for {plugin.Metadata.Name}");
+                        Logger.log.Error(e);
+                    }
+                }
+
+                if (icon == null)
                     icon = DefaultIcon;
 
                 Logger.log.Debug($"BSIPAModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
@@ -67,7 +78,7 @@ namespace BSIPA_ModList.UI
 
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -112,7 +123,7 @@ namespace BSIPA_ModList.UI
 
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), authorText,
-                        desc, Plugin.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                        desc, Plugin.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin : null);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -162,7 +173,7 @@ namespace BSIPA_ModList.UI
 
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -206,7 +217,7 @@ namespace BSIPA_ModList.UI
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), "<color=#BFBFBF><i>Unknown Author</i>",
                         "<color=#A0A0A0>This mod was written for IPA Reloaded. No metadata is avaliable for this mod. " +
-                        "Please contact the mod author and ask them to port it to BSIPA to provide more information.", false);
+                        "Please contact the mod author and ask them to port it to BSIPA to provide more information.", null);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
