@@ -43,12 +43,24 @@ See [Developing](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloa
 
 BSIPA will automatically repatch the game when it updates, as long as `winhttp.dll` is present in the install directory.
 
+## Notes for running under Wine
+
+For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection. 
+To make the injection work with Wine, `winhttp` has to have a DLL override set to `native,builtin`. This can be set either through 
+Protontricks, or with the following `.reg` file.
+
+```reg
+REGEDIT4
+[HKEY_CURRENT_USER\Software\Wine\DllOverrides]
+"winhttp"="native,builtin"
+```
+
 ## Building
 
 ### Prerequisites 
 
 - Microsoft Visual Studio 2019 or later
-- Tools for C/C++ (MSVC) v142
+- Tools for C/C++ (MSVC) v141
 - .NET 4.6.1 SDK and .NET 4.7.2 SDK
 
 ### Building
