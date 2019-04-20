@@ -1,5 +1,6 @@
 ﻿using CustomUI.BeatSaber;
 using CustomUI.Utilities;
+using IPA.Loader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +20,11 @@ namespace BSIPA_ModList.UI
         internal string Version;
         internal string Author;
         internal string Description;
-        internal bool CanUpdate;
+        internal PluginLoader.PluginMetadata UpdateInfo;
 
         private ModInfoView view;
 
-        public void Init(Sprite icon, string name, string version, string author, string description, bool canUpdate)
+        public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo)
         {
             Logger.log.Debug($"init info view controller");
 
@@ -32,7 +33,7 @@ namespace BSIPA_ModList.UI
             Version = version;
             Author = author;
             Description = description;
-            CanUpdate = canUpdate;
+            UpdateInfo = updateInfo;
 
             // i also have no clue why this is necessary
             rectTransform.anchorMin = new Vector2(0f, 0f);

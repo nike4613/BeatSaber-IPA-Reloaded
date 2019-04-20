@@ -27,7 +27,7 @@ namespace IPA.Loader
         });
 
         /// <summary>
-        /// A class which describes
+        /// A class which describes a loaded plugin.
         /// </summary>
         public class PluginMetadata
         {
