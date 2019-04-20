@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using Version = SemVer.Version;
 
@@ -36,10 +37,20 @@ namespace IPA.Utilities
         /// </summary>
         public static Release ReleaseType => (_releaseCache ?? (_releaseCache = FindSteamVRAsset() ? Release.Steam : Release.Oculus)).Value;
 
+        private static string _installRoot;
         /// <summary>
         /// The path to the Beat Saber install dir
         /// </summary>
-        public static string InstallPath => Environment.CurrentDirectory;
+        public static string InstallPath
+        {
+            get
+            {
+                if (_installRoot == null)
+                    _installRoot = Path.GetFullPath(
+                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", ".."));
+                return _installRoot;
+            }
+        }
         /// <summary>
         /// The path to the `Libs` folder. Use only if necessary.
         /// </summary>

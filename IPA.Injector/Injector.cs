@@ -85,9 +85,13 @@ namespace IPA.Injector
         private static void InstallBootstrapPatch()
         {
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
+            var managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var dataDir = new DirectoryInfo(managedPath).Parent.Name;
+            var gameName = dataDir.Substring(0, dataDir.Length - 5);
 
             loader.Debug("Finding backup");
-            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", "Beat Saber");
+            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", gameName);
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
                 loader.Warn("No backup found! Was BSIPA installed using the installer?");
@@ -97,7 +101,7 @@ namespace IPA.Injector
             #region Insert patch into UnityEngine.CoreModule.dll
 
             {
-                var unityPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
+                var unityPath = Path.Combine(managedPath,
                     "UnityEngine.CoreModule.dll");
 
                 var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
@@ -188,7 +192,7 @@ namespace IPA.Injector
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
             
             {
-                var ascPath = Path.Combine(Environment.CurrentDirectory, "Beat Saber_Data", "Managed",
+                var ascPath = Path.Combine(managedPath,
                     "Assembly-CSharp.dll");
 
                 #region Virtualize Assembly-CSharp.dll
