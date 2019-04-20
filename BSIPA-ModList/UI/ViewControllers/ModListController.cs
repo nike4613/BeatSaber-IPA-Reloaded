@@ -118,6 +118,56 @@ namespace BSIPA_ModList.UI
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
             }
         }
+        private class LibraryModCell : CustomCellInfo, IClickableCell
+        {
+            private static Sprite _defaultIcon;
+            public static Sprite DefaultIcon
+            {
+                get
+                {
+                    if (_defaultIcon == null)
+                        _defaultIcon = UIUtilities.LoadSpriteFromResources("BSIPA_ModList.Icons.library.png");
+                    return _defaultIcon;
+                }
+            }
+
+            internal PluginLoader.PluginInfo Plugin;
+            private ModListController list;
+
+            public LibraryModCell(ModListController list, PluginLoader.PluginInfo plugin)
+                : base($"{plugin.Metadata.Name} <size=60%>v{plugin.Metadata.Version}", plugin.Metadata.Manifest.Author, null)
+            {
+                Plugin = plugin;
+                this.list = list;
+
+                if (string.IsNullOrWhiteSpace(subtext))
+                    subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
+
+                icon = DefaultIcon;
+
+                Logger.log.Debug($"LibraryModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
+            }
+
+            private ModInfoViewController infoView;
+
+            public void OnSelect(ModListController cntrl)
+            {
+                Logger.log.Debug($"Selected LibraryModCell {Plugin.Metadata.Name} {Plugin.Metadata.Version}");
+
+                if (infoView == null)
+                {
+                    var desc = Plugin.Metadata.Manifest.Description;
+                    if (string.IsNullOrWhiteSpace(desc))
+                        desc = "<color=#BFBFBF><i>No description</i>";
+
+                    infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
+                    infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
+                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null);
+                }
+
+                list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
+            }
+        }
 
 #pragma warning disable CS0618
         private class IPAModCell : CustomCellInfo, IClickableCell
@@ -190,10 +240,12 @@ namespace BSIPA_ModList.UI
 
             reuseIdentifier = "BSIPAModListTableCell";
 
-            foreach (var plugin in bsipaPlugins)
+            foreach (var plugin in bsipaPlugins.Where(p => !p.Metadata.IsBare))
                 Data.Add(new BSIPAModCell(this, plugin));
             foreach (var plugin in ignoredPlugins)
                 Data.Add(new BSIPAIgnoredModCell(this, plugin));
+            foreach (var plugin in bsipaPlugins.Where(p => p.Metadata.IsBare))
+                Data.Add(new LibraryModCell(this, plugin));
             foreach (var plugin in ipaPlugins)
                 Data.Add(new IPAModCell(this, plugin));
         }

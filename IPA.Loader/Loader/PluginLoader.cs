@@ -71,6 +71,8 @@ namespace IPA.Loader
 
             internal bool IsSelf;
 
+            internal bool IsBare;
+
             private PluginManifest manifest;
 
             internal HashSet<PluginMetadata> Dependencies { get; } = new HashSet<PluginMetadata>();
@@ -212,6 +214,31 @@ namespace IPA.Loader
                     Logger.loader.Error(e);
                 }
             }
+
+            IEnumerable<string> bareManifests = Directory.GetFiles(BeatSaber.PluginsPath, "*.json");
+            bareManifests = bareManifests.Concat(Directory.GetFiles(BeatSaber.PluginsPath, "*.manifest"));
+            foreach (var manifest in bareManifests)
+            {
+                try
+                {
+                    var metadata = new PluginMetadata
+                    {
+                        File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, manifest)),
+                        IsSelf = false,
+                        IsBare = true,
+                    };
+
+                    metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+
+                    Logger.loader.Debug($"Adding info for bare manifest {Path.GetFileName(manifest)}");
+                    PluginsMetadata.Add(metadata);
+                }
+                catch (Exception e)
+                {
+                    Logger.loader.Error($"Could not load data for bare manifest {Path.GetFileName(manifest)}");
+                    Logger.loader.Error(e);
+                }
+            }
         }
 
         // keep track of these for the updater; it should still be able to update mods not loaded
@@ -219,7 +246,7 @@ namespace IPA.Loader
 
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
-            PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
+            PluginsMetadata.Sort((a, b) => b.Version.CompareTo(a.Version));
             
             var ids = new HashSet<string>();
             var ignore = new HashSet<PluginMetadata>();
@@ -431,7 +458,7 @@ namespace IPA.Loader
 
         internal static void Load(PluginMetadata meta)
         {
-            if (meta.Assembly == null)
+            if (meta.Assembly == null && meta.PluginType != null)
                 meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
         }
 
