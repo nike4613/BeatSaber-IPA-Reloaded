@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using IPA.Config;
 using IPA.Loader;
 using IPA.Loader.Features;
 using IPA.Utilities;
@@ -28,6 +29,8 @@ namespace IPA.Updating.BeatMods
     {
         public static Updater Instance;
 
+        internal static bool ModListPresent = false;
+
         public void Awake()
         {
             try
@@ -37,7 +40,9 @@ namespace IPA.Updating.BeatMods
                 else
                 {
                     Instance = this;
-                    CheckForUpdates();
+                    DontDestroyOnLoad(this);
+                    if (!ModListPresent && SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates)
+                        CheckForUpdates();
                 }
             }
             catch (Exception e)
@@ -46,9 +51,11 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        public void CheckForUpdates() => StartCoroutine(CheckForUpdatesCoroutine());
+        internal delegate void CheckUpdatesComplete(List<DependencyObject> toUpdate);
 
-        private class DependencyObject
+        public void CheckForUpdates(CheckUpdatesComplete onComplete = null) => StartCoroutine(CheckForUpdatesCoroutine(onComplete));
+
+        internal class DependencyObject
         {
             public string Name { get; set; }
             public Version Version { get; set; }
@@ -69,8 +76,8 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private readonly Dictionary<string, string> requestCache = new Dictionary<string, string>();
-        private IEnumerator GetBeatModsEndpoint(string url, Ref<string> result)
+        private static readonly Dictionary<string, string> requestCache = new Dictionary<string, string>();
+        private static IEnumerator GetBeatModsEndpoint(string url, Ref<string> result)
         {
             if (requestCache.TryGetValue(url, out string value))
             {
@@ -106,8 +113,8 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private readonly Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
-        private IEnumerator GetModInfo(string modName, string ver, Ref<ApiEndpoint.Mod> result)
+        private static readonly Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
+        private static IEnumerator GetModInfo(string modName, string ver, Ref<ApiEndpoint.Mod> result)
         {
             var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeUriString(modName), Uri.EscapeUriString(ver));
 
@@ -134,8 +141,8 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private readonly Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
-        private IEnumerator GetModVersionsMatching(string modName, Range range, Ref<List<ApiEndpoint.Mod>> result)
+        private static readonly Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
+        private static IEnumerator GetModVersionsMatching(string modName, Range range, Ref<List<ApiEndpoint.Mod>> result)
         {
             var uri = string.Format(ApiEndpoint.GetModsByName, Uri.EscapeUriString(modName));
 
@@ -163,7 +170,7 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private IEnumerator CheckForUpdatesCoroutine()
+        internal IEnumerator CheckForUpdatesCoroutine(CheckUpdatesComplete onComplete)
         {
             var depList = new Ref<List<DependencyObject>>(new List<DependencyObject>());
 
@@ -219,20 +226,25 @@ namespace IPA.Updating.BeatMods
             foreach (var dep in depList.Value)
                 Logger.updater.Debug($"Phantom Dependency: {dep}");
 
-            yield return DependencyResolveFirstPass(depList);
+            yield return ResolveDependencyRanges(depList);
             
             foreach (var dep in depList.Value)
                 Logger.updater.Debug($"Dependency: {dep}");
 
-            yield return DependencyResolveSecondPass(depList);
+            yield return ResolveDependencyPresence(depList);
 
             foreach (var dep in depList.Value)
                 Logger.updater.Debug($"Dependency: {dep}");
 
-            DependendyResolveFinalPass(depList);
+            CheckDependencies(depList);
+
+            onComplete?.Invoke(depList);
+
+            if (!ModListPresent && SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
+                StartDownload(depList);
         }
 
-        private IEnumerator DependencyResolveFirstPass(Ref<List<DependencyObject>> list)
+        internal IEnumerator ResolveDependencyRanges(Ref<List<DependencyObject>> list)
         {
             for (int i = 0; i < list.Value.Count; i++)
             { // Grab dependencies (1.2)
@@ -294,7 +306,7 @@ namespace IPA.Updating.BeatMods
             list.Value = final;
         }
 
-        private IEnumerator DependencyResolveSecondPass(Ref<List<DependencyObject>> list)
+        internal IEnumerator ResolveDependencyPresence(Ref<List<DependencyObject>> list)
         {
             foreach(var dep in list.Value)
             {
@@ -329,7 +341,7 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private void DependendyResolveFinalPass(Ref<List<DependencyObject>> list)
+        internal void CheckDependencies(Ref<List<DependencyObject>> list)
         { // also starts download of mods
             var toDl = new List<DependencyObject>();
 
@@ -355,11 +367,38 @@ namespace IPA.Updating.BeatMods
 
             Logger.updater.Debug($"To Download {string.Join(", ", toDl.Select(d => $"{d.Name}@{d.ResolvedVersion}"))}");
 
-            foreach (var item in toDl)
-                StartCoroutine(UpdateModCoroutine(item));
+            list.Value = toDl;
         }
 
-        private IEnumerator UpdateModCoroutine(DependencyObject item)
+        internal delegate void DownloadStart(DependencyObject obj);
+        internal delegate void DownloadProgress(DependencyObject obj, long totalBytes, long currentBytes, double progress);
+        internal delegate void DownloadFailed(DependencyObject obj, string error);
+        internal delegate void DownloadFinish(DependencyObject obj);
+        /// <summary>
+        /// This will still be called even if there was an error. Called after all three download/install attempts, or after a successful installation.
+        /// ALWAYS called.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="didError"></param>
+        internal delegate void InstallFinish(DependencyObject obj, bool didError);
+        /// <summary>
+        /// This can be called multiple times
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="error"></param>
+        internal delegate void InstallFailed(DependencyObject obj, Exception error);
+
+        internal void StartDownload(List<DependencyObject> download, DownloadStart downloadStart = null, 
+            DownloadProgress downloadProgress = null, DownloadFailed downloadFail = null, DownloadFinish downloadFinish = null, 
+            InstallFailed installFail = null, InstallFinish installFinish = null)
+        {
+            foreach (var item in download)
+                StartCoroutine(UpdateModCoroutine(item, downloadStart, downloadProgress, downloadFail, downloadFinish, installFail, installFinish));
+        }
+
+        private static IEnumerator UpdateModCoroutine(DependencyObject item, DownloadStart downloadStart,
+            DownloadProgress progress, DownloadFailed dlFail, DownloadFinish finish,
+            InstallFailed installFail, InstallFinish installFinish)
         { // (3.2)
             Logger.updater.Debug($"Release: {BeatSaber.ReleaseType}");
 
@@ -372,13 +411,6 @@ namespace IPA.Updating.BeatMods
                 Logger.updater.Error(e);
                 yield break;
             }
-
-            /*
-            ApiEndpoint.Mod.DownloadsObject platformFile;
-            if (BeatSaber.ReleaseType == BeatSaber.Release.Steam || mod.Value.Files.Oculus == null)
-                platformFile = mod.Value.Files.Steam;
-            else
-                platformFile = mod.Value.Files.Oculus;*/
 
             var releaseName = BeatSaber.ReleaseType == BeatSaber.Release.Steam 
                 ? ApiEndpoint.Mod.DownloadsObject.TypeSteam : ApiEndpoint.Mod.DownloadsObject.TypeOculus;
@@ -399,8 +431,10 @@ namespace IPA.Updating.BeatMods
                 using (var request = UnityWebRequest.Get(url))
                 using (var taskTokenSource = new CancellationTokenSource())
                 {
-                    var dlh = new StreamDownloadHandler(stream);
+                    var dlh = new StreamDownloadHandler(stream, (int i1, int i2, double d) => progress(item, i1, i2, d));
                     request.downloadHandler = dlh;
+
+                    downloadStart?.Invoke(item);
 
                     Logger.updater.Debug("Sending request");
                     //Logger.updater.Debug(request?.downloadHandler?.ToString() ?? "DLH==NULL");
@@ -411,6 +445,7 @@ namespace IPA.Updating.BeatMods
                     {
                         Logger.updater.Error("Network error while trying to update mod");
                         Logger.updater.Error(request.error);
+                        dlFail?.Invoke(item, request.error);
                         taskTokenSource.Cancel();
                         continue;
                     }
@@ -418,9 +453,12 @@ namespace IPA.Updating.BeatMods
                     {
                         Logger.updater.Error("Server returned an error code while trying to update mod");
                         Logger.updater.Error(request.error);
+                        dlFail?.Invoke(item, request.error);
                         taskTokenSource.Cancel();
                         continue;
                     }
+
+                    finish?.Invoke(item);
 
                     stream.Seek(0, SeekOrigin.Begin); // reset to beginning
 
@@ -437,11 +475,13 @@ namespace IPA.Updating.BeatMods
                     {
                         if (downloadTask.Exception != null && downloadTask.Exception.InnerExceptions.Any(e => e is BeatmodsInterceptException))
                         { // any exception is an intercept exception
-                            Logger.updater.Error($"Modsaber did not return expected data for {item.Name}");
+                            Logger.updater.Error($"BeatMods did not return expected data for {item.Name}");
                         }
 
                         Logger.updater.Error($"Error downloading mod {item.Name}");
                         Logger.updater.Error(downloadTask.Exception);
+
+                        installFail?.Invoke(item, downloadTask.Exception);
                         continue;
                     }
 
@@ -450,23 +490,35 @@ namespace IPA.Updating.BeatMods
             }
 
             if (tries == 0)
+            {
                 Logger.updater.Warn($"Plugin download failed {maxTries} times, not re-trying");
+
+                installFinish?.Invoke(item, true);
+            }
             else
+            {
                 Logger.updater.Debug("Download complete");
+                installFinish?.Invoke(item, false);
+            }
         }
 
         internal class StreamDownloadHandler : DownloadHandlerScript
         {
+            internal int length;
+            internal int cLen;
+            internal Action<int, int, double> progress;
             public MemoryStream Stream { get; set; }
 
-            public StreamDownloadHandler(MemoryStream stream)
+            public StreamDownloadHandler(MemoryStream stream, Action<int, int, double> progress = null)
             {
                 Stream = stream;
+                this.progress = progress;
             }
 
             protected override void ReceiveContentLength(int contentLength)
             {
-                Stream.Capacity = contentLength;
+                Stream.Capacity = length = contentLength;
+                cLen = 0;
                 Logger.updater.Debug($"Got content length: {contentLength}");
             }
 
@@ -483,7 +535,12 @@ namespace IPA.Updating.BeatMods
                     return false;
                 }
 
+                cLen += dataLength;
+
                 Stream.Write(rData, 0, dataLength);
+
+                progress?.Invoke(length, cLen, ((double)cLen) / length);
+
                 return true;
             }
 
@@ -500,7 +557,7 @@ namespace IPA.Updating.BeatMods
             }
         }
 
-        private void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.DownloadsObject fileInfo)
+        private static void ExtractPluginAsync(MemoryStream stream, DependencyObject item, ApiEndpoint.Mod.DownloadsObject fileInfo)
         { // (3.3)
             Logger.updater.Debug($"Extracting ZIP file for {item.Name}");
 

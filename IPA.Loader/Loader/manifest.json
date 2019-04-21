@@ -15,5 +15,10 @@
     "define-feature(add-in, IPA.Loader.Features.AddInFeature)",
     "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
     "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)"
-  ]
+  ],
+  "links": {
+    "project-home": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/wiki",
+    "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
+    "donate": "https://ko-fi.com/danike"
+  }
 }

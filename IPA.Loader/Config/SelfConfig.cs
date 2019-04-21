@@ -39,7 +39,13 @@ namespace IPA.Config
 
         public bool ApplyAntiYeet = false;
 
-        public bool AutoUpdate = true;
+        public class UpdateObject
+        {
+            public bool AutoUpdate = true;
+            public bool AutoCheckUpdates = true;
+        }
+
+        public UpdateObject Updates = new UpdateObject();
 
         public class DebugObject
         {
