@@ -431,7 +431,7 @@ namespace IPA.Updating.BeatMods
                 using (var request = UnityWebRequest.Get(url))
                 using (var taskTokenSource = new CancellationTokenSource())
                 {
-                    var dlh = new StreamDownloadHandler(stream, (int i1, int i2, double d) => progress(item, i1, i2, d));
+                    var dlh = new StreamDownloadHandler(stream, (int i1, int i2, double d) => progress?.Invoke(item, i1, i2, d));
                     request.downloadHandler = dlh;
 
                     downloadStart?.Invoke(item);

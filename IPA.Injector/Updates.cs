@@ -110,7 +110,15 @@ namespace IPA.Injector
                 updater.Error(e);
             }
 
-            Directory.Delete(pendingDir, true);
+            try
+            {
+                Directory.Delete(pendingDir, true);
+            }
+            catch (Exception e)
+            {
+                updater.Error("Something went wrong performing an operation that should never fail!");
+                updater.Error(e);
+            }
         }
     }
 }
