@@ -1,12 +1,8 @@
 ﻿using IPA;
 using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
-using CustomUI.BeatSaber;
 using BSIPA_ModList.UI;
-using CustomUI.MenuButton;
-using UnityEngine.Events;
 using UnityEngine;
-using System.Linq;
 
 namespace BSIPA_ModList
 {
@@ -21,6 +17,8 @@ namespace BSIPA_ModList
         {
             Logger.log = logger;
             Logger.log.Debug("Init");
+
+            IPA.Updating.BeatMods.Updater.ModListPresent = true;
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)

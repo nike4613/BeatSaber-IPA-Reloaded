@@ -1,8 +1,10 @@
 ﻿using CustomUI.BeatSaber;
+using CustomUI.MenuButton;
 using CustomUI.Utilities;
 using IPA.Loader;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +24,15 @@ namespace BSIPA_ModList.UI
         internal string Description;
         internal PluginLoader.PluginMetadata UpdateInfo;
 
-        private ModInfoView view;
+        private static RectTransform rowTransformOriginal;
 
-        public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo)
+        private ModInfoView view;
+        private RectTransform rowTransform;
+        private Button linkHomeButton;
+        private Button linkSourceButton;
+        private Button linkDonateButton;
+
+        public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo, PluginManifest.LinksObject links = null)
         {
             Logger.log.Debug($"init info view controller");
 
@@ -34,6 +42,9 @@ namespace BSIPA_ModList.UI
             Author = author;
             Description = description;
             UpdateInfo = updateInfo;
+
+            if (rowTransformOriginal == null)
+                rowTransformOriginal = MenuButtonUI.Instance.GetPrivateField<RectTransform>("menuButtonsOriginal");
 
             // i also have no clue why this is necessary
             rectTransform.anchorMin = new Vector2(0f, 0f);
@@ -47,10 +58,76 @@ namespace BSIPA_ModList.UI
             rt.SetParent(transform);
             rt.anchorMin = new Vector2(0f, 0f);
             rt.anchorMax = new Vector2(1f, 1f);
-            rt.anchoredPosition = new Vector2(0f, 0f);
+            rt.anchoredPosition = new Vector2(0f, 0);
             view.Init(this);
             go.SetActive(true);
+
+            if (links != null)
+            {
+                rowTransform = Instantiate(rowTransformOriginal, rectTransform);
+                rowTransform.anchorMin = new Vector2(0f, 0f);
+                rowTransform.anchorMax = new Vector2(1f, .15f);
+                rowTransform.anchoredPosition = new Vector2(-3.5f, -2f);
+
+                foreach (Transform child in rowTransform)
+                {
+                    child.name = string.Empty;
+                    Destroy(child.gameObject);
+                }
+
+                if (links.ProjectHome != null)
+                {
+                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Home", 
+                        onClick: () => Process.Start(links.ProjectHome.ToString()));
+                    linkHomeButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                }
+                if (links.ProjectSource != null)
+                {
+                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Source", 
+                        onClick: () => Process.Start(links.ProjectSource.ToString()));
+                    linkSourceButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                }
+                if (links.Donate != null)
+                {
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Donate", 
+                        onClick: () => Process.Start(links.Donate.ToString()));
+                    linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                }
+            }
         }
+
+#if DEBUG
+        public void Update()
+        {
+#if ADJUST_INFO_BUTTON_UI_LINKS
+            RectTransform rt = rowTransform;
+
+            if (rt == null) return;
+
+            var cpos = rt.anchoredPosition;
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                rt.anchoredPosition = new Vector2(cpos.x - .1f, cpos.y);
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                rt.anchoredPosition = new Vector2(cpos.x + .1f, cpos.y);
+            }
+            else if (Input.GetKey(KeyCode.UpArrow))
+            {
+                rt.anchoredPosition = new Vector2(cpos.x, cpos.y + .1f);
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                rt.anchoredPosition = new Vector2(cpos.x, cpos.y - .1f);
+            }
+            else
+                return;
+
+            Logger.log.Debug($"Position now at {rt.anchoredPosition}");
+#endif
+        }
+#endif
     }
 
     internal class ModInfoView : MonoBehaviour

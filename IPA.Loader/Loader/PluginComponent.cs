@@ -28,8 +28,7 @@ namespace IPA.Loader
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
-            if (SelfConfig.SelfConfigRef.Value.AutoUpdate)
-                gameObject.AddComponent<Updating.BeatMods.Updater>();
+            gameObject.AddComponent<Updating.BeatMods.Updater>();
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();

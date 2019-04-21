@@ -78,7 +78,8 @@ namespace BSIPA_ModList.UI
 
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null);
+                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null,
+                        Plugin.Metadata.Manifest.Links);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -123,7 +124,8 @@ namespace BSIPA_ModList.UI
 
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), authorText,
-                        desc, Plugin.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin : null);
+                        desc, Plugin.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin : null,
+                        Plugin.Manifest.Links);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -173,7 +175,8 @@ namespace BSIPA_ModList.UI
 
                     infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                     infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null);
+                        desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null,
+                        Plugin.Metadata.Manifest.Links);
                 }
 
                 list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);

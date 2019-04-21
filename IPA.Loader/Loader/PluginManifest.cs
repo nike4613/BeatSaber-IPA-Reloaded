@@ -1,7 +1,9 @@
 ﻿using IPA.JsonConverters;
 using Newtonsoft.Json;
 using SemVer;
+using System;
 using System.Collections.Generic;
+using Version = SemVer.Version;
 
 namespace IPA.Loader
 {
@@ -13,7 +15,7 @@ namespace IPA.Loader
         [JsonProperty("id", Required = Required.AllowNull)]
         public string Id;
 
-        [JsonProperty("description", Required = Required.Always)]
+        [JsonProperty("description", Required = Required.Always), JsonConverter(typeof(MultilineStringConverter))]
         public string Description;
 
         [JsonProperty("version", Required = Required.Always), JsonConverter(typeof(SemverVersionConverter))]
@@ -42,5 +44,21 @@ namespace IPA.Loader
 
         [JsonProperty("icon", Required = Required.DisallowNull)]
         public string IconPath = null;
+
+        [Serializable]
+        public class LinksObject
+        {
+            [JsonProperty("project-home", Required = Required.DisallowNull)]
+            public Uri ProjectHome = null;
+
+            [JsonProperty("project-source", Required = Required.DisallowNull)]
+            public Uri ProjectSource = null;
+
+            [JsonProperty("donate", Required = Required.DisallowNull)]
+            public Uri Donate = null;
+        }
+
+        [JsonProperty("links", Required = Required.DisallowNull)]
+        public LinksObject Links = new LinksObject();
     }
 }
