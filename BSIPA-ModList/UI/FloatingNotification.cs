@@ -90,13 +90,18 @@ namespace BSIPA_ModList.UI
             _loadingBackg.enabled = false;
             _canvas.enabled = true;
         }
+
+        private bool updatesZero = false;
         private void CheckForUpdatesDone(int count)
         {
+            if (count == 0) updatesZero = true;
+
             _showingMessage = false;
             _headerText.text = $"{count} updates found";
             _loadingBar.enabled = false;
             _loadingBackg.enabled = false;
             _canvas.enabled = true;
+
             StartCoroutine(DisableCanvasRoutine(5f));
         }
 
@@ -126,8 +131,9 @@ namespace BSIPA_ModList.UI
                 _loadingBackg.enabled = false;
                 _canvas.enabled = true;
             }
-            if (DownloadController.Instance.IsDone)
+            if (DownloadController.Instance.IsDone && !updatesZero)
             {
+                StopAllCoroutines();
                 _showingMessage = false;
                 _headerText.text = "Updates complete";
                 _loadingBar.enabled = false;

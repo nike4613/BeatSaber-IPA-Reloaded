@@ -148,6 +148,9 @@ namespace BSIPA_ModList
 
             if (SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
                 StartDownloads();
+
+            if (downloads.Count == 0)
+                OnAllDownloadsCompleted();
         }
 
         public void StartDownloads()
@@ -158,9 +161,6 @@ namespace BSIPA_ModList
             State = States.Downloading;
             Updater.Instance.StartDownload(downloads.Select(d => d.Mod), _DownloadStart, _DownloadProgress, 
                 _DownloadFailed, _DownloadFinished, _InstallFailed, _InstallFinished);
-
-            if (downloads.Count == 0)
-                OnAllDownloadsCompleted();
         }
 
         private void _DownloadStart(DependencyObject obj)
