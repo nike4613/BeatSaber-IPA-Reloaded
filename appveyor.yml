@@ -1,6 +1,6 @@
 version: 'BSIPA-{branch}-{build}'
 environment:
-  bsipa_version: '3.12.13'
+  bsipa_version: '3.12.14'
 pull_requests:
   do_not_increment_build_number: true
 install:
@@ -25,7 +25,7 @@ deploy:
   release: BSIPA $(bsipa_version)-draft
   tag: $(bsipa_version)-d
   description: |
-    **Build:** [$(bsipa_version)-$(APPVEYOR_BUILD_NUMBER)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded/builds/$(APPVEYOR_BUILD_ID)) [$(configuration)|$(platform)]
+    **Build:** [$(bsipa_version)-$(APPVEYOR_BUILD_NUMBER)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb/builds/$(APPVEYOR_BUILD_ID)) [$(configuration)|$(platform)]
     **Latest Commit:** $(APPVEYOR_REPO_COMMIT)
     - `$(APPVEYOR_REPO_COMMIT_MESSAGE)`
     - `$(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)`
