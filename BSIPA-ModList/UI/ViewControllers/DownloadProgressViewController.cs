@@ -122,6 +122,9 @@ namespace BSIPA_ModList.UI.ViewControllers
         {
             DownloadController.Instance.OnDownloaderListChanged -= Refresh;
             DownloadController.Instance.OnDownloadStateChanged -= DownloaderStateChanged;
+
+            if (DownloadController.Instance.IsDone)
+                FloatingNotification.instance.Close();
         }
 
         private void Refresh()

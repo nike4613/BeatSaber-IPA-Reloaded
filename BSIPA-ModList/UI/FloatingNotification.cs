@@ -50,6 +50,7 @@ namespace BSIPA_ModList.UI
             StopAllCoroutines();
             _showingMessage = true;
             _headerText.text = message;
+            _headerText.alignment = TextAlignmentOptions.Left;
             _loadingBar.enabled = false;
             _loadingBackg.enabled = false;
             _canvas.enabled = true;
@@ -61,6 +62,7 @@ namespace BSIPA_ModList.UI
             StopAllCoroutines();
             _showingMessage = true;
             _headerText.text = message;
+            _headerText.alignment = TextAlignmentOptions.Left;
             _loadingBar.enabled = false;
             _loadingBackg.enabled = false;
             _canvas.enabled = true;
@@ -86,6 +88,7 @@ namespace BSIPA_ModList.UI
         {
             _showingMessage = false;
             _headerText.text = HeaderText;
+            _headerText.alignment = TextAlignmentOptions.Left;
             _loadingBar.enabled = false;
             _loadingBackg.enabled = false;
             _canvas.enabled = true;
@@ -95,9 +98,11 @@ namespace BSIPA_ModList.UI
         private void CheckForUpdatesDone(int count)
         {
             if (count == 0) updatesZero = true;
+            else updatesZero = false;
 
             _showingMessage = false;
             _headerText.text = $"{count} updates found";
+            _headerText.alignment = TextAlignmentOptions.Left;
             _loadingBar.enabled = false;
             _loadingBackg.enabled = false;
             _canvas.enabled = true;
@@ -127,6 +132,7 @@ namespace BSIPA_ModList.UI
                 StopAllCoroutines();
                 _showingMessage = false;
                 _headerText.text = "Downloading updates...";
+                _headerText.alignment = TextAlignmentOptions.Left;
                 _loadingBar.enabled = false;
                 _loadingBackg.enabled = false;
                 _canvas.enabled = true;
@@ -135,11 +141,16 @@ namespace BSIPA_ModList.UI
             {
                 StopAllCoroutines();
                 _showingMessage = false;
-                _headerText.text = "Updates complete";
+                _headerText.text = "Update complete. Restart to finish installation.";
+                _headerText.alignment = TextAlignmentOptions.Center;
                 _loadingBar.enabled = false;
                 _loadingBackg.enabled = false;
-                StartCoroutine(DisableCanvasRoutine(5f));
             }
+        }
+
+        internal void Close()
+        {
+            StartCoroutine(DisableCanvasRoutine(0f));
         }
 
         private IEnumerator DisableCanvasRoutine(float time)
@@ -149,7 +160,7 @@ namespace BSIPA_ModList.UI
             _showingMessage = false;
         }
 
-        private static FloatingNotification instance;
+        internal static FloatingNotification instance;
 
         protected void Awake()
         {
