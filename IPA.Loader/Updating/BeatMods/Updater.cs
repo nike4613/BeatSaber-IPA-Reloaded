@@ -76,6 +76,13 @@ namespace IPA.Updating.BeatMods
             }
         }
 
+        public static void ResetRequestCache()
+        {
+            requestCache.Clear();
+            modCache.Clear();
+            modVersionsCache.Clear();
+        }
+
         private static readonly Dictionary<string, string> requestCache = new Dictionary<string, string>();
         private static IEnumerator GetBeatModsEndpoint(string url, Ref<string> result)
         {
@@ -241,7 +248,7 @@ namespace IPA.Updating.BeatMods
             onComplete?.Invoke(depList);
 
             if (!ModListPresent && SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
-                StartDownload(depList);
+                StartDownload(depList.Value);
         }
 
         internal IEnumerator ResolveDependencyRanges(Ref<List<DependencyObject>> list)
@@ -388,7 +395,7 @@ namespace IPA.Updating.BeatMods
         /// <param name="error"></param>
         internal delegate void InstallFailed(DependencyObject obj, Exception error);
 
-        internal void StartDownload(List<DependencyObject> download, DownloadStart downloadStart = null, 
+        internal void StartDownload(IEnumerable<DependencyObject> download, DownloadStart downloadStart = null, 
             DownloadProgress downloadProgress = null, DownloadFailed downloadFail = null, DownloadFinish downloadFinish = null, 
             InstallFailed installFail = null, InstallFinish installFinish = null)
         {

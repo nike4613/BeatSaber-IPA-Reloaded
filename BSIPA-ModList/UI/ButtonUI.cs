@@ -46,7 +46,6 @@ namespace BSIPA_ModList.UI
             StartCoroutine(AddModListButton());
         }
 
-        private static MainFlowCoordinator mainFlow;
         private static ModListFlowCoordinator menuFlow;
 
         private static readonly WaitUntil _bottomPanelExists = new WaitUntil(() => GameObject.Find(ControllerPanel) != null);
@@ -65,8 +64,6 @@ namespace BSIPA_ModList.UI
 
             lock (Instance)
             {
-                if (mainFlow == null)
-                    mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
                 if (menuFlow == null)
                     menuFlow = new GameObject("BSIPA Mod List Flow Controller").AddComponent<ModListFlowCoordinator>();
                 if (panel == null)
@@ -77,7 +74,7 @@ namespace BSIPA_ModList.UI
                     button = BeatSaberUI.CreateUIButton(panel, CopyButton, () =>
                     {
                         Logger.log.Debug("Presenting own flow controller");
-                        menuFlow.PresentOn(mainFlow);
+                        menuFlow.Present();
                     }, "Mod List");
                     panel.Find(CopyButton).SetAsLastSibling();
 

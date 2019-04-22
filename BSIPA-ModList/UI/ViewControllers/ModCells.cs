@@ -19,17 +19,6 @@ namespace BSIPA_ModList.UI.ViewControllers
 
     internal class BSIPAModCell : CustomCellInfo, IClickableCell
     {
-        private static Sprite _defaultIcon;
-        public static Sprite DefaultIcon
-        {
-            get
-            {
-                if (_defaultIcon == null)
-                    _defaultIcon = UIUtilities.LoadSpriteFromResources("BSIPA_ModList.Icons.mod_bsipa.png");
-                return _defaultIcon;
-            }
-        }
-
         internal PluginLoader.PluginInfo Plugin;
         private ModListController list;
 
@@ -42,21 +31,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             if (string.IsNullOrWhiteSpace(subtext))
                 subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
 
-            if (plugin.Metadata.Manifest.IconPath != null)
-            {
-                try
-                {
-                    icon = UIUtilities.LoadSpriteRaw(UIUtilities.GetResource(plugin.Metadata.Assembly, plugin.Metadata.Manifest.IconPath));
-                }
-                catch (Exception e)
-                {
-                    Logger.log.Error($"Error loading icon for {plugin.Metadata.Name}");
-                    Logger.log.Error(e);
-                }
-            }
-
-            if (icon == null)
-                icon = DefaultIcon;
+            icon = plugin.Metadata.GetIcon();
 
             Logger.log.Debug($"BSIPAModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
         }
@@ -93,7 +68,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         private string authorText;
 
         public BSIPAIgnoredModCell(ModListController list, PluginLoader.PluginMetadata plugin)
-            : base($"<color=#878787>{plugin.Name} <size=60%>v{plugin.Version}", "", BSIPAModCell.DefaultIcon)
+            : base($"<color=#878787>{plugin.Name} <size=60%>v{plugin.Version}", "", Utilities.DefaultBSIPAIcon)
         {
             Plugin = plugin;
             this.list = list;
@@ -130,17 +105,6 @@ namespace BSIPA_ModList.UI.ViewControllers
     }
     internal class LibraryModCell : CustomCellInfo, IClickableCell
     {
-        private static Sprite _defaultIcon;
-        public static Sprite DefaultIcon
-        {
-            get
-            {
-                if (_defaultIcon == null)
-                    _defaultIcon = UIUtilities.LoadSpriteFromResources("BSIPA_ModList.Icons.library.png");
-                return _defaultIcon;
-            }
-        }
-
         internal PluginLoader.PluginInfo Plugin;
         private ModListController list;
 
@@ -153,7 +117,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             if (string.IsNullOrWhiteSpace(subtext))
                 subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
 
-            icon = DefaultIcon;
+            icon = Utilities.DefaultLibraryIcon;
 
             Logger.log.Debug($"LibraryModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
         }
@@ -183,22 +147,11 @@ namespace BSIPA_ModList.UI.ViewControllers
 #pragma warning disable CS0618
     internal class IPAModCell : CustomCellInfo, IClickableCell
     {
-        private static Sprite _defaultIcon;
-        public static Sprite DefaultIcon
-        {
-            get
-            {
-                if (_defaultIcon == null)
-                    _defaultIcon = UIUtilities.LoadSpriteFromResources("BSIPA_ModList.Icons.mod_ipa.png");
-                return _defaultIcon;
-            }
-        }
-
         internal IPlugin Plugin;
         private ModListController list;
 
         public IPAModCell(ModListController list, IPlugin plugin)
-            : base($"{plugin.Name} <size=60%>{plugin.Version}", "<color=#BFBFBF><i>Legacy</i>", DefaultIcon)
+            : base($"{plugin.Name} <size=60%>{plugin.Version}", "<color=#BFBFBF><i>Legacy</i>", Utilities.DefaultIPAIcon)
         {
             Plugin = plugin;
             this.list = list;

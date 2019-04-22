@@ -31,6 +31,7 @@ namespace BSIPA_ModList
 
         public void OnApplicationStart()
         {
+
         }
 
         public void OnFixedUpdate()
@@ -41,6 +42,8 @@ namespace BSIPA_ModList
         {
             if (scene.name == "MenuCore")
             {
+                FloatingNotification.Create();
+
                 if (ButtonUI.Instance == null)
                 {
                     Logger.log.Debug("Creating Menu");

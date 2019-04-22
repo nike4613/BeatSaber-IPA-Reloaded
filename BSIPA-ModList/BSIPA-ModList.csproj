@@ -67,14 +67,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DownloadController.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ButtonUI.cs" />
+    <Compile Include="UI\DownloadProgressCell.cs" />
     <Compile Include="UI\ModListFlowCoordinator.cs" />
     <Compile Include="UI\ViewControllers\BackButtonNavigationController.cs" />
+    <Compile Include="UI\ViewControllers\DownloadProgressViewController.cs" />
+    <Compile Include="UI\FloatingNotification.cs" />
     <Compile Include="UI\ViewControllers\ModCells.cs" />
     <Compile Include="UI\ViewControllers\ModInfoViewController.cs" />
     <Compile Include="UI\ViewControllers\ModListController.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
