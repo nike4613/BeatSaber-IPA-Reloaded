@@ -1,4 +1,5 @@
-﻿using CustomUI.BeatSaber;
+﻿using BSIPA_ModList.UI.ViewControllers;
+using CustomUI.BeatSaber;
 using CustomUI.Utilities;
 using IPA.Loader;
 using System;
@@ -13,6 +14,7 @@ namespace BSIPA_ModList.UI
     {
         private BackButtonNavigationController navigationController;
         private ModListController modList;
+        private DownloadProgressViewController downloads;
 
 #pragma warning disable CS0618
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
@@ -27,17 +29,19 @@ namespace BSIPA_ModList.UI
                 modList = BeatSaberUI.CreateViewController<ModListController>();
                 modList.Init(this, PluginManager.AllPlugins, PluginLoader.ignoredPlugins, PluginManager.Plugins);
 
+                downloads = BeatSaberUI.CreateViewController<DownloadProgressViewController>();
+
                 PushViewControllerToNavigationController(navigationController, modList);
             }
 
-            ProvideInitialViewControllers(navigationController);
+            ProvideInitialViewControllers(navigationController, rightViewController: downloads);
         }
 #pragma warning restore
 
         private delegate void PresentFlowCoordDel(FlowCoordinator self, FlowCoordinator newF, Action finished, bool immediate, bool replaceTop);
         private static PresentFlowCoordDel presentFlow;
 
-        public void PresentOn(FlowCoordinator main, Action finished = null, bool immediate = false, bool replaceTop = false)
+        public void Present(Action finished = null, bool immediate = false, bool replaceTop = false)
         {
             if (presentFlow == null)
             {
@@ -46,7 +50,8 @@ namespace BSIPA_ModList.UI
                 presentFlow = (PresentFlowCoordDel)Delegate.CreateDelegate(typeof(PresentFlowCoordDel), m);
             }
 
-            presentFlow(main, this, finished, immediate, replaceTop);
+            MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
+            presentFlow(mainFlow, this, finished, immediate, replaceTop);
         }
 
         public bool HasSelected { get; private set; } = false;
