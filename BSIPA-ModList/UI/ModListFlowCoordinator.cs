@@ -15,6 +15,7 @@ namespace BSIPA_ModList.UI
         private BackButtonNavigationController navigationController;
         private ModListController modList;
         private DownloadProgressViewController downloads;
+        private VRUIViewController settings;
 
 #pragma warning disable CS0618
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
@@ -29,12 +30,14 @@ namespace BSIPA_ModList.UI
                 modList = BeatSaberUI.CreateViewController<ModListController>();
                 modList.Init(this, PluginManager.AllPlugins, PluginLoader.ignoredPlugins, PluginManager.Plugins);
 
+                settings = SettingsViewController.Create();
+
                 downloads = BeatSaberUI.CreateViewController<DownloadProgressViewController>();
 
                 PushViewControllerToNavigationController(navigationController, modList);
             }
 
-            ProvideInitialViewControllers(navigationController, rightViewController: downloads);
+            ProvideInitialViewControllers(navigationController, settings, downloads);
         }
 #pragma warning restore
 
