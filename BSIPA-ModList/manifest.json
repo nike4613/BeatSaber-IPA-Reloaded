@@ -5,7 +5,7 @@
   "gameVersion": "0.13.2",
   "id": "BSIPA Mod List",
   "name": "BSIPA Mod List",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "BSIPA_ModList.Icons.self.png",
   "dependsOn": {
     "BSIPA": "^3.12.13",
