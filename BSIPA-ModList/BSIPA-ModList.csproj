@@ -73,6 +73,7 @@
     <Compile Include="UI\ButtonUI.cs" />
     <Compile Include="UI\DownloadProgressCell.cs" />
     <Compile Include="UI\ModListFlowCoordinator.cs" />
+    <Compile Include="UI\SettingsViewController.cs" />
     <Compile Include="UI\ViewControllers\BackButtonNavigationController.cs" />
     <Compile Include="UI\ViewControllers\DownloadProgressViewController.cs" />
     <Compile Include="UI\FloatingNotification.cs" />

@@ -146,11 +146,10 @@ namespace BSIPA_ModList
 
             OnDownloaderListChanged?.Invoke();
 
-            if (SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
-                StartDownloads();
-
             if (downloads.Count == 0)
                 OnAllDownloadsCompleted();
+            else if (SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
+                StartDownloads();
         }
 
         public void StartDownloads()
