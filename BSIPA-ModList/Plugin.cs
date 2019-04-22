@@ -16,7 +16,6 @@ namespace BSIPA_ModList
         public void Init(IPALogger logger)
         {
             Logger.log = logger;
-            Logger.log.Debug("Init");
 
             IPA.Updating.BeatMods.Updater.ModListPresent = true;
         }
@@ -45,10 +44,7 @@ namespace BSIPA_ModList
                 FloatingNotification.Create();
 
                 if (ButtonUI.Instance == null)
-                {
-                    Logger.log.Debug("Creating Menu");
                     new GameObject("BSIPA Mod List Object").AddComponent<ButtonUI>().Init();
-                }
             }
         }
 

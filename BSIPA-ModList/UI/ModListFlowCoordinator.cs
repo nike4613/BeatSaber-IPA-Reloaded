@@ -63,32 +63,21 @@ namespace BSIPA_ModList.UI
         {
             if (immediate)
             {
-                Logger.log.Debug("setting selected immediately");
                 if (HasSelected)
-                {
-                    Logger.log.Debug("popping vc");
                     PopViewController(immediate: true);
-                }
-                Logger.log.Debug("pushing vc");
                 PushViewController(selected, callback, true);
                 HasSelected = true;
             }
             else
             {
-                Logger.log.Debug("setting selected");
                 if (HasSelected)
-                {
-                    Logger.log.Debug("popping vc");
                     PopViewController(() =>
                     {
-                        Logger.log.Debug("pushing vc");
                         PushViewController(selected, callback, immediate);
                         HasSelected = true;
                     }, immediate);
-                }
                 else
                 {
-                    Logger.log.Debug("pushing vc");
                     PushViewController(selected, callback, immediate);
                     HasSelected = true;
                 }

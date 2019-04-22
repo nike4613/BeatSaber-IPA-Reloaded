@@ -34,8 +34,6 @@ namespace BSIPA_ModList.UI
 
         public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo, PluginManifest.LinksObject links = null)
         {
-            Logger.log.Debug($"init info view controller");
-
             Icon = icon;
             Name = name;
             Version = version;
@@ -141,7 +139,6 @@ namespace BSIPA_ModList.UI
 
         public void Init(ModInfoViewController controller)
         {
-            Logger.log.Debug($"init info view");
             this.controller = controller;
 
             var rectTransform = transform as RectTransform;

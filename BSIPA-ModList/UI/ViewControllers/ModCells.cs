@@ -32,8 +32,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                 subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
 
             icon = plugin.Metadata.GetIcon();
-
-            Logger.log.Debug($"BSIPAModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
         }
 
         private ModInfoViewController infoView;
@@ -78,8 +76,6 @@ namespace BSIPA_ModList.UI.ViewControllers
             else
                 authorText = plugin.Manifest.Author;
             subtext = string.Format(authorFormat, authorText);
-
-            Logger.log.Debug($"BSIPAIgnoredModCell {plugin.Name} {plugin.Version}");
         }
 
         private ModInfoViewController infoView;
@@ -118,8 +114,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                 subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
 
             icon = Utilities.DefaultLibraryIcon;
-
-            Logger.log.Debug($"LibraryModCell {plugin.Metadata.Name} {plugin.Metadata.Version}");
         }
 
         private ModInfoViewController infoView;
@@ -155,8 +149,6 @@ namespace BSIPA_ModList.UI.ViewControllers
         {
             Plugin = plugin;
             this.list = list;
-
-            Logger.log.Debug($"IPAModCell {plugin.Name} {plugin.Version}");
         }
 
         private ModInfoViewController infoView;

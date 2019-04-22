@@ -56,8 +56,6 @@ namespace BSIPA_ModList.UI
 
         private static IEnumerator AddModListButton()
         {
-            Logger.log.Debug("AddModListButton");
-
             yield return _bottomPanelExists;
 
             Logger.log.Debug("Adding button to main menu");
@@ -73,7 +71,6 @@ namespace BSIPA_ModList.UI
                 {
                     button = BeatSaberUI.CreateUIButton(panel, CopyButton, () =>
                     {
-                        Logger.log.Debug("Presenting own flow controller");
                         menuFlow.Present();
                     }, "Mod List");
                     panel.Find(CopyButton).SetAsLastSibling();
