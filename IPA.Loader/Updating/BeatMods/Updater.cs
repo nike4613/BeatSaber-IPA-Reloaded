@@ -67,8 +67,10 @@ namespace IPA.Updating.BeatMods
             public HashSet<string> Consumers { get; set; } = new HashSet<string>();
 
             public bool MetaRequestFailed { get; set; }
-            
+
             public PluginLoader.PluginInfo LocalPluginMeta { get; set; }
+
+            public bool IsLegacy { get; set; } = false;
 
             public override string ToString()
             {
@@ -121,7 +123,7 @@ namespace IPA.Updating.BeatMods
         }
 
         private static readonly Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
-        private static IEnumerator GetModInfo(string modName, string ver, Ref<ApiEndpoint.Mod> result)
+        internal static IEnumerator GetModInfo(string modName, string ver, Ref<ApiEndpoint.Mod> result)
         {
             var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeUriString(modName), Uri.EscapeUriString(ver));
 
@@ -149,7 +151,7 @@ namespace IPA.Updating.BeatMods
         }
 
         private static readonly Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
-        private static IEnumerator GetModVersionsMatching(string modName, Range range, Ref<List<ApiEndpoint.Mod>> result)
+        internal static IEnumerator GetModVersionsMatching(string modName, Range range, Ref<List<ApiEndpoint.Mod>> result)
         {
             var uri = string.Format(ApiEndpoint.GetModsByName, Uri.EscapeUriString(modName));
 
@@ -182,7 +184,6 @@ namespace IPA.Updating.BeatMods
             var depList = new Ref<List<DependencyObject>>(new List<DependencyObject>());
 
             foreach (var plugin in BSMetas)
-                //.Where(m => m.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) == null))
             { // initialize with data to resolve (1.1)
                 if (plugin.Metadata.Id != null)
                 { // updatable
@@ -205,7 +206,6 @@ namespace IPA.Updating.BeatMods
             }
 
             foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null))
-            //.Where(m => m.Features.FirstOrDefault(f => f is NoUpdateFeature) == null))
             {
                 if (meta.Id != null)
                 { // updatable
@@ -229,6 +229,31 @@ namespace IPA.Updating.BeatMods
                     depList.Value.Add(dep);
                 }
             }
+
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            foreach (var plug in Plugins)
+            { // throw these in the updater on the off chance that they are set up properly
+                try
+                {
+                    var dep = new DependencyObject
+                    {
+                        Name = plug.Name,
+                        Version = new Version(plug.Version),
+                        Requirement = new Range($">={plug.Version}"),
+                        IsLegacy = true,
+                        LocalPluginMeta = null
+                    };
+
+                    depList.Value.Add(dep);
+                }
+                catch (Exception e)
+                {
+                    Logger.updater.Warn($"Error trying to add legacy plugin {plug.Name} to updater");
+                    Logger.updater.Warn(e);
+                }
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
 
             foreach (var dep in depList.Value)
                 Logger.updater.Debug($"Phantom Dependency: {dep}");

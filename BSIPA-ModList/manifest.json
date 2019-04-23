@@ -5,11 +5,16 @@
   "gameVersion": "0.13.2",
   "id": "BSIPA Mod List",
   "name": "BSIPA Mod List",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "icon": "BSIPA_ModList.Icons.self.png",
   "dependsOn": {
-    "BSIPA": "^3.12.13",
+    "BSIPA": "^3.12.14",
     "CustomUI": "^1.5.4"
   },
-  "features": []
+  "features": [],
+  "links": {
+    "project-home": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/tree/master/BSIPA-ModList",
+    "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
+    "donate": "https://ko-fi.com/danike"
+  }
 }

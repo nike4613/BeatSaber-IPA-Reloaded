@@ -1,8 +1,10 @@
 ﻿using CustomUI.BeatSaber;
 using CustomUI.MenuButton;
-using CustomUI.Utilities;
 using IPA.Loader;
+using IPA.Updating.BeatMods;
+using IPA.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -60,8 +62,16 @@ namespace BSIPA_ModList.UI
             view.Init(this);
             go.SetActive(true);
 
-            if (links != null)
+            SetupLinks(links);
+        }
+
+        private void SetupLinks(PluginManifest.LinksObject links = null, Uri moreInfoLink = null)
+        {
+            bool addedLink = false;
+            if (links != null || moreInfoLink != null)
             {
+                Logger.log.Debug($"Adding links");
+
                 rowTransform = Instantiate(rowTransformOriginal, rectTransform);
                 rowTransform.anchorMin = new Vector2(0f, 0f);
                 rowTransform.anchorMax = new Vector2(1f, .15f);
@@ -73,25 +83,53 @@ namespace BSIPA_ModList.UI
                     Destroy(child.gameObject);
                 }
 
-                if (links.ProjectHome != null)
+                if (links?.ProjectHome != null)
                 {
-                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Home", 
+                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Home",
                         onClick: () => Process.Start(links.ProjectHome.ToString()));
                     linkHomeButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                    addedLink = true;
                 }
-                if (links.ProjectSource != null)
+                if (links?.ProjectSource != null)
                 {
-                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Source", 
+                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Source",
                         onClick: () => Process.Start(links.ProjectSource.ToString()));
                     linkSourceButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                    addedLink = true;
                 }
-                if (links.Donate != null)
+                if (links?.Donate != null)
                 {
-                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Donate", 
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Donate",
                         onClick: () => Process.Start(links.Donate.ToString()));
                     linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                    addedLink = true;
+                }
+                if (moreInfoLink != null)
+                {
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "More Info",
+                        onClick: () => Process.Start(moreInfoLink.ToString()));
+                    linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
+                    addedLink = true;
                 }
             }
+            if (UpdateInfo != null && !addedLink)
+                StartCoroutine(GetMoreInfoLink());
+        }
+
+        private IEnumerator GetMoreInfoLink()
+        {
+            Logger.log.Debug($"Getting more info link");
+            Ref<ApiEndpoint.Mod> mod = new Ref<ApiEndpoint.Mod>(null);
+            if (UpdateInfo.Id == null) yield break;
+            yield return Updater.GetModInfo(UpdateInfo.Id, UpdateInfo.Version.ToString(), mod);
+            try { mod.Verify(); }
+            catch (Exception e)
+            {
+                Logger.log.Warn($"Error getting more info link for mod {UpdateInfo.Id}");
+                Logger.log.Warn(e);
+                yield break;
+            }
+            SetupLinks(null, mod.Value.Link);
         }
 
 #if DEBUG
@@ -130,8 +168,6 @@ namespace BSIPA_ModList.UI
 
     internal class ModInfoView : MonoBehaviour
     {
-        private ModInfoViewController controller;
-
         private TextMeshProUGUI titleText;
         private TextMeshProUGUI authorText;
         private TextMeshProUGUI descText;
@@ -139,8 +175,6 @@ namespace BSIPA_ModList.UI
 
         public void Init(ModInfoViewController controller)
         {
-            this.controller = controller;
-
             var rectTransform = transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(60f, 10f);
 
@@ -163,7 +197,7 @@ namespace BSIPA_ModList.UI
             icon.sprite = controller.Icon;
             icon.preserveAspect = true;
             icon.useSpriteMesh = true;
-            icon.material = UIUtilities.NoGlowMaterial;
+            icon.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
             icon.gameObject.SetActive(true);
         }
 

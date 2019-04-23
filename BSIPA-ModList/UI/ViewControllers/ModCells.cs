@@ -48,8 +48,7 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                    desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null,
-                    Plugin.Metadata.Manifest.Links);
+                    desc, Plugin.Metadata, Plugin.Metadata.Manifest.Links);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -92,8 +91,7 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), authorText,
-                    desc, Plugin.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin : null,
-                    Plugin.Manifest.Links);
+                    desc, Plugin, Plugin.Manifest.Links);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -130,8 +128,7 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                    desc, Plugin.Metadata.Features.FirstOrDefault(f => f is NoUpdateFeature) != null ? Plugin.Metadata : null,
-                    Plugin.Metadata.Manifest.Links);
+                    desc, Plugin.Metadata, Plugin.Metadata.Manifest.Links);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -159,10 +156,27 @@ namespace BSIPA_ModList.UI.ViewControllers
 
             if (infoView == null)
             {
+                PluginLoader.PluginMetadata updateInfo = null;
+
+                try
+                {
+                    updateInfo = new PluginLoader.PluginMetadata
+                    {
+                        Name = Plugin.Name,
+                        Id = Plugin.Name,
+                        Version = new SemVer.Version(Plugin.Version)
+                    };
+                }
+                catch (Exception e)
+                {
+                    Logger.log.Warn($"Could not generate fake update info for {Plugin.Name}");
+                    Logger.log.Warn(e);
+                }
+
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), "<color=#BFBFBF><i>Unknown Author</i>",
                     "<color=#A0A0A0>This mod was written for IPA Reloaded. No metadata is avaliable for this mod. " +
-                    "Please contact the mod author and ask them to port it to BSIPA to provide more information.", null);
+                    "Please contact the mod author and ask them to port it to BSIPA to provide more information.", updateInfo);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);

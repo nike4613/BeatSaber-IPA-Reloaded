@@ -139,7 +139,7 @@ namespace BSIPA_ModList
                 Add(new DownloadObject
                 {
                     Mod = dep,
-                    Icon = Utilities.GetIcon(dep.LocalPluginMeta?.Metadata),
+                    Icon = dep.IsLegacy ? Utilities.DefaultIPAIcon : Utilities.GetIcon(dep.LocalPluginMeta?.Metadata),
                     State = DownloadObject.States.ToDownload,
                     Progress = 0
                 });

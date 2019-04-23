@@ -47,7 +47,7 @@ namespace IPA.Loader
             public string Name { get; internal set; }
 
             /// <summary>
-            /// The ModSaber ID of the plugin, or null if it doesn't have one.
+            /// The BeatMods ID of the plugin, or null if it doesn't have one.
             /// </summary>
             public string Id { get; internal set; }
 

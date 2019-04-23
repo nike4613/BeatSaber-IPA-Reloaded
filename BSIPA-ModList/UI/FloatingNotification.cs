@@ -86,6 +86,7 @@ namespace BSIPA_ModList.UI
 
         private void CheckForUpdatesStart()
         {
+            StopAllCoroutines();
             _showingMessage = false;
             _headerText.text = HeaderText;
             _headerText.alignment = TextAlignmentOptions.Left;
@@ -100,6 +101,7 @@ namespace BSIPA_ModList.UI
             if (count == 0) updatesZero = true;
             else updatesZero = false;
 
+            StopAllCoroutines();
             _showingMessage = false;
             _headerText.text = $"{count} updates found";
             _headerText.alignment = TextAlignmentOptions.Left;
