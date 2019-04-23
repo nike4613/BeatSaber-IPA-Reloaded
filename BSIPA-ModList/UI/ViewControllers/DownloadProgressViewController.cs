@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using CustomUI.BeatSaber;
 using CustomUI.Utilities;
@@ -19,10 +21,15 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         private Button _checkForUpdates;
         private Button _downloadUpdates;
+        private Button _restartGame;
         private TableView _currentlyUpdatingTableView;
         private LevelListTableCell _songListTableCellInstance;
         private Button _pageUpButton;
         private Button _pageDownButton;
+
+        private const float TableXOffset = -20f;
+        private const float ButtonXOffset = 36f;
+        private static readonly Vector2 ButtonSize = new Vector2(40f, 10f);
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
@@ -40,7 +47,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _pageUpButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageUpButton")), rectTransform, false);
                 (_pageUpButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 1f);
                 (_pageUpButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 1f);
-                (_pageUpButton.transform as RectTransform).anchoredPosition = new Vector2(0f, -14f);
+                (_pageUpButton.transform as RectTransform).anchoredPosition = new Vector2(TableXOffset, -14f);
                 (_pageUpButton.transform as RectTransform).sizeDelta = new Vector2(40f, 10f);
                 _pageUpButton.interactable = true;
                 _pageUpButton.onClick.AddListener(delegate ()
@@ -51,7 +58,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), rectTransform, false);
                 (_pageDownButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 0f);
                 (_pageDownButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 0f);
-                (_pageDownButton.transform as RectTransform).anchoredPosition = new Vector2(0f, 8f);
+                (_pageDownButton.transform as RectTransform).anchoredPosition = new Vector2(TableXOffset, 8f);
                 (_pageDownButton.transform as RectTransform).sizeDelta = new Vector2(40f, 10f);
                 _pageDownButton.interactable = true;
                 _pageDownButton.onClick.AddListener(delegate ()
@@ -75,7 +82,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 (_currentlyUpdatingTableView.transform as RectTransform).anchorMin = new Vector2(0.3f, 0.5f);
                 (_currentlyUpdatingTableView.transform as RectTransform).anchorMax = new Vector2(0.7f, 0.5f);
                 (_currentlyUpdatingTableView.transform as RectTransform).sizeDelta = new Vector2(0f, 60f);
-                (_currentlyUpdatingTableView.transform as RectTransform).anchoredPosition = new Vector3(0f, -3f);
+                (_currentlyUpdatingTableView.transform as RectTransform).anchoredPosition = new Vector3(TableXOffset, -3f);
 
                 ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageUpButton", _pageUpButton);
                 ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageDownButton", _pageDownButton);
@@ -84,17 +91,27 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _currentlyUpdatingTableView.dataSource = this;
                 gobj.SetActive(true);
 
-                _checkForUpdates = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(36f, -30f), new Vector2(20f, 10f), CheckUpdates, "Check for updates");
+                _checkForUpdates = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(ButtonXOffset, -30f), ButtonSize, CheckUpdates, "Check for updates");
                 _checkForUpdates.interactable = DownloadController.Instance.CanCheck || DownloadController.Instance.CanReset;
                 _checkForUpdates.ToggleWordWrapping(false);
 
-                _downloadUpdates = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(36f, -15f), new Vector2(20f, 10f), DownloadUpdates, "Download Updates");
+                _downloadUpdates = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(ButtonXOffset, -19f), ButtonSize, DownloadUpdates, "Download Updates");
                 _downloadUpdates.interactable = DownloadController.Instance.CanDownload;
                 _downloadUpdates.ToggleWordWrapping(false);
+
+                _restartGame = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(ButtonXOffset, -8f), ButtonSize, Restart, "Restart Game");
+                _restartGame.interactable = DownloadController.Instance.HadUpdates;
+                _restartGame.ToggleWordWrapping(false);
 
                 DownloadController.Instance.OnDownloaderListChanged += Refresh;
                 DownloadController.Instance.OnDownloadStateChanged += DownloaderStateChanged;
             }
+        }
+
+        private void Restart()
+        {
+            Process.Start(Path.Combine(Environment.CurrentDirectory, Process.GetCurrentProcess().MainModule.FileName), Environment.CommandLine);
+            Application.Quit();
         }
 
         private void DownloadUpdates()
@@ -116,6 +133,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         {
             _checkForUpdates.interactable = DownloadController.Instance.CanCheck || DownloadController.Instance.CanReset;
             _downloadUpdates.interactable = DownloadController.Instance.CanDownload;
+            _restartGame.interactable = DownloadController.Instance.HadUpdates;
         }
 
         protected override void DidDeactivate(DeactivationType type)
