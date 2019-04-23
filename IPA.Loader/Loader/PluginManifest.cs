@@ -59,6 +59,6 @@ namespace IPA.Loader
         }
 
         [JsonProperty("links", Required = Required.DisallowNull)]
-        public LinksObject Links = new LinksObject();
+        public LinksObject Links = null;
     }
 }
