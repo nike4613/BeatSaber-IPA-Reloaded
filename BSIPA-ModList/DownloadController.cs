@@ -64,7 +64,7 @@ namespace BSIPA_ModList
 
         private enum States
         {
-            Start, Checking, UpdatesFound, Downloading, Done
+            Start, Checking, UpdatesFound, Downloading, Done, DoneWithNoUpdates
         }
 
         private States _state = States.Start;
@@ -78,12 +78,13 @@ namespace BSIPA_ModList
             }
         }
 
-        public bool CanCheck => State == States.Start || State == States.Done;
+        public bool CanCheck => State == States.Start || IsDone;
         public bool CanDownload => State == States.UpdatesFound;
         public bool CanReset => State == States.UpdatesFound;
         public bool IsChecking => State == States.Checking;
         public bool IsDownloading => State == States.Downloading;
-        public bool IsDone => State == States.Done;
+        public bool IsDone => State == States.Done || State == States.DoneWithNoUpdates;
+        public bool HadUpdates => State == States.Done;
 
         public void Awake() => DontDestroyOnLoad(this);
 
@@ -147,7 +148,7 @@ namespace BSIPA_ModList
             OnDownloaderListChanged?.Invoke();
 
             if (downloads.Count == 0)
-                OnAllDownloadsCompleted();
+                OnAllDownloadsCompleted(false);
             else if (SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
                 StartDownloads();
         }
@@ -204,12 +205,12 @@ namespace BSIPA_ModList
             Remove(obj);
 
             if (downloads.Count == 0)
-                OnAllDownloadsCompleted();
+                OnAllDownloadsCompleted(true);
         }
 
-        private void OnAllDownloadsCompleted()
+        private void OnAllDownloadsCompleted(bool hadUpdates)
         {
-            State = States.Done;
+            State = hadUpdates ? States.Done : States.DoneWithNoUpdates;
         }
     }
 }
