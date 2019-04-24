@@ -241,7 +241,7 @@ namespace IPA.Loader
             catch (ReflectionTypeLoadException e)
             {
                 Logger.loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
-                Logger.loader.Error($"  {string.Join(", ", e.Types.Select(t => t.FullName))}");
+                Logger.loader.Error($"  {string.Join("\n  ", e.LoaderExceptions.Select(e1 => e1?.Message))}");
             }
             catch (Exception e)
             {
