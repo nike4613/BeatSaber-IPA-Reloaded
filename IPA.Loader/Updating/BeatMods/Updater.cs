@@ -125,7 +125,7 @@ namespace IPA.Updating.BeatMods
         private static readonly Dictionary<string, ApiEndpoint.Mod> modCache = new Dictionary<string, ApiEndpoint.Mod>();
         internal static IEnumerator GetModInfo(string modName, string ver, Ref<ApiEndpoint.Mod> result)
         {
-            var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeUriString(modName), Uri.EscapeUriString(ver));
+            var uri = string.Format(ApiEndpoint.GetModInfoEndpoint, Uri.EscapeDataString(modName), Uri.EscapeDataString(ver));
 
             if (modCache.TryGetValue(uri, out ApiEndpoint.Mod value))
             {
@@ -153,7 +153,7 @@ namespace IPA.Updating.BeatMods
         private static readonly Dictionary<string, List<ApiEndpoint.Mod>> modVersionsCache = new Dictionary<string, List<ApiEndpoint.Mod>>();
         internal static IEnumerator GetModVersionsMatching(string modName, Range range, Ref<List<ApiEndpoint.Mod>> result)
         {
-            var uri = string.Format(ApiEndpoint.GetModsByName, Uri.EscapeUriString(modName));
+            var uri = string.Format(ApiEndpoint.GetModsByName, Uri.EscapeDataString(modName));
 
             if (modVersionsCache.TryGetValue(uri, out List<ApiEndpoint.Mod> value))
             {
