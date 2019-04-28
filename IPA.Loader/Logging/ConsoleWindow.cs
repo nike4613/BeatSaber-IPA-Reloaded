@@ -15,6 +15,8 @@ namespace IPA.Logging
         private static SafeFileHandle outHandle;
         private static SafeFileHandle inHandle;
 
+        public static bool UseVTEscapes { get; private set; } = true;
+
         internal static IntPtr OutHandle => outHandle.DangerousGetHandle();
         internal static IntPtr InHandle => inHandle.DangerousGetHandle();
 
@@ -58,10 +60,18 @@ namespace IPA.Logging
                 {
                     mode |= EnableVTProcessing;
                     if (!SetConsoleMode(handle, mode))
-                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                    {
+                        UseVTEscapes = false;
+                        Console.Error.WriteLine("Could not enable VT100 escape code processing (maybe you're running an old Windows?): " + 
+                            new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                    }
                 }
                 else
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                {
+                    UseVTEscapes = false;
+                    Console.Error.WriteLine("Could not enable VT100 escape code processing (maybe you're running an old Windows?): " +
+                        new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                }
             }
         }
 

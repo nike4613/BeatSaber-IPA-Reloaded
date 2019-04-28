@@ -53,6 +53,7 @@ namespace IPA.Logging
 
         private static string ConsoleColorToForegroundSet(ConsoleColor col)
         {
+            if (!WinConsole.UseVTEscapes) return "";
             string code = "0"; // reset
 
             switch (col)
