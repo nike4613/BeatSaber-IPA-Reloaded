@@ -58,6 +58,7 @@ namespace BSIPA_ModList.UI
 
         public void Update()
         {
+            if (mod == null) return;
             _bgImage.enabled = true;
             switch (mod.State)
             {
