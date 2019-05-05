@@ -39,6 +39,7 @@ namespace IPA.Loader
 #pragma warning disable CS0618 // Type or member is obsolete
             new Tuple<Type, InjectParameter>(typeof(IModPrefs), (prev, param, meta) => prev ?? new ModPrefs(meta)),
 #pragma warning restore CS0618 // Type or member is obsolete
+            new Tuple<Type, InjectParameter>(typeof(PluginLoader.PluginMetadata), (prev, param, meta) => prev ?? meta),
             new Tuple<Type, InjectParameter>(typeof(IConfigProvider), (prev, param, meta) =>
             {
                 if (prev != null) return prev;
