@@ -239,7 +239,7 @@ namespace IPA.Logging
 
         private static StandardLogger loggerLogger;
 
-        private const int LogCloseTimeout = 500;
+        private const int LogCloseTimeout = 250;
 
         /// <summary>
         /// The log printer thread for <see cref="StandardLogger"/>.

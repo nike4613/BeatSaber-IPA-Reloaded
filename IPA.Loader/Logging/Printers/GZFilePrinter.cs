@@ -96,12 +96,12 @@ namespace IPA.Logging.Printers
             FileWriter.Flush();
             zstream.Flush();
             fstream.Flush();
-            FileWriter.Close();
-            zstream.Close();
-            fstream.Close();
             FileWriter.Dispose();
             zstream.Dispose();
             fstream.Dispose();
+            FileWriter = null;
+            zstream = null;
+            fstream = null;
         }
 
         /// <inheritdoc />
