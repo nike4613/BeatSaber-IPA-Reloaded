@@ -137,7 +137,6 @@ namespace IPA.Logging
                 if (!addedConsolePrinters)
                     AddDefaultPrinter(new ColorlessConsolePrinter());
                 
-                StdoutInterceptor.Intercept();
                 finalizedDefaultPrinters = true;
             }
 
@@ -259,6 +258,7 @@ namespace IPA.Logging
             var started = new HashSet<LogPrinter>();
             while (logQueue.TryTake(out var msg, Timeout.Infinite))
             {
+                StdoutInterceptor.Intercept();
                 do
                 {
                     var logger = msg.Logger;
