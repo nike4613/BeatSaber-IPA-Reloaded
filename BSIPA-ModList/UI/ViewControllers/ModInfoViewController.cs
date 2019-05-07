@@ -1,4 +1,5 @@
-﻿using CustomUI.BeatSaber;
+﻿using BSIPA_ModList.UI.ViewControllers;
+using CustomUI.BeatSaber;
 using CustomUI.MenuButton;
 using IPA.Loader;
 using IPA.Updating.BeatMods;
@@ -182,10 +183,17 @@ namespace BSIPA_ModList.UI
             titleText.fontSize = 6f;
             authorText = BeatSaberUI.CreateText(rectTransform, controller.Author, new Vector2(11f, 22f));
             authorText.fontSize = 4.5f;
+
+            /*
             descText = BeatSaberUI.CreateText(rectTransform, controller.Description, new Vector2(-4.5f, 12f));
             descText.fontSize = 3.5f;
             descText.enableWordWrapping = true;
-            descText.overflowMode = TextOverflowModes.ScrollRect;
+            descText.overflowMode = TextOverflowModes.ScrollRect;*/
+
+            var mdv = new GameObject("MarkDown Desc").AddComponent<MarkdownView>();
+            mdv.rectTransform.anchoredPosition = new Vector2(-4.5f, 12f);
+            mdv.rectTransform.SetParent(rectTransform);
+            mdv.Markdown = controller.Description;
 
             icon = new GameObject("Mod Info View Icon", typeof(RectTransform)).AddComponent<Image>();
             icon.gameObject.SetActive(false);
@@ -328,5 +336,5 @@ namespace BSIPA_ModList.UI
 #endif
         }
 #endif
-        }
+    }
 }

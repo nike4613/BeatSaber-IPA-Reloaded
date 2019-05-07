@@ -78,6 +78,7 @@
     <Compile Include="UI\ViewControllers\BackButtonNavigationController.cs" />
     <Compile Include="UI\ViewControllers\DownloadProgressViewController.cs" />
     <Compile Include="UI\FloatingNotification.cs" />
+    <Compile Include="UI\ViewControllers\MarkdownView.cs" />
     <Compile Include="UI\ViewControllers\ModCells.cs" />
     <Compile Include="UI\ViewControllers\ModInfoViewController.cs" />
     <Compile Include="UI\ViewControllers\ModListController.cs" />
@@ -94,6 +95,9 @@
     <EmbeddedResource Include="manifest.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommonMark.NET">
+      <Version>0.15.1</Version>
+    </PackageReference>
     <PackageReference Include="SemanticVersioning">
       <Version>1.2.0</Version>
     </PackageReference>
@@ -112,12 +116,15 @@
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
     <ItemGroup>
-      <BadFiles Include="$(OutputPath)**/*" Exclude="$(OutputPath)**/$(AssemblyName).*" />
+      <CMark Include="$(OutputPath)CommonMark.*" />
+      <BadFiles Include="$(OutputPath)**/*" Exclude="$(OutputPath)**/$(AssemblyName).*;@(CMark)" />
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
+    <Move SourceFiles="@(CMark)" DestinationFolder="$(OutputPath)Libs/" />
     <ItemGroup>
       <UnBadFiles Include="$(OutputPath)*" />
     </ItemGroup>
     <Move SourceFiles="@(UnBadFiles)" DestinationFolder="$(OutputPath)Plugins/" />
+    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildProjectDirectory)\PostBuild.msbuild&quot; /property:OPath=$(OutputPath) /property:Configuration=$(Configuration) /property:SolDir=$(SolutionDir)" />
   </Target>
 </Project>
