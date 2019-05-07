@@ -3,12 +3,15 @@ using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
 using BSIPA_ModList.UI;
 using UnityEngine;
+using IPA.Logging;
 
 namespace BSIPA_ModList
 {
     internal static class Logger
     {
         internal static IPALogger log { get; set; }
+
+        internal static IPALogger md => log.GetChildLogger("MarkDown");
     }
 
     public class Plugin : IBeatSaberPlugin
