@@ -70,12 +70,16 @@ namespace BSIPA_ModList.UI.ViewControllers
         {
             content = new GameObject("Content Wrapper").AddComponent<RectTransform>();
             content.SetParent(transform);
+            content.localPosition = Vector2.zero;
+            content.anchorMin = Vector2.zero;
+            content.anchorMax = Vector2.one;
             var contentLayout = content.gameObject.AddComponent<LayoutElement>();
             var contentFitter = content.gameObject.AddComponent<ContentSizeFitter>();
             contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             contentFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
             contentLayout.preferredWidth = 100f; // to be adjusted
             content.sizeDelta = new Vector2(100f,100f);
+            content.gameObject.AddComponent<TagTypeComponent>();
 
             /*view = GetComponent<ScrollRect>();
             view.content = content;
@@ -102,7 +106,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 {
                     var block = node.Block;
 
-                    void BlockNode(string name, float spacing, bool isVertical)
+                    void BlockNode(string name, float spacing, bool isVertical, bool isDoc = false)
                     {
                         var type = isVertical ? typeof(VerticalLayoutGroup) : typeof(HorizontalLayoutGroup);
                         if (node.IsOpening)
@@ -113,6 +117,8 @@ namespace BSIPA_ModList.UI.ViewControllers
                             var go = new GameObject(name, typeof(RectTransform), type);
                             var vlayout = go.GetComponent<RectTransform>();
                             vlayout.SetParent(layout.Peek());
+                            //if (isDoc)
+                                vlayout.anchoredPosition = Vector2.zero;
                             go.AddComponent<TagTypeComponent>().Tag = block.Tag;
                             layout.Push(vlayout);
 
@@ -141,7 +147,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                     switch (block.Tag)
                     {
                         case BlockTag.Document:
-                            BlockNode("DocumentRoot", 10f, true);
+                            BlockNode("DocumentRoot", .2f, true, true);
                             break;
                         case BlockTag.SetextHeading:
                             BlockNode("Heading1", .1f, false);
