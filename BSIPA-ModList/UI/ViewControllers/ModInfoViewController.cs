@@ -191,14 +191,16 @@ namespace BSIPA_ModList.UI
             descText.overflowMode = TextOverflowModes.ScrollRect;*/
 
             var mdv = new GameObject("MarkDown Desc").AddComponent<MarkdownView>();
-            mdv.rectTransform.anchoredPosition = new Vector2(-4.5f, 12f);
             mdv.rectTransform.SetParent(rectTransform);
+            mdv.rectTransform.anchorMin = new Vector2(.22f, 0f);
+            mdv.rectTransform.anchorMax = new Vector2(1f, .25f);
+            mdv.rectTransform.anchoredPosition = Vector2.zero;
             mdv.Markdown = controller.Description;
 
             icon = new GameObject("Mod Info View Icon", typeof(RectTransform)).AddComponent<Image>();
             icon.gameObject.SetActive(false);
             icon.rectTransform.SetParent(rectTransform, false);
-            icon.rectTransform.anchorMin = new Vector2(0.5f, 0.44f);
+            icon.rectTransform.anchorMin = new Vector2(0.5f, 0.44f); 
             icon.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             icon.rectTransform.sizeDelta = new Vector2(60f, 10f);
             icon.rectTransform.anchoredPosition = new Vector2(-27.8f, 27.3f);
