@@ -54,6 +54,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             { // !:: means embedded, w:: means web
               // this block is for when neither is specified
 
+                Logger.md.Debug($"Resolving nonspecific URI {arg}");
                 // check if its embedded
                 if (HasEmbeddedImage != null && HasEmbeddedImage(arg))
                     return "!::" + arg;
@@ -61,6 +62,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                     return "w::" + arg;
             }
 
+            Logger.md.Debug($"Resolved specific URI {arg}");
             return arg;
         }
 
