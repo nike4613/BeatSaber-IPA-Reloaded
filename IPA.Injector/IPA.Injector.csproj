@@ -81,6 +81,7 @@
     </Content>
     <Content Include="..\Libs\Microsoft.CSharp.dll">
       <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Libs\System.Runtime.Serialization.dll">
       <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
