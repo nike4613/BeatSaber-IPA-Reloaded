@@ -2,11 +2,16 @@
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
   "author": "DaNike",
   "description": [
+    "Mod List",
+    "========",
+    "",
     "## An in-game interface client for BSIPA.",
     "",
     "***",
     "",
-    "Look, ma! Markdown! Its **[CommonMark](w::https://commonmark.org/)**!"
+    "Look, ma! Markdown! Its **[CommonMark](w::https://commonmark.org/)**!",
+    "",
+    "# H1 type 2 test"
   ],
   "gameVersion": "0.13.2",
   "id": "BSIPA Mod List",

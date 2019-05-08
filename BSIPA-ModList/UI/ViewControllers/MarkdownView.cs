@@ -18,6 +18,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         private class TagTypeComponent : MonoBehaviour
         {
             internal BlockTag Tag;
+            internal HeadingData hData;
         }
 
         private string markdown = "";
@@ -68,6 +69,8 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         protected void Awake()
         {
+            rectTransform.sizeDelta = new Vector2(100f, 100f);
+
             content = new GameObject("Content Wrapper").AddComponent<RectTransform>();
             content.SetParent(transform);
             content.localPosition = Vector2.zero;
@@ -75,10 +78,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             content.anchorMax = Vector2.one;
             var contentLayout = content.gameObject.AddComponent<LayoutElement>();
             var contentFitter = content.gameObject.AddComponent<ContentSizeFitter>();
-            contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            contentFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
             contentFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-            contentLayout.preferredWidth = 100f; // to be adjusted
-            content.sizeDelta = new Vector2(100f,100f);
+            contentLayout.preferredWidth = contentLayout.minWidth = 100f; // to be adjusted
+            contentLayout.preferredHeight = 0f;
             content.gameObject.AddComponent<TagTypeComponent>();
 
             /*view = GetComponent<ScrollRect>();
@@ -88,6 +91,34 @@ namespace BSIPA_ModList.UI.ViewControllers
             view.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             view.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;*/
         }
+
+        private static Sprite whitePixel;
+        private static Sprite WhitePixel
+        {
+            get
+            {
+                if (whitePixel == null)
+                    whitePixel = Resources.FindObjectsOfTypeAll<Sprite>().First(s => s.name == "WhitePixel");
+                return whitePixel;
+            }
+        }
+
+#if DEBUG
+#if UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
+        private byte tbreakSettings = 0;
+#endif
+        public void Update()
+        {
+#if UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                tbreakSettings = (byte)((tbreakSettings + 1) % 16);
+                UpdateMd();
+                Logger.md.Info(tbreakSettings.ToString());
+            }
+#endif
+        }
+#endif
 
         private void UpdateMd()
         {
@@ -106,7 +137,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 {
                     var block = node.Block;
 
-                    void BlockNode(string name, float spacing, bool isVertical, bool isDoc = false)
+                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, bool isDoc = false)
                     {
                         var type = isVertical ? typeof(VerticalLayoutGroup) : typeof(HorizontalLayoutGroup);
                         if (node.IsOpening)
@@ -117,46 +148,90 @@ namespace BSIPA_ModList.UI.ViewControllers
                             var go = new GameObject(name, typeof(RectTransform), type);
                             var vlayout = go.GetComponent<RectTransform>();
                             vlayout.SetParent(layout.Peek());
-                            //if (isDoc)
-                                vlayout.anchoredPosition = Vector2.zero;
-                            go.AddComponent<TagTypeComponent>().Tag = block.Tag;
+                            vlayout.anchoredPosition = Vector2.zero;
+                            vlayout.localScale = Vector3.one;
+                            vlayout.localPosition = Vector3.zero;
+                            var tt = go.AddComponent<TagTypeComponent>();
+                            tt.Tag = block.Tag;
+                            apply?.Invoke(tt);
                             layout.Push(vlayout);
 
+                            HorizontalOrVerticalLayoutGroup l;
                             if (isVertical)
-                            {
-                                var vl = go.GetComponent<VerticalLayoutGroup>();
-                                vl.childControlHeight = vl.childControlWidth =
-                                    vl.childForceExpandHeight = vl.childForceExpandWidth = false;
-                                vl.spacing = spacing;
-                            }
+                                l = go.GetComponent<VerticalLayoutGroup>();
                             else
-                            {
-                                var hl = go.GetComponent<HorizontalLayoutGroup>();
-                                hl.childControlHeight = hl.childControlWidth =
-                                    hl.childForceExpandHeight = hl.childForceExpandWidth = false;
-                                hl.spacing = spacing;
-                            }
+                                l = go.GetComponent<HorizontalLayoutGroup>();
+
+                            l.childControlHeight = l.childControlWidth = true;
+                            l.childForceExpandHeight = l.childForceExpandWidth = false;
+                            l.childForceExpandWidth = isDoc;
+                            l.spacing = spacing;
+                            return l;
                         }
                         else if (node.IsClosing)
                         {
                             currentText = null;
                             layout.Pop();
                         }
+                        return null;
                     }
 
                     switch (block.Tag)
                     {
                         case BlockTag.Document:
-                            BlockNode("DocumentRoot", .2f, true, true);
+                            BlockNode("DocumentRoot", .2f, true, isDoc: true);
                             break;
                         case BlockTag.SetextHeading:
-                            BlockNode("Heading1", .1f, false);
+                            var l = BlockNode("SeHeading", .1f, false, t => t.hData = block.Heading);
+                            if (l) l.childAlignment = TextAnchor.UpperCenter; // TODO: fix centering
                             break;
                         case BlockTag.AtxHeading:
-                            BlockNode("Heading2", .1f, false);
+                                l = BlockNode("AtxHeading", .1f, false, t => t.hData = block.Heading);
+                            if (l && block.Heading.Level == 1)
+                                l.childAlignment = TextAnchor.UpperCenter;
                             break;
                         case BlockTag.Paragraph:
                             BlockNode("Paragraph", .1f, false);
+                            break;
+                        case BlockTag.ThematicBreak:
+                            { // TODO: fix this, it doesn't want to actually show up properly
+                                const float BreakHeight = .5f;
+
+                                var go = new GameObject("ThematicBreak", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+                                var vlayout = go.GetComponent<RectTransform>();
+                                vlayout.SetParent(layout.Peek());
+                                vlayout.anchoredPosition = Vector2.zero;
+
+                                l = go.GetComponent<HorizontalLayoutGroup>();
+#if DEBUG && UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
+                                l.childControlHeight = (tbreakSettings & 0b0001) != 0; // if set, not well behaved
+                                l.childControlWidth = (tbreakSettings & 0b0010) != 0;
+                                l.childForceExpandHeight = (tbreakSettings & 0b0100) != 0; // if set, not well behaved
+                                l.childForceExpandWidth = (tbreakSettings & 0b1000) != 0;
+#else
+                                l.childControlHeight = false;
+                                l.childControlWidth = false;
+                                l.childForceExpandHeight = false;
+                                l.childForceExpandWidth = false;
+#endif
+                                l.spacing = 0f;
+
+                                currentText = null;
+                                go = new GameObject("ThematicBreakBar", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+                                var im = go.GetComponent<Image>();
+                                im.color = Color.white;
+                                im.sprite = WhitePixel;
+                                im.material = new Material(CustomUI.Utilities.UIUtilities.NoGlowMaterial);
+                                var rt = go.GetComponent<RectTransform>();
+                                rt.SetParent(vlayout);
+                                rt.anchorMin = Vector2.zero;
+                                rt.anchorMax = Vector2.one;
+                                rt.sizeDelta = new Vector2(100f, BreakHeight);
+                                var le = go.GetComponent<LayoutElement>();
+                                le.minWidth = le.preferredWidth = 100f;
+                                le.minHeight = le.preferredHeight = BreakHeight;
+                                le.flexibleHeight = le.flexibleWidth = 1f;
+                            }
                             break;
                         // TODO: add the rest of the tag types
                     }
@@ -165,6 +240,9 @@ namespace BSIPA_ModList.UI.ViewControllers
                 { // inline element
                     var inl = node.Inline;
 
+                    const float PSize = 3.5f;
+                    const float H1Size = 4.8f;
+                    const float HLevelDecrease = 0.5f;
                     switch (inl.Tag)
                     {
                         case InlineTag.String:
@@ -172,24 +250,26 @@ namespace BSIPA_ModList.UI.ViewControllers
                             {
                                 Logger.md.Debug($"Adding new text element");
 
-                                var btt = layout.Peek().gameObject.GetComponent<TagTypeComponent>().Tag;
+                                var tt = layout.Peek().gameObject.GetComponent<TagTypeComponent>();
                                 currentText = BeatSaberUI.CreateText(layout.Peek(), "", Vector2.zero);
                                 //var le = currentText.gameObject.AddComponent<LayoutElement>();
                                 
-                                switch (btt)
+                                switch (tt.Tag)
                                 {
                                     case BlockTag.List:
                                     case BlockTag.ListItem:
                                     case BlockTag.Paragraph:
-                                        currentText.fontSize = 3.5f;
+                                        currentText.fontSize = PSize;
                                         currentText.enableWordWrapping = true;
                                         break;
                                     case BlockTag.AtxHeading:
-                                        currentText.fontSize = 4f;
+                                        var size = H1Size;
+                                        size -= HLevelDecrease * (tt.hData.Level - 1);
+                                        currentText.fontSize = size;
                                         currentText.enableWordWrapping = true;
                                         break;
                                     case BlockTag.SetextHeading:
-                                        currentText.fontSize = 4.5f;
+                                        currentText.fontSize = H1Size;
                                         currentText.enableWordWrapping = true;
                                         break;
                                     // TODO: add other relevant types
@@ -205,8 +285,18 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         private void Clear()
         {
-            foreach (Transform child in content)
-                Destroy(child.gameObject);
+            content.gameObject.SetActive(false);
+            void Clear(Transform target)
+            {
+                foreach (Transform child in target)
+                {
+                    Clear(child);
+                    Logger.md.Debug($"Destroying {child.name}");
+                    Destroy(child.gameObject);
+                }
+            }
+            Clear(content);
+            content.gameObject.SetActive(true);
         }
     }
 }
