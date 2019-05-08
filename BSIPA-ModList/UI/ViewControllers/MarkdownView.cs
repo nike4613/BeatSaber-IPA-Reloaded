@@ -12,7 +12,7 @@ using CustomUI.BeatSaber;
 
 namespace BSIPA_ModList.UI.ViewControllers
 {
-    [RequireComponent(/*typeof(ScrollRect),*/ typeof(RectTransform))]
+    [RequireComponent(typeof(RectTransform), typeof(ScrollRect))]
     public class MarkdownView : MonoBehaviour
     {
         private class TagTypeComponent : MonoBehaviour
@@ -34,8 +34,10 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         public RectTransform rectTransform => GetComponent<RectTransform>();
 
-        //private ScrollRect view;
+        private ScrollRect view;
         private RectTransform content;
+        private RectTransform viewport;
+        private Scrollbar scrollbar;
 
         private CommonMarkSettings settings;
         public MarkdownView()
@@ -70,9 +72,31 @@ namespace BSIPA_ModList.UI.ViewControllers
         protected void Awake()
         {
             rectTransform.sizeDelta = new Vector2(100f, 100f);
+            view = GetComponent<ScrollRect>();
+            view.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+            view.vertical = true;
+            view.horizontal = false;
+            view.scrollSensitivity = 0f;
+            view.movementType = ScrollRect.MovementType.Clamped;
+
+            scrollbar = new GameObject("Scrollbar", typeof(RectTransform)).AddComponent<Scrollbar>();
+            scrollbar.transform.SetParent(transform);
+            scrollbar.direction = Scrollbar.Direction.TopToBottom;
+            scrollbar.interactable = true;
+            view.verticalScrollbar = scrollbar;
+
+            var vpgo = new GameObject("Viewport");
+            viewport = vpgo.AddComponent<RectTransform>();
+            viewport.SetParent(transform);
+            viewport.localPosition = Vector2.zero;
+            viewport.anchorMin = Vector2.zero;
+            viewport.anchorMax = Vector2.one;
+            vpgo.AddComponent<Mask>();
+
+            view.viewport = viewport;
 
             content = new GameObject("Content Wrapper").AddComponent<RectTransform>();
-            content.SetParent(transform);
+            content.SetParent(viewport);
             content.localPosition = Vector2.zero;
             content.anchorMin = Vector2.zero;
             content.anchorMax = Vector2.one;
@@ -84,12 +108,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             contentLayout.preferredHeight = 0f;
             content.gameObject.AddComponent<TagTypeComponent>();
 
-            /*view = GetComponent<ScrollRect>();
             view.content = content;
-            view.vertical = true;
-            view.horizontal = false;
-            view.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-            view.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;*/
         }
 
         private static Sprite whitePixel;

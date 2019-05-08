@@ -195,6 +195,11 @@ namespace BSIPA_ModList.UI
             mdv.rectTransform.anchorMin = new Vector2(.22f, 0f);
             mdv.rectTransform.anchorMax = new Vector2(1f, .25f);
             mdv.rectTransform.anchoredPosition = Vector2.zero;
+            var le = mdv.gameObject.AddComponent<LayoutElement>();
+            le.minWidth = le.preferredWidth = 30f;
+            var asv = mdv.gameObject.AddComponent<AspectRatioFitter>();
+            asv.aspectMode = AspectRatioFitter.AspectMode.HeightControlsWidth;
+            asv.aspectRatio = 1f;
             mdv.Markdown = controller.Description;
 
             icon = new GameObject("Mod Info View Icon", typeof(RectTransform)).AddComponent<Image>();
