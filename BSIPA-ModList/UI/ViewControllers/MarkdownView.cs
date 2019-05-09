@@ -22,13 +22,14 @@ namespace BSIPA_ModList.UI.ViewControllers
         }
 
         private string markdown = "";
+        private bool mdDirty = false;
         public string Markdown
         {
             get => markdown;
             set
             {
                 markdown = value;
-                UpdateMd();
+                mdDirty = true;
             }
         }
 
@@ -71,12 +72,12 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         protected void Awake()
         {
-            rectTransform.sizeDelta = new Vector2(100f, 100f);
             view = GetComponent<ScrollRect>();
             view.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             view.vertical = true;
             view.horizontal = false;
             view.scrollSensitivity = 0f;
+            view.inertia = true;
             view.movementType = ScrollRect.MovementType.Clamped;
 
             scrollbar = new GameObject("Scrollbar", typeof(RectTransform)).AddComponent<Scrollbar>();
@@ -91,22 +92,30 @@ namespace BSIPA_ModList.UI.ViewControllers
             viewport.localPosition = Vector2.zero;
             viewport.anchorMin = Vector2.zero;
             viewport.anchorMax = Vector2.one;
-            vpgo.AddComponent<Mask>();
+            viewport.anchoredPosition = new Vector2(.5f, .5f);
+            viewport.sizeDelta = Vector2.zero;
+            var vpmask = vpgo.AddComponent<Mask>();
+            var vpim = vpgo.AddComponent<Image>(); // supposedly Mask needs an Image?
+            vpmask.showMaskGraphic = false;
+            vpim.color = Color.white;
+            vpim.sprite = WhitePixel;
+            vpim.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
 
             view.viewport = viewport;
 
             content = new GameObject("Content Wrapper").AddComponent<RectTransform>();
             content.SetParent(viewport);
-            content.localPosition = Vector2.zero;
-            content.anchorMin = Vector2.zero;
-            content.anchorMax = Vector2.one;
             var contentLayout = content.gameObject.AddComponent<LayoutElement>();
             var contentFitter = content.gameObject.AddComponent<ContentSizeFitter>();
-            contentFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
+            contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             contentFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-            contentLayout.preferredWidth = contentLayout.minWidth = 100f; // to be adjusted
-            contentLayout.preferredHeight = 0f;
+            contentLayout.preferredWidth = contentLayout.minWidth = rectTransform.sizeDelta.x; // to be adjusted
             content.gameObject.AddComponent<TagTypeComponent>();
+            content.localPosition = Vector2.zero;
+            content.anchorMin = new Vector2(.5f, .5f);
+            content.anchorMax = new Vector2(.5f, .5f);
+            content.anchoredPosition = Vector2.zero;
+            //content.sizeDelta = Vector2.zero;
 
             view.content = content;
         }
@@ -126,9 +135,10 @@ namespace BSIPA_ModList.UI.ViewControllers
 #if UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
         private byte tbreakSettings = 0;
 #endif
+#endif
         public void Update()
         {
-#if UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
+#if DEBUG && UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
             if (Input.GetKeyDown(KeyCode.K))
             {
                 tbreakSettings = (byte)((tbreakSettings + 1) % 16);
@@ -136,11 +146,22 @@ namespace BSIPA_ModList.UI.ViewControllers
                 Logger.md.Info(tbreakSettings.ToString());
             }
 #endif
-        }
-#endif
+            if (mdDirty)
+                UpdateMd();
+            else if (resetContentPosition)
+            {
+                resetContentPosition = false;
+                var v = content.anchoredPosition;
+                v.y = -(content.rect.height / 2);
+                content.anchoredPosition = v;
+            }
 
+        }
+
+        private bool resetContentPosition = false;
         private void UpdateMd()
         {
+            mdDirty = false;
             Clear();
 
             var doc = CommonMarkConverter.Parse(markdown, settings);
@@ -156,20 +177,42 @@ namespace BSIPA_ModList.UI.ViewControllers
                 {
                     var block = node.Block;
 
-                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, bool isDoc = false)
+                    void Spacer(float size = 1.5f)
                     {
-                        var type = isVertical ? typeof(VerticalLayoutGroup) : typeof(HorizontalLayoutGroup);
+                        var go = new GameObject("Spacer", typeof(RectTransform));
+                        var vlayout = go.GetComponent<RectTransform>();
+                        vlayout.SetParent(layout.Peek());
+                        vlayout.anchorMin = new Vector2(.5f, .5f);
+                        vlayout.anchorMax = new Vector2(.5f, .5f);
+                        vlayout.localScale = Vector3.one;
+                        vlayout.localPosition = Vector3.zero;
+
+                        var l = go.AddComponent<LayoutElement>();
+                        l.minHeight = l.preferredHeight  = size;
+                    }
+
+                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, float? spacer = null, bool isDoc = false)
+                    {
                         if (node.IsOpening)
                         {
                             Logger.md.Debug($"Creating block container {name}");
 
                             currentText = null;
-                            var go = new GameObject(name, typeof(RectTransform), type);
+                            var go = new GameObject(name, typeof(RectTransform));
                             var vlayout = go.GetComponent<RectTransform>();
                             vlayout.SetParent(layout.Peek());
-                            vlayout.anchoredPosition = Vector2.zero;
+                            //vlayout.anchoredPosition = new Vector2(.5f, .5f);
+                            vlayout.anchorMin = new Vector2(.5f, .5f);
+                            vlayout.anchorMax = new Vector2(.5f, .5f);
                             vlayout.localScale = Vector3.one;
                             vlayout.localPosition = Vector3.zero;
+
+                            if (isDoc)
+                            {
+                                vlayout.sizeDelta = Vector2.zero;
+                                vlayout.anchorMin = Vector2.zero;
+                                vlayout.anchorMax = Vector2.one;
+                            }
                             var tt = go.AddComponent<TagTypeComponent>();
                             tt.Tag = block.Tag;
                             apply?.Invoke(tt);
@@ -177,20 +220,27 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                             HorizontalOrVerticalLayoutGroup l;
                             if (isVertical)
-                                l = go.GetComponent<VerticalLayoutGroup>();
+                                l = go.AddComponent<VerticalLayoutGroup>();
                             else
-                                l = go.GetComponent<HorizontalLayoutGroup>();
+                                l = go.AddComponent<HorizontalLayoutGroup>();
 
                             l.childControlHeight = l.childControlWidth = true;
                             l.childForceExpandHeight = l.childForceExpandWidth = false;
                             l.childForceExpandWidth = isDoc;
                             l.spacing = spacing;
+                            /*var cfit = go.AddComponent<ContentSizeFitter>();
+                            cfit.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+                            cfit.verticalFit = ContentSizeFitter.FitMode.Unconstrained;*/
+
                             return l;
                         }
                         else if (node.IsClosing)
                         {
                             currentText = null;
                             layout.Pop();
+
+                            if (spacer.HasValue)
+                                Spacer(spacer.Value);
                         }
                         return null;
                     }
@@ -198,7 +248,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                     switch (block.Tag)
                     {
                         case BlockTag.Document:
-                            BlockNode("DocumentRoot", .2f, true, isDoc: true);
+                            BlockNode("DocumentRoot", .5f, true, isDoc: true);
                             break;
                         case BlockTag.SetextHeading:
                             var l = BlockNode("SeHeading", .1f, false, t => t.hData = block.Heading);
@@ -210,7 +260,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 l.childAlignment = TextAnchor.UpperCenter;
                             break;
                         case BlockTag.Paragraph:
-                            BlockNode("Paragraph", .1f, false);
+                                l = BlockNode("Paragraph", .1f, false, spacer: 1.5f);
                             break;
                         case BlockTag.ThematicBreak:
                             { // TODO: fix this, it doesn't want to actually show up properly
@@ -219,8 +269,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 var go = new GameObject("ThematicBreak", typeof(RectTransform), typeof(HorizontalLayoutGroup));
                                 var vlayout = go.GetComponent<RectTransform>();
                                 vlayout.SetParent(layout.Peek());
-                                vlayout.anchoredPosition = Vector2.zero;
-
                                 l = go.GetComponent<HorizontalLayoutGroup>();
 #if DEBUG && UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
                                 l.childControlHeight = (tbreakSettings & 0b0001) != 0; // if set, not well behaved
@@ -235,21 +283,34 @@ namespace BSIPA_ModList.UI.ViewControllers
 #endif
                                 l.spacing = 0f;
 
+                                vlayout.localScale = Vector3.one;
+                                vlayout.anchoredPosition = Vector2.zero;
+                                vlayout.anchorMin = new Vector2(.5f, .5f);
+                                vlayout.anchorMax = new Vector2(.5f, .5f);
+                                vlayout.sizeDelta = new Vector2(layout.Peek().rect.width - BreakHeight, BreakHeight);
+                                vlayout.localPosition = Vector3.zero;
+
                                 currentText = null;
-                                go = new GameObject("ThematicBreakBar", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+                                go = new GameObject("ThematicBreak Bar", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
                                 var im = go.GetComponent<Image>();
                                 im.color = Color.white;
-                                im.sprite = WhitePixel;
-                                im.material = new Material(CustomUI.Utilities.UIUtilities.NoGlowMaterial);
+                                // i think i need to copy the sprite because i'm using the same one for the mask
+                                im.sprite = Sprite.Create(WhitePixel.texture, WhitePixel.rect, Vector2.zero);
+                                im.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
                                 var rt = go.GetComponent<RectTransform>();
                                 rt.SetParent(vlayout);
-                                rt.anchorMin = Vector2.zero;
-                                rt.anchorMax = Vector2.one;
-                                rt.sizeDelta = new Vector2(100f, BreakHeight);
                                 var le = go.GetComponent<LayoutElement>();
-                                le.minWidth = le.preferredWidth = 100f;
+                                le.minWidth = le.preferredWidth = layout.Peek().rect.width - BreakHeight;
                                 le.minHeight = le.preferredHeight = BreakHeight;
                                 le.flexibleHeight = le.flexibleWidth = 1f;
+                                rt.localScale = Vector3.one;
+                                rt.localPosition = Vector3.zero;
+                                rt.anchoredPosition = Vector3.zero;
+                                rt.anchorMin = Vector2.zero;
+                                rt.anchorMax = Vector2.one;
+                                rt.sizeDelta = new Vector2(layout.Peek().rect.width - BreakHeight, BreakHeight);
+
+                                Spacer(1f);
                             }
                             break;
                         // TODO: add the rest of the tag types
@@ -300,6 +361,8 @@ namespace BSIPA_ModList.UI.ViewControllers
                     }
                 }
             }
+
+            resetContentPosition = true;
         }
 
         private void Clear()
@@ -311,6 +374,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 {
                     Clear(child);
                     Logger.md.Debug($"Destroying {child.name}");
+                    child.SetParent(null);
                     Destroy(child.gameObject);
                 }
             }
