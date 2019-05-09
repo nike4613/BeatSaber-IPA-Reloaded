@@ -116,6 +116,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Icons\library.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Message Text="Packing..." Importance="normal" />
