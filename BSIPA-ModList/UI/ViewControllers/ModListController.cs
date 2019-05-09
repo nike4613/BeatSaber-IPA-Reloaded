@@ -11,6 +11,7 @@ using VRUI;
 using IPA.Loader.Features;
 using TMPro;
 using BSIPA_ModList.UI.ViewControllers;
+using UnityEngine.UI;
 
 namespace BSIPA_ModList.UI
 {
@@ -65,6 +66,8 @@ namespace BSIPA_ModList.UI
             var rt = _customListTableView.transform as RectTransform;
             rt.anchorMin = new Vector2(.1f, 0f);
             rt.anchorMax = new Vector2(.9f, 1f);
+
+            _customListTableView.gameObject.GetComponent<ScrollRect>().scrollSensitivity = 0f;
         }
     }
 }
