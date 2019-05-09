@@ -69,8 +69,8 @@ REGEDIT4
 2. Create a file, `bsinstalldir.txt` in the solution root. Do NOT create this in Visual Studio; VS adds a BOM at the begginning of the file that the tools used cannot read.
    It should contain the path to your Beat Saber installation, using forward slashes with a trailing slash. e.g. 
    ```
-   C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/
-  ```
+C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/
+```
 3. Open `BSIPA.sln` in Visual Studio.
 4. Choose the configuration `x64`
 5. Rebuild all. 
