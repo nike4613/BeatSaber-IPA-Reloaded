@@ -131,7 +131,11 @@ namespace BSIPA_ModList.UI.ViewControllers
                 pup_rt.anchoredPosition = new Vector2(pup_xoff, pup_rt.anchoredPosition.y);
                 var pup_bg_rt = pup_rt.Find("BG") as RectTransform;
                 pup_bg_rt.sizeDelta = new Vector2(pup_bg_rt.sizeDelta.y, pup_bg_rt.sizeDelta.y);
-                //Destroy(pageUp.GetComponent<Touchable>()); // destroy Touchable component to fix hitboxes
+
+                // fix hitbox
+                pup_rt.anchorMin = new Vector2(.5f, pup_rt.anchorMin.y);
+                pup_rt.anchorMax = new Vector2(.5f, pup_rt.anchorMax.y);
+                pup_rt.sizeDelta = new Vector2(pup_rt.sizeDelta.y, pup_rt.sizeDelta.y);
             }
             {
                 var pdn_rt = pageDown.transform as RectTransform;
@@ -140,7 +144,11 @@ namespace BSIPA_ModList.UI.ViewControllers
                 pdn_rt.anchoredPosition = new Vector2(pdn_xoff, pdn_rt.anchoredPosition.y);
                 var pdn_bg_rt = pdn_rt.Find("BG") as RectTransform;
                 pdn_bg_rt.sizeDelta = new Vector2(pdn_bg_rt.sizeDelta.y, pdn_bg_rt.sizeDelta.y);
-                //Destroy(pageDown.GetComponent<Touchable>()); // destroy Touchable component to fix hitboxes
+
+                // fix hitbox
+                pdn_rt.anchorMin = new Vector2(.5f, pdn_rt.anchorMin.y);
+                pdn_rt.anchorMax = new Vector2(.5f, pdn_rt.anchorMax.y);
+                pdn_rt.sizeDelta = new Vector2(pdn_rt.sizeDelta.y, pdn_rt.sizeDelta.y);
             }
 
             scrView = gameObject.AddComponent<ScrollView>();
