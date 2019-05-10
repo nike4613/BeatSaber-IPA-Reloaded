@@ -9,10 +9,11 @@ using CommonMark.Syntax;
 using UnityEngine.UI;
 using TMPro;
 using CustomUI.BeatSaber;
+using IPA.Utilities;
 
 namespace BSIPA_ModList.UI.ViewControllers
 {
-    [RequireComponent(typeof(RectTransform), typeof(ScrollRect))]
+    [RequireComponent(typeof(RectTransform))]
     public class MarkdownView : MonoBehaviour
     {
         private class TagTypeComponent : MonoBehaviour
@@ -35,10 +36,9 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         public RectTransform rectTransform => GetComponent<RectTransform>();
 
-        private ScrollRect view;
+        private ScrollView scrView;
         private RectTransform content;
         private RectTransform viewport;
-        private Scrollbar scrollbar;
 
         private CommonMarkSettings settings;
         public MarkdownView()
@@ -72,7 +72,7 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         protected void Awake()
         {
-            view = GetComponent<ScrollRect>();
+            /*view = GetComponent<ScrollRect>();
             view.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             view.vertical = true;
             view.horizontal = false;
@@ -84,7 +84,9 @@ namespace BSIPA_ModList.UI.ViewControllers
             scrollbar.transform.SetParent(transform);
             scrollbar.direction = Scrollbar.Direction.TopToBottom;
             scrollbar.interactable = true;
-            view.verticalScrollbar = scrollbar;
+            view.verticalScrollbar = scrollbar;*/
+
+            gameObject.SetActive(false);
 
             var vpgo = new GameObject("Viewport");
             viewport = vpgo.AddComponent<RectTransform>();
@@ -101,7 +103,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             vpim.sprite = WhitePixel;
             vpim.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
 
-            view.viewport = viewport;
+            //view.viewport = viewport;
 
             content = new GameObject("Content Wrapper").AddComponent<RectTransform>();
             content.SetParent(viewport);
@@ -117,7 +119,37 @@ namespace BSIPA_ModList.UI.ViewControllers
             content.anchoredPosition = Vector2.zero;
             //content.sizeDelta = Vector2.zero;
 
-            view.content = content;
+            //view.content = content;
+
+            var pageUp = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last((Button x) => x.name == "PageUpButton"), rectTransform, false);
+            var pageDown = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last((Button x) => x.name == "PageDownButton"), rectTransform, false);
+
+            {
+                var pup_rt = pageUp.transform as RectTransform;
+                var pup_sof = pup_rt.sizeDelta.y;
+                var pup_xoff = (rectTransform.sizeDelta.x / 2) + (pup_sof / 2);
+                pup_rt.anchoredPosition = new Vector2(pup_xoff, pup_rt.anchoredPosition.y);
+                var pup_bg_rt = pup_rt.Find("BG") as RectTransform;
+                pup_bg_rt.sizeDelta = new Vector2(pup_bg_rt.sizeDelta.y, pup_bg_rt.sizeDelta.y);
+                //Destroy(pageUp.GetComponent<Touchable>()); // destroy Touchable component to fix hitboxes
+            }
+            {
+                var pdn_rt = pageDown.transform as RectTransform;
+                var pdn_sof = pdn_rt.sizeDelta.y;
+                var pdn_xoff = (rectTransform.sizeDelta.x / 2) + (pdn_sof / 2);
+                pdn_rt.anchoredPosition = new Vector2(pdn_xoff, pdn_rt.anchoredPosition.y);
+                var pdn_bg_rt = pdn_rt.Find("BG") as RectTransform;
+                pdn_bg_rt.sizeDelta = new Vector2(pdn_bg_rt.sizeDelta.y, pdn_bg_rt.sizeDelta.y);
+                //Destroy(pageDown.GetComponent<Touchable>()); // destroy Touchable component to fix hitboxes
+            }
+
+            scrView = gameObject.AddComponent<ScrollView>();
+            scrView.SetPrivateField("_pageUpButton", pageUp);
+            scrView.SetPrivateField("_pageDownButton", pageDown);
+            scrView.SetPrivateField("_contentRectTransform", content);
+            scrView.SetPrivateField("_viewport", viewport);
+
+            gameObject.SetActive(true);
         }
 
         private static Sprite whitePixel;
@@ -151,11 +183,11 @@ namespace BSIPA_ModList.UI.ViewControllers
             else if (resetContentPosition)
             {
                 resetContentPosition = false;
-                var v = content.anchoredPosition;
+                /*var v = content.anchoredPosition;
                 v.y = -(content.rect.height / 2);
-                content.anchoredPosition = v;
+                content.anchoredPosition = v;*/
+                scrView.Setup();
             }
-
         }
 
         private bool resetContentPosition = false;
@@ -176,6 +208,9 @@ namespace BSIPA_ModList.UI.ViewControllers
                 if (node.Block != null)
                 {
                     var block = node.Block;
+
+                    const float BreakHeight = .5f;
+                    const int TextInset = 1;
 
                     void Spacer(float size = 1.5f)
                     {
@@ -206,12 +241,12 @@ namespace BSIPA_ModList.UI.ViewControllers
                             vlayout.anchorMax = new Vector2(.5f, .5f);
                             vlayout.localScale = Vector3.one;
                             vlayout.localPosition = Vector3.zero;
-
                             if (isDoc)
                             {
                                 vlayout.sizeDelta = Vector2.zero;
                                 vlayout.anchorMin = Vector2.zero;
                                 vlayout.anchorMax = Vector2.one;
+                                vlayout.anchoredPosition = new Vector2(0f, -30f); // no idea where this -30 comes from, but it works for my use
                             }
                             var tt = go.AddComponent<TagTypeComponent>();
                             tt.Tag = block.Tag;
@@ -245,6 +280,56 @@ namespace BSIPA_ModList.UI.ViewControllers
                         return null;
                     }
 
+                    void ThematicBreak()
+                    { // TODO: Fix positioning
+                        var go = new GameObject("ThematicBreak", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+                        var vlayout = go.GetComponent<RectTransform>();
+                        vlayout.SetParent(layout.Peek());
+                        var l = go.GetComponent<HorizontalLayoutGroup>();
+#if DEBUG && UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
+                        l.childControlHeight = (tbreakSettings & 0b0001) != 0; // if set, not well behaved
+                        l.childControlWidth = (tbreakSettings & 0b0010) != 0;
+                        l.childForceExpandHeight = (tbreakSettings & 0b0100) != 0; // if set, not well behaved
+                        l.childForceExpandWidth = (tbreakSettings & 0b1000) != 0;
+#else
+                        l.childControlHeight = false;
+                        l.childControlWidth = false;
+                        l.childForceExpandHeight = false;
+                        l.childForceExpandWidth = false;
+#endif
+                        l.childAlignment = TextAnchor.UpperCenter;
+                        l.spacing = 0f;
+
+                        vlayout.localScale = Vector3.one;
+                        vlayout.anchoredPosition = Vector2.zero;
+                        vlayout.anchorMin = new Vector2(.5f, .5f);
+                        vlayout.anchorMax = new Vector2(.5f, .5f);
+                        vlayout.sizeDelta = new Vector2(layout.Peek().rect.width, BreakHeight);
+                        vlayout.localPosition = Vector3.zero;
+
+                        currentText = null;
+                        go = new GameObject("ThematicBreak Bar", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+                        var im = go.GetComponent<Image>();
+                        im.color = Color.white;
+                        // i think i need to copy the sprite because i'm using the same one for the mask
+                        im.sprite = Sprite.Create(WhitePixel.texture, WhitePixel.rect, Vector2.zero);
+                        im.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
+                        var rt = go.GetComponent<RectTransform>();
+                        rt.SetParent(vlayout);
+                        var le = go.GetComponent<LayoutElement>();
+                        le.minWidth = le.preferredWidth = layout.Peek().rect.width;
+                        le.minHeight = le.preferredHeight = BreakHeight;
+                        le.flexibleHeight = le.flexibleWidth = 1f;
+                        rt.localScale = Vector3.one;
+                        rt.localPosition = Vector3.zero;
+                        rt.anchoredPosition = Vector3.zero;
+                        rt.anchorMin = Vector2.zero;
+                        rt.anchorMax = Vector2.one;
+                        rt.sizeDelta = new Vector2(layout.Peek().rect.width, BreakHeight);
+
+                        Spacer(1f);
+                    }
+
                     switch (block.Tag)
                     {
                         case BlockTag.Document:
@@ -252,66 +337,25 @@ namespace BSIPA_ModList.UI.ViewControllers
                             break;
                         case BlockTag.SetextHeading:
                             var l = BlockNode("SeHeading", .1f, false, t => t.hData = block.Heading);
-                            if (l) l.childAlignment = TextAnchor.UpperCenter; // TODO: fix centering
+                            if (l)
+                            {
+                                l.childAlignment = TextAnchor.UpperCenter;
+                                l.padding = new RectOffset(TextInset, TextInset, 0, 0);
+                            }
+                            else ThematicBreak();
                             break;
                         case BlockTag.AtxHeading:
                                 l = BlockNode("AtxHeading", .1f, false, t => t.hData = block.Heading);
+                            if (l) l.padding = new RectOffset(TextInset, TextInset, 0, 0);
                             if (l && block.Heading.Level == 1)
                                 l.childAlignment = TextAnchor.UpperCenter;
                             break;
                         case BlockTag.Paragraph:
                                 l = BlockNode("Paragraph", .1f, false, spacer: 1.5f);
+                            if (l) l.padding = new RectOffset(TextInset, TextInset, 0, 0);
                             break;
                         case BlockTag.ThematicBreak:
-                            { // TODO: fix this, it doesn't want to actually show up properly
-                                const float BreakHeight = .5f;
-
-                                var go = new GameObject("ThematicBreak", typeof(RectTransform), typeof(HorizontalLayoutGroup));
-                                var vlayout = go.GetComponent<RectTransform>();
-                                vlayout.SetParent(layout.Peek());
-                                l = go.GetComponent<HorizontalLayoutGroup>();
-#if DEBUG && UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
-                                l.childControlHeight = (tbreakSettings & 0b0001) != 0; // if set, not well behaved
-                                l.childControlWidth = (tbreakSettings & 0b0010) != 0;
-                                l.childForceExpandHeight = (tbreakSettings & 0b0100) != 0; // if set, not well behaved
-                                l.childForceExpandWidth = (tbreakSettings & 0b1000) != 0;
-#else
-                                l.childControlHeight = false;
-                                l.childControlWidth = false;
-                                l.childForceExpandHeight = false;
-                                l.childForceExpandWidth = false;
-#endif
-                                l.spacing = 0f;
-
-                                vlayout.localScale = Vector3.one;
-                                vlayout.anchoredPosition = Vector2.zero;
-                                vlayout.anchorMin = new Vector2(.5f, .5f);
-                                vlayout.anchorMax = new Vector2(.5f, .5f);
-                                vlayout.sizeDelta = new Vector2(layout.Peek().rect.width - BreakHeight, BreakHeight);
-                                vlayout.localPosition = Vector3.zero;
-
-                                currentText = null;
-                                go = new GameObject("ThematicBreak Bar", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
-                                var im = go.GetComponent<Image>();
-                                im.color = Color.white;
-                                // i think i need to copy the sprite because i'm using the same one for the mask
-                                im.sprite = Sprite.Create(WhitePixel.texture, WhitePixel.rect, Vector2.zero);
-                                im.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
-                                var rt = go.GetComponent<RectTransform>();
-                                rt.SetParent(vlayout);
-                                var le = go.GetComponent<LayoutElement>();
-                                le.minWidth = le.preferredWidth = layout.Peek().rect.width - BreakHeight;
-                                le.minHeight = le.preferredHeight = BreakHeight;
-                                le.flexibleHeight = le.flexibleWidth = 1f;
-                                rt.localScale = Vector3.one;
-                                rt.localPosition = Vector3.zero;
-                                rt.anchoredPosition = Vector3.zero;
-                                rt.anchorMin = Vector2.zero;
-                                rt.anchorMax = Vector2.one;
-                                rt.sizeDelta = new Vector2(layout.Peek().rect.width - BreakHeight, BreakHeight);
-
-                                Spacer(1f);
-                            }
+                            ThematicBreak();
                             break;
                         // TODO: add the rest of the tag types
                     }
