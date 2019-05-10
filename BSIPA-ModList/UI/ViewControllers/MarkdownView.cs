@@ -72,20 +72,6 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         protected void Awake()
         {
-            /*view = GetComponent<ScrollRect>();
-            view.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-            view.vertical = true;
-            view.horizontal = false;
-            view.scrollSensitivity = 0f;
-            view.inertia = true;
-            view.movementType = ScrollRect.MovementType.Clamped;
-
-            scrollbar = new GameObject("Scrollbar", typeof(RectTransform)).AddComponent<Scrollbar>();
-            scrollbar.transform.SetParent(transform);
-            scrollbar.direction = Scrollbar.Direction.TopToBottom;
-            scrollbar.interactable = true;
-            view.verticalScrollbar = scrollbar;*/
-
             gameObject.SetActive(false);
 
             var vpgo = new GameObject("Viewport");
@@ -103,23 +89,23 @@ namespace BSIPA_ModList.UI.ViewControllers
             vpim.sprite = WhitePixel;
             vpim.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
 
-            //view.viewport = viewport;
-
             content = new GameObject("Content Wrapper").AddComponent<RectTransform>();
             content.SetParent(viewport);
-            var contentLayout = content.gameObject.AddComponent<LayoutElement>();
-            var contentFitter = content.gameObject.AddComponent<ContentSizeFitter>();
-            contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            contentFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-            contentLayout.preferredWidth = contentLayout.minWidth = rectTransform.sizeDelta.x; // to be adjusted
             content.gameObject.AddComponent<TagTypeComponent>();
             content.localPosition = Vector2.zero;
-            content.anchorMin = new Vector2(.5f, .5f);
-            content.anchorMax = new Vector2(.5f, .5f);
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
             content.anchoredPosition = Vector2.zero;
-            //content.sizeDelta = Vector2.zero;
-
-            //view.content = content;
+            var contentLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
+            var contentFitter = content.gameObject.AddComponent<ContentSizeFitter>();
+            contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            contentLayout.childControlHeight = true;
+            contentLayout.childControlWidth = false;
+            contentLayout.childForceExpandHeight = false;
+            contentLayout.childForceExpandWidth = true;
+            contentLayout.childAlignment = TextAnchor.UpperCenter;
+            contentLayout.spacing = 0f;
 
             var pageUp = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last((Button x) => x.name == "PageUpButton"), rectTransform, false);
             var pageDown = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last((Button x) => x.name == "PageDownButton"), rectTransform, false);
@@ -191,10 +177,12 @@ namespace BSIPA_ModList.UI.ViewControllers
             else if (resetContentPosition)
             {
                 resetContentPosition = false;
-                /*var v = content.anchoredPosition;
-                v.y = -(content.rect.height / 2);
-                content.anchoredPosition = v;*/
                 scrView.Setup();
+
+                // this is the bullshit I have to use to make it work properly
+                content.gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
+                var childRt = content.GetChild(0) as RectTransform;
+                childRt.anchoredPosition = new Vector2(0f, childRt.anchoredPosition.y);
             }
         }
 
@@ -203,6 +191,9 @@ namespace BSIPA_ModList.UI.ViewControllers
         {
             mdDirty = false;
             Clear();
+
+            // enable so it will set stuff up
+            content.gameObject.GetComponent<VerticalLayoutGroup>().enabled = true;
 
             var doc = CommonMarkConverter.Parse(markdown, settings);
 
@@ -251,10 +242,10 @@ namespace BSIPA_ModList.UI.ViewControllers
                             vlayout.localPosition = Vector3.zero;
                             if (isDoc)
                             {
-                                vlayout.sizeDelta = Vector2.zero;
-                                vlayout.anchorMin = Vector2.zero;
-                                vlayout.anchorMax = Vector2.one;
-                                vlayout.anchoredPosition = new Vector2(0f, -30f); // no idea where this -30 comes from, but it works for my use
+                                vlayout.sizeDelta = new Vector2(rectTransform.rect.width, 0f);
+                                vlayout.anchorMin = new Vector2(0f, 1f);
+                                vlayout.anchorMax = new Vector2(1f, 1f);
+                                //vlayout.anchoredPosition = new Vector2(0f, -30f); // no idea where this -30 comes from, but it works for my use
                             }
                             var tt = go.AddComponent<TagTypeComponent>();
                             tt.Tag = block.Tag;
@@ -271,9 +262,11 @@ namespace BSIPA_ModList.UI.ViewControllers
                             l.childForceExpandHeight = l.childForceExpandWidth = false;
                             l.childForceExpandWidth = isDoc;
                             l.spacing = spacing;
-                            /*var cfit = go.AddComponent<ContentSizeFitter>();
-                            cfit.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                            cfit.verticalFit = ContentSizeFitter.FitMode.Unconstrained;*/
+
+                            if (isDoc)
+                            {
+                                vlayout.anchoredPosition = new Vector2(0f, -vlayout.rect.height);
+                            }
 
                             return l;
                         }
