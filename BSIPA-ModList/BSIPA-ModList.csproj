@@ -120,7 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Bundles\consolas" />
-    <None Include="README.md" />
+    <EmbeddedResource Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
