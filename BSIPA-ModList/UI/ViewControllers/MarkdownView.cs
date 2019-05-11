@@ -107,6 +107,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                     {
                         _consolas.material.color = new Color(1f, 1f, 1f, 0f);
                         _consolas.material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
+                        MaterialReferenceManager.AddFontAsset(_consolas);
                     }
                 }
                 return _consolas;
@@ -231,7 +232,6 @@ namespace BSIPA_ModList.UI.ViewControllers
         private const string LinkDefaultColor = "#0061ff";
         private const string LinkHoverColor = "#009dff";
 
-        private bool resetContentPosition = false;
         private IEnumerator UpdateMd()
         {
             mdDirty = false;
@@ -492,7 +492,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                             break;
                         case InlineTag.Code:
                             EnsureText();
-                            currentText.text += $"<link=\"$$codeBlock\"><noparse>{inl.LiteralContent}</noparse></link>";
+                            currentText.text += $"<font=\"CONSOLAS\"><noparse>{inl.LiteralContent}</noparse></font>";
                             break;
                         case InlineTag.Link:
                             EnsureText();
@@ -515,16 +515,15 @@ namespace BSIPA_ModList.UI.ViewControllers
             var childRt = content.GetChild(0) as RectTransform;
             childRt.anchoredPosition = new Vector2(0f, childRt.anchoredPosition.y);
 
-            if (Consolas != null)
+            /*if (Consolas != null)
             {
                 foreach (var link in texts.Select(t => t.textInfo.linkInfo).Aggregate<IEnumerable<TMP_LinkInfo>>(Enumerable.Concat).Where(l => l.GetLinkID() == "$$codeBlock"))
                 {
                     //link.textComponent.font = Consolas;
                     var texinfo = link.textComponent.textInfo;
-                    texinfo.characterInfo[link.linkTextfirstCharacterIndex].DebugPrintTo(Logger.md.Debug, 2);
                     for (int i = link.linkTextfirstCharacterIndex; i < link.linkTextfirstCharacterIndex + link.linkTextLength; i++)
                     {
-
+                        texinfo.characterInfo[i].DebugPrintTo(Logger.md.Debug, 2);
                         texinfo.characterInfo[i].fontAsset = Consolas;
                         texinfo.characterInfo[i].material = Consolas.material;
                         texinfo.characterInfo[i].isUsingAlternateTypeface = true;
@@ -533,9 +532,10 @@ namespace BSIPA_ModList.UI.ViewControllers
                 foreach (var text in texts)
                 {
                     text.SetLayoutDirty();
+                    text.SetMaterialDirty();
                     text.SetVerticesDirty();
                 }
-            }
+            }*/
         }
 
         private class TextLinkDecoder : MonoBehaviour, IPointerClickHandler
