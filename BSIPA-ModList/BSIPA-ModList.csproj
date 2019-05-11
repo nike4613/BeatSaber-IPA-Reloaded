@@ -54,6 +54,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\Refs\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>..\Refs\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Refs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
@@ -116,6 +119,7 @@
     <EmbeddedResource Include="Icons\library.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Bundles\consolas" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

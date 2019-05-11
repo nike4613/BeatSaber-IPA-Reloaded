@@ -10,6 +10,10 @@ using UnityEngine.UI;
 using TMPro;
 using CustomUI.BeatSaber;
 using IPA.Utilities;
+using System.Reflection;
+using UnityEngine.EventSystems;
+using System.Diagnostics;
+using System.Collections;
 
 namespace BSIPA_ModList.UI.ViewControllers
 {
@@ -70,8 +74,50 @@ namespace BSIPA_ModList.UI.ViewControllers
             return arg;
         }
 
+        private static string GetLinkUri(string uri)
+        {
+            if (uri[0] == '!')
+            {
+                Logger.md.Error($"Cannot link to embedded resource in mod description");
+                return null;
+            }
+            else
+                return uri.Substring(3);
+        }
+
+        private static AssetBundle _bundle;
+        private static AssetBundle Bundle
+        {
+            get
+            {
+                if (_bundle == null)
+                    _bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("BSIPA_ModList.Bundles.consolas"));
+                return _bundle;
+            }
+        }
+        private static TMP_FontAsset _consolas;
+        private static TMP_FontAsset Consolas
+        {
+            get
+            {
+                if (_consolas == null)
+                {
+                    _consolas = Bundle?.LoadAsset<TMP_FontAsset>("CONSOLAS");
+                    if (_consolas != null)
+                    {
+                        _consolas.material.color = new Color(1f, 1f, 1f, 0f);
+                        _consolas.material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
+                    }
+                }
+                return _consolas;
+            }
+        }
+
         protected void Awake()
         {
+            if (Consolas == null)
+                Logger.md.Error($"Loading of Consolas font failed");
+
             gameObject.SetActive(false);
 
             var vpgo = new GameObject("Viewport");
@@ -173,21 +219,20 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
 #endif
             if (mdDirty)
-                UpdateMd();
-            else if (resetContentPosition)
-            {
-                resetContentPosition = false;
-                scrView.Setup();
-
-                // this is the bullshit I have to use to make it work properly
-                content.gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
-                var childRt = content.GetChild(0) as RectTransform;
-                childRt.anchoredPosition = new Vector2(0f, childRt.anchoredPosition.y);
-            }
+                StartCoroutine(UpdateMd());
         }
 
+        [Flags]
+        private enum CurrentTextFlags
+        {
+            None = 0, Bold = 1, Italic = 2, Underline = 4, Strikethrough = 8,
+        }
+
+        private const string LinkDefaultColor = "#0061ff";
+        private const string LinkHoverColor = "#009dff";
+
         private bool resetContentPosition = false;
-        private void UpdateMd()
+        private IEnumerator UpdateMd()
         {
             mdDirty = false;
             Clear();
@@ -200,6 +245,8 @@ namespace BSIPA_ModList.UI.ViewControllers
             Stack<RectTransform> layout = new Stack<RectTransform>();
             layout.Push(content);
             TextMeshProUGUI currentText = null;
+            List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
+            CurrentTextFlags textFlags = 0;
             foreach (var node in doc.AsEnumerable())
             {
                 Logger.md.Debug($"node {node}");
@@ -365,49 +412,192 @@ namespace BSIPA_ModList.UI.ViewControllers
                 { // inline element
                     var inl = node.Inline;
 
+                    void Flag(CurrentTextFlags flag)
+                    {
+                        if (node.IsOpening)
+                            textFlags |= flag;
+                        else if (node.IsClosing)
+                            textFlags &= ~flag;
+                    }
+
                     const float PSize = 3.5f;
                     const float H1Size = 4.8f;
                     const float HLevelDecrease = 0.5f;
+                    void EnsureText()
+                    {
+                        if (currentText == null)
+                        {
+                            Logger.md.Debug($"Adding new text element");
+
+                            var tt = layout.Peek().gameObject.GetComponent<TagTypeComponent>();
+                            currentText = BeatSaberUI.CreateText(layout.Peek(), "", Vector2.zero);
+                            currentText.gameObject.AddComponent<TextLinkDecoder>();
+
+                            /*if (Consolas != null)
+                            {
+                                // Set the font to Consolas so code blocks work
+                                currentText.font = Instantiate(Consolas);
+                                currentText.text = $"<font={DefaultFontName}>";
+                            }*/
+
+                            switch (tt.Tag)
+                            {
+                                case BlockTag.List:
+                                case BlockTag.ListItem:
+                                case BlockTag.Paragraph:
+                                    currentText.fontSize = PSize;
+                                    currentText.enableWordWrapping = true;
+                                    break;
+                                case BlockTag.AtxHeading:
+                                    var size = H1Size;
+                                    size -= HLevelDecrease * (tt.hData.Level - 1);
+                                    currentText.fontSize = size;
+                                    currentText.enableWordWrapping = true;
+                                    break;
+                                case BlockTag.SetextHeading:
+                                    currentText.fontSize = H1Size;
+                                    currentText.enableWordWrapping = true;
+                                    break;
+                                    // TODO: add other relevant types
+                            }
+
+                            texts.Add(currentText);
+                        }
+                    }
                     switch (inl.Tag)
                     {
                         case InlineTag.String:
-                            if (currentText == null)
-                            {
-                                Logger.md.Debug($"Adding new text element");
+                            EnsureText();
 
-                                var tt = layout.Peek().gameObject.GetComponent<TagTypeComponent>();
-                                currentText = BeatSaberUI.CreateText(layout.Peek(), "", Vector2.zero);
-                                //var le = currentText.gameObject.AddComponent<LayoutElement>();
-                                
-                                switch (tt.Tag)
-                                {
-                                    case BlockTag.List:
-                                    case BlockTag.ListItem:
-                                    case BlockTag.Paragraph:
-                                        currentText.fontSize = PSize;
-                                        currentText.enableWordWrapping = true;
-                                        break;
-                                    case BlockTag.AtxHeading:
-                                        var size = H1Size;
-                                        size -= HLevelDecrease * (tt.hData.Level - 1);
-                                        currentText.fontSize = size;
-                                        currentText.enableWordWrapping = true;
-                                        break;
-                                    case BlockTag.SetextHeading:
-                                        currentText.fontSize = H1Size;
-                                        currentText.enableWordWrapping = true;
-                                        break;
-                                    // TODO: add other relevant types
-                                }
-                            }
-                            Logger.md.Debug($"Appending '{inl.LiteralContent}' to current element");
-                            currentText.text += inl.LiteralContent;
+                            string head = "<noparse>", tail = "</noparse>";
+                            if (textFlags.HasFlag(CurrentTextFlags.Bold))
+                            { head = "<b>" + head; tail += "</b>"; }
+                            if (textFlags.HasFlag(CurrentTextFlags.Italic))
+                            { head = "<i>" + head; tail += "</i>"; }
+                            if (textFlags.HasFlag(CurrentTextFlags.Strikethrough))
+                            { head = "<s>" + head; tail += "</s>"; }
+                            if (textFlags.HasFlag(CurrentTextFlags.Underline))
+                            { head = "<u>" + head; tail += "</u>"; }
+
+                            currentText.text += head + inl.LiteralContent + tail;
+                            break;
+                        case InlineTag.Strong:
+                            Flag(CurrentTextFlags.Bold);
+                            break;
+                        case InlineTag.Strikethrough:
+                            Flag(CurrentTextFlags.Strikethrough);
+                            break;
+                        case InlineTag.Emphasis:
+                            Flag(CurrentTextFlags.Italic);
+                            break;
+                        case InlineTag.Code:
+                            EnsureText();
+                            currentText.text += $"<link=\"$$codeBlock\"><noparse>{inl.LiteralContent}</noparse></link>";
+                            break;
+                        case InlineTag.Link:
+                            EnsureText();
+                            Flag(CurrentTextFlags.Underline);
+                            if (node.IsOpening)
+                                currentText.text += $"<color={LinkDefaultColor}><link=\"{ResolveUri(inl.TargetUrl)}\">";
+                            else if (node.IsClosing)
+                                currentText.text += "</link></color>";
                             break;
                     }
                 }
             }
 
-            resetContentPosition = true;
+            yield return null; // delay one frame
+             
+            scrView.Setup();
+
+            // this is the bullshit I have to use to make it work properly
+            content.gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
+            var childRt = content.GetChild(0) as RectTransform;
+            childRt.anchoredPosition = new Vector2(0f, childRt.anchoredPosition.y);
+
+            if (Consolas != null)
+            {
+                foreach (var link in texts.Select(t => t.textInfo.linkInfo).Aggregate<IEnumerable<TMP_LinkInfo>>(Enumerable.Concat).Where(l => l.GetLinkID() == "$$codeBlock"))
+                {
+                    //link.textComponent.font = Consolas;
+                    var texinfo = link.textComponent.textInfo;
+                    texinfo.characterInfo[link.linkTextfirstCharacterIndex].DebugPrintTo(Logger.md.Debug, 2);
+                    for (int i = link.linkTextfirstCharacterIndex; i < link.linkTextfirstCharacterIndex + link.linkTextLength; i++)
+                    {
+
+                        texinfo.characterInfo[i].fontAsset = Consolas;
+                        texinfo.characterInfo[i].material = Consolas.material;
+                        texinfo.characterInfo[i].isUsingAlternateTypeface = true;
+                    }
+                }
+                foreach (var text in texts)
+                {
+                    text.SetLayoutDirty();
+                    text.SetVerticesDirty();
+                }
+            }
+        }
+
+        private class TextLinkDecoder : MonoBehaviour, IPointerClickHandler
+        {
+            private TextMeshProUGUI tmp;
+
+            public void Awake()
+            {
+                tmp = GetComponent<TextMeshProUGUI>();
+            }
+
+            public void OnPointerClick(PointerEventData eventData)
+            {
+                // this may not actually get me what i want
+                int linkIndex = TMP_TextUtilities.FindIntersectingLink(tmp, eventData.pointerPressRaycast.worldPosition, null);
+                if (linkIndex != -1)
+                { // was a link clicked?
+                    TMP_LinkInfo linkInfo = tmp.textInfo.linkInfo[linkIndex];
+
+                    // open the link id as a url, which is the metadata we added in the text field
+                    var qualifiedUrl = linkInfo.GetLinkID();
+                    if (qualifiedUrl.StartsWith("$$"))
+                        return; // this means its used for something else
+
+                    Logger.md.Debug($"Link pressed {qualifiedUrl}");
+
+                    var uri = GetLinkUri(qualifiedUrl);
+                    if (uri != null)
+                        Process.Start(uri);
+                }
+            }
+
+            private List<Color32[]> SetLinkToColor(int linkIndex, Color32 color)
+            {
+                TMP_LinkInfo linkInfo = tmp.textInfo.linkInfo[linkIndex];
+
+                var oldVertColors = new List<Color32[]>(); // store the old character colors
+
+                for (int i = 0; i < linkInfo.linkTextLength; i++)
+                { // for each character in the link string
+                    int characterIndex = linkInfo.linkTextfirstCharacterIndex + i; // the character index into the entire text
+                    var charInfo = tmp.textInfo.characterInfo[characterIndex];
+                    int meshIndex = charInfo.materialReferenceIndex; // Get the index of the material / sub text object used by this character.
+                    int vertexIndex = charInfo.vertexIndex; // Get the index of the first vertex of this character.
+
+                    Color32[] vertexColors = tmp.textInfo.meshInfo[meshIndex].colors32; // the colors for this character
+                    oldVertColors.Add(vertexColors.ToArray());
+
+                    if (charInfo.isVisible)
+                    {
+                        vertexColors[vertexIndex + 0] = color;
+                        vertexColors[vertexIndex + 1] = color;
+                        vertexColors[vertexIndex + 2] = color;
+                        vertexColors[vertexIndex + 3] = color;
+                    }
+                }
+
+                // Update Geometry
+                tmp.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+
+                return oldVertColors;
+            }
         }
 
         private void Clear()
