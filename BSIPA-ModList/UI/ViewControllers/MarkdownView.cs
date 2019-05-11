@@ -492,7 +492,11 @@ namespace BSIPA_ModList.UI.ViewControllers
                             break;
                         case InlineTag.Code:
                             EnsureText();
-                            currentText.text += $"<font=\"CONSOLAS\"><noparse>{inl.LiteralContent}</noparse></font>";
+                            currentText.text += $"<font=\"CONSOLAS\"><mark=#A0A0C080><noparse>{inl.LiteralContent}</noparse></mark></font>";
+                            break;
+                        case InlineTag.SoftBreak:
+                            EnsureText();
+                            currentText.text += " "; // soft breaks translate to a space
                             break;
                         case InlineTag.Link:
                             EnsureText();
