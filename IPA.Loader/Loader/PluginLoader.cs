@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
 
@@ -107,6 +108,8 @@ namespace IPA.Loader
         }
 
         internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();
+
+        private static Regex embeddedTextDescriptionPattern = new Regex(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
         internal static void LoadMetadata()
         {
@@ -212,6 +215,31 @@ namespace IPA.Loader
                 {
                     Logger.loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
                     Logger.loader.Error(e);
+                }
+
+                foreach (var meta in PluginsMetadata)
+                { // process description include
+                    var lines = meta.Manifest.Description.Split('\n');
+                    var m = embeddedTextDescriptionPattern.Match(lines[0]);
+                    if (m.Success)
+                    {
+                        var name = m.Groups[1].Value;
+                        var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
+                                                                   .Where(r => r != null)
+                                                                   .FirstOrDefault(r => r.Name == name);
+                        if (resc == null)
+                        {
+                            Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
+                            meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
+                            continue;
+                        }
+
+                        string description;
+                        using (var reader = new StreamReader(resc.GetResourceStream()))
+                            description = reader.ReadToEnd();
+
+                        meta.Manifest.Description = description;
+                    }
                 }
             }
 
