@@ -196,7 +196,7 @@ namespace BSIPA_ModList.UI
             mdv.rectTransform.SetParent(rectTransform);
             mdv.rectTransform.anchorMin = new Vector2(.5f, .5f);
             mdv.rectTransform.anchorMax = new Vector2(.5f, .5f);
-            mdv.rectTransform.anchoredPosition = new Vector2(-4f, -3.5f);
+            mdv.rectTransform.anchoredPosition = new Vector2(-4f, -3.6f);
             mdv.rectTransform.sizeDelta = new Vector2(65f, 40f);
             mdvgo.SetActive(true);
             mdv.Markdown = controller.Description;

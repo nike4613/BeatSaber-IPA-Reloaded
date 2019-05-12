@@ -119,8 +119,12 @@
     <EmbeddedResource Include="Icons\library.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Bundles\consolas" />
     <EmbeddedResource Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TMP Exporter\Assets\AssetBundles\fonts\consolas.font">
+      <Link>Bundles\consolas.font</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
