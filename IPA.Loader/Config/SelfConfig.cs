@@ -51,6 +51,8 @@ namespace IPA.Config
         {
             public bool ShowCallSource = false;
             public bool ShowDebug = false;
+            public bool HideMessagesForPerformance = true;
+            public int HideLogThreshold = 512;
         }
 
         public DebugObject Debug = new DebugObject();
