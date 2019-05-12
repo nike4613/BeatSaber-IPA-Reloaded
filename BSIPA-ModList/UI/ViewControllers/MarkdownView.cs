@@ -276,7 +276,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                         l.minHeight = l.preferredHeight  = size;
                     }
 
-                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, float? spacer = null, bool isDoc = false)
+                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, float? spacer = null, bool isDoc = false, bool matchWidth = false)
                     {
                         if (node.IsOpening)
                         {
@@ -296,8 +296,10 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 vlayout.sizeDelta = new Vector2(rectTransform.rect.width, 0f);
                                 vlayout.anchorMin = new Vector2(0f, 1f);
                                 vlayout.anchorMax = new Vector2(1f, 1f);
-                                //vlayout.anchoredPosition = new Vector2(0f, -30f); // no idea where this -30 comes from, but it works for my use
                             }
+                            if (matchWidth)
+                                vlayout.sizeDelta = new Vector2(layout.Peek().rect.width, BreakHeight);
+
                             var tt = go.AddComponent<TagTypeComponent>();
                             tt.Tag = block.Tag;
                             apply?.Invoke(tt);
@@ -332,7 +334,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                         return null;
                     }
 
-                    void ThematicBreak()
+                    void ThematicBreak(float spacerSize = 1f)
                     { // TODO: Fix positioning
                         var go = new GameObject("ThematicBreak", typeof(RectTransform), typeof(HorizontalLayoutGroup));
                         var vlayout = go.GetComponent<RectTransform>();
@@ -379,7 +381,8 @@ namespace BSIPA_ModList.UI.ViewControllers
                         rt.anchorMax = Vector2.one;
                         rt.sizeDelta = new Vector2(layout.Peek().rect.width, BreakHeight);
 
-                        Spacer(1f);
+                        if (spacerSize != 0f)
+                            Spacer(spacerSize);
                     }
 
                     switch (block.Tag)
@@ -388,13 +391,14 @@ namespace BSIPA_ModList.UI.ViewControllers
                             BlockNode("DocumentRoot", .5f, true, isDoc: true);
                             break;
                         case BlockTag.SetextHeading:
-                            var l = BlockNode("SeHeading", .1f, false, t => t.hData = block.Heading);
+                            var l = BlockNode("SeHeading", 0f, false, t => t.hData = block.Heading, spacer: 0f);
                             if (l)
                             {
                                 l.childAlignment = TextAnchor.UpperCenter;
                                 l.padding = new RectOffset(TextInset, TextInset, 0, 0);
                             }
-                            else ThematicBreak();
+                            else
+                                ThematicBreak(1.5f);
                             break;
                         case BlockTag.AtxHeading:
                                 l = BlockNode("AtxHeading", .1f, false, t => t.hData = block.Heading);
@@ -425,7 +429,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                     }
 
                     const float PSize = 3.5f;
-                    const float H1Size = 4.8f;
+                    const float H1Size = 5.5f;
                     const float HLevelDecrease = 0.5f;
                     void EnsureText()
                     {
