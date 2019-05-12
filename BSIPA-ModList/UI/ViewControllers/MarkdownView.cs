@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using CommonMark;
 using CommonMark.Syntax;
@@ -208,6 +206,30 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
         }
 
+        private static Sprite blockQuoteBackground;
+        private static Sprite BlockQuoteBackground
+        {
+            get
+            {
+                if (blockQuoteBackground == null)
+                    blockQuoteBackground = Resources.FindObjectsOfTypeAll<Sprite>().First(s => s.name == "RoundRectNormal");
+                return blockQuoteBackground;
+            }
+        }
+
+        private static Sprite blockQuoteSidebar;
+        private static Sprite BlockQuoteSidebar
+        {
+            get
+            {
+                if (blockQuoteSidebar == null)
+                    blockQuoteSidebar = Resources.FindObjectsOfTypeAll<Sprite>().First(s => s.name == "BackButtonBG");
+                return blockQuoteSidebar;
+            }
+        }
+
+        private static readonly Color BlockQuoteColor = new Color(30f/255, 109f/255, 178f/255, .25f);
+
 #if DEBUG
 #if UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
         private byte tbreakSettings = 0;
@@ -261,6 +283,7 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                     const float BreakHeight = .5f;
                     const int TextInset = 1;
+                    const int BlockQuoteInset = TextInset * 2;
 
                     void Spacer(float size = 1.5f)
                     {
@@ -276,7 +299,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                         l.minHeight = l.preferredHeight  = size;
                     }
 
-                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, float? spacer = null, bool isDoc = false, bool matchWidth = false)
+                    HorizontalOrVerticalLayoutGroup BlockNode(string name, float spacing, bool isVertical, Action<TagTypeComponent> apply = null, float? spacer = null, bool isDoc = false, bool matchWidth = false, float matchWidthDiff = 0f)
                     {
                         if (node.IsOpening)
                         {
@@ -298,7 +321,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 vlayout.anchorMax = new Vector2(1f, 1f);
                             }
                             if (matchWidth)
-                                vlayout.sizeDelta = new Vector2(layout.Peek().rect.width, BreakHeight);
+                                vlayout.sizeDelta = new Vector2(layout.Peek().rect.width-matchWidthDiff, 0f);
 
                             var tt = go.AddComponent<TagTypeComponent>();
                             tt.Tag = block.Tag;
@@ -312,14 +335,12 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 l = go.AddComponent<HorizontalLayoutGroup>();
 
                             l.childControlHeight = l.childControlWidth = true;
-                            l.childForceExpandHeight = l.childForceExpandWidth = false;
+                            l.childForceExpandHeight = false;
                             l.childForceExpandWidth = isDoc;
                             l.spacing = spacing;
 
                             if (isDoc)
-                            {
                                 vlayout.anchoredPosition = new Vector2(0f, -vlayout.rect.height);
-                            }
 
                             return l;
                         }
@@ -334,7 +355,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                         return null;
                     }
 
-                    void ThematicBreak(float spacerSize = 1f)
+                    void ThematicBreak(float spacerSize = 1.5f)
                     { // TODO: Fix positioning
                         var go = new GameObject("ThematicBreak", typeof(RectTransform), typeof(HorizontalLayoutGroup));
                         var vlayout = go.GetComponent<RectTransform>();
@@ -398,7 +419,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 l.padding = new RectOffset(TextInset, TextInset, 0, 0);
                             }
                             else
-                                ThematicBreak(1.5f);
+                                ThematicBreak(2f);
                             break;
                         case BlockTag.AtxHeading:
                                 l = BlockNode("AtxHeading", .1f, false, t => t.hData = block.Heading);
@@ -414,6 +435,32 @@ namespace BSIPA_ModList.UI.ViewControllers
                             ThematicBreak();
                             break;
                         // TODO: add the rest of the tag types
+                        case BlockTag.BlockQuote:
+                            l = BlockNode("BlockQuote", .1f, true, matchWidth: true, matchWidthDiff: BlockQuoteInset*2, spacer: 1.5f);
+                            if (l)
+                            {
+                                l.childForceExpandWidth = true;
+                                l.padding = new RectOffset(BlockQuoteInset, BlockQuoteInset, BlockQuoteInset, 0);
+                                var go = l.gameObject;
+                                var rt = go.GetComponent<RectTransform>();
+
+                                var im = go.AddComponent<Image>();
+                                im.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
+                                im.type = Image.Type.Sliced;
+                                im.sprite = Instantiate(BlockQuoteBackground);
+                                im.color = BlockQuoteColor;
+
+                                /*var im2 = go.AddComponent<Image>();
+                                im2.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
+                                im2.type = Image.Type.Sliced;
+                                im2.sprite = Instantiate(BlockQuoteSidebar);*/
+                                //im2.color = BlockQuoteColor;
+                            }
+                            break;
+
+                        case BlockTag.ReferenceDefinition: // i have no idea what the state looks like here
+                            block.DebugPrintTo(Logger.md.Info, 5);
+                            break;
                     }
                 }
                 else if (node.Inline != null)
