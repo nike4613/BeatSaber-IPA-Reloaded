@@ -8,6 +8,8 @@ Find all builds in [AppVeyor](https://ci.appveyor.com/project/nike4613/beatsaber
 
 ### This test header contains a `code` block
 
+[Test ref item]: https://www.google.com/ "with title text"
+
 1. And here is a 
    list
 2. Test
@@ -15,12 +17,26 @@ Find all builds in [AppVeyor](https://ci.appveyor.com/project/nike4613/beatsaber
    - 2
    - 3
 
->This is a block quote
+[Test ref item] is a ref instance (?)
+
+> This is a block quote
 >
->This will be supported soon....
+> This will be supported soon....
+>
+> > This is a nested block quote 
+> >
+> > ***
+> > 
+> > more content
+>
+> more content
 
 ```
-This is a code block...
+This is a fenced code block...
 
 This will be supported soon....
 ```
+
+    this is an indented code block
+
+	this will also be supported soon
