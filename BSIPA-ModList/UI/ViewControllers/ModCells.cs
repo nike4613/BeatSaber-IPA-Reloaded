@@ -175,8 +175,8 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), "<color=#BFBFBF><i>Unknown Author</i>",
-                    "# This mod was written for IPA Reloaded. No metadata is avaliable for this mod.\n\n" +
-                    "# Please contact the mod author and ask them to port it to BSIPA to provide more information.", updateInfo);
+                    "This mod was written for IPA.\n===\n\n## No metadata is avaliable for this mod.\n\n" +
+                    "Please contact the mod author and ask them to port it to BSIPA to provide more information.", updateInfo);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
