@@ -91,7 +91,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             get
             {
                 if (_bundle == null)
-                    _bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("BSIPA_ModList.Bundles.consolas"));
+                    _bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("BSIPA_ModList.Bundles.consolas.font"));
                 return _bundle;
             }
         }
@@ -105,8 +105,12 @@ namespace BSIPA_ModList.UI.ViewControllers
                     _consolas = Bundle?.LoadAsset<TMP_FontAsset>("CONSOLAS");
                     if (_consolas != null)
                     {
-                        _consolas.material.color = new Color(1f, 1f, 1f, 0f);
-                        _consolas.material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
+                        var originalFont = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Last(f => f.name == "Teko-Medium SDF No Glow");
+                        var matCopy = Instantiate(originalFont.material);
+                        matCopy.mainTexture = _consolas.material.mainTexture;
+                        matCopy.mainTextureOffset = _consolas.material.mainTextureOffset;
+                        matCopy.mainTextureScale = _consolas.material.mainTextureScale;
+                        _consolas.material = matCopy;
                         MaterialReferenceManager.AddFontAsset(_consolas);
                     }
                 }
@@ -433,13 +437,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                             currentText = BeatSaberUI.CreateText(layout.Peek(), "", Vector2.zero);
                             currentText.gameObject.AddComponent<TextLinkDecoder>();
 
-                            /*if (Consolas != null)
-                            {
-                                // Set the font to Consolas so code blocks work
-                                currentText.font = Instantiate(Consolas);
-                                currentText.text = $"<font={DefaultFontName}>";
-                            }*/
-
                             switch (tt.Tag)
                             {
                                 case BlockTag.List:
@@ -453,10 +450,13 @@ namespace BSIPA_ModList.UI.ViewControllers
                                     size -= HLevelDecrease * (tt.hData.Level - 1);
                                     currentText.fontSize = size;
                                     currentText.enableWordWrapping = true;
+                                    if (tt.hData.Level == 1)
+                                        currentText.alignment = TextAlignmentOptions.Center;
                                     break;
                                 case BlockTag.SetextHeading:
                                     currentText.fontSize = H1Size;
                                     currentText.enableWordWrapping = true;
+                                    currentText.alignment = TextAlignmentOptions.Center;
                                     break;
                                     // TODO: add other relevant types
                             }
@@ -492,7 +492,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                             break;
                         case InlineTag.Code:
                             EnsureText();
-                            currentText.text += $"<font=\"CONSOLAS\"><mark=#A0A0C080><noparse>{inl.LiteralContent}</noparse></mark></font>";
+                            currentText.text += $"<font=\"CONSOLAS\"><size=80%><mark=#A0A0C080><noparse>{inl.LiteralContent}</noparse></mark></size></font>";
                             break;
                         case InlineTag.SoftBreak:
                             EnsureText();
@@ -518,28 +518,6 @@ namespace BSIPA_ModList.UI.ViewControllers
             content.gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
             var childRt = content.GetChild(0) as RectTransform;
             childRt.anchoredPosition = new Vector2(0f, childRt.anchoredPosition.y);
-
-            /*if (Consolas != null)
-            {
-                foreach (var link in texts.Select(t => t.textInfo.linkInfo).Aggregate<IEnumerable<TMP_LinkInfo>>(Enumerable.Concat).Where(l => l.GetLinkID() == "$$codeBlock"))
-                {
-                    //link.textComponent.font = Consolas;
-                    var texinfo = link.textComponent.textInfo;
-                    for (int i = link.linkTextfirstCharacterIndex; i < link.linkTextfirstCharacterIndex + link.linkTextLength; i++)
-                    {
-                        texinfo.characterInfo[i].DebugPrintTo(Logger.md.Debug, 2);
-                        texinfo.characterInfo[i].fontAsset = Consolas;
-                        texinfo.characterInfo[i].material = Consolas.material;
-                        texinfo.characterInfo[i].isUsingAlternateTypeface = true;
-                    }
-                }
-                foreach (var text in texts)
-                {
-                    text.SetLayoutDirty();
-                    text.SetMaterialDirty();
-                    text.SetVerticesDirty();
-                }
-            }*/
         }
 
         private class TextLinkDecoder : MonoBehaviour, IPointerClickHandler
