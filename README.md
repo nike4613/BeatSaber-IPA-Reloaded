@@ -5,7 +5,7 @@ Beat Saber IPA - The mod injector tailored for Beat Saber
 
 ## How To Install
 
-1. Download a release (https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases)
+1. [Download a release](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases)
 2. Extract the contents into the game folder
 3. Run **IPA.exe**
 4. Start the game as usual
