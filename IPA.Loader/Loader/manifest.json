@@ -1,7 +1,10 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
   "author": "DaNike",
-  "description": "A mod loader specifically for Beat Saber.",
+  "description": [
+    "#![IPA.Loader.description.md]",
+    "A mod loader specifically for Beat Saber."
+  ],
   "gameVersion": "0.13.2",
   "id": "BSIPA",
   "name": "Beat Saber IPA",

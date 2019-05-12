@@ -223,20 +223,38 @@ namespace IPA.Loader
                     var m = embeddedTextDescriptionPattern.Match(lines[0]);
                     if (m.Success)
                     {
-                        var name = m.Groups[1].Value;
-                        var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
-                                                                   .Where(r => r != null)
-                                                                   .FirstOrDefault(r => r.Name == name);
-                        if (resc == null)
+                        if (meta.IsBare)
                         {
-                            Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
+                            Logger.loader.Warn($"Bare manifest cannot specify description file");
                             meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
                             continue;
                         }
 
+                        var name = m.Groups[1].Value;
                         string description;
-                        using (var reader = new StreamReader(resc.GetResourceStream()))
-                            description = reader.ReadToEnd();
+                        if (!meta.IsSelf)
+                        {
+                            var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
+                                                                       .Where(r => r != null)
+                                                                       .FirstOrDefault(r => r.Name == name);
+                            if (resc == null)
+                            {
+                                Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
+                                meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
+                                continue;
+                            }
+
+                            using (var reader = new StreamReader(resc.GetResourceStream()))
+                                description = reader.ReadToEnd();
+                        }
+                        else
+                        {
+                            using (var descriptionReader =
+                                new StreamReader(
+                                    meta.Assembly.GetManifestResourceStream(name) ??
+                                    throw new InvalidOperationException()))
+                                description = descriptionReader.ReadToEnd();
+                        }
 
                         meta.Manifest.Description = description;
                     }

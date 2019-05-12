@@ -130,5 +130,8 @@
   <ItemGroup>
     <EmbeddedResource Include="icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Loader\description.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
