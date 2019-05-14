@@ -9,6 +9,7 @@ namespace IPA
     /// A class to provide information about a mod on ModSaber.ML
     /// </summary>
     // ReSharper disable once IdentifierTypo
+    [Obsolete("This is unused, and has been since the manifest was introduced. All functionality is provided by the manifest.")]
     public class ModsaberModInfo
     {
         /// <summary>
