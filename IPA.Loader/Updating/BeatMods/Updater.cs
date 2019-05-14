@@ -290,7 +290,8 @@ namespace IPA.Updating.BeatMods
                 catch (Exception e)
                 {
                     Logger.updater.Error($"Error getting info for {dep.Name}");
-                    Logger.updater.Error(e);
+                    if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                        Logger.updater.Error(e);
                     dep.MetaRequestFailed = true;
                     continue;
                 }
@@ -356,7 +357,8 @@ namespace IPA.Updating.BeatMods
                 catch (Exception e)
                 {
                     Logger.updater.Error($"Error getting mod list for {dep.Name}");
-                    Logger.updater.Error(e);
+                    if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                        Logger.updater.Error(e);
                     dep.MetaRequestFailed = true;
                     continue;
                 }
@@ -440,7 +442,8 @@ namespace IPA.Updating.BeatMods
             catch (Exception e)
             {
                 Logger.updater.Error($"Error occurred while trying to get information for {item}");
-                Logger.updater.Error(e);
+                if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                    Logger.updater.Error(e);
                 yield break;
             }
 
@@ -509,9 +512,11 @@ namespace IPA.Updating.BeatMods
                         { // any exception is an intercept exception
                             Logger.updater.Error($"BeatMods did not return expected data for {item.Name}");
                         }
+                        else
+                            Logger.updater.Error($"Error downloading mod {item.Name}");
 
-                        Logger.updater.Error($"Error downloading mod {item.Name}");
-                        Logger.updater.Error(downloadTask.Exception);
+                        if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                            Logger.updater.Error(downloadTask.Exception);
 
                         installFail?.Invoke(item, downloadTask.Exception);
                         continue;

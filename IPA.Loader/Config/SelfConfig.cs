@@ -51,6 +51,7 @@ namespace IPA.Config
         {
             public bool ShowCallSource = false;
             public bool ShowDebug = false;
+            public bool ShowHandledErrorStackTraces = false;
             public bool HideMessagesForPerformance = true;
             public int HideLogThreshold = 512;
         }
