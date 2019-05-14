@@ -22,6 +22,9 @@ namespace BSIPA_ModList.UI.ViewControllers
         {
             internal BlockTag Tag;
             internal HeadingData hData;
+            internal ListData lData;
+            internal int listCount;
+            internal int listIndex;
         }
 
         private string markdown = "";
@@ -217,18 +220,8 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
         }
 
-        private static Sprite blockQuoteSidebar;
-        private static Sprite BlockQuoteSidebar
-        {
-            get
-            {
-                if (blockQuoteSidebar == null)
-                    blockQuoteSidebar = Resources.FindObjectsOfTypeAll<Sprite>().First(s => s.name == "BackButtonBG");
-                return blockQuoteSidebar;
-            }
-        }
-
-        private static readonly Color BlockQuoteColor = new Color(30f/255, 109f/255, 178f/255, .25f);
+        private static readonly Color BlockQuoteColor = new Color( 30f / 255, 109f / 255, 178f / 255, .25f);
+        private static readonly Color BlockCodeColor  = new Color(135f / 255, 135f / 255, 135f / 255, .5f);
 
 #if DEBUG
 #if UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
@@ -258,6 +251,11 @@ namespace BSIPA_ModList.UI.ViewControllers
         private const string LinkDefaultColor = "#0061ff";
         private const string LinkHoverColor = "#009dff";
 
+        const float PSize = 3.5f;
+        const float BlockCodeSize = PSize - .5f;
+        const float H1Size = 5.5f;
+        const float HLevelDecrease = 0.5f;
+
         private IEnumerator UpdateMd()
         {
             mdDirty = false;
@@ -284,6 +282,8 @@ namespace BSIPA_ModList.UI.ViewControllers
                     const float BreakHeight = .5f;
                     const int TextInset = 1;
                     const int BlockQuoteInset = TextInset * 2;
+                    const int BlockCodeInset = BlockQuoteInset;
+                    const int ListInset = TextInset;
 
                     void Spacer(float size = 1.5f)
                     {
@@ -442,24 +442,127 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 l.childForceExpandWidth = true;
                                 l.padding = new RectOffset(BlockQuoteInset, BlockQuoteInset, BlockQuoteInset, 0);
                                 var go = l.gameObject;
-                                var rt = go.GetComponent<RectTransform>();
 
                                 var im = go.AddComponent<Image>();
                                 im.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
                                 im.type = Image.Type.Sliced;
                                 im.sprite = Instantiate(BlockQuoteBackground);
                                 im.color = BlockQuoteColor;
+                            }
+                            break;
+                        case BlockTag.IndentedCode:
+                        case BlockTag.FencedCode:
+                            {
+                                currentText = null;
+                                var go = new GameObject("CodeBlock", typeof(RectTransform));
+                                var vlayout = go.GetComponent<RectTransform>();
+                                vlayout.SetParent(layout.Peek());
 
-                                /*var im2 = go.AddComponent<Image>();
-                                im2.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
-                                im2.type = Image.Type.Sliced;
-                                im2.sprite = Instantiate(BlockQuoteSidebar);*/
-                                //im2.color = BlockQuoteColor;
+                                vlayout.anchorMin = new Vector2(.5f, .5f);
+                                vlayout.anchorMax = new Vector2(.5f, .5f);
+                                vlayout.localScale = Vector3.one;
+                                vlayout.localPosition = Vector3.zero;
+                                vlayout.sizeDelta = new Vector2(layout.Peek().rect.width - BlockCodeInset * 2, 0f);
+
+                                var tt = go.AddComponent<TagTypeComponent>();
+                                tt.Tag = block.Tag;
+
+                                l = go.AddComponent<VerticalLayoutGroup>();
+
+                                l.childControlHeight = l.childControlWidth = true;
+                                l.childForceExpandHeight = false;
+                                l.childForceExpandWidth = true;
+                                l.spacing = 1.5f;
+                                l.padding = new RectOffset(BlockCodeInset, BlockCodeInset, BlockCodeInset, BlockCodeInset);
+
+                                var im = go.AddComponent<Image>();
+                                im.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
+                                im.type = Image.Type.Sliced;
+                                im.sprite = Instantiate(BlockQuoteBackground);
+                                im.color = BlockCodeColor;
+
+                                var text = BeatSaberUI.CreateText(vlayout, $"<noparse>{block.StringContent}</noparse>", Vector2.zero);
+                                text.fontSize = BlockCodeSize;
+                                text.font = Consolas;
                             }
                             break;
 
+                        case BlockTag.List:
+                            l = BlockNode("List", .05f, true, t => t.lData = block.ListData, matchWidth: true, matchWidthDiff: ListInset * 2, spacer: 1.5f);
+                            if (l)
+                            {
+                                l.childForceExpandWidth = true;
+                                l.padding = new RectOffset(ListInset, ListInset, 0, 0);
+                                var go = l.gameObject;
+                                var tt = go.GetComponent<TagTypeComponent>();
+
+                                // count up children
+                                var count = 0;
+                                for (var c = block.FirstChild; c != null; c = c.NextSibling) count++;
+                                tt.listCount = count;
+                                tt.listIndex = 0;
+                            }
+                            break;
+                        case BlockTag.ListItem:
+                            l = BlockNode("ListItem", .05f, false, matchWidth: true, spacer: null);
+                            if (l)
+                            { // TODO: this is mega scuffed
+                                l.childForceExpandWidth = true;
+                                var go = l.gameObject;
+                                var rt = go.GetComponent<RectTransform>();
+                                var tt = go.GetComponent<TagTypeComponent>();
+                                var ptt = rt.parent.gameObject.GetComponent<TagTypeComponent>();
+
+                                var index = ptt.listIndex++;
+
+                                var listCount = ptt.listCount;
+                                var maxNum = listCount + ptt.lData.Start;
+                                var numChars = (int)Math.Floor(Math.Log10(maxNum) + 1);
+
+                                var cNum = index + ptt.lData.Start;
+
+                                var lt = ptt.lData.ListType;
+
+                                var id = lt == ListType.Bullet ? ptt.lData.BulletChar.ToString() : (cNum + (ptt.lData.Delimiter == ListDelimiter.Parenthesis ? ")" : "."));
+                                var ident = BeatSaberUI.CreateText(rt, $"<nobr>{id} </nobr>\n", Vector2.zero);
+                                if (lt == ListType.Ordered) // pad it out to fill space
+                                    ident.text += $"<nobr><mspace=1em>{new string(' ', numChars + 1)}</mspace></nobr>";
+
+                                var contGo = new GameObject("Content", typeof(RectTransform));
+                                var vlayout = contGo.GetComponent<RectTransform>();
+                                vlayout.SetParent(rt);
+
+                                vlayout.anchorMin = new Vector2(.5f, .5f);
+                                vlayout.anchorMax = new Vector2(.5f, .5f);
+                                vlayout.localScale = Vector3.one;
+                                vlayout.localPosition = Vector3.zero;
+                                //vlayout.sizeDelta = new Vector2(rt.rect.width, 0f);
+
+                                var tt2 = contGo.AddComponent<TagTypeComponent>();
+                                tt2.Tag = block.Tag;
+
+                                var csf = contGo.AddComponent<ContentSizeFitter>();
+                                csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+                                csf.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+                                l = contGo.AddComponent<VerticalLayoutGroup>();
+                                l.childAlignment = TextAnchor.UpperLeft;
+                                l.childControlHeight = l.childControlWidth = true;
+                                l.childForceExpandHeight = false;
+                                l.childForceExpandWidth = true;
+                                l.spacing = .5f;
+
+                                layout.Push(vlayout);
+                            }
+                            else
+                                layout.Pop(); // pop one more to clear content rect from stack
+                            break;
+
+                        case BlockTag.HtmlBlock:
+                            break;
+
                         case BlockTag.ReferenceDefinition: // i have no idea what the state looks like here
-                            block.DebugPrintTo(Logger.md.Info, 5);
+                            //block.DebugPrintTo(Logger.md.Info, 5);
                             break;
                     }
                 }
@@ -475,9 +578,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                             textFlags &= ~flag;
                     }
 
-                    const float PSize = 3.5f;
-                    const float H1Size = 5.5f;
-                    const float HLevelDecrease = 0.5f;
                     void EnsureText()
                     {
                         if (currentText == null)
@@ -488,25 +588,24 @@ namespace BSIPA_ModList.UI.ViewControllers
                             currentText = BeatSaberUI.CreateText(layout.Peek(), "", Vector2.zero);
                             currentText.gameObject.AddComponent<TextLinkDecoder>();
 
+                            currentText.enableWordWrapping = true;
+
                             switch (tt.Tag)
                             {
                                 case BlockTag.List:
                                 case BlockTag.ListItem:
                                 case BlockTag.Paragraph:
                                     currentText.fontSize = PSize;
-                                    currentText.enableWordWrapping = true;
                                     break;
                                 case BlockTag.AtxHeading:
                                     var size = H1Size;
                                     size -= HLevelDecrease * (tt.hData.Level - 1);
                                     currentText.fontSize = size;
-                                    currentText.enableWordWrapping = true;
                                     if (tt.hData.Level == 1)
                                         currentText.alignment = TextAlignmentOptions.Center;
                                     break;
                                 case BlockTag.SetextHeading:
                                     currentText.fontSize = H1Size;
-                                    currentText.enableWordWrapping = true;
                                     currentText.alignment = TextAlignmentOptions.Center;
                                     break;
                                     // TODO: add other relevant types
@@ -549,6 +648,10 @@ namespace BSIPA_ModList.UI.ViewControllers
                             EnsureText();
                             currentText.text += " "; // soft breaks translate to a space
                             break;
+                        case InlineTag.LineBreak:
+                            EnsureText();
+                            currentText.text += "\n"; // line breaks translate to a new line
+                            break;
                         case InlineTag.Link:
                             EnsureText();
                             Flag(CurrentTextFlags.Underline);
@@ -556,6 +659,13 @@ namespace BSIPA_ModList.UI.ViewControllers
                                 currentText.text += $"<color={LinkDefaultColor}><link=\"{ResolveUri(inl.TargetUrl)}\">";
                             else if (node.IsClosing)
                                 currentText.text += "</link></color>";
+                            break;
+                        case InlineTag.RawHtml:
+                            EnsureText();
+                            currentText.text += inl.LiteralContent;
+                            break;
+                        case InlineTag.Placeholder:
+
                             break;
                     }
                 }
