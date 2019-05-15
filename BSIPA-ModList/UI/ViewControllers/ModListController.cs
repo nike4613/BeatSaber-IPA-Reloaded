@@ -22,6 +22,8 @@ namespace BSIPA_ModList.UI
             var cell = base.CellForIdx(idx) as LevelListTableCell;
             var nameText = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
             nameText.overflowMode = TextOverflowModes.Overflow;
+            var authorText = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
+            authorText.overflowMode = TextOverflowModes.Overflow;
             return cell;
         }
 
