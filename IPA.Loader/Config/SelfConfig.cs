@@ -7,6 +7,13 @@ namespace IPA.Config
     {
         private static IConfigProvider _loaderConfig;
 
+        private static void ConfigFileChangeDelegate(IConfigProvider configProvider, Ref<SelfConfig> selfConfigRef)
+        {
+            if (selfConfigRef.Value.Regenerate)
+                configProvider.Store(selfConfigRef.Value = new SelfConfig { Regenerate = false });
+
+            StandardLogger.Configure(selfConfigRef.Value);
+        }
         public static IConfigProvider LoaderConfig
         {
             get => _loaderConfig;
@@ -14,13 +21,10 @@ namespace IPA.Config
             {
                 _loaderConfig?.RemoveLinks();
                 value.Load();
-                SelfConfigRef = value.MakeLink<SelfConfig>((c, v) =>
-                {
-                    if (v.Value.Regenerate)
-                        c.Store(v.Value = new SelfConfig { Regenerate = false });
 
-                    StandardLogger.Configure(v.Value);
-                });
+                // This will set the instance reference to update to a
+                // new instance every time the config file changes
+                SelfConfigRef = value.MakeLink<SelfConfig>(ConfigFileChangeDelegate);
                 _loaderConfig = value;
             }
         }

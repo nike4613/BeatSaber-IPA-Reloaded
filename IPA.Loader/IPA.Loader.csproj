@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Config.cs" />
+    <Compile Include="Config\ConfigProviders\IniConfigProvider.cs" />
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\SelfConfig.cs" />
@@ -111,6 +112,9 @@
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ini-parser">
+      <Version>2.5.2</Version>
+    </PackageReference>
     <PackageReference Include="Ionic.Zip">
       <Version>1.9.1.8</Version>
     </PackageReference>

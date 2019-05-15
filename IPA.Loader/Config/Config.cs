@@ -16,6 +16,7 @@ namespace IPA.Config
         static Config()
         {
             JsonConfigProvider.RegisterConfig();
+            IniConfigProvider.RegisterConfig();
         }
 
         /// <inheritdoc />
@@ -115,10 +116,10 @@ namespace IPA.Config
             registeredProviders.Add(ext.Extension, type);
         }
 
-        private static List<Tuple<Ref<DateTime>, IConfigProvider>> configProviders = new List<Tuple<Ref<DateTime>, IConfigProvider>>();
+        private static List<Tuple<Ref<DateTime>, IConfigProvider>> lastModTimeConfigProvider = new List<Tuple<Ref<DateTime>, IConfigProvider>>();
 
         /// <summary>
-        /// Gets an <see cref="IConfigProvider"/> using the specified list pf preferred config types.
+        /// Gets an <see cref="IConfigProvider"/> using the specified list of preferred config types.
         /// </summary>
         /// <param name="configName">the name of the mod for this config</param>
         /// <param name="extensions">the preferred config types to try to get</param>
@@ -130,8 +131,8 @@ namespace IPA.Config
             var provider = Activator.CreateInstance(type) as IConfigProvider;
             if (provider != null)
             {
-                provider.Filename = Path.Combine(BeatSaber.UserDataPath, configName);
-                configProviders.Add(Tuple.Create(Ref.Create(provider.LastModified), provider));
+                provider.Filename = Path.Combine(BeatSaber.UserDataPath, (configName + "." + chosenExt));
+                lastModTimeConfigProvider.Add(Tuple.Create(Ref.Create(provider.LastModified), provider));
             }
 
             return provider;
@@ -148,7 +149,7 @@ namespace IPA.Config
             return GetProviderFor(modName, prefs);
         }
 
-        private static Dictionary<IConfigProvider, Action> linkedProviders =
+        private static Dictionary<IConfigProvider, Action> ProviderChangeDelegate =
             new Dictionary<IConfigProvider, Action>();
 
         /// <summary>
@@ -167,10 +168,10 @@ namespace IPA.Config
                 onChange?.Invoke(config, @ref);
             }
 
-            if (linkedProviders.ContainsKey(config))
-                linkedProviders[config] = (Action) Delegate.Combine(linkedProviders[config], (Action) ChangeDelegate);
+            if (ProviderChangeDelegate.ContainsKey(config))
+                ProviderChangeDelegate[config] = (Action) Delegate.Combine(ProviderChangeDelegate[config], (Action) ChangeDelegate);
             else
-                linkedProviders.Add(config, ChangeDelegate);
+                ProviderChangeDelegate.Add(config, ChangeDelegate);
 
             ChangeDelegate();
 
@@ -183,21 +184,21 @@ namespace IPA.Config
         /// <param name="config">the <see cref="IConfigProvider"/> to unlink</param>
         public static void RemoveLinks(this IConfigProvider config)
         {
-            if (linkedProviders.ContainsKey(config))
-                linkedProviders.Remove(config);
+            if (ProviderChangeDelegate.ContainsKey(config))
+                ProviderChangeDelegate.Remove(config);
         }
 
         internal static void Update()
         {
-            foreach (var provider in configProviders)
+            foreach (var timeProviderTuple in lastModTimeConfigProvider)
             {
                 
-                if (provider.Item2.LastModified > provider.Item1.Value)
+                if (timeProviderTuple.Item2.LastModified > timeProviderTuple.Item1.Value)
                 {
                     try
                     {
-                        provider.Item2.Load(); // auto reload if it changes
-                        provider.Item1.Value = provider.Item2.LastModified;
+                        timeProviderTuple.Item2.Load(); // auto reload if it changes
+                        timeProviderTuple.Item1.Value = timeProviderTuple.Item2.LastModified;
                     }
                     catch (Exception e)
                     {
@@ -205,12 +206,12 @@ namespace IPA.Config
                         Logging.Logger.config.Error(e);
                     }
                 }
-                if (provider.Item2.HasChanged)
+                if (timeProviderTuple.Item2.HasChanged)
                 {
                     try
                     {
-                        provider.Item2.Save();
-                        provider.Item1.Value = DateTime.Now;
+                        timeProviderTuple.Item2.Save();
+                        timeProviderTuple.Item1.Value = DateTime.Now;
                     }
                     catch (Exception e)
                     {
@@ -219,13 +220,13 @@ namespace IPA.Config
                     }
                 }
 
-                if (provider.Item2.InMemoryChanged)
+                if (timeProviderTuple.Item2.InMemoryChanged)
                 {
-                    provider.Item2.InMemoryChanged = false;
+                    timeProviderTuple.Item2.InMemoryChanged = false;
                     try
                     {
-                        if (linkedProviders.ContainsKey(provider.Item2))
-                            linkedProviders[provider.Item2]();
+                        if (ProviderChangeDelegate.ContainsKey(timeProviderTuple.Item2))
+                            ProviderChangeDelegate[timeProviderTuple.Item2]();
                     }
                     catch (Exception e)
                     {
@@ -238,11 +239,11 @@ namespace IPA.Config
 
         internal static void Save()
         {
-            foreach (var provider in configProviders)
-                if (provider.Item2.HasChanged)
+            foreach (var timeProviderTuple in lastModTimeConfigProvider)
+                if (timeProviderTuple.Item2.HasChanged)
                     try
                     {
-                        provider.Item2.Save();
+                        timeProviderTuple.Item2.Save();
                     }
                     catch (Exception e)
                     {

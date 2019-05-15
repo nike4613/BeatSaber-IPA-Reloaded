@@ -24,7 +24,7 @@ namespace IPA.Config.ConfigProviders
         public bool HasChanged { get; private set; }
         public bool InMemoryChanged { get; set; }
 
-        public DateTime LastModified => File.GetLastWriteTime(Filename + ".json");
+        public DateTime LastModified => File.GetLastWriteTime(Filename);
 
         private string _filename;
 
@@ -41,9 +41,9 @@ namespace IPA.Config.ConfigProviders
 
         public void Load()
         {
-            Logger.config.Debug($"Loading file {Filename}.json");
+            Logger.config.Debug($"Loading file {Filename}");
 
-            var fileInfo = new FileInfo(Filename + ".json");
+            var fileInfo = new FileInfo(Filename);
             if (fileInfo.Exists)
             {
                 string json = File.ReadAllText(fileInfo.FullName);
@@ -53,7 +53,7 @@ namespace IPA.Config.ConfigProviders
                 }
                 catch (Exception e)
                 {
-                    Logger.config.Error($"Error parsing JSON in file {Filename}.json; resetting to empty JSON");
+                    Logger.config.Error($"Error parsing JSON in file {Filename}; resetting to empty JSON");
                     Logger.config.Error(e);
                     jsonObj = new JObject();
                     File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
@@ -102,10 +102,10 @@ namespace IPA.Config.ConfigProviders
 
         public void Save()
         {
-            Logger.config.Debug($"Saving file {Filename}.json");
+            Logger.config.Debug($"Saving file {Filename}");
             if (!Directory.Exists(Path.GetDirectoryName(Filename)))
                 Directory.CreateDirectory(Path.GetDirectoryName(Filename) ?? throw new InvalidOperationException());
-            File.WriteAllText(Filename + ".json", JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
+            File.WriteAllText(Filename, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
 
             HasChanged = false;
         }
