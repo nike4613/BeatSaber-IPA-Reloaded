@@ -4,6 +4,9 @@ using IPALogger = IPA.Logging.Logger;
 using BSIPA_ModList.UI;
 using UnityEngine;
 using IPA.Logging;
+using BSIPA_ModList.UI.ViewControllers;
+using System.Collections;
+using IPA.Loader;
 
 namespace BSIPA_ModList
 {
@@ -21,6 +24,8 @@ namespace BSIPA_ModList
             Logger.log = logger;
 
             IPA.Updating.BeatMods.Updater.ModListPresent = true;
+
+
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
@@ -33,7 +38,20 @@ namespace BSIPA_ModList
 
         public void OnApplicationStart()
         {
+            // Load resources ahead of time
+            MarkdownView.StartLoadResourcesAsync();
 
+            SharedCoroutineStarter.instance.StartCoroutine(LoadPluginIcons());
+        }
+
+        private static IEnumerator LoadPluginIcons()
+        {
+            foreach (var p in PluginManager.AllPlugins)
+            {
+                yield return null;
+                Logger.log.Debug($"Loading icon for {p.Metadata.Name}");
+                var _ = p.Metadata.GetIcon();
+            }
         }
 
         public void OnFixedUpdate()
