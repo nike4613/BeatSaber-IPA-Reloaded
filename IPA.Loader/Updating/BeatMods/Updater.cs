@@ -365,7 +365,7 @@ namespace IPA.Updating.BeatMods
 
                 var ver = modsMatching.Value
                     .Where(nullCheck => nullCheck != null) // entry is not null
-                    //.Where(versionCheck => versionCheck.GameVersion.Version == BeatSaber.GameVersion) // game version matches
+                    .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion) // game version matches
                     .Where(approvalCheck => approvalCheck.Status == ApiEndpoint.Mod.ApprovedStatus) // version approved
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version
                     .Select(mod => mod.Version).Max(); // (2.1) get the max version

@@ -102,6 +102,10 @@ namespace IPA.Updating.BeatMods
              JsonConverter(typeof(SemverVersionConverter))]
             public Version Version;
 
+            [JsonProperty("gameVersion"),
+             JsonConverter(typeof(SemverVersionConverter))]
+            public Version GameVersion;
+
             [Serializable]
             public class AuthorType
             {
@@ -115,22 +119,6 @@ namespace IPA.Updating.BeatMods
 
             [JsonProperty("author")]
             public AuthorType Author;
-
-            /*[Serializable]
-            public class DetailsData
-            {
-                [JsonProperty("author")]
-                public AuthorType Author;
-                [JsonProperty("title")]
-                public string Title;
-                [JsonProperty("description")]
-                public string Description;
-                [JsonProperty("published")]
-                public string Published;
-            }
-
-            [JsonProperty("details")]
-            public DetailsData Details;*/
 
             [JsonProperty("status")]
             public string Status;
@@ -146,35 +134,6 @@ namespace IPA.Updating.BeatMods
             public Uri Link;
             
 #pragma warning restore CS0649
-            /*[Serializable]
-            public class PlatformFile
-            {
-                [JsonProperty("hash"),
-                 JsonConverter(typeof(HexArrayConverter))]
-                public byte[] Hash = new byte[20];
-
-                [JsonProperty("files", ItemConverterType = typeof(HexArrayConverter))]
-                public Dictionary<string, byte[]> FileHashes = new Dictionary<string, byte[]>();
-
-                [JsonProperty("url")]
-                public string DownloadPath;
-
-                public override string ToString() =>
-                    $"{Utils.ByteArrayToString(Hash)}@{DownloadPath}({string.Join(",", FileHashes.Select(o => $"\"{o.Key}\":\"{Utils.ByteArrayToString(o.Value)}\""))})";
-            }
-
-            [Serializable]
-            public class FilesObject
-            {
-                [JsonProperty("steam")]
-                public PlatformFile Steam;
-
-                [JsonProperty("oculus")]
-                public PlatformFile Oculus;
-            }
-            
-            [JsonProperty("files")]
-            public FilesObject Files;*/
 
             [Serializable]
             public class DownloadsObject
@@ -208,28 +167,6 @@ namespace IPA.Updating.BeatMods
 
             [JsonProperty("downloads")]
             public DownloadsObject[] Downloads;
-
-            /*public class Dependency
-            {
-                public string Name = null;
-                public Range VersionRange = null;
-            }
-
-            [Serializable]
-            public class LinksType
-            {
-                [JsonProperty("dependencies", ItemConverterType = typeof(ModSaberDependencyConverter))]
-                public Dependency[] Dependencies = new Dependency[0];
-
-                [JsonProperty("conflicts", ItemConverterType = typeof(ModSaberDependencyConverter))]
-                public Dependency[] Conflicts = new Dependency[0];
-            }
-
-            [JsonProperty("links")]
-            public LinksType Links;
-
-            [JsonProperty("oldVersions", ItemConverterType = typeof(SemverVersionConverter))]
-            public Version[] OldVersions = new Version[0];*/
 
             [JsonProperty("dependencies", ItemConverterType = typeof(ModMultiformatJsonConverter))]
             public Mod[] Dependencies;
