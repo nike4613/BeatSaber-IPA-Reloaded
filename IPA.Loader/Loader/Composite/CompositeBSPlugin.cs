@@ -59,8 +59,6 @@ namespace IPA.Loader.Composite
 
         public string Version => throw new InvalidOperationException();
 
-        public ModsaberModInfo ModInfo => throw new InvalidOperationException();
-
         public void OnLateUpdate() {
             Invoke(plugin => {
                 if (plugin.Plugin is IEnhancedBeatSaberPlugin saberPlugin)

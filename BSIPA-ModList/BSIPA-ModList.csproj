@@ -80,7 +80,7 @@
     <Compile Include="UI\ButtonUI.cs" />
     <Compile Include="UI\DownloadProgressCell.cs" />
     <Compile Include="UI\ModListFlowCoordinator.cs" />
-    <Compile Include="UI\SettingsViewController.cs" />
+    <Compile Include="UI\ViewControllers\SettingsViewController.cs" />
     <Compile Include="UI\ViewControllers\BackButtonNavigationController.cs" />
     <Compile Include="UI\ViewControllers\DownloadProgressViewController.cs" />
     <Compile Include="UI\FloatingNotification.cs" />
@@ -122,7 +122,7 @@
     <EmbeddedResource Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TMP Exporter\Assets\AssetBundles\fonts\consolas.font">
+    <EmbeddedResource Include="..\TMP Exporter\Assets\AssetBundles\fonts\consolas.font">
       <Link>Bundles\consolas.font</Link>
     </EmbeddedResource>
   </ItemGroup>
