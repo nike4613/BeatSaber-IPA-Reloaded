@@ -34,7 +34,7 @@ namespace BSIPA_ModList.UI
             _songNameText = GetComponentsInChildren<TextMeshProUGUI>().First(x => x.name == "SongName");
             _songNameText.enableWordWrapping = false;
             _songNameText.overflowMode = TextOverflowModes.Overflow;
-            _coverImage = GetComponentsInChildren<UnityEngine.UI.Image>().First(x => x.name == "CoverImage");
+            _coverRawImage = GetComponentsInChildren<UnityEngine.UI.RawImage>().First(x => x.name == "CoverImage");
             _bgImage = GetComponentsInChildren<UnityEngine.UI.Image>().First(x => x.name == "BG");
             _highlightImage = GetComponentsInChildren<UnityEngine.UI.Image>().First(x => x.name == "Highlight");
             _beatmapCharacteristicAlphas = new float[0];
@@ -46,7 +46,7 @@ namespace BSIPA_ModList.UI
 
             _songNameText.text = $"{mod.Mod.Name} <size=60%>v{mod.Mod.ResolvedVersion}</size>";
             _authorText.text = "";
-            _coverImage.sprite = mod.Icon;
+            _coverRawImage.texture = mod.Icon.texture;
 
             _bgImage.enabled = true;
             _bgImage.sprite = Sprite.Create(new Texture2D(1, 1), new Rect(0, 0, 1, 1), Vector2.one / 2f);
