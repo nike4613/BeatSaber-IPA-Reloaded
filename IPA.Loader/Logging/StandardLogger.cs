@@ -294,9 +294,9 @@ namespace IPA.Logging
                         }
                     }
 
-                    var debugConfig = SelfConfig.SelfConfigRef.Value.Debug;
+                    var debugConfig = SelfConfig.SelfConfigRef?.Value?.Debug;
 
-                    if (debugConfig.HideMessagesForPerformance 
+                    if (debugConfig != null && debugConfig.HideMessagesForPerformance 
                         && logQueue.Count > debugConfig.HideLogThreshold)
                     { // spam filtering (if queue has more tha 512 elements)
                         logWaitEvent.Reset(); // pause incoming log requests
