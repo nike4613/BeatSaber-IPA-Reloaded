@@ -171,7 +171,6 @@ namespace BSIPA_ModList.UI
     {
         private TextMeshProUGUI titleText;
         private TextMeshProUGUI authorText;
-        private TextMeshProUGUI descText;
         private Image icon;
 
         public void Init(ModInfoViewController controller)

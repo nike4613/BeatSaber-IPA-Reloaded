@@ -24,7 +24,6 @@ namespace IPA.Loader
             LoadMetadata();
             Resolve();
             ComputeLoadOrder();
-            InitFeatures();
         });
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace IPA.Loader
 
         internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();
 
-        private static Regex embeddedTextDescriptionPattern = new Regex(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex embeddedTextDescriptionPattern = new Regex(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
         internal static void LoadMetadata()
         {
@@ -502,6 +501,14 @@ namespace IPA.Loader
             }
         }
 
+        internal static void ReleaseAll()
+        {
+            ignoredPlugins = new HashSet<PluginMetadata>();
+            PluginsMetadata = new List<PluginMetadata>();
+            Feature.Reset();
+            GC.Collect();
+        }
+
         internal static void Load(PluginMetadata meta)
         {
             if (meta.Assembly == null && meta.PluginType != null)
@@ -518,6 +525,9 @@ namespace IPA.Loader
                 };
 
             var info = new PluginInfo();
+
+            if (meta.Manifest.GameVersion != BeatSaber.GameVersion)
+                Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
             try
             {
@@ -580,6 +590,10 @@ namespace IPA.Loader
             return info;
         }
 
-        internal static List<PluginInfo> LoadPlugins() => PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
+        internal static List<PluginInfo> LoadPlugins()
+        {
+            InitFeatures();
+            return PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
+        }
     }
 }

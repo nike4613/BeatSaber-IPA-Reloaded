@@ -74,10 +74,20 @@ namespace IPA.Loader.Features
         /// </summary>
         protected internal virtual bool StoreOnPlugin => true;
 
-        private static readonly Dictionary<string, Type> featureTypes = new Dictionary<string, Type>
+        static Feature()
         {
-            { "define-feature", typeof(DefineFeature) }
-        };
+            Reset();
+        }
+
+        internal static void Reset()
+        {
+            featureTypes = new Dictionary<string, Type>
+            {
+                { "define-feature", typeof(DefineFeature) }
+            };
+        }
+
+        private static Dictionary<string, Type> featureTypes;
 
         internal static bool HasFeature(string name) => featureTypes.ContainsKey(name);
 

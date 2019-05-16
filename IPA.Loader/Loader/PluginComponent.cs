@@ -23,6 +23,8 @@ namespace IPA.Loader
         {
             DontDestroyOnLoad(gameObject);
 
+            PluginManager.Load();
+
             bsPlugins = new CompositeBSPlugin(PluginManager.BSMetas);
 #pragma warning disable 618
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
