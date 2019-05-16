@@ -129,28 +129,6 @@
             <param name="sizeDelta">The size of the color picker's RectTransform.</param>
             <returns></returns>
         </member>
-        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateTextSegmentedControl(UnityEngine.RectTransform,UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Events.UnityAction{System.Int32},System.Single,System.Single)">
-            <summary>
-            Creates a custom TextSegmentedControl component.
-            </summary>
-            <param name="parent">Thet transform to parent the new TextSegmentedControl component to.</param>
-            <param name="anchoredPosition">The position the TextSegmentedControl component should be anchored to.</param>
-            <param name="sizeDelta">The size of the TextSegmentedControl component RectTransform.</param>
-            <param name="onValueChanged">Callback when the user clicks on one of the segments.</param>
-            <param name="fontSize">Size of text in segments.</param>
-            <param name="padding">Size of padding in segments.</param>
-            <returns>The newly created TextSegmentedControl component.</returns>
-        </member>
-        <member name="M:CustomUI.BeatSaber.BeatSaberUI.CreateIconSegmentedControl(UnityEngine.RectTransform,UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Events.UnityAction{System.Int32})">
-            <summary>
-            Creates a custom IconSegmentedControl component.
-            </summary>
-            <param name="parent">Thet transform to parent the new IconSegmentedControl component to.</param>
-            <param name="anchoredPosition">The position the IconSegmentedControl component should be anchored to.</param>
-            <param name="sizeDelta">The size of the IconSegmentedControl component RectTransform.</param>
-            <param name="onValueChanged">Callback when the user clicks on one of the segments.</param>
-            <returns>The newly created IconSegmentedControl component.</returns>
-        </member>
         <member name="F:CustomUI.BeatSaber.CustomFlowCoordinator.parentFlowCoordinator">
             <summary>
             The FlowCoordinator that presented this FlowCoordinator
