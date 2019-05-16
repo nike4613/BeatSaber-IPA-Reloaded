@@ -37,18 +37,9 @@ namespace IPA.Loader
                 return (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
             }
         }
+
         private static List<PluginInfo> _bsPlugins;
-        internal static IEnumerable<PluginInfo> BSMetas
-        {
-            get
-            {
-                if (_bsPlugins == null)
-                {
-                    LoadPlugins();
-                }
-                return _bsPlugins;
-            }
-        }
+        internal static IEnumerable<PluginInfo> BSMetas => _bsPlugins;
 
         /// <summary>
         /// Gets info about the plugin with the specified name.
@@ -76,27 +67,48 @@ namespace IPA.Loader
         public static IEnumerable<PluginInfo> AllPlugins => BSMetas;
 
         /// <summary>
-        /// An <see cref="IEnumerable"/> of old IPA plugins
+        /// An <see cref="IEnumerable"/> of old IPA plugins.
         /// </summary>
         [Obsolete("I mean, IPlugin shouldn't be used, so why should this? Not renaming to extend support for old plugins.")]
-        public static IEnumerable<IPlugin> Plugins
-        {
-            get
-            {
-                if (_ipaPlugins == null)
-                {
-                    LoadPlugins();
-                }
-                return _ipaPlugins;
-            }
-        }
+        public static IEnumerable<IPlugin> Plugins => _ipaPlugins;
         private static List<IPlugin> _ipaPlugins;
 
         internal static IConfigProvider SelfConfigProvider { get; set; }
 
+        internal static void Load()
+        {
+            string pluginDir = BeatSaber.PluginsPath;
+            var gameVer = BeatSaber.GameVersion;
+            var lastVerS = SelfConfig.SelfConfigRef.Value.LastGameVersion;
+            var lastVer = lastVerS != null ? new SemVer.Version(lastVerS) : null;
+
+            if (lastVer != null && gameVer != lastVer)
+            {
+                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"{lastVer} Plugins");
+                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"{gameVer} Plugins");
+
+                ReleaseAll();
+
+                if (Directory.Exists(oldPluginsName))
+                    Directory.Delete(oldPluginsName, true);
+                Directory.Move(pluginDir, oldPluginsName);
+                if (Directory.Exists(newPluginsName))
+                    Directory.Move(newPluginsName, pluginDir);
+                else
+                    Directory.CreateDirectory(pluginDir);
+
+                LoadTask().Wait();
+            }
+
+            SelfConfig.SelfConfigRef.Value.LastGameVersion = gameVer.ToString();
+            SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
+
+            LoadPlugins();
+        }
+
         private static void LoadPlugins()
         {
-            string pluginDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
+            string pluginDirectory = BeatSaber.PluginsPath;
 
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke

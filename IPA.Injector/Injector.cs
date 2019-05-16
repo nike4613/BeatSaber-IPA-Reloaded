@@ -183,8 +183,8 @@ namespace IPA.Injector
                     bkp?.Add(unityPath);
                     unityAsmDef.Write(unityPath);
                 }
-                else
-                    return; // shortcut
+                /*else
+                    return; // shortcut*/
             }
 
             #endregion Insert patch into UnityEngine.CoreModule.dll
@@ -206,7 +206,8 @@ namespace IPA.Injector
 
                 #region Anti-Yeet
 
-                if (SelfConfig.SelfConfigRef.Value.ApplyAntiYeet)
+                //if (SelfConfig.SelfConfigRef.Value.ApplyAntiYeet)
+                try
                 {
                     loader.Debug("Applying anti-yeet patch");
                     
@@ -222,6 +223,10 @@ namespace IPA.Injector
                     deleter.Methods.Clear(); // delete all methods
 
                     ascAsmDef.Write(ascPath);
+                }
+                catch (Exception)
+                {
+                    // ignore
                 }
 
                 #endregion

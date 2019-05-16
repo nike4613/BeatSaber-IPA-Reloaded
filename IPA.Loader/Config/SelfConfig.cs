@@ -1,5 +1,9 @@
-﻿using IPA.Logging;
+﻿using IPA.JsonConverters;
+using IPA.Logging;
 using IPA.Utilities;
+using Newtonsoft.Json;
+using SemVer;
+using System;
 
 namespace IPA.Config
 {
@@ -33,10 +37,11 @@ namespace IPA.Config
         }
 
         internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "3.12.17"; 
+        internal const string IPAVersion = "3.12.18"; 
 		
         public bool Regenerate = true;
 
+        [Obsolete("No longer does anything, built-in mod yeeter always disabled")]
         public bool ApplyAntiYeet = false;
 
         public class UpdateObject
@@ -57,5 +62,7 @@ namespace IPA.Config
         }
 
         public DebugObject Debug = new DebugObject();
+
+        public string LastGameVersion = null;
     }
 }
