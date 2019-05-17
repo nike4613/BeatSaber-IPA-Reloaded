@@ -31,7 +31,7 @@ namespace IPA.Config
 
         public static Ref<SelfConfig> SelfConfigRef;
 
-        public static void Set()
+        public static void Load()
         {
             LoaderConfig = Config.GetProviderFor(IPAName, "json");
         }

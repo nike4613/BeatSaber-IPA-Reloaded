@@ -23,6 +23,7 @@ namespace IPA.Loader
         {
             LoadMetadata();
             Resolve();
+            FilterDisabled();
             ComputeLoadOrder();
         });
 
@@ -287,6 +288,7 @@ namespace IPA.Loader
         }
 
         // keep track of these for the updater; it should still be able to update mods not loaded
+        // TODO: add ignore reason
         internal static HashSet<PluginMetadata> ignoredPlugins = new HashSet<PluginMetadata>();
 
         internal static void Resolve()
@@ -351,6 +353,22 @@ namespace IPA.Loader
             }
 
             PluginsMetadata = resolved;
+        }
+
+        private static void FilterDisabled()
+        { // TODO: move disabled to a seperate list from ignored
+            var enabled = new List<PluginMetadata>(PluginsMetadata.Count);
+
+            var disabled = DisabledConfig.Ref.Value.DisabledModIds;
+            foreach (var meta in PluginsMetadata)
+            {
+                if (disabled.Contains(meta.Id ?? meta.Name))
+                    ignoredPlugins.Add(meta);
+                else
+                    enabled.Add(meta);
+            }
+
+            PluginsMetadata = enabled;
         }
 
         internal static void ComputeLoadOrder()
