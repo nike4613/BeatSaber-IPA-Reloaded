@@ -64,6 +64,7 @@
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="JsonConverters\MultilineStringConverter.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
+    <Compile Include="Loader\DisabledConfig.cs" />
     <Compile Include="Loader\Features\AddInFeature.cs" />
     <Compile Include="Loader\Features\ConfigProviderFeature.cs" />
     <Compile Include="Loader\Features\DefineFeature.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="Logging\StdoutInterceptor.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
+    <Compile Include="PluginInterfaces\BeatSaber\IDisablablePlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\ModsaberModInfo.cs" />
     <Compile Include="PluginInterfaces\IGenericEnhancedPlugin.cs" />

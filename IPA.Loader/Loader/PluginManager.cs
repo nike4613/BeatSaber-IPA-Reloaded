@@ -26,18 +26,7 @@ namespace IPA.Loader
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
         /// </summary>
-        internal static IEnumerable<IBeatSaberPlugin> BSPlugins
-        {
-            get
-            {
-                if(_bsPlugins == null)
-                {
-                    LoadPlugins();
-                }
-                return (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
-            }
-        }
-
+        internal static IEnumerable<IBeatSaberPlugin> BSPlugins => (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
         private static List<PluginInfo> _bsPlugins;
         internal static IEnumerable<PluginInfo> BSMetas => _bsPlugins;
 
@@ -56,9 +45,49 @@ namespace IPA.Loader
         /// </summary>
         /// <param name="name">the ModSaber name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin info for the requested plugin or null</returns>
-        public static PluginInfo GetPluginFromModSaberName(string name)
+        [Obsolete("Old name. Use GetPluginFromId instead.")]
+        public static PluginInfo GetPluginFromModSaberName(string name) => GetPluginFromId(name);
+
+        /// <summary>
+        /// Gets info about the plugin with the specified ID.
+        /// </summary>
+        /// <param name="name">the ModSaber name of the plugin to get (must be an exact match)</param>
+        /// <returns>the plugin info for the requested plugin or null</returns>
+        public static PluginInfo GetPluginFromId(string name)
         {
             return BSMetas.FirstOrDefault(p => p.Metadata.Id == name);
+        }
+
+        /// <summary>
+        /// Disables a plugin for the next time the game starts.
+        /// </summary>
+        /// <param name="plugin">the plugin to disable</param>
+        public static void DisablePlugin(PluginInfo plugin) =>
+            DisablePlugin(plugin.Metadata.Id ?? plugin.Metadata.Name);
+
+        /// <summary>
+        /// Disables a plugin for the next time the game starts.
+        /// </summary>
+        /// <param name="pluginId">the ID, or name if the ID is null, of the plugin to disable</param>
+        public static void DisablePlugin(string pluginId)
+        {
+            DisabledConfig.Ref.Value.DisabledModIds.Add(pluginId);
+        }
+
+        /// <summary>
+        /// Enables a plugin that had been previously disabled.
+        /// </summary>
+        /// <param name="plugin">the plugin to enable</param>
+        public static void EnablePlugin(PluginMetadata plugin) =>
+            EnablePlugin(plugin.Id ?? plugin.Name);
+
+        /// <summary>
+        /// Enables a plugin that had been previously disabled.
+        /// </summary>
+        /// <param name="pluginId">the ID, or name if the ID is null, of the plugin to enable</param>
+        public static void EnablePlugin(string pluginId)
+        {
+            DisabledConfig.Ref.Value.DisabledModIds.Remove(pluginId);
         }
 
         /// <summary>
