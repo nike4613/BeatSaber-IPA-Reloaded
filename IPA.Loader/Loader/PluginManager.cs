@@ -51,7 +51,7 @@ namespace IPA.Loader
         /// <summary>
         /// Gets info about the plugin with the specified ID.
         /// </summary>
-        /// <param name="name">the ModSaber name of the plugin to get (must be an exact match)</param>
+        /// <param name="name">the ID name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin info for the requested plugin or null</returns>
         public static PluginInfo GetPluginFromId(string name)
         {
