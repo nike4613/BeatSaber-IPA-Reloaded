@@ -28,7 +28,7 @@ namespace BSIPA_ModList.UI
                 navigationController.didFinishEvent += backButton_DidFinish;
 
                 modList = BeatSaberUI.CreateViewController<ModListController>();
-                modList.Init(this, PluginManager.AllPlugins, PluginLoader.ignoredPlugins, PluginManager.Plugins);
+                modList.Init(this, PluginManager.AllPlugins.Select(p => p.Metadata).Concat(PluginManager.DisabledPlugins), PluginLoader.ignoredPlugins, PluginManager.Plugins);
 
                 settings = SettingsViewController.Create();
 

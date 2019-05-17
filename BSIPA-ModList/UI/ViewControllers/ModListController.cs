@@ -28,8 +28,10 @@ namespace BSIPA_ModList.UI
         internal ModListFlowCoordinator flow;
 
 #pragma warning disable CS0618
-        public void Init(ModListFlowCoordinator flow, IEnumerable<PluginLoader.PluginInfo> bsipaPlugins, IEnumerable<PluginLoader.PluginMetadata> ignoredPlugins, IEnumerable<IPlugin> ipaPlugins)
+        public void Init(ModListFlowCoordinator flow, IEnumerable<PluginLoader.PluginMetadata> bsipaPlugins, IEnumerable<PluginLoader.PluginMetadata> ignoredPlugins, IEnumerable<IPlugin> ipaPlugins)
         {
+            Data.Clear();
+
             Logger.log.Debug("List Controller Init");
 
             DidActivateEvent = DidActivate;
@@ -43,11 +45,11 @@ namespace BSIPA_ModList.UI
 
             reuseIdentifier = "BSIPAModListTableCell";
 
-            foreach (var plugin in bsipaPlugins.Where(p => !p.Metadata.IsBare))
+            foreach (var plugin in bsipaPlugins.Where(p => !p.IsBare))
                 Data.Add(new BSIPAModCell(this, plugin));
             foreach (var plugin in ignoredPlugins)
                 Data.Add(new BSIPAIgnoredModCell(this, plugin));
-            foreach (var plugin in bsipaPlugins.Where(p => p.Metadata.IsBare))
+            foreach (var plugin in bsipaPlugins.Where(p => p.IsBare))
                 Data.Add(new LibraryModCell(this, plugin));
             foreach (var plugin in ipaPlugins)
                 Data.Add(new IPAModCell(this, plugin));

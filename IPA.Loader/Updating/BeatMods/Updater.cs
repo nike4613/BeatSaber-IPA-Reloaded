@@ -205,8 +205,8 @@ namespace IPA.Updating.BeatMods
                 }
             }
 
-            foreach (var meta in PluginLoader.ignoredPlugins.Where(m => m.Id != null))
-            {
+            foreach (var meta in PluginLoader.ignoredPlugins)
+            { // update ignored
                 if (meta.Id != null)
                 { // updatable
                     var dep = new DependencyObject
@@ -230,6 +230,30 @@ namespace IPA.Updating.BeatMods
                 }
             }
 
+            foreach (var meta in DisabledPlugins)
+            { // update ignored
+                if (meta.Id != null)
+                { // updatable
+                    var dep = new DependencyObject
+                    {
+                        Name = meta.Id,
+                        Version = meta.Version,
+                        Requirement = new Range($">={meta.Version}"),
+                        LocalPluginMeta = new PluginLoader.PluginInfo
+                        {
+                            Metadata = meta,
+                            Plugin = null
+                        }
+                    };
+
+                    if (meta.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
+                    { // disable updating, by only matching self
+                        dep.Requirement = new Range(meta.Version.ToString());
+                    }
+
+                    depList.Value.Add(dep);
+                }
+            }
 
 #pragma warning disable CS0618 // Type or member is obsolete
             foreach (var plug in Plugins)

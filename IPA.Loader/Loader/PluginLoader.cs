@@ -108,6 +108,7 @@ namespace IPA.Loader
         }
 
         internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();
+        internal static List<PluginMetadata> DisabledPlugins = new List<PluginMetadata>();
 
         private static readonly Regex embeddedTextDescriptionPattern = new Regex(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -363,7 +364,7 @@ namespace IPA.Loader
             foreach (var meta in PluginsMetadata)
             {
                 if (disabled.Contains(meta.Id ?? meta.Name))
-                    ignoredPlugins.Add(meta);
+                    DisabledPlugins.Add(meta);
                 else
                     enabled.Add(meta);
             }
@@ -519,10 +520,23 @@ namespace IPA.Loader
             }
         }
 
-        internal static void ReleaseAll()
+        internal static void ReleaseAll(bool full = false)
         {
-            ignoredPlugins = new HashSet<PluginMetadata>();
+            if (full)
+                ignoredPlugins = new HashSet<PluginMetadata>();
+            else
+            {
+                foreach (var m in PluginsMetadata)
+                    ignoredPlugins.Add(m);
+                foreach (var m in ignoredPlugins)
+                { // clean them up so we can still use the metadata for updates
+                    m.InternalFeatures.Clear();
+                    m.PluginType = null;
+                    m.Assembly = null;
+                }
+            }
             PluginsMetadata = new List<PluginMetadata>();
+            DisabledPlugins = new List<PluginMetadata>();
             Feature.Reset();
             GC.Collect();
         }
@@ -589,6 +603,17 @@ namespace IPA.Loader
                     catch (Exception e)
                     {
                         Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
+                    }
+
+                if (instance is IDisablablePlugin disable)
+                    try
+                    {
+                        disable.OnEnable();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.loader.Error($"Error occurred trying to enable {meta.Name}");
+                        Logger.loader.Error(e);
                     }
             }
             catch (AmbiguousMatchException)

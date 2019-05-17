@@ -59,36 +59,114 @@ namespace IPA.Loader
         }
 
         /// <summary>
-        /// Disables a plugin for the next time the game starts.
+        /// Gets a disabled plugin's metadata by its name.
         /// </summary>
-        /// <param name="plugin">the plugin to disable</param>
-        public static void DisablePlugin(PluginInfo plugin) =>
-            DisablePlugin(plugin.Metadata.Id ?? plugin.Metadata.Name);
+        /// <param name="name">the name of the disabled plugin to get</param>
+        /// <returns>the metadata for the corresponding plugin</returns>
+        public static PluginMetadata GetDisabledPlugin(string name) =>
+            DisabledPlugins.FirstOrDefault(p => p.Name == name);
 
         /// <summary>
-        /// Disables a plugin for the next time the game starts.
+        /// Gets a disabled plugin's metadata by its ID.
+        /// </summary>
+        /// <param name="name">the ID of the disabled plugin to get</param>
+        /// <returns>the metadata for the corresponding plugin</returns>
+        public static PluginMetadata GetDisabledPluginFromId(string name) =>
+            DisabledPlugins.FirstOrDefault(p => p.Id == name);
+
+        /// <summary>
+        /// Disables a plugin.
+        /// </summary>
+        /// <param name="plugin">the plugin to disable</param>
+        /// <returns>whether or not it needs a restart to enable</returns>
+        public static bool DisablePlugin(PluginInfo plugin)
+        {
+            if (plugin == null) return false;
+
+            DisabledConfig.Ref.Value.DisabledModIds.Add(plugin.Metadata.Id ?? plugin.Metadata.Name);
+            DisabledConfig.Provider.Store(DisabledConfig.Ref.Value);
+
+            if (plugin.Plugin is IDisablablePlugin disable)
+            {
+                try
+                {
+                    disable.OnDisable();
+                }
+                catch (Exception e)
+                {
+                    Logger.loader.Error($"Error occurred trying to disable {plugin.Metadata.Name}");
+                    Logger.loader.Error(e);
+                }
+
+                runtimeDisabled.Add(plugin);
+                _bsPlugins.Remove(plugin);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Disables a plugin.
         /// </summary>
         /// <param name="pluginId">the ID, or name if the ID is null, of the plugin to disable</param>
-        public static void DisablePlugin(string pluginId)
-        {
-            DisabledConfig.Ref.Value.DisabledModIds.Add(pluginId);
-        }
+        /// <returns>whether a restart is needed to activate</returns>
+        public static bool DisablePlugin(string pluginId) => DisablePlugin(GetPluginFromId(pluginId) ?? GetPlugin(pluginId));
 
         /// <summary>
         /// Enables a plugin that had been previously disabled.
         /// </summary>
         /// <param name="plugin">the plugin to enable</param>
-        public static void EnablePlugin(PluginMetadata plugin) =>
-            EnablePlugin(plugin.Id ?? plugin.Name);
+        /// <returns>whether a restart is needed to activate</returns>
+        public static bool EnablePlugin(PluginMetadata plugin)
+        {
+            if (plugin == null) return false;
+
+            DisabledConfig.Ref.Value.DisabledModIds.Remove(plugin.Id ?? plugin.Name);
+            DisabledConfig.Provider.Store(DisabledConfig.Ref.Value);
+
+            var needsRestart = true;
+
+            var runtimeInfo = runtimeDisabled.FirstOrDefault(p => p.Metadata == plugin);
+            if (runtimeInfo != null && runtimeInfo.Plugin is IDisablablePlugin disable)
+            {
+                runtimeDisabled.Remove(runtimeInfo);
+                try
+                {
+                    disable.OnEnable();
+                }
+                catch (Exception e)
+                {
+                    Logger.loader.Error($"Error occurred trying to enable {plugin.Name}");
+                    Logger.loader.Error(e);
+                }
+                needsRestart = false;
+            }
+            else
+            {
+                PluginLoader.DisabledPlugins.Remove(plugin);
+                runtimeInfo = InitPlugin(plugin);
+            }
+
+            _bsPlugins.Add(runtimeInfo);
+
+            return needsRestart;
+        }
 
         /// <summary>
         /// Enables a plugin that had been previously disabled.
         /// </summary>
         /// <param name="pluginId">the ID, or name if the ID is null, of the plugin to enable</param>
-        public static void EnablePlugin(string pluginId)
-        {
-            DisabledConfig.Ref.Value.DisabledModIds.Remove(pluginId);
-        }
+        /// <returns>whether a restart is needed to activate</returns>
+        public static bool EnablePlugin(string pluginId) => 
+            EnablePlugin(GetDisabledPluginFromId(pluginId) ?? GetDisabledPlugin(pluginId));
+
+        private static readonly List<PluginInfo> runtimeDisabled = new List<PluginInfo>();
+        /// <summary>
+        /// Gets a list of disabled BSIPA plugins.
+        /// </summary>
+        public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins.Concat(runtimeDisabled.Select(p => p.Metadata));
 
         /// <summary>
         /// Gets a list of all BSIPA plugins.
