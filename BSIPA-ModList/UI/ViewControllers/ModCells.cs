@@ -19,11 +19,11 @@ namespace BSIPA_ModList.UI.ViewControllers
 
     internal class BSIPAModCell : CustomCellInfo, IClickableCell
     {
-        internal PluginLoader.PluginInfo Plugin;
+        internal PluginLoader.PluginMetadata Plugin;
         private ModListController list;
 
-        public BSIPAModCell(ModListController list, PluginLoader.PluginInfo plugin)
-            : base($"{plugin.Metadata.Name} <size=60%>v{plugin.Metadata.Version}", plugin.Metadata.Manifest.Author, null)
+        public BSIPAModCell(ModListController list, PluginLoader.PluginMetadata plugin)
+            : base($"{plugin.Name} <size=60%>v{plugin.Version}", plugin.Manifest.Author, null)
         {
             Plugin = plugin;
             this.list = list;
@@ -31,24 +31,24 @@ namespace BSIPA_ModList.UI.ViewControllers
             if (string.IsNullOrWhiteSpace(subtext))
                 subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
 
-            icon = plugin.Metadata.GetIcon();
+            icon = plugin.GetIcon();
         }
 
         private ModInfoViewController infoView;
 
         public void OnSelect(ModListController cntrl)
         {
-            Logger.log.Debug($"Selected BSIPAModCell {Plugin.Metadata.Name} {Plugin.Metadata.Version}");
+            Logger.log.Debug($"Selected BSIPAModCell {Plugin.Name} {Plugin.Version}");
 
             if (infoView == null)
             {
-                var desc = Plugin.Metadata.Manifest.Description;
+                var desc = Plugin.Manifest.Description;
                 if (string.IsNullOrWhiteSpace(desc))
                     desc = "<color=#BFBFBF><i>No description</i>";
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
-                infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                    desc, Plugin.Metadata, Plugin.Metadata.Manifest.Links);
+                infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), subtext,
+                    desc, Plugin, Plugin.Manifest.Links);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
@@ -99,11 +99,11 @@ namespace BSIPA_ModList.UI.ViewControllers
     }
     internal class LibraryModCell : CustomCellInfo, IClickableCell
     {
-        internal PluginLoader.PluginInfo Plugin;
+        internal PluginLoader.PluginMetadata Plugin;
         private ModListController list;
 
-        public LibraryModCell(ModListController list, PluginLoader.PluginInfo plugin)
-            : base($"{plugin.Metadata.Name} <size=60%>v{plugin.Metadata.Version}", plugin.Metadata.Manifest.Author, null)
+        public LibraryModCell(ModListController list, PluginLoader.PluginMetadata plugin)
+            : base($"{plugin.Name} <size=60%>v{plugin.Version}", plugin.Manifest.Author, null)
         {
             Plugin = plugin;
             this.list = list;
@@ -118,17 +118,17 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         public void OnSelect(ModListController cntrl)
         {
-            Logger.log.Debug($"Selected LibraryModCell {Plugin.Metadata.Name} {Plugin.Metadata.Version}");
+            Logger.log.Debug($"Selected LibraryModCell {Plugin.Name} {Plugin.Version}");
 
             if (infoView == null)
             {
-                var desc = Plugin.Metadata.Manifest.Description;
+                var desc = Plugin.Manifest.Description;
                 if (string.IsNullOrWhiteSpace(desc))
                     desc = "<color=#BFBFBF><i>No description</i>";
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
-                infoView.Init(icon, Plugin.Metadata.Name, "v" + Plugin.Metadata.Version.ToString(), subtext,
-                    desc, Plugin.Metadata, Plugin.Metadata.Manifest.Links);
+                infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), subtext,
+                    desc, Plugin, Plugin.Manifest.Links);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);

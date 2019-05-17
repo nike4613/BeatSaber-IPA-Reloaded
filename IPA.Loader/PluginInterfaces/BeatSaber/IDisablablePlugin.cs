@@ -6,7 +6,7 @@
     public interface IDisablablePlugin
     {
         /// <summary>
-        /// Called when a plugin is enabled. This is where you shhould set up Harmony patches and the like.
+        /// Called when a plugin is enabled. This is where you should set up Harmony patches and the like.
         /// </summary>
         /// <remarks>
         /// This will be called after Init, and will be called when the plugin loads normally too.
