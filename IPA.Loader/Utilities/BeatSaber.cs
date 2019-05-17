@@ -71,11 +71,9 @@ namespace IPA.Utilities
         private static bool FindSteamVRAsset()
         {
             // these require assembly qualified names....
-            var steamVRCamera = Type.GetType("SteamVR_Camera, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
-            var steamVRExternalCamera = Type.GetType("SteamVR_ExternalCamera, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
-            var steamVRFade = Type.GetType("SteamVR_Fade, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
+            var steamUser = Type.GetType("Steamworks.SteamUser, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
 
-            return steamVRCamera != null && steamVRExternalCamera != null && steamVRFade != null;
+            return steamUser != null;
         }
     }
 }
