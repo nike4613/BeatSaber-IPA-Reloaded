@@ -76,7 +76,9 @@ namespace BSIPA_ModList.UI
                 rowTransform = Instantiate(rowTransformOriginal, rectTransform);
                 rowTransform.anchorMin = new Vector2(0f, 0f);
                 rowTransform.anchorMax = new Vector2(1f, .15f);
-                rowTransform.anchoredPosition = new Vector2(-3.5f, -2f);
+                rowTransform.anchoredPosition = new Vector2(-3.5f, 4f);
+                rowTransform.sizeDelta = Vector2.zero;
+                Destroy(rowTransform.GetComponent<StartMiddleEndButtonsGroup>());
 
                 foreach (Transform child in rowTransform)
                 {
@@ -86,32 +88,35 @@ namespace BSIPA_ModList.UI
 
                 if (links?.ProjectHome != null)
                 {
-                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Home",
+                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Home", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(links.ProjectHome.ToString()));
                     linkHomeButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
                 if (links?.ProjectSource != null)
                 {
-                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Source",
+                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Source", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(links.ProjectSource.ToString()));
                     linkSourceButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
                 if (links?.Donate != null)
                 {
-                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Donate",
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Donate", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(links.Donate.ToString()));
                     linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
                 if (moreInfoLink != null)
                 {
-                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "More Info",
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "More Info", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(moreInfoLink.ToString()));
                     linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
+
+                foreach (var cmp in rowTransform.GetComponentsInChildren<StartMiddleEndButtonBackgroundController>())
+                    cmp.SetMiddleSprite();
             }
             if (UpdateInfo != null && !addedLink)
                 StartCoroutine(GetMoreInfoLink());

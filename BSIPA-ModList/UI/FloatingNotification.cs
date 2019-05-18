@@ -16,7 +16,7 @@ namespace BSIPA_ModList.UI
         private Image _loadingBackg;
         private Image _loadingBar;
 
-        private static readonly Vector3 Position = new Vector3(2.3f, 2.3f, 1.35f);
+        private static readonly Vector3 Position = new Vector3(2.25f, 2.3f, 1.55f);
         private static readonly Vector3 Rotation = new Vector3(0, 60, 0);
         private static readonly Vector3 Scale = new Vector3(0.01f, 0.01f, 0.01f);
 

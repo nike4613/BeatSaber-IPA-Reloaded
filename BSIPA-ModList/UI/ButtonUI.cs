@@ -14,7 +14,7 @@ namespace BSIPA_ModList.UI
     internal class ButtonUI : MonoBehaviour
     {
         private const string ControllerPanel = "MainMenuViewController/SmallButtons";
-        private const string CopyButton = "CreditsButton";
+        private const string CopyButton = "BeatmapEditorButton";
 
         internal static ButtonUI Instance;
 
