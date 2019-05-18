@@ -152,7 +152,7 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         public float CellSize()
         {
-            return 10f;
+            return 8.5f;
         }
 
         public int NumberOfCells()

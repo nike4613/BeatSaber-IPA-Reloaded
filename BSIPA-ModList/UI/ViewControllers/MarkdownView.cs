@@ -12,6 +12,7 @@ using System.Reflection;
 using UnityEngine.EventSystems;
 using System.Diagnostics;
 using System.Collections;
+using System.IO;
 
 namespace BSIPA_ModList.UI.ViewControllers
 {
@@ -86,37 +87,71 @@ namespace BSIPA_ModList.UI.ViewControllers
                 return uri.Substring(3);
         }
 
+        private static Stream ConsolasAssetBundleFontStream => Assembly.GetExecutingAssembly().GetManifestResourceStream("BSIPA_ModList.Bundles.consolas.font");
+
+        private static AssetBundleCreateRequest _bundleRequest;
         private static AssetBundle _bundle;
         private static AssetBundle Bundle
         {
             get
             {
+                if (_bundle == null && _bundleRequest != null)
+                    throw new InvalidOperationException("Asset bundle is being loaded asynchronously; please wait for that to complete");
                 if (_bundle == null)
-                    _bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("BSIPA_ModList.Bundles.consolas.font"));
+                    _bundle = AssetBundle.LoadFromStream(ConsolasAssetBundleFontStream);
                 return _bundle;
             }
         }
+
+        private static AssetBundleRequest _consolasRequest;
+        private static TMP_FontAsset _unsetConsolas;
         private static TMP_FontAsset _consolas;
         private static TMP_FontAsset Consolas
         {
             get
             {
-                if (_consolas == null)
-                {
-                    _consolas = Bundle?.LoadAsset<TMP_FontAsset>("CONSOLAS");
-                    if (_consolas != null)
-                    {
-                        var originalFont = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Last(f => f.name == "Teko-Medium SDF No Glow");
-                        var matCopy = Instantiate(originalFont.material);
-                        matCopy.mainTexture = _consolas.material.mainTexture;
-                        matCopy.mainTextureOffset = _consolas.material.mainTextureOffset;
-                        matCopy.mainTextureScale = _consolas.material.mainTextureScale;
-                        _consolas.material = matCopy;
-                        MaterialReferenceManager.AddFontAsset(_consolas);
-                    }
-                }
+                if (_unsetConsolas == null && _consolasRequest != null)
+                    throw new InvalidOperationException("Asset is being loaded asynchronously; please wait for that to complete");
+                if (_unsetConsolas == null)
+                    _unsetConsolas = Bundle?.LoadAsset<TMP_FontAsset>("CONSOLAS");
+                if (_consolas == null && _unsetConsolas != null)
+                    _consolas = SetupFont(_unsetConsolas);
                 return _consolas;
             }
+        }
+
+        private static TMP_FontAsset SetupFont(TMP_FontAsset f)
+        {
+            var originalFont = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Last(f2 => f2.name == "Teko-Medium SDF No Glow");
+            var matCopy = Instantiate(originalFont.material);
+            matCopy.mainTexture = f.material.mainTexture;
+            matCopy.mainTextureOffset = f.material.mainTextureOffset;
+            matCopy.mainTextureScale = f.material.mainTextureScale;
+            f.material = matCopy;
+            f = Instantiate(f);
+            MaterialReferenceManager.AddFontAsset(f);
+            return f;
+        }
+
+        internal static void StartLoadResourcesAsync()
+        {
+            SharedCoroutineStarter.instance.StartCoroutine(LoadResourcesAsync());
+        }
+        private static IEnumerator LoadResourcesAsync()
+        {
+            Logger.md.Debug("Starting to load resources");
+
+            _bundleRequest = AssetBundle.LoadFromStreamAsync(ConsolasAssetBundleFontStream);
+            yield return _bundleRequest;
+            _bundle = _bundleRequest.assetBundle;
+
+            Logger.md.Debug("Bundle loaded");
+
+            _consolasRequest = _bundle.LoadAssetAsync<TMP_FontAsset>("CONSOLAS");
+            yield return _consolasRequest;
+            _unsetConsolas = _consolasRequest.asset as TMP_FontAsset;
+
+            Logger.md.Debug("Font loaded");
         }
 
         protected void Awake()

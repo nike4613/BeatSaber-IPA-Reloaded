@@ -44,7 +44,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             {
                 var desc = Plugin.Manifest.Description;
                 if (string.IsNullOrWhiteSpace(desc))
-                    desc = "<color=#BFBFBF><i>No description</i>";
+                    desc = "*No description*";
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), subtext,
@@ -87,7 +87,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             {
                 var desc = Plugin.Manifest.Description;
                 if (string.IsNullOrWhiteSpace(desc))
-                    desc = "<color=#BFBFBF><i>No description</i>";
+                    desc = "*No description*";
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), authorText,
@@ -109,7 +109,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             this.list = list;
 
             if (string.IsNullOrWhiteSpace(subtext))
-                subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
+                subtext = "<color=#BFBFBF><i>Unspecified Author</i></color>";
 
             icon = Utilities.DefaultLibraryIcon;
         }
@@ -124,7 +124,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             {
                 var desc = Plugin.Manifest.Description;
                 if (string.IsNullOrWhiteSpace(desc))
-                    desc = "<color=#BFBFBF><i>No description</i>";
+                    desc = "*No description*";
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), subtext,

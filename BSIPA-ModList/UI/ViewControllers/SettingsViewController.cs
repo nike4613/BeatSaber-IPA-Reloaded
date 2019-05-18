@@ -33,6 +33,9 @@ namespace BSIPA_ModList.UI
                 SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
             };
 
+            autoCheck.Init();
+            autoUpdate.Init();
+
             return menu.viewController;
         }
     }
