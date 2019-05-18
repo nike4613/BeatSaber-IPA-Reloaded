@@ -8,13 +8,13 @@
     "",
     "## An in-game interface client for BSIPA.",
   ],
-  "gameVersion": "0.13.2",
+  "gameVersion": "1.0.0",
   "id": "BSIPA Mod List",
   "name": "BSIPA Mod List",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "icon": "BSIPA_ModList.Icons.self.png",
   "dependsOn": {
-    "BSIPA": "^3.12.18",
+    "BSIPA": "^3.12.19",
     "CustomUI": "^1.5.4"
   },
   "features": [],

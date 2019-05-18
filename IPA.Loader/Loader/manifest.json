@@ -5,10 +5,10 @@
     "#![IPA.Loader.description.md]",
     "A mod loader specifically for Beat Saber."
   ],
-  "gameVersion": "0.13.2",
+  "gameVersion": "1.0.0",
   "id": "BSIPA",
   "name": "Beat Saber IPA",
-  "version": "3.12.18",
+  "version": "3.12.19",
   "icon": "IPA.icon.png",
   "features": [
     "define-feature(print, IPA.Loader.Features.PrintFeature)",
