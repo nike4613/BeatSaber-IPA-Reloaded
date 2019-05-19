@@ -15,6 +15,7 @@ namespace BSIPA_ModList.UI.ViewControllers
     internal interface IClickableCell
     {
         void OnSelect(ModListController cntrl);
+        void Update();
     }
 
     internal class BSIPAModCell : CustomCellInfo, IClickableCell
@@ -22,16 +23,47 @@ namespace BSIPA_ModList.UI.ViewControllers
         internal PluginLoader.PluginMetadata Plugin;
         private ModListController list;
 
+        private PluginManager.PluginEnableDelegate enableDel;
+        private PluginManager.PluginDisableDelegate disableDel;
+
         public BSIPAModCell(ModListController list, PluginLoader.PluginMetadata plugin)
-            : base($"{plugin.Name} <size=60%>v{plugin.Version}", plugin.Manifest.Author, null)
+            : base("", "", null)
         {
             Plugin = plugin;
             this.list = list;
 
-            if (string.IsNullOrWhiteSpace(subtext))
-                subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
+            var thisWeakRef = new WeakReference<BSIPAModCell>(this);
+            PluginManager.PluginDisableDelegate reflessDDel = null;
+            reflessDDel = disableDel = (p, r) => PluginManager_PluginDisabled(p, r, thisWeakRef, reflessDDel); // some indirection to make it a weak link for GC
+            PluginManager.PluginDisabled += reflessDDel;
+            PluginManager.PluginEnableDelegate reflessEDel = null;
+            reflessEDel = enableDel = (p, r) => PluginManager_PluginEnabled(p, r, thisWeakRef, reflessEDel); // some indirection to make it a weak link for GC
+            PluginManager.PluginEnabled += reflessEDel;
 
-            icon = plugin.GetIcon();
+            Update(propogate: false);
+        }
+
+        private static void PluginManager_PluginEnabled(PluginLoader.PluginInfo plugin, bool needsRestart, WeakReference<BSIPAModCell> _self, PluginManager.PluginEnableDelegate ownDel)
+        {
+            if (!_self.TryGetTarget(out var self))
+            {
+                PluginManager.PluginEnabled -= ownDel;
+                return;
+            }
+
+            if (plugin.Metadata != self.Plugin) return;
+
+            self.Update(true, needsRestart);
+        }
+
+        private static void PluginManager_PluginDisabled(PluginLoader.PluginMetadata plugin, bool needsRestart, WeakReference<BSIPAModCell> _self, PluginManager.PluginDisableDelegate ownDel)
+        {
+            if (!_self.TryGetTarget(out var self))
+                PluginManager.PluginDisabled -= ownDel;
+
+            if (plugin != self.Plugin) return;
+
+            self.Update(false, needsRestart);
         }
 
         private ModInfoViewController infoView;
@@ -48,10 +80,37 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                 infoView = BeatSaberUI.CreateViewController<ModInfoViewController>();
                 infoView.Init(icon, Plugin.Name, "v" + Plugin.Version.ToString(), subtext,
-                    desc, Plugin, Plugin.Manifest.Links);
+                    desc, Plugin, Plugin.Manifest.Links, true, list.flow);
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
+        }
+
+        void IClickableCell.Update() => Update(null, false, false);
+
+        public void Update(bool? _enabled = null, bool needsRestart = false, bool propogate = true)
+        {
+            text = $"{Plugin.Name} <size=60%>v{Plugin.Version}";
+            subtext = Plugin.Manifest.Author;
+
+            if (string.IsNullOrWhiteSpace(subtext))
+                subtext = "<color=#BFBFBF><i>Unspecified Author</i>";
+
+            var enabled = _enabled ?? !PluginManager.IsDisabled(Plugin);
+            if (!enabled)
+                subtext += "  <color=#C2C2C2>- <i>Disabled</i>";
+            if (needsRestart)
+                subtext += " <i>(Restart to apply)</i>";
+
+            icon = Plugin.GetIcon();
+
+            var desc = Plugin.Manifest.Description;
+            if (string.IsNullOrWhiteSpace(desc))
+                desc = "*No description*";
+            infoView?.Reload(Plugin.Name, "v" + Plugin.Version.ToString(), subtext, desc);
+
+            if (propogate)
+                list.Reload();
         }
     }
 
@@ -96,6 +155,10 @@ namespace BSIPA_ModList.UI.ViewControllers
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
         }
+
+        public void Update()
+        {
+        }
     }
     internal class LibraryModCell : CustomCellInfo, IClickableCell
     {
@@ -132,6 +195,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
+        }
+
+        public void Update()
+        {
         }
     }
 
@@ -180,6 +247,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
 
             list.flow.SetSelected(infoView, immediate: list.flow.HasSelected);
+        }
+
+        public void Update()
+        {
         }
     }
 #pragma warning restore

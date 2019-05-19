@@ -697,10 +697,6 @@ namespace IPA.Updating.BeatMods
             }
             catch (Exception)
             { // something failed; restore
-                /*foreach (var file in newFiles)
-                    file.Delete();
-                backup.Restore();
-                backup.Delete();*/
                 Directory.Delete(targetDir, true); // delete extraction site
 
                 throw;
@@ -708,6 +704,7 @@ namespace IPA.Updating.BeatMods
 
             if ((item.LocalPluginMeta?.Metadata.IsSelf).Unwrap())
             { // currently updating self, so copy to working dir and update
+                NeedsManualRestart = true; // flag so that ModList keeps the restart button hidden
                 Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
                 var deleteFile = Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile);
                 if (File.Exists(deleteFile)) File.Delete(deleteFile);
@@ -725,6 +722,8 @@ namespace IPA.Updating.BeatMods
 
             Logger.updater.Debug("Extractor exited");
         }
+
+        internal static bool NeedsManualRestart = false;
 
         internal const string SpecialDeletionsFile = "$$delete";
     }

@@ -3,9 +3,12 @@ using CustomUI.BeatSaber;
 using CustomUI.Utilities;
 using IPA.Loader;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using VRUI;
 
 namespace BSIPA_ModList.UI
@@ -100,6 +103,8 @@ namespace BSIPA_ModList.UI
             PopViewControllerFromNavigationController(navigationController, callback, immediate);
         }
 
+        internal HashSet<Action> exitActions = new HashSet<Action>();
+
         private delegate void DismissFlowDel(FlowCoordinator self, FlowCoordinator newF, Action finished, bool immediate);
         private static DismissFlowDel dismissFlow;
 
@@ -112,8 +117,30 @@ namespace BSIPA_ModList.UI
                 dismissFlow = (DismissFlowDel)Delegate.CreateDelegate(typeof(DismissFlowDel), m);
             }
 
-            MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-            dismissFlow(mainFlow, this, null, false);
+            if (exitActions.Count == 0)
+            {
+                MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
+                dismissFlow(mainFlow, this, null, false);
+            }
+            else
+            {
+                var actions = exitActions;
+                UnityAction<Scene, LoadSceneMode> releaseAction = null;
+                releaseAction = (a, b) => SceneManager_sceneLoaded(actions, releaseAction, a, b);
+                SceneManager.sceneLoaded += releaseAction;
+                Resources.FindObjectsOfTypeAll<MenuTransitionsHelperSO>().First().RestartGame(true);
+            }
+        }
+
+        private static void SceneManager_sceneLoaded(HashSet<Action> actions, UnityAction<Scene, LoadSceneMode> self, Scene arg0, LoadSceneMode arg1)
+        {
+            if (arg0.name == "Init")
+            {
+                SceneManager.sceneLoaded -= self;
+
+                foreach (var act in actions)
+                    act();
+            }
         }
     }
 }
