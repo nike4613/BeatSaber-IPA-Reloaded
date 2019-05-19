@@ -436,9 +436,11 @@ namespace IPA.Loader
 
             var metadata = new List<PluginMetadata>();
             var pluginsToLoad = new Dictionary<string, Version>();
+            var disabledLookup = DisabledPlugins.Where(m => m.Id != null).ToDictionary(m => m.Id, m => m.Version);
             foreach (var meta in deTreed)
             {
                 bool load = true;
+                bool disable = false;
                 foreach (var dep in meta.Manifest.Dependencies)
                 {
 #if DEBUG
@@ -448,7 +450,16 @@ namespace IPA.Loader
                         continue;
 
                     load = false;
-                    Logger.loader.Warn($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
+
+                    if (disabledLookup.ContainsKey(dep.Key) && dep.Value.IsSatisfied(disabledLookup[dep.Key]))
+                    {
+                        disable = true;
+                        Logger.loader.Warn($"Dependency {dep.Key} was found, but disabled. Disabling {meta.Name} too.");
+                    }
+                    else
+                        Logger.loader.Warn($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
+
+                    break;
                 }
 
                 if (load)
@@ -456,6 +467,11 @@ namespace IPA.Loader
                     metadata.Add(meta);
                     if (meta.Id != null)
                         pluginsToLoad.Add(meta.Id, meta.Version);
+                }
+                else if (disable)
+                {
+                    DisabledPlugins.Add(meta);
+                    DisabledConfig.Ref.Value.DisabledModIds.Add(meta.Id ?? meta.Name);
                 }
                 else
                     ignoredPlugins.Add(meta);
@@ -636,6 +652,7 @@ namespace IPA.Loader
         internal static List<PluginInfo> LoadPlugins()
         {
             InitFeatures();
+            DisabledPlugins.ForEach(Load); // make sure they get loaded into memory so their metadata and stuff can be read more easily
             return PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
         }
     }

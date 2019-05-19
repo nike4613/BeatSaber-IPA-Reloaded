@@ -18,6 +18,7 @@ namespace BSIPA_ModList.UI.ViewControllers
     internal class DownloadProgressViewController : VRUIViewController, TableView.IDataSource
     {
         private TextMeshProUGUI _titleText;
+        private TextMeshProUGUI _manualDownloadText;
 
         private Button _checkForUpdates;
         private Button _downloadUpdates;
@@ -43,6 +44,11 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _titleText = BeatSaberUI.CreateText(rectTransform, "DOWNLOAD QUEUE", new Vector2(0f, 35f));
                 _titleText.alignment = TextAlignmentOptions.Top;
                 _titleText.fontSize = 6f;
+
+                _manualDownloadText = BeatSaberUI.CreateText(rectTransform, "Manual Restart Required", new Vector2(37f, -3f));
+                _manualDownloadText.alignment = TextAlignmentOptions.Top;
+                _manualDownloadText.fontSize = 4f;
+                _manualDownloadText.gameObject.SetActive(false);
 
                 _pageUpButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageUpButton")), rectTransform, false);
                 (_pageUpButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 1f);
@@ -131,9 +137,10 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         private void DownloaderStateChanged()
         {
-            _checkForUpdates.interactable = DownloadController.Instance.CanCheck || DownloadController.Instance.CanReset;
-            _downloadUpdates.interactable = DownloadController.Instance.CanDownload;
-            _restartGame.interactable = DownloadController.Instance.HadUpdates;
+            _checkForUpdates.interactable = (DownloadController.Instance.CanCheck || DownloadController.Instance.CanReset) && !Updater.NeedsManualRestart;
+            _downloadUpdates.interactable = DownloadController.Instance.CanDownload && !Updater.NeedsManualRestart;
+            _restartGame.interactable = DownloadController.Instance.HadUpdates && !Updater.NeedsManualRestart;
+            _manualDownloadText.gameObject.SetActive(Updater.NeedsManualRestart);
         }
 
         protected override void DidDeactivate(DeactivationType type)

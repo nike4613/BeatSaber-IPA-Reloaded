@@ -75,7 +75,7 @@ namespace IPA.Loader
             DisabledPlugins.FirstOrDefault(p => p.Id == name);
 
         /// <summary>
-        /// Disables a plugin.
+        /// Disables a plugin, and all dependents.
         /// </summary>
         /// <param name="plugin">the plugin to disable</param>
         /// <returns>whether or not it needs a restart to enable</returns>
@@ -83,10 +83,25 @@ namespace IPA.Loader
         {
             if (plugin == null) return false;
 
+            if (plugin.Metadata.IsBare)
+            {
+                Logger.loader.Warn($"Trying to disable bare manifest");
+                return false;
+            }
+
+            if (IsDisabled(plugin.Metadata)) return false;
+
+            var needsRestart = false;
+
+            Logger.loader.Info($"Disabling {plugin.Metadata.Name}");
+
+            var dependents = BSMetas.Where(m => m.Metadata.Dependencies.Contains(plugin.Metadata)).ToList();
+            needsRestart = dependents.Aggregate(needsRestart, (b, p) => DisablePlugin(p) || b);
+
             DisabledConfig.Ref.Value.DisabledModIds.Add(plugin.Metadata.Id ?? plugin.Metadata.Name);
             DisabledConfig.Provider.Store(DisabledConfig.Ref.Value);
 
-            if (plugin.Plugin is IDisablablePlugin disable)
+            if (!needsRestart && plugin.Plugin is IDisablablePlugin disable)
             {
                 try
                 {
@@ -98,17 +113,30 @@ namespace IPA.Loader
                     Logger.loader.Error(e);
                 }
 
-                runtimeDisabled.Add(plugin);
-                _bsPlugins.Remove(plugin);
+                if (needsRestart)
+                    Logger.loader.Warn($"Disablable plugin has non-disablable dependents; some things may not work properly");
+            }
+            else needsRestart = true;
 
-                return false;
+            runtimeDisabled.Add(plugin);
+            _bsPlugins.Remove(plugin);
+            PluginLoader.DisabledPlugins.Add(plugin.Metadata);
+
+            try
+            {
+                PluginDisabled?.Invoke(plugin.Metadata, needsRestart);
+            }
+            catch (Exception e)
+            {
+                Logger.loader.Error($"Error occurred invoking disable event for {plugin.Metadata.Name}");
+                Logger.loader.Error(e);
             }
 
-            return true;
+            return needsRestart;
         }
 
         /// <summary>
-        /// Disables a plugin.
+        /// Disables a plugin, and all dependents.
         /// </summary>
         /// <param name="pluginId">the ID, or name if the ID is null, of the plugin to disable</param>
         /// <returns>whether a restart is needed to activate</returns>
@@ -123,15 +151,26 @@ namespace IPA.Loader
         {
             if (plugin == null) return false;
 
+            if (plugin.IsBare)
+            {
+                Logger.loader.Warn($"Trying to enable bare manifest");
+                return false;
+            }
+
+            if (IsEnabled(plugin)) return false;
+
+            Logger.loader.Info($"Enabling {plugin.Name}");
+
             DisabledConfig.Ref.Value.DisabledModIds.Remove(plugin.Id ?? plugin.Name);
             DisabledConfig.Provider.Store(DisabledConfig.Ref.Value);
 
             var needsRestart = true;
 
+            var depsNeedRestart = plugin.Dependencies.Aggregate(false, (b, p) => EnablePlugin(p) || b);
+
             var runtimeInfo = runtimeDisabled.FirstOrDefault(p => p.Metadata == plugin);
             if (runtimeInfo != null && runtimeInfo.Plugin is IDisablablePlugin disable)
             {
-                runtimeDisabled.Remove(runtimeInfo);
                 try
                 {
                     disable.OnEnable();
@@ -146,12 +185,29 @@ namespace IPA.Loader
             else
             {
                 PluginLoader.DisabledPlugins.Remove(plugin);
-                runtimeInfo = InitPlugin(plugin);
+                if (runtimeInfo == null)
+                {
+                    runtimeInfo = InitPlugin(plugin);
+                    needsRestart = false;
+                }
             }
+
+            if (runtimeInfo != null)
+                runtimeDisabled.Remove(runtimeInfo);
 
             _bsPlugins.Add(runtimeInfo);
 
-            return needsRestart;
+            try
+            {
+                PluginEnabled?.Invoke(runtimeInfo, needsRestart || depsNeedRestart);
+            }
+            catch (Exception e)
+            {
+                Logger.loader.Error($"Error occurred invoking enable event for {plugin.Name}");
+                Logger.loader.Error(e);
+            }
+
+            return needsRestart || depsNeedRestart;
         }
 
         /// <summary>
@@ -162,6 +218,20 @@ namespace IPA.Loader
         public static bool EnablePlugin(string pluginId) => 
             EnablePlugin(GetDisabledPluginFromId(pluginId) ?? GetDisabledPlugin(pluginId));
 
+        /// <summary>
+        /// Checks if a given plugin is disabled.
+        /// </summary>
+        /// <param name="meta">the plugin to check</param>
+        /// <returns><see langword="true"/> if the plugin is disabled, <see langword="false"/> otherwise.</returns>
+        public static bool IsDisabled(PluginMetadata meta) => DisabledPlugins.Contains(meta);
+
+        /// <summary>
+        /// Checks if a given plugin is enabled.
+        /// </summary>
+        /// <param name="meta">the plugin to check</param>
+        /// <returns><see langword="true"/> if the plugin is enabled, <see langword="false"/> otherwise.</returns>
+        public static bool IsEnabled(PluginMetadata meta) => !IsDisabled(meta);
+
         private static readonly List<PluginInfo> runtimeDisabled = new List<PluginInfo>();
         /// <summary>
         /// Gets a list of disabled BSIPA plugins.
@@ -169,9 +239,44 @@ namespace IPA.Loader
         public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins.Concat(runtimeDisabled.Select(p => p.Metadata));
 
         /// <summary>
+        /// An invoker for the <see cref="PluginEnabled"/> event.
+        /// </summary>
+        /// <param name="plugin">the plugin that was enabled</param>
+        /// <param name="needsRestart">whether it needs a restart to take effect</param>
+        public delegate void PluginEnableDelegate(PluginInfo plugin, bool needsRestart);
+        /// <summary>
+        /// An invoker for the <see cref="PluginDisabled"/> event.
+        /// </summary>
+        /// <param name="plugin">the plugin that was disabled</param>
+        /// <param name="needsRestart">whether it needs a restart to take effect</param>
+        public delegate void PluginDisableDelegate(PluginMetadata plugin, bool needsRestart);
+
+        /// <summary>
+        /// Called whenever a plugin is enabled.
+        /// </summary>
+        public static event PluginEnableDelegate PluginEnabled;
+        /// <summary>
+        /// Called whenever a plugin is disabled.
+        /// </summary>
+        public static event PluginDisableDelegate PluginDisabled;
+
+        /// <summary>
         /// Gets a list of all BSIPA plugins.
         /// </summary>
         public static IEnumerable<PluginInfo> AllPlugins => BSMetas;
+
+        /// <summary>
+        /// Converts a plugin's metadata to a <see cref="PluginInfo"/>.
+        /// </summary>
+        /// <param name="meta">the metadata</param>
+        /// <returns>the plugin info</returns>
+        public static PluginInfo InfoFromMetadata(PluginMetadata meta)
+        {
+            if (IsDisabled(meta))
+                return runtimeDisabled.FirstOrDefault(p => p.Metadata == meta);
+            else
+                return AllPlugins.FirstOrDefault(p => p.Metadata == meta);
+        }
 
         /// <summary>
         /// An <see cref="IEnumerable"/> of old IPA plugins.

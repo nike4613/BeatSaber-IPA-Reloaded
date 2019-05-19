@@ -59,6 +59,18 @@ namespace BSIPA_ModList.UI
 
 #pragma warning restore
 
+        public void Reload()
+        {
+            var cells = _customListTableView.GetPrivateField<List<TableCell>>("_visibleCells");
+            foreach (var c in cells)
+            {
+                c.gameObject.SetActive(false);
+                _customListTableView.AddCellToReusableCells(c);
+            }
+            cells.Clear();
+            _customListTableView.RefreshCells(true);
+        }
+
         private void DidSelectRow(TableView view, int index)
         {
             Debug.Assert(ReferenceEquals(view.dataSource, this));

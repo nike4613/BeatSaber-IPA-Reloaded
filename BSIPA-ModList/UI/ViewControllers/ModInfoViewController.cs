@@ -35,14 +35,27 @@ namespace BSIPA_ModList.UI
         private Button linkSourceButton;
         private Button linkDonateButton;
 
-        public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo, PluginManifest.LinksObject links = null)
+        private ModListFlowCoordinator flowController;
+        private bool showEnableDisable = false;
+
+        private TextMeshProUGUI restartMessage;
+        private Button enableDisableButton;
+        private new bool enabled = false;
+
+        public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo, PluginManifest.LinksObject links = null, bool showEnDis = false, ModListFlowCoordinator mlfc = null)
         {
+            showEnableDisable = showEnDis;
+
             Icon = icon;
             Name = name;
             Version = version;
             Author = author;
             Description = description;
             UpdateInfo = updateInfo;
+
+            enabled = !PluginManager.IsDisabled(updateInfo);
+
+            flowController = mlfc;
 
             if (rowTransformOriginal == null)
                 rowTransformOriginal = MenuButtonUI.Instance.GetPrivateField<RectTransform>("menuButtonsOriginal");
@@ -63,7 +76,52 @@ namespace BSIPA_ModList.UI
             view.Init(this);
             go.SetActive(true);
 
+            if (showEnDis)
+            {
+                restartMessage = BeatSaberUI.CreateText(rectTransform, "A restart is required to apply", new Vector2(11f, 33.5f));
+                restartMessage.fontSize = 4f;
+                restartMessage.gameObject.SetActive(false);
+
+                enableDisableButton = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(33, 32), new Vector2(25, 10), ToggleEnable);
+                enableDisableButton.GetComponentInChildren<StartMiddleEndButtonBackgroundController>().SetMiddleSprite();
+                UpdateButtonText();
+            }
+
             SetupLinks(links);
+        }
+
+        private Action setAction = () => { };
+        private void ToggleEnable()
+        {
+            var info = enabled ? PluginManager.InfoFromMetadata(UpdateInfo) : null;
+            bool needsRestart;
+            if (enabled)
+                needsRestart = PluginManager.DisablePlugin(info);
+            else
+                needsRestart =  PluginManager.EnablePlugin(UpdateInfo);
+
+            UpdateButtonText(!enabled, needsRestart);
+            if (!needsRestart)
+                flowController.exitActions.Add(setAction);
+        }
+
+        private void UpdateButtonText(bool? _enabled = null, bool _needsRestart = false)
+        {
+            enabled = _enabled ?? enabled;
+            if (enabled)
+                enableDisableButton.SetButtonText("Disable");
+            else
+                enableDisableButton.SetButtonText("Enable");
+            restartMessage.gameObject.SetActive(_needsRestart);
+        }
+
+        public void Reload(string name, string version, string author, string description)
+        {
+            Name = name;
+            Version = version;
+            Author = author;
+            Description = description;
+            view.Refresh();
         }
 
         private void SetupLinks(PluginManifest.LinksObject links = null, Uri moreInfoLink = null)
@@ -88,30 +146,26 @@ namespace BSIPA_ModList.UI
 
                 if (links?.ProjectHome != null)
                 {
-                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Home", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
+                    linkHomeButton = BeatSaberUI.CreateUIButton(rowTransform, "CreditsButton", buttonText: "Home", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(links.ProjectHome.ToString()));
-                    linkHomeButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
                 if (links?.ProjectSource != null)
                 {
-                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Source", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
+                    linkSourceButton = BeatSaberUI.CreateUIButton(rowTransform, "CreditsButton", buttonText: "Source", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(links.ProjectSource.ToString()));
-                    linkSourceButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
                 if (links?.Donate != null)
                 {
-                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "Donate", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "CreditsButton", buttonText: "Donate", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(links.Donate.ToString()));
-                    linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
                 if (moreInfoLink != null)
                 {
-                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "QuitButton", buttonText: "More Info", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
+                    linkDonateButton = BeatSaberUI.CreateUIButton(rowTransform, "CreditsButton", buttonText: "More Info", anchoredPosition: Vector2.zero, sizeDelta: new Vector2(20, 10),
                         onClick: () => Process.Start(moreInfoLink.ToString()));
-                    linkDonateButton.GetComponentInChildren<HorizontalLayoutGroup>().padding = new RectOffset(6, 6, 0, 0);
                     addedLink = true;
                 }
 
@@ -174,29 +228,28 @@ namespace BSIPA_ModList.UI
 
     internal class ModInfoView : MonoBehaviour
     {
+        private MarkdownView mdv;
         private TextMeshProUGUI titleText;
         private TextMeshProUGUI authorText;
         private Image icon;
+        private ModInfoViewController controller;
 
+        private const string TitleFormat = "{0} <size=60%>{1}";
         public void Init(ModInfoViewController controller)
         {
+            this.controller = controller;
+
             var rectTransform = transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(60f, 10f);
 
-            titleText = BeatSaberUI.CreateText(rectTransform, $"{controller.Name} <size=60%>{controller.Version}", new Vector2(11f, 27.5f));
+            titleText = BeatSaberUI.CreateText(rectTransform, string.Format(TitleFormat, controller.Name, controller.Version), new Vector2(11f, 27.5f));
             titleText.fontSize = 6f;
             authorText = BeatSaberUI.CreateText(rectTransform, controller.Author, new Vector2(11f, 22f));
             authorText.fontSize = 4.5f;
 
-            /*
-            descText = BeatSaberUI.CreateText(rectTransform, controller.Description, new Vector2(-4.5f, 12f));
-            descText.fontSize = 3.5f;
-            descText.enableWordWrapping = true;
-            descText.overflowMode = TextOverflowModes.ScrollRect;*/
-
             var mdvgo = new GameObject("MarkDown Desc");
             mdvgo.SetActive(false);
-            var mdv = mdvgo.AddComponent<MarkdownView>();
+            mdv = mdvgo.AddComponent<MarkdownView>();
             mdv.rectTransform.SetParent(rectTransform);
             mdv.rectTransform.anchorMin = new Vector2(.5f, .5f);
             mdv.rectTransform.anchorMax = new Vector2(.5f, .5f);
@@ -217,6 +270,14 @@ namespace BSIPA_ModList.UI
             icon.useSpriteMesh = true;
             icon.material = CustomUI.Utilities.UIUtilities.NoGlowMaterial;
             icon.gameObject.SetActive(true);
+        }
+
+        public void Refresh()
+        {
+            titleText.text = string.Format(TitleFormat, controller.Name, controller.Version);
+            authorText.text = controller.Author;
+            mdv.Markdown = controller.Description;
+            icon.sprite = controller.Icon;
         }
 
 #if DEBUG

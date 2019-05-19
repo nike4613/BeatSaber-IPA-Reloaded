@@ -24,8 +24,6 @@ namespace BSIPA_ModList
             Logger.log = logger;
 
             IPA.Updating.BeatMods.Updater.ModListPresent = true;
-
-
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
