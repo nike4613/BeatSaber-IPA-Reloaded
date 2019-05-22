@@ -18,6 +18,8 @@ namespace IPA.Loader.Features
         /// Note: When no parenthesis are provided, <paramref name="parameters"/> is an empty array.
         /// </summary>
         /// <remarks>
+        /// This gets called BEFORE your Init method.
+        /// 
         /// Returning <see langword="false" /> does *not* prevent the plugin from being loaded. It simply prevents the feature from being used.
         /// </remarks>
         /// <param name="meta">the metadata of the plugin that is being prepared</param>

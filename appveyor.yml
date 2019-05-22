@@ -1,6 +1,6 @@
 version: 'BSIPA-{branch}-{build}'
 environment:
-  bsipa_version: '3.12.20'
+  bsipa_version: '3.12.21'
 pull_requests:
   do_not_increment_build_number: true
 install:
