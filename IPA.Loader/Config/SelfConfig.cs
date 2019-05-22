@@ -37,7 +37,7 @@ namespace IPA.Config
         }
 
         internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "3.12.19"; 
+        internal const string IPAVersion = "3.12.20"; 
 		
         public bool Regenerate = true;
 
