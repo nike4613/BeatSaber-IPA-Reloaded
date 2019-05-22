@@ -614,7 +614,7 @@ namespace IPA.Loader
                 foreach (var feature in meta.Features)
                     try
                     {
-                        feature.AfterInit(info);
+                        feature.AfterInit(info, info.Plugin);
                     }
                     catch (Exception e)
                     {
