@@ -28,7 +28,6 @@ namespace IPA.Logging.Printers
         /// </summary>
         protected StreamWriter FileWriter;
 
-        private GZipStream zstream;
         private FileStream fstream;
 
         /// <summary>
@@ -36,6 +35,8 @@ namespace IPA.Logging.Printers
         /// </summary>
         /// <returns></returns>
         protected abstract FileInfo GetFileInfo();
+
+        private const string latestFormat = "_latest{0}";
 
         private void InitLog()
         {
@@ -45,11 +46,18 @@ namespace IPA.Logging.Printers
                 { // first init
                     fileInfo = GetFileInfo();
                     var ext = fileInfo.Extension;
-                    fileInfo = new FileInfo(fileInfo.FullName + ".gz");
-                    fileInfo.Create().Close();
 
-                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName ?? throw new InvalidOperationException(), $"_latest{ext}.gz"));
+                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName ?? throw new InvalidOperationException(), string.Format(latestFormat, ext)));
                     if (symlink.Exists) symlink.Delete();
+
+                    foreach (var file in fileInfo.Directory.EnumerateFiles("*.log", SearchOption.TopDirectoryOnly))
+                    {
+                        if (file.Extension == ".gz") continue;
+
+                        CompressOldLog(file);
+                    }
+
+                    fileInfo.Create().Close();
 
                     try
                     {
@@ -73,6 +81,20 @@ namespace IPA.Logging.Printers
             }
         }
 
+        private static async void CompressOldLog(FileInfo file)
+        {
+            Logger.log.Debug($"Compressing log file {file}");
+
+            var newFile = new FileInfo(file.FullName + ".gz");
+
+            using (var istream = file.OpenRead())
+            using (var ostream = newFile.Create())
+            using (var gz = new GZipStream(ostream, CompressionMode.Compress, CompressionLevel.BestCompression, false))
+                await istream.CopyToAsync(gz);
+
+            file.Delete();
+        }
+
         /// <summary>
         /// Called at the start of any print session.
         /// </summary>
@@ -81,11 +103,7 @@ namespace IPA.Logging.Printers
             InitLog();
 
             fstream = fileInfo.Open(FileMode.Append, FileAccess.Write);
-            zstream = new GZipStream(fstream, CompressionMode.Compress)
-            {
-                FlushMode = FlushType.Full
-            };
-            FileWriter = new StreamWriter(zstream, new UTF8Encoding(false));
+            FileWriter = new StreamWriter(fstream, new UTF8Encoding(false));
         }
 
         /// <summary>
@@ -94,13 +112,10 @@ namespace IPA.Logging.Printers
         public sealed override void EndPrint()
         {
             FileWriter.Flush();
-            zstream.Flush();
             fstream.Flush();
             FileWriter.Dispose();
-            zstream.Dispose();
             fstream.Dispose();
             FileWriter = null;
-            zstream = null;
             fstream = null;
         }
 
@@ -120,13 +135,10 @@ namespace IPA.Logging.Printers
             if (disposing)
             {
                 FileWriter.Flush();
-                zstream.Flush();
                 fstream.Flush();
                 FileWriter.Close();
-                zstream.Close();
                 fstream.Close();
                 FileWriter.Dispose();
-                zstream.Dispose();
                 fstream.Dispose();
             }
         }

@@ -108,10 +108,12 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _restartGame = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(ButtonXOffset, -8f), ButtonSize, Restart, "Restart Game");
                 _restartGame.interactable = DownloadController.Instance.HadUpdates;
                 _restartGame.ToggleWordWrapping(false);
-
-                DownloadController.Instance.OnDownloaderListChanged += Refresh;
-                DownloadController.Instance.OnDownloadStateChanged += DownloaderStateChanged;
             }
+
+            DownloadController.Instance.OnDownloaderListChanged += Refresh;
+            DownloadController.Instance.OnDownloadStateChanged += DownloaderStateChanged;
+
+            DownloaderStateChanged();
         }
 
         private void Restart()
