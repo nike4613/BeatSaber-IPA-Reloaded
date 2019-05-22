@@ -11,6 +11,8 @@ namespace IPA
     {
         /// <summary>
         /// Gets invoked when the application is started.
+        /// 
+        /// THIS EVENT WILL NOT BE GUARANTEED TO FIRE. USE Init OR <see cref="IDisablablePlugin.OnEnable"/> INSTEAD.
         /// </summary>
         void OnApplicationStart();
 

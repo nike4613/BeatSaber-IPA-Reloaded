@@ -24,6 +24,11 @@ namespace BSIPA_ModList
             Logger.log = logger;
 
             IPA.Updating.BeatMods.Updater.ModListPresent = true;
+
+            // Load resources ahead of time
+            MarkdownView.StartLoadResourcesAsync();
+
+            SharedCoroutineStarter.instance.StartCoroutine(LoadPluginIcons());
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
@@ -36,10 +41,6 @@ namespace BSIPA_ModList
 
         public void OnApplicationStart()
         {
-            // Load resources ahead of time
-            MarkdownView.StartLoadResourcesAsync();
-
-            SharedCoroutineStarter.instance.StartCoroutine(LoadPluginIcons());
         }
 
         private static IEnumerator LoadPluginIcons()
