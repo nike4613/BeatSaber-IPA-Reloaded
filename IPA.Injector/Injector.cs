@@ -59,6 +59,8 @@ namespace IPA.Injector
 
                 Updates.InstallPendingUpdates();
 
+                LibLoader.SetupAssemblyFilenames(true);
+
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
             }
             catch (Exception e)
@@ -81,6 +83,7 @@ namespace IPA.Injector
             if (loadingDone) return;
             loadingDone = true;
             AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
+            LibLoader.SetupAssemblyFilenames(true);
         }
 
         private static void InstallBootstrapPatch()

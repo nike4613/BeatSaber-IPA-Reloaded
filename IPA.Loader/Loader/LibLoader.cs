@@ -33,9 +33,9 @@ namespace IPA.Loader
         internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
         internal static Dictionary<string, string> FilenameLocations;
 
-        internal static void SetupAssemblyFilenames()
+        internal static void SetupAssemblyFilenames(bool force = false)
         {
-            if (FilenameLocations == null)
+            if (FilenameLocations == null || force)
             {
                 FilenameLocations = new Dictionary<string, string>();
 
