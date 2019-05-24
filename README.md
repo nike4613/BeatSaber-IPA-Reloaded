@@ -55,6 +55,9 @@ REGEDIT4
 "winhttp"="native,builtin"
 ```
 
+For steam there's a per-game wine prefix under compatdata. In this case SteamLibrary/steamapps/compatdata/620980/pfx/user.reg.
+Changes to this file will likely be ovewritten when beatsaber updates or if local files are validated through steam.
+
 ## Building
 
 ### Prerequisites 
