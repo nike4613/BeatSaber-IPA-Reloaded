@@ -217,49 +217,6 @@ namespace IPA.Loader
                     Logger.loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
                     Logger.loader.Error(e);
                 }
-
-                foreach (var meta in PluginsMetadata)
-                { // process description include
-                    var lines = meta.Manifest.Description.Split('\n');
-                    var m = embeddedTextDescriptionPattern.Match(lines[0]);
-                    if (m.Success)
-                    {
-                        if (meta.IsBare)
-                        {
-                            Logger.loader.Warn($"Bare manifest cannot specify description file");
-                            meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
-                            continue;
-                        }
-
-                        var name = m.Groups[1].Value;
-                        string description;
-                        if (!meta.IsSelf)
-                        {
-                            var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
-                                                                       .Where(r => r != null)
-                                                                       .FirstOrDefault(r => r.Name == name);
-                            if (resc == null)
-                            {
-                                Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
-                                meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
-                                continue;
-                            }
-
-                            using (var reader = new StreamReader(resc.GetResourceStream()))
-                                description = reader.ReadToEnd();
-                        }
-                        else
-                        {
-                            using (var descriptionReader =
-                                new StreamReader(
-                                    meta.Assembly.GetManifestResourceStream(name) ??
-                                    throw new InvalidOperationException()))
-                                description = descriptionReader.ReadToEnd();
-                        }
-
-                        meta.Manifest.Description = description;
-                    }
-                }
             }
 
             IEnumerable<string> bareManifests = Directory.GetFiles(BeatSaber.PluginsPath, "*.json");
@@ -284,6 +241,49 @@ namespace IPA.Loader
                 {
                     Logger.loader.Error($"Could not load data for bare manifest {Path.GetFileName(manifest)}");
                     Logger.loader.Error(e);
+                }
+            }
+
+            foreach (var meta in PluginsMetadata)
+            { // process description include
+                var lines = meta.Manifest.Description.Split('\n');
+                var m = embeddedTextDescriptionPattern.Match(lines[0]);
+                if (m.Success)
+                {
+                    if (meta.IsBare)
+                    {
+                        Logger.loader.Warn($"Bare manifest cannot specify description file");
+                        meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
+                        continue;
+                    }
+
+                    var name = m.Groups[1].Value;
+                    string description;
+                    if (!meta.IsSelf)
+                    {
+                        var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
+                                                                   .Where(r => r != null)
+                                                                   .FirstOrDefault(r => r.Name == name);
+                        if (resc == null)
+                        {
+                            Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
+                            meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
+                            continue;
+                        }
+
+                        using (var reader = new StreamReader(resc.GetResourceStream()))
+                            description = reader.ReadToEnd();
+                    }
+                    else
+                    {
+                        using (var descriptionReader =
+                            new StreamReader(
+                                meta.Assembly.GetManifestResourceStream(name) ??
+                                throw new InvalidOperationException()))
+                            description = descriptionReader.ReadToEnd();
+                    }
+
+                    meta.Manifest.Description = description;
                 }
             }
         }
