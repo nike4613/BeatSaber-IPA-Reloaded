@@ -13,6 +13,8 @@ using UnityEngine.EventSystems;
 using System.Diagnostics;
 using System.Collections;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BSIPA_ModList.UI.ViewControllers
 {
@@ -283,8 +285,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             None = 0, Bold = 1, Italic = 2, Underline = 4, Strikethrough = 8,
         }
 
-        private const string LinkDefaultColor = "#0061ff";
-        private const string LinkHoverColor = "#009dff";
+        private const string LinkDefaultColor = "#59B0F4";
+        // private const string LinkHoverColor = "#009dff";
+
+        private static readonly Regex linkRefTitleColorRegex = new Regex(@"\{\s*color:\s*#?([a-fA-F0-9]{6})\s*\}", RegexOptions.Compiled | RegexOptions.Singleline);
 
         const float PSize = 3.5f;
         const float BlockCodeSize = PSize - .5f;
@@ -597,7 +601,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                             break;
 
                         case BlockTag.ReferenceDefinition: // i have no idea what the state looks like here
-                            //block.DebugPrintTo(Logger.md.Info, 5);
                             break;
                     }
                 }
@@ -690,8 +693,16 @@ namespace BSIPA_ModList.UI.ViewControllers
                         case InlineTag.Link:
                             EnsureText();
                             Flag(CurrentTextFlags.Underline);
+
+                            var color = LinkDefaultColor;
+                            var targetUrl = ResolveUri(inl.TargetUrl);
+
+                            var m = linkRefTitleColorRegex.Match(inl.LiteralContent);
+                            if (m.Success)
+                                color = "#" + m.Groups[1].Value;
+
                             if (node.IsOpening)
-                                currentText.text += $"<color={LinkDefaultColor}><link=\"{ResolveUri(inl.TargetUrl)}\">";
+                                currentText.text += $"<color={color}><link=\"{targetUrl}\">";
                             else if (node.IsClosing)
                                 currentText.text += "</link></color>";
                             break;
