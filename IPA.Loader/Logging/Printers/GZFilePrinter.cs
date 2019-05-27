@@ -52,6 +52,7 @@ namespace IPA.Logging.Printers
 
                     foreach (var file in fileInfo.Directory.EnumerateFiles("*.log", SearchOption.TopDirectoryOnly))
                     {
+                        if (file.Equals(fileInfo)) continue;
                         if (file.Extension == ".gz") continue;
 
                         CompressOldLog(file);
