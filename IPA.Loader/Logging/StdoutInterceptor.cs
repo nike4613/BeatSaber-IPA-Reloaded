@@ -137,6 +137,7 @@ namespace IPA.Logging
             {
                 var getColorM = typeof(ConsoleHarmonyPatches).GetMethod("GetColor");
                 return new[] {
+                    new CodeInstruction(OpCodes.Tailcall),
                     new CodeInstruction(OpCodes.Call, getColorM),
                     new CodeInstruction(OpCodes.Ret)
                 };
@@ -147,6 +148,7 @@ namespace IPA.Logging
                 var setColorM = typeof(ConsoleHarmonyPatches).GetMethod("SetColor");
                 return new[] {
                     new CodeInstruction(OpCodes.Ldarg_0),
+                    new CodeInstruction(OpCodes.Tailcall),
                     new CodeInstruction(OpCodes.Call, setColorM),
                     new CodeInstruction(OpCodes.Ret)
                 };
@@ -156,6 +158,7 @@ namespace IPA.Logging
             {
                 var resetColor = typeof(ConsoleHarmonyPatches).GetMethod("ResetColor");
                 return new[] {
+                    new CodeInstruction(OpCodes.Tailcall),
                     new CodeInstruction(OpCodes.Call, resetColor),
                     new CodeInstruction(OpCodes.Ret)
                 };
