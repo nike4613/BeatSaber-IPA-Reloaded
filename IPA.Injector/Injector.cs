@@ -19,6 +19,7 @@ namespace IPA.Injector
     public static class Injector
     {
         private static Task pluginAsyncLoadTask;
+        private static Task permissionFixTask;
 
         // ReSharper disable once UnusedParameter.Global
         public static void Main(string[] args)
@@ -62,6 +63,7 @@ namespace IPA.Injector
                 LibLoader.SetupAssemblyFilenames(true);
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
+                permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
             }
             catch (Exception e)
             {
@@ -264,6 +266,7 @@ namespace IPA.Injector
         {
             // wait for plugins to finish loading
             pluginAsyncLoadTask.Wait();
+            permissionFixTask.Wait();
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata));
             PluginComponent.Create();
