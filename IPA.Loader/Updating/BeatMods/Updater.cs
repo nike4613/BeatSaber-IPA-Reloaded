@@ -395,12 +395,12 @@ namespace IPA.Updating.BeatMods
                     .Select(mod => mod.Version).Max(); // (2.1) get the max version
                 // ReSharper disable once AssignmentInConditionalExpression
                 if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
-                dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; // dep.Version is only not null if its already installed
+                dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; 
             }
         }
 
         internal void CheckDependencies(Ref<List<DependencyObject>> list)
-        { // also starts download of mods
+        { 
             var toDl = new List<DependencyObject>();
 
             foreach (var dep in list.Value)
