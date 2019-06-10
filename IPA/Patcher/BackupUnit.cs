@@ -93,7 +93,8 @@ namespace IPA.Patcher
             else
             {
                 // Make empty file
-                backupPath.Create().Close();
+                //backupPath.Create().Close();
+                // don't do this bc its dumb
             }
 
             if (!File.Exists(_manifestFile.FullName))
@@ -118,25 +119,19 @@ namespace IPA.Patcher
                 var backupFile = new FileInfo(Path.Combine(_backupPath.FullName, relativePath));
                 var target = new FileInfo(Path.Combine(_context.ProjectRoot, relativePath));
 
-                if (backupFile.Exists)
+                if (backupFile.Exists && backupFile.Length > 0)
                 {
-                    if (backupFile.Length > 0)
-                    {
-                        Console.WriteLine("  {0} => {1}", backupFile.FullName, target.FullName);
-                        target.Directory?.Create();
-                        backupFile.CopyTo(target.FullName, true);
-                    }
-                    else
-                    {
-                        Console.WriteLine("  x {0}", target.FullName);
-                        if(target.Exists)
-                        {
-                            target.Delete();
-                        }
-                    }
-                } else
+                    Console.WriteLine("  {0} => {1}", backupFile.FullName, target.FullName);
+                    target.Directory?.Create();
+                    backupFile.CopyTo(target.FullName, true);
+                }
+                else
                 {
-                    Console.Error.WriteLine("Backup not found!");
+                    Console.WriteLine("  x {0}", target.FullName);
+                    if(target.Exists)
+                    {
+                        target.Delete();
+                    }
                 }
             }
         }
