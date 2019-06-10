@@ -35,7 +35,7 @@ namespace IPA.Injector.Backups
             if (unit._manifestFile.Exists)
             {
                 var manifest = File.ReadAllText(unit._manifestFile.FullName);
-                foreach (var line in manifest.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var line in manifest.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
                     unit._files.Add(line);
             }
             else
@@ -81,7 +81,8 @@ namespace IPA.Injector.Backups
             else
             {
                 // Make empty file
-                backupPath.Create().Close();
+                //backupPath.Create().Close();
+                // do not do this because it can cause problems
             }
 
             if (_files.Contains(relativePath)) return;
