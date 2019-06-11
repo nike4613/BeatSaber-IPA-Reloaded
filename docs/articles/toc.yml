@@ -1,2 +1,4 @@
+- name: Home
+  href: ../index.md
 - name: Getting Started
-  href: intro.md
+  href: index.md
