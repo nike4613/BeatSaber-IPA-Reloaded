@@ -58,7 +58,7 @@ after_deploy:
             
             git config --global core.autocrlf true
             git config --global credential.helper store
-            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_acct_user):$($env:gh_acct_pw)@github.com`n"
+            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_acct_user):$($env:gh_acct_pw)@github.com/"
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
             git clone "https://github.com/$($env:APPVEYOR_REPO_NAME).git" -b gh-pages origin_site
