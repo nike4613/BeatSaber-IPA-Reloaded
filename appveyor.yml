@@ -1,10 +1,8 @@
 version: 'BSIPA-{branch}-{build}'
 environment:
   bsipa_version: '3.12.21'
-  gh_acct_user:
-    secure: Q4+sZFxDOY7dL9prok446NlMzp3orJA0YmiBz9AYWLs=
-  gh_acct_pw:
-    secure: Aqn8uiVQ4vvjwgUYUaO4iGWJwqDVQppkYWU2x6s/p4ZgRrhI28FiIcFv6/wqxS9n
+  gh_token:
+    secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
 pull_requests:
   do_not_increment_build_number: true
 install:
@@ -58,7 +56,7 @@ after_deploy:
             
             git config --global core.autocrlf true
             git config --global credential.helper store
-            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_acct_user):$($env:gh_acct_pw)@github.com/"
+            Add-Content "$HOME\.git-credentials" "https://$($env:gh_token):x-oauth-basic@github.com`n
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
             git clone "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
