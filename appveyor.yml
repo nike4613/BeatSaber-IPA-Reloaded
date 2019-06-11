@@ -48,7 +48,7 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: false
-after_deploy:
+before_deploy:
   - ps: |
         if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
         {
