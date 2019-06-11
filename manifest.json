@@ -1,8 +1,80 @@
 {
   "homepages": [],
-  "source_base_path": "C:/projects/beatsaber-ipa-reloaded-9smsb/IPA.Loader/doc",
+  "source_base_path": "C:/projects/beatsaber-ipa-reloaded-9smsb/docs",
   "xrefmap": "xrefmap.yml",
   "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/BSIPA_ModList.Plugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BSIPA_ModList.Plugin.html",
+          "hash": "gLiqzAJvsxX6jpBV3ULYOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/BSIPA_ModList.UI.ViewControllers.MarkdownView.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BSIPA_ModList.UI.ViewControllers.MarkdownView.html",
+          "hash": "9Mu2hixNIgOxqk30jLa6xw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/BSIPA_ModList.UI.ViewControllers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BSIPA_ModList.UI.ViewControllers.html",
+          "hash": "97EweQn+hOrrN5Ld7inEUw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/BSIPA_ModList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BSIPA_ModList.html",
+          "hash": "PO3QNv7+mX4j+q4EZvvAdA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Doorstop.Loader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Doorstop.Loader.html",
+          "hash": "gUARU9Hg8uMw/sMO8sNbBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Doorstop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Doorstop.html",
+          "hash": "0S1dBMxWGA1c2YPP3QYhhw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
     {
       "type": "ManagedReference",
       "source_relative_path": "api/IPA.Config.Config.NameAttribute.yml",
@@ -142,6 +214,66 @@
         ".html": {
           "relative_path": "api/IPA.IGenericEnhancedPlugin.html",
           "hash": "qE4SlrxdOvFFT7e/QX440Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IPA.Injector.Backups.BackupManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IPA.Injector.Backups.BackupManager.html",
+          "hash": "Lwb8DkNDmM/2+kEfvNAgVQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IPA.Injector.Backups.BackupUnit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IPA.Injector.Backups.BackupUnit.html",
+          "hash": "DneAsphO3cGKwBBsND/s1A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IPA.Injector.Backups.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IPA.Injector.Backups.html",
+          "hash": "A1PSezpI/l59NEyaB1c3Pg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IPA.Injector.Injector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IPA.Injector.Injector.html",
+          "hash": "LJyu8VsVxTUQQLvksMpvJA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IPA.Injector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IPA.Injector.html",
+          "hash": "5vq38D+CyqBlZJlT33LNcw=="
         }
       },
       "is_incremental": false,
@@ -607,12 +739,36 @@
       "version": ""
     },
     {
+      "type": "ManagedReference",
+      "source_relative_path": "api/MSBuildTasks.AssemblyRename.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/MSBuildTasks.AssemblyRename.html",
+          "hash": "pgfUKq8tX1bdcA3waxb/ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/MSBuildTasks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/MSBuildTasks.html",
+          "hash": "U6tLwp2YqMVIuQAQnY/bkw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "api/index.md",
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "z2KlFnNYAo6GRLTCD1PJPg=="
+          "hash": "EFQdyos1QjUmeSv/rodHyA=="
         }
       },
       "is_incremental": false,
@@ -624,7 +780,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "B/KjbAdN6ION9PPOtzNf5Q=="
+          "hash": "QzbhtzF7aWvnfs8WpWGrLQ=="
         }
       },
       "is_incremental": false,
@@ -636,7 +792,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/intro.html",
-          "hash": "K5OtQF5satcqUNsSWg1+rw=="
+          "hash": "7M61FgfW+tGkb7DH46bo2A=="
         }
       },
       "is_incremental": false,
@@ -660,7 +816,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "w3vZu73SpBfNdhwgvAQlgQ=="
+          "hash": "nBM3wtARAZPMYL05/aA+sg=="
         }
       },
       "is_incremental": false,
@@ -690,16 +846,16 @@
         "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 63,
+          "skipped_file_count": 0
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 3,
-          "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 50,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
