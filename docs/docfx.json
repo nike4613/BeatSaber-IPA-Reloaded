@@ -53,6 +53,10 @@
     "template": [
       "default", "templates/material/material"
     ],
+    "globalMetadata": {
+      "_enableSearch": true,
+      "_enableNewTab": true
+    },
     "postProcessors": [],
     "markdownEngineName": "dfm",
     "noLangKeyword": false,

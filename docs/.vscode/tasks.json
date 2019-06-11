@@ -6,7 +6,8 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "docfx metadata; docfx build" 
+      "command": "docfx metadata; docfx build",
+      "problemMatcher": []
     }
   ]
 }
