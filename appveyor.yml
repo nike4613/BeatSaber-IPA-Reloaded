@@ -56,6 +56,7 @@ after_deploy:
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
             }
             
+            git config --global core.autocrlf true
             git config --global credential.helper store
             Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_acct_user):$($env:gh_acct_pw)@github.com`n"
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
