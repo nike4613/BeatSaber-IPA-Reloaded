@@ -4,9 +4,6 @@
 [submodule "BuildTools"]
 	path = BuildTools
 	url = https://github.com/beat-saber-modding-group/BS-Plugin-BuildTools.git
-[submodule "docs/templates/material"]
-	path = docs/templates/material
-	url = https://github.com/ovasquez/docfx-material.git
 [submodule "docs/templates/darkfx"]
 	path = docs/templates/darkfx
 	url = https://github.com/steffen-wilke/darkfx.git
