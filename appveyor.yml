@@ -6,6 +6,12 @@ pull_requests:
 install:
   - git submodule update --init --recursive
   - nuget restore
+  - ps: |
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        {
+            git checkout $env:APPVEYOR_REPO_BRANCH -q
+            choco install docfx -y
+        }
 image: Visual Studio 2017
 configuration: Release
 platform: x64
@@ -36,3 +42,24 @@ deploy:
   force_update: true
   on:
     branch: master
+after_deploy:
+  - ps: |
+        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:APPVEYOR_REPO_BRANCH -eq 'master')
+        {
+            cd IPA.Loader/doc
+            & docfx docfx.json
+            if ($lastexitcode -ne 0){
+              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+            }
+            
+            git config --global credential.helper store
+            #Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+            git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
+            git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
+            git clone "https://github.com/$env:APPVEYOR_REPO_NAME.git" -b gh-pages origin_site -q
+            Copy-Item origin_site/.git _site -recurse
+            CD _site
+            git add -A 2>&1
+            git commit -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs" -q
+            git push origin gh-pages -q
+        }
