@@ -7,7 +7,7 @@ namespace IPA.Injector.Backups
     /// <summary>
     /// A unit for backup. WIP.
     /// </summary>
-    public class BackupUnit
+    internal class BackupUnit
     {
         public string Name { get; private set; }
         

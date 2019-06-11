@@ -17,8 +17,17 @@ namespace BSIPA_ModList
         internal static IPALogger md => log.GetChildLogger("MarkDown");
     }
 
-    public class Plugin : IBeatSaberPlugin
+    /// <summary>
+    /// The main plugin type for the in-game mod list mod.
+    /// </summary>
+    internal class Plugin : IBeatSaberPlugin
     {
+        /// <summary>
+        /// Initializes the plugin with certain parameters. Is only called once.
+        /// 
+        /// This is called by the plugin loader in BSIPA, and thus must be <see langword="public"/>.
+        /// </summary>
+        /// <param name="logger">a logger to initialize the plugin with</param>
         public void Init(IPALogger logger)
         {
             Logger.log = logger;
