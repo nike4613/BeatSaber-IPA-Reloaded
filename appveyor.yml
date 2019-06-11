@@ -64,7 +64,10 @@ after_deploy:
             git clone "https://github.com/$($env:APPVEYOR_REPO_NAME).git" -b gh-pages origin_site
             Move-Item origin_site/.git _site
             CD _site
+            echo "Adding..."
             git add -A 2>&1
+            echo "Commiting..."
             git commit -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs"
+            echo "Pushing..."
             git push origin gh-pages
         }
