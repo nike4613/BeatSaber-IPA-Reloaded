@@ -53,10 +53,7 @@
     "template": [
       "default", "templates/material/material"
     ],
-    "globalMetadata": {
-      "_enableSearch": true,
-      "_enableNewTab": true
-    },
+    "globalMetadataFiles": ["all_globals.json"],
     "postProcessors": [],
     "markdownEngineName": "dfm",
     "noLangKeyword": false,
