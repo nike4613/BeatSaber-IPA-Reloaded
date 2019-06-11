@@ -16,12 +16,12 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
     
-    
-    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
   </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
@@ -58,6 +58,16 @@
           </div>
         </div>
       </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
       <div role="main" class="container body-content hide-when-search">
         
         <div class="sidenav hide-when-search">
@@ -73,7 +83,7 @@
   
   <h1 id="IPA_Loader_PluginInitInjector_InjectParameter" data-uid="IPA.Loader.PluginInitInjector.InjectParameter" class="text-break">Delegate PluginInitInjector.InjectParameter
   </h1>
-  <div class="markdown level0 summary"><p>A typed injector for a plugin's Init method. When registered, called for all associated types. If it returns null, the default for the type will be used.</p>
+  <div class="markdown level0 summary"><p>A typed injector for a plugin&apos;s Init method. When registered, called for all associated types. If it returns null, the default for the type will be used.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Loader.html">IPA.Loader</a></h6>
@@ -93,15 +103,15 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
         <td><span class="parametername">previous</span></td>
         <td><p>the previous return value of the function, or <span class="xref">null</span> if never called for plugin.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Reflection.ParameterInfo</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.reflection.parameterinfo">ParameterInfo</a></td>
         <td><span class="parametername">param</span></td>
-        <td><p>the <span class="xref">System.Reflection.ParameterInfo</span> of the parameter being injected.</p>
+        <td><p>the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.reflection.parameterinfo">ParameterInfo</a> of the parameter being injected.</p>
 </td>
       </tr>
       <tr>
@@ -122,7 +132,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
         <td><p>the value to inject into that parameter.</p>
 </td>
       </tr>

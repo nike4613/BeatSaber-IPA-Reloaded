@@ -16,12 +16,12 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
     
-    
-    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
   </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
@@ -58,6 +58,16 @@
           </div>
         </div>
       </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
       <div role="main" class="container body-content hide-when-search">
         
         <div class="sidenav hide-when-search">
@@ -78,31 +88,31 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">Feature</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
     </div>
     <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetType()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
     </div>
     <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Loader.Features.html">IPA.Loader.Features</a></h6>
@@ -143,7 +153,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><p>the message to show when the feature is marked invalid</p>
 </td>
       </tr>
@@ -175,7 +185,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><p><span class="xref">true</span> if this <a class="xref" href="IPA.Loader.Features.Feature.html">Feature</a> will be stored on the plugin metadata, <span class="xref">false</span> otherwise</p>
 </td>
       </tr>
@@ -266,7 +276,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
   </span>
   <a id="IPA_Loader_Features_Feature_BeforeInit_" data-uid="IPA.Loader.Features.Feature.BeforeInit*"></a>
   <h4 id="IPA_Loader_Features_Feature_BeforeInit_IPA_Loader_PluginLoader_PluginInfo_" data-uid="IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginLoader.PluginInfo)">BeforeInit(PluginLoader.PluginInfo)</h4>
-  <div class="markdown level1 summary"><p>Called before a plugin's <code>Init</code> method is called. This will not be called if there is no <code>Init</code> method. This should never throw an exception. An exception will abort the loading of the plugin with an error.</p>
+  <div class="markdown level1 summary"><p>Called before a plugin&apos;s <code>Init</code> method is called. This will not be called if there is no <code>Init</code> method. This should never throw an exception. An exception will abort the loading of the plugin with an error.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -301,7 +311,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><p>whether or not to call the Init method</p>
 </td>
       </tr>
@@ -351,7 +361,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><p>whether or not the plugin should be loaded</p>
 </td>
       </tr>
@@ -388,7 +398,7 @@ Any features it defines, for example, will still be loaded.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><p>the truthiness of the Feature.</p>
 </td>
       </tr>
@@ -428,7 +438,7 @@ Any features it defines, for example, will still be loaded.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.String</span>[]</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>[]</td>
         <td><span class="parametername">parameters</span></td>
         <td><p>the parameters passed to the feature definition, or null</p>
 </td>
@@ -445,7 +455,7 @@ Any features it defines, for example, will still be loaded.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><p><span class="xref">true</span> if the feature is valid for the plugin, <span class="xref">false</span> otherwise</p>
 </td>
       </tr>
@@ -464,7 +474,7 @@ Any features it defines, for example, will still be loaded.</p>
   </span>
   <a id="IPA_Loader_Features_Feature_RequireLoaded_" data-uid="IPA.Loader.Features.Feature.RequireLoaded*"></a>
   <h4 id="IPA_Loader_Features_Feature_RequireLoaded_IPA_Loader_PluginLoader_PluginMetadata_" data-uid="IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginLoader.PluginMetadata)">RequireLoaded(PluginLoader.PluginMetadata)</h4>
-  <div class="markdown level1 summary"><p>Ensures a plugin's assembly is loaded. Do not use unless you need to.</p>
+  <div class="markdown level1 summary"><p>Ensures a plugin&apos;s assembly is loaded. Do not use unless you need to.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

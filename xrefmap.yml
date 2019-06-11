@@ -58,6 +58,9 @@ references:
   isSpec: "True"
   fullName: BSIPA_ModList.UI.ViewControllers.MarkdownView.rectTransform
   nameWithType: MarkdownView.rectTransform
+- uid: getting_started
+  name: Getting Started
+  href: articles/index.html
 - uid: IPA
   name: IPA
   href: api/IPA.html
