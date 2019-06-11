@@ -43,6 +43,7 @@ namespace IPA.Logging
         /// <summary>
         /// The standard format for log messages.
         /// </summary>
+        /// <value>the format for the standard loggers to print in</value>
         public static string LogFormat { get; protected internal set; } = "[{3} @ {2:HH:mm:ss} | {1}] {0}";
 
         /// <summary>
@@ -174,97 +175,97 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends a debug message.
-        /// Equivalent to Log(Level.Debug, message);
-        /// <see cref="Log(Level, string)"/>
+        /// Equivalent to `Log(Level.Debug, message);`
         /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
         public virtual void Debug(string message) => Log(Level.Debug, message);
 
         /// <summary>
         /// Sends an exception as a debug message.
-        /// Equivalent to Log(Level.Debug, e);
-        /// <see cref="Log(Level, Exception)"/>
+        /// Equivalent to `Log(Level.Debug, e);`
         /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
         public virtual void Debug(Exception e) => Log(Level.Debug, e);
 
         /// <summary>
         /// Sends an info message.
-        /// Equivalent to Log(Level.Info, message).
-        /// <see cref="Log(Level, string)"/>
+        /// Equivalent to `Log(Level.Info, message);`
         /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
         public virtual void Info(string message) => Log(Level.Info, message);
 
         /// <summary>
         /// Sends an exception as an info message.
-        /// Equivalent to Log(Level.Info, e);
-        /// <see cref="Log(Level, Exception)"/>
+        /// Equivalent to `Log(Level.Info, e);`
         /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
         public virtual void Info(Exception e) => Log(Level.Info, e);
-        
+
         /// <summary>
         /// Sends a notice message.
-        /// Equivalent to Log(Level.Notice, message).
-        /// <see cref="Log(Level, string)"/>
+        /// Equivalent to `Log(Level.Notice, message);`
         /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
         public virtual void Notice(string message) => Log(Level.Notice, message);
 
         /// <summary>
         /// Sends an exception as a notice message.
-        /// Equivalent to Log(Level.Notice, e);
-        /// <see cref="Log(Level, Exception)"/>
+        /// Equivalent to `Log(Level.Notice, e);`
         /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
         public virtual void Notice(Exception e) => Log(Level.Notice, e);
 
         /// <summary>
         /// Sends a warning message.
-        /// Equivalent to Log(Level.Warning, message).
-        /// <see cref="Log(Level, string)"/>
+        /// Equivalent to `Log(Level.Warning, message);`
         /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
         public virtual void Warn(string message) => Log(Level.Warning, message);
 
         /// <summary>
         /// Sends an exception as a warning message.
-        /// Equivalent to Log(Level.Warning, e);
-        /// <see cref="Log(Level, Exception)"/>
+        /// Equivalent to `Log(Level.Warning, e);`
         /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
         public virtual void Warn(Exception e) => Log(Level.Warning, e);
 
         /// <summary>
         /// Sends an error message.
-        /// Equivalent to Log(Level.Error, message).
-        /// <see cref="Log(Level, string)"/>
+        /// Equivalent to `Log(Level.Error, message);`
         /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
         public virtual void Error(string message) => Log(Level.Error, message);
 
         /// <summary>
         /// Sends an exception as an error message.
-        /// Equivalent to Log(Level.Error, e);
-        /// <see cref="Log(Level, Exception)"/>
+        /// Equivalent to `Log(Level.Error, e);`
         /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
         public virtual void Error(Exception e) => Log(Level.Error, e);
 
         /// <summary>
         /// Sends a critical message.
-        /// Equivalent to Log(Level.Critical, message).
-        /// <see cref="Log(Level, string)"/>
+        /// Equivalent to `Log(Level.Critical, message);`
         /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
         public virtual void Critical(string message) => Log(Level.Critical, message);
 
         /// <summary>
         /// Sends an exception as a critical message.
-        /// Equivalent to Log(Level.Critical, e);
-        /// <see cref="Log(Level, Exception)"/>
+        /// Equivalent to `Log(Level.Critical, e);`
         /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
         public virtual void Critical(Exception e) => Log(Level.Critical, e);
     }

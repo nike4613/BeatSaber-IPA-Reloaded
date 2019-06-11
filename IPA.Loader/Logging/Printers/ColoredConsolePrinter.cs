@@ -13,10 +13,12 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// A filter for this specific printer.
         /// </summary>
+        /// <value>the filter to apply to this printer</value>
         public override Logger.LogLevel Filter { get => filter; set => filter = value; }
         /// <summary>
         /// The color to print messages as.
         /// </summary>
+        /// <value>the color to print this message as</value>
         public ConsoleColor Color { get; set; } = Console.ForegroundColor;
 
         /// <summary>

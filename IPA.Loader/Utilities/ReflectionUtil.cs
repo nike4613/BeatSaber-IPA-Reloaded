@@ -75,7 +75,7 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// Copies a component of type originalType to a component of overridingType on the destination GameObject.
+        /// Copies a component <paramref name="original"/> to a component of <paramref name="overridingType"/> on the destination <see cref="GameObject"/>.
         /// </summary>
         /// <param name="original">the original component</param>
         /// <param name="overridingType">the new component's type</param>
@@ -98,9 +98,9 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// A generic version of CopyComponent. 
-        /// <see cref="CopyComponent(Component, Type, GameObject, Type)"/>
+        /// A generic version of <see cref="CopyComponent(Component, Type, GameObject, Type)"/>. 
         /// </summary>
+        /// <seealso cref="CopyComponent(Component, Type, GameObject, Type)"/>
         /// <typeparam name="T">the overriding type</typeparam>
         /// <param name="original">the original component</param>
         /// <param name="destination">the destination game object</param>
@@ -133,9 +133,9 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// Calls an instance method on a type specified by functionClass and dependency.
-        /// <seealso cref="CallNonStaticMethod(Type, string, Type[], object[])"/>
+        /// Calls an instance method on a type specified by <paramref name="functionClass"/> and <paramref name="dependency"/>.
         /// </summary>
+        /// <seealso cref="CallNonStaticMethod(Type, string, Type[], object[])"/>
         /// <param name="functionClass">the type name</param>
         /// <param name="dependency">the assembly the type is in</param>
         /// <param name="function">the name of the method to call</param>
@@ -178,8 +178,8 @@ namespace IPA.Utilities
 
         /// <summary>
         /// Calls an instance method on a new object.
-        /// <seealso cref="CallNonStaticMethod(Type, string, Type[], object[])"/>
         /// </summary>
+        /// <seealso cref="CallNonStaticMethod(Type, string, Type[], object[])"/>
         /// <typeparam name="T">the return type</typeparam>
         /// <param name="type">the object type</param>
         /// <param name="function">the name of the method to call</param>

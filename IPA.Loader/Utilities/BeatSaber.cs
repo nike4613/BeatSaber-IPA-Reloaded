@@ -13,8 +13,9 @@ namespace IPA.Utilities
     {
         private static Version _gameVersion;
         /// <summary>
-        /// Provides the current game version
+        /// Provides the current game version.
         /// </summary>
+        /// <value>the SemVer version of the game</value>
         public static Version GameVersion => _gameVersion ?? (_gameVersion = new Version(Application.version, true));
 
         /// <summary>
@@ -35,12 +36,14 @@ namespace IPA.Utilities
         /// <summary>
         /// Gets the <see cref="Release"/> type of this installation of Beat Saber
         /// </summary>
+        /// <value>the type of release this is</value>
         public static Release ReleaseType => (_releaseCache ?? (_releaseCache = FindSteamVRAsset() ? Release.Steam : Release.Oculus)).Value;
 
         private static string _installRoot;
         /// <summary>
-        /// The path to the Beat Saber install dir
+        /// Gets the path to the Beat Saber install directory.
         /// </summary>
+        /// <value>the path of the game install directory</value>
         public static string InstallPath
         {
             get
@@ -54,18 +57,22 @@ namespace IPA.Utilities
         /// <summary>
         /// The path to the `Libs` folder. Use only if necessary.
         /// </summary>
+        /// <value>the path to the library directory</value>
         public static string LibraryPath => Path.Combine(InstallPath, "Libs");
         /// <summary>
         /// The path to the `Libs\Native` folder. Use only if necessary.
         /// </summary>
+        /// <value>the path to the native library directory</value>
         public static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
         /// <summary>
         /// The directory to load plugins from.
         /// </summary>
+        /// <value>the path to the plugin directory</value>
         public static string PluginsPath => Path.Combine(InstallPath, "Plugins");
         /// <summary>
         /// The path to the `UserData` folder.
         /// </summary>
+        /// <value>the path to the user data directory</value>
         public static string UserDataPath => Path.Combine(InstallPath, "UserData");
 
         private static bool FindSteamVRAsset()

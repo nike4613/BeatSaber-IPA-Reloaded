@@ -3,10 +3,10 @@
     {
       "src": [
         {
+          "src": "..",
           "files": [
             "**.csproj"
-          ],
-          "src": "Z:\\Users\\aaron\\Source\\Repos\\IPA-Reloaded-BeatSaber\\IPA.Loader"
+          ]
         }
       ],
       "dest": "api",
@@ -41,7 +41,7 @@
     "overwrite": [
       {
         "files": [
-          "apidoc/**.md"
+          "override/**.md"
         ],
         "exclude": [
           "obj/**",
