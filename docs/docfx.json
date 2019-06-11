@@ -9,7 +9,9 @@
           ],
           "exclude": [
             "**/IPA.csproj",
-            "**/IPA.Tests.csproj"
+            "**/IPA.Tests.csproj",
+            "BuildTools/**.csproj",
+            "Doorstop/**.csproj"
           ]
         }
       ],

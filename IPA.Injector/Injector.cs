@@ -15,14 +15,17 @@ using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace IPA.Injector
 {
+    /// <summary>
+    /// The entry point type for BSIPA's Doorstop injector.
+    /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public static class Injector
+    internal static class Injector
     {
         private static Task pluginAsyncLoadTask;
         private static Task permissionFixTask;
 
         // ReSharper disable once UnusedParameter.Global
-        public static void Main(string[] args)
+        internal static void Main(string[] args)
         { // entry point for doorstop
           // At this point, literally nothing but mscorlib is loaded,
           // and since this class doesn't have any static fields that

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace IPA.Injector.Backups
 {
-    public static class BackupManager
+    internal static class BackupManager
     {
         public static BackupUnit FindLatestBackup(string dir)
         {

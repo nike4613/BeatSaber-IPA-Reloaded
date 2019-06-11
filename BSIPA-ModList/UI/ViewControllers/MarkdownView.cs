@@ -18,6 +18,9 @@ using System.Text.RegularExpressions;
 
 namespace BSIPA_ModList.UI.ViewControllers
 {
+    /// <summary>
+    /// A UI component that renders Markdown in-game.
+    /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public class MarkdownView : MonoBehaviour
     {
@@ -42,6 +45,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
         }
 
+        /// <summary>
+        /// A convenience property to access the <see cref="RectTransform"/> on the <see cref="GameObject"/> this is on.
+        /// </summary>
+        /// <value>the <see cref="RectTransform"/> associated with this component</value>
         public RectTransform rectTransform => GetComponent<RectTransform>();
 
         private ScrollView scrView;
@@ -49,6 +56,10 @@ namespace BSIPA_ModList.UI.ViewControllers
         private RectTransform viewport;
 
         private CommonMarkSettings settings;
+
+        /// <summary>
+        /// Creates a new <see cref="MarkdownView"/>. Should never be called correctly. Instead, use <see cref="GameObject.AddComponent{T}"/>.
+        /// </summary>
         public MarkdownView()
         {
             settings = CommonMarkSettings.Default.Clone();
@@ -57,6 +68,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             settings.UriResolver = ResolveUri;
         }
 
+        /// <summary>
+        /// This function will be called whenever attempting to resolve an image URI, to ensure that the image exists in the embedded assembly.
+        /// </summary>
+        /// <value>a delegate for the function to call</value>
         public Func<string, bool> HasEmbeddedImage;
 
         private string ResolveUri(string arg)
@@ -156,7 +171,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             Logger.md.Debug("Font loaded");
         }
 
-        protected void Awake()
+        internal void Awake()
         {
             if (Consolas == null)
                 Logger.md.Error($"Loading of Consolas font failed");
@@ -265,7 +280,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         private byte tbreakSettings = 0;
 #endif
 #endif
-        public void Update()
+        internal void Update()
         {
 #if DEBUG && UI_CONFIGURE_MARKDOWN_THEMATIC_BREAK
             if (Input.GetKeyDown(KeyCode.K))
