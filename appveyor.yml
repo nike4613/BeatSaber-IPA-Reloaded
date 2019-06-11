@@ -62,7 +62,7 @@ after_deploy:
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
             git clone "https://github.com/$($env:APPVEYOR_REPO_NAME).git" -b gh-pages origin_site -q
-            Copy-Item origin_site/.git _site -recurse
+            Move-Item origin_site/.git _site
             CD _site
             git add -A 2>&1
             git commit -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs" -q
