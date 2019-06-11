@@ -31,6 +31,7 @@ namespace IPA.Utilities
         /// <summary>
         /// The value of the reference
         /// </summary>
+        /// <value>the value wrapped by this <see cref="Ref{T}"/></value>
         public T Value
         {
             get
@@ -45,6 +46,7 @@ namespace IPA.Utilities
         /// <summary>
         /// An exception that was generated while creating the value.
         /// </summary>
+        /// <value>the error held in this <see cref="Ref{T}"/></value>
         public Exception Error
         {
             get
@@ -93,8 +95,12 @@ namespace IPA.Utilities
         {
             if (Error != null) throw Error;
         }
-
-        /// <inheritdoc />
+        
+        /// <summary>
+        /// Compares the wrapped object to the other object.
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>the value of the comparison</returns>
         public int CompareTo(T other)
         {
             if (Value is IComparable<T> compare)
@@ -102,11 +108,12 @@ namespace IPA.Utilities
             return Equals(Value, other) ? 0 : -1;
         }
 
-        /// <inheritdoc />
-        public int CompareTo(Ref<T> other)
-        {
-            return CompareTo(other.Value);
-        }
+        /// <summary>
+        /// Compares the wrapped object to the other wrapped object.
+        /// </summary>
+        /// <param name="other">the wrapped object to compare to</param>
+        /// <returns>the value of the comparison</returns>
+        public int CompareTo(Ref<T> other) => CompareTo(other.Value);
     }
     
     internal static class ExceptionUtilities

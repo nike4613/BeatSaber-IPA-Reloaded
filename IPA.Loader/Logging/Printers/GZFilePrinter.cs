@@ -26,14 +26,15 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// The <see cref="StreamWriter"/> that writes to the GZip file.
         /// </summary>
+        /// <value>the writer to the underlying filestream</value>
         protected StreamWriter FileWriter;
 
         private FileStream fstream;
 
         /// <summary>
-        /// Gets the <see cref="FileInfo"/> for the file to write to without the .gz extension.
+        /// Gets the <see cref="FileInfo"/> for the file to write to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>the file to write to</returns>
         protected abstract FileInfo GetFileInfo();
 
         private const string latestFormat = "_latest{0}";

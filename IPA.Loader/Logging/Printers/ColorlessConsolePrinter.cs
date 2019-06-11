@@ -10,6 +10,7 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// A filter for this specific printer.
         /// </summary>
+        /// <value>the filter level for this printer</value>
         public override Logger.LogLevel Filter { get; set; }
 
         /// <summary>

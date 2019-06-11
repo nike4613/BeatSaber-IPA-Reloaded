@@ -236,6 +236,7 @@ namespace IPA.Loader
         /// <summary>
         /// Gets a list of disabled BSIPA plugins.
         /// </summary>
+        /// <value>a collection of all disabled plugins as <see cref="PluginMetadata"/></value>
         public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins.Concat(runtimeDisabled.Select(p => p.Metadata));
 
         /// <summary>
@@ -263,6 +264,7 @@ namespace IPA.Loader
         /// <summary>
         /// Gets a list of all BSIPA plugins.
         /// </summary>
+        /// <value>a collection of all enabled plugins as <see cref="PluginInfo"/>s</value>
         public static IEnumerable<PluginInfo> AllPlugins => BSMetas;
 
         /// <summary>
@@ -281,6 +283,7 @@ namespace IPA.Loader
         /// <summary>
         /// An <see cref="IEnumerable"/> of old IPA plugins.
         /// </summary>
+        /// <value>all legacy plugin instances</value>
         [Obsolete("I mean, IPlugin shouldn't be used, so why should this? Not renaming to extend support for old plugins.")]
         public static IEnumerable<IPlugin> Plugins => _ipaPlugins;
         private static List<IPlugin> _ipaPlugins;

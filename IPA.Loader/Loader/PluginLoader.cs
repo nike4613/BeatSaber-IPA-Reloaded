@@ -35,37 +35,44 @@ namespace IPA.Loader
             /// <summary>
             /// The assembly the plugin was loaded from.
             /// </summary>
+            /// <value>the loaded Assembly that contains the plugin main type</value>
             public Assembly Assembly { get; internal set; }
 
             /// <summary>
             /// The TypeDefinition for the main type of the plugin.
             /// </summary>
+            /// <value>the Cecil definition for the plugin main type</value>
             public TypeDefinition PluginType { get; internal set; }
 
             /// <summary>
             /// The human readable name of the plugin.
             /// </summary>
+            /// <value>the name of the plugin</value>
             public string Name { get; internal set; }
 
             /// <summary>
             /// The BeatMods ID of the plugin, or null if it doesn't have one.
             /// </summary>
+            /// <value>the updater ID of the plugin</value>
             public string Id { get; internal set; }
 
             /// <summary>
             /// The version of the plugin.
             /// </summary>
+            /// <value>the version of the plugin</value>
             public Version Version { get; internal set; }
 
             /// <summary>
             /// The file the plugin was loaded from.
             /// </summary>
+            /// <value>the file the plugin was loaded from</value>
             public FileInfo File { get; internal set; }
 
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             /// <summary>
             /// The features this plugin requests.
             /// </summary>
+            /// <value>the list of features requested by the plugin</value>
             public IReadOnlyList<Feature> Features => InternalFeatures;
 
             internal readonly List<Feature> InternalFeatures = new List<Feature>();
@@ -90,7 +97,10 @@ namespace IPA.Loader
                 }
             }
 
-            /// <inheritdoc />
+            /// <summary>
+            /// Gets all of the metadata as a readable string.
+            /// </summary>
+            /// <returns>the readable printable metadata string</returns>
             public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName, BeatSaber.InstallPath)}'";
         }
 
@@ -104,6 +114,7 @@ namespace IPA.Loader
             /// <summary>
             /// Metadata for the plugin.
             /// </summary>
+            /// <value>the metadata for this plugin</value>
             public PluginMetadata Metadata { get; internal set; } = new PluginMetadata();
         }
 

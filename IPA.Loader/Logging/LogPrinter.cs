@@ -10,6 +10,7 @@ namespace IPA.Logging
         /// <summary>
         /// Provides a filter for which log levels to allow through.
         /// </summary>
+        /// <value>the level to filter to</value>
         public abstract Logger.LogLevel Filter { get; set; }
 
         /// <summary>

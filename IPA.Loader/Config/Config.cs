@@ -118,7 +118,7 @@ namespace IPA.Config
         private static List<Tuple<Ref<DateTime>, IConfigProvider>> configProviders = new List<Tuple<Ref<DateTime>, IConfigProvider>>();
 
         /// <summary>
-        /// Gets an <see cref="IConfigProvider"/> using the specified list pf preferred config types.
+        /// Gets an <see cref="IConfigProvider"/> using the specified list of preferred config types.
         /// </summary>
         /// <param name="configName">the name of the mod for this config</param>
         /// <param name="extensions">the preferred config types to try to get</param>

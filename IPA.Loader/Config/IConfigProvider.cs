@@ -24,24 +24,29 @@ namespace IPA.Config
         /// <summary>
         /// Gets a dynamic object providing access to the configuration.
         /// </summary>
+        /// <value>a dynamically bound object to use to access config values directly</value>
         dynamic Dynamic { get; }
 
         #region State getters
         /// <summary>
         /// Returns <see langword="true"/> if object has changed since the last save
         /// </summary>
+        /// <value><see langword="true"/> if object has changed since the last save, else <see langword="false"/></value>
         bool HasChanged { get; }
         /// <summary>
         /// Returns <see langword="true"/> if the data in memory has been changed - notably including loads.
         /// </summary>
+        /// <value><see langword="true"/> if the data in memory has been changed, else <see langword="false"/></value>
         bool InMemoryChanged { get; set; }
         /// <summary>
         /// Will be set with the filename (no extension) to save to. When saving, the implementation should add the appropriate extension. Should error if set multiple times.
         /// </summary>
+        /// <value>the extensionless filename to save to</value>
         string Filename { set; }
         /// <summary>
         /// Gets the last time the config was modified.
         /// </summary>
+        /// <value>the last time the config file was modified</value>
         DateTime LastModified { get; }
         /// <summary>
         /// Saves configuration to file. Should error if not a root object.

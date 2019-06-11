@@ -79,12 +79,13 @@ namespace IPA.Logging
         /// <summary>
         /// The <see cref="TextWriter"/> for writing directly to the console window, or stdout if no window open.
         /// </summary>
+        /// <value>a <see cref="TextWriter"/> for the current primary text output</value>
         public static TextWriter ConsoleWriter { get; internal set; } = Console.Out;
 
         /// <summary>
         /// Adds to the default printer pool that all printers inherit from. Printers added this way will be passed every message from every logger.
         /// </summary>
-        /// <param name="printer"></param>
+        /// <param name="printer">the printer to add</param>
         internal static void AddDefaultPrinter(LogPrinter printer)
         {
             defaultPrinters.Add(printer);
@@ -96,6 +97,7 @@ namespace IPA.Logging
         /// <summary>
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
+        /// <value>the global filter level</value>
         public static LogLevel PrintFilter { get; set; } = LogLevel.All;
 
         private readonly List<LogPrinter> printers = new List<LogPrinter>();

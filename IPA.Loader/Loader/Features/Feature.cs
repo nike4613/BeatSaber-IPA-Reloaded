@@ -18,7 +18,7 @@ namespace IPA.Loader.Features
         /// Note: When no parenthesis are provided, <paramref name="parameters"/> is an empty array.
         /// </summary>
         /// <remarks>
-        /// This gets called BEFORE your Init method.
+        /// This gets called BEFORE *your* `Init` method.
         /// 
         /// Returning <see langword="false" /> does *not* prevent the plugin from being loaded. It simply prevents the feature from being used.
         /// </remarks>
@@ -39,6 +39,7 @@ namespace IPA.Loader.Features
         /// The message to be logged when the feature is not valid for a plugin.
         /// This should also be set whenever either <see cref="BeforeLoad"/> or <see cref="BeforeInit"/> returns false.
         /// </summary>
+        /// <value>the message to show when the feature is marked invalid</value>
         public virtual string InvalidMessage { get; protected set; }
 
         /// <summary>
@@ -53,21 +54,21 @@ namespace IPA.Loader.Features
         public virtual bool BeforeLoad(PluginLoader.PluginMetadata plugin) => true;
 
         /// <summary>
-        /// Called before a plugin's Init method is called. This will not be called if there is no Init method. This should never throw an exception. An exception will abort the loading of the plugin with an error.
+        /// Called before a plugin's `Init` method is called. This will not be called if there is no `Init` method. This should never throw an exception. An exception will abort the loading of the plugin with an error.
         /// </summary>
         /// <param name="plugin">the plugin to be initialized</param>
         /// <returns>whether or not to call the Init method</returns>
         public virtual bool BeforeInit(PluginLoader.PluginInfo plugin) => true;
 
         /// <summary>
-        /// Called after a plugin has been fully initialized, whether or not there is an Init method. This should never throw an exception.
+        /// Called after a plugin has been fully initialized, whether or not there is an `Init` method. This should never throw an exception.
         /// </summary>
         /// <param name="plugin">the plugin that was just initialized</param>
         /// <param name="pluginInstance">the instance of the plugin being initialized</param>
         public virtual void AfterInit(PluginLoader.PluginInfo plugin, IBeatSaberPlugin pluginInstance) => AfterInit(plugin);
 
         /// <summary>
-        /// Called after a plugin has been fully initialized, whether or not there is an Init method. This should never throw an exception.
+        /// Called after a plugin has been fully initialized, whether or not there is an `Init` method. This should never throw an exception.
         /// </summary>
         /// <param name="plugin">the plugin that was just initialized</param>
         public virtual void AfterInit(PluginLoader.PluginInfo plugin) { }
@@ -81,6 +82,7 @@ namespace IPA.Loader.Features
         /// <summary>
         /// Defines whether or not this feature will be accessible from the plugin metadata once loaded.
         /// </summary>
+        /// <value><see langword="true"/> if this <see cref="Feature"/> will be stored on the plugin metadata, <see langword="false"/> otherwise</value>
         protected internal virtual bool StoreOnPlugin => true;
 
         static Feature()

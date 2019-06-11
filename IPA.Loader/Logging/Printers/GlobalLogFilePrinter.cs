@@ -11,6 +11,7 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// Provides a filter for this specific printer.
         /// </summary>
+        /// <value>the filter level for this printer</value>
         public override Logger.LogLevel Filter { get; set; } = Logger.LogLevel.All;
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace IPA.Logging.Printers
         /// <summary>
         /// Gets the <see cref="FileInfo"/> for the target file.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>the target file to write to</returns>
         protected override FileInfo GetFileInfo()
         {
             var logsDir = new DirectoryInfo("Logs");
