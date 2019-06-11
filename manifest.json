@@ -4,24 +4,15 @@
   "xrefmap": "xrefmap.yml",
   "files": [
     {
-      "type": "ManagedReference",
-      "source_relative_path": "api/BSIPA_ModList.Plugin.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/BSIPA_ModList.Plugin.html",
-          "hash": "gLiqzAJvsxX6jpBV3ULYOw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
+      "log_codes": [
+        "ReferencedXrefPropertyNotString"
+      ],
       "type": "ManagedReference",
       "source_relative_path": "api/BSIPA_ModList.UI.ViewControllers.MarkdownView.yml",
       "output": {
         ".html": {
           "relative_path": "api/BSIPA_ModList.UI.ViewControllers.MarkdownView.html",
-          "hash": "9Mu2hixNIgOxqk30jLa6xw=="
+          "hash": "0wB4t5lqI6EvK33J7PxFJA=="
         }
       },
       "is_incremental": false,
@@ -33,43 +24,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BSIPA_ModList.UI.ViewControllers.html",
-          "hash": "97EweQn+hOrrN5Ld7inEUw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/BSIPA_ModList.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/BSIPA_ModList.html",
-          "hash": "PO3QNv7+mX4j+q4EZvvAdA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Doorstop.Loader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Doorstop.Loader.html",
-          "hash": "gUARU9Hg8uMw/sMO8sNbBw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Doorstop.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Doorstop.html",
-          "hash": "0S1dBMxWGA1c2YPP3QYhhw=="
+          "hash": "NdhzSeEw5ws5NqYIXQ+eZA=="
         }
       },
       "is_incremental": false,
@@ -214,66 +169,6 @@
         ".html": {
           "relative_path": "api/IPA.IGenericEnhancedPlugin.html",
           "hash": "qE4SlrxdOvFFT7e/QX440Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/IPA.Injector.Backups.BackupManager.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/IPA.Injector.Backups.BackupManager.html",
-          "hash": "Lwb8DkNDmM/2+kEfvNAgVQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/IPA.Injector.Backups.BackupUnit.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/IPA.Injector.Backups.BackupUnit.html",
-          "hash": "DneAsphO3cGKwBBsND/s1A=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/IPA.Injector.Backups.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/IPA.Injector.Backups.html",
-          "hash": "A1PSezpI/l59NEyaB1c3Pg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/IPA.Injector.Injector.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/IPA.Injector.Injector.html",
-          "hash": "LJyu8VsVxTUQQLvksMpvJA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/IPA.Injector.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/IPA.Injector.html",
-          "hash": "5vq38D+CyqBlZJlT33LNcw=="
         }
       },
       "is_incremental": false,
@@ -739,30 +634,6 @@
       "version": ""
     },
     {
-      "type": "ManagedReference",
-      "source_relative_path": "api/MSBuildTasks.AssemblyRename.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/MSBuildTasks.AssemblyRename.html",
-          "hash": "pgfUKq8tX1bdcA3waxb/ag=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/MSBuildTasks.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/MSBuildTasks.html",
-          "hash": "U6tLwp2YqMVIuQAQnY/bkw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
       "type": "Conceptual",
       "source_relative_path": "api/index.md",
       "output": {
@@ -780,7 +651,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "QzbhtzF7aWvnfs8WpWGrLQ=="
+          "hash": "VJx35M/CYXXdI295RQJN7A=="
         }
       },
       "is_incremental": false,
@@ -846,10 +717,11 @@
         "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
-        "ManagedReferenceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 63,
+          "total_file_count": 0,
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {
@@ -858,11 +730,10 @@
           "total_file_count": 3,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 0,
+          "total_file_count": 52,
           "skipped_file_count": 0
         }
       }
