@@ -51,7 +51,7 @@
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default", "templates/material/material"
+      "default", "templates/material/material", "templates/fix_urls"
     ],
     "globalMetadata": {
       "_enableSearch": true,
