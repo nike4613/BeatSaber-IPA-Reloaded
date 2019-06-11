@@ -19,7 +19,7 @@ using System.Text.RegularExpressions;
 namespace BSIPA_ModList.UI.ViewControllers
 {
     /// <summary>
-    /// A UI component that renders Markdown in-game.
+    /// A UI component that renders CommonMark Markdown in-game.
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public class MarkdownView : MonoBehaviour
@@ -35,6 +35,14 @@ namespace BSIPA_ModList.UI.ViewControllers
 
         private string markdown = "";
         private bool mdDirty = false;
+        
+        /// <summary>
+        /// The text to be rendered.
+        /// </summary>
+        /// <remarks>
+        /// When this is assigned, the object is marked dirty. It will re-render on the next Update tick.
+        /// </remarks>
+        /// <value>the text to render as Markdown</value>
         public string Markdown
         {
             get => markdown;
