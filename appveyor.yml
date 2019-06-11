@@ -61,7 +61,7 @@ after_deploy:
             Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_acct_user):$($env:gh_acct_pw)@github.com/"
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
-            git clone "https://github.com/$($env:APPVEYOR_REPO_NAME).git" -b gh-pages origin_site
+            git clone "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
             Move-Item origin_site/.git _site
             CD _site
             echo "Adding..."
