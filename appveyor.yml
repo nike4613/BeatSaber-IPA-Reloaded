@@ -67,7 +67,7 @@ after_deploy:
             echo "Adding..."
             git add -A 2>&1
             echo "Commiting..."
-            git commit -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs"
+            git commit -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs" 2>&1
             echo "Pushing..."
-            git push origin gh-pages
+            git push -v --progress origin gh-pages 2>&1 
         }
