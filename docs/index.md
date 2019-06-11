@@ -1,4 +1,7 @@
-# This is the **HOMEPAGE**.
-Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
-## Quick Start Notes:
-1. Add images to the *images* folder if the file is referencing an image.
+# Beat Saber IPA Reloaded
+
+The game-agnostic mod injector for Unity, that happens to have been written for Beat Saber!
+
+Take a look at the [getting started guide](articles/intro.md) to see how to get going.
+
+TODO: finish
