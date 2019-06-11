@@ -47,13 +47,14 @@
       ]
     }],
     "dest": "_site",
+    "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ],
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default", "templates/darkfx/darkfx"
+      "default", "templates/material/material"
     ],
     "postProcessors": [],
-    "markdownEngineName": "markdig",
+    "markdownEngineName": "dfm",
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
