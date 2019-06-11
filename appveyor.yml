@@ -61,7 +61,7 @@ after_deploy:
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
             git clone -q "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
             
-            if (-Not Test-Path origin_site/tags)
+            if (-Not (Test-Path origin_site/tags))
             { New-Item -ItemType directory -Path origin_site/tags }
             
             if ($env:APPVEYOR_REPO_TAG -eq "true")
@@ -77,7 +77,7 @@ after_deploy:
                 git add -A 2>&1
                 git commit -q -a -m "Saved tag $env:APPVEYOR_REPO_TAG_NAME" 2>&1
             }
-            if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+            elseif (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
             { # Generate docs
                 Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
                 & docfx metadata
