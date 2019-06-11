@@ -53,7 +53,13 @@
     "template": [
       "default", "templates/material/material"
     ],
-    "globalMetadataFiles": ["all_globals.json"],
+    "globalMetadata": {
+      "_enableSearch": true,
+      "_enableNewTab": true,
+      "_gitContribute": {
+        "apiSpecFolder": "docs/override"
+      }
+    },
     "postProcessors": [],
     "markdownEngineName": "dfm",
     "noLangKeyword": false,
