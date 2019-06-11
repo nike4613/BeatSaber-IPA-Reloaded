@@ -49,8 +49,10 @@ after_deploy:
         if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:APPVEYOR_REPO_BRANCH -eq 'master')
         {
             cd docs
+            
+            Add-Content link_branch.json "{`"_gitContribute`":{`"branch`":`"$env:APPVEYOR_REPO_COMMIT`"}}"
             & docfx metadata
-            & docfx build
+            & docfx build --globalMetadataFiles all_globals.json,link_branch.json
             if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
             }
