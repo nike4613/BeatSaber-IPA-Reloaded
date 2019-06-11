@@ -63,9 +63,9 @@ after_deploy:
             Move-Item origin_site/.git _site
             CD _site
             echo "Adding..."
-            git add -A 2>&1
+            git add -q -A 2>&1
             echo "Commiting..."
-            git commit -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs" 2>&1
+            git commit -q -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs" 2>&1
             echo "Pushing..."
-            git push -v --progress origin gh-pages 2>&1 
+            git push -q origin gh-pages 2>&1 
         }
