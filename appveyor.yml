@@ -50,9 +50,9 @@ after_deploy:
         {
             cd docs
             
-            Add-Content link_branch.json "{`"_gitContribute`":{`"branch`":`"$env:APPVEYOR_REPO_COMMIT`"}}"
+            Add-Content link_branch.json "{`"_gitContribute`":{`"branch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
             & docfx metadata
-            & docfx build --globalMetadataFiles all_globals.json,link_branch.json
+            & docfx build --globalMetadataFiles link_branch.json
             if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
             }
