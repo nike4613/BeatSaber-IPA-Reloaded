@@ -17,6 +17,9 @@ install:
 image: Visual Studio 2017
 configuration: Release
 platform: x64
+branches:
+  except:
+    - gh-pages
 cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 artifacts:
@@ -27,7 +30,7 @@ artifacts:
 build:
   verbosity: normal
   project: BSIPA.sln
-skip_tags: true
+skip_tags: false
 deploy:
 - provider: GitHub
   release: BSIPA $(bsipa_version)-draft
@@ -44,31 +47,51 @@ deploy:
   force_update: true
   on:
     branch: master
+    APPVEYOR_REPO_TAG: false
 after_deploy:
   - ps: |
-        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:APPVEYOR_REPO_BRANCH -eq 'master')
+        if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
         {
             cd docs
-            
-            Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
-            & docfx metadata
-            & docfx build --globalMetadataFiles link_branch.json
-            if ($lastexitcode -ne 0){
-              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
-            }
             
             git config --global core.autocrlf true
             git config --global credential.helper store
             Add-Content "$HOME\.git-credentials" "https://$($env:gh_token):x-oauth-basic@github.com`n"
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
-            git clone "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
-            Move-Item origin_site/.git _site
-            CD _site
-            echo "Adding..."
-            git add -A 2>&1
-            echo "Commiting..."
-            git commit -q -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Docs" 2>&1
-            echo "Pushing..."
+            git clone -q "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
+            
+            if (-Not Test-Path origin_site/tags)
+            { New-Item -ItemType directory -Path origin_site/tags }
+            
+            if ($env:APPVEYOR_REPO_TAG -eq "true")
+            { # Copy current site into tags
+                cd origin_site # make things a bit easier
+                
+                $tagPath = "tags/$env:APPVEYOR_REPO_TAG_NAME"
+                New-Item -ItemType directory -Path $tagPath
+                Copy-Item * $tagPath -Exclude ".git,tags" -Recurse
+                
+                cd .. # fix working directory
+                
+                git add -A 2>&1
+                git commit -q -a -m "Saved tag $env:APPVEYOR_REPO_TAG_NAME" 2>&1
+            }
+            if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+            { # Generate docs
+                Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
+                & docfx metadata
+                & docfx build --globalMetadataFiles link_branch.json
+                if ($lastexitcode -ne 0){
+                  throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+                }
+            
+                Move-Item origin_site/.git _site
+                Move-Item origin_size/tags _site
+                CD _site
+                git add -A 2>&1
+                git commit -q -a -m "$env:APPVEYOR_REPO_COMMIT_MESSAGE -- Generated Docs" 2>&1
+            }
+            
             git push -q origin gh-pages 2>&1 
         }
