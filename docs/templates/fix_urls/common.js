@@ -32,7 +32,8 @@ function getHtmlId(input) {
 // Note: the parameter `gitContribute` won't be used in this function
 function getViewSourceHref(item, gitContribute, gitUrlPattern) {
     if (!item || !item.source || !item.source.remote) return '';
-    return getRemoteUrl(item.source.remote, item.source.startLine - '0' + 1, item._gitContribute, gitUrlPattern);
+    if (!gitContribute) gitContribute = item._gitContribute;
+    return getRemoteUrl(item.source.remote, item.source.startLine - '0' + 1, gitContribute, gitUrlPattern);
 }
 
 function getImproveTheDocHref(item, gitContribute, gitUrlPattern) {
@@ -71,7 +72,7 @@ var gitUrlPatternItems = {
         'generateUrl': function (gitInfo) {
             var url = normalizeGitUrlToHttps(gitInfo.repo);
             url = getRepoWithoutGitExtension(url);
-            url += '/blob' + '/' + gitInfo.branch + '/' + gitInfo.path;
+            url += '/blob' + '/' + gitInfo.sourceBranch + '/' + gitInfo.path;
             if (gitInfo.startLine && gitInfo.startLine > 0) {
                 url += '/#L' + gitInfo.startLine;
             }
@@ -181,6 +182,7 @@ function getGitInfo(gitContribute, gitRemote) {
     }
     mergeKey(gitContribute, gitRemote, result, 'repo');
     mergeKey(gitContribute, gitRemote, result, 'branch');
+    mergeKey(gitContribute, gitRemote, result, 'sourceBranch');
     mergeKey(gitContribute, gitRemote, result, 'path');
 
     return result;
