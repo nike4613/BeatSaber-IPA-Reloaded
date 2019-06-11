@@ -1,6 +1,10 @@
 version: 'BSIPA-{branch}-{build}'
 environment:
   bsipa_version: '3.12.21'
+  gh_acct_user:
+    secure: Q4+sZFxDOY7dL9prok446NlMzp3orJA0YmiBz9AYWLs=
+  gh_acct_pw:
+    secure: Aqn8uiVQ4vvjwgUYUaO4iGWJwqDVQppkYWU2x6s/p4ZgRrhI28FiIcFv6/wqxS9n
 pull_requests:
   do_not_increment_build_number: true
 install:
@@ -53,10 +57,10 @@ after_deploy:
             }
             
             git config --global credential.helper store
-            #Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:gh_acct_user):$($env:gh_acct_pw)@github.com`n"
             git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
             git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
-            git clone "https://github.com/$env:APPVEYOR_REPO_NAME.git" -b gh-pages origin_site -q
+            git clone "https://github.com/$($env:APPVEYOR_REPO_NAME).git" -b gh-pages origin_site -q
             Copy-Item origin_site/.git _site -recurse
             CD _site
             git add -A 2>&1
