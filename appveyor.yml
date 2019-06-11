@@ -48,7 +48,7 @@ after_deploy:
   - ps: |
         if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:APPVEYOR_REPO_BRANCH -eq 'master')
         {
-            cd IPA.Loader/doc
+            cd docs
             & docfx docfx.json
             if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
