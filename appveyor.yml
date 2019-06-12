@@ -50,7 +50,7 @@ deploy:
     APPVEYOR_REPO_TAG: false
 - provider: GitHub
   release: -ignore-
-  tag: $(APPVEYOR_REPO_TAG_NAME)_created
+  tag: create_tag
   description: |
     **Build:** [$(bsipa_version)-$(APPVEYOR_BUILD_NUMBER)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb/builds/$(APPVEYOR_BUILD_ID))
   auth_token:
