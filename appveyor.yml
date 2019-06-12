@@ -48,6 +48,18 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: false
+- provider: GitHub
+  release: -ignore-
+  tag: $(APPVEYOR_REPO_TAG_NAME)_created
+  description: |
+    **Build:** [$(bsipa_version)-$(APPVEYOR_BUILD_NUMBER)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb/builds/$(APPVEYOR_BUILD_ID))
+  auth_token:
+    secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
+  draft: true
+  force_update: true
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
 before_deploy:
   - ps: |
         if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
