@@ -103,7 +103,7 @@ before_deploy:
                 Git-Do
                 
                 Move-Item origin_site/.git _site
-                Move-Item origin_size/tags _site
+                Move-Item origin_site/tags _site
                 
                 CD _site
                 git add -A 2>&1
