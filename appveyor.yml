@@ -1,6 +1,6 @@
 version: 'BSIPA-{branch}-{build}'
 environment:
-  bsipa_version: '3.12.21'
+  bsipa_version: '3.12.22'
   gh_token:
     secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
 pull_requests:
