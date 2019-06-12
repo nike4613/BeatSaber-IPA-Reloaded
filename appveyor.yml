@@ -80,7 +80,7 @@ before_deploy:
             { # Copy current site into tags
                 cd origin_site # make things a bit easier
                 
-                $tagPath = Join-Path $source "tags/$env:APPVEYOR_REPO_TAG_NAME"
+                $tagPath = "tags/$env:APPVEYOR_REPO_TAG_NAME"
                 New-Item -ItemType directory -Path $tagPath
                 Copy-Item -Path (Get-ChildItem -Exclude ('.git','tags')).FullName -Destination $tagPath -Recurse
 
