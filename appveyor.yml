@@ -83,10 +83,7 @@ before_deploy:
                 $source = Get-Location
                 $tagPath = Join-Path $source "tags/$env:APPVEYOR_REPO_TAG_NAME"
                 New-Item -ItemType directory -Path $tagPath
-                Get-ChildItem $source -Recurse -Exclude @('.git','tags/*','tags') | 
-                    Copy-Item -Destination {Join-Path $tagPath $_.FullName.Substring($source.length)}
-                
-                cd .. # fix working directory
+                Get-ChildItem $source -Recurse -Exclude @('.git','tags/*','tags') | Copy-Item -Destination {Join-Path $tagPath $_.FullName.Substring($source.length)}
                 
                 git add -A 2>&1
                 git commit -q -a -m "Saved tag $env:APPVEYOR_REPO_TAG_NAME" 2>&1
