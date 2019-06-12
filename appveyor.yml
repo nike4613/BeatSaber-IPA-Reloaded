@@ -81,8 +81,10 @@ before_deploy:
                 cd origin_site # make things a bit easier
                 
                 $tagPath = "tags/$env:APPVEYOR_REPO_TAG_NAME"
+                $source = "."
                 New-Item -ItemType directory -Path $tagPath
-                Copy-Item -Path * -Destination $tagPath -Exclude ".git,tags/*" -Recurse
+                Get-ChildItem $source -Recurse -Exclude @('.git','tags/*','tags') | 
+                    Copy-Item -Destination {Join-Path $tagPath $_.FullName.Substring($source.length)}
                 
                 cd .. # fix working directory
                 
