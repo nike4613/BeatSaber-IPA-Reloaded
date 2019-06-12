@@ -11,7 +11,7 @@ install:
   - ps: |
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
         {
-            git checkout $env:APPVEYOR_REPO_BRANCH -q
+            #git checkout $env:APPVEYOR_REPO_BRANCH -q
             choco install docfx -y
         }
 image: Visual Studio 2017
@@ -82,7 +82,7 @@ before_deploy:
                 
                 $tagPath = "tags/$env:APPVEYOR_REPO_TAG_NAME"
                 New-Item -ItemType directory -Path $tagPath
-                Copy-Item * $tagPath -Exclude ".git,tags" -Recurse
+                Copy-Item -Path * -Destination $tagPath -Exclude ".git,tags/*" -Recurse
                 
                 cd .. # fix working directory
                 
