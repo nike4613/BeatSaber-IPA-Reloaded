@@ -90,9 +90,9 @@ before_deploy:
             
             if ($env:APPVEYOR_REPO_TAG -eq "true")
             { # Copy current site into tags
-                Do-DocFX "-o origin_site/tags"
+                & Do-DocFX "-o origin_site/tags"
                 
-                Git-Do
+                & Git-Do
                 
                 cd origin_site # make things a bit easier
                 
@@ -108,9 +108,9 @@ before_deploy:
             }
             elseif (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
             { # Generate docs
-                Do-DocFX ""
+                & Do-DocFX ""
                 
-                Git-Do
+                & Git-Do
                 
                 Move-Item origin_site/.git _site
                 Move-Item origin_site/tags _site
