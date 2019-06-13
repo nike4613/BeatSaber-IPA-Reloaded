@@ -97,7 +97,6 @@ before_deploy:
                 cd origin_site # make things a bit easier
                 
                 $tagPath = "tags/$env:APPVEYOR_REPO_TAG_NAME"
-                #New-Item -ItemType directory -Path $tagPath
                 Move-Item ../_site $tagPath
                 
                 git add -A 2>&1
