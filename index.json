@@ -1,13 +1,13 @@
 {
-  "articles/index.html": {
-    "href": "articles/index.html",
-    "title": "Getting Started",
-    "keywords": "Getting Started"
-  },
   "index.html": {
     "href": "index.html",
     "title": "Beat Saber IPA Reloaded",
     "keywords": "Beat Saber IPA Reloaded The game-agnostic mod injector for Unity, that happens to have been written for Beat Saber! Take a look at Getting Started to see how to get going. TODO: finish"
+  },
+  "articles/index.html": {
+    "href": "articles/index.html",
+    "title": "Getting Started",
+    "keywords": "Getting Started"
   },
   "api/index.html": {
     "href": "api/index.html",
