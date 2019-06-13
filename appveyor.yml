@@ -82,7 +82,7 @@ before_deploy:
             {
                 Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
                 & docfx metadata
-                & "docfx build --globalMetadataFiles link_branch.json $params"
+                invoke-expression "docfx build --globalMetadataFiles link_branch.json $params"
                 if ($lastexitcode -ne 0){
                   throw [System.Exception] "docfx build failed with exit code $lastexitcode."
                 }
