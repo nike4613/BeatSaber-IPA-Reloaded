@@ -78,27 +78,37 @@ before_deploy:
                 { New-Item -ItemType directory -Path origin_site/tags }
             }
             
+            function Do-DocFX($params)
+            {
+                Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
+                & docfx metadata
+                Invoke-Expression "& docfx build --globalMetadataFiles link_branch.json $params"
+                if ($lastexitcode -ne 0){
+                  throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+                }
+            }
+            
             if ($env:APPVEYOR_REPO_TAG -eq "true")
             { # Copy current site into tags
+                Do-DocFX "-o origin_site/tags"
+                
                 Git-Do
                 
                 cd origin_site # make things a bit easier
                 
                 $tagPath = "tags/$env:APPVEYOR_REPO_TAG_NAME"
                 New-Item -ItemType directory -Path $tagPath
-                Copy-Item -Path (Get-ChildItem -Exclude ('.git','tags')).FullName -Destination $tagPath -Recurse
+                #Copy-Item -Path (Get-ChildItem -Exclude ('.git','tags')).FullName -Destination $tagPath -Recurse
+                #pushd ..
+                #popd
+                Move-Item tags/_site $tagPath
                 
                 git add -A 2>&1
                 git commit -q -a -m "Saved tag $env:APPVEYOR_REPO_TAG_NAME" 2>&1
             }
             elseif (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
             { # Generate docs
-                Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
-                & docfx metadata
-                & docfx build --globalMetadataFiles link_branch.json
-                if ($lastexitcode -ne 0){
-                  throw [System.Exception] "docfx build failed with exit code $lastexitcode."
-                }
+                Do-DocFX
                 
                 Git-Do
                 
