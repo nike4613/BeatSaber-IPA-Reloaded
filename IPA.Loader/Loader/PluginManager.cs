@@ -299,8 +299,8 @@ namespace IPA.Loader
 
             if (lastVer != null && gameVer != lastVer)
             {
-                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"{lastVer} Plugins");
-                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"{gameVer} Plugins");
+                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {lastVer} Plugins");
+                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {gameVer} Plugins");
 
                 ReleaseAll();
 
