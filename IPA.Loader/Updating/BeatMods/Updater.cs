@@ -351,7 +351,7 @@ namespace IPA.Updating.BeatMods
                         foreach (var consume in dep.Consumers)
                             toMod.Consumers.Add(consume);
                     }
-                    else if (dep.Conflicts != null)
+                    if (dep.Conflicts != null)
                     {
                         toMod.Conflicts = toMod.Conflicts == null
                             ? dep.Conflicts
@@ -391,11 +391,12 @@ namespace IPA.Updating.BeatMods
                     .Where(nullCheck => nullCheck != null) // entry is not null
                     .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion) // game version matches
                     .Where(approvalCheck => approvalCheck.Status == ApiEndpoint.Mod.ApprovedStatus) // version approved
+                    // TODO: fix; it seems wrong somehow
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version
                     .Select(mod => mod.Version).Max(); // (2.1) get the max version
-                // ReSharper disable once AssignmentInConditionalExpression
-                if (dep.Resolved = ver != null) dep.ResolvedVersion = ver; // (2.2)
-                dep.Has = dep.Version == dep.ResolvedVersion && dep.Resolved; 
+                dep.Resolved = ver != null;
+                if (dep.Resolved) dep.ResolvedVersion = ver; // (2.2)
+                dep.Has = dep.Resolved && dep.Version == dep.ResolvedVersion; 
             }
         }
 
@@ -416,7 +417,7 @@ namespace IPA.Updating.BeatMods
                 }
                 else if (!dep.Has)
                 {
-                    if (dep.Requirement.IsSatisfied(dep.Version))
+                    if (dep.Version != null && dep.Requirement.IsSatisfied(dep.Version))
                         Logger.updater.Notice($"Mod {dep.Name} running a newer version than is on BeatMods ({dep.Version})");
                     else
                         Logger.updater.Warn($"Could not resolve dependency {dep}");
