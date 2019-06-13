@@ -200,7 +200,7 @@ namespace BSIPA_ModList
 
         private IEnumerator RemoveModFromList(DependencyObject obj)
         {
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(1f);
 
             Remove(obj);
 
