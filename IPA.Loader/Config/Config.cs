@@ -28,6 +28,7 @@ namespace IPA.Config
             /// <summary>
             /// The extension associated with this type, without the '.'
             /// </summary>
+            /// <value>the extension to register the config provider as</value>
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             public string Extension { get; private set; }
 
@@ -52,6 +53,7 @@ namespace IPA.Config
             /// <summary>
             /// The order of preference for the config type. 
             /// </summary>
+            /// <value>the list of config extensions in order of preference</value>
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             public string[] PreferenceOrder { get; private set; }
 
@@ -75,6 +77,7 @@ namespace IPA.Config
             /// <summary>
             /// The name to use for the config.
             /// </summary>
+            /// <value>the name to use for the config</value>
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             public string Name { get; private set; }
 
@@ -191,7 +194,6 @@ namespace IPA.Config
         {
             foreach (var provider in configProviders)
             {
-                
                 if (provider.Item2.LastModified > provider.Item1.Value)
                 {
                     try
