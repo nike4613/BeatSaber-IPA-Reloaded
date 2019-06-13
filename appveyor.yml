@@ -78,11 +78,11 @@ before_deploy:
                 { New-Item -ItemType directory -Path origin_site/tags }
             }
             
-            function Do-DocFX([string]$params)
+            function Do-DocFX
             {
                 Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
                 & docfx metadata
-                invoke-expression "docfx build --globalMetadataFiles link_branch.json $params"
+                & docfx build --globalMetadataFiles link_branch.json @Args
                 if ($lastexitcode -ne 0){
                   throw [System.Exception] "docfx build failed with exit code $lastexitcode."
                 }
@@ -90,7 +90,7 @@ before_deploy:
             
             if ($env:APPVEYOR_REPO_TAG -eq "true")
             { # Copy current site into tags
-                & Do-DocFX "-o origin_site/tags"
+                & Do-DocFX -o origin_site/tags
                 
                 & Git-Do
                 
@@ -108,7 +108,7 @@ before_deploy:
             }
             elseif (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
             { # Generate docs
-                & Do-DocFX ""
+                & Do-DocFX 
                 
                 & Git-Do
                 
