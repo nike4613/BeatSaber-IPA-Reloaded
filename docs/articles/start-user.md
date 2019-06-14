@@ -4,7 +4,7 @@
 > This guide assumes that you are starting completely fresh.
 
  1. Grab a release from the GitHub [Releases page](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases).
-    Make sure to download `BSIPA.zip`, as `ModList.zip` contains the Beat Saber mod for showing your mods in-game.
+    Make sure to download `BSIPA.zip`, as `ModList.zip` contains the Beat Saber mod for showing your mods in-game, not the loader itself.
 
  2. Extract the zip into your game installation directory. There should now be a folder named `IPA` and a file named `IPA.exe` in
     the same folder as the game executable.
