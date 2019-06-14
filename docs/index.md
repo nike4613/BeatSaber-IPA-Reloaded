@@ -44,8 +44,8 @@ BSIPA will automatically repatch the game when it updates, as long as `winhttp.d
 
 ## Notes for running under Wine
 
-For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection. 
-To make the injection work with Wine, `winhttp` has to have a DLL override set to `native,builtin`. This can be set either through 
+For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection.
+To make the injection work with Wine, `winhttp` has to have a DLL override set to `native,builtin`. This can be set either through
 Protontricks, or with the following `.reg` file.
 
 ```reg
@@ -57,7 +57,7 @@ REGEDIT4
 For Steam there's a per-game Wine prefix under `compatdata`. In this case `SteamLibrary/steamapps/compatdata/620980/pfx/user.reg`.
 Changes to this file will likely be ovewritten when the game updates or if local files are validated through Steam.
 
-## Building
+## Developing BSIPA itself
 
 ### Prerequisites
 
@@ -74,6 +74,7 @@ Changes to this file will likely be ovewritten when the game updates or if local
    ```
    C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/
    ```
+
 3. Open `BSIPA.sln` in Visual Studio.
 4. Choose the configuration `x64`
 5. Rebuild all.
