@@ -7,6 +7,9 @@ using IPA.Logging;
 using BSIPA_ModList.UI.ViewControllers;
 using System.Collections;
 using IPA.Loader;
+using IPA.Config;
+using IPA.Utilities;
+using System;
 
 namespace BSIPA_ModList
 {
@@ -17,20 +20,40 @@ namespace BSIPA_ModList
         internal static IPALogger md => log.GetChildLogger("MarkDown");
     }
 
+    internal class SelfConfig
+    {
+        public bool Regenerate = true;
+        public bool ShowEnableDisable = false;
+    }
+
     /// <summary>
     /// The main plugin type for the in-game mod list mod.
     /// </summary>
     internal class Plugin : IBeatSaberPlugin
     {
+        internal static IConfigProvider provider;
+        internal static Ref<SelfConfig> config;
+
+        internal static event Action<SelfConfig> OnConfigChaned;
+
         /// <summary>
         /// Initializes the plugin with certain parameters. Is only called once.
         /// 
         /// This is called by the plugin loader in BSIPA, and thus must be <see langword="public"/>.
         /// </summary>
         /// <param name="logger">a logger to initialize the plugin with</param>
-        public void Init(IPALogger logger)
+        public void Init(IPALogger logger, IConfigProvider provider)
         {
             Logger.log = logger;
+            Plugin.provider = provider;
+
+            config = provider.MakeLink<SelfConfig>((p, r) =>
+            {
+                if (r.Value.Regenerate)
+                    p.Store(r.Value = new SelfConfig { Regenerate = false });
+
+                OnConfigChaned?.Invoke(r.Value);
+            });
 
             IPA.Updating.BeatMods.Updater.ModListPresent = true;
 
