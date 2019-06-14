@@ -14,7 +14,7 @@
   "version": "1.2.5",
   "icon": "BSIPA_ModList.Icons.self.png",
   "dependsOn": {
-    "BSIPA": "^3.12.19",
+    "BSIPA": "^3.12.22",
     "CustomUI": "^1.5.4"
   },
   "features": [],

@@ -45,6 +45,7 @@ namespace BSIPA_ModList.UI
         public void Init(Sprite icon, string name, string version, string author, string description, PluginLoader.PluginMetadata updateInfo, PluginManifest.LinksObject links = null, bool showEnDis = false, ModListFlowCoordinator mlfc = null)
         {
             showEnableDisable = showEnDis;
+            Plugin.OnConfigChaned -= OptHideButton;
 
             Icon = icon;
             Name = name;
@@ -85,9 +86,22 @@ namespace BSIPA_ModList.UI
                 enableDisableButton = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(33, 32), new Vector2(25, 10), ToggleEnable);
                 enableDisableButton.GetComponentInChildren<StartMiddleEndButtonBackgroundController>().SetMiddleSprite();
                 UpdateButtonText();
+
+                Plugin.OnConfigChaned += OptHideButton;
+                OptHideButton(Plugin.config.Value);
             }
 
             SetupLinks(links);
+        }
+
+        ~ModInfoViewController()
+        {
+            Plugin.OnConfigChaned -= OptHideButton;
+        }
+
+        private void OptHideButton(SelfConfig cfg)
+        {
+            enableDisableButton?.gameObject.SetActive(cfg.ShowEnableDisable);
         }
 
         private Action setAction = () => { };

@@ -9,6 +9,7 @@ namespace BSIPA_ModList.UI
         private static SubMenu menu;
         private static BoolViewController autoUpdate;
         private static BoolViewController autoCheck;
+        private static BoolViewController showEnableDisable;
 
         public static VRUIViewController Create()
         {
@@ -16,25 +17,35 @@ namespace BSIPA_ModList.UI
 
             autoCheck = menu.AddBool("Auto Update Check", "If enabled, automatically checks for updates on game start.");
             autoUpdate = menu.AddBool("Auto Update", "If enabled, automatically installs updates after checking for them.");
+            showEnableDisable = menu.AddBool("Show Enable/Disable Button", "If enabled, BSIPA mods will have a button to enable or disable them.");
 
             autoCheck.applyImmediately = true;
-            autoCheck.GetValue += () => SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates;
+            autoCheck.GetValue += () => IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates;
             autoCheck.SetValue += val =>
             {
-                SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates = val;
-                SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
+                IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates = val;
+                IPA.Config.SelfConfig.LoaderConfig.Store(IPA.Config.SelfConfig.SelfConfigRef.Value);
             };
 
             autoUpdate.applyImmediately = true;
-            autoUpdate.GetValue += () => SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate;
+            autoUpdate.GetValue += () => IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate;
             autoUpdate.SetValue += val =>
             {
-                SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate = val;
-                SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
+                IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate = val;
+                IPA.Config.SelfConfig.LoaderConfig.Store(IPA.Config.SelfConfig.SelfConfigRef.Value);
+            };
+
+            showEnableDisable.applyImmediately = true;
+            showEnableDisable.GetValue += () => Plugin.config.Value.ShowEnableDisable;
+            showEnableDisable.SetValue += val =>
+            {
+                Plugin.config.Value.ShowEnableDisable = val;
+                Plugin.provider.Store(Plugin.config.Value);
             };
 
             autoCheck.Init();
             autoUpdate.Init();
+            showEnableDisable.Init();
 
             return menu.viewController;
         }
