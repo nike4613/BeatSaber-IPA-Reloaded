@@ -116,29 +116,30 @@
 <h2 id="how-to-keep-the-game-patched">How To Keep The Game Patched</h2>
 <p>BSIPA will automatically repatch the game when it updates, as long as <code>winhttp.dll</code> is present in the install directory.</p>
 <h2 id="notes-for-running-under-wine">Notes for running under Wine</h2>
-<p>For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection. 
-To make the injection work with Wine, <code>winhttp</code> has to have a DLL override set to <code>native,builtin</code>. This can be set either through 
+<p>For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection.
+To make the injection work with Wine, <code>winhttp</code> has to have a DLL override set to <code>native,builtin</code>. This can be set either through
 Protontricks, or with the following <code>.reg</code> file.</p>
 <pre><code class="lang-reg">REGEDIT4
 [HKEY_CURRENT_USER\Software\Wine\DllOverrides]
 &quot;winhttp&quot;=&quot;native,builtin&quot;
 </code></pre><p>For Steam there&#39;s a per-game Wine prefix under <code>compatdata</code>. In this case <code>SteamLibrary/steamapps/compatdata/620980/pfx/user.reg</code>.
 Changes to this file will likely be ovewritten when the game updates or if local files are validated through Steam.</p>
-<h2 id="building">Building</h2>
+<h2 id="developing-bsipa-itself">Developing BSIPA itself</h2>
 <h3 id="prerequisites">Prerequisites</h3>
 <ul>
 <li>Microsoft Visual Studio 2019 or later (2017 may work, no guarantees)</li>
 <li>Tools for C/C++ (MSVC) v141</li>
 <li>.NET 4.6.1 SDK and .NET 4.7.2 SDK</li>
 </ul>
-<h3 id="building-1">Building</h3>
+<h3 id="building">Building</h3>
 <ol>
 <li>Clone with <code>git clone https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git --recursive</code></li>
 <li><p>Create a file, <code>bsinstalldir.txt</code> in the solution root. Do NOT create this in Visual Studio; VS adds a BOM at the begginning of the file that the tools used cannot read.
 It should contain the path to your Beat Saber installation, using forward slashes with a trailing slash. e.g.</p>
 <pre><code>C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/
 </code></pre></li>
-<li>Open <code>BSIPA.sln</code> in Visual Studio.</li>
+<li><p>Open <code>BSIPA.sln</code> in Visual Studio.</p>
+</li>
 <li>Choose the configuration <code>x64</code></li>
 <li><p>Rebuild all.</p>
 <p>When you make a change somewhere in BSIPA itself, right click on <code>IPA</code> and click <code>Build</code>. This sets up the output in <code>path/to/solution/IPA/bin/&lt;Configuration&gt;</code> to be what
@@ -157,7 +158,7 @@ should reference the copy in there. When building for Release, it just uses the 
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/7c7ba452c300fa8c9d02ceb20f9d33b0cc5ab329/docs/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/57cdcd2b85cf3ef32f94212de7d633c305442393/docs/index.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
