@@ -120,7 +120,6 @@ namespace IPA.Loader
 
             runtimeDisabled.Add(plugin);
             _bsPlugins.Remove(plugin);
-            PluginLoader.DisabledPlugins.Add(plugin.Metadata);
 
             try
             {

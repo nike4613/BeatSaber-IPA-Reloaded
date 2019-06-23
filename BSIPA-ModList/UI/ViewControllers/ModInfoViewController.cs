@@ -94,6 +94,20 @@ namespace BSIPA_ModList.UI
             SetupLinks(links);
         }
 
+        protected override void DidDeactivate(DeactivationType deactivationType)
+        {
+            base.DidDeactivate(deactivationType);
+
+            if (deactivationType == DeactivationType.RemovedFromHierarchy)
+                Plugin.OnConfigChaned -= OptHideButton;
+        }
+
+        protected override void OnDestroy()
+        {
+            Plugin.OnConfigChaned -= OptHideButton;
+            base.OnDestroy();
+        }
+
         ~ModInfoViewController()
         {
             Plugin.OnConfigChaned -= OptHideButton;
@@ -101,7 +115,7 @@ namespace BSIPA_ModList.UI
 
         private void OptHideButton(SelfConfig cfg)
         {
-            enableDisableButton?.gameObject.SetActive(cfg.ShowEnableDisable);
+            enableDisableButton?.gameObject?.SetActive(cfg.ShowEnableDisable);
         }
 
         private Action setAction = () => { };
