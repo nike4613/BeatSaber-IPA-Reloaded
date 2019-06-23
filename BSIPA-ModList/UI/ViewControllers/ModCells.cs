@@ -18,7 +18,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         void Update();
     }
 
-    internal class BSIPAModCell : CustomCellInfo, IClickableCell
+    internal class BSIPAModCell : CustomCellInfo, IClickableCell, IDisposable
     {
         internal PluginLoader.PluginMetadata Plugin;
         private ModListController list;
@@ -59,7 +59,10 @@ namespace BSIPA_ModList.UI.ViewControllers
         private static void PluginManager_PluginDisabled(PluginLoader.PluginMetadata plugin, bool needsRestart, WeakReference<BSIPAModCell> _self, PluginManager.PluginDisableDelegate ownDel)
         {
             if (!_self.TryGetTarget(out var self))
+            {
                 PluginManager.PluginDisabled -= ownDel;
+                return;
+            }
 
             if (plugin != self.Plugin) return;
 
@@ -112,6 +115,28 @@ namespace BSIPA_ModList.UI.ViewControllers
             if (propogate)
                 list.Reload();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    PluginManager.PluginDisabled -= disableDel;
+                    PluginManager.PluginEnabled -= enableDel;
+                }
+
+                disposedValue = true;
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 
     internal class BSIPAIgnoredModCell : CustomCellInfo, IClickableCell

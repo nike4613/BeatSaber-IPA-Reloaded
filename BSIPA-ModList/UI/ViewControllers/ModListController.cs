@@ -64,7 +64,8 @@ namespace BSIPA_ModList.UI
             var cells = _customListTableView.GetPrivateField<List<TableCell>>("_visibleCells");
             foreach (var c in cells)
             {
-                c.gameObject.SetActive(false);
+                if (c == null) continue;
+                c.gameObject?.SetActive(false);
                 _customListTableView.AddCellToReusableCells(c);
             }
             cells.Clear();
@@ -84,6 +85,17 @@ namespace BSIPA_ModList.UI
             rt.anchorMax = new Vector2(.9f, 1f);
 
             _customListTableView.gameObject.GetComponent<ScrollRect>().scrollSensitivity = 0f;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            foreach (var cell in Data)
+            {
+                if (cell is IDisposable disp)
+                    disp.Dispose();
+            }
         }
     }
 }
