@@ -97,6 +97,9 @@ namespace BSIPA_ModList
 
                 if (ButtonUI.Instance == null)
                     new GameObject("BSIPA Mod List Object").AddComponent<ButtonUI>().Init();
+
+                if (WarningUI.Instance == null)
+                    new GameObject("BSIPA Mod List Warning UI").AddComponent<WarningUI>().Init();
             }
         }
 
