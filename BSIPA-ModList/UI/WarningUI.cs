@@ -94,8 +94,6 @@ namespace BSIPA_ModList.UI
 #if DEBUG
                         Logger.log.Debug($"Looking for dependency {dep.Key} with version range {dep.Value.Intersect(new SemVer.Range("*.*.*"))}");
 #endif
-                        if (loadedPlugins.ContainsKey(dep.Key) && dep.Value.IsSatisfied(loadedPlugins[dep.Key]))
-                            continue;
 
                         if (loadedPlugins.ContainsKey(dep.Key) && dep.Value.IsSatisfied(loadedPlugins[dep.Key]))
                         {
