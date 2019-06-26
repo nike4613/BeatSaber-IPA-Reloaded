@@ -15,18 +15,20 @@ namespace BSIPA_ModList.UI
     {
         public string ModName;
         public string[] MissingDependencies;
+        public string[] IgnoredDependencies;
         public string[] DisabledDependencies;
 
-        public WarningEntry(string modName, string[] missingDependencies, string[] disabledDependencies)
+        public WarningEntry(string modName, string[] missingDependencies, string[] ignoredDependencies, string[] disabledDependencies)
         {
             ModName = modName;
             MissingDependencies = missingDependencies;
+            IgnoredDependencies = ignoredDependencies;
             DisabledDependencies = disabledDependencies;
         }
     }
 
     internal class WarningUI : MonoBehaviour
-    {
+    { // TODO: rework this to just use disable/ignore reason
         internal static WarningUI Instance;
         internal static bool firstShow = true;
 
@@ -83,11 +85,16 @@ namespace BSIPA_ModList.UI
                 }
 
                 _warningsQueue.Clear();
-                Dictionary<string, SemVer.Version> loadedPlugins = PluginManager.AllPlugins.Select(x => x.Metadata).Concat(PluginManager.DisabledPlugins).Concat(PluginLoader.ignoredPlugins).ToDictionary(x => x.Id, y => y.Version);
 
-                foreach (var meta in PluginManager.AllPlugins.Select(x => x.Metadata).Concat(PluginManager.DisabledPlugins).Concat(PluginLoader.ignoredPlugins))
+                var enabledPlugins = PluginManager.AllPlugins.Select(p => p.Metadata).Where(x => x.Id != null).ToDictionary(x => x.Id, y => y.Version);
+                var ignoredPlugins = PluginLoader.ignoredPlugins.Where(x => x.Id != null).ToDictionary(x => x.Id, y => y.Version);
+                var disabledPlugins = PluginManager.DisabledPlugins.Where(x => x.Id != null).ToDictionary(x => x.Id, y => y.Version);
+
+                // iterate only disabled and ignored, as thats where missing deps can end up
+                foreach (var meta in PluginManager.DisabledPlugins.Concat(PluginLoader.ignoredPlugins))
                 {
                     List<string> disabledDependencies = new List<string>();
+                    List<string> ignoredDependencies = new List<string>();
                     List<string> missingDependencies = new List<string>();
                     foreach (var dep in meta.Manifest.Dependencies)
                     {
@@ -95,22 +102,30 @@ namespace BSIPA_ModList.UI
                         Logger.log.Debug($"Looking for dependency {dep.Key} with version range {dep.Value.Intersect(new SemVer.Range("*.*.*"))}");
 #endif
 
-                        if (loadedPlugins.ContainsKey(dep.Key) && dep.Value.IsSatisfied(loadedPlugins[dep.Key]))
+                        if (disabledPlugins.TryGetValue(dep.Key, out var version) && dep.Value.IsSatisfied(version))
                         {
                             Logger.log.Debug($"Dependency {dep.Key} was found, but disabled.");
-                            disabledDependencies.Add($"{dep.Key}@{dep.Value.ToString()}");
+                            disabledDependencies.Add($"{dep.Key} {dep.Value.ToString()}");
+                        }
+                        else if (ignoredPlugins.TryGetValue(dep.Key, out version) && dep.Value.IsSatisfied(version))
+                        {
+                            Logger.log.Debug($"Dependency {dep.Key} was found, but was ignored, likely due to a missing dependency.");
+                            ignoredDependencies.Add($"{dep.Key} {dep.Value.ToString()}");
+                        }
+                        else if (enabledPlugins.TryGetValue(dep.Key, out version) && dep.Value.IsSatisfied(version))
+                        {
+                            // do nothing, this was probably user disabled
                         }
                         else
                         {
-                            Logger.log.Debug($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
-                            missingDependencies.Add($"{dep.Key}@{dep.Value.ToString()}");
+                            Logger.log.Debug($"{meta.Name} is missing dependency {dep.Key} {dep.Value}");
+                            missingDependencies.Add($"{dep.Key} {dep.Value.ToString()}");
                         }
+
                     }
 
-                    if(disabledDependencies.Count > 0 || missingDependencies.Count > 0)
-                    {
-                        _warningsQueue.Enqueue(new WarningEntry(meta.Name, missingDependencies.ToArray(), disabledDependencies.ToArray()));
-                    }
+                    if(disabledDependencies.Count > 0 || ignoredDependencies.Count > 0 || missingDependencies.Count > 0)
+                        _warningsQueue.Enqueue(new WarningEntry(meta.Name, missingDependencies.ToArray(), ignoredDependencies.ToArray(), disabledDependencies.ToArray()));
                 }
 
                 if (_warningsQueue.Count > 0)
@@ -129,6 +144,7 @@ namespace BSIPA_ModList.UI
             WarningEntry warning = _warningsQueue.Dequeue();
             _warningDialog.Init("Unmet Dependencies", $"Mod <b>{warning.ModName}</b> has unmet dependencies!" +
                                                         (warning.MissingDependencies.Length > 0 ? $"\nMissing:\n<color=red>{string.Join("\n", warning.MissingDependencies)}</color>" : "") +
+                                                        (warning.IgnoredDependencies.Length > 0 ? $"\nIgnored:\n<color=#C2B2B2>{string.Join("\n", warning.IgnoredDependencies)}</color>" : "") +
                                                         (warning.DisabledDependencies.Length > 0 ? $"\nDisabled:\n<color=#C2C2C2>{string.Join("\n", warning.DisabledDependencies)}</color>" : "")
                                                         , "Okay", WarningDialogDidFinish);
             _mainFlow.InvokePrivateMethod("PresentViewController", _warningDialog, null, true);
