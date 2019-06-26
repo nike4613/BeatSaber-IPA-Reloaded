@@ -88,6 +88,7 @@
     <Compile Include="UI\ViewControllers\ModCells.cs" />
     <Compile Include="UI\ViewControllers\ModInfoViewController.cs" />
     <Compile Include="UI\ViewControllers\ModListController.cs" />
+    <Compile Include="UI\WarningUI.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
