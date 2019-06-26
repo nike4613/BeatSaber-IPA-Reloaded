@@ -23,8 +23,10 @@ namespace IPA.Loader
         {
             LoadMetadata();
             Resolve();
-            FilterDisabled();
             ComputeLoadOrder();
+            FilterDisabled();
+
+            ResolveDependencies();
         });
 
         /// <summary>
@@ -368,7 +370,7 @@ namespace IPA.Loader
         }
 
         private static void FilterDisabled()
-        { // TODO: move disabled to a seperate list from ignored
+        {
             var enabled = new List<PluginMetadata>(PluginsMetadata.Count);
 
             var disabled = DisabledConfig.Ref.Value.DisabledModIds;
@@ -438,17 +440,20 @@ namespace IPA.Loader
                     }
             }
 
-            var deTreed = new List<PluginMetadata>();
-            DeTree(deTreed, pluginTree);
+            PluginsMetadata = new List<PluginMetadata>();
+            DeTree(PluginsMetadata, pluginTree);
 
 #if DEBUG
-            Logger.loader.Debug(string.Join(", ", deTreed.Select(p => p.ToString())));
+            Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString())));
 #endif
+        }
 
+        internal static void ResolveDependencies()
+        {
             var metadata = new List<PluginMetadata>();
             var pluginsToLoad = new Dictionary<string, Version>();
             var disabledLookup = DisabledPlugins.Where(m => m.Id != null).ToDictionary(m => m.Id, m => m.Version);
-            foreach (var meta in deTreed)
+            foreach (var meta in PluginsMetadata)
             {
                 bool load = true;
                 bool disable = false;
@@ -633,7 +638,7 @@ namespace IPA.Loader
                     }
 
                 if (instance is IDisablablePlugin disable)
-                    try
+                    try // TODO: move this out to after all plugins have been inited
                     {
                         disable.OnEnable();
                     }

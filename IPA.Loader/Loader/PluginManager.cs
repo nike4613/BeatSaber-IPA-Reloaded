@@ -156,7 +156,7 @@ namespace IPA.Loader
                 return false;
             }
 
-            if (IsEnabled(plugin)) return false;
+            if (!IsDisabled(plugin)) return false;
 
             Logger.loader.Info($"Enabling {plugin.Name}");
 
@@ -229,7 +229,7 @@ namespace IPA.Loader
         /// </summary>
         /// <param name="meta">the plugin to check</param>
         /// <returns><see langword="true"/> if the plugin is enabled, <see langword="false"/> otherwise.</returns>
-        public static bool IsEnabled(PluginMetadata meta) => !IsDisabled(meta);
+        public static bool IsEnabled(PluginMetadata meta) => BSMetas.Any(p => p.Metadata == meta);
 
         private static readonly List<PluginInfo> runtimeDisabled = new List<PluginInfo>();
         /// <summary>
