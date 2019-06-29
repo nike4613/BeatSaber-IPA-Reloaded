@@ -81,7 +81,11 @@ namespace IPA.Loader
 
             internal bool IsSelf;
 
-            internal bool IsBare;
+            /// <summary>
+            /// Whether or not this metadata object represents a bare manifest.
+            /// </summary>
+            /// <value><see langword="true"/> if it is bare, <see langword="false"/> otherwise</value>
+            public bool IsBare { get; internal set; }
 
             private PluginManifest manifest;
 
