@@ -1192,6 +1192,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginLoader.PluginMetadata.Id
   nameWithType: PluginLoader.PluginMetadata.Id
+- uid: IPA.Loader.PluginLoader.PluginMetadata.IsBare
+  name: IsBare
+  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_IsBare
+  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.IsBare
+  fullName: IPA.Loader.PluginLoader.PluginMetadata.IsBare
+  nameWithType: PluginLoader.PluginMetadata.IsBare
+- uid: IPA.Loader.PluginLoader.PluginMetadata.IsBare*
+  name: IsBare
+  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_IsBare_
+  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.IsBare
+  isSpec: "True"
+  fullName: IPA.Loader.PluginLoader.PluginMetadata.IsBare
+  nameWithType: PluginLoader.PluginMetadata.IsBare
 - uid: IPA.Loader.PluginLoader.PluginMetadata.Name
   name: Name
   href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Name
