@@ -1,5 +1,6 @@
 ﻿using IPA.Config;
 using IPA.Logging.Printers;
+using IPA.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -194,7 +195,7 @@ namespace IPA.Logging
                 Level = level,
                 Message = message,
                 Logger = this,
-                Time = DateTime.Now
+                Time = Utils.CurrentTime()
             });
         }
 
@@ -285,7 +286,7 @@ namespace IPA.Logging
                                 }
 
                                 // update last use time and print
-                                printer.LastUse = DateTime.Now;
+                                printer.LastUse = Utils.CurrentTime();
                                 printer.Print(msg.Level, msg.Time, msg.Logger.logName, msg.Message);
                             }
                         }
@@ -328,14 +329,14 @@ namespace IPA.Logging
                             Level = Level.Warning,
                             Logger = loggerLogger,
                             Message = $"{loggerLogger.logName.ToUpper()}: Messages omitted to improve performance",
-                            Time = DateTime.Now
+                            Time = Utils.CurrentTime()
                         });
 
                         // resume log calls
                         logWaitEvent.Set();
                     }
 
-                    var now = DateTime.Now;
+                    var now = Utils.CurrentTime();
                     var copy = new List<LogPrinter>(started);
                     foreach (var printer in copy)
                     {
