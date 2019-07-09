@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IPA.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -16,7 +17,7 @@ namespace IPA.Injector.Backups
         private readonly FileInfo _manifestFile;
         private const string ManifestFileName = "$manifest$.txt";
 
-        public BackupUnit(string dir) : this(dir, DateTime.Now.ToString("yyyy-MM-dd_h-mm-ss"))
+        public BackupUnit(string dir) : this(dir, Utils.CurrentTime().ToString("yyyy-MM-dd_h-mm-ss"))
         {
         }
 

@@ -129,5 +129,42 @@ namespace IPA.Utilities
                 CopyAll(diSourceSubDir, nextTargetSubDir, appendFileName, onCopyException);
             }
         }
+
+        /// <summary>
+        /// Whether you can safely use <see cref="DateTime.Now"/> without Mono throwing a fit.
+        /// </summary>
+        /// <value><see langword="true"/> if you can use <see cref="DateTime.Now"/> safely, <see langword="false"/> otherwise</value>
+        public static bool CanUseDateTimeNowSafely { get; private set; } = true;
+        private static bool DateTimeSafetyUnknown = true;
+        private static ulong UnsafeAdvanceTicks = 1;
+
+        /// <summary>
+        /// Gets the current <see cref="DateTime"/> if supported, otherwise, if Mono would throw a fit,
+        /// returns <see cref="DateTime.MinValue"/> plus some value, such that each time it is called
+        /// the value will be greater than the previous result. Not suitable for timing.
+        /// </summary>
+        /// <returns>the current <see cref="DateTime"/> if supported, otherwise some indeterminant increasing value.</returns>
+        public static DateTime CurrentTime()
+        {
+            if (DateTimeSafetyUnknown)
+            {
+                DateTime time = DateTime.MinValue;
+                try
+                {
+                    time = DateTime.Now;
+                }
+                catch (TimeZoneNotFoundException)
+                { // Mono did a fucky wucky and we need to avoid this call
+                    CanUseDateTimeNowSafely = false;
+                }
+                DateTimeSafetyUnknown = false;
+                return time;
+            }
+            else
+            {
+                if (CanUseDateTimeNowSafely) return DateTime.Now;
+                else return DateTime.MinValue.AddTicks((long)UnsafeAdvanceTicks++); // return MinValue as a fallback
+            }
+        }
     }
 }

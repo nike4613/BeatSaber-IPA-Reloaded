@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using IPA.Utilities;
 
 namespace IPA.Logging.Printers
 {
@@ -25,7 +26,7 @@ namespace IPA.Logging.Printers
         {
             var logsDir = new DirectoryInfo(Path.Combine("Logs", mainName, name));
             logsDir.Create();
-            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{DateTime.Now:yyyy.MM.dd.HH.mm.ss}.log"));
+            var finfo = new FileInfo(Path.Combine(logsDir.FullName, $"{Utils.CurrentTime():yyyy.MM.dd.HH.mm.ss}.log"));
             return finfo;
         }
 

@@ -212,7 +212,7 @@ namespace IPA.Config
                     try
                     {
                         provider.Item2.Save();
-                        provider.Item1.Value = DateTime.Now;
+                        provider.Item1.Value = Utils.CurrentTime();
                     }
                     catch (Exception e)
                     {
