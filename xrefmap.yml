@@ -2220,38 +2220,6 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.StandardLogger.PrintFilter
   nameWithType: StandardLogger.PrintFilter
-- uid: IPA.ModsaberModInfo
-  name: ModsaberModInfo
-  href: api/IPA.ModsaberModInfo.html
-  commentId: T:IPA.ModsaberModInfo
-  fullName: IPA.ModsaberModInfo
-  nameWithType: ModsaberModInfo
-- uid: IPA.ModsaberModInfo.CurrentVersion
-  name: CurrentVersion
-  href: api/IPA.ModsaberModInfo.html#IPA_ModsaberModInfo_CurrentVersion
-  commentId: P:IPA.ModsaberModInfo.CurrentVersion
-  fullName: IPA.ModsaberModInfo.CurrentVersion
-  nameWithType: ModsaberModInfo.CurrentVersion
-- uid: IPA.ModsaberModInfo.CurrentVersion*
-  name: CurrentVersion
-  href: api/IPA.ModsaberModInfo.html#IPA_ModsaberModInfo_CurrentVersion_
-  commentId: Overload:IPA.ModsaberModInfo.CurrentVersion
-  isSpec: "True"
-  fullName: IPA.ModsaberModInfo.CurrentVersion
-  nameWithType: ModsaberModInfo.CurrentVersion
-- uid: IPA.ModsaberModInfo.InternalName
-  name: InternalName
-  href: api/IPA.ModsaberModInfo.html#IPA_ModsaberModInfo_InternalName
-  commentId: P:IPA.ModsaberModInfo.InternalName
-  fullName: IPA.ModsaberModInfo.InternalName
-  nameWithType: ModsaberModInfo.InternalName
-- uid: IPA.ModsaberModInfo.InternalName*
-  name: InternalName
-  href: api/IPA.ModsaberModInfo.html#IPA_ModsaberModInfo_InternalName_
-  commentId: Overload:IPA.ModsaberModInfo.InternalName
-  isSpec: "True"
-  fullName: IPA.ModsaberModInfo.InternalName
-  nameWithType: ModsaberModInfo.InternalName
 - uid: IPA.Old
   name: IPA.Old
   href: api/IPA.Old.html
