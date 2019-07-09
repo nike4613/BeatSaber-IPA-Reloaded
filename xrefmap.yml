@@ -2860,6 +2860,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.ByteArrayToString
   nameWithType: Utils.ByteArrayToString
+- uid: IPA.Utilities.Utils.CanUseDateTimeNowSafely
+  name: CanUseDateTimeNowSafely
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CanUseDateTimeNowSafely
+  commentId: P:IPA.Utilities.Utils.CanUseDateTimeNowSafely
+  fullName: IPA.Utilities.Utils.CanUseDateTimeNowSafely
+  nameWithType: Utils.CanUseDateTimeNowSafely
+- uid: IPA.Utilities.Utils.CanUseDateTimeNowSafely*
+  name: CanUseDateTimeNowSafely
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CanUseDateTimeNowSafely_
+  commentId: Overload:IPA.Utilities.Utils.CanUseDateTimeNowSafely
+  isSpec: "True"
+  fullName: IPA.Utilities.Utils.CanUseDateTimeNowSafely
+  nameWithType: Utils.CanUseDateTimeNowSafely
 - uid: IPA.Utilities.Utils.CopyAll(System.IO.DirectoryInfo,System.IO.DirectoryInfo,System.String,System.Func{System.Exception,System.IO.FileInfo,System.Boolean})
   name: CopyAll(DirectoryInfo, DirectoryInfo, String, Func<Exception, FileInfo, Boolean>)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CopyAll_System_IO_DirectoryInfo_System_IO_DirectoryInfo_System_String_System_Func_System_Exception_System_IO_FileInfo_System_Boolean__
@@ -2876,6 +2889,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.CopyAll
   nameWithType: Utils.CopyAll
+- uid: IPA.Utilities.Utils.CurrentTime
+  name: CurrentTime()
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CurrentTime
+  commentId: M:IPA.Utilities.Utils.CurrentTime
+  fullName: IPA.Utilities.Utils.CurrentTime()
+  nameWithType: Utils.CurrentTime()
+- uid: IPA.Utilities.Utils.CurrentTime*
+  name: CurrentTime
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CurrentTime_
+  commentId: Overload:IPA.Utilities.Utils.CurrentTime
+  isSpec: "True"
+  fullName: IPA.Utilities.Utils.CurrentTime
+  nameWithType: Utils.CurrentTime
 - uid: IPA.Utilities.Utils.GetRelativePath(System.String,System.String)
   name: GetRelativePath(String, String)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_GetRelativePath_System_String_System_String_
