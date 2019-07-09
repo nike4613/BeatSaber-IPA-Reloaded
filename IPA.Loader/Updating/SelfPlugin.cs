@@ -13,12 +13,6 @@ namespace IPA.Updating
 
         public string Version => SelfConfig.IPAVersion;
 
-        public ModsaberModInfo ModInfo => new ModsaberModInfo
-        {
-            CurrentVersion = SelfConfig.IPAVersion,
-            InternalName = "beatsaber-ipa-reloaded"
-        };
-
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
         }
