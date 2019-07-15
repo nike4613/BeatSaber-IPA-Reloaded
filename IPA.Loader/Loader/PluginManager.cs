@@ -294,7 +294,7 @@ namespace IPA.Loader
             string pluginDir = BeatSaber.PluginsPath;
             var gameVer = BeatSaber.GameVersion;
             var lastVerS = SelfConfig.SelfConfigRef.Value.LastGameVersion;
-            var lastVer = lastVerS != null ? new SemVer.Version(lastVerS) : null;
+            var lastVer = lastVerS != null ? new SemVer.Version(lastVerS.Split('p').First()) : null;
 
             if (lastVer != null && gameVer != lastVer)
             {
