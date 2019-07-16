@@ -166,5 +166,21 @@ namespace IPA.Utilities
                 else return DateTime.MinValue.AddTicks((long)UnsafeAdvanceTicks++); // return MinValue as a fallback
             }
         }
+
+        /// <summary>
+        /// Compares a pair of <see cref="SemVer.Version"/>s ignoring both the prerelease and build fields.
+        /// </summary>
+        /// <param name="l">the left value</param>
+        /// <param name="r">the right value</param>
+        /// <returns>-1 if l is less than r, 0 if they are equal in the numeric portion, or 1 if l is greater than r</returns>
+        public static int VersionCompareNoPrerelease(SemVer.Version l, SemVer.Version r)
+        {
+            var cmpVal = l.Major - r.Major;
+            if (cmpVal != 0) return cmpVal;
+            cmpVal = l.Minor - r.Minor;
+            if (cmpVal != 0) return cmpVal;
+            cmpVal = l.Patch - r.Patch;
+            return cmpVal;
+        }
     }
 }
