@@ -21,6 +21,7 @@ namespace IPA.Loader
     {
         internal static Task LoadTask() => Task.Run(() =>
         {
+
             LoadMetadata();
             Resolve();
             ComputeLoadOrder();

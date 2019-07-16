@@ -1,10 +1,14 @@
 version: 'BSIPA-{branch}-{build}'
+
 environment:
   bsipa_version: '3.12.23'
   gh_token:
     secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
+  BUILD_DOCS: 'no'
+
 pull_requests:
   do_not_increment_build_number: true
+
 install:
   - git submodule update --init --recursive
   - nuget restore
@@ -14,26 +18,43 @@ install:
             #git checkout $env:APPVEYOR_REPO_BRANCH -q
             choco install docfx -y
         }
-image: Visual Studio 2019 Preview
+
+image: Visual Studio 2019
+
 configuration: 
   - Release
 platform: 
-  - x86
   - x64
+  #- x86
+
+for:
+- 
+  matrix:
+    only:
+    - configuration: Release
+      platform: x64
+  environment:
+    BUILD_DOCS: 'yes'
+
 branches:
   except:
     - gh-pages
+
 cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+
 artifacts:
   - path: IPA/bin/$(configuration)
     name: BSIPA
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
+
 build:
   verbosity: normal
   project: BSIPA.sln
+
 skip_tags: false
+
 deploy:
 - provider: GitHub
   release: BSIPA $(bsipa_version)-draft
@@ -51,6 +72,7 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: false
+  
 - provider: GitHub
   release: -ignore-
   tag: create_tag
@@ -63,9 +85,10 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: true
+
 before_deploy:
   - ps: |
-        if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
+        if ($env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:BUILD_DOCS -eq 'yes')
         {
             cd docs
             

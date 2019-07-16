@@ -18,6 +18,21 @@ namespace IPA.Utilities
         /// <value>the SemVer version of the game</value>
         public static Version GameVersion => _gameVersion ?? (_gameVersion = new Version(Application.version, true));
 
+        internal static void SetEarlyGameVersion(Version ver)
+        {
+            _gameVersion = ver;
+            Logging.Logger.log.Debug($"GameVersion set early to {ver}");
+        }
+        internal static void EnsureRuntimeGameVersion()
+        {
+            var rtVer = new Version(Application.version, true);
+            if (rtVer != _gameVersion)
+            {
+                Logging.Logger.log.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
+                _gameVersion = rtVer;
+            }
+        }
+
         /// <summary>
         /// The different types of releases of the game.
         /// </summary>
