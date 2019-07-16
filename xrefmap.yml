@@ -2912,3 +2912,16 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.UnsafeCompare
   nameWithType: Utils.UnsafeCompare
+- uid: IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version,SemVer.Version)
+  name: VersionCompareNoPrerelease(SemVer.Version, SemVer.Version)
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_SemVer_Version_SemVer_Version_
+  commentId: M:IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version,SemVer.Version)
+  fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version, SemVer.Version)
+  nameWithType: Utils.VersionCompareNoPrerelease(SemVer.Version, SemVer.Version)
+- uid: IPA.Utilities.Utils.VersionCompareNoPrerelease*
+  name: VersionCompareNoPrerelease
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_
+  commentId: Overload:IPA.Utilities.Utils.VersionCompareNoPrerelease
+  isSpec: "True"
+  fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease
+  nameWithType: Utils.VersionCompareNoPrerelease
