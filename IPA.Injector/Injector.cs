@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
@@ -59,11 +60,15 @@ namespace IPA.Injector
 
                 loader.Debug("Prepping bootstrapper");
                 
+                // updates backup
                 InstallBootstrapPatch();
 
                 Updates.InstallPendingUpdates();
 
                 LibLoader.SetupAssemblyFilenames(true);
+
+                // causes mono to hate itself
+                //GameVersionEarly.Load();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));

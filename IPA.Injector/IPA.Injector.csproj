@@ -55,6 +55,7 @@
     <Compile Include="Backups\BackupManager.cs" />
     <Compile Include="Backups\BackupUnit.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="GameVersionEarly.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="PermissionFix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
