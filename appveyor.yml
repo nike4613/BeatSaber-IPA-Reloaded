@@ -15,8 +15,11 @@ install:
             choco install docfx -y
         }
 image: Visual Studio 2019 Preview
-configuration: Release
-platform: x64
+configuration: 
+  - Release
+platform: 
+  - x86
+  - x64
 branches:
   except:
     - gh-pages
