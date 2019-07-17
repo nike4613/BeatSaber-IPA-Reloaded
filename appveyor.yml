@@ -37,7 +37,7 @@ artifacts: # When Net3 is added, this will need to be moved to the for block to 
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
   - path: ./
-    name: DirDebug
+    name: DirDebug_
 
 #matrix:
   #exclude:
@@ -142,7 +142,7 @@ deploy:
     - `$(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)`
   auth_token:
     secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
-  artifact: /.*\.zip/
+  artifact: '/.*[^_]\.zip/'
   draft: true
   force_update: true
   on:
