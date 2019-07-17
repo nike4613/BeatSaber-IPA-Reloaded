@@ -77,11 +77,9 @@
     <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
     <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
     <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
-    
-    <Outputs Include="$(OutputPath)**\*" />
   </ItemGroup>
   
-  <Target Name="Assemble" Inputs="@(InputDlls);@(InputIPAFiles)" Outputs="@(Outputs)" Returns="$(OutputPath)">
+  <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     
