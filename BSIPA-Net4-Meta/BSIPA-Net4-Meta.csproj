@@ -86,7 +86,7 @@
     <ItemGroup>
       <IPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(IPAFiles)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(IPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
   
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
