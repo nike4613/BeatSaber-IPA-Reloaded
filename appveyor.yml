@@ -32,8 +32,10 @@ platform:
   - x86
   
 artifacts: # When Net3 is added, this will need to be moved to the for block to only run for Net4 builds
-  - path: BSIPA-ModList/bin/$(configuration)
+  - path: BSIPA-ModList/bin/Release
     name: ModList
+  - path: BSIPA-Net4-Meta/bin/$(configuration) 
+    name: BSIPA-Net4-$(platform)
 
 matrix:
   exclude:
@@ -54,9 +56,9 @@ for:
     only:
     - configuration: Release_Net4
   
+  environment:
+    
   artifacts:
-    - path: BSIPA-Net4-Meta/bin/$(configuration) 
-      name: BSIPA-Net4-$(platform)
 - 
   matrix:
     except:
