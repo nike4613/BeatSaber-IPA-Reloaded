@@ -29,17 +29,17 @@ configuration:
   - Release_Net4
 platform: 
   - x64
-  #- x86
+  - x86
   
 artifacts: # When Net3 is added, this will need to be moved to the for block to only run for Net4 builds
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
 
-#matrix:
-  #exclude:
-    #- BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
-    #  configuration: Release
-    #  platform: x64
+matrix:
+  exclude:
+    - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
+      configuration: Release
+      platform: x64
 
 for:
 -
