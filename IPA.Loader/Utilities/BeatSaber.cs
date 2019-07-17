@@ -11,22 +11,22 @@ namespace IPA.Utilities
     /// </summary>
     public static class BeatSaber
     {
-        private static Version _gameVersion;
+        private static AlmostVersion _gameVersion;
         /// <summary>
         /// Provides the current game version.
         /// </summary>
         /// <value>the SemVer version of the game</value>
-        public static Version GameVersion => _gameVersion ?? (_gameVersion = new Version(Application.version, true));
+        public static AlmostVersion GameVersion => _gameVersion ?? (_gameVersion = new AlmostVersion(Application.version));
 
-        internal static void SetEarlyGameVersion(Version ver)
+        internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
             _gameVersion = ver;
             Logging.Logger.log.Debug($"GameVersion set early to {ver}");
         }
         internal static void EnsureRuntimeGameVersion()
         {
-            var rtVer = new Version(Application.version, true);
-            if (rtVer != _gameVersion)
+            var rtVer = new AlmostVersion(Application.version);
+            if (!rtVer.Equals(_gameVersion)) // this actually uses stricter equality than == for AlmostVersion
             {
                 Logging.Logger.log.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
                 _gameVersion = rtVer;
