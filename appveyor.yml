@@ -35,6 +35,9 @@ for:
       platform: x64
   environment:
     BUILD_DOCS: 'yes'
+  artifacts:
+  - path: BSIPA-ModList/bin/$(configuration)
+    name: ModList
 
 branches:
   except:
@@ -45,9 +48,7 @@ cache:
 
 artifacts:
   - path: IPA/bin/$(configuration)
-    name: BSIPA
-  - path: BSIPA-ModList/bin/$(configuration)
-    name: ModList
+    name: BSIPA-$(platform)
 
 build:
   verbosity: normal
