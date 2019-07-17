@@ -2523,6 +2523,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.AlmostVersion.SemverValue
   nameWithType: AlmostVersion.SemverValue
+- uid: IPA.Utilities.AlmostVersion.StorageMode
+  name: StorageMode
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_StorageMode
+  commentId: P:IPA.Utilities.AlmostVersion.StorageMode
+  fullName: IPA.Utilities.AlmostVersion.StorageMode
+  nameWithType: AlmostVersion.StorageMode
+- uid: IPA.Utilities.AlmostVersion.StorageMode*
+  name: StorageMode
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_StorageMode_
+  commentId: Overload:IPA.Utilities.AlmostVersion.StorageMode
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.StorageMode
+  nameWithType: AlmostVersion.StorageMode
 - uid: IPA.Utilities.AlmostVersion.StoredAs
   name: AlmostVersion.StoredAs
   href: api/IPA.Utilities.AlmostVersion.StoredAs.html
