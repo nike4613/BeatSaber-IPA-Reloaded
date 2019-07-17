@@ -59,7 +59,6 @@
     <OtherConfig>Verbose_Release</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
-   
   <Target Name="Clean">
     <ItemGroup>
       <Files Include="$(OutputPath)**\*" />
@@ -67,29 +66,30 @@
     <Delete Files="@(Files)" />
   </Target>
   <Target Name="Rebuild">
-    <CallTarget Targets="Assemble"/>
+    <CallTarget Targets="Assemble" />
   </Target>
   <Target Name="Build">
-    <CallTarget Targets="Assemble"/>
+    <CallTarget Targets="Assemble" />
   </Target>
   
-  <Target Name="Assemble">
+  <ItemGroup>
+    <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
+    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
+    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
+    <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
+    
+    <Outputs Include="$(OutputPath)**\*" />
+  </ItemGroup>
+  
+  <Target Name="Assemble" Inputs="@(InputDlls);@(InputIPAFiles)" Outputs="@(Outputs)" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
-    <ItemGroup>
-      <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
-      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
-    </ItemGroup>
-    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
+    
+    <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
-  
-    <ItemGroup>
-      <IPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(IPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
-  
+    
+    <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
       <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
