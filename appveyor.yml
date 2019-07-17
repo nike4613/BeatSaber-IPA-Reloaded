@@ -36,8 +36,6 @@ artifacts: # When Net3 is added, this will need to be moved to the for block to 
     name: BSIPA-$(platform)
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
-  - path: ./
-    name: DirDebug_
 
 #matrix:
   #exclude:
