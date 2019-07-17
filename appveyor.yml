@@ -55,10 +55,8 @@ for:
   matrix:
     only:
     - configuration: Release_Net4
-  
-  environment:
-    
-  artifacts:
+
+  # this is never used because fuck me....
 - 
   matrix:
     except:
