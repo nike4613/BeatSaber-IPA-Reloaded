@@ -37,8 +37,8 @@ artifacts:
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
 
-matrix:
-  exclude:
+#matrix:
+  #exclude:
     #- BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
     #  configuration: Release
     #  platform: x64
