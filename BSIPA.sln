@@ -150,19 +150,15 @@ Global
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x64.Build.0 = Debug|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x86.Build.0 = Debug|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x64.ActiveCfg = Release|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x64.Build.0 = Release|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x86.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x86.Build.0 = Release|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x64.ActiveCfg = Release|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x64.Build.0 = Release|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x86.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x86.Build.0 = Release|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x64.ActiveCfg = Debug|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x64.Build.0 = Debug|Any CPU
 		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x86.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
