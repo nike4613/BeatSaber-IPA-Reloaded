@@ -12,7 +12,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_Net4|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' " />
+  <PropertyGroup Condition=" '$(Platform)' == 'x64' " />
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug_Net4' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -24,7 +26,7 @@
     <OtherConfig>Debug</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_Net4|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release_Net4' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -35,7 +37,7 @@
     <OtherConfig>Release</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose_Net4|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Verbose_Net4' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -47,7 +49,7 @@
     <OtherConfig>Verbose</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose_Release_Net4|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Verbose_Release_Net4' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -72,8 +74,8 @@
   </Target>
   <ItemGroup>
     <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
-    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
-    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
+    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(Platform)\$(ProxyConfig)\**\*.dll" />
+    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(Platform)\$(ProxyConfig)\**\*.pdb" />
     <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
   </ItemGroup>
   <Target Name="Assemble" Returns="$(OutputPath)">
@@ -85,8 +87,8 @@
     <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
-      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
-      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release_Net4' Or '$(Configuration)'=='Verbose_Release_Net4'" />
+      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release_Net4' Or '$(Configuration)'=='Verbose_Release_Net4'" />
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
     <RemoveDir Directories="$(OutputPath)Libraries\" />
