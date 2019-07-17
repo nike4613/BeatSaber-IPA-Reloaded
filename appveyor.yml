@@ -26,6 +26,10 @@ configuration:
 platform: 
   - x64
   #- x86
+  
+artifacts:
+  - path: IPA/bin/$(configuration)
+    name: BSIPA-$(platform)
 
 for:
 - 
@@ -45,10 +49,6 @@ branches:
 
 cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
-
-artifacts:
-  - path: IPA/bin/$(configuration)
-    name: BSIPA-$(platform)
 
 build:
   verbosity: normal
