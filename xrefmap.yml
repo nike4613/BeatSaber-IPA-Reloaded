@@ -2374,6 +2374,199 @@ references:
   commentId: N:IPA.Utilities
   fullName: IPA.Utilities
   nameWithType: IPA.Utilities
+- uid: IPA.Utilities.AlmostVersion
+  name: AlmostVersion
+  href: api/IPA.Utilities.AlmostVersion.html
+  commentId: T:IPA.Utilities.AlmostVersion
+  fullName: IPA.Utilities.AlmostVersion
+  nameWithType: AlmostVersion
+- uid: IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)
+  name: AlmostVersion(SemVer.Version)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_SemVer_Version_
+  commentId: M:IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)
+  fullName: IPA.Utilities.AlmostVersion.AlmostVersion(SemVer.Version)
+  nameWithType: AlmostVersion.AlmostVersion(SemVer.Version)
+- uid: IPA.Utilities.AlmostVersion.#ctor(System.String)
+  name: AlmostVersion(String)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_System_String_
+  commentId: M:IPA.Utilities.AlmostVersion.#ctor(System.String)
+  fullName: IPA.Utilities.AlmostVersion.AlmostVersion(System.String)
+  nameWithType: AlmostVersion.AlmostVersion(String)
+- uid: IPA.Utilities.AlmostVersion.#ctor(System.String,IPA.Utilities.AlmostVersion)
+  name: AlmostVersion(String, AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_System_String_IPA_Utilities_AlmostVersion_
+  commentId: M:IPA.Utilities.AlmostVersion.#ctor(System.String,IPA.Utilities.AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.AlmostVersion(System.String, IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.AlmostVersion(String, AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.#ctor(System.String,IPA.Utilities.AlmostVersion.StoredAs)
+  name: AlmostVersion(String, AlmostVersion.StoredAs)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_System_String_IPA_Utilities_AlmostVersion_StoredAs_
+  commentId: M:IPA.Utilities.AlmostVersion.#ctor(System.String,IPA.Utilities.AlmostVersion.StoredAs)
+  fullName: IPA.Utilities.AlmostVersion.AlmostVersion(System.String, IPA.Utilities.AlmostVersion.StoredAs)
+  nameWithType: AlmostVersion.AlmostVersion(String, AlmostVersion.StoredAs)
+- uid: IPA.Utilities.AlmostVersion.#ctor*
+  name: AlmostVersion
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_
+  commentId: Overload:IPA.Utilities.AlmostVersion.#ctor
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.AlmostVersion
+  nameWithType: AlmostVersion.AlmostVersion
+- uid: IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)
+  name: CompareTo(AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion_
+  commentId: M:IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.CompareTo(AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)
+  name: CompareTo(SemVer.Version)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version_
+  commentId: M:IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)
+  fullName: IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)
+  nameWithType: AlmostVersion.CompareTo(SemVer.Version)
+- uid: IPA.Utilities.AlmostVersion.CompareTo*
+  name: CompareTo
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_
+  commentId: Overload:IPA.Utilities.AlmostVersion.CompareTo
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.CompareTo
+  nameWithType: AlmostVersion.CompareTo
+- uid: IPA.Utilities.AlmostVersion.Equals(System.Object)
+  name: Equals(Object)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_Equals_System_Object_
+  commentId: M:IPA.Utilities.AlmostVersion.Equals(System.Object)
+  fullName: IPA.Utilities.AlmostVersion.Equals(System.Object)
+  nameWithType: AlmostVersion.Equals(Object)
+- uid: IPA.Utilities.AlmostVersion.Equals*
+  name: Equals
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_Equals_
+  commentId: Overload:IPA.Utilities.AlmostVersion.Equals
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.Equals
+  nameWithType: AlmostVersion.Equals
+- uid: IPA.Utilities.AlmostVersion.GetHashCode
+  name: GetHashCode()
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_GetHashCode
+  commentId: M:IPA.Utilities.AlmostVersion.GetHashCode
+  fullName: IPA.Utilities.AlmostVersion.GetHashCode()
+  nameWithType: AlmostVersion.GetHashCode()
+- uid: IPA.Utilities.AlmostVersion.GetHashCode*
+  name: GetHashCode
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_GetHashCode_
+  commentId: Overload:IPA.Utilities.AlmostVersion.GetHashCode
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.GetHashCode
+  nameWithType: AlmostVersion.GetHashCode
+- uid: IPA.Utilities.AlmostVersion.op_Equality(IPA.Utilities.AlmostVersion,IPA.Utilities.AlmostVersion)
+  name: Equality(AlmostVersion, AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_
+  commentId: M:IPA.Utilities.AlmostVersion.op_Equality(IPA.Utilities.AlmostVersion,IPA.Utilities.AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.Equality(IPA.Utilities.AlmostVersion, IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.Equality(AlmostVersion, AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.op_Equality*
+  name: Equality
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Equality_
+  commentId: Overload:IPA.Utilities.AlmostVersion.op_Equality
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.Equality
+  nameWithType: AlmostVersion.Equality
+- uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version
+  name: Implicit(AlmostVersion to SemVer.Version)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version
+  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version
+  name.vb: Widening(AlmostVersion to SemVer.Version)
+  fullName: IPA.Utilities.AlmostVersion.Implicit(IPA.Utilities.AlmostVersion to SemVer.Version)
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to SemVer.Version)
+  nameWithType: AlmostVersion.Implicit(AlmostVersion to SemVer.Version)
+  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to SemVer.Version)
+- uid: IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion
+  name: Implicit(SemVer.Version to AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion
+  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion
+  name.vb: Widening(SemVer.Version to AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.Implicit(SemVer.Version to IPA.Utilities.AlmostVersion)
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening(SemVer.Version to IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.Implicit(SemVer.Version to AlmostVersion)
+  nameWithType.vb: AlmostVersion.Widening(SemVer.Version to AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.op_Implicit*
+  name: Implicit
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_
+  commentId: Overload:IPA.Utilities.AlmostVersion.op_Implicit
+  isSpec: "True"
+  name.vb: Widening
+  fullName: IPA.Utilities.AlmostVersion.Implicit
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening
+  nameWithType: AlmostVersion.Implicit
+  nameWithType.vb: AlmostVersion.Widening
+- uid: IPA.Utilities.AlmostVersion.op_Inequality(IPA.Utilities.AlmostVersion,IPA.Utilities.AlmostVersion)
+  name: Inequality(AlmostVersion, AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Inequality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_
+  commentId: M:IPA.Utilities.AlmostVersion.op_Inequality(IPA.Utilities.AlmostVersion,IPA.Utilities.AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.Inequality(IPA.Utilities.AlmostVersion, IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.Inequality(AlmostVersion, AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.op_Inequality*
+  name: Inequality
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Inequality_
+  commentId: Overload:IPA.Utilities.AlmostVersion.op_Inequality
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.Inequality
+  nameWithType: AlmostVersion.Inequality
+- uid: IPA.Utilities.AlmostVersion.SemverValue
+  name: SemverValue
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_SemverValue
+  commentId: P:IPA.Utilities.AlmostVersion.SemverValue
+  fullName: IPA.Utilities.AlmostVersion.SemverValue
+  nameWithType: AlmostVersion.SemverValue
+- uid: IPA.Utilities.AlmostVersion.SemverValue*
+  name: SemverValue
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_SemverValue_
+  commentId: Overload:IPA.Utilities.AlmostVersion.SemverValue
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.SemverValue
+  nameWithType: AlmostVersion.SemverValue
+- uid: IPA.Utilities.AlmostVersion.StoredAs
+  name: AlmostVersion.StoredAs
+  href: api/IPA.Utilities.AlmostVersion.StoredAs.html
+  commentId: T:IPA.Utilities.AlmostVersion.StoredAs
+  fullName: IPA.Utilities.AlmostVersion.StoredAs
+  nameWithType: AlmostVersion.StoredAs
+- uid: IPA.Utilities.AlmostVersion.StoredAs.SemVer
+  name: SemVer
+  href: api/IPA.Utilities.AlmostVersion.StoredAs.html#IPA_Utilities_AlmostVersion_StoredAs_SemVer
+  commentId: F:IPA.Utilities.AlmostVersion.StoredAs.SemVer
+  fullName: IPA.Utilities.AlmostVersion.StoredAs.SemVer
+  nameWithType: AlmostVersion.StoredAs.SemVer
+- uid: IPA.Utilities.AlmostVersion.StoredAs.String
+  name: String
+  href: api/IPA.Utilities.AlmostVersion.StoredAs.html#IPA_Utilities_AlmostVersion_StoredAs_String
+  commentId: F:IPA.Utilities.AlmostVersion.StoredAs.String
+  fullName: IPA.Utilities.AlmostVersion.StoredAs.String
+  nameWithType: AlmostVersion.StoredAs.String
+- uid: IPA.Utilities.AlmostVersion.StringValue
+  name: StringValue
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_StringValue
+  commentId: P:IPA.Utilities.AlmostVersion.StringValue
+  fullName: IPA.Utilities.AlmostVersion.StringValue
+  nameWithType: AlmostVersion.StringValue
+- uid: IPA.Utilities.AlmostVersion.StringValue*
+  name: StringValue
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_StringValue_
+  commentId: Overload:IPA.Utilities.AlmostVersion.StringValue
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.StringValue
+  nameWithType: AlmostVersion.StringValue
+- uid: IPA.Utilities.AlmostVersion.ToString
+  name: ToString()
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_ToString
+  commentId: M:IPA.Utilities.AlmostVersion.ToString
+  fullName: IPA.Utilities.AlmostVersion.ToString()
+  nameWithType: AlmostVersion.ToString()
+- uid: IPA.Utilities.AlmostVersion.ToString*
+  name: ToString
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_ToString_
+  commentId: Overload:IPA.Utilities.AlmostVersion.ToString
+  isSpec: "True"
+  fullName: IPA.Utilities.AlmostVersion.ToString
+  nameWithType: AlmostVersion.ToString
 - uid: IPA.Utilities.BeatSaber
   name: BeatSaber
   href: api/IPA.Utilities.BeatSaber.html
