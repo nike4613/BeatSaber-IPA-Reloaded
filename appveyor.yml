@@ -26,14 +26,12 @@ install:
 image: Visual Studio 2019
 
 configuration: 
-  - Release
+  - Release_Net4
 platform: 
   - x64
   #- x86
   
 artifacts: # When Net3 is added, this will need to be moved to the for block to only run for Net4 builds
-  - path: BSIPA-Net4-Meta/bin/$(configuration) 
-    name: BSIPA-Net4-$(platform)
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
 
@@ -50,6 +48,14 @@ for:
     - BUILD_DOC: 'yes'
 
   skip_tags: true
+-
+  matrix:
+    only:
+    - configuration: Release_Net4
+  
+  artifacts:
+    - path: BSIPA-Net4-Meta/bin/$(configuration) 
+      name: BSIPA-Net4-$(platform)
 - 
   matrix:
     except:
