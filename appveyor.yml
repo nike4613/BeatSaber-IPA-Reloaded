@@ -31,8 +31,8 @@ platform:
   - x64
   #- x86
   
-artifacts:
-  - path: IPA/bin/$(configuration)
+artifacts: # When Net3 is added, this will need to be moved to the for block to only run for Net4 builds
+  - path: BSIPA-Net4-Meta/bin/$(configuration) 
     name: BSIPA-$(platform)
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
