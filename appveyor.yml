@@ -33,7 +33,7 @@ platform:
   
 artifacts: # When Net3 is added, this will need to be moved to the for block to only run for Net4 builds
   - path: BSIPA-Net4-Meta/bin/$(configuration) 
-    name: BSIPA-$(platform)
+    name: BSIPA-Net4-$(platform)
   - path: BSIPA-ModList/bin/$(configuration)
     name: ModList
 
