@@ -6,9 +6,8 @@ environment:
     secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
 
   matrix:
-    BUILD_DOC: 
-    - 'yes'
-    - 'no'
+    - BUILD_DOC: 'yes'
+    - BUILD_DOC: 'no'
 
 pull_requests:
   do_not_increment_build_number: true
