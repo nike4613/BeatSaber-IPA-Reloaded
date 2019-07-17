@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{880A3560-82CD-4836-996B-11BEFE6B44DB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BSIPA_Net4_Meta</RootNamespace>
+    <AssemblyName>BSIPA-Net4-Meta</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OtherConfig>Debug</OtherConfig>
+    <ProxyConfig>Release</ProxyConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OtherConfig>Release</OtherConfig>
+    <ProxyConfig>Release</ProxyConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Verbose\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OtherConfig>Verbose</OtherConfig>
+    <ProxyConfig>Verbose_Release</ProxyConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose_Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Verbose_Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OtherConfig>Verbose_Release</OtherConfig>
+    <ProxyConfig>Verbose_Release</ProxyConfig>
+  </PropertyGroup>
+   
+  <Target Name="Clean">
+    <ItemGroup>
+      <Files Include="$(OutputPath)**\*" />
+    </ItemGroup>
+    <Delete Files="@(Files)" />
+  </Target>
+  <Target Name="Rebuild">
+    <CallTarget Targets="Assemble"/>
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="Assemble"/>
+  </Target>
+  
+  <Target Name="Assemble">
+    <Message Text="Packing..." Importance="normal" />
+    <ItemGroup>
+      <Dlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
+      <Dlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
+    <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
+    <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
+  
+    <ItemGroup>
+      <IPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(IPAFiles)" DestinationFolder="$(OutputPath)" />
+  
+    <ItemGroup>
+      <BadFiles Include="$(OutputPath)*.dll" />
+      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+    </ItemGroup>
+    <Delete Files="@(BadFiles)" />
+    <RemoveDir Directories="$(OutputPath)Libraries\" />
+  </Target>
+</Project>
