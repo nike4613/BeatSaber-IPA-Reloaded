@@ -5,6 +5,7 @@ environment:
   gh_token:
     secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
 
+  do_deploy: true
   matrix:
     - BUILD_DOC: 'yes'
     - BUILD_DOC: 'no'
@@ -54,6 +55,8 @@ for:
     except:
     - BUILD_DOC: 'no'
 
+  environment:
+    do_deploy: false
   skip_tags: false
   build_script:
   - ps: |
@@ -142,16 +145,4 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: false
-  
-- provider: GitHub
-  release: -ignore-
-  tag: create_tag
-  description: |
-    **Build:** [$(bsipa_version)-$(APPVEYOR_BUILD_NUMBER)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb/builds/$(APPVEYOR_BUILD_ID))
-  auth_token:
-    secure: KhF3q/zWEFwrW0QeZLqE3NAkWR4u9iVhsmcyzXvwwJ28fUy+MzW4CWBx3RxNM60t
-  draft: true
-  force_update: true
-  on:
-    branch: master
-    APPVEYOR_REPO_TAG: true
+    do_deploy: true
