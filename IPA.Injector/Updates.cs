@@ -1,8 +1,10 @@
 ﻿using IPA.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using static IPA.Logging.Logger;
 
 namespace IPA.Injector
@@ -10,7 +12,37 @@ namespace IPA.Injector
     internal static class Updates
     {
         private const string DeleteFileName = Updating.BeatMods.Updater.SpecialDeletionsFile;
+
         public static void InstallPendingUpdates()
+        {
+            InstallPendingSelfUpdates();
+            InstallPendingModUpdates();
+        }
+
+        private static void InstallPendingSelfUpdates()
+        {
+            var path = Path.Combine(BeatSaber.InstallPath, "IPA.exe");
+            if (!File.Exists(path)) return;
+
+            var ipaVersion = new Version(FileVersionInfo.GetVersionInfo(path).FileVersion);
+            var selfVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
+            if (ipaVersion > selfVersion)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    // will never actually be null
+                    FileName = path,
+                    Arguments = $"\"-nw={Process.GetCurrentProcess().Id},s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1)).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
+                    UseShellExecute = false
+                });
+
+                updater.Info("Updating BSIPA...");
+                Environment.Exit(0);
+            }
+        }
+
+        private static void InstallPendingModUpdates()
         {
             var pendingDir = Path.Combine(BeatSaber.InstallPath, "IPA", "Pending");
             if (!Directory.Exists(pendingDir)) return; 

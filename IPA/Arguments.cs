@@ -57,6 +57,7 @@ namespace IPA
 
                     var subBuildState = new StringBuilder();
                     var parsingValue = false;
+                    var escaped = false;
                     var mainChar = ' ';
                     foreach (var chr in argument)
                     {
@@ -74,16 +75,23 @@ namespace IPA
                         }
                         else
                         {
-                            if (chr == ',')
+                            if (!escaped)
                             {
-                                parsingValue = false;
-                                flags[mainChar] = subBuildState.ToString();
-                                subBuildState = new StringBuilder();
+                                if (chr == ',')
+                                {
+                                    parsingValue = false;
+                                    flags[mainChar] = subBuildState.ToString();
+                                    subBuildState = new StringBuilder();
+                                    continue;
+                                }
+                                else if (chr == '\\')
+                                {
+                                    escaped = true;
+                                    continue;
+                                }
                             }
-                            else
-                            {
-                                subBuildState.Append(chr);
-                            }
+
+                            subBuildState.Append(chr);
                         }
                     }
 
