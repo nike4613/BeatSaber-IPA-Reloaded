@@ -12,8 +12,12 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x86' " />
-  <PropertyGroup Condition=" '$(Platform)' == 'x64' " />
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <ProxyPlatform>Win32</ProxyPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
+    <ProxyPlatform>x64</ProxyPlatform>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug_Net4' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
@@ -74,8 +78,8 @@
   </Target>
   <ItemGroup>
     <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
-    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(Platform)\$(ProxyConfig)\**\*.dll" />
-    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(Platform)\$(ProxyConfig)\**\*.pdb" />
+    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
+    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
     <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
   </ItemGroup>
   <Target Name="Assemble" Returns="$(OutputPath)">
