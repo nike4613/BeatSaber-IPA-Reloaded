@@ -7,8 +7,8 @@ environment:
 
   do_deploy: true
   matrix:
-    - BUILD_DOC: 'yes'
     - BUILD_DOC: 'no'
+    - BUILD_DOC: 'yes'
 
 pull_requests:
   do_not_increment_build_number: true
