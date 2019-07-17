@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Assemble" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug_Net4</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{880A3560-82CD-4836-996B-11BEFE6B44DB}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -13,7 +12,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_Net4|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -25,7 +24,7 @@
     <OtherConfig>Debug</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_Net4|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -36,7 +35,7 @@
     <OtherConfig>Release</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose_Net4|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -48,7 +47,7 @@
     <OtherConfig>Verbose</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose_Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Verbose_Release_Net4|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -71,22 +70,18 @@
   <Target Name="Build">
     <CallTarget Targets="Assemble" />
   </Target>
-  
   <ItemGroup>
     <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
     <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.dll" />
     <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\x64\$(ProxyConfig)\**\*.pdb" />
     <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
   </ItemGroup>
-  
   <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
-    
     <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
-    
     <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
