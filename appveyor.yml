@@ -37,9 +37,10 @@ artifacts: # When Net3 is added, this will need to be moved to the for block to 
 
 matrix:
   exclude:
+    # Don't exclude Release_Net4|x64
     - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
-      configuration: Release
-      platform: x64
+      configuration: Release_Net4
+      platform: x86
 
 for:
 -
