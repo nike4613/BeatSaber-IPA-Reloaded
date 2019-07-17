@@ -62,6 +62,7 @@
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="JsonConverters\AlmostVersionConverter.cs" />
     <Compile Include="JsonConverters\MultilineStringConverter.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />
     <Compile Include="Loader\DisabledConfig.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="JsonConverters\SemverRangeConverter.cs" />
     <Compile Include="JsonConverters\SemverVersionConverter.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
+    <Compile Include="Utilities\AlmostVersion.cs" />
     <Compile Include="Utilities\Ref.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />
     <Compile Include="Loader\Composite\CompositeIPAPlugin.cs" />

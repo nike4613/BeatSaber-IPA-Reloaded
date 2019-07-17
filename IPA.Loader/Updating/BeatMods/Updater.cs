@@ -389,7 +389,7 @@ namespace IPA.Updating.BeatMods
 
                 var ver = modsMatching.Value
                     .Where(nullCheck => nullCheck != null) // entry is not null
-                    .Where(versionCheck => Utils.VersionCompareNoPrerelease(versionCheck.GameVersion, BeatSaber.GameVersion) == 0) // game version matches
+                    .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion) // game version matches
                     .Where(approvalCheck => approvalCheck.Status == ApiEndpoint.Mod.ApprovedStatus) // version approved
                     // TODO: fix; it seems wrong somehow
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version

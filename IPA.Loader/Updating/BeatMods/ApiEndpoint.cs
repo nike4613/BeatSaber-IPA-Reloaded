@@ -103,8 +103,8 @@ namespace IPA.Updating.BeatMods
             public Version Version;
 
             [JsonProperty("gameVersion"),
-             JsonConverter(typeof(SemverVersionConverter))]
-            public Version GameVersion;
+             JsonConverter(typeof(AlmostVersionConverter))]
+            public AlmostVersion GameVersion;
 
             [Serializable]
             public class AuthorType

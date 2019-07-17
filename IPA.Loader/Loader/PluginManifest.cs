@@ -1,4 +1,5 @@
 ﻿using IPA.JsonConverters;
+using IPA.Utilities;
 using Newtonsoft.Json;
 using SemVer;
 using System;
@@ -21,8 +22,8 @@ namespace IPA.Loader
         [JsonProperty("version", Required = Required.Always), JsonConverter(typeof(SemverVersionConverter))]
         public Version Version;
 
-        [JsonProperty("gameVersion", Required = Required.Always), JsonConverter(typeof(SemverVersionConverter))]
-        public Version GameVersion;
+        [JsonProperty("gameVersion", Required = Required.Always), JsonConverter(typeof(AlmostVersionConverter))]
+        public AlmostVersion GameVersion;
 
         [JsonProperty("author", Required = Required.Always)]
         public string Author;
