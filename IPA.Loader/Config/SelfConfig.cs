@@ -41,9 +41,6 @@ namespace IPA.Config
 		
         public bool Regenerate = true;
 
-        [Obsolete("No longer does anything, built-in mod yeeter always disabled")]
-        public bool ApplyAntiYeet = false;
-
         public class UpdateObject
         {
             public bool AutoUpdate = true;
