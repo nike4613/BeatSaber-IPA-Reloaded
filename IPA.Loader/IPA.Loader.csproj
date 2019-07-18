@@ -55,7 +55,7 @@
     <Reference Include="System.Net.Http" Condition=" '$(Platform)' == 'Net4' " />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Refs\UnityEngine.CoreModule.$(Platform).dll</HintPath>>
+      <HintPath>..\Refs\UnityEngine.CoreModule.$(Platform).dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
