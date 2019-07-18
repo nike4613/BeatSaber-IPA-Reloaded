@@ -10,6 +10,7 @@
     <RootNamespace>IPA.Injector</RootNamespace>
     <AssemblyName>IPA.Injector</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFramework>net35</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
