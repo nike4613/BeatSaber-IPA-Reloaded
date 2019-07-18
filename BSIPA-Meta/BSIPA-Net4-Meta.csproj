@@ -64,6 +64,7 @@
     <OtherConfig>Verbose_Release</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
+  <Target Name="Restore" />
   <Target Name="Clean">
     <ItemGroup>
       <Files Include="$(OutputPath)**\*" />
