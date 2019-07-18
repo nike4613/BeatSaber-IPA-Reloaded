@@ -201,9 +201,7 @@ Global
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug_Net4|x86.ActiveCfg = Debug|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Debug_Net4|x86.Build.0 = Debug|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release_Net3|x64.ActiveCfg = Release|Any CPU
-		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release_Net3|x64.Build.0 = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release_Net3|x86.ActiveCfg = Release|Any CPU
-		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release_Net3|x86.Build.0 = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release_Net4|x64.ActiveCfg = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Release_Net4|x86.ActiveCfg = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Net3|x64.ActiveCfg = Debug|Any CPU
@@ -215,9 +213,7 @@ Global
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Net4|x86.ActiveCfg = Debug|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Net4|x86.Build.0 = Debug|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release_Net3|x64.ActiveCfg = Release|Any CPU
-		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release_Net3|x64.Build.0 = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release_Net3|x86.ActiveCfg = Release|Any CPU
-		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release_Net3|x86.Build.0 = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release_Net4|x64.ActiveCfg = Release|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose_Release_Net4|x86.ActiveCfg = Release|Any CPU
 		{E2CCDD2F-1D4F-4B06-9CD4-E0D2B9AE543A}.Debug_Net3|x64.ActiveCfg = Debug|Any CPU
