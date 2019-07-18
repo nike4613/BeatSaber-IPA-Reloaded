@@ -37,9 +37,6 @@
     <DocumentationFile>bin\Release\IPA.Loader.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\Libs\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -116,6 +113,9 @@
   <ItemGroup>
     <PackageReference Include="Ionic.Zip">
       <Version>1.9.1.8</Version>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>1.2.0.1</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
       <Version>0.10.4</Version>

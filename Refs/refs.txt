@@ -26,3 +26,15 @@
 "Plugins/
 ""BeatSaberCustomUI.
 """dll
+
+::startopt
+::from ./mdinstalldir.txt
+"MuseDash_Data/
+""Managed/
+"""UnityEngine.
+""""dll?alias=UnityEngine.net3.dll
+""""UnityWebRequestModule.
+"""""dll?alias=UnityEngine.UnityWebRequestModule.net3.dll
+""""CoreModule.
+"""""dll?alias=UnityEngine.CoreModule.net3.dll
+::endopt

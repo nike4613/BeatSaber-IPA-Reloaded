@@ -76,15 +76,17 @@
   <Target Name="Build">
     <CallTarget Targets="Assemble" />
   </Target>
-  <ItemGroup>
-    <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
-    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
-    <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
-    <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
-  </ItemGroup>
   <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
+    
+    <ItemGroup>
+      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(OtherConfig)\Libraries\**\*" />
+      <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
+      <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
+      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
+    </ItemGroup>
+  
     <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
