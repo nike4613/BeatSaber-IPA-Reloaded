@@ -36,7 +36,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -48,9 +47,9 @@
     <Compile Include="**\*.cs" Exclude="obj\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IPA.Loader\IPA.Loader.net3.csproj">
-      <Project>{5ad344f0-01a0-4ca8-92e5-9d095737744d}</Project>
-      <Name>IPA.Loader</Name>
+    <ProjectReference Include="..\IPA.Loader\IPA.Loader.Net3.csproj">
+      <Project>{938EE019-7BBF-406A-ACBA-5AC55AA74510}</Project>
+      <Name>IPA.Loader.Net3</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
