@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IPA.Injector</RootNamespace>
     <AssemblyName>IPA.Injector</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
@@ -18,16 +18,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin3\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET3</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin3\Release\</OutputPath>
+    <DefineConstants>TRACE;NET3</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -36,48 +35,35 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Refs\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\Refs\UnityEngine.CoreModule.net3.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backups\BackupManager.cs" />
-    <Compile Include="Backups\BackupUnit.cs" />
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="GameVersionEarly.cs" />
-    <Compile Include="Injector.cs" />
-    <Compile Include="PermissionFix.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Updates.cs" />
-    <Compile Include="Virtualizer.cs" />
+    <Compile Include="**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
+    <ProjectReference Include="..\IPA.Loader\IPA.Loader.net3.csproj">
       <Project>{5ad344f0-01a0-4ca8-92e5-9d095737744d}</Project>
       <Name>IPA.Loader</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Libs\I18N.dll">
-      <Link>Libraries\Mono\I18N.dll</Link>
+      <Link>Libraries\Mono\I18N.net3.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Libs\I18N.West.dll">
-      <Link>Libraries\Mono\I18N.West.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Libs\Microsoft.CSharp.dll">
-      <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
+      <Link>Libraries\Mono\I18N.West.net3.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Libs\System.Runtime.Serialization.dll">
-      <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
+      <Link>Libraries\Mono\System.Runtime.Serialization.net3.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
