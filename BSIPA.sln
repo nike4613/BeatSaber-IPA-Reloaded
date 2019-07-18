@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSIPA-Net4-Meta", "BSIPA-Ne
 		{2A1AF16B-27F1-46E0-9A95-181516BC1CB7} = {2A1AF16B-27F1-46E0-9A95-181516BC1CB7}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA.Injector.Net3", "IPA.Injector\IPA.Injector.Net3.csproj", "{43D197F0-CB54-403F-B167-7236DA9FC65C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA.Loader.Net3", "IPA.Loader\IPA.Loader.Net3.csproj", "{938EE019-7BBF-406A-ACBA-5AC55AA74510}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Net4|x64 = Debug_Net4|x64
@@ -181,6 +185,22 @@ Global
 		{880A3560-82CD-4836-996B-11BEFE6B44DB}.Verbose_Release_Net4|x64.Build.0 = Verbose_Release_Net4|x64
 		{880A3560-82CD-4836-996B-11BEFE6B44DB}.Verbose_Release_Net4|x86.ActiveCfg = Verbose_Release_Net4|x86
 		{880A3560-82CD-4836-996B-11BEFE6B44DB}.Verbose_Release_Net4|x86.Build.0 = Verbose_Release_Net4|x86
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Debug_Net4|x64.ActiveCfg = Debug|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Debug_Net4|x86.ActiveCfg = Debug|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Release_Net4|x64.ActiveCfg = Release|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Release_Net4|x86.ActiveCfg = Release|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Verbose_Net4|x64.ActiveCfg = Debug|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Verbose_Net4|x86.ActiveCfg = Debug|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Verbose_Release_Net4|x64.ActiveCfg = Release|Any CPU
+		{43D197F0-CB54-403F-B167-7236DA9FC65C}.Verbose_Release_Net4|x86.ActiveCfg = Release|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Debug_Net4|x64.ActiveCfg = Debug|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Debug_Net4|x86.ActiveCfg = Debug|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Release_Net4|x64.ActiveCfg = Release|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Release_Net4|x86.ActiveCfg = Release|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Verbose_Net4|x64.ActiveCfg = Debug|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Verbose_Net4|x86.ActiveCfg = Debug|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Verbose_Release_Net4|x64.ActiveCfg = Release|Any CPU
+		{938EE019-7BBF-406A-ACBA-5AC55AA74510}.Verbose_Release_Net4|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
