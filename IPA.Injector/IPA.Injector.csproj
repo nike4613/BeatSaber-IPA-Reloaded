@@ -47,8 +47,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" Condition=" '$(Platform)' == 'Net4' " />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Refs\UnityEngine.CoreModule.$(Platform).dll</HintPath>
+    <Reference Include="UnityEngine.CoreModule" Condition=" '$(Platform)' == 'Net4' ">
+      <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" Condition=" '$(Platform)' == 'Net3' ">
+      <HintPath>..\Refs\UnityEngine.CoreModule.Net3.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -69,20 +73,34 @@
       <Name>IPA.Loader</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\Libs\I18N.$(Platform).dll">
+  <ItemGroup Condition=" '$(Platform)' == 'Net4' " >
+    <Content Include="..\Libs\I18N.Net4.dll">
       <Link>Libraries\Mono\I18N.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Libs\I18N.West.$(Platform).dll">
+    <Content Include="..\Libs\I18N.West.Net4.dll">
       <Link>Libraries\Mono\I18N.West.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Libs\Microsoft.CSharp.dll" Condition=" '$(Platform)' == 'Net4' " >
+    <Content Include="..\Libs\Microsoft.CSharp.dll" >
       <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Libs\System.Runtime.Serialization.$(Platform).dll">
+    <Content Include="..\Libs\System.Runtime.Serialization.Net4.dll">
+      <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'Net3' " >
+    <Content Include="..\Libs\I18N.Net3.dll">
+      <Link>Libraries\Mono\I18N.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\I18N.West.Net3.dll">
+      <Link>Libraries\Mono\I18N.West.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\System.Runtime.Serialization.Net3.dll">
       <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

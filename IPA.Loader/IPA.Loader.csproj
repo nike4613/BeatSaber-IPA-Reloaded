@@ -54,12 +54,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" Condition=" '$(Platform)' == 'Net4' " />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'Net4' " >
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Refs\UnityEngine.CoreModule.$(Platform).dll</HintPath>
+      <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\Refs\UnityEngine.UnityWebRequestModule.$(Platform).dll</HintPath>
+      <HintPath>..\Refs\UnityEngine.UnityWebRequestModule.Net4.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'Net3' " >
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\Refs\UnityEngine.CoreModule.Net3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\Refs\UnityEngine.UnityWebRequestModule.Net3.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
