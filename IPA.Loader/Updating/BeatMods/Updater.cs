@@ -25,7 +25,14 @@ using Version = SemVer.Version;
 namespace IPA.Updating.BeatMods
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    internal class Updater : MonoBehaviour
+    internal partial class Updater : MonoBehaviour
+    {
+        internal const string SpecialDeletionsFile = "$$delete";
+    }
+
+#if NET4
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    internal partial class Updater : MonoBehaviour
     {
         public static Updater Instance;
 
@@ -725,8 +732,6 @@ namespace IPA.Updating.BeatMods
         }
 
         internal static bool NeedsManualRestart = false;
-
-        internal const string SpecialDeletionsFile = "$$delete";
     }
 
     [Serializable]
@@ -768,5 +773,5 @@ namespace IPA.Updating.BeatMods
         {
         }
     }
-
+#endif
 }

@@ -10,6 +10,7 @@ using Version = SemVer.Version;
 
 namespace IPA.Updating.BeatMods
 {
+#if NET4
     class ApiEndpoint
     {
         public const string BeatModBase = "https://beatmods.com";
@@ -178,4 +179,5 @@ namespace IPA.Updating.BeatMods
         }
 
     }
+#endif
 }
