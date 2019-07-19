@@ -9,7 +9,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IPA.Injector</RootNamespace>
     <AssemblyName>IPA.Injector</AssemblyName>
-	<TargetFrameworks>net461;net35</TargetFrameworks>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
