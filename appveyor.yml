@@ -9,6 +9,9 @@ environment:
   matrix:
     - BUILD_DOC: 'no'
     - BUILD_DOC: 'yes'
+    - native_platform: x64
+    - native_platform: x86
+    - net_platform: Net4
 
 pull_requests:
   do_not_increment_build_number: true
@@ -25,24 +28,21 @@ install:
 
 image: Visual Studio 2019
 
-configuration: 
-  - Release_Net4
-platform: 
-  - x64
-  - x86
+configuration: Release
+platform: $(native_platform)-$(net_platform)
   
 artifacts: # When Net3 is added, this will need to be moved to the for block to only run for Net4 builds
   - path: BSIPA-ModList/bin/Release
     name: ModList
-  - path: BSIPA-Net4-Meta/bin/$(configuration) 
-    name: BSIPA-Net4-$(platform)
+  - path: BSIPA-Meta/bin/$(configuration) 
+    name: BSIPA-$(platform)
 
 matrix:
   exclude:
     # Don't exclude Release_Net4|x64
     - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
-      configuration: Release_Net4
-      platform: x86
+      native_platform: x86
+      net_platform: Net4
 
 for:
 -
@@ -54,13 +54,14 @@ for:
 -
   matrix:
     only:
-    - configuration: Release_Net4
+    - configuration: Release
 
   # this is never used because fuck me....
 - 
   matrix:
-    except:
-    - BUILD_DOC: 'no'
+    only:
+    - BUILD_DOC: 'yes'
+      platform: x64-Net4
 
   artifacts:
   environment:
