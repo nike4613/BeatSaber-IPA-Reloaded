@@ -42,6 +42,10 @@ matrix:
     - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
       platform: x86-Net4
 
+before_build:
+- ps: |
+      echo $env:Configuration $env:Platform $env:BuildingInsideVisualStudio
+      
 for:
 -
   matrix:
