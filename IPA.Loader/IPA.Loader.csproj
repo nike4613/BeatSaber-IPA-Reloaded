@@ -35,10 +35,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net4' ">
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+	<TargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">net461</TargetFrameworks>
     <DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<TargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">net35</TargetFrameworks>
     <DefineConstants>$(DefineConstants);NET3</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
