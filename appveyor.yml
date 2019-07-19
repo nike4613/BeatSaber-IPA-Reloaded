@@ -49,12 +49,6 @@ for:
     - BUILD_DOC: 'yes'
 
   skip_tags: true
--
-  matrix:
-    only:
-    - configuration: Release
-
-  # this is never used because fuck me....
 - 
   matrix:
     except:
