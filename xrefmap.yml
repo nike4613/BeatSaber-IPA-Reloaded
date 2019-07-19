@@ -792,11 +792,11 @@ references:
   commentId: T:IPA.IBeatSaberPlugin
   fullName: IPA.IBeatSaberPlugin
   nameWithType: IBeatSaberPlugin
-- uid: IPA.IBeatSaberPlugin.OnActiveSceneChanged(UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene)
+- uid: IPA.IBeatSaberPlugin.OnActiveSceneChanged(Scene,Scene)
   name: OnActiveSceneChanged(Scene, Scene)
-  href: api/IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnActiveSceneChanged_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene_
-  commentId: M:IPA.IBeatSaberPlugin.OnActiveSceneChanged(UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene)
-  fullName: IPA.IBeatSaberPlugin.OnActiveSceneChanged(UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.Scene)
+  href: api/IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnActiveSceneChanged_Scene_Scene_
+  commentId: M:IPA.IBeatSaberPlugin.OnActiveSceneChanged(Scene,Scene)
+  fullName: IPA.IBeatSaberPlugin.OnActiveSceneChanged(Scene, Scene)
   nameWithType: IBeatSaberPlugin.OnActiveSceneChanged(Scene, Scene)
 - uid: IPA.IBeatSaberPlugin.OnActiveSceneChanged*
   name: OnActiveSceneChanged
@@ -844,11 +844,11 @@ references:
   isSpec: "True"
   fullName: IPA.IBeatSaberPlugin.OnFixedUpdate
   nameWithType: IBeatSaberPlugin.OnFixedUpdate
-- uid: IPA.IBeatSaberPlugin.OnSceneLoaded(UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.LoadSceneMode)
+- uid: IPA.IBeatSaberPlugin.OnSceneLoaded(Scene,LoadSceneMode)
   name: OnSceneLoaded(Scene, LoadSceneMode)
-  href: api/IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnSceneLoaded_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_LoadSceneMode_
-  commentId: M:IPA.IBeatSaberPlugin.OnSceneLoaded(UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.LoadSceneMode)
-  fullName: IPA.IBeatSaberPlugin.OnSceneLoaded(UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode)
+  href: api/IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnSceneLoaded_Scene_LoadSceneMode_
+  commentId: M:IPA.IBeatSaberPlugin.OnSceneLoaded(Scene,LoadSceneMode)
+  fullName: IPA.IBeatSaberPlugin.OnSceneLoaded(Scene, LoadSceneMode)
   nameWithType: IBeatSaberPlugin.OnSceneLoaded(Scene, LoadSceneMode)
 - uid: IPA.IBeatSaberPlugin.OnSceneLoaded*
   name: OnSceneLoaded
@@ -857,11 +857,11 @@ references:
   isSpec: "True"
   fullName: IPA.IBeatSaberPlugin.OnSceneLoaded
   nameWithType: IBeatSaberPlugin.OnSceneLoaded
-- uid: IPA.IBeatSaberPlugin.OnSceneUnloaded(UnityEngine.SceneManagement.Scene)
+- uid: IPA.IBeatSaberPlugin.OnSceneUnloaded(Scene)
   name: OnSceneUnloaded(Scene)
-  href: api/IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnSceneUnloaded_UnityEngine_SceneManagement_Scene_
-  commentId: M:IPA.IBeatSaberPlugin.OnSceneUnloaded(UnityEngine.SceneManagement.Scene)
-  fullName: IPA.IBeatSaberPlugin.OnSceneUnloaded(UnityEngine.SceneManagement.Scene)
+  href: api/IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnSceneUnloaded_Scene_
+  commentId: M:IPA.IBeatSaberPlugin.OnSceneUnloaded(Scene)
+  fullName: IPA.IBeatSaberPlugin.OnSceneUnloaded(Scene)
   nameWithType: IBeatSaberPlugin.OnSceneUnloaded(Scene)
 - uid: IPA.IBeatSaberPlugin.OnSceneUnloaded*
   name: OnSceneUnloaded
@@ -2923,11 +2923,11 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.CallNonStaticMethod(Of T)(System.Type, System.String, System.Type(), System.Object())
   nameWithType: ReflectionUtil.CallNonStaticMethod<T>(Type, String, Type[], Object[])
   nameWithType.vb: ReflectionUtil.CallNonStaticMethod(Of T)(Type, String, Type(), Object())
-- uid: IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component,System.Type,UnityEngine.GameObject,System.Type)
+- uid: IPA.Utilities.ReflectionUtil.CopyComponent(Component,System.Type,GameObject,System.Type)
   name: CopyComponent(Component, Type, GameObject, Type)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_
-  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component,System.Type,UnityEngine.GameObject,System.Type)
-  fullName: IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component, System.Type, UnityEngine.GameObject, System.Type)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_Component_System_Type_GameObject_System_Type_
+  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent(Component,System.Type,GameObject,System.Type)
+  fullName: IPA.Utilities.ReflectionUtil.CopyComponent(Component, System.Type, GameObject, System.Type)
   nameWithType: ReflectionUtil.CopyComponent(Component, Type, GameObject, Type)
 - uid: IPA.Utilities.ReflectionUtil.CopyComponent*
   name: CopyComponent
@@ -2936,13 +2936,13 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.CopyComponent
   nameWithType: ReflectionUtil.CopyComponent
-- uid: IPA.Utilities.ReflectionUtil.CopyComponent``1(UnityEngine.Component,UnityEngine.GameObject,System.Type)
+- uid: IPA.Utilities.ReflectionUtil.CopyComponent``1(Component,GameObject,System.Type)
   name: CopyComponent<T>(Component, GameObject, Type)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type_
-  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent``1(UnityEngine.Component,UnityEngine.GameObject,System.Type)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_System_Type_
+  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent``1(Component,GameObject,System.Type)
   name.vb: CopyComponent(Of T)(Component, GameObject, Type)
-  fullName: IPA.Utilities.ReflectionUtil.CopyComponent<T>(UnityEngine.Component, UnityEngine.GameObject, System.Type)
-  fullName.vb: IPA.Utilities.ReflectionUtil.CopyComponent(Of T)(UnityEngine.Component, UnityEngine.GameObject, System.Type)
+  fullName: IPA.Utilities.ReflectionUtil.CopyComponent<T>(Component, GameObject, System.Type)
+  fullName.vb: IPA.Utilities.ReflectionUtil.CopyComponent(Of T)(Component, GameObject, System.Type)
   nameWithType: ReflectionUtil.CopyComponent<T>(Component, GameObject, Type)
   nameWithType.vb: ReflectionUtil.CopyComponent(Of T)(Component, GameObject, Type)
 - uid: IPA.Utilities.ReflectionUtil.GetPrivateField*
