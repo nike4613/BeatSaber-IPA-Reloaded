@@ -30,7 +30,9 @@ namespace IPA.Loader
             ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
+#if NET4
             gameObject.AddComponent<Updating.BeatMods.Updater>();
+#endif
 
             bsPlugins.OnApplicationStart();
             ipaPlugins.OnApplicationStart();
