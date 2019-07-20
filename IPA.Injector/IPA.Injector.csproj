@@ -16,6 +16,7 @@
 	
 	<ShowTargetFrameworks>false</ShowTargetFrameworks>
 	<ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
+	<TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,12 +35,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net4' ">
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-	<TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461</TargetFrameworks>
 	<DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	<TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net35</TargetFrameworks>
 	<DefineConstants>$(DefineConstants);NET3</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
