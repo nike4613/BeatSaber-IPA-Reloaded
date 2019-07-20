@@ -13,6 +13,9 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
+	
+	<ShowTargetFrameworks>false</ShowTargetFrameworks>
+	<ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +34,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net4' ">
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-	<TargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">net461</TargetFrameworks>
+	<TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461</TargetFrameworks>
 	<DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	<TargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">net35</TargetFrameworks>
+	<TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net35</TargetFrameworks>
 	<DefineConstants>$(DefineConstants);NET3</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
