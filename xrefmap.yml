@@ -3131,3 +3131,9 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease
   nameWithType: Utils.VersionCompareNoPrerelease
+- uid: other.config.schema
+  name: Configuration File Schema
+  href: other_api/config/schema.html
+- uid: other.index
+  name: Title1
+  href: other_api/index.html
