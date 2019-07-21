@@ -6,8 +6,10 @@
         "**.csproj"
       ],
       "exclude": [
+        "**/BSIPA-Meta.csproj",
         "**/IPA.csproj",
         "**/IPA.Tests.csproj",
+        "TMP Exporter/**.csproj",
         "BuildTools/**.csproj",
         "Doorstop/**.csproj"
       ]
@@ -27,6 +29,9 @@
         "files": [
           "articles/**.md",
           "articles/**/toc.yml",
+          "other_api/**.md",
+          "other_api/**/toc.yml",
+          "other_api/**.yml",
           "toc.yml",
           "*.md"
         ]
