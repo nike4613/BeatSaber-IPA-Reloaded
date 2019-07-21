@@ -206,8 +206,8 @@ namespace IPA.Utilities
         /// <seealso cref="Equals(object)"/>
         public static bool operator==(AlmostVersion l, AlmostVersion r)
         {
-            if (l == null && r == null) return true;
-            if (l == null || r == null) return false;
+            if (ReferenceEquals(l, null) && ReferenceEquals(r, null)) return true;
+            if (ReferenceEquals(l, null) || ReferenceEquals(r, null)) return false;
             if (l.StorageMode != r.StorageMode) return false;
             if (l.StorageMode == StoredAs.SemVer)
                 return Utils.VersionCompareNoPrerelease(l.SemverValue, r.SemverValue) == 0;
