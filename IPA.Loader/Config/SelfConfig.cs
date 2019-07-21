@@ -1,14 +1,16 @@
-﻿using IPA.JsonConverters;
+﻿// BEGIN: section ignore
 using IPA.Logging;
 using IPA.Utilities;
+// END: section ignore
 using Newtonsoft.Json;
-using SemVer;
-using System;
 
 namespace IPA.Config
 {
     internal class SelfConfig
     {
+        // This is to allow the doc generation to parse this file and use Newtonsoft to generate a JSON schema
+        // BEGIN: section ignore
+
         private static IConfigProvider _loaderConfig;
 
         public static IConfigProvider LoaderConfig
@@ -39,6 +41,8 @@ namespace IPA.Config
         internal const string IPAName = "Beat Saber IPA";
         internal const string IPAVersion = "3.12.24"; 
 		
+        // END: section ignore
+
         public bool Regenerate = true;
 
         public class UpdateObject
@@ -47,6 +51,7 @@ namespace IPA.Config
             public bool AutoCheckUpdates = true;
         }
 
+        [JsonProperty(Required = Required.Always)]
         public UpdateObject Updates = new UpdateObject();
 
         public class DebugObject
@@ -58,8 +63,10 @@ namespace IPA.Config
             public int HideLogThreshold = 512;
         }
 
+        [JsonProperty(Required = Required.Always)]
         public DebugObject Debug = new DebugObject();
 
+        [JsonProperty(Required = Required.Default)]
         public string LastGameVersion = null;
     }
 }
