@@ -1,8 +1,8 @@
 & docfx metadata
 
 # read SelfConfig, remove wierd bits, load it, load Newtonsoft, and turn it into a schema
-$newtonsoftLoc = "nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
-$newtonsoftSchemaLoc = "nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
+$newtonsoftLoc = "./nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
+$newtonsoftSchemaLoc = "./nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
 $selfConfigLoc = "../IPA.Loader/Config/SelfConfig.cs"
 
 if (!(Test-Path "nuget" -PathType Container)) {

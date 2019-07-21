@@ -35,6 +35,8 @@ artifacts: # When Net3 is added, this will need to be moved to the for block to 
     name: ModList
   - path: BSIPA-Meta/bin/$(platform)/$(configuration) 
     name: BSIPA-$(platform)
+  - path: docs/nuget
+    name: nuget_debug_
 
 matrix:
   exclude:
