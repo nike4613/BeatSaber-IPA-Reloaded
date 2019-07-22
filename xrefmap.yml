@@ -251,19 +251,6 @@ references:
   commentId: T:IPA.Config.IConfigProvider
   fullName: IPA.Config.IConfigProvider
   nameWithType: IConfigProvider
-- uid: IPA.Config.IConfigProvider.Dynamic
-  name: Dynamic
-  href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Dynamic
-  commentId: P:IPA.Config.IConfigProvider.Dynamic
-  fullName: IPA.Config.IConfigProvider.Dynamic
-  nameWithType: IConfigProvider.Dynamic
-- uid: IPA.Config.IConfigProvider.Dynamic*
-  name: Dynamic
-  href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Dynamic_
-  commentId: Overload:IPA.Config.IConfigProvider.Dynamic
-  isSpec: "True"
-  fullName: IPA.Config.IConfigProvider.Dynamic
-  nameWithType: IConfigProvider.Dynamic
 - uid: IPA.Config.IConfigProvider.Filename
   name: Filename
   href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Filename
@@ -3131,6 +3118,600 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease
   nameWithType: Utils.VersionCompareNoPrerelease
+- uid: Net3_Proxy
+  name: Net3_Proxy
+  href: api/Net3_Proxy.html
+  commentId: N:Net3_Proxy
+  fullName: Net3_Proxy
+  nameWithType: Net3_Proxy
+- uid: Net3_Proxy.DirectoryInfoExtensions
+  name: DirectoryInfoExtensions
+  href: api/Net3_Proxy.DirectoryInfoExtensions.html
+  commentId: T:Net3_Proxy.DirectoryInfoExtensions
+  fullName: Net3_Proxy.DirectoryInfoExtensions
+  nameWithType: DirectoryInfoExtensions
+- uid: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo)
+  name: EnumerateFiles(DirectoryInfo)
+  href: api/Net3_Proxy.DirectoryInfoExtensions.html#Net3_Proxy_DirectoryInfoExtensions_EnumerateFiles_System_IO_DirectoryInfo_
+  commentId: M:Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo)
+  fullName: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo)
+  nameWithType: DirectoryInfoExtensions.EnumerateFiles(DirectoryInfo)
+- uid: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo,System.String)
+  name: EnumerateFiles(DirectoryInfo, String)
+  href: api/Net3_Proxy.DirectoryInfoExtensions.html#Net3_Proxy_DirectoryInfoExtensions_EnumerateFiles_System_IO_DirectoryInfo_System_String_
+  commentId: M:Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo,System.String)
+  fullName: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo, System.String)
+  nameWithType: DirectoryInfoExtensions.EnumerateFiles(DirectoryInfo, String)
+- uid: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo,System.String,System.IO.SearchOption)
+  name: EnumerateFiles(DirectoryInfo, String, SearchOption)
+  href: api/Net3_Proxy.DirectoryInfoExtensions.html#Net3_Proxy_DirectoryInfoExtensions_EnumerateFiles_System_IO_DirectoryInfo_System_String_System_IO_SearchOption_
+  commentId: M:Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo,System.String,System.IO.SearchOption)
+  fullName: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles(System.IO.DirectoryInfo, System.String, System.IO.SearchOption)
+  nameWithType: DirectoryInfoExtensions.EnumerateFiles(DirectoryInfo, String, SearchOption)
+- uid: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles*
+  name: EnumerateFiles
+  href: api/Net3_Proxy.DirectoryInfoExtensions.html#Net3_Proxy_DirectoryInfoExtensions_EnumerateFiles_
+  commentId: Overload:Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles
+  isSpec: "True"
+  fullName: Net3_Proxy.DirectoryInfoExtensions.EnumerateFiles
+  nameWithType: DirectoryInfoExtensions.EnumerateFiles
+- uid: Net3_Proxy.Extensions
+  name: Extensions
+  href: api/Net3_Proxy.Extensions.html
+  commentId: T:Net3_Proxy.Extensions
+  fullName: Net3_Proxy.Extensions
+  nameWithType: Extensions
+- uid: Net3_Proxy.Extensions.Clear(System.Text.StringBuilder)
+  name: Clear(StringBuilder)
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_Clear_System_Text_StringBuilder_
+  commentId: M:Net3_Proxy.Extensions.Clear(System.Text.StringBuilder)
+  fullName: Net3_Proxy.Extensions.Clear(System.Text.StringBuilder)
+  nameWithType: Extensions.Clear(StringBuilder)
+- uid: Net3_Proxy.Extensions.Clear*
+  name: Clear
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_Clear_
+  commentId: Overload:Net3_Proxy.Extensions.Clear
+  isSpec: "True"
+  fullName: Net3_Proxy.Extensions.Clear
+  nameWithType: Extensions.Clear
+- uid: Net3_Proxy.Extensions.GetCustomAttribute(System.Reflection.MemberInfo,System.Type)
+  name: GetCustomAttribute(MemberInfo, Type)
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_GetCustomAttribute_System_Reflection_MemberInfo_System_Type_
+  commentId: M:Net3_Proxy.Extensions.GetCustomAttribute(System.Reflection.MemberInfo,System.Type)
+  fullName: Net3_Proxy.Extensions.GetCustomAttribute(System.Reflection.MemberInfo, System.Type)
+  nameWithType: Extensions.GetCustomAttribute(MemberInfo, Type)
+- uid: Net3_Proxy.Extensions.GetCustomAttribute(System.Reflection.ParameterInfo,System.Type)
+  name: GetCustomAttribute(ParameterInfo, Type)
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_GetCustomAttribute_System_Reflection_ParameterInfo_System_Type_
+  commentId: M:Net3_Proxy.Extensions.GetCustomAttribute(System.Reflection.ParameterInfo,System.Type)
+  fullName: Net3_Proxy.Extensions.GetCustomAttribute(System.Reflection.ParameterInfo, System.Type)
+  nameWithType: Extensions.GetCustomAttribute(ParameterInfo, Type)
+- uid: Net3_Proxy.Extensions.GetCustomAttribute*
+  name: GetCustomAttribute
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_GetCustomAttribute_
+  commentId: Overload:Net3_Proxy.Extensions.GetCustomAttribute
+  isSpec: "True"
+  fullName: Net3_Proxy.Extensions.GetCustomAttribute
+  nameWithType: Extensions.GetCustomAttribute
+- uid: Net3_Proxy.Extensions.GetCustomAttribute``1(System.Reflection.ParameterInfo)
+  name: GetCustomAttribute<T>(ParameterInfo)
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_GetCustomAttribute__1_System_Reflection_ParameterInfo_
+  commentId: M:Net3_Proxy.Extensions.GetCustomAttribute``1(System.Reflection.ParameterInfo)
+  name.vb: GetCustomAttribute(Of T)(ParameterInfo)
+  fullName: Net3_Proxy.Extensions.GetCustomAttribute<T>(System.Reflection.ParameterInfo)
+  fullName.vb: Net3_Proxy.Extensions.GetCustomAttribute(Of T)(System.Reflection.ParameterInfo)
+  nameWithType: Extensions.GetCustomAttribute<T>(ParameterInfo)
+  nameWithType.vb: Extensions.GetCustomAttribute(Of T)(ParameterInfo)
+- uid: Net3_Proxy.File
+  name: File
+  href: api/Net3_Proxy.File.html
+  commentId: T:Net3_Proxy.File
+  fullName: Net3_Proxy.File
+  nameWithType: File
+- uid: Net3_Proxy.File.AppendAllLines(System.String,System.Collections.Generic.IEnumerable{System.String})
+  name: AppendAllLines(String, IEnumerable<String>)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_AppendAllLines_System_String_System_Collections_Generic_IEnumerable_System_String__
+  commentId: M:Net3_Proxy.File.AppendAllLines(System.String,System.Collections.Generic.IEnumerable{System.String})
+  name.vb: AppendAllLines(String, IEnumerable(Of String))
+  fullName: Net3_Proxy.File.AppendAllLines(System.String, System.Collections.Generic.IEnumerable<System.String>)
+  fullName.vb: Net3_Proxy.File.AppendAllLines(System.String, System.Collections.Generic.IEnumerable(Of System.String))
+  nameWithType: File.AppendAllLines(String, IEnumerable<String>)
+  nameWithType.vb: File.AppendAllLines(String, IEnumerable(Of String))
+- uid: Net3_Proxy.File.AppendAllLines*
+  name: AppendAllLines
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_AppendAllLines_
+  commentId: Overload:Net3_Proxy.File.AppendAllLines
+  isSpec: "True"
+  fullName: Net3_Proxy.File.AppendAllLines
+  nameWithType: File.AppendAllLines
+- uid: Net3_Proxy.File.Delete(System.String)
+  name: Delete(String)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_Delete_System_String_
+  commentId: M:Net3_Proxy.File.Delete(System.String)
+  fullName: Net3_Proxy.File.Delete(System.String)
+  nameWithType: File.Delete(String)
+- uid: Net3_Proxy.File.Delete*
+  name: Delete
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_Delete_
+  commentId: Overload:Net3_Proxy.File.Delete
+  isSpec: "True"
+  fullName: Net3_Proxy.File.Delete
+  nameWithType: File.Delete
+- uid: Net3_Proxy.File.Exists(System.String)
+  name: Exists(String)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_Exists_System_String_
+  commentId: M:Net3_Proxy.File.Exists(System.String)
+  fullName: Net3_Proxy.File.Exists(System.String)
+  nameWithType: File.Exists(String)
+- uid: Net3_Proxy.File.Exists*
+  name: Exists
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_Exists_
+  commentId: Overload:Net3_Proxy.File.Exists
+  isSpec: "True"
+  fullName: Net3_Proxy.File.Exists
+  nameWithType: File.Exists
+- uid: Net3_Proxy.File.ReadAllLines(System.String)
+  name: ReadAllLines(String)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_ReadAllLines_System_String_
+  commentId: M:Net3_Proxy.File.ReadAllLines(System.String)
+  fullName: Net3_Proxy.File.ReadAllLines(System.String)
+  nameWithType: File.ReadAllLines(String)
+- uid: Net3_Proxy.File.ReadAllLines*
+  name: ReadAllLines
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_ReadAllLines_
+  commentId: Overload:Net3_Proxy.File.ReadAllLines
+  isSpec: "True"
+  fullName: Net3_Proxy.File.ReadAllLines
+  nameWithType: File.ReadAllLines
+- uid: Net3_Proxy.File.ReadAllText(System.String)
+  name: ReadAllText(String)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_ReadAllText_System_String_
+  commentId: M:Net3_Proxy.File.ReadAllText(System.String)
+  fullName: Net3_Proxy.File.ReadAllText(System.String)
+  nameWithType: File.ReadAllText(String)
+- uid: Net3_Proxy.File.ReadAllText(System.String,System.Text.Encoding)
+  name: ReadAllText(String, Encoding)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_ReadAllText_System_String_System_Text_Encoding_
+  commentId: M:Net3_Proxy.File.ReadAllText(System.String,System.Text.Encoding)
+  fullName: Net3_Proxy.File.ReadAllText(System.String, System.Text.Encoding)
+  nameWithType: File.ReadAllText(String, Encoding)
+- uid: Net3_Proxy.File.ReadAllText*
+  name: ReadAllText
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_ReadAllText_
+  commentId: Overload:Net3_Proxy.File.ReadAllText
+  isSpec: "True"
+  fullName: Net3_Proxy.File.ReadAllText
+  nameWithType: File.ReadAllText
+- uid: Net3_Proxy.IReadOnlyList`1
+  name: IReadOnlyList<T>
+  href: api/Net3_Proxy.IReadOnlyList-1.html
+  commentId: T:Net3_Proxy.IReadOnlyList`1
+  name.vb: IReadOnlyList(Of T)
+  fullName: Net3_Proxy.IReadOnlyList<T>
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T)
+  nameWithType: IReadOnlyList<T>
+  nameWithType.vb: IReadOnlyList(Of T)
+- uid: Net3_Proxy.IReadOnlyList`1.Count
+  name: Count
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_Count
+  commentId: P:Net3_Proxy.IReadOnlyList`1.Count
+  fullName: Net3_Proxy.IReadOnlyList<T>.Count
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).Count
+  nameWithType: IReadOnlyList<T>.Count
+  nameWithType.vb: IReadOnlyList(Of T).Count
+- uid: Net3_Proxy.IReadOnlyList`1.Count*
+  name: Count
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_Count_
+  commentId: Overload:Net3_Proxy.IReadOnlyList`1.Count
+  isSpec: "True"
+  fullName: Net3_Proxy.IReadOnlyList<T>.Count
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).Count
+  nameWithType: IReadOnlyList<T>.Count
+  nameWithType.vb: IReadOnlyList(Of T).Count
+- uid: Net3_Proxy.IReadOnlyList`1.GetEnumerator
+  name: GetEnumerator()
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_GetEnumerator
+  commentId: M:Net3_Proxy.IReadOnlyList`1.GetEnumerator
+  fullName: Net3_Proxy.IReadOnlyList<T>.GetEnumerator()
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).GetEnumerator()
+  nameWithType: IReadOnlyList<T>.GetEnumerator()
+  nameWithType.vb: IReadOnlyList(Of T).GetEnumerator()
+- uid: Net3_Proxy.IReadOnlyList`1.GetEnumerator*
+  name: GetEnumerator
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_GetEnumerator_
+  commentId: Overload:Net3_Proxy.IReadOnlyList`1.GetEnumerator
+  isSpec: "True"
+  fullName: Net3_Proxy.IReadOnlyList<T>.GetEnumerator
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).GetEnumerator
+  nameWithType: IReadOnlyList<T>.GetEnumerator
+  nameWithType.vb: IReadOnlyList(Of T).GetEnumerator
+- uid: Net3_Proxy.IReadOnlyList`1.Item(System.Int32)
+  name: Item[Int32]
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_Item_System_Int32_
+  commentId: P:Net3_Proxy.IReadOnlyList`1.Item(System.Int32)
+  name.vb: Item(Int32)
+  fullName: Net3_Proxy.IReadOnlyList<T>.Item[System.Int32]
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).Item(System.Int32)
+  nameWithType: IReadOnlyList<T>.Item[Int32]
+  nameWithType.vb: IReadOnlyList(Of T).Item(Int32)
+- uid: Net3_Proxy.IReadOnlyList`1.Item*
+  name: Item
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_Item_
+  commentId: Overload:Net3_Proxy.IReadOnlyList`1.Item
+  isSpec: "True"
+  fullName: Net3_Proxy.IReadOnlyList<T>.Item
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).Item
+  nameWithType: IReadOnlyList<T>.Item
+  nameWithType.vb: IReadOnlyList(Of T).Item
+- uid: Net3_Proxy.IReadOnlyList`1.op_Implicit(System.Collections.Generic.List{`0})~Net3_Proxy.IReadOnlyList{`0}
+  name: Implicit(List<T> to IReadOnlyList<T>)
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_op_Implicit_System_Collections_Generic_List__0___Net3_Proxy_IReadOnlyList__0_
+  commentId: M:Net3_Proxy.IReadOnlyList`1.op_Implicit(System.Collections.Generic.List{`0})~Net3_Proxy.IReadOnlyList{`0}
+  name.vb: Widening(List(Of T) to IReadOnlyList(Of T))
+  fullName: Net3_Proxy.IReadOnlyList<T>.Implicit(System.Collections.Generic.List<T> to Net3_Proxy.IReadOnlyList<T>)
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).Widening(System.Collections.Generic.List(Of T) to Net3_Proxy.IReadOnlyList(Of T))
+  nameWithType: IReadOnlyList<T>.Implicit(List<T> to IReadOnlyList<T>)
+  nameWithType.vb: IReadOnlyList(Of T).Widening(List(Of T) to IReadOnlyList(Of T))
+- uid: Net3_Proxy.IReadOnlyList`1.op_Implicit*
+  name: Implicit
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_op_Implicit_
+  commentId: Overload:Net3_Proxy.IReadOnlyList`1.op_Implicit
+  isSpec: "True"
+  name.vb: Widening
+  fullName: Net3_Proxy.IReadOnlyList<T>.Implicit
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).Widening
+  nameWithType: IReadOnlyList<T>.Implicit
+  nameWithType.vb: IReadOnlyList(Of T).Widening
+- uid: Net3_Proxy.IReadOnlyList`1.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:Net3_Proxy.IReadOnlyList`1.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: Net3_Proxy.IReadOnlyList<T>.System.Collections.IEnumerable.GetEnumerator()
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: IReadOnlyList<T>.IEnumerable.GetEnumerator()
+  nameWithType.vb: IReadOnlyList(Of T).System.Collections.IEnumerable.GetEnumerator()
+- uid: Net3_Proxy.IReadOnlyList`1.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/Net3_Proxy.IReadOnlyList-1.html#Net3_Proxy_IReadOnlyList_1_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:Net3_Proxy.IReadOnlyList`1.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: Net3_Proxy.IReadOnlyList<T>.System.Collections.IEnumerable.GetEnumerator
+  fullName.vb: Net3_Proxy.IReadOnlyList(Of T).System.Collections.IEnumerable.GetEnumerator
+  nameWithType: IReadOnlyList<T>.IEnumerable.GetEnumerator
+  nameWithType.vb: IReadOnlyList(Of T).System.Collections.IEnumerable.GetEnumerator
+- uid: Net3_Proxy.Path
+  name: Path
+  href: api/Net3_Proxy.Path.html
+  commentId: T:Net3_Proxy.Path
+  fullName: Net3_Proxy.Path
+  nameWithType: Path
+- uid: Net3_Proxy.Path.Combine(System.String)
+  name: Combine(String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_Combine_System_String_
+  commentId: M:Net3_Proxy.Path.Combine(System.String)
+  fullName: Net3_Proxy.Path.Combine(System.String)
+  nameWithType: Path.Combine(String)
+- uid: Net3_Proxy.Path.Combine(System.String,System.String)
+  name: Combine(String, String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_Combine_System_String_System_String_
+  commentId: M:Net3_Proxy.Path.Combine(System.String,System.String)
+  fullName: Net3_Proxy.Path.Combine(System.String, System.String)
+  nameWithType: Path.Combine(String, String)
+- uid: Net3_Proxy.Path.Combine(System.String,System.String,System.String)
+  name: Combine(String, String, String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_Combine_System_String_System_String_System_String_
+  commentId: M:Net3_Proxy.Path.Combine(System.String,System.String,System.String)
+  fullName: Net3_Proxy.Path.Combine(System.String, System.String, System.String)
+  nameWithType: Path.Combine(String, String, String)
+- uid: Net3_Proxy.Path.Combine(System.String,System.String,System.String,System.String)
+  name: Combine(String, String, String, String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_Combine_System_String_System_String_System_String_System_String_
+  commentId: M:Net3_Proxy.Path.Combine(System.String,System.String,System.String,System.String)
+  fullName: Net3_Proxy.Path.Combine(System.String, System.String, System.String, System.String)
+  nameWithType: Path.Combine(String, String, String, String)
+- uid: Net3_Proxy.Path.Combine(System.String[])
+  name: Combine(String[])
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_Combine_System_String___
+  commentId: M:Net3_Proxy.Path.Combine(System.String[])
+  name.vb: Combine(String())
+  fullName: Net3_Proxy.Path.Combine(System.String[])
+  fullName.vb: Net3_Proxy.Path.Combine(System.String())
+  nameWithType: Path.Combine(String[])
+  nameWithType.vb: Path.Combine(String())
+- uid: Net3_Proxy.Path.Combine*
+  name: Combine
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_Combine_
+  commentId: Overload:Net3_Proxy.Path.Combine
+  isSpec: "True"
+  fullName: Net3_Proxy.Path.Combine
+  nameWithType: Path.Combine
+- uid: Net3_Proxy.Path.GetDirectoryName(System.String)
+  name: GetDirectoryName(String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetDirectoryName_System_String_
+  commentId: M:Net3_Proxy.Path.GetDirectoryName(System.String)
+  fullName: Net3_Proxy.Path.GetDirectoryName(System.String)
+  nameWithType: Path.GetDirectoryName(String)
+- uid: Net3_Proxy.Path.GetDirectoryName*
+  name: GetDirectoryName
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetDirectoryName_
+  commentId: Overload:Net3_Proxy.Path.GetDirectoryName
+  isSpec: "True"
+  fullName: Net3_Proxy.Path.GetDirectoryName
+  nameWithType: Path.GetDirectoryName
+- uid: Net3_Proxy.Path.GetFileName(System.String)
+  name: GetFileName(String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetFileName_System_String_
+  commentId: M:Net3_Proxy.Path.GetFileName(System.String)
+  fullName: Net3_Proxy.Path.GetFileName(System.String)
+  nameWithType: Path.GetFileName(String)
+- uid: Net3_Proxy.Path.GetFileName*
+  name: GetFileName
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetFileName_
+  commentId: Overload:Net3_Proxy.Path.GetFileName
+  isSpec: "True"
+  fullName: Net3_Proxy.Path.GetFileName
+  nameWithType: Path.GetFileName
+- uid: Net3_Proxy.Path.GetFileNameWithoutExtension(System.String)
+  name: GetFileNameWithoutExtension(String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetFileNameWithoutExtension_System_String_
+  commentId: M:Net3_Proxy.Path.GetFileNameWithoutExtension(System.String)
+  fullName: Net3_Proxy.Path.GetFileNameWithoutExtension(System.String)
+  nameWithType: Path.GetFileNameWithoutExtension(String)
+- uid: Net3_Proxy.Path.GetFileNameWithoutExtension*
+  name: GetFileNameWithoutExtension
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetFileNameWithoutExtension_
+  commentId: Overload:Net3_Proxy.Path.GetFileNameWithoutExtension
+  isSpec: "True"
+  fullName: Net3_Proxy.Path.GetFileNameWithoutExtension
+  nameWithType: Path.GetFileNameWithoutExtension
+- uid: Net3_Proxy.Path.GetFullPath(System.String)
+  name: GetFullPath(String)
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetFullPath_System_String_
+  commentId: M:Net3_Proxy.Path.GetFullPath(System.String)
+  fullName: Net3_Proxy.Path.GetFullPath(System.String)
+  nameWithType: Path.GetFullPath(String)
+- uid: Net3_Proxy.Path.GetFullPath*
+  name: GetFullPath
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_GetFullPath_
+  commentId: Overload:Net3_Proxy.Path.GetFullPath
+  isSpec: "True"
+  fullName: Net3_Proxy.Path.GetFullPath
+  nameWithType: Path.GetFullPath
+- uid: Net3_Proxy.StreamExtensions
+  name: StreamExtensions
+  href: api/Net3_Proxy.StreamExtensions.html
+  commentId: T:Net3_Proxy.StreamExtensions
+  fullName: Net3_Proxy.StreamExtensions
+  nameWithType: StreamExtensions
+- uid: Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream,System.IO.Stream)
+  name: CopyToAsync(Stream, Stream)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_CopyToAsync_System_IO_Stream_System_IO_Stream_
+  commentId: M:Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream,System.IO.Stream)
+  fullName: Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream, System.IO.Stream)
+  nameWithType: StreamExtensions.CopyToAsync(Stream, Stream)
+- uid: Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Int32)
+  name: CopyToAsync(Stream, Stream, Int32)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_CopyToAsync_System_IO_Stream_System_IO_Stream_System_Int32_
+  commentId: M:Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Int32)
+  fullName: Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream, System.IO.Stream, System.Int32)
+  nameWithType: StreamExtensions.CopyToAsync(Stream, Stream, Int32)
+- uid: Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Int32,CancellationToken)
+  name: CopyToAsync(Stream, Stream, Int32, CancellationToken)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_CopyToAsync_System_IO_Stream_System_IO_Stream_System_Int32_CancellationToken_
+  commentId: M:Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Int32,CancellationToken)
+  fullName: Net3_Proxy.StreamExtensions.CopyToAsync(System.IO.Stream, System.IO.Stream, System.Int32, CancellationToken)
+  nameWithType: StreamExtensions.CopyToAsync(Stream, Stream, Int32, CancellationToken)
+- uid: Net3_Proxy.StreamExtensions.CopyToAsync*
+  name: CopyToAsync
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_CopyToAsync_
+  commentId: Overload:Net3_Proxy.StreamExtensions.CopyToAsync
+  isSpec: "True"
+  fullName: Net3_Proxy.StreamExtensions.CopyToAsync
+  nameWithType: StreamExtensions.CopyToAsync
+- uid: Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32)
+  name: ReadAsync(Stream, Byte[], Int32, Int32)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_ReadAsync_System_IO_Stream_System_Byte___System_Int32_System_Int32_
+  commentId: M:Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32)
+  name.vb: ReadAsync(Stream, Byte(), Int32, Int32)
+  fullName: Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream, System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream, System.Byte(), System.Int32, System.Int32)
+  nameWithType: StreamExtensions.ReadAsync(Stream, Byte[], Int32, Int32)
+  nameWithType.vb: StreamExtensions.ReadAsync(Stream, Byte(), Int32, Int32)
+- uid: Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32,CancellationToken)
+  name: ReadAsync(Stream, Byte[], Int32, Int32, CancellationToken)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_ReadAsync_System_IO_Stream_System_Byte___System_Int32_System_Int32_CancellationToken_
+  commentId: M:Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32,CancellationToken)
+  name.vb: ReadAsync(Stream, Byte(), Int32, Int32, CancellationToken)
+  fullName: Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream, System.Byte[], System.Int32, System.Int32, CancellationToken)
+  fullName.vb: Net3_Proxy.StreamExtensions.ReadAsync(System.IO.Stream, System.Byte(), System.Int32, System.Int32, CancellationToken)
+  nameWithType: StreamExtensions.ReadAsync(Stream, Byte[], Int32, Int32, CancellationToken)
+  nameWithType.vb: StreamExtensions.ReadAsync(Stream, Byte(), Int32, Int32, CancellationToken)
+- uid: Net3_Proxy.StreamExtensions.ReadAsync*
+  name: ReadAsync
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_ReadAsync_
+  commentId: Overload:Net3_Proxy.StreamExtensions.ReadAsync
+  isSpec: "True"
+  fullName: Net3_Proxy.StreamExtensions.ReadAsync
+  nameWithType: StreamExtensions.ReadAsync
+- uid: Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32)
+  name: WriteAsync(Stream, Byte[], Int32, Int32)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_WriteAsync_System_IO_Stream_System_Byte___System_Int32_System_Int32_
+  commentId: M:Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32)
+  name.vb: WriteAsync(Stream, Byte(), Int32, Int32)
+  fullName: Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream, System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream, System.Byte(), System.Int32, System.Int32)
+  nameWithType: StreamExtensions.WriteAsync(Stream, Byte[], Int32, Int32)
+  nameWithType.vb: StreamExtensions.WriteAsync(Stream, Byte(), Int32, Int32)
+- uid: Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32,CancellationToken)
+  name: WriteAsync(Stream, Byte[], Int32, Int32, CancellationToken)
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_WriteAsync_System_IO_Stream_System_Byte___System_Int32_System_Int32_CancellationToken_
+  commentId: M:Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32,CancellationToken)
+  name.vb: WriteAsync(Stream, Byte(), Int32, Int32, CancellationToken)
+  fullName: Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream, System.Byte[], System.Int32, System.Int32, CancellationToken)
+  fullName.vb: Net3_Proxy.StreamExtensions.WriteAsync(System.IO.Stream, System.Byte(), System.Int32, System.Int32, CancellationToken)
+  nameWithType: StreamExtensions.WriteAsync(Stream, Byte[], Int32, Int32, CancellationToken)
+  nameWithType.vb: StreamExtensions.WriteAsync(Stream, Byte(), Int32, Int32, CancellationToken)
+- uid: Net3_Proxy.StreamExtensions.WriteAsync*
+  name: WriteAsync
+  href: api/Net3_Proxy.StreamExtensions.html#Net3_Proxy_StreamExtensions_WriteAsync_
+  commentId: Overload:Net3_Proxy.StreamExtensions.WriteAsync
+  isSpec: "True"
+  fullName: Net3_Proxy.StreamExtensions.WriteAsync
+  nameWithType: StreamExtensions.WriteAsync
+- uid: Net3_Proxy.Tuple
+  name: Tuple
+  href: api/Net3_Proxy.Tuple.html
+  commentId: T:Net3_Proxy.Tuple
+  fullName: Net3_Proxy.Tuple
+  nameWithType: Tuple
+- uid: Net3_Proxy.Tuple.Create*
+  name: Create
+  href: api/Net3_Proxy.Tuple.html#Net3_Proxy_Tuple_Create_
+  commentId: Overload:Net3_Proxy.Tuple.Create
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple.Create
+  nameWithType: Tuple.Create
+- uid: Net3_Proxy.Tuple.Create``2(``0,``1)
+  name: Create<T1, T2>(T1, T2)
+  href: api/Net3_Proxy.Tuple.html#Net3_Proxy_Tuple_Create__2___0___1_
+  commentId: M:Net3_Proxy.Tuple.Create``2(``0,``1)
+  name.vb: Create(Of T1, T2)(T1, T2)
+  fullName: Net3_Proxy.Tuple.Create<T1, T2>(T1, T2)
+  fullName.vb: Net3_Proxy.Tuple.Create(Of T1, T2)(T1, T2)
+  nameWithType: Tuple.Create<T1, T2>(T1, T2)
+  nameWithType.vb: Tuple.Create(Of T1, T2)(T1, T2)
+- uid: Net3_Proxy.Tuple`2
+  name: Tuple<T1, T2>
+  href: api/Net3_Proxy.Tuple-2.html
+  commentId: T:Net3_Proxy.Tuple`2
+  name.vb: Tuple(Of T1, T2)
+  fullName: Net3_Proxy.Tuple<T1, T2>
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2)
+  nameWithType: Tuple<T1, T2>
+  nameWithType.vb: Tuple(Of T1, T2)
+- uid: Net3_Proxy.Tuple`2.#ctor(`0,`1)
+  name: Tuple(T1, T2)
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2__ctor__0__1_
+  commentId: M:Net3_Proxy.Tuple`2.#ctor(`0,`1)
+  fullName: Net3_Proxy.Tuple<T1, T2>.Tuple(T1, T2)
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Tuple(T1, T2)
+  nameWithType: Tuple<T1, T2>.Tuple(T1, T2)
+  nameWithType.vb: Tuple(Of T1, T2).Tuple(T1, T2)
+- uid: Net3_Proxy.Tuple`2.#ctor*
+  name: Tuple
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2__ctor_
+  commentId: Overload:Net3_Proxy.Tuple`2.#ctor
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple<T1, T2>.Tuple
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Tuple
+  nameWithType: Tuple<T1, T2>.Tuple
+  nameWithType.vb: Tuple(Of T1, T2).Tuple
+- uid: Net3_Proxy.Tuple`2.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_Equals_System_Object_
+  commentId: M:Net3_Proxy.Tuple`2.Equals(System.Object)
+  fullName: Net3_Proxy.Tuple<T1, T2>.Equals(System.Object)
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Equals(System.Object)
+  nameWithType: Tuple<T1, T2>.Equals(Object)
+  nameWithType.vb: Tuple(Of T1, T2).Equals(Object)
+- uid: Net3_Proxy.Tuple`2.Equals*
+  name: Equals
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_Equals_
+  commentId: Overload:Net3_Proxy.Tuple`2.Equals
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple<T1, T2>.Equals
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Equals
+  nameWithType: Tuple<T1, T2>.Equals
+  nameWithType.vb: Tuple(Of T1, T2).Equals
+- uid: Net3_Proxy.Tuple`2.GetHashCode
+  name: GetHashCode()
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_GetHashCode
+  commentId: M:Net3_Proxy.Tuple`2.GetHashCode
+  fullName: Net3_Proxy.Tuple<T1, T2>.GetHashCode()
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).GetHashCode()
+  nameWithType: Tuple<T1, T2>.GetHashCode()
+  nameWithType.vb: Tuple(Of T1, T2).GetHashCode()
+- uid: Net3_Proxy.Tuple`2.GetHashCode*
+  name: GetHashCode
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_GetHashCode_
+  commentId: Overload:Net3_Proxy.Tuple`2.GetHashCode
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple<T1, T2>.GetHashCode
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).GetHashCode
+  nameWithType: Tuple<T1, T2>.GetHashCode
+  nameWithType.vb: Tuple(Of T1, T2).GetHashCode
+- uid: Net3_Proxy.Tuple`2.Item1
+  name: Item1
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_Item1
+  commentId: P:Net3_Proxy.Tuple`2.Item1
+  fullName: Net3_Proxy.Tuple<T1, T2>.Item1
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Item1
+  nameWithType: Tuple<T1, T2>.Item1
+  nameWithType.vb: Tuple(Of T1, T2).Item1
+- uid: Net3_Proxy.Tuple`2.Item1*
+  name: Item1
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_Item1_
+  commentId: Overload:Net3_Proxy.Tuple`2.Item1
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple<T1, T2>.Item1
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Item1
+  nameWithType: Tuple<T1, T2>.Item1
+  nameWithType.vb: Tuple(Of T1, T2).Item1
+- uid: Net3_Proxy.Tuple`2.Item2
+  name: Item2
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_Item2
+  commentId: P:Net3_Proxy.Tuple`2.Item2
+  fullName: Net3_Proxy.Tuple<T1, T2>.Item2
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Item2
+  nameWithType: Tuple<T1, T2>.Item2
+  nameWithType.vb: Tuple(Of T1, T2).Item2
+- uid: Net3_Proxy.Tuple`2.Item2*
+  name: Item2
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_Item2_
+  commentId: Overload:Net3_Proxy.Tuple`2.Item2
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple<T1, T2>.Item2
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).Item2
+  nameWithType: Tuple<T1, T2>.Item2
+  nameWithType.vb: Tuple(Of T1, T2).Item2
+- uid: Net3_Proxy.Tuple`2.System#IComparable#CompareTo(System.Object)
+  name: IComparable.CompareTo(Object)
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_System_IComparable_CompareTo_System_Object_
+  commentId: M:Net3_Proxy.Tuple`2.System#IComparable#CompareTo(System.Object)
+  name.vb: System.IComparable.CompareTo(Object)
+  fullName: Net3_Proxy.Tuple<T1, T2>.System.IComparable.CompareTo(System.Object)
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).System.IComparable.CompareTo(System.Object)
+  nameWithType: Tuple<T1, T2>.IComparable.CompareTo(Object)
+  nameWithType.vb: Tuple(Of T1, T2).System.IComparable.CompareTo(Object)
+- uid: Net3_Proxy.Tuple`2.System#IComparable#CompareTo*
+  name: IComparable.CompareTo
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_System_IComparable_CompareTo_
+  commentId: Overload:Net3_Proxy.Tuple`2.System#IComparable#CompareTo
+  isSpec: "True"
+  name.vb: System.IComparable.CompareTo
+  fullName: Net3_Proxy.Tuple<T1, T2>.System.IComparable.CompareTo
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).System.IComparable.CompareTo
+  nameWithType: Tuple<T1, T2>.IComparable.CompareTo
+  nameWithType.vb: Tuple(Of T1, T2).System.IComparable.CompareTo
+- uid: Net3_Proxy.Tuple`2.ToString
+  name: ToString()
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_ToString
+  commentId: M:Net3_Proxy.Tuple`2.ToString
+  fullName: Net3_Proxy.Tuple<T1, T2>.ToString()
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).ToString()
+  nameWithType: Tuple<T1, T2>.ToString()
+  nameWithType.vb: Tuple(Of T1, T2).ToString()
+- uid: Net3_Proxy.Tuple`2.ToString*
+  name: ToString
+  href: api/Net3_Proxy.Tuple-2.html#Net3_Proxy_Tuple_2_ToString_
+  commentId: Overload:Net3_Proxy.Tuple`2.ToString
+  isSpec: "True"
+  fullName: Net3_Proxy.Tuple<T1, T2>.ToString
+  fullName.vb: Net3_Proxy.Tuple(Of T1, T2).ToString
+  nameWithType: Tuple<T1, T2>.ToString
+  nameWithType.vb: Tuple(Of T1, T2).ToString
 - uid: other.config.schema
   name: Configuration File Schema
   href: other_api/config/schema.html
