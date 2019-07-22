@@ -190,6 +190,7 @@ namespace IPA.Utilities
 
 #if NET4
         internal static IEnumerable<string> StrJP(this IEnumerable<string> a) => a;
+        internal static IEnumerable<string> StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */);
 #endif
 #if NET3
         internal static string[] StrJP(this IEnumerable<string> a) => a.ToArray();
