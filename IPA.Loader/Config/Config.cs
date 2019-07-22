@@ -5,6 +5,10 @@ using System.Linq;
 using System.Reflection;
 using IPA.Config.ConfigProviders;
 using IPA.Utilities;
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+#endif
 
 namespace IPA.Config
 {

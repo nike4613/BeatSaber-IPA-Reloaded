@@ -2,6 +2,9 @@
 using System.Globalization;
 using System.IO;
 using IPA.Loader;
+#if NET3
+using Path = Net3_Proxy.Path;
+#endif
 
 namespace IPA.Config
 {

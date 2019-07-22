@@ -13,6 +13,11 @@ using Mono.Cecil;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using static IPA.Loader.PluginLoader;
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+using File = Net3_Proxy.File;
+#endif
 
 namespace IPA.Loader
 {

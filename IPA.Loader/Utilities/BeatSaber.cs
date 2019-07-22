@@ -2,7 +2,9 @@
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-using Version = SemVer.Version;
+#if NET3
+using Path = Net3_Proxy.Path;
+#endif
 
 namespace IPA.Utilities
 {

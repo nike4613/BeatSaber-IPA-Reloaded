@@ -5,6 +5,9 @@ using System.Reflection;
 using IPA.Config;
 using IPA.Logging;
 using IPA.Utilities;
+#if NET3
+using Net3_Proxy;
+#endif
 
 namespace IPA.Loader
 {

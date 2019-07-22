@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+#if NET3
+using File = Net3_Proxy.File;
+#endif
 
 namespace IPA.Utilities
 {

@@ -21,13 +21,15 @@ namespace IPA.Config
         /// <param name="obj">the object containing the data to save</param>
         void Store<T>(T obj);
 
+#if NET4
         /// <summary>
         /// Gets a dynamic object providing access to the configuration.
         /// </summary>
         /// <value>a dynamically bound object to use to access config values directly</value>
         dynamic Dynamic { get; }
+#endif
 
-        #region State getters
+#region State getters
         /// <summary>
         /// Returns <see langword="true"/> if object has changed since the last save
         /// </summary>
@@ -56,6 +58,6 @@ namespace IPA.Config
         /// Loads the state of the file on disk.
         /// </summary>
         void Load();
-        #endregion
+#endregion
     }
 }
