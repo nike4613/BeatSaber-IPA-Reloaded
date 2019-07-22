@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Linq;
+using System.Collections.Generic;
 #if NET3
 using File = Net3_Proxy.File;
 #endif
@@ -185,5 +187,13 @@ namespace IPA.Utilities
             cmpVal = l.Patch - r.Patch;
             return cmpVal;
         }
+
+#if NET4
+        internal static IEnumerable<string> StrJP(this IEnumerable<string> a) => a;
+#endif
+#if NET3
+        internal static string[] StrJP(this IEnumerable<string> a) => a.ToArray();
+        internal static string[] StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */).ToArray();
+#endif
     }
 }

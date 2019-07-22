@@ -15,6 +15,7 @@ using Version = SemVer.Version;
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
 using File = Net3_Proxy.File;
+using Directory = Net3_Proxy.Directory;
 #endif
 
 namespace IPA.Loader
@@ -276,7 +277,7 @@ namespace IPA.Loader
                     if (meta.IsBare)
                     {
                         Logger.loader.Warn($"Bare manifest cannot specify description file");
-                        meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
+                        meta.Manifest.Description = string.Join("\n", lines.Skip(1).StrJP()); // ignore first line
                         continue;
                     }
 
@@ -290,7 +291,7 @@ namespace IPA.Loader
                         if (resc == null)
                         {
                             Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
-                            meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
+                            meta.Manifest.Description = string.Join("\n", lines.Skip(1).StrJP()); // ignore first line
                             continue;
                         }
 
@@ -398,7 +399,7 @@ namespace IPA.Loader
         internal static void ComputeLoadOrder()
         {
 #if DEBUG
-            Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString())));
+            Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString()).StrJP()));
 #endif
 
             bool InsertInto(HashSet<PluginMetadata> root, PluginMetadata meta, bool isRoot = false)
@@ -454,7 +455,7 @@ namespace IPA.Loader
             DeTree(PluginsMetadata, pluginTree);
 
 #if DEBUG
-            Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString())));
+            Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString()).StrJP()));
 #endif
         }
 

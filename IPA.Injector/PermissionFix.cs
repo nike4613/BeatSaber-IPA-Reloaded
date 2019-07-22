@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
+#if NET3
+using Net3_Proxy;
+#endif
 
 namespace IPA.Injector
 {
@@ -13,9 +13,9 @@ namespace IPA.Injector
     {
         public static Task FixPermissions(DirectoryInfo root)
         {
-            if (!root.Exists) return Task.CompletedTask;
+            if (!root.Exists) return new Task(() => { });
 
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 try
                 {

@@ -6,6 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using static IPA.Logging.Logger;
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+using File = Net3_Proxy.File;
+using Directory = Net3_Proxy.Directory;
+#endif
 
 namespace IPA.Injector
 {
@@ -33,7 +39,7 @@ namespace IPA.Injector
                 {
                     // will never actually be null
                     FileName = path,
-                    Arguments = $"\"-nw={Process.GetCurrentProcess().Id},s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1)).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
+                    Arguments = $"\"-nw={Process.GetCurrentProcess().Id},s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1).StrJP()).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
                     UseShellExecute = false
                 });
 

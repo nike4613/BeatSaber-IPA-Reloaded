@@ -215,7 +215,7 @@ namespace IPA.Logging
                 if (lineNo == 0)
                 { // no debug info
                     var method = stackFrame.GetMethod();
-                    var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
+                    var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName).StrJP());
 
                     message = $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString})}} {message}";
                 }

@@ -52,5 +52,6 @@ namespace Net3_Proxy
                 begin = Combine(begin, p);
             return begin;
         }
+        public static char PathSeparator => OgPath.PathSeparator;
     }
 }
