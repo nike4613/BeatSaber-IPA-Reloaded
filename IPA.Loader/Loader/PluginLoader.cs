@@ -11,6 +11,11 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+using File = Net3_Proxy.File;
+#endif
 
 namespace IPA.Loader
 {
@@ -19,7 +24,7 @@ namespace IPA.Loader
     /// </summary>
     public class PluginLoader
     {
-        internal static Task LoadTask() => Task.Run(() =>
+        internal static Task LoadTask() => Task.Factory.StartNew(() =>
         {
 
             LoadMetadata();

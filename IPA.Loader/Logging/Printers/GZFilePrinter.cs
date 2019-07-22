@@ -4,6 +4,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+#endif
 
 namespace IPA.Logging.Printers
 {

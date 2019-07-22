@@ -20,10 +20,10 @@
     <ProxyPlatform>x64</ProxyPlatform>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86-Net4' Or '$(Platform)' == 'x64-Net4' ">
-    <NetPlatform>4</NetPlatform>
+    <NetPlatform>Net4</NetPlatform>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86-Net3' Or '$(Platform)' == 'x64-Net3' ">
-    <NetPlatform>3</NetPlatform>
+    <NetPlatform>Net3</NetPlatform>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -85,7 +85,7 @@
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     
     <ItemGroup>
-      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\Net$(NetPlatform)\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\Net$(NetPlatform)\$(OtherConfig)\Libraries\**\*" />
+      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(OtherConfig)\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
