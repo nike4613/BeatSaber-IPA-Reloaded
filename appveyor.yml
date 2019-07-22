@@ -90,7 +90,10 @@ for:
                 #if ($lastexitcode -ne 0){
                 #    throw [System.Exception] "docfx build failed with exit code $lastexitcode."
                 #}
-                & .\build.ps1
+                powershell .\build.ps1
+                if ($lastexitcode -ne 0){
+                    throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+                }
             }
             
             if ($env:APPVEYOR_REPO_TAG -eq "true")

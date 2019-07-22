@@ -1,14 +1,14 @@
-& docfx metadata
-
 # read SelfConfig, remove wierd bits, load it, load Newtonsoft, and turn it into a schema
-$newtonsoftLoc = "./nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
-$newtonsoftSchemaLoc = "./nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
+$newtonsoftLoc = "$(pwd)/nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
+$newtonsoftSchemaLoc = "$(pwd)/nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
 $selfConfigLoc = "../IPA.Loader/Config/SelfConfig.cs"
 
 if (!(Test-Path "nuget" -PathType Container)) {
-    nuget install Newtonsoft.Json -Version 12.0.2 -source https://api.nuget.org/v3/index.json -o nuget
-    nuget install Newtonsoft.Json.Schema -Version 3.0.11 -source https://api.nuget.org/v3/index.json -o nuget
+    nuget install Newtonsoft.Json -Version 12.0.2 -source https://api.nuget.org/v3/index.json -o "$(pwd)/nuget"
+    nuget install Newtonsoft.Json.Schema -Version 3.0.11 -source https://api.nuget.org/v3/index.json -o "$(pwd)/nuget"
 }
+
+& docfx metadata
 
 if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -PathType Leaf)) {
     # The files we need exist, lets do this!
