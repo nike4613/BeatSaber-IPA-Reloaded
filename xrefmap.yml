@@ -3124,6 +3124,176 @@ references:
   commentId: N:Net3_Proxy
   fullName: Net3_Proxy
   nameWithType: Net3_Proxy
+- uid: Net3_Proxy.Directory
+  name: Directory
+  href: api/Net3_Proxy.Directory.html
+  commentId: T:Net3_Proxy.Directory
+  fullName: Net3_Proxy.Directory
+  nameWithType: Directory
+- uid: Net3_Proxy.Directory.CreateDirectory(System.String)
+  name: CreateDirectory(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_CreateDirectory_System_String_
+  commentId: M:Net3_Proxy.Directory.CreateDirectory(System.String)
+  fullName: Net3_Proxy.Directory.CreateDirectory(System.String)
+  nameWithType: Directory.CreateDirectory(String)
+- uid: Net3_Proxy.Directory.CreateDirectory(System.String,System.Security.AccessControl.DirectorySecurity)
+  name: CreateDirectory(String, DirectorySecurity)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_CreateDirectory_System_String_System_Security_AccessControl_DirectorySecurity_
+  commentId: M:Net3_Proxy.Directory.CreateDirectory(System.String,System.Security.AccessControl.DirectorySecurity)
+  fullName: Net3_Proxy.Directory.CreateDirectory(System.String, System.Security.AccessControl.DirectorySecurity)
+  nameWithType: Directory.CreateDirectory(String, DirectorySecurity)
+- uid: Net3_Proxy.Directory.CreateDirectory*
+  name: CreateDirectory
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_CreateDirectory_
+  commentId: Overload:Net3_Proxy.Directory.CreateDirectory
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.CreateDirectory
+  nameWithType: Directory.CreateDirectory
+- uid: Net3_Proxy.Directory.Delete(System.String)
+  name: Delete(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Delete_System_String_
+  commentId: M:Net3_Proxy.Directory.Delete(System.String)
+  fullName: Net3_Proxy.Directory.Delete(System.String)
+  nameWithType: Directory.Delete(String)
+- uid: Net3_Proxy.Directory.Delete(System.String,System.Boolean)
+  name: Delete(String, Boolean)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Delete_System_String_System_Boolean_
+  commentId: M:Net3_Proxy.Directory.Delete(System.String,System.Boolean)
+  fullName: Net3_Proxy.Directory.Delete(System.String, System.Boolean)
+  nameWithType: Directory.Delete(String, Boolean)
+- uid: Net3_Proxy.Directory.Delete*
+  name: Delete
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Delete_
+  commentId: Overload:Net3_Proxy.Directory.Delete
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.Delete
+  nameWithType: Directory.Delete
+- uid: Net3_Proxy.Directory.EnumerateDirectories(System.String)
+  name: EnumerateDirectories(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateDirectories_System_String_
+  commentId: M:Net3_Proxy.Directory.EnumerateDirectories(System.String)
+  fullName: Net3_Proxy.Directory.EnumerateDirectories(System.String)
+  nameWithType: Directory.EnumerateDirectories(String)
+- uid: Net3_Proxy.Directory.EnumerateDirectories(System.String,System.String)
+  name: EnumerateDirectories(String, String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateDirectories_System_String_System_String_
+  commentId: M:Net3_Proxy.Directory.EnumerateDirectories(System.String,System.String)
+  fullName: Net3_Proxy.Directory.EnumerateDirectories(System.String, System.String)
+  nameWithType: Directory.EnumerateDirectories(String, String)
+- uid: Net3_Proxy.Directory.EnumerateDirectories(System.String,System.String,System.IO.SearchOption)
+  name: EnumerateDirectories(String, String, SearchOption)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateDirectories_System_String_System_String_System_IO_SearchOption_
+  commentId: M:Net3_Proxy.Directory.EnumerateDirectories(System.String,System.String,System.IO.SearchOption)
+  fullName: Net3_Proxy.Directory.EnumerateDirectories(System.String, System.String, System.IO.SearchOption)
+  nameWithType: Directory.EnumerateDirectories(String, String, SearchOption)
+- uid: Net3_Proxy.Directory.EnumerateDirectories*
+  name: EnumerateDirectories
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateDirectories_
+  commentId: Overload:Net3_Proxy.Directory.EnumerateDirectories
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.EnumerateDirectories
+  nameWithType: Directory.EnumerateDirectories
+- uid: Net3_Proxy.Directory.EnumerateFiles(System.String)
+  name: EnumerateFiles(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateFiles_System_String_
+  commentId: M:Net3_Proxy.Directory.EnumerateFiles(System.String)
+  fullName: Net3_Proxy.Directory.EnumerateFiles(System.String)
+  nameWithType: Directory.EnumerateFiles(String)
+- uid: Net3_Proxy.Directory.EnumerateFiles(System.String,System.String)
+  name: EnumerateFiles(String, String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateFiles_System_String_System_String_
+  commentId: M:Net3_Proxy.Directory.EnumerateFiles(System.String,System.String)
+  fullName: Net3_Proxy.Directory.EnumerateFiles(System.String, System.String)
+  nameWithType: Directory.EnumerateFiles(String, String)
+- uid: Net3_Proxy.Directory.EnumerateFiles(System.String,System.String,System.IO.SearchOption)
+  name: EnumerateFiles(String, String, SearchOption)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateFiles_System_String_System_String_System_IO_SearchOption_
+  commentId: M:Net3_Proxy.Directory.EnumerateFiles(System.String,System.String,System.IO.SearchOption)
+  fullName: Net3_Proxy.Directory.EnumerateFiles(System.String, System.String, System.IO.SearchOption)
+  nameWithType: Directory.EnumerateFiles(String, String, SearchOption)
+- uid: Net3_Proxy.Directory.EnumerateFiles*
+  name: EnumerateFiles
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_EnumerateFiles_
+  commentId: Overload:Net3_Proxy.Directory.EnumerateFiles
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.EnumerateFiles
+  nameWithType: Directory.EnumerateFiles
+- uid: Net3_Proxy.Directory.Exists(System.String)
+  name: Exists(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Exists_System_String_
+  commentId: M:Net3_Proxy.Directory.Exists(System.String)
+  fullName: Net3_Proxy.Directory.Exists(System.String)
+  nameWithType: Directory.Exists(String)
+- uid: Net3_Proxy.Directory.Exists*
+  name: Exists
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Exists_
+  commentId: Overload:Net3_Proxy.Directory.Exists
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.Exists
+  nameWithType: Directory.Exists
+- uid: Net3_Proxy.Directory.GetDirectories(System.String)
+  name: GetDirectories(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetDirectories_System_String_
+  commentId: M:Net3_Proxy.Directory.GetDirectories(System.String)
+  fullName: Net3_Proxy.Directory.GetDirectories(System.String)
+  nameWithType: Directory.GetDirectories(String)
+- uid: Net3_Proxy.Directory.GetDirectories(System.String,System.String)
+  name: GetDirectories(String, String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetDirectories_System_String_System_String_
+  commentId: M:Net3_Proxy.Directory.GetDirectories(System.String,System.String)
+  fullName: Net3_Proxy.Directory.GetDirectories(System.String, System.String)
+  nameWithType: Directory.GetDirectories(String, String)
+- uid: Net3_Proxy.Directory.GetDirectories(System.String,System.String,System.IO.SearchOption)
+  name: GetDirectories(String, String, SearchOption)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetDirectories_System_String_System_String_System_IO_SearchOption_
+  commentId: M:Net3_Proxy.Directory.GetDirectories(System.String,System.String,System.IO.SearchOption)
+  fullName: Net3_Proxy.Directory.GetDirectories(System.String, System.String, System.IO.SearchOption)
+  nameWithType: Directory.GetDirectories(String, String, SearchOption)
+- uid: Net3_Proxy.Directory.GetDirectories*
+  name: GetDirectories
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetDirectories_
+  commentId: Overload:Net3_Proxy.Directory.GetDirectories
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.GetDirectories
+  nameWithType: Directory.GetDirectories
+- uid: Net3_Proxy.Directory.GetFiles(System.String)
+  name: GetFiles(String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetFiles_System_String_
+  commentId: M:Net3_Proxy.Directory.GetFiles(System.String)
+  fullName: Net3_Proxy.Directory.GetFiles(System.String)
+  nameWithType: Directory.GetFiles(String)
+- uid: Net3_Proxy.Directory.GetFiles(System.String,System.String)
+  name: GetFiles(String, String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetFiles_System_String_System_String_
+  commentId: M:Net3_Proxy.Directory.GetFiles(System.String,System.String)
+  fullName: Net3_Proxy.Directory.GetFiles(System.String, System.String)
+  nameWithType: Directory.GetFiles(String, String)
+- uid: Net3_Proxy.Directory.GetFiles(System.String,System.String,System.IO.SearchOption)
+  name: GetFiles(String, String, SearchOption)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetFiles_System_String_System_String_System_IO_SearchOption_
+  commentId: M:Net3_Proxy.Directory.GetFiles(System.String,System.String,System.IO.SearchOption)
+  fullName: Net3_Proxy.Directory.GetFiles(System.String, System.String, System.IO.SearchOption)
+  nameWithType: Directory.GetFiles(String, String, SearchOption)
+- uid: Net3_Proxy.Directory.GetFiles*
+  name: GetFiles
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_GetFiles_
+  commentId: Overload:Net3_Proxy.Directory.GetFiles
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.GetFiles
+  nameWithType: Directory.GetFiles
+- uid: Net3_Proxy.Directory.Move(System.String,System.String)
+  name: Move(String, String)
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Move_System_String_System_String_
+  commentId: M:Net3_Proxy.Directory.Move(System.String,System.String)
+  fullName: Net3_Proxy.Directory.Move(System.String, System.String)
+  nameWithType: Directory.Move(String, String)
+- uid: Net3_Proxy.Directory.Move*
+  name: Move
+  href: api/Net3_Proxy.Directory.html#Net3_Proxy_Directory_Move_
+  commentId: Overload:Net3_Proxy.Directory.Move
+  isSpec: "True"
+  fullName: Net3_Proxy.Directory.Move
+  nameWithType: Directory.Move
 - uid: Net3_Proxy.DirectoryInfoExtensions
   name: DirectoryInfoExtensions
   href: api/Net3_Proxy.DirectoryInfoExtensions.html
@@ -3202,6 +3372,22 @@ references:
   fullName.vb: Net3_Proxy.Extensions.GetCustomAttribute(Of T)(System.Reflection.ParameterInfo)
   nameWithType: Extensions.GetCustomAttribute<T>(ParameterInfo)
   nameWithType.vb: Extensions.GetCustomAttribute(Of T)(ParameterInfo)
+- uid: Net3_Proxy.Extensions.HasFlag*
+  name: HasFlag
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_HasFlag_
+  commentId: Overload:Net3_Proxy.Extensions.HasFlag
+  isSpec: "True"
+  fullName: Net3_Proxy.Extensions.HasFlag
+  nameWithType: Extensions.HasFlag
+- uid: Net3_Proxy.Extensions.HasFlag``1(``0,``0)
+  name: HasFlag<E>(E, E)
+  href: api/Net3_Proxy.Extensions.html#Net3_Proxy_Extensions_HasFlag__1___0___0_
+  commentId: M:Net3_Proxy.Extensions.HasFlag``1(``0,``0)
+  name.vb: HasFlag(Of E)(E, E)
+  fullName: Net3_Proxy.Extensions.HasFlag<E>(E, E)
+  fullName.vb: Net3_Proxy.Extensions.HasFlag(Of E)(E, E)
+  nameWithType: Extensions.HasFlag<E>(E, E)
+  nameWithType.vb: Extensions.HasFlag(Of E)(E, E)
 - uid: Net3_Proxy.File
   name: File
   href: api/Net3_Proxy.File.html
@@ -3250,6 +3436,19 @@ references:
   isSpec: "True"
   fullName: Net3_Proxy.File.Exists
   nameWithType: File.Exists
+- uid: Net3_Proxy.File.OpenRead(System.String)
+  name: OpenRead(String)
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_OpenRead_System_String_
+  commentId: M:Net3_Proxy.File.OpenRead(System.String)
+  fullName: Net3_Proxy.File.OpenRead(System.String)
+  nameWithType: File.OpenRead(String)
+- uid: Net3_Proxy.File.OpenRead*
+  name: OpenRead
+  href: api/Net3_Proxy.File.html#Net3_Proxy_File_OpenRead_
+  commentId: Overload:Net3_Proxy.File.OpenRead
+  isSpec: "True"
+  fullName: Net3_Proxy.File.OpenRead
+  nameWithType: File.OpenRead
 - uid: Net3_Proxy.File.ReadAllLines(System.String)
   name: ReadAllLines(String)
   href: api/Net3_Proxy.File.html#Net3_Proxy_File_ReadAllLines_System_String_
@@ -3479,6 +3678,19 @@ references:
   isSpec: "True"
   fullName: Net3_Proxy.Path.GetFullPath
   nameWithType: Path.GetFullPath
+- uid: Net3_Proxy.Path.PathSeparator
+  name: PathSeparator
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_PathSeparator
+  commentId: P:Net3_Proxy.Path.PathSeparator
+  fullName: Net3_Proxy.Path.PathSeparator
+  nameWithType: Path.PathSeparator
+- uid: Net3_Proxy.Path.PathSeparator*
+  name: PathSeparator
+  href: api/Net3_Proxy.Path.html#Net3_Proxy_Path_PathSeparator_
+  commentId: Overload:Net3_Proxy.Path.PathSeparator
+  isSpec: "True"
+  fullName: Net3_Proxy.Path.PathSeparator
+  nameWithType: Path.PathSeparator
 - uid: Net3_Proxy.StreamExtensions
   name: StreamExtensions
   href: api/Net3_Proxy.StreamExtensions.html
