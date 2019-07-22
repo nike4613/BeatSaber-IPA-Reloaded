@@ -91,7 +91,7 @@ namespace IPA
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
                 if (argExeName == null)
                     context = PatchContext.Create(new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
-                            .First(o => o.Extension == ".exe" && o.FullName != Assembly.GetCallingAssembly().Location)
+                            .First(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly().Location)
                             .FullName);
                 else
                     context = PatchContext.Create(argExeName);
