@@ -2,17 +2,22 @@
 using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
+using IPA.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+using Directory = Net3_Proxy.Directory;
+#endif
 
 namespace IPA.Injector
 {
@@ -276,7 +281,7 @@ namespace IPA.Injector
             pluginAsyncLoadTask.Wait();
             permissionFixTask.Wait();
             log.Debug("Plugins loaded");
-            log.Debug(string.Join(", ", PluginLoader.PluginsMetadata));
+            log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
             PluginComponent.Create();
         }
     }

@@ -23,5 +23,6 @@ namespace Net3_Proxy
                     textWriter.WriteLine(value);
         }
         public static string[] ReadAllLines(string p) => OgFile.ReadAllLines(p);
+        public static FileStream OpenRead(string p) => OgFile.OpenRead(p);
     }
 }

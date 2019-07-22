@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Directory.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="File.cs" />
     <Compile Include="IReadOnlyList.cs" />

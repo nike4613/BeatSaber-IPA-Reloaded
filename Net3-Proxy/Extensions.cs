@@ -24,6 +24,13 @@ namespace Net3_Proxy
 
         public static StringBuilder Clear(this StringBuilder sb)
             => sb.Remove(0, sb.Length);
+
+        public static bool HasFlag<E>(this E e, E o) where E : Enum
+        {
+            var ei = Convert.ToUInt64(e);
+            var oi = Convert.ToUInt64(o);
+            return (ei & oi) == oi;
+        }
     }
 
     public static class DirectoryInfoExtensions
