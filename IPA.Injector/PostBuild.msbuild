@@ -12,6 +12,9 @@
     <ItemGroup>
       <SystemFiles Include="$(OPath)IPA.Injector.*" />
       <SystemFiles Include="$(OPath)IPA.Loader.*" />
+      <SystemFiles Include="$(OPath)AsyncBridge.*" />
+      <SystemFiles Include="$(OPath)System.Threading.*" />
+      <SystemFiles Include="$(OPath)Net3-Proxy.*" />
       <SystemFiles Include="$(OPath)Libraries\Mono\**\*" />
       <OldLibFiles Include="$(OPath)Libs\**\*" />
     </ItemGroup>

@@ -11,7 +11,8 @@
         "**/IPA.Tests.csproj",
         "TMP Exporter/**.csproj",
         "BuildTools/**.csproj",
-        "Doorstop/**.csproj"
+        "Doorstop/**.csproj",
+        "Net3-Proxy/**.csproj"
       ]
     }],
     "dest": "api",
