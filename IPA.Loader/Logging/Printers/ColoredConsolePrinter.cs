@@ -20,7 +20,6 @@ namespace IPA.Logging.Printers
         /// </summary>
         /// <value>the color to print this message as</value>
         // Initializer calls this function because Unity's .NET 3.5 doesn't have the color properties on Console
-        // TODO: move this garbo out to Net3_Proxy
         public ConsoleColor Color { get; set; } = GetConsoleColor(WinConsole.OutHandle);
 
         /// <summary>
