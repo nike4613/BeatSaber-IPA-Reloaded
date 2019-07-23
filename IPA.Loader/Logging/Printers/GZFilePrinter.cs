@@ -23,7 +23,13 @@ namespace IPA.Logging.Printers
             IntPtr lpSecurityAttributes
         );
 
-        internal static Regex removeControlCodes = new Regex("\x1b\\[\\d+m", RegexOptions.Compiled);
+#if NET4
+        private const RegexOptions reOptions = RegexOptions.Compiled;
+#elif NET3 // Needed because Compiled doesn't exist in Unity's .NET 3 runtime
+        private const RegexOptions reOptions = RegexOptions.None;
+#endif
+
+        internal static Regex removeControlCodes = new Regex("\x1b\\[\\d+m", reOptions);
 
         private FileInfo fileInfo;
 

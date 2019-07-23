@@ -55,6 +55,7 @@ if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -Pa
 
     # Generate schema
     $schemagen = New-Object -TypeName Newtonsoft.Json.Schema.Generation.JSchemaGenerator
+    $schemagen.DefaultRequired = [Newtonsoft.Json.Required]::Always
     $schema = $schemagen.Generate([IPA.Config.SelfConfig])
 
     $schema.ToString() | Out-File "other_api/config/_schema.json"

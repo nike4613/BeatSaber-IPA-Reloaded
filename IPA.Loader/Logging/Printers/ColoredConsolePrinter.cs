@@ -19,7 +19,9 @@ namespace IPA.Logging.Printers
         /// The color to print messages as.
         /// </summary>
         /// <value>the color to print this message as</value>
-        public ConsoleColor Color { get; set; } = Console.ForegroundColor;
+        // Initializer calls this function because Unity's .NET 3.5 doesn't have the color properties on Console
+        // TODO: move this garbo out to Net3_Proxy
+        public ConsoleColor Color { get; set; } = GetConsoleColor(WinConsole.OutHandle);
 
         /// <summary>
         /// Prints an entry to the console window.
@@ -69,6 +71,12 @@ namespace IPA.Logging.Printers
         {
             attr &= ~15;
             return (short)(attr | (int)color);
+        }
+
+        private static ConsoleColor GetConsoleColor(IntPtr handle)
+        {
+            GetConsoleScreenBufferInfo(handle, out var info);
+            return (ConsoleColor)(info.Attribute & 15);
         }
 
 
