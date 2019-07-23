@@ -49,6 +49,11 @@ namespace IPA.Loader
         public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
         {
             var asmName = new AssemblyName(e.Name);
+            return LoadLibrary(asmName);
+        }
+
+        internal static Assembly LoadLibrary(AssemblyName asmName)
+        {
             Log(Logger.Level.Debug, $"Resolving library {asmName}");
 
             SetupAssemblyFilenames();

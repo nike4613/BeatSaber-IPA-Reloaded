@@ -91,7 +91,14 @@ namespace IPA.Logging
             if (!file.IsInvalid)
             {
                 handle = file;
+#if NET4
                 var fs = new FileStream(file, dotNetFileAccess);
+#elif NET3
+#pragma warning disable CS0618
+                // this is marked obsolete, and shouldn't need to be used, but the constructor used in .NET 4 doesn't exist in Unity's mscorlib.dll
+                var fs = new FileStream(file.DangerousGetHandle(), dotNetFileAccess);
+#pragma warning restore
+#endif
                 return fs;
             }
 
@@ -99,7 +106,7 @@ namespace IPA.Logging
             return null;
         }
 
-        #region Win API Functions and Constants
+#region Win API Functions and Constants
         [DllImport("kernel32.dll",
             EntryPoint = "AllocConsole",
             SetLastError = true,
@@ -150,6 +157,6 @@ namespace IPA.Logging
         
         private const uint AttachParent = 0xFFFFFFFF;
 
-        #endregion
+#endregion
     }
 }

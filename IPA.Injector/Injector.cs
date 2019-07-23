@@ -16,6 +16,7 @@ using MethodAttributes = Mono.Cecil.MethodAttributes;
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
+using File = Net3_Proxy.File;
 using Directory = Net3_Proxy.Directory;
 #endif
 
@@ -29,6 +30,7 @@ namespace IPA.Injector
     {
         private static Task pluginAsyncLoadTask;
         private static Task permissionFixTask;
+        private static string otherNewtonsoftJson = null;
 
         // ReSharper disable once UnusedParameter.Global
         internal static void Main(string[] args)
@@ -44,6 +46,16 @@ namespace IPA.Injector
                     WinConsole.Initialize();
 
                 SetupLibraryLoading();
+
+                var otherNewtonsoft = Path.Combine(
+                    Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First(),
+                    "Managed",
+                    "Newtonsoft.Json.dll");
+                if (File.Exists(otherNewtonsoft))
+                { // this game ships its own Newtonsoft; force load ours and flag loading theirs
+                    LibLoader.LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"));
+                    otherNewtonsoftJson = otherNewtonsoft;
+                }
 
                 EnsureDirectories();
 
@@ -258,6 +270,9 @@ namespace IPA.Injector
         {
             if (bootstrapped) return;
             bootstrapped = true;
+
+            if (otherNewtonsoftJson != null)
+                Assembly.LoadFrom(otherNewtonsoftJson);
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {

@@ -121,12 +121,16 @@ namespace IPA.Logging
                 var console = typeof(Console);
                 var resetColor = console.GetMethod("ResetColor");
                 var foregroundProperty = console.GetProperty("ForegroundColor");
-                var setFg = foregroundProperty.GetSetMethod();
-                var getFg = foregroundProperty.GetGetMethod();
+                var setFg = foregroundProperty?.GetSetMethod();
+                var getFg = foregroundProperty?.GetGetMethod();
 
-                harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchResetColor"));
-                harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchSetForegroundColor"));
-                harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchGetForegroundColor"));
+                if (resetColor != null)
+                    harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchResetColor"));
+                if (foregroundProperty != null)
+                {
+                    harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchSetForegroundColor"));
+                    harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchGetForegroundColor"));
+                }
             }
 
             public static ConsoleColor GetColor() => stdoutInterceptor.currentColor;

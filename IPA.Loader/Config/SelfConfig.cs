@@ -51,7 +51,6 @@ namespace IPA.Config
             public bool AutoCheckUpdates = true;
         }
 
-        [JsonProperty(Required = Required.Always)]
         public UpdateObject Updates = new UpdateObject();
 
         public class DebugObject
@@ -63,7 +62,6 @@ namespace IPA.Config
             public int HideLogThreshold = 512;
         }
 
-        [JsonProperty(Required = Required.Always)]
         public DebugObject Debug = new DebugObject();
 
         [JsonProperty(Required = Required.Default)]
