@@ -13,10 +13,10 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
-	
-	<ShowTargetFrameworks>false</ShowTargetFrameworks>
-	<ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
-	<TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
+    
+    <ShowTargetFrameworks>false</ShowTargetFrameworks>
+    <ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
+    <TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,11 +35,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net4' ">
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-	<DefineConstants>$(DefineConstants);NET4</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-	<DefineConstants>$(DefineConstants);NET3</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET3</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
