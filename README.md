@@ -74,10 +74,10 @@ Changes to this file will likely be ovewritten when beatsaber updates or if loca
    C:/Program Files (x86)/Steam/steamapps/common/Beat Saber/
    ```
 3. Open `BSIPA.sln` in Visual Studio.
-4. Choose the configuration `x64`
+4. Choose the configuration `x64-Net4`
 5. Rebuild all. 
    
-   When you make a change somewhere in BSIPA itself, right click on `BSIPA-Net4-Meta` and click `Build` or `Rebuild`. This sets up the output in `path/to/solution/BSIPA-Net4-Meta/bin/<Configuration>` to be what
+   When you make a change somewhere in BSIPA itself, right click on `BSIPA-Meta` and click `Build` or `Rebuild`. This sets up the output in `path/to/solution/BSIPA-Meta/bin/<Configuration>` to be what
    should be copied to the game directory.
 
    When making a change to the Mod List, you only need to build the mod list. Install by copying everything in `path/to/solution/BSIPA-ModList/bin/<Configuration>` to your game
