@@ -184,14 +184,13 @@ namespace IPA.Loader
                        AssemblyResolver = new CecilLibLoader() 
                     }).MainModule;
 
-                    var iBeatSaberPlugin = pluginModule.ImportReference(typeof(IBeatSaberPlugin));
                     foreach (var type in pluginModule.Types)
                     {
                         foreach (var inter in type.Interfaces)
                         {
                             var ifType = inter.InterfaceType;
 
-                            if (iBeatSaberPlugin.FullName == ifType.FullName)
+                            if (typeof(IBeatSaberPlugin).FullName == ifType.FullName)
                             {
                                 metadata.PluginType = type;
                                 break;
