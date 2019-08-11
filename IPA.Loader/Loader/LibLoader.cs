@@ -13,14 +13,15 @@ namespace IPA.Loader
         {
             LibLoader.SetupAssemblyFilenames();
 
-            var testFile = $"{name.Name}.{name.Version}.dll";
-
-            if (LibLoader.FilenameLocations.TryGetValue(testFile, out string path))
+            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out var path))
             {
                 if (File.Exists(path))
-                {
                     return AssemblyDefinition.ReadAssembly(path, parameters);
-                }
+            }
+            else if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out path))
+            {
+                if (File.Exists(path))
+                    return AssemblyDefinition.ReadAssembly(path, parameters);
             }
 
             return base.Resolve(name, parameters);
