@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Linq;
 using IPA.Logging;
 using Mono.Cecil;
 
@@ -34,6 +38,13 @@ namespace IPA.Loader
         internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
         internal static Dictionary<string, string> FilenameLocations;
 
+        internal static void Configure()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= AssemblyLibLoader;
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
+            SetupAssemblyFilenames(true);
+        }
+
         internal static void SetupAssemblyFilenames(bool force = false)
         {
             if (FilenameLocations == null || force)
@@ -44,6 +55,36 @@ namespace IPA.Loader
                     if (FilenameLocations.ContainsKey(fn.Name))
                         Log(Logger.Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
                     else FilenameLocations.Add(fn.Name, fn.FullName);
+
+
+                if (!SetDefaultDllDirectories(LoadLibraryFlags.LOAD_LIBRARY_SEARCH_USER_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_SYSTEM32
+                                            | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_APPLICATION_DIR))
+                {
+                    var err = new Win32Exception();
+                    Log(Logger.Level.Critical, $"Error configuring DLL search path");
+                    Log(Logger.Level.Critical, err);
+                    return;
+                }
+
+                void AddDir(string path)
+                {
+                    var retPtr = AddDllDirectory(path);
+                    if (retPtr == IntPtr.Zero)
+                    {
+                        var err = new Win32Exception();
+                        Log(Logger.Level.Warning, $"Could not add DLL directory");
+                        Log(Logger.Level.Warning, err);
+                    }
+                }
+
+                if (Directory.Exists(NativeLibraryPath))
+                {
+                    AddDir(NativeLibraryPath);
+                    TraverseTree(NativeLibraryPath, dir =>
+                    { // this is a terrible hack for iterating directories
+                        AddDir(dir); return true;
+                    }).All(f => true); // force it to iterate all
+                }
             }
         }
 
@@ -92,8 +133,17 @@ namespace IPA.Loader
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
                     Console.WriteLine($"[{lvl}] {message}");
         }
+        internal static void Log(Logger.Level lvl, Exception message)
+        { // multiple proxy methods to delay loading of assemblies until it's done
+            if (Logger.LogCreated)
+                AssemblyLibLoaderCallLogger(lvl, message);
+            else
+                if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
+                Console.WriteLine($"[{lvl}] {message}");
+        }
 
         private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.libLoader.Log(lvl, message);
+        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.libLoader.Log(lvl, message);
 
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
         private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool> dirValidator = null)
@@ -115,13 +165,9 @@ namespace IPA.Loader
                     subDirs = Directory.GetDirectories(currentDir);
                 }
                 catch (UnauthorizedAccessException)
-                {
-                    continue;
-                }
+                { continue; }
                 catch (DirectoryNotFoundException)
-                {
-                    continue;
-                }
+                { continue; }
 
                 string[] files;
                 try
@@ -129,13 +175,9 @@ namespace IPA.Loader
                     files = Directory.GetFiles(currentDir);
                 }
                 catch (UnauthorizedAccessException)
-                {
-                    continue;
-                }
+                { continue; }
                 catch (DirectoryNotFoundException)
-                {
-                    continue;
-                }
+                { continue; }
                 
                 foreach (string str in subDirs)
                     if (dirValidator(str)) dirs.Push(str);
@@ -148,15 +190,29 @@ namespace IPA.Loader
                         nextValue = new FileInfo(file);
                     }
                     catch (FileNotFoundException)
-                    {
-                        continue;
-                    }
+                    { continue; }
 
                     yield return nextValue;
                 }
             }
         }
 
-        
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr AddDllDirectory(string lpPathName);
+
+        [Flags]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        private enum LoadLibraryFlags : uint
+        {
+            None = 0,
+            LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
+            LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
+            LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
+            LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetDefaultDllDirectories(LoadLibraryFlags dwFlags);
     }
 }

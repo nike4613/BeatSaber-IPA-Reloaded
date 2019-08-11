@@ -109,8 +109,7 @@ namespace IPA.Injector
         {
             if (loadingDone) return;
             loadingDone = true;
-            AppDomain.CurrentDomain.AssemblyResolve += LibLoader.AssemblyLibLoader;
-            LibLoader.SetupAssemblyFilenames(true);
+            LibLoader.Configure();
         }
 
         private static void InstallBootstrapPatch()
