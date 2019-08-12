@@ -184,38 +184,15 @@ namespace IPA.Loader
                        AssemblyResolver = new CecilLibLoader() 
                     }).MainModule;
 
-                    foreach (var type in pluginModule.Types)
-                    {
-                        foreach (var inter in type.Interfaces)
-                        {
-                            var ifType = inter.InterfaceType;
-
-                            if (typeof(IBeatSaberPlugin).FullName == ifType.FullName)
-                            {
-                                metadata.PluginType = type;
-                                break;
-                            }
-                        }
-
-                        if (metadata.PluginType != null) break;
-                    }
-
-                    if (metadata.PluginType == null)
-                    {
-                        Logger.loader.Notice(
-                        #if DIRE_LOADER_WARNINGS
-                            $"Could not find plugin type for {Path.GetFileName(plugin)}"
-                        #else
-                            $"New plugin type not present in {Path.GetFileName(plugin)}; maybe an old plugin?"
-                        #endif
-                            );
-                        continue;
-                    }
+                    string pluginNs = "";
 
                     foreach (var resource in pluginModule.Resources)
                     {
+                        const string manifestSuffix = ".manifest.json";
                         if (!(resource is EmbeddedResource embedded) ||
-                            embedded.Name != $"{metadata.PluginType.Namespace}.manifest.json") continue;
+                            !embedded.Name.EndsWith(manifestSuffix)) continue;
+
+                        pluginNs = embedded.Name.Substring(0, embedded.Name.Length - manifestSuffix.Length);
 
                         string manifest;
                         using (var manifestReader = new StreamReader(embedded.GetResourceStream()))
@@ -227,8 +204,32 @@ namespace IPA.Loader
 
                     if (metadata.Manifest == null)
                     {
-                        Logger.loader.Error("Could not find manifest.json in namespace " +
-                            $"{metadata.PluginType.Namespace} for {Path.GetFileName(plugin)}");
+#if DIRE_LOADER_WARNINGS
+                        Logger.loader.Error($"Could not find manifest.json for {Path.GetFileName(plugin)}");
+#else
+                        Logger.loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
+#endif
+                        continue;
+                    }
+
+                    foreach (var type in pluginModule.Types)
+                    {
+                        if (type.Namespace != pluginNs) continue;
+
+                        foreach (var inter in type.Interfaces)
+                        {
+                            if (typeof(IBeatSaberPlugin).FullName == inter.InterfaceType.FullName)
+                            {
+                                metadata.PluginType = type;
+                                goto type_loop_done; // break out of both loops
+                            }
+                        }
+                    }
+
+                    type_loop_done:
+                    if (metadata.PluginType == null)
+                    {
+                        Logger.loader.Error($"No plugin found in the manifest namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
                         continue;
                     }
 
