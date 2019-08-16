@@ -41,7 +41,7 @@ namespace BSIPA_ModList
         public static DownloadController Create()
         {
             var inst = new GameObject("BSIPA Modlist Download Controller").AddComponent<DownloadController>();
-            if (IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates)
+            if (IPA.Config.SelfConfig.Updates_.AutoCheckUpdates_)
                 inst.StartCoroutine(inst.StartUpdateCheck());
             return inst;
         }
@@ -149,7 +149,7 @@ namespace BSIPA_ModList
 
             if (downloads.Count == 0)
                 OnAllDownloadsCompleted(false);
-            else if (IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
+            else if (IPA.Config.SelfConfig.Updates_.AutoUpdate_)
                 StartDownloads();
         }
 

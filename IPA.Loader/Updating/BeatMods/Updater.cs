@@ -48,7 +48,7 @@ namespace IPA.Updating.BeatMods
                 {
                     Instance = this;
                     DontDestroyOnLoad(this);
-                    if (!ModListPresent && SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates)
+                    if (!ModListPresent && SelfConfig.Updates_.AutoCheckUpdates_)
                         CheckForUpdates();
                 }
             }
@@ -303,7 +303,7 @@ namespace IPA.Updating.BeatMods
 
             onComplete?.Invoke(depList);
 
-            if (!ModListPresent && SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate)
+            if (!ModListPresent && SelfConfig.Updates_.AutoUpdate_)
                 StartDownload(depList.Value);
         }
 
@@ -321,7 +321,7 @@ namespace IPA.Updating.BeatMods
                 catch (Exception e)
                 {
                     Logger.updater.Error($"Error getting info for {dep.Name}");
-                    if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
                         Logger.updater.Error(e);
                     dep.MetaRequestFailed = true;
                     continue;
@@ -388,7 +388,7 @@ namespace IPA.Updating.BeatMods
                 catch (Exception e)
                 {
                     Logger.updater.Error($"Error getting mod list for {dep.Name}");
-                    if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
                         Logger.updater.Error(e);
                     dep.MetaRequestFailed = true;
                     continue;
@@ -474,7 +474,7 @@ namespace IPA.Updating.BeatMods
             catch (Exception e)
             {
                 Logger.updater.Error($"Error occurred while trying to get information for {item}");
-                if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
                     Logger.updater.Error(e);
                 yield break;
             }
@@ -547,7 +547,7 @@ namespace IPA.Updating.BeatMods
                         else
                             Logger.updater.Error($"Error downloading mod {item.Name}");
 
-                        if (SelfConfig.SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces)
+                        if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
                             Logger.updater.Error(downloadTask.Exception);
 
                         installFail?.Invoke(item, downloadTask.Exception);
