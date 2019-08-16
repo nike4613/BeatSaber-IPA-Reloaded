@@ -39,8 +39,11 @@ namespace IPA.Config
         }
 
         internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "3.12.25"; 
-		
+        internal const string IPAVersion = "3.12.25";
+
+        // uses Updates.AutoCheckUpdates, YeetMods
+        internal static SelfConfig CommandLineValues = new SelfConfig();
+
         // END: section ignore
 
         public bool Regenerate = true;
@@ -52,8 +55,9 @@ namespace IPA.Config
             public static bool AutoUpdate_ => SelfConfigRef.Value.Updates.AutoUpdate;
 
             public bool AutoCheckUpdates = true;
-            // LINE: ignore
-            public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates;
+            // LINE: ignore 2
+            public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates 
+                                                 &&   CommandLineValues.Updates.AutoCheckUpdates;
         }
 
         public Updates_ Updates = new Updates_();
@@ -84,8 +88,9 @@ namespace IPA.Config
         public Debug_ Debug = new Debug_();
 
         public bool YeetMods = true;
-        // LINE: ignore
-        public static bool YeetMods_ => SelfConfigRef.Value.YeetMods;
+        // LINE: ignore 2
+        public static bool YeetMods_ => SelfConfigRef.Value.YeetMods 
+                                     &&   CommandLineValues.YeetMods;
 
         [JsonProperty(Required = Required.Default)]
         public string LastGameVersion = null;
