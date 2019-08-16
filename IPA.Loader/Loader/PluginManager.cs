@@ -299,10 +299,10 @@ namespace IPA.Loader
         {
             string pluginDir = BeatSaber.PluginsPath;
             var gameVer = BeatSaber.GameVersion;
-            var lastVerS = SelfConfig.SelfConfigRef.Value.LastGameVersion;
+            var lastVerS = SelfConfig.LastGameVersion_;
             var lastVer = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
 
-            if (lastVer != null && gameVer != lastVer)
+            if (SelfConfig.YeetMods_ && lastVer != null && gameVer != lastVer)
             {
                 var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {lastVer} Plugins");
                 var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {gameVer} Plugins");

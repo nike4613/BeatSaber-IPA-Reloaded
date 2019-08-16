@@ -45,26 +45,42 @@ namespace IPA.Config
 
         public bool Regenerate = true;
 
-        public class UpdateObject
+        public class Updates_
         {
             public bool AutoUpdate = true;
+            public static bool AutoUpdate_ => SelfConfigRef.Value.Updates.AutoUpdate;
+
             public bool AutoCheckUpdates = true;
+            public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates;
         }
 
-        public UpdateObject Updates = new UpdateObject();
+        public Updates_ Updates = new Updates_();
 
-        public class DebugObject
+        public class Debug_
         {
             public bool ShowCallSource = false;
+            public static bool ShowCallSource_ => SelfConfigRef.Value.Debug.ShowCallSource;
+
             public bool ShowDebug = false;
+            public static bool ShowDebug_ => SelfConfigRef.Value.Debug.ShowDebug;
+
             public bool ShowHandledErrorStackTraces = false;
+            public static bool ShowHandledErrorStackTraces_ => SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces;
+
             public bool HideMessagesForPerformance = true;
+            public static bool HideMessagesForPerformance_ => SelfConfigRef.Value.Debug.HideMessagesForPerformance;
+
             public int HideLogThreshold = 512;
+            public static int HideLogThreshold_ => SelfConfigRef.Value.Debug.HideLogThreshold;
         }
 
-        public DebugObject Debug = new DebugObject();
+        public Debug_ Debug = new Debug_();
+
+        public bool YeetMods = true;
+        public static bool YeetMods_ => SelfConfigRef.Value.YeetMods;
 
         [JsonProperty(Required = Required.Default)]
         public string LastGameVersion = null;
+        public static string LastGameVersion_ => SelfConfigRef.Value.LastGameVersion;
     }
 }
