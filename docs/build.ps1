@@ -1,11 +1,11 @@
 # read SelfConfig, remove wierd bits, load it, load Newtonsoft, and turn it into a schema
-$newtonsoftLoc = "$(pwd)/nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
-$newtonsoftSchemaLoc = "$(pwd)/nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
+$newtonsoftLoc = "$(Get-Location)/nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
+$newtonsoftSchemaLoc = "$(Get-Location)/nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
 $selfConfigLoc = "../IPA.Loader/Config/SelfConfig.cs"
 
 if (!(Test-Path "nuget" -PathType Container)) {
-    nuget install Newtonsoft.Json -Version 12.0.2 -source https://api.nuget.org/v3/index.json -o "$(pwd)/nuget"
-    nuget install Newtonsoft.Json.Schema -Version 3.0.11 -source https://api.nuget.org/v3/index.json -o "$(pwd)/nuget"
+    nuget install Newtonsoft.Json -Version 12.0.2 -source https://api.nuget.org/v3/index.json -o "$(Get-Location)/nuget"
+    nuget install Newtonsoft.Json.Schema -Version 3.0.11 -source https://api.nuget.org/v3/index.json -o "$(Get-Location)/nuget"
 }
 
 & docfx metadata
@@ -18,23 +18,27 @@ if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -Pa
     Add-Type -Path $newtonsoftSchemaLoc
 
     # Read and parse special directives from SelfConfig
-    function Process-Lines {
+    function ProcessLines {
         begin {
             $inIgnoreSection = $false
+            $ignoreNext = 0
         }
         process {
-            if ( $_ -match "^\s*//\s+([A-Z]+):\s+section\s+(.+)\s*$" ) {
+            if ( $_ -match "^\s*//\s+([A-Z]+):\s*(?:section)?\s+(.+)\s*$" ) {
                 $Begin = ($Matches[1] -eq "BEGIN")
                 $End = ($Matches[1] -eq "END")
+                $Line = ($Matches[1] -eq "LINE")
                 switch ($Matches[2]) {
                     "ignore" { 
                         if ($Begin) { $inIgnoreSection = $true }
                         if ($End) { $inIgnoreSection = $false }
+                        if ($Line) { $ignoreNext = 2 }
                     }
                 }
             }
 
             if ($inIgnoreSection) { "" }
+            elseif ($ignoreNext -gt 0) { $ignoreNext = $ignoreNext - 1; "" }
             else { $_ }
         }
     }
@@ -45,11 +49,11 @@ if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -Pa
         end { $str }
     }
 
-    function Filter-Def {
+    function FilterDef {
         process { $_ -replace "internal", "public" }
     }
 
-    Add-Type -TypeDefinition (Get-Content $selfConfigLoc | Process-Lines | Merge-Lines | Filter-Def) -ReferencedAssemblies $newtonsoftLoc,"netstandard"
+    Add-Type -TypeDefinition (Get-Content $selfConfigLoc | ProcessLines | Merge-Lines | FilterDef) -ReferencedAssemblies $newtonsoftLoc,"netstandard"
 
     # type will be [IPA.Config.SelfConfig]
 
