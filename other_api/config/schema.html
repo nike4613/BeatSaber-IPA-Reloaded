@@ -79,8 +79,80 @@
             <article class="content wrap" id="_content" data-uid="other.config.schema">
 <h1 id="configuration-file-schema">Configuration File Schema</h1>
 
-<!-- Can not find reference _schema.json -->
-</article>
+<pre><code name="Schema File">{
+  &quot;definitions&quot;: {
+    &quot;Debug_&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;ShowCallSource&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;ShowDebug&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;ShowHandledErrorStackTraces&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;HideMessagesForPerformance&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;HideLogThreshold&quot;: {
+          &quot;type&quot;: &quot;integer&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;ShowCallSource&quot;,
+        &quot;ShowDebug&quot;,
+        &quot;ShowHandledErrorStackTraces&quot;,
+        &quot;HideMessagesForPerformance&quot;,
+        &quot;HideLogThreshold&quot;
+      ]
+    },
+    &quot;Updates_&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;AutoUpdate&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;AutoCheckUpdates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;AutoUpdate&quot;,
+        &quot;AutoCheckUpdates&quot;
+      ]
+    }
+  },
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;Regenerate&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;Updates&quot;: {
+      &quot;$ref&quot;: &quot;#/definitions/Updates_&quot;
+    },
+    &quot;Debug&quot;: {
+      &quot;$ref&quot;: &quot;#/definitions/Debug_&quot;
+    },
+    &quot;YeetMods&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;LastGameVersion&quot;: {
+      &quot;type&quot;: [
+        &quot;string&quot;,
+        &quot;null&quot;
+      ]
+    }
+  },
+  &quot;required&quot;: [
+    &quot;Regenerate&quot;,
+    &quot;Updates&quot;,
+    &quot;Debug&quot;,
+    &quot;YeetMods&quot;
+  ]
+}
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -88,7 +160,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/97d38985aa51ee21d0eda4dea1a0e3fd0f7d9b52/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/1f9c6df5035721da00b9b576e81213895d3a9c93/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
