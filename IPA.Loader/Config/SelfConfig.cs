@@ -48,9 +48,11 @@ namespace IPA.Config
         public class Updates_
         {
             public bool AutoUpdate = true;
+            // LINE: ignore
             public static bool AutoUpdate_ => SelfConfigRef.Value.Updates.AutoUpdate;
 
             public bool AutoCheckUpdates = true;
+            // LINE: ignore
             public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates;
         }
 
@@ -59,28 +61,35 @@ namespace IPA.Config
         public class Debug_
         {
             public bool ShowCallSource = false;
+            // LINE: ignore
             public static bool ShowCallSource_ => SelfConfigRef.Value.Debug.ShowCallSource;
 
             public bool ShowDebug = false;
+            // LINE: ignore
             public static bool ShowDebug_ => SelfConfigRef.Value.Debug.ShowDebug;
 
             public bool ShowHandledErrorStackTraces = false;
+            // LINE: ignore
             public static bool ShowHandledErrorStackTraces_ => SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces;
 
             public bool HideMessagesForPerformance = true;
+            // LINE: ignore
             public static bool HideMessagesForPerformance_ => SelfConfigRef.Value.Debug.HideMessagesForPerformance;
 
             public int HideLogThreshold = 512;
+            // LINE: ignore
             public static int HideLogThreshold_ => SelfConfigRef.Value.Debug.HideLogThreshold;
         }
 
         public Debug_ Debug = new Debug_();
 
         public bool YeetMods = true;
+        // LINE: ignore
         public static bool YeetMods_ => SelfConfigRef.Value.YeetMods;
 
         [JsonProperty(Required = Required.Default)]
         public string LastGameVersion = null;
+        // LINE: ignore
         public static string LastGameVersion_ => SelfConfigRef.Value.LastGameVersion;
     }
 }
