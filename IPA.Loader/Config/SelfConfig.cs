@@ -38,10 +38,35 @@ namespace IPA.Config
             LoaderConfig = Config.GetProviderFor(IPAName, "json");
         }
 
+        public static void ReadCommandLine(string[] args)
+        {
+            foreach (var arg in args)
+            {
+                switch (arg)
+                {
+                    case "--no-yeet":
+                        CommandLineValues.YeetMods = false;
+                        break;
+                    case "--condense-logs":
+                        CommandLineValues.Debug.CondenseModLogs = true;
+                        break;
+                    case "--debug":
+                        CommandLineValues.Debug.ShowDebug = true;
+                        CommandLineValues.Debug.ShowCallSource = true;
+                        break;
+                    case "--no-updates":
+                        CommandLineValues.Updates.AutoCheckUpdates = false;
+                        CommandLineValues.Updates.AutoUpdate = false;
+                        break;
+                }
+            }
+        }
+
         internal const string IPAName = "Beat Saber IPA";
         internal const string IPAVersion = "3.12.25";
 
-        // uses Updates.AutoCheckUpdates, YeetMods
+        // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
+        //      Debug.CondenseModLogs
         internal static SelfConfig CommandLineValues = new SelfConfig();
 
         // END: section ignore
@@ -51,12 +76,13 @@ namespace IPA.Config
         public class Updates_
         {
             public bool AutoUpdate = true;
-            // LINE: ignore
-            public static bool AutoUpdate_ => SelfConfigRef.Value.Updates.AutoUpdate;
+            // LINE: ignore 2
+            public static bool AutoUpdate_ => SelfConfigRef.Value.Updates.AutoUpdate
+                                           &&   CommandLineValues.Updates.AutoUpdate;
 
             public bool AutoCheckUpdates = true;
             // LINE: ignore 2
-            public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates 
+            public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates
                                                  &&   CommandLineValues.Updates.AutoCheckUpdates;
         }
 
@@ -65,18 +91,20 @@ namespace IPA.Config
         public class Debug_
         {
             public bool ShowCallSource = false;
-            // LINE: ignore
-            public static bool ShowCallSource_ => SelfConfigRef.Value.Debug.ShowCallSource;
+            // LINE: ignore 2
+            public static bool ShowCallSource_ => SelfConfigRef.Value.Debug.ShowCallSource
+                                               ||   CommandLineValues.Debug.ShowCallSource;
 
             public bool ShowDebug = false;
-            // LINE: ignore
-            public static bool ShowDebug_ => SelfConfigRef.Value.Debug.ShowDebug;
+            // LINE: ignore 2
+            public static bool ShowDebug_ => SelfConfigRef.Value.Debug.ShowDebug
+                                          ||   CommandLineValues.Debug.ShowDebug;
 
             // This option only takes effect after a full game restart, unless new logs are created again
             public bool CondenseModLogs = false;
             // LINE: ignore 2
             public static bool CondenseModLogs_ => SelfConfigRef.Value.Debug.CondenseModLogs
-                                                &&   CommandLineValues.Debug.CondenseModLogs;
+                                                ||   CommandLineValues.Debug.CondenseModLogs;
 
             public bool ShowHandledErrorStackTraces = false;
             // LINE: ignore

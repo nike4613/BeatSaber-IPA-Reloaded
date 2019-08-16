@@ -73,6 +73,7 @@ namespace IPA.Injector
                 log.Debug("Initializing logger");
 
                 SelfConfig.Load();
+                SelfConfig.ReadCommandLine(Environment.GetCommandLineArgs());
                 DisabledConfig.Load();
 
                 loader.Debug("Prepping bootstrapper");
