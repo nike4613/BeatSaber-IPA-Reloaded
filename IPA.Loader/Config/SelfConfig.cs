@@ -72,6 +72,12 @@ namespace IPA.Config
             // LINE: ignore
             public static bool ShowDebug_ => SelfConfigRef.Value.Debug.ShowDebug;
 
+            // This option only takes effect after a full game restart, unless new logs are created again
+            public bool CondenseModLogs = false;
+            // LINE: ignore 2
+            public static bool CondenseModLogs_ => SelfConfigRef.Value.Debug.CondenseModLogs
+                                                &&   CommandLineValues.Debug.CondenseModLogs;
+
             public bool ShowHandledErrorStackTraces = false;
             // LINE: ignore
             public static bool ShowHandledErrorStackTraces_ => SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces;
