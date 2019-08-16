@@ -24,21 +24,23 @@ if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -Pa
             $ignoreNext = 0
         }
         process {
-            if ( $_ -match "^\s*//\s+([A-Z]+):\s*(?:section)?\s+(.+)\s*$" ) {
+            if ( $_ -match "^\s*//\s+([A-Z]+):\s*(?:section)?\s+([a-zA-Z]+)(?:\s+(\d+))?\s*$" ) {
                 $Begin = ($Matches[1] -eq "BEGIN")
                 $End = ($Matches[1] -eq "END")
                 $Line = ($Matches[1] -eq "LINE")
+                $Num = if ($Matches[3].length -gt 0) { [int]($Matches[3]) } else { 1 }
+
                 switch ($Matches[2]) {
                     "ignore" { 
                         if ($Begin) { $inIgnoreSection = $true }
                         if ($End) { $inIgnoreSection = $false }
-                        if ($Line) { $ignoreNext = 2 }
+                        if ($Line) { $ignoreNext = $Num + 1 }
                     }
                 }
             }
 
             if ($inIgnoreSection) { "" }
-            elseif ($ignoreNext -gt 0) { $ignoreNext = $ignoreNext - 1; "" }
+            elseif ($ignoreNext -gt 0) { $ignoreNext = $ignoreNext - 1; return "" }
             else { $_ }
         }
     }
