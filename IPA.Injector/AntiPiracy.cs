@@ -22,7 +22,7 @@ namespace IPA.Injector
                 File.Exists(Path.Combine(path, "GAMESTORRENT.CO.url")) ||
                 File.Exists(Path.Combine(dataPlugins, "BSteam crack.dll")) ||
                 File.Exists(Path.Combine(dataPlugins, "HUHUVR_steam_api64.dll")) ||
-                Directory.GetFiles(BeatSaber.PluginsPath, "*.ini", SearchOption.TopDirectoryOnly).Length > 0;
+                Directory.GetFiles(dataPlugins, "*.ini", SearchOption.TopDirectoryOnly).Length > 0;
         }
     }
 }
