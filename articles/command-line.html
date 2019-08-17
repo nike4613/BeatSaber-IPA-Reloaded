@@ -93,68 +93,72 @@
 <section id="tabpanel_8icGlBCLD4_installer" role="tabpanel" data-tab="installer">
 <p>The installer has quite a few options, which are documented inline with the <code>-h</code> or <code>--help</code> flag.</p>
 <p>This is what it currently looks like:</p>
-<p>&gt;</p>
-<blockquote><!-- Can not find reference _ipa_command_line.txt -->
-</blockquote>
-</section>
+<pre><code name="IPA command line" title="the result of IPA.exe -h">usage:
+    IPA.exe [FLAGS] [ARGUMENTS]
+
+flags:
+    -h, --help
+        prints this message
+    -w, --waitfor=PID
+        waits for the specified PID to exit
+    -f, --force
+        forces the operation to go through
+    -r, --revert
+        reverts the IPA installation
+    -n, --nowait
+        doesn&#39;t wait for user input after the operation
+    -s, --start=ARGUMENTS
+        uses value_ as arguments to start the game after the patch/unpatch
+    -l, --launch
+        uses positional parameters as arguments to start the game after patch/unpatch
+</code></pre></section>
 <section id="tabpanel_8icGlBCLD4_game" role="tabpanel" data-tab="game" aria-hidden="true" hidden="hidden">
 <p>The game <em>also</em> gets quite a few command line options, though there isn&#39;t anything as convenient as a help page for them.</p>
 <p>Here&#39;s a quick list of what they are and what they do.</p>
 <ul>
-<li><code>--debug</code>
-&gt;
-&gt; Enables the loading of debug information in Mono. The debugging information must be in the portable PDB format,
-&gt; in the same location as the DLL that it&#39;s for.
-&gt;
-&gt; This option also forces BSIPA to show all debug messages in the console, as well as where they were called.
-&gt;
-&gt; This overrides the config settings <code>Debug.ShowDebug</code> and <code>Debug.ShowCallSource</code>.
-&gt;</li>
-<li><code>--mono-debug</code>
-&gt;
-&gt; Enables the built-in Mono soft debugger engine.
-&gt;
-&gt; By default, it acts as a client, and requires that there be a soft
-&gt; debugger server running on port 10000 on <code>localhost</code>.
-&gt;
-&gt; Implies <code>--debug</code>.
-&gt;</li>
-<li><code>--server</code>
-&gt;
-&gt; Does nothing on its own.
-&gt;
-&gt; When paired with <code>--mono-debug</code>, this option makes the Mono soft debugger act in server mode. It begins listening on
-&gt; port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I reccommend using
-&gt; SDB, but that is a command line debugger and a lot of people don&#39;t care for those.
-&gt;</li>
-<li><code>--no-yeet</code>
-&gt;
-&gt; Disables mod yeeting.
-&gt;
-&gt; By default, whenever BSIPA detects that the game is now running a newer version than previous runs, it will move all
-&gt; mods to another folder and not load them. (They still get checked for updates though.) When this is enabled, that
-&gt; behaviour is disabled.
-&gt;
-&gt; Overrides the config setting <code>YeetMods</code>.
-&gt;</li>
-<li><code>--condense-logs</code>
-&gt;
-&gt; Reduces the number of log files BSIPA will output for a given session.
-&gt;
-&gt; By default, BSIPA will create a subfolder in the <code>Logs</code> folder for each mod sublog, as well as each mod. This disables
-&gt; that behaviour, and restricts it to only create a global log and mod logs.
-&gt;
-&gt; Overrides the config setting <code>Debug.CondenseModLogs</code>.
-&gt;</li>
-<li><code>--no-updates</code>
-&gt;
-&gt; Disables automatic updating.
-&gt;
-&gt; By default, BSIPA will check <a href="http://beatmods.com">BeatMods</a> for all of the loaded mods to see if there is a new version
-&gt; avaliable. If there is, it will be downloaded and installed on the next run. This flag disables that behaviour.
-&gt;
-&gt; Overrides the config settings <code>Updates.AutoCheckUpdates</code> and <code>Updates.AutoUpdate</code>.
-&gt;</li>
+<li><p><code>--debug</code></p>
+<blockquote><p>Enables the loading of debug information in Mono. The debugging information must be in the portable PDB format,
+in the same location as the DLL that it&#39;s for.</p>
+<p>This option also forces BSIPA to show all debug messages in the console, as well as where they were called.</p>
+<p>This overrides the config settings <code>Debug.ShowDebug</code> and <code>Debug.ShowCallSource</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--mono-debug</code></p>
+<blockquote><p>Enables the built-in Mono soft debugger engine.</p>
+<p>By default, it acts as a client, and requires that there be a soft
+debugger server running on port 10000 on <code>localhost</code>.</p>
+<p>Implies <code>--debug</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--server</code></p>
+<blockquote><p>Does nothing on its own.</p>
+<p>When paired with <code>--mono-debug</code>, this option makes the Mono soft debugger act in server mode. It begins listening on
+port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I reccommend using
+SDB, but that is a command line debugger and a lot of people don&#39;t care for those.</p>
+</blockquote>
+</li>
+<li><p><code>--no-yeet</code></p>
+<blockquote><p>Disables mod yeeting.</p>
+<p>By default, whenever BSIPA detects that the game is now running a newer version than previous runs, it will move all
+mods to another folder and not load them. (They still get checked for updates though.) When this is enabled, that
+behaviour is disabled.</p>
+<p>Overrides the config setting <code>YeetMods</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--condense-logs</code></p>
+<blockquote><p>Reduces the number of log files BSIPA will output for a given session.</p>
+<p>By default, BSIPA will create a subfolder in the <code>Logs</code> folder for each mod sublog, as well as each mod. This disables
+that behaviour, and restricts it to only create a global log and mod logs.</p>
+<p>Overrides the config setting <code>Debug.CondenseModLogs</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--no-updates</code></p>
+<blockquote><p>Disables automatic updating.</p>
+<p>By default, BSIPA will check <a href="http://beatmods.com">BeatMods</a> for all of the loaded mods to see if there is a new version
+avaliable. If there is, it will be downloaded and installed on the next run. This flag disables that behaviour.</p>
+<p>Overrides the config settings <code>Updates.AutoCheckUpdates</code> and <code>Updates.AutoUpdate</code>.</p>
+</blockquote>
+</li>
 </ul>
 </section>
 </div>
@@ -166,7 +170,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/6f232b795b1f67ccc24efe0c25498ff55f28121e/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/4366624cc4a50e4e1f1a95ded76f82b4b7cc0ed9/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
