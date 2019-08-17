@@ -2,6 +2,7 @@
 $newtonsoftLoc = "$(Get-Location)/nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
 $newtonsoftSchemaLoc = "$(Get-Location)/nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
 $selfConfigLoc = "../IPA.Loader/Config/SelfConfig.cs"
+$ipaRoot = "../IPA"
 
 if (!(Test-Path "nuget" -PathType Container)) {
     nuget install Newtonsoft.Json -Version 12.0.2 -source https://api.nuget.org/v3/index.json -o "$(Get-Location)/nuget"
@@ -66,6 +67,14 @@ if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -Pa
 
     $schema.ToString() | Out-File "other_api/config/_schema.json"
 }
+
+$ipaExe = "$ipaRoot/bin/Release/IPA.exe"
+# generate IPA.exe args file
+if (-not (Test-Path $ipaExe -PathType Leaf)) {
+    msbuild -p:Configuration=Release -p:Platform=AnyCPU "$ipaRoot/IPA.csproj"
+}
+
+& $ipaExe --help > .\articles\_ipa_command_line.txt
 
 & docfx build --globalMetadataFiles link_branch.json @Args
 if ($lastexitcode -ne 0) {
