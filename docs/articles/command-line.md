@@ -18,6 +18,11 @@ The game *also* gets quite a few command line options, though there isn't anythi
 
 Here's a quick list of what they are and what they do.
 
+- `--verbose`
+
+  > Makes a console appear with log information at startup.
+  >
+
 - `--debug`
 
   > Enables the loading of debug information in Mono. The debugging information must be in the portable PDB format,
@@ -43,7 +48,7 @@ Here's a quick list of what they are and what they do.
   > Does nothing on its own.
   >
   > When paired with `--mono-debug`, this option makes the Mono soft debugger act in server mode. It begins listening on
-  > port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I reccommend using
+  > port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I recommend using
   > SDB, but that is a command line debugger and a lot of people don't care for those.
   >
 
