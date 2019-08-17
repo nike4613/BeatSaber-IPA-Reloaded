@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -155,7 +156,7 @@ namespace IPA
         public void PrintHelp()
         {
             const string indent = "    ";
-            var filename = Environment.GetCommandLineArgs()[0];
+            var filename = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
             const string format = @"usage:
 {2}{0} [FLAGS] [ARGUMENTS]
 
