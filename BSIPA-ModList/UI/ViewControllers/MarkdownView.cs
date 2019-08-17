@@ -66,7 +66,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         private CommonMarkSettings settings;
 
         /// <summary>
-        /// Creates a new <see cref="MarkdownView"/>. Should never be called correctly. Instead, use <see cref="GameObject.AddComponent{T}"/>.
+        /// Creates a new <see cref="MarkdownView"/>. Should never be called directly. Instead, use <see cref="GameObject.AddComponent{T}"/>.
         /// </summary>
         public MarkdownView()
         {
