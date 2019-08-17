@@ -71,7 +71,7 @@ if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -Pa
 $ipaExe = "$ipaRoot/bin/Release/IPA.exe"
 # generate IPA.exe args file
 if (-not (Test-Path $ipaExe -PathType Leaf)) {
-    msbuild -p:Configuration=Release -p:Platform=AnyCPU "$ipaRoot/IPA.csproj"
+    msbuild -p:Configuration=Release -p:Platform=AnyCPU -p:SolutionDir=.. "$ipaRoot/IPA.csproj"
 }
 
 & $ipaExe --help > .\articles\_ipa_command_line.txt
