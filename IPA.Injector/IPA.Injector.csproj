@@ -13,10 +13,10 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
-    
     <ShowTargetFrameworks>false</ShowTargetFrameworks>
     <ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
     <TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AntiPiracy.cs" />
     <Compile Include="Backups\BackupManager.cs" />
     <Compile Include="Backups\BackupUnit.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -75,12 +76,12 @@
       <Project>{5ad344f0-01a0-4ca8-92e5-9d095737744d}</Project>
       <Name>IPA.Loader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(Platform)' == 'Net3' " >
+    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(Platform)' == 'Net3' ">
       <Project>{642F52DA-90F9-40E3-8784-6964F36752FB}</Project>
       <Name>Net3-Proxy</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'Net4' " >
+  <ItemGroup Condition=" '$(Platform)' == 'Net4' ">
     <Content Include="..\Libs\I18N.Net4.dll">
       <Link>Libraries\Mono\I18N.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -89,7 +90,7 @@
       <Link>Libraries\Mono\I18N.West.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Libs\Microsoft.CSharp.dll" >
+    <Content Include="..\Libs\Microsoft.CSharp.dll">
       <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -98,7 +99,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'Net3' " >
+  <ItemGroup Condition=" '$(Platform)' == 'Net3' ">
     <Content Include="..\Libs\I18N.Net3.dll">
       <Link>Libraries\Mono\I18N.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

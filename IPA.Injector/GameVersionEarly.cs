@@ -14,7 +14,7 @@ namespace IPA.Injector
 {
     internal static class GameVersionEarly
     {
-        private static string ResolveDataPath(string installDir) => 
+        internal static string ResolveDataPath(string installDir) => 
             Path.Combine(Directory.EnumerateDirectories(installDir, "*_Data").First(), "globalgamemanagers");
 
         internal static string GetGameVersion()
