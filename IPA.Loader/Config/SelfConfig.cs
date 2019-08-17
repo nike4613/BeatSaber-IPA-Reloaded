@@ -44,15 +44,16 @@ namespace IPA.Config
             {
                 switch (arg)
                 {
+                    case "--debug":
+                    case "--mono-debug":
+                        CommandLineValues.Debug.ShowDebug = true;
+                        CommandLineValues.Debug.ShowCallSource = true;
+                        break;
                     case "--no-yeet":
                         CommandLineValues.YeetMods = false;
                         break;
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
-                        break;
-                    case "--debug":
-                        CommandLineValues.Debug.ShowDebug = true;
-                        CommandLineValues.Debug.ShowCallSource = true;
                         break;
                     case "--no-updates":
                         CommandLineValues.Updates.AutoCheckUpdates = false;
