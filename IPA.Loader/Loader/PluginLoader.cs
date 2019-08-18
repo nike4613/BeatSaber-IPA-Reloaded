@@ -1,4 +1,5 @@
-﻿using IPA.Loader.Features;
+﻿using IPA.Config;
+using IPA.Loader.Features;
 using IPA.Logging;
 using IPA.Utilities;
 using Mono.Cecil;
@@ -27,6 +28,7 @@ namespace IPA.Loader
     {
         internal static Task LoadTask() => Task.Factory.StartNew(() =>
         {
+            YeetIfNeeded();
 
             LoadMetadata();
             Resolve();
@@ -129,6 +131,31 @@ namespace IPA.Loader
             /// </summary>
             /// <value>the metadata for this plugin</value>
             public PluginMetadata Metadata { get; internal set; } = new PluginMetadata();
+        }
+
+        internal static void YeetIfNeeded()
+        {
+            string pluginDir = BeatSaber.PluginsPath;
+            var gameVer = BeatSaber.GameVersion;
+            var lastVerS = SelfConfig.LastGameVersion_;
+            var lastVer = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
+
+            if (SelfConfig.YeetMods_ && lastVer != null && gameVer != lastVer)
+            {
+                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {lastVer} Plugins");
+                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {gameVer} Plugins");
+
+                if (Directory.Exists(oldPluginsName))
+                    Directory.Delete(oldPluginsName, true);
+                Directory.Move(pluginDir, oldPluginsName);
+                if (Directory.Exists(newPluginsName))
+                    Directory.Move(newPluginsName, pluginDir);
+                else
+                    Directory.CreateDirectory(pluginDir);
+            }
+
+            SelfConfig.SelfConfigRef.Value.LastGameVersion = gameVer.ToString();
+            SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
         }
 
         internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();

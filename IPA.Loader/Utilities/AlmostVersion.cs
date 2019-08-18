@@ -69,7 +69,7 @@ namespace IPA.Utilities
                 throw new ArgumentNullException(nameof(copyMode));
 
             if (!TryParseFrom(vertext, copyMode.StorageMode))
-                throw new ArgumentException($"{nameof(vertext)} could not be stored the same way as {copyMode}!");
+                TryParseFrom(vertext, StoredAs.String); // silently parse differently
         }
 
         private bool TryParseFrom(string str, StoredAs mode)

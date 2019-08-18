@@ -92,8 +92,7 @@ namespace IPA.Injector
 
                 LibLoader.SetupAssemblyFilenames(true);
 
-                // causes mono to hate itself
-                //GameVersionEarly.Load();
+                GameVersionEarly.Load();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
@@ -302,6 +301,9 @@ namespace IPA.Injector
             // wait for plugins to finish loading
             pluginAsyncLoadTask.Wait();
             permissionFixTask.Wait();
+
+            BeatSaber.EnsureRuntimeGameVersion();
+
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
             PluginComponent.Create();
