@@ -1,26 +1,26 @@
 ﻿{
-  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
-  "author": "DaNike",
-  "description": [
-    "#![BSIPA_ModList.README.md]",
-    "Mod List",
-    "========",
-    "",
-    "## An in-game interface client for BSIPA."
-  ],
-  "gameVersion": "1.2.0",
-  "id": "BSIPA Mod List",
-  "name": "BSIPA Mod List",
-  "version": "1.3.1",
-  "icon": "BSIPA_ModList.Icons.self.png",
-  "dependsOn": {
-    "BSIPA": "^3.13.0",
-    "CustomUI": "^1.5.4"
-  },
-  "features": [],
-  "links": {
-    "project-home": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/tree/master/BSIPA-ModList",
-    "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
-    "donate": "https://ko-fi.com/danike"
-  }
+    "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
+    "author": "DaNike",
+    "description": [
+        "#![BSIPA_ModList.README.md]",
+        "Mod List",
+        "========",
+        "",
+        "## An in-game interface client for BSIPA."
+    ],
+    "gameVersion": "1.2.0",
+    "id": "BSIPA Mod List",
+    "name": "BSIPA Mod List",
+    "version": "1.3.1",
+    "icon": "BSIPA_ModList.Icons.self.png",
+    "dependsOn": {
+        "BSIPA": ">=3.13.0 <3.14.0",
+        "CustomUI": "^1.5.4"
+    },
+    "features": [],
+    "links": {
+        "project-home": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/tree/master/BSIPA-ModList",
+        "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
+        "donate": "https://ko-fi.com/danike"
+    }
 }
