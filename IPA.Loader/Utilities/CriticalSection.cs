@@ -8,6 +8,9 @@ using IPA.Logging;
 
 namespace IPA.Utilities
 {
+    /// <summary>
+    /// Provides utilities for managing various critical sections.
+    /// </summary>
     public static class CriticalSection
     {
 
