@@ -13,7 +13,6 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
-    
     <ShowTargetFrameworks>false</ShowTargetFrameworks>
     <ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
     <TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
@@ -79,7 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(Platform)' == 'Net3' " >
+    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(Platform)' == 'Net3' ">
       <Project>{642F52DA-90F9-40E3-8784-6964F36752FB}</Project>
       <Name>Net3-Proxy</Name>
     </ProjectReference>
@@ -122,6 +121,7 @@
     <Compile Include="JsonConverters\SemverVersionConverter.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
     <Compile Include="Utilities\AlmostVersion.cs" />
+    <Compile Include="Utilities\CriticalSection.cs" />
     <Compile Include="Utilities\Ref.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />
     <Compile Include="Loader\Composite\CompositeIPAPlugin.cs" />

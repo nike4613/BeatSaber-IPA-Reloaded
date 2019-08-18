@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IPA.Config;
+using System;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
@@ -18,20 +19,30 @@ namespace IPA.Utilities
         /// Provides the current game version.
         /// </summary>
         /// <value>the SemVer version of the game</value>
-        public static AlmostVersion GameVersion => _gameVersion ?? (_gameVersion = new AlmostVersion(Application.version));
+        public static AlmostVersion GameVersion => _gameVersion ?? (_gameVersion = new AlmostVersion(ApplicationVersionProxy));
 
         internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
             _gameVersion = ver;
             Logging.Logger.log.Debug($"GameVersion set early to {ver}");
         }
+        private static string ApplicationVersionProxy => Application.version;
         internal static void EnsureRuntimeGameVersion()
         {
-            var rtVer = new AlmostVersion(Application.version);
-            if (!rtVer.Equals(_gameVersion)) // this actually uses stricter equality than == for AlmostVersion
+            try
             {
-                Logging.Logger.log.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
-                _gameVersion = rtVer;
+                var rtVer = new AlmostVersion(ApplicationVersionProxy);
+                if (!rtVer.Equals(_gameVersion)) // this actually uses stricter equality than == for AlmostVersion
+                {
+                    Logging.Logger.log.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
+                    _gameVersion = rtVer;
+                }
+            }
+            catch (MissingMethodException e)
+            {
+                Logging.Logger.log.Error("Application.version was not found! Cannot check early parsed version");
+                if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                    Logging.Logger.log.Error(e);
             }
         }
 
