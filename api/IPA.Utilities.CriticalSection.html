@@ -127,11 +127,12 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_CriticalSection_EnterExecuteSection.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection.EnterExecuteSection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/1368e6dd6f85d0ff7ed0a203ec915fc5d49ca955/IPA.Loader/Utilities/CriticalSection.cs/#L55">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/85057f5eab973d8e4f5e8f74be948f30eace9039/IPA.Loader/Utilities/CriticalSection.cs/#L63">View Source</a>
   </span>
   <a id="IPA_Utilities_CriticalSection_EnterExecuteSection_" data-uid="IPA.Utilities.CriticalSection.EnterExecuteSection*"></a>
   <h4 id="IPA_Utilities_CriticalSection_EnterExecuteSection" data-uid="IPA.Utilities.CriticalSection.EnterExecuteSection">EnterExecuteSection()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Enters a critical execution section. Does not nest.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -139,18 +140,51 @@
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_CriticalSection_EnterGCSection.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection.EnterGCSection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/85057f5eab973d8e4f5e8f74be948f30eace9039/IPA.Loader/Utilities/CriticalSection.cs/#L106">View Source</a>
+  </span>
+  <a id="IPA_Utilities_CriticalSection_EnterGCSection_" data-uid="IPA.Utilities.CriticalSection.EnterGCSection*"></a>
+  <h4 id="IPA_Utilities_CriticalSection_EnterGCSection" data-uid="IPA.Utilities.CriticalSection.EnterGCSection">EnterGCSection()</h4>
+  <div class="markdown level1 summary"><p>Enters a GC critical section. Each call to this must be paired with a call to <a class="xref" href="IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitGCSection">ExitGCSection()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void EnterGCSection()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_CriticalSection_ExitExecuteSection.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection.ExitExecuteSection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/1368e6dd6f85d0ff7ed0a203ec915fc5d49ca955/IPA.Loader/Utilities/CriticalSection.cs/#L63">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/85057f5eab973d8e4f5e8f74be948f30eace9039/IPA.Loader/Utilities/CriticalSection.cs/#L79">View Source</a>
   </span>
   <a id="IPA_Utilities_CriticalSection_ExitExecuteSection_" data-uid="IPA.Utilities.CriticalSection.ExitExecuteSection*"></a>
   <h4 id="IPA_Utilities_CriticalSection_ExitExecuteSection" data-uid="IPA.Utilities.CriticalSection.ExitExecuteSection">ExitExecuteSection()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Exits a critical execution section. Does not nest.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static void ExitExecuteSection()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_CriticalSection_ExitGCSection.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection.ExitGCSection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/85057f5eab973d8e4f5e8f74be948f30eace9039/IPA.Loader/Utilities/CriticalSection.cs/#L121">View Source</a>
+  </span>
+  <a id="IPA_Utilities_CriticalSection_ExitGCSection_" data-uid="IPA.Utilities.CriticalSection.ExitGCSection*"></a>
+  <h4 id="IPA_Utilities_CriticalSection_ExitGCSection" data-uid="IPA.Utilities.CriticalSection.ExitGCSection">ExitGCSection()</h4>
+  <div class="markdown level1 summary"><p>Exits a GC critical section. Each call to this must have a preceding call to <a class="xref" href="IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterGCSection">EnterGCSection()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ExitGCSection()</code></pre>
   </div>
 </article>
           </div>
@@ -163,7 +197,7 @@
                     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_CriticalSection.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/1368e6dd6f85d0ff7ed0a203ec915fc5d49ca955/IPA.Loader/Utilities/CriticalSection.cs/#L11" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/85057f5eab973d8e4f5e8f74be948f30eace9039/IPA.Loader/Utilities/CriticalSection.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

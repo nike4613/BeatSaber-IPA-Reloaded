@@ -2701,6 +2701,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.CriticalSection.EnterExecuteSection
   nameWithType: CriticalSection.EnterExecuteSection
+- uid: IPA.Utilities.CriticalSection.EnterGCSection
+  name: EnterGCSection()
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterGCSection
+  commentId: M:IPA.Utilities.CriticalSection.EnterGCSection
+  fullName: IPA.Utilities.CriticalSection.EnterGCSection()
+  nameWithType: CriticalSection.EnterGCSection()
+- uid: IPA.Utilities.CriticalSection.EnterGCSection*
+  name: EnterGCSection
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterGCSection_
+  commentId: Overload:IPA.Utilities.CriticalSection.EnterGCSection
+  isSpec: "True"
+  fullName: IPA.Utilities.CriticalSection.EnterGCSection
+  nameWithType: CriticalSection.EnterGCSection
 - uid: IPA.Utilities.CriticalSection.ExitExecuteSection
   name: ExitExecuteSection()
   href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitExecuteSection
@@ -2714,6 +2727,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.CriticalSection.ExitExecuteSection
   nameWithType: CriticalSection.ExitExecuteSection
+- uid: IPA.Utilities.CriticalSection.ExitGCSection
+  name: ExitGCSection()
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitGCSection
+  commentId: M:IPA.Utilities.CriticalSection.ExitGCSection
+  fullName: IPA.Utilities.CriticalSection.ExitGCSection()
+  nameWithType: CriticalSection.ExitGCSection()
+- uid: IPA.Utilities.CriticalSection.ExitGCSection*
+  name: ExitGCSection
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitGCSection_
+  commentId: Overload:IPA.Utilities.CriticalSection.ExitGCSection
+  isSpec: "True"
+  fullName: IPA.Utilities.CriticalSection.ExitGCSection
+  nameWithType: CriticalSection.ExitGCSection
 - uid: IPA.Utilities.Extensions
   name: Extensions
   href: api/IPA.Utilities.Extensions.html
