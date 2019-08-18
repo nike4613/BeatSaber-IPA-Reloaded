@@ -64,7 +64,7 @@ namespace IPA.Config
         }
 
         internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "3.12.25";
+        internal const string IPAVersion = "3.13.0";
 
         // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
         //      Debug.CondenseModLogs
@@ -104,7 +104,7 @@ namespace IPA.Config
             // This option only takes effect after a full game restart, unless new logs are created again
             public bool CondenseModLogs = false;
             // LINE: ignore 2
-            public static bool CondenseModLogs_ => SelfConfigRef.Value.Debug.CondenseModLogs
+            public static bool CondenseModLogs_ => SelfConfigRef?.Value.Debug.CondenseModLogs ?? false
                                                 ||   CommandLineValues.Debug.CondenseModLogs;
 
             public bool ShowHandledErrorStackTraces = false;

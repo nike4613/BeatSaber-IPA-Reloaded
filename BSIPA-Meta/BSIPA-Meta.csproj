@@ -33,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Debug</NoVerboseConfig>
     <OtherConfig>Debug</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
@@ -43,6 +44,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Release</NoVerboseConfig>
     <OtherConfig>Release</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
@@ -54,6 +56,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Debug</NoVerboseConfig>
     <OtherConfig>Verbose</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
@@ -64,6 +67,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Release</NoVerboseConfig>
     <OtherConfig>Verbose_Release</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
   </PropertyGroup>
@@ -85,7 +89,7 @@
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     
     <ItemGroup>
-      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(OtherConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(OtherConfig)\Libraries\**\*" />
+      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(NoVerboseConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(NoVerboseConfig)\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
