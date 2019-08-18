@@ -83,6 +83,8 @@ namespace IPA.Injector
                     return;
                 }
 
+                CriticalSection.Configure();
+
                 loader.Debug("Prepping bootstrapper");
                 
                 // updates backup
@@ -140,6 +142,9 @@ namespace IPA.Injector
             {
                 var unityPath = Path.Combine(managedPath,
                     "UnityEngine.CoreModule.dll");
+
+                // this is a critical section because if you exit in here, CoreModule can die
+                CriticalSection.EnterExecuteSection();
 
                 var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
                 {
@@ -220,8 +225,8 @@ namespace IPA.Injector
                     bkp?.Add(unityPath);
                     unityAsmDef.Write(unityPath);
                 }
-                /*else
-                    return; // shortcut*/
+
+                CriticalSection.ExitExecuteSection();
             }
 
             #endregion Insert patch into UnityEngine.CoreModule.dll
@@ -235,15 +240,20 @@ namespace IPA.Injector
                 #region Virtualize Assembly-CSharp.dll
 
                 {
+                    CriticalSection.EnterExecuteSection();
+
                     var ascModule = VirtualizedModule.Load(ascPath);
                     ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+
+                    CriticalSection.ExitExecuteSection();
                 }
 
                 #endregion Virtualize Assembly-CSharp.dll
 
                 #region Anti-Yeet
 
-                //if (SelfConfig.SelfConfigRef.Value.ApplyAntiYeet)
+                CriticalSection.EnterExecuteSection();
+
                 try
                 {
                     loader.Debug("Applying anti-yeet patch");
@@ -265,6 +275,8 @@ namespace IPA.Injector
                 {
                     // ignore
                 }
+
+                CriticalSection.ExitExecuteSection();
 
                 #endregion
             }
