@@ -2682,6 +2682,38 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.BeatSaber.UserDataPath
   nameWithType: BeatSaber.UserDataPath
+- uid: IPA.Utilities.CriticalSection
+  name: CriticalSection
+  href: api/IPA.Utilities.CriticalSection.html
+  commentId: T:IPA.Utilities.CriticalSection
+  fullName: IPA.Utilities.CriticalSection
+  nameWithType: CriticalSection
+- uid: IPA.Utilities.CriticalSection.EnterExecuteSection
+  name: EnterExecuteSection()
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterExecuteSection
+  commentId: M:IPA.Utilities.CriticalSection.EnterExecuteSection
+  fullName: IPA.Utilities.CriticalSection.EnterExecuteSection()
+  nameWithType: CriticalSection.EnterExecuteSection()
+- uid: IPA.Utilities.CriticalSection.EnterExecuteSection*
+  name: EnterExecuteSection
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterExecuteSection_
+  commentId: Overload:IPA.Utilities.CriticalSection.EnterExecuteSection
+  isSpec: "True"
+  fullName: IPA.Utilities.CriticalSection.EnterExecuteSection
+  nameWithType: CriticalSection.EnterExecuteSection
+- uid: IPA.Utilities.CriticalSection.ExitExecuteSection
+  name: ExitExecuteSection()
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitExecuteSection
+  commentId: M:IPA.Utilities.CriticalSection.ExitExecuteSection
+  fullName: IPA.Utilities.CriticalSection.ExitExecuteSection()
+  nameWithType: CriticalSection.ExitExecuteSection()
+- uid: IPA.Utilities.CriticalSection.ExitExecuteSection*
+  name: ExitExecuteSection
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitExecuteSection_
+  commentId: Overload:IPA.Utilities.CriticalSection.ExitExecuteSection
+  isSpec: "True"
+  fullName: IPA.Utilities.CriticalSection.ExitExecuteSection
+  nameWithType: CriticalSection.ExitExecuteSection
 - uid: IPA.Utilities.Extensions
   name: Extensions
   href: api/IPA.Utilities.Extensions.html
