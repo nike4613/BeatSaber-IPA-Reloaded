@@ -297,37 +297,6 @@ namespace IPA.Loader
 
         internal static void Load()
         {
-            string pluginDir = BeatSaber.PluginsPath;
-            var gameVer = BeatSaber.GameVersion;
-            var lastVerS = SelfConfig.LastGameVersion_;
-            var lastVer = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
-
-            if (SelfConfig.YeetMods_ && lastVer != null && gameVer != lastVer)
-            {
-                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {lastVer} Plugins");
-                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {gameVer} Plugins");
-
-                ReleaseAll();
-
-                if (Directory.Exists(oldPluginsName))
-                    Directory.Delete(oldPluginsName, true);
-                Directory.Move(pluginDir, oldPluginsName);
-                if (Directory.Exists(newPluginsName))
-                    Directory.Move(newPluginsName, pluginDir);
-                else
-                    Directory.CreateDirectory(pluginDir);
-
-                LoadTask().Wait();
-            }
-
-            SelfConfig.SelfConfigRef.Value.LastGameVersion = gameVer.ToString();
-            SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
-
-            LoadPlugins();
-        }
-
-        private static void LoadPlugins()
-        {
             string pluginDirectory = BeatSaber.PluginsPath;
 
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,

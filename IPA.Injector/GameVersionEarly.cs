@@ -1,4 +1,5 @@
 ﻿using IPA.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace IPA.Injector
 
         internal static string GetGameVersion()
         {
-            var mgr = ResolveDataPath(BeatSaber.InstallPath);
+            var mgr = GlobalGameManagers(BeatSaber.InstallPath);
 
             using (var stream = File.OpenRead(mgr))
             using (var reader = new BinaryReader(stream, Encoding.UTF8))
@@ -52,6 +53,14 @@ namespace IPA.Injector
 
         internal static SemVer.Version SafeParseVersion() => new SemVer.Version(GetGameVersion(), true);
 
-        internal static void Load() => BeatSaber.SetEarlyGameVersion(SafeParseVersion());
+        private static void _Load() => BeatSaber.SetEarlyGameVersion(SafeParseVersion());
+
+        internal static void Load()
+        {
+            // This exists for the same reason the wierdness in Injector.Main does
+            var unused = Type.GetType("SemVer.Version, SemVer", false);
+
+            _Load();
+        }
     }
 }
