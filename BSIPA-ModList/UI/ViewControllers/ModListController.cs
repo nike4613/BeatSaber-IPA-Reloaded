@@ -17,9 +17,9 @@ namespace BSIPA_ModList.UI
 {
     internal class ModListController : CustomListViewController
     {
-        public override TableCell CellForIdx(int idx)
+        public override TableCell CellForIdx(TableView view, int idx)
         {
-            var cell = base.CellForIdx(idx) as LevelListTableCell;
+            var cell = base.CellForIdx(view, idx) as LevelListTableCell;
             var nameText = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
             nameText.overflowMode = TextOverflowModes.Overflow;
             var authorText = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
