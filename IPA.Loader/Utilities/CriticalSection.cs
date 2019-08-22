@@ -23,35 +23,38 @@ namespace IPA.Utilities
 
         #region Execute section
 
-        private static readonly EventHandler registeredHandler = HandleExit;
+        private static readonly Win32.EventHandler registeredHandler = HandleExit;
         internal static void ResetExitHandlers()
         {
-            SetConsoleCtrlHandler(registeredHandler, false);
-            SetConsoleCtrlHandler(registeredHandler, true);
+            Win32.SetConsoleCtrlHandler(registeredHandler, false);
+            Win32.SetConsoleCtrlHandler(registeredHandler, true);
         }
 
-        [DllImport("Kernel32")]
-        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+        private static partial class Win32 {
+            [DllImport("Kernel32")]
+            public static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
-        private delegate bool EventHandler(CtrlType sig);
-        private static EventHandler _handler = null;
+            public enum CtrlType
+            {
+                CTRL_C_EVENT = 0,
+                CTRL_BREAK_EVENT = 1,
+                CTRL_CLOSE_EVENT = 2,
+                CTRL_LOGOFF_EVENT = 5,
+                CTRL_SHUTDOWN_EVENT = 6
+            }
 
-        private static bool HandleExit(CtrlType type)
+            public delegate bool EventHandler(CtrlType sig);
+        }
+
+        private static Win32.EventHandler _handler = null;
+
+        private static bool HandleExit(Win32.CtrlType type)
         {
             if (_handler != null)
                 return _handler(type);
 
             return false;
         } 
-
-        enum CtrlType
-        {
-            CTRL_C_EVENT = 0,
-            CTRL_BREAK_EVENT = 1,
-            CTRL_CLOSE_EVENT = 2,
-            CTRL_LOGOFF_EVENT = 5,
-            CTRL_SHUTDOWN_EVENT = 6
-        }
 
         private static volatile bool exitRecieved = false;
 

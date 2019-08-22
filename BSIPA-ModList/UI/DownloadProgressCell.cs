@@ -15,11 +15,6 @@ namespace BSIPA_ModList.UI
     {
         private DownloadObject mod;
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         public void Init(DownloadObject mod)
         {
             Destroy(GetComponent<LevelListTableCell>());

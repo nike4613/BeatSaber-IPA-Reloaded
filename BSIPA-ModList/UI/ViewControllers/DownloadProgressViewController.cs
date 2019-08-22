@@ -25,8 +25,6 @@ namespace BSIPA_ModList.UI.ViewControllers
         private Button _restartGame;
         private TableView _currentlyUpdatingTableView;
         private LevelListTableCell _songListTableCellInstance;
-        private Button _pageUpButton;
-        private Button _pageDownButton;
 
         private const float TableXOffset = -20f;
         private const float ButtonXOffset = 36f;
@@ -50,28 +48,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _manualDownloadText.fontSize = 4f;
                 _manualDownloadText.gameObject.SetActive(false);
 
-                _pageUpButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageUpButton")), rectTransform, false);
-                (_pageUpButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 1f);
-                (_pageUpButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 1f);
-                (_pageUpButton.transform as RectTransform).anchoredPosition = new Vector2(TableXOffset, -14f);
-                (_pageUpButton.transform as RectTransform).sizeDelta = new Vector2(40f, 10f);
-                _pageUpButton.interactable = true;
-                _pageUpButton.onClick.AddListener(delegate ()
-                {
-                    _currentlyUpdatingTableView.PageScrollUp();
-                });
-
-                _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), rectTransform, false);
-                (_pageDownButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 0f);
-                (_pageDownButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 0f);
-                (_pageDownButton.transform as RectTransform).anchoredPosition = new Vector2(TableXOffset, 8f);
-                (_pageDownButton.transform as RectTransform).sizeDelta = new Vector2(40f, 10f);
-                _pageDownButton.interactable = true;
-                _pageDownButton.onClick.AddListener(delegate ()
-                {
-                    _currentlyUpdatingTableView.PageScrollDown();
-                });
-
                 var gobj = new GameObject("DownloadTable");
                 gobj.SetActive(false);
                 _currentlyUpdatingTableView = gobj.AddComponent<TableView>();
@@ -79,6 +55,11 @@ namespace BSIPA_ModList.UI.ViewControllers
 
                 _currentlyUpdatingTableView.SetPrivateField("_isInitialized", false);
                 _currentlyUpdatingTableView.SetPrivateField("_preallocatedCells", new TableView.CellsGroup[0]);
+
+                var viewport = new GameObject("Viewport").AddComponent<RectTransform>();
+                viewport.SetParent(gobj.GetComponent<RectTransform>(), false);
+                gobj.GetComponent<ScrollRect>().viewport = viewport;
+
                 _currentlyUpdatingTableView.Init();
 
                 RectMask2D viewportMask = Instantiate(Resources.FindObjectsOfTypeAll<RectMask2D>().First(), _currentlyUpdatingTableView.transform, false);
@@ -90,12 +71,12 @@ namespace BSIPA_ModList.UI.ViewControllers
                 (_currentlyUpdatingTableView.transform as RectTransform).sizeDelta = new Vector2(0f, 60f);
                 (_currentlyUpdatingTableView.transform as RectTransform).anchoredPosition = new Vector3(TableXOffset, -3f);
 
-                ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageUpButton", _pageUpButton);
-                ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageDownButton", _pageDownButton);
-
                 _currentlyUpdatingTableView.selectionType = TableViewSelectionType.None;
-                _currentlyUpdatingTableView.dataSource = this;
+
+                _currentlyUpdatingTableView.dataSource = this; // calls Init
                 gobj.SetActive(true);
+
+                _currentlyUpdatingTableView.RefreshScrollButtons();
 
                 _checkForUpdates = BeatSaberUI.CreateUIButton(rectTransform, "CreditsButton", new Vector2(ButtonXOffset, -30f), ButtonSize, CheckUpdates, "Check for updates");
                 _checkForUpdates.interactable = DownloadController.Instance.CanCheck || DownloadController.Instance.CanReset;
@@ -169,7 +150,7 @@ namespace BSIPA_ModList.UI.ViewControllers
             return DownloadController.Instance.Downloads.Count;
         }
 
-        public TableCell CellForIdx(int row)
+        public TableCell CellForIdx(TableView view, int row)
         {
             LevelListTableCell _tableCell = Instantiate(_songListTableCellInstance);
             DownloadProgressCell _queueCell = _tableCell.gameObject.AddComponent<DownloadProgressCell>();
