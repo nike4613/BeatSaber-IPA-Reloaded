@@ -25,6 +25,9 @@ namespace BSIPA_ModList.UI.ViewControllers
         private Button _restartGame;
         private TableView _currentlyUpdatingTableView;
         private LevelListTableCell _songListTableCellInstance;
+        private Button _pageUpButton;
+        private Button _pageDownButton;
+        private TableViewScroller _scroller;
 
         private const float TableXOffset = -20f;
         private const float ButtonXOffset = 36f;
@@ -48,6 +51,28 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _manualDownloadText.fontSize = 4f;
                 _manualDownloadText.gameObject.SetActive(false);
 
+                _pageUpButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageUpButton")), rectTransform, false);
+                (_pageUpButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 1f);
+                (_pageUpButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 1f);
+                (_pageUpButton.transform as RectTransform).anchoredPosition = new Vector2(TableXOffset, -14f);
+                (_pageUpButton.transform as RectTransform).sizeDelta = new Vector2(40f, 10f);
+                _pageUpButton.interactable = true;
+                _pageUpButton.onClick.AddListener(delegate ()
+                {
+                    _scroller.PageScrollUp();
+                });
+
+                _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), rectTransform, false);
+                (_pageDownButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 0f);
+                (_pageDownButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 0f);
+                (_pageDownButton.transform as RectTransform).anchoredPosition = new Vector2(TableXOffset, 8f);
+                (_pageDownButton.transform as RectTransform).sizeDelta = new Vector2(40f, 10f);
+                _pageDownButton.interactable = true;
+                _pageDownButton.onClick.AddListener(delegate ()
+                {
+                    _scroller.PageScrollDown();
+                });
+
                 var gobj = new GameObject("DownloadTable");
                 gobj.SetActive(false);
                 _currentlyUpdatingTableView = gobj.AddComponent<TableView>();
@@ -60,8 +85,6 @@ namespace BSIPA_ModList.UI.ViewControllers
                 viewport.SetParent(gobj.GetComponent<RectTransform>(), false);
                 gobj.GetComponent<ScrollRect>().viewport = viewport;
 
-                _currentlyUpdatingTableView.Init();
-
                 RectMask2D viewportMask = Instantiate(Resources.FindObjectsOfTypeAll<RectMask2D>().First(), _currentlyUpdatingTableView.transform, false);
                 viewportMask.transform.DetachChildren();
                 _currentlyUpdatingTableView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Content").transform.SetParent(viewportMask.rectTransform, false);
@@ -71,9 +94,14 @@ namespace BSIPA_ModList.UI.ViewControllers
                 (_currentlyUpdatingTableView.transform as RectTransform).sizeDelta = new Vector2(0f, 60f);
                 (_currentlyUpdatingTableView.transform as RectTransform).anchoredPosition = new Vector3(TableXOffset, -3f);
 
+                ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageUpButton", _pageUpButton);
+                ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageDownButton", _pageDownButton);
+
                 _currentlyUpdatingTableView.selectionType = TableViewSelectionType.None;
 
+                _currentlyUpdatingTableView.Init();
                 _currentlyUpdatingTableView.dataSource = this; // calls Init
+                _scroller = gobj.GetComponent<TableViewScroller>();
                 gobj.SetActive(true);
 
                 _currentlyUpdatingTableView.RefreshScrollButtons();
