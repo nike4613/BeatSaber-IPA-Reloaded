@@ -85,9 +85,9 @@ namespace BSIPA_ModList.UI.ViewControllers
                 viewport.SetParent(gobj.GetComponent<RectTransform>(), false);
                 gobj.GetComponent<ScrollRect>().viewport = viewport;
 
-                RectMask2D viewportMask = Instantiate(Resources.FindObjectsOfTypeAll<RectMask2D>().First(), _currentlyUpdatingTableView.transform, false);
+                /*RectMask2D viewportMask = Instantiate(Resources.FindObjectsOfTypeAll<RectMask2D>().First(), _currentlyUpdatingTableView.transform, false);
                 viewportMask.transform.DetachChildren();
-                _currentlyUpdatingTableView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Content").transform.SetParent(viewportMask.rectTransform, false);
+                _currentlyUpdatingTableView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Content").transform.SetParent(viewportMask.rectTransform, false);*/
 
                 (_currentlyUpdatingTableView.transform as RectTransform).anchorMin = new Vector2(0.3f, 0.5f);
                 (_currentlyUpdatingTableView.transform as RectTransform).anchorMax = new Vector2(0.7f, 0.5f);
