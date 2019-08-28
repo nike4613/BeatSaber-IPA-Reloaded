@@ -85,6 +85,9 @@ namespace BSIPA_ModList.UI
             rt.anchorMax = new Vector2(.9f, 1f);
 
             _customListTableView.gameObject.GetComponent<ScrollRect>().scrollSensitivity = 0f;
+
+            var content = _customListTableView.contentTransform;
+            content.anchoredPosition = new Vector2(7f, 0f);
         }
 
         protected override void OnDestroy()
