@@ -23,32 +23,74 @@ namespace IPA.Utilities
 
         #region Execute section
 
-        private static readonly Win32.EventHandler registeredHandler = HandleExit;
+        private static readonly Win32.ConsoleCtrlDelegate registeredHandler = HandleExit;
         internal static void ResetExitHandlers()
         {
             Win32.SetConsoleCtrlHandler(registeredHandler, false);
             Win32.SetConsoleCtrlHandler(registeredHandler, true);
+            WinHttp.SetPeekMessageHook(PeekMessageHook);
         }
 
-        private static partial class Win32 {
-            [DllImport("Kernel32")]
-            public static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+        private static class WinHttp
+        {
+            public delegate bool PeekMessageHook(
+                bool isW,
+                uint result,
+                [MarshalAs(UnmanagedType.LPStruct)]
+                in Win32.MSG message,
+                IntPtr hwnd,
+                uint filterMin,
+                uint filterMax,
+                ref Win32.PeekMessageParams removeMsg);
 
-            public enum CtrlType
+            [DllImport("winhttp")]
+            public static extern void SetPeekMessageHook(
+                [MarshalAs(UnmanagedType.FunctionPtr)]
+                PeekMessageHook hook);
+        }
+
+        private static Win32.ConsoleCtrlDelegate _handler = null;
+        private static volatile bool isInExecuteSection = false;
+
+        // returns true to continue looping and calling PeekMessage
+        private static bool PeekMessageHook(
+                bool isW,
+                uint result,
+                [MarshalAs(UnmanagedType.LPStruct)]
+                in Win32.MSG message,
+                IntPtr hwnd,
+                uint filterMin,
+                uint filterMax,
+                ref Win32.PeekMessageParams removeMsg)
+        {
+            if (isInExecuteSection)
             {
-                CTRL_C_EVENT = 0,
-                CTRL_BREAK_EVENT = 1,
-                CTRL_CLOSE_EVENT = 2,
-                CTRL_LOGOFF_EVENT = 5,
-                CTRL_SHUTDOWN_EVENT = 6
+                if (result == 0) return false;
+
+                switch (message.message)
+                {
+                    case Win32.WM.CLOSE:
+                        if (removeMsg != Win32.PeekMessageParams.PM_REMOVE)
+                        {
+                            removeMsg = Win32.PeekMessageParams.PM_REMOVE;
+                            exitRecieved = true;
+                            return true;
+                        }
+                        else
+                        {
+                            removeMsg = Win32.PeekMessageParams.PM_NOREMOVE;
+                            return true;
+                        }
+
+                    default:
+                        return false;
+                }
             }
 
-            public delegate bool EventHandler(CtrlType sig);
+            return false;
         }
 
-        private static Win32.EventHandler _handler = null;
-
-        private static bool HandleExit(Win32.CtrlType type)
+        private static bool HandleExit(Win32.CtrlTypes type)
         {
             if (_handler != null)
                 return _handler(type);
@@ -72,6 +114,7 @@ namespace IPA.Utilities
 
             exitRecieved = false;
             _handler = sig => exitRecieved = true;
+            isInExecuteSection = true;
         }
 
         /// <summary>
@@ -85,6 +128,7 @@ namespace IPA.Utilities
         public static void ExitExecuteSection()
         {
             _handler = null;
+            isInExecuteSection = false;
 
             if (exitRecieved)
                 Environment.Exit(1);

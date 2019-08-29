@@ -138,6 +138,7 @@
     <Compile Include="Updating\BeatMods\Updater.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Utilities\Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ionic.Zip">
