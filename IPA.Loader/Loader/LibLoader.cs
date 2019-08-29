@@ -85,6 +85,9 @@ namespace IPA.Loader
                         AddDir(dir); return true;
                     }).All(f => true); // force it to iterate all
                 }
+
+                foreach (var dir in Environment.GetEnvironmentVariable("path").Split(Path.PathSeparator))
+                    AddDir(dir);
             }
         }
 
