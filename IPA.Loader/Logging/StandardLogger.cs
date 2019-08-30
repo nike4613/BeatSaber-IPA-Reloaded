@@ -112,8 +112,8 @@ namespace IPA.Logging
         /// <param name="cfg"></param>
         internal static void Configure(SelfConfig cfg)
         {
-            showSourceClass = cfg.Debug.ShowCallSource;
-            PrintFilter = cfg.Debug.ShowDebug ? LogLevel.All : LogLevel.InfoUp;
+            showSourceClass = SelfConfig.Debug_.ShowCallSource_;
+            PrintFilter = SelfConfig.Debug_.ShowDebug_ ? LogLevel.All : LogLevel.InfoUp;
         }
 
         private StandardLogger(StandardLogger parent, string subName)
@@ -186,6 +186,8 @@ namespace IPA.Logging
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
+
+            if (!SelfConfig.Debug_.ShowTrace_ && level == Level.Trace) return;
 
             // make sure that the queue isn't being cleared
             logWaitEvent.Wait();

@@ -33,6 +33,14 @@ Here's a quick list of what they are and what they do.
   > This overrides the config settings `Debug.ShowDebug` and `Debug.ShowCallSource`.
   >
 
+- `--trace`
+  
+  > Enables trace level messages. By default, they do not ever enter the message queue, and thus cost almost nothing.
+  > When this or the config option is used, they are added and logged with the same rules as Debug messages.
+  >
+  > This overrides the config setting `Debug.ShowTrace`.
+  >
+
 - `--mono-debug`
 
   > Enables the built-in Mono soft debugger engine.
