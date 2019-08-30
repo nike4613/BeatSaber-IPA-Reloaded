@@ -59,6 +59,9 @@ namespace IPA.Config
                         CommandLineValues.Updates.AutoCheckUpdates = false;
                         CommandLineValues.Updates.AutoUpdate = false;
                         break;
+                    case "--trace":
+                        CommandLineValues.Debug.ShowTrace = true;
+                        break;
                 }
             }
         }
@@ -118,6 +121,11 @@ namespace IPA.Config
             public int HideLogThreshold = 512;
             // LINE: ignore
             public static int HideLogThreshold_ => SelfConfigRef.Value.Debug.HideLogThreshold;
+
+            public bool ShowTrace = false;
+            // LINE: ignore 2
+            public static bool ShowTrace_ => SelfConfigRef.Value.Debug.ShowTrace
+                                          ||   CommandLineValues.Debug.ShowTrace;
         }
 
         public Debug_ Debug = new Debug_();

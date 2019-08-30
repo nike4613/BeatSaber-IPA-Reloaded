@@ -57,6 +57,11 @@ namespace IPA.Logging
             None = 0,
 
             /// <summary>
+            /// A trace message. These are ignored *incredibly* early.
+            /// </summary>
+            Trace = 32,
+
+            /// <summary>
             /// A debug message.
             /// </summary>
             Debug = 1,
@@ -97,6 +102,8 @@ namespace IPA.Logging
             /// Allow no messages through.
             /// </summary>
             None = Level.None,
+
+            TraceOnly = Level.Trace,
 
             /// <summary>
             /// Only shows Debug messages.
@@ -149,9 +156,14 @@ namespace IPA.Logging
             InfoUp = InfoOnly | NoticeUp,
 
             /// <summary>
+            /// Shows all messages debug and up.
+            /// </summary>
+            DebugUp = DebugOnly | InfoUp,
+
+            /// <summary>
             /// Shows all messages.
             /// </summary>
-            All = DebugOnly | InfoUp,
+            All = TraceOnly | DebugUp,
 
             /// <summary>
             /// Used for when the level is undefined.
@@ -172,6 +184,22 @@ namespace IPA.Logging
         /// <param name="level">the level of the message</param>
         /// <param name="e">the exception to log</param>
         public virtual void Log(Level level, Exception e) => Log(level, e.ToString());
+
+        /// <summary>
+        /// Sends a trace message.
+        /// Equivalent to `Log(Level.Trace, message);`
+        /// </summary>
+        /// <seealso cref="Log(Level, string)"/>
+        /// <param name="message">the message to log</param>
+        public virtual void Trace(string message) => Log(Level.Trace, message);
+
+        /// <summary>
+        /// Sends an exception as a trace message.
+        /// Equivalent to `Log(Level.Trace, e);`
+        /// </summary>
+        /// <seealso cref="Log(Level, Exception)"/>
+        /// <param name="e">the exception to log</param>
+        public virtual void Trace(Exception e) => Log(Level.Trace, e);
 
         /// <summary>
         /// Sends a debug message.
