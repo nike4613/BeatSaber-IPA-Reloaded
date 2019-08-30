@@ -31,7 +31,7 @@ namespace IPA.Config
             }
         }
 
-        public static Ref<SelfConfig> SelfConfigRef;
+        public static Ref<SelfConfig> SelfConfigRef = new SelfConfig();
 
         public static void Load()
         {
