@@ -1585,6 +1585,12 @@ references:
   commentId: F:IPA.Logging.Logger.Level.Notice
   fullName: IPA.Logging.Logger.Level.Notice
   nameWithType: Logger.Level.Notice
+- uid: IPA.Logging.Logger.Level.Trace
+  name: Trace
+  href: api/IPA.Logging.Logger.Level.html#IPA_Logging_Logger_Level_Trace
+  commentId: F:IPA.Logging.Logger.Level.Trace
+  fullName: IPA.Logging.Logger.Level.Trace
+  nameWithType: Logger.Level.Trace
 - uid: IPA.Logging.Logger.Level.Warning
   name: Warning
   href: api/IPA.Logging.Logger.Level.html#IPA_Logging_Logger_Level_Warning
@@ -1647,6 +1653,12 @@ references:
   commentId: F:IPA.Logging.Logger.LogLevel.DebugOnly
   fullName: IPA.Logging.Logger.LogLevel.DebugOnly
   nameWithType: Logger.LogLevel.DebugOnly
+- uid: IPA.Logging.Logger.LogLevel.DebugUp
+  name: DebugUp
+  href: api/IPA.Logging.Logger.LogLevel.html#IPA_Logging_Logger_LogLevel_DebugUp
+  commentId: F:IPA.Logging.Logger.LogLevel.DebugUp
+  fullName: IPA.Logging.Logger.LogLevel.DebugUp
+  nameWithType: Logger.LogLevel.DebugUp
 - uid: IPA.Logging.Logger.LogLevel.ErrorOnly
   name: ErrorOnly
   href: api/IPA.Logging.Logger.LogLevel.html#IPA_Logging_Logger_LogLevel_ErrorOnly
@@ -1689,6 +1701,12 @@ references:
   commentId: F:IPA.Logging.Logger.LogLevel.NoticeUp
   fullName: IPA.Logging.Logger.LogLevel.NoticeUp
   nameWithType: Logger.LogLevel.NoticeUp
+- uid: IPA.Logging.Logger.LogLevel.TraceOnly
+  name: TraceOnly
+  href: api/IPA.Logging.Logger.LogLevel.html#IPA_Logging_Logger_LogLevel_TraceOnly
+  commentId: F:IPA.Logging.Logger.LogLevel.TraceOnly
+  fullName: IPA.Logging.Logger.LogLevel.TraceOnly
+  nameWithType: Logger.LogLevel.TraceOnly
 - uid: IPA.Logging.Logger.LogLevel.Undefined
   name: Undefined
   href: api/IPA.Logging.Logger.LogLevel.html#IPA_Logging_Logger_LogLevel_Undefined
@@ -1726,6 +1744,25 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Logger.Notice
   nameWithType: Logger.Notice
+- uid: IPA.Logging.Logger.Trace(System.Exception)
+  name: Trace(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_System_Exception_
+  commentId: M:IPA.Logging.Logger.Trace(System.Exception)
+  fullName: IPA.Logging.Logger.Trace(System.Exception)
+  nameWithType: Logger.Trace(Exception)
+- uid: IPA.Logging.Logger.Trace(System.String)
+  name: Trace(String)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_System_String_
+  commentId: M:IPA.Logging.Logger.Trace(System.String)
+  fullName: IPA.Logging.Logger.Trace(System.String)
+  nameWithType: Logger.Trace(String)
+- uid: IPA.Logging.Logger.Trace*
+  name: Trace
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_
+  commentId: Overload:IPA.Logging.Logger.Trace
+  isSpec: "True"
+  fullName: IPA.Logging.Logger.Trace
+  nameWithType: Logger.Trace
 - uid: IPA.Logging.Logger.Warn(System.Exception)
   name: Warn(Exception)
   href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Warn_System_Exception_
