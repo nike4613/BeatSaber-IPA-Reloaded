@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>The Command Line </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="The Command Line ">
+    <meta name="generator" content="docfx 2.45.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="the-command-line">The Command Line</h1>
+
+<p>BSIPA has 2 command lines: the installer, and the game.</p>
+<p>Their documentation is below.</p>
+<div class="tabGroup" id="tabgroup_8icGlBCLD4">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_8icGlBCLD4_installer" role="tab" aria-controls="tabpanel_8icGlBCLD4_installer" data-tab="installer" tabindex="0" aria-selected="true">The Installer (<code>IPA.exe</code>)</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_8icGlBCLD4_game" role="tab" aria-controls="tabpanel_8icGlBCLD4_game" data-tab="game" tabindex="-1">The Game</a>
+</li>
+</ul>
+<section id="tabpanel_8icGlBCLD4_installer" role="tabpanel" data-tab="installer">
+<p>The installer has quite a few options, which are documented inline with the <code>-h</code> or <code>--help</code> flag.</p>
+<p>This is what it currently looks like:</p>
+<pre><code name="IPA command line" title="the result of IPA.exe -h">usage:
+    IPA.exe [FLAGS] [ARGUMENTS]
+
+flags:
+    -h, --help
+        prints this message
+    -w, --waitfor=PID
+        waits for the specified PID to exit
+    -f, --force
+        forces the operation to go through
+    -r, --revert
+        reverts the IPA installation
+    -n, --nowait
+        doesn&#39;t wait for user input after the operation
+    -s, --start=ARGUMENTS
+        uses value_ as arguments to start the game after the patch/unpatch
+    -l, --launch
+        uses positional parameters as arguments to start the game after patch/unpatch
+</code></pre></section>
+<section id="tabpanel_8icGlBCLD4_game" role="tabpanel" data-tab="game" aria-hidden="true" hidden="hidden">
+<p>The game <em>also</em> gets quite a few command line options, though there isn&#39;t anything as convenient as a help page for them.</p>
+<p>Here&#39;s a quick list of what they are and what they do.</p>
+<ul>
+<li><p><code>--verbose</code></p>
+<blockquote><p>Makes a console appear with log information at startup.</p>
+</blockquote>
+</li>
+<li><p><code>--debug</code></p>
+<blockquote><p>Enables the loading of debug information in Mono. The debugging information must be in the portable PDB format,
+in the same location as the DLL that it&#39;s for.</p>
+<p>This option also forces BSIPA to show all debug messages in the console, as well as where they were called.</p>
+<p>This overrides the config settings <code>Debug.ShowDebug</code> and <code>Debug.ShowCallSource</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--trace</code></p>
+<blockquote><p>Enables trace level messages. By default, they do not ever enter the message queue, and thus cost almost nothing.
+When this or the config option is used, they are added and logged with the same rules as Debug messages.</p>
+<p>This overrides the config setting <code>Debug.ShowTrace</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--mono-debug</code></p>
+<blockquote><p>Enables the built-in Mono soft debugger engine.</p>
+<p>By default, it acts as a client, and requires that there be a soft
+debugger server running on port 10000 on <code>localhost</code>.</p>
+<p>Implies <code>--debug</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--server</code></p>
+<blockquote><p>Does nothing on its own.</p>
+<p>When paired with <code>--mono-debug</code>, this option makes the Mono soft debugger act in server mode. It begins listening on
+port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I recommend using
+SDB, but that is a command line debugger and a lot of people don&#39;t care for those.</p>
+</blockquote>
+</li>
+<li><p><code>--no-yeet</code></p>
+<blockquote><p>Disables mod yeeting.</p>
+<p>By default, whenever BSIPA detects that the game is now running a newer version than previous runs, it will move all
+mods to another folder and not load them. (They still get checked for updates though.) When this is enabled, that
+behaviour is disabled.</p>
+<p>Overrides the config setting <code>YeetMods</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--condense-logs</code></p>
+<blockquote><p>Reduces the number of log files BSIPA will output for a given session.</p>
+<p>By default, BSIPA will create a subfolder in the <code>Logs</code> folder for each mod sublog, as well as each mod. This disables
+that behaviour, and restricts it to only create a global log and mod logs.</p>
+<p>Overrides the config setting <code>Debug.CondenseModLogs</code>.</p>
+</blockquote>
+</li>
+<li><p><code>--no-updates</code></p>
+<blockquote><p>Disables automatic updating.</p>
+<p>By default, BSIPA will check <a href="http://beatmods.com">BeatMods</a> for all of the loaded mods to see if there is a new version
+avaliable. If there is, it will be downloaded and installed on the next run. This flag disables that behaviour.</p>
+<p>Overrides the config settings <code>Updates.AutoCheckUpdates</code> and <code>Updates.AutoUpdate</code>.</p>
+</blockquote>
+</li>
+</ul>
+</section>
+</div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/c57fdfa83eef52955dd90baad18123997d7ec4b9/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
