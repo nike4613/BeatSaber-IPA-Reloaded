@@ -103,6 +103,9 @@ namespace IPA.Logging
             /// </summary>
             None = Level.None,
 
+            /// <summary>
+            /// Only shows Trace messages.
+            /// </summary>
             TraceOnly = Level.Trace,
 
             /// <summary>
