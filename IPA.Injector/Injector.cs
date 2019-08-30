@@ -72,8 +72,8 @@ namespace IPA.Injector
 
                 log.Debug("Initializing logger");
 
-                SelfConfig.Load();
                 SelfConfig.ReadCommandLine(Environment.GetCommandLineArgs());
+                SelfConfig.Load();
                 DisabledConfig.Load();
 
                 if (AntiPiracy.IsInvalid(Environment.CurrentDirectory))
