@@ -100,6 +100,7 @@ namespace IPA.Logging
         /// </summary>
         /// <value>the global filter level</value>
         public static LogLevel PrintFilter { get; set; } = LogLevel.All;
+        private static bool showTrace = false;
 
         private readonly List<LogPrinter> printers = new List<LogPrinter>();
         private readonly StandardLogger parent;
@@ -114,6 +115,7 @@ namespace IPA.Logging
         {
             showSourceClass = SelfConfig.Debug_.ShowCallSource_;
             PrintFilter = SelfConfig.Debug_.ShowDebug_ ? LogLevel.All : LogLevel.InfoUp;
+            showTrace = SelfConfig.Debug_.ShowTrace_;
         }
 
         private StandardLogger(StandardLogger parent, string subName)
@@ -187,7 +189,7 @@ namespace IPA.Logging
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            if (!SelfConfig.Debug_.ShowTrace_ && level == Level.Trace) return;
+            if (!showTrace && level == Level.Trace) return;
 
             // make sure that the queue isn't being cleared
             logWaitEvent.Wait();
