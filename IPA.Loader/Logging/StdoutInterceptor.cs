@@ -125,11 +125,11 @@ namespace IPA.Logging
                 var getFg = foregroundProperty?.GetGetMethod();
 
                 if (resetColor != null)
-                    harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchResetColor"));
+                    harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchResetColor)));
                 if (foregroundProperty != null)
                 {
-                    harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchSetForegroundColor"));
-                    harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), "PatchGetForegroundColor"));
+                    harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchSetForegroundColor)));
+                    harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchGetForegroundColor)));
                 }
             }
 

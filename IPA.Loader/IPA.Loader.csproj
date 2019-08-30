@@ -98,6 +98,7 @@
     <Compile Include="Loader\Features\InitInjectorFeature.cs" />
     <Compile Include="Loader\Features\NoUpdateFeature.cs" />
     <Compile Include="Loader\Features\PrintFeature.cs" />
+    <Compile Include="Loader\HarmonyProtector.cs" />
     <Compile Include="Loader\PluginInitInjector.cs" />
     <Compile Include="Loader\LibLoader.cs" />
     <Compile Include="Loader\Features\Feature.cs" />
