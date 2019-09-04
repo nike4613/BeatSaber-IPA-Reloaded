@@ -59,7 +59,7 @@ namespace IPA.Logging
             /// <summary>
             /// A trace message. These are ignored *incredibly* early.
             /// </summary>
-            Trace = 32,
+            Trace = 64,
 
             /// <summary>
             /// A debug message.

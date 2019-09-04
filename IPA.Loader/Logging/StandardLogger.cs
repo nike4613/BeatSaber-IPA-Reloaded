@@ -43,6 +43,11 @@ namespace IPA.Logging
                 {
                     new ColoredConsolePrinter()
                     {
+                        Filter = LogLevel.TraceOnly,
+                        Color = ConsoleColor.DarkMagenta,
+                    },
+                    new ColoredConsolePrinter()
+                    {
                         Filter = LogLevel.DebugOnly,
                         Color = ConsoleColor.Green,
                     },
