@@ -163,12 +163,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Loader\manifest.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="icon.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="icon_white.png" />
     <EmbeddedResource Include="Loader\description.md" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="icon_black.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
