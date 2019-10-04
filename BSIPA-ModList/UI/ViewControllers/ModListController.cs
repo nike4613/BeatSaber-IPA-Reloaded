@@ -81,7 +81,7 @@ namespace BSIPA_ModList.UI
         private new void DidActivate(bool first, ActivationType type)
         {
             var rt = _customListTableView.transform as RectTransform;
-            rt.anchorMin = new Vector2(.1f, 0f);
+            rt.anchorMin = new Vector2(0f, 0f);
             rt.anchorMax = new Vector2(.9f, 1f);
 
             _customListTableView.gameObject.GetComponent<ScrollRect>().scrollSensitivity = 0f;

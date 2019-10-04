@@ -29,7 +29,7 @@ namespace BSIPA_ModList.UI.ViewControllers
         private Button _pageDownButton;
         private TableViewScroller _scroller;
 
-        private const float TableXOffset = -20f;
+        private const float TableXOffset = 0f;
         private const float ButtonXOffset = 36f;
         private static readonly Vector2 ButtonSize = new Vector2(40f, 10f);
 
@@ -92,7 +92,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 (_currentlyUpdatingTableView.transform as RectTransform).anchorMin = new Vector2(0.3f, 0.5f);
                 (_currentlyUpdatingTableView.transform as RectTransform).anchorMax = new Vector2(0.7f, 0.5f);
                 (_currentlyUpdatingTableView.transform as RectTransform).sizeDelta = new Vector2(0f, 60f);
-                (_currentlyUpdatingTableView.transform as RectTransform).anchoredPosition = new Vector3(TableXOffset, -3f);
+                (_currentlyUpdatingTableView.transform as RectTransform).anchoredPosition = new Vector3(TableXOffset, -20f);
 
                 ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageUpButton", _pageUpButton);
                 ReflectionUtil.SetPrivateField(_currentlyUpdatingTableView, "_pageDownButton", _pageDownButton);
@@ -103,6 +103,7 @@ namespace BSIPA_ModList.UI.ViewControllers
                 _currentlyUpdatingTableView.dataSource = this; // calls Init
                 _scroller = gobj.GetComponent<TableViewScroller>();
                 gobj.SetActive(true);
+                gobj.GetComponent<ScrollRect>().content.anchorMax = new Vector2(.6f, 1f);
 
                 _currentlyUpdatingTableView.RefreshScrollButtons();
 
