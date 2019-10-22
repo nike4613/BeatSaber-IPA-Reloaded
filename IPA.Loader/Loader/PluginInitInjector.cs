@@ -33,7 +33,7 @@ namespace IPA.Loader
         /// <param name="injector">the function to call for injection.</param>
         public static void AddInjector(Type type, InjectParameter injector)
         {
-            injectors.Add(new Tuple<Type, InjectParameter>(type, injector));
+            injectors.Add(Tuple.Create(type, injector));
         }
 
         private static readonly List<Tuple<Type, InjectParameter>> injectors = new List<Tuple<Type, InjectParameter>>
@@ -60,14 +60,14 @@ namespace IPA.Loader
             var initArgs = new List<object>();
             var initParams = init.GetParameters();
 
-            Dictionary<Tuple<Type, InjectParameter>, object> previousValues =
-                new Dictionary<Tuple<Type, InjectParameter>, object>(injectors.Count);
+            var previousValues = new Dictionary<Tuple<Type, InjectParameter>, object>(injectors.Count);
 
             foreach (var param in initParams)
             {
                 var paramType = param.ParameterType;
 
                 var value = paramType.GetDefault();
+                // TODO: make this work on closest match
                 foreach (var pair in injectors.Where(t => paramType.IsAssignableFrom(t.Item1)))
                 {
                     object prev = null;
@@ -75,7 +75,7 @@ namespace IPA.Loader
                         prev = previousValues[pair];
 
                     var val = pair.Item2?.Invoke(prev, param, meta);
-                    
+
                     if (previousValues.ContainsKey(pair))
                         previousValues[pair] = val;
                     else
