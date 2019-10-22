@@ -5,7 +5,7 @@
     /// </summary>
     public interface IDisablablePlugin
     {
-        /// <summary>
+        /*/// <summary>
         /// Called when a plugin is enabled. This is where you should set up Harmony patches and the like.
         /// </summary>
         /// <remarks>
@@ -14,14 +14,14 @@
         /// 
         /// Init will only ever be called once.
         /// </remarks>
-        void OnEnable();
+        void OnEnable();*/
 
         /// <summary>
         /// Called when a plugin is disabled at runtime. This should disable things like Harmony patches and unsubscribe
         /// from events. After this is called there should be no lingering effects of the mod.
         /// </summary>
         /// <remarks>
-        /// This will get called at shutdown, after <see cref="IBeatSaberPlugin.OnApplicationQuit"/>, as well as when the
+        /// This will get called at shutdown, after <see cref="_IPlugin.OnApplicationQuit"/>, as well as when the
         /// plugin is disabled at runtime.
         /// </remarks>
         void OnDisable();

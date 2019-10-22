@@ -6,13 +6,13 @@ using Logger = IPA.Logging.Logger;
 namespace IPA.Loader.Composite
 {
 #pragma warning disable CS0618 // Type or member is obsolete
-    internal class CompositeIPAPlugin : IPlugin
+    internal class CompositeIPAPlugin : Old.IPlugin
     {
-        private readonly IEnumerable<IPlugin> plugins;
+        private readonly IEnumerable<Old.IPlugin> plugins;
 
-        private delegate void CompositeCall(IPlugin plugin);
+        private delegate void CompositeCall(Old.IPlugin plugin);
         
-        public CompositeIPAPlugin(IEnumerable<IPlugin> plugins) {
+        public CompositeIPAPlugin(IEnumerable<Old.IPlugin> plugins) {
             this.plugins = plugins;
         }
 
@@ -49,7 +49,7 @@ namespace IPA.Loader.Composite
 
         public void OnLateUpdate() {
             Invoke(plugin => {
-                if (plugin is IEnhancedPlugin saberPlugin)
+                if (plugin is Old.IEnhancedPlugin saberPlugin)
                     saberPlugin.OnLateUpdate();
             });
         }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using Mono.Cecil;
 #if NET3
 using File = Net3_Proxy.File;
 #endif
@@ -186,6 +187,11 @@ namespace IPA.Utilities
             if (cmpVal != 0) return cmpVal;
             cmpVal = l.Patch - r.Patch;
             return cmpVal;
+        }
+        internal static bool HasInterface(this TypeDefinition type, string interfaceFullName)
+        {
+            return (type.Interfaces.Any(i => i.InterfaceType.FullName == interfaceFullName)
+                    || type.Interfaces.Any(t => HasInterface(t.InterfaceType.Resolve(), interfaceFullName)));
         }
 
 #if NET4

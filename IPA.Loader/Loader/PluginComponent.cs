@@ -34,7 +34,9 @@ namespace IPA.Loader
             gameObject.AddComponent<Updating.BeatMods.Updater>();
 #endif
 
+#pragma warning disable CS0612 // Type or member is obsolete
             bsPlugins.OnApplicationStart();
+#pragma warning restore CS0612 // Type or member is obsolete
             ipaPlugins.OnApplicationStart();
             
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
