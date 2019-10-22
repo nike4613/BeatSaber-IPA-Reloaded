@@ -111,6 +111,8 @@
     <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IDisablablePlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
+    <Compile Include="PluginInterfaces\BeatSaber\IEnhancedPlugin.cs" />
+    <Compile Include="PluginInterfaces\BeatSaber\IPlugin.cs" />
     <Compile Include="PluginInterfaces\IGenericEnhancedPlugin.cs" />
     <Compile Include="Config\IniFile.cs" />
     <Compile Include="PluginInterfaces\IPA\IEnhancedPlugin.cs" />
@@ -167,7 +169,7 @@
     <EmbeddedResource Include="Loader\description.md" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="icon_black.png" />
+    <None Include="icon_black.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

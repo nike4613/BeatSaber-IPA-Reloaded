@@ -5,6 +5,7 @@ namespace IPA
     /// <summary>
     /// An enhanced version of a standard BeatSaber plugin.
     /// </summary>
+    [System.Obsolete]
     public interface IEnhancedBeatSaberPlugin : IBeatSaberPlugin, IGenericEnhancedPlugin
     {
     }

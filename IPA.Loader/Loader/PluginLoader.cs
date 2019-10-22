@@ -124,7 +124,7 @@ namespace IPA.Loader
         /// </summary>
         public class PluginInfo
         {
-            internal IBeatSaberPlugin Plugin { get; set; }
+            internal _IPlugin Plugin { get; set; }
 
             /// <summary>
             /// Metadata for the plugin.
@@ -243,17 +243,14 @@ namespace IPA.Loader
                     {
                         if (type.Namespace != pluginNs) continue;
 
-                        foreach (var inter in type.Interfaces)
+                        // TODO: change this to just IPlugin
+                        if (type.HasInterface(typeof(_IPlugin).FullName))
                         {
-                            if (typeof(IBeatSaberPlugin).FullName == inter.InterfaceType.FullName)
-                            {
-                                metadata.PluginType = type;
-                                goto type_loop_done; // break out of both loops
-                            }
+                            metadata.PluginType = type;
+                            break;
                         }
                     }
 
-                    type_loop_done:
                     if (metadata.PluginType == null)
                     {
                         Logger.loader.Error($"No plugin found in the manifest namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
@@ -645,7 +642,7 @@ namespace IPA.Loader
                 }
 
                 var type = meta.Assembly.GetType(meta.PluginType.FullName);
-                var instance = (IBeatSaberPlugin)Activator.CreateInstance(type);
+                var instance = Activator.CreateInstance(type) as _IPlugin;
 
                 info.Metadata = meta;
                 info.Plugin = instance;
@@ -668,17 +665,18 @@ namespace IPA.Loader
                 foreach (var feature in meta.Features)
                     try
                     {
-                        feature.AfterInit(info, info.Plugin);
+                        // TODO: remove need for cast
+                        feature.AfterInit(info, info.Plugin as IPlugin);
                     }
                     catch (Exception e)
                     {
                         Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
                     }
 
-                if (instance is IDisablablePlugin disable)
+                if (instance is IPlugin newPlugin) // TODO: remove this check, all plugins should be IPlugin
                     try // TODO: move this out to after all plugins have been inited
                     {
-                        disable.OnEnable();
+                        newPlugin.OnEnable();
                     }
                     catch (Exception e)
                     {

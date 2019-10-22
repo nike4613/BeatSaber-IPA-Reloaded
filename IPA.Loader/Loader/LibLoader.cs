@@ -7,15 +7,22 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Linq;
 using IPA.Logging;
+using IPA.Utilities;
 using Mono.Cecil;
 
 namespace IPA.Loader
 {
     internal class CecilLibLoader : BaseAssemblyResolver
     {
+        private static string CurrentAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        private static string CurrentAssemblyPath = Assembly.GetExecutingAssembly().Location;
+
         public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
         {
             LibLoader.SetupAssemblyFilenames();
+
+            if (name.Name == CurrentAssemblyName)
+                return AssemblyDefinition.ReadAssembly(CurrentAssemblyPath, parameters);
 
             if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out var path))
             {

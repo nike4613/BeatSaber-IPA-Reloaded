@@ -68,7 +68,7 @@ namespace IPA.Loader.Features
         /// </summary>
         /// <param name="plugin">the plugin that was just initialized</param>
         /// <param name="pluginInstance">the instance of the plugin being initialized</param>
-        public virtual void AfterInit(PluginLoader.PluginInfo plugin, IBeatSaberPlugin pluginInstance) => AfterInit(plugin);
+        public virtual void AfterInit(PluginLoader.PluginInfo plugin, IPlugin pluginInstance) => AfterInit(plugin);
 
         /// <summary>
         /// Called after a plugin has been fully initialized, whether or not there is an `Init` method. This should never throw an exception.

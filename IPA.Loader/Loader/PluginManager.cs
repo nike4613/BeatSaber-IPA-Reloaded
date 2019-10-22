@@ -32,7 +32,7 @@ namespace IPA.Loader
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
         /// </summary>
-        internal static IEnumerable<IBeatSaberPlugin> BSPlugins => (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
+        internal static IEnumerable<_IPlugin> BSPlugins => (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
         private static List<PluginInfo> _bsPlugins;
         internal static IEnumerable<PluginInfo> BSMetas => _bsPlugins;
 
@@ -174,11 +174,11 @@ namespace IPA.Loader
             var depsNeedRestart = plugin.Dependencies.Aggregate(false, (b, p) => EnablePlugin(p) || b);
 
             var runtimeInfo = runtimeDisabled.FirstOrDefault(p => p.Metadata == plugin);
-            if (runtimeInfo != null && runtimeInfo.Plugin is IDisablablePlugin disable)
+            if (runtimeInfo != null && runtimeInfo.Plugin is IPlugin newPlugin)
             {
                 try
                 {
-                    disable.OnEnable();
+                    newPlugin.OnEnable();
                 }
                 catch (Exception e)
                 {
@@ -290,8 +290,8 @@ namespace IPA.Loader
         /// </summary>
         /// <value>all legacy plugin instances</value>
         [Obsolete("I mean, IPlugin shouldn't be used, so why should this? Not renaming to extend support for old plugins.")]
-        public static IEnumerable<IPlugin> Plugins => _ipaPlugins;
-        private static List<IPlugin> _ipaPlugins;
+        public static IEnumerable<Old.IPlugin> Plugins => _ipaPlugins;
+        private static List<Old.IPlugin> _ipaPlugins;
 
         internal static IConfigProvider SelfConfigProvider { get; set; }
 
@@ -303,7 +303,7 @@ namespace IPA.Loader
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             _bsPlugins = new List<PluginInfo>();
-            _ipaPlugins = new List<IPlugin>();
+            _ipaPlugins = new List<Old.IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
 
@@ -398,12 +398,12 @@ namespace IPA.Loader
             Logger.log.Info("-----------------------------");
         }
 
-        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>> LoadPluginsFromFile(string file)
+        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<Old.IPlugin>> LoadPluginsFromFile(string file)
         {
-            List<IPlugin> ipaPlugins = new List<IPlugin>();
+            var ipaPlugins = new List<Old.IPlugin>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(null, ipaPlugins);
+                return new Tuple<IEnumerable<PluginInfo>, IEnumerable<Old.IPlugin>>(null, ipaPlugins);
 
             T OptionalGetPlugin<T>(Type t) where T : class
             {
@@ -431,7 +431,7 @@ namespace IPA.Loader
                 foreach (Type t in assembly.GetTypes())
                 {
                        
-                    IPlugin ipaPlugin = OptionalGetPlugin<IPlugin>(t);
+                    var ipaPlugin = OptionalGetPlugin<Old.IPlugin>(t);
                     if (ipaPlugin != null)
                     {
                         ipaPlugins.Add(ipaPlugin);
@@ -450,7 +450,7 @@ namespace IPA.Loader
                 Logger.loader.Error(e);
             }
 
-            return new Tuple<IEnumerable<PluginInfo>, IEnumerable<IPlugin>>(null, ipaPlugins);
+            return new Tuple<IEnumerable<PluginInfo>, IEnumerable<Old.IPlugin>>(null, ipaPlugins);
         }
 
         internal static class AppInfo
