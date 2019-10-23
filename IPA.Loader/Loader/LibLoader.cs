@@ -8,6 +8,10 @@ using System.Runtime.InteropServices;
 using System.Linq;
 using IPA.Logging;
 using Mono.Cecil;
+#if NET3
+using Net3_Proxy;
+using Directory = Net3_Proxy.Directory;
+#endif
 
 namespace IPA.Loader
 {
