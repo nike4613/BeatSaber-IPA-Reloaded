@@ -96,7 +96,7 @@ namespace IPA.Injector
 
                 GameVersionEarly.Load();
 
-                HarmonyProtector.Protect();
+                InstallHarmonyProtections();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
@@ -104,6 +104,7 @@ namespace IPA.Injector
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                throw;
             }
         }
 
@@ -121,6 +122,11 @@ namespace IPA.Injector
             if (loadingDone) return;
             loadingDone = true;
             LibLoader.Configure();
+        }
+
+        private static void InstallHarmonyProtections()
+        { // proxy function to delay resolution
+            HarmonyProtector.Protect();
         }
 
         private static void InstallBootstrapPatch()

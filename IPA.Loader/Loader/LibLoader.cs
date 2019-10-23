@@ -47,9 +47,9 @@ namespace IPA.Loader
 
         internal static void Configure()
         {
+            SetupAssemblyFilenames(true);
             AppDomain.CurrentDomain.AssemblyResolve -= AssemblyLibLoader;
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
-            SetupAssemblyFilenames(true);
         }
 
         internal static void SetupAssemblyFilenames(bool force = false)
@@ -93,8 +93,8 @@ namespace IPA.Loader
                     }).All(f => true); // force it to iterate all
                 }
 
-                var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
-                AddDir(Path.Combine(unityData, "Plugins"));
+                //var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
+                //AddDir(Path.Combine(unityData, "Plugins"));
 
                 foreach (var dir in Environment.GetEnvironmentVariable("path").Split(Path.PathSeparator))
                     AddDir(dir);
