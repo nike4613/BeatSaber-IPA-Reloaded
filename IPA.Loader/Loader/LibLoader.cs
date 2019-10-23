@@ -12,6 +12,8 @@ using Mono.Cecil;
 #if NET3
 using Net3_Proxy;
 using Directory = Net3_Proxy.Directory;
+using Path = Net3_Proxy.Path;
+using File = Net3_Proxy.File;
 #endif
 
 namespace IPA.Loader
