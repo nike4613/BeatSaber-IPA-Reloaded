@@ -6,7 +6,7 @@ namespace IPA
     /// Interface for BSIPA plugins. Every class that implements this will be loaded if the DLL is placed at
     /// &lt;install dir&gt;/Plugins.
     /// </summary>
-    public interface IPlugin : _IPlugin
+    public interface IPlugin
     {
         /// <summary>
         /// Called when a plugin is enabled. This is where you should set up Harmony patches and the like.
@@ -18,11 +18,7 @@ namespace IPA
         /// Init will only ever be called once.
         /// </remarks>
         void OnEnable();
-    }
-    /// <summary>
-    /// An interface for providing compatability with BSIPA 3.x.x. Do not use.
-    /// </summary>
-    public interface _IPlugin {
+
         /// <summary>
         /// Gets invoked when the application is closed.
         /// </summary>

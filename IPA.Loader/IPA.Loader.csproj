@@ -108,9 +108,7 @@
     <Compile Include="Logging\Printers\ColorlessConsolePrinter.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />
     <Compile Include="Logging\StdoutInterceptor.cs" />
-    <Compile Include="PluginInterfaces\BeatSaber\IBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IDisablablePlugin.cs" />
-    <Compile Include="PluginInterfaces\BeatSaber\IEnhancedBeatSaberPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IPlugin.cs" />
     <Compile Include="PluginInterfaces\IGenericEnhancedPlugin.cs" />

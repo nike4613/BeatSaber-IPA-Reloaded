@@ -32,7 +32,7 @@ namespace IPA.Loader
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
         /// </summary>
-        internal static IEnumerable<_IPlugin> BSPlugins => (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
+        internal static IEnumerable<IPlugin> BSPlugins => (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
         private static List<PluginInfo> _bsPlugins;
         internal static IEnumerable<PluginInfo> BSMetas => _bsPlugins;
 
@@ -324,11 +324,17 @@ namespace IPA.Loader
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
 
+            var metadataPaths = PluginsMetadata.Select(m => m.File.FullName).ToList();
+            var ignoredPaths = ignoredPlugins.Select(m => m.File.FullName).ToList();
+            var disabledPaths = DisabledPlugins.Select(m => m.File.FullName).ToList();
+
             //Copy plugins to .cache
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
             foreach (string s in originalPlugins)
             {
-                if (PluginsMetadata.Select(m => m.File.FullName).Contains(s)) continue;
+                if (metadataPaths.Contains(s)) continue;
+                if (ignoredPaths.Contains(s)) continue;
+                if (disabledPaths.Contains(s)) continue;
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
 
                 #region Fix assemblies for refactor
