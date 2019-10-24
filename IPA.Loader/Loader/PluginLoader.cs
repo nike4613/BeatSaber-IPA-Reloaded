@@ -124,7 +124,7 @@ namespace IPA.Loader
         /// </summary>
         public class PluginInfo
         {
-            internal _IPlugin Plugin { get; set; }
+            internal IPlugin Plugin { get; set; }
 
             /// <summary>
             /// Metadata for the plugin.
@@ -196,14 +196,14 @@ namespace IPA.Loader
 
             foreach (var plugin in plugins)
             {
+                var metadata = new PluginMetadata
+                {
+                    File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, plugin)),
+                    IsSelf = false
+                };
+
                 try
                 {
-                    var metadata = new PluginMetadata
-                    {
-                        File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, plugin)),
-                        IsSelf = false
-                    };
-
                     var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
                     {
                        ReadingMode = ReadingMode.Immediate,
@@ -244,7 +244,7 @@ namespace IPA.Loader
                         if (type.Namespace != pluginNs) continue;
 
                         // TODO: change this to just IPlugin
-                        if (type.HasInterface(typeof(_IPlugin).FullName))
+                        if (type.HasInterface(typeof(IPlugin).FullName))
                         {
                             metadata.PluginType = type;
                             break;
@@ -264,6 +264,7 @@ namespace IPA.Loader
                 {
                     Logger.loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
                     Logger.loader.Error(e);
+                    ignoredPlugins.Add(metadata);
                 }
             }
 
@@ -642,7 +643,7 @@ namespace IPA.Loader
                 }
 
                 var type = meta.Assembly.GetType(meta.PluginType.FullName);
-                var instance = Activator.CreateInstance(type) as _IPlugin;
+                var instance = Activator.CreateInstance(type) as IPlugin;
 
                 info.Metadata = meta;
                 info.Plugin = instance;

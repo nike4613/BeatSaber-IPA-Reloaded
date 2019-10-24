@@ -21,7 +21,7 @@
         /// from events. After this is called there should be no lingering effects of the mod.
         /// </summary>
         /// <remarks>
-        /// This will get called at shutdown, after <see cref="_IPlugin.OnApplicationQuit"/>, as well as when the
+        /// This will get called at shutdown, after <see cref="IPlugin.OnApplicationQuit"/>, as well as when the
         /// plugin is disabled at runtime.
         /// </remarks>
         void OnDisable();

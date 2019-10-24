@@ -5,11 +5,7 @@ using Logger = IPA.Logging.Logger;
 
 namespace IPA.Loader.Composite
 {
-    internal class CompositeBSPlugin :
-#pragma warning disable CS0618 // Type or member is obsolete
-        IBeatSaberPlugin,
-#pragma warning restore CS0618 // Type or member is obsolete
-        _IPlugin
+    internal class CompositeBSPlugin
     {
         private readonly IEnumerable<PluginLoader.PluginInfo> plugins;
 
@@ -17,11 +13,6 @@ namespace IPA.Loader.Composite
         
         public CompositeBSPlugin(IEnumerable<PluginLoader.PluginInfo> plugins) {
             this.plugins = plugins;
-        }
-
-        [Obsolete]
-        public void OnApplicationStart() {
-            Invoke(plugin => (plugin.Plugin as IBeatSaberPlugin)?.OnApplicationStart());
         }
 
         public void OnApplicationQuit() {
