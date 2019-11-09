@@ -18,7 +18,16 @@ namespace IPA.Utilities
         {
             Logger.log.Debug("Configuring exit handlers");
 
+            AppDomain.CurrentDomain.ProcessExit -= Reset;
+            AppDomain.CurrentDomain.ProcessExit += Reset;
+
             ResetExitHandlers();
+        }
+
+        private static void Reset(object sender, EventArgs e)
+        {
+            Win32.SetConsoleCtrlHandler(registeredHandler, false);
+            WinHttp.SetPeekMessageHook(null);
         }
 
         #region Execute section
