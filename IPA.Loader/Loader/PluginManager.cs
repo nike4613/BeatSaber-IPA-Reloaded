@@ -13,6 +13,7 @@ using Mono.Cecil;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using static IPA.Loader.PluginLoader;
+using IPA.Loader.Features;
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
@@ -323,6 +324,7 @@ namespace IPA.Loader
 
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
+            NoRuntimeEnableFeature.HaveLoadedPlugins = true;
 
             var metadataPaths = PluginsMetadata.Select(m => m.File.FullName).ToList();
             var ignoredPaths = ignoredPlugins.Select(m => m.File.FullName).ToList();

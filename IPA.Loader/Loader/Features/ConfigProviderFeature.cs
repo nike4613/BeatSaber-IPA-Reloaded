@@ -39,7 +39,7 @@ namespace IPA.Loader.Features
                         goto hasFilename;
                     case BadImageFormatException bi:
                         filename = bi.FileName;
-                        hasFilename:
+                    hasFilename:
                         InvalidMessage = $"Could not find {filename} while loading type";
                         break;
                     default:

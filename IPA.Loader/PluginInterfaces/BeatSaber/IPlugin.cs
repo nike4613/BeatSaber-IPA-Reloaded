@@ -6,6 +6,10 @@ namespace IPA
     /// Interface for BSIPA plugins. Every class that implements this will be loaded if the DLL is placed at
     /// &lt;install dir&gt;/Plugins.
     /// </summary>
+    /// <remarks>
+    /// Mods implemented with this interface should handle being enabled at runtime properly, unless marked
+    /// with the "no-runtime-enable" feature.
+    /// </remarks>
     public interface IPlugin
     {
         /// <summary>
