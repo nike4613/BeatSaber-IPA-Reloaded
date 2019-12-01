@@ -1,6 +1,3 @@
-[submodule "Doorstop"]
-	path = Doorstop
-	url = https://github.com/nike4613/UnityDoorstop-BSIPA
 [submodule "BuildTools"]
 	path = BuildTools
 	url = https://github.com/beat-saber-modding-group/BS-Plugin-BuildTools.git
