@@ -29,7 +29,7 @@ namespace IPA.Loader
             inst.Patch(target, new HarmonyMethod(patch));
         }
 
-        private static void PatchProcessor_Patch_Prefix(PatchProcessor __instance, ref List<MethodBase> ___originals)
+        private static void PatchProcessor_Patch_Prefix(ref List<MethodBase> ___originals)
         {
             for (int i = 0; i < ___originals.Count; i++)
             {
