@@ -1,0 +1,3 @@
+LIBRARY    proxy.dll
+EXPORTS
+${proxy_exports}
