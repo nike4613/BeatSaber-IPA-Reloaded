@@ -29,7 +29,7 @@ namespace BSIPA_ModList
     /// <summary>
     /// The main plugin type for the in-game mod list mod.
     /// </summary>
-    internal class Plugin : IBeatSaberPlugin
+    internal class Plugin : IPlugin
     {
         internal static IConfigProvider provider;
         internal static Ref<SelfConfig> config;
@@ -109,6 +109,11 @@ namespace BSIPA_ModList
 
         public void OnUpdate()
         {
+        }
+
+        public void OnEnable()
+        {
+
         }
     }
 }
