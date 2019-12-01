@@ -53,6 +53,8 @@ namespace IPA.Loader
 
         internal static void Configure()
         {
+            Console.WriteLine("Configuring up library loading");
+
             SetupAssemblyFilenames(true);
             AppDomain.CurrentDomain.AssemblyResolve -= AssemblyLibLoader;
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
@@ -62,6 +64,8 @@ namespace IPA.Loader
         {
             if (FilenameLocations == null || force)
             {
+                Console.WriteLine("Calculating assembly filenames");
+
                 FilenameLocations = new Dictionary<string, string>();
 
                 foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
@@ -69,6 +73,7 @@ namespace IPA.Loader
                         Log(Logger.Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
                     else FilenameLocations.Add(fn.Name, fn.FullName);
 
+                foreach (var kvp in FilenameLocations) Console.WriteLine(kvp);
 
                 if (!SetDefaultDllDirectories(LoadLibraryFlags.LOAD_LIBRARY_SEARCH_USER_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_SYSTEM32
                                             | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_APPLICATION_DIR))
@@ -118,6 +123,8 @@ namespace IPA.Loader
             Log(Logger.Level.Debug, $"Resolving library {asmName}");
 
             SetupAssemblyFilenames();
+
+            Console.WriteLine($"Looking for {asmName.Name} {asmName.Version} ({asmName.Name}.{asmName.Version}.dll)");
 
             var testFile = $"{asmName.Name}.{asmName.Version}.dll";
             Log(Logger.Level.Debug, $"Looking for file {testFile}");

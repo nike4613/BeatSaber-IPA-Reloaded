@@ -4,12 +4,17 @@ using System.Reflection;
 
 namespace IPA.Loader
 {
+    internal static class HarmonyProtectorProxy
+    {
+        public static void ProtectNull() => HarmonyProtector.Protect();
+    }
+
     internal static class HarmonyProtector
     {
         private static HarmonyInstance instance;
         private static Assembly selfAssem;
         private static Assembly harmonyAssem;
-
+        
         public static void Protect(HarmonyInstance inst = null)
         {
             selfAssem = Assembly.GetExecutingAssembly();
