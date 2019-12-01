@@ -104,7 +104,6 @@ namespace IPA.Injector
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
         }
 
