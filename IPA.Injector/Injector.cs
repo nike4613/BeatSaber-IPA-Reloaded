@@ -45,8 +45,6 @@ namespace IPA.Injector
                 if (Environment.GetCommandLineArgs().Contains("--verbose"))
                     WinConsole.Initialize();
 
-                Console.WriteLine("Setting up library loading");
-
                 SetupLibraryLoading();
 
                 /*var otherNewtonsoft = Path.Combine(
@@ -97,8 +95,6 @@ namespace IPA.Injector
                 LibLoader.SetupAssemblyFilenames(true);
 
                 GameVersionEarly.Load();
-
-                InstallHarmonyProtections();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
@@ -310,6 +306,8 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
+
+            InstallHarmonyProtections();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
