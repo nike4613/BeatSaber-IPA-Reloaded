@@ -1,16 +1,14 @@
 #pragma once
 
-
-#ifdef _VERBOSE
-
 #pragma comment(lib, "ucrt.lib")
 
 #include <windows.h>
 #include <stdio.h>
 
+#ifdef _VERBOSE
+
 static HANDLE log_handle;
 static char buffer[8192];
-static wchar_t bufferW[8192];
 
 inline void init_logger()
 {
@@ -39,6 +37,8 @@ inline void free_logger()
 
 #define LOG(message, ...) 
 #endif
+
+static wchar_t bufferW[8192];
 
 #define ASSERT_F(test, message, ...)											        	                            \
 	if(!(test))																		                                    \
