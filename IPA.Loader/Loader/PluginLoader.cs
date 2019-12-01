@@ -666,24 +666,23 @@ namespace IPA.Loader
                 foreach (var feature in meta.Features)
                     try
                     {
-                        // TODO: remove need for cast
-                        feature.AfterInit(info, info.Plugin as IPlugin);
+                        feature.AfterInit(info, info.Plugin);
                     }
                     catch (Exception e)
                     {
                         Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
                     }
 
-                if (instance is IPlugin newPlugin) // TODO: remove this check, all plugins should be IPlugin
-                    try // TODO: move this out to after all plugins have been inited
-                    {
-                        newPlugin.OnEnable();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.loader.Error($"Error occurred trying to enable {meta.Name}");
-                        Logger.loader.Error(e);
-                    }
+                try // TODO: move this out to after all plugins have been inited
+                {
+                    instance.OnEnable();
+                }
+                catch (Exception e)
+                {
+                    Logger.loader.Error($"Error occurred trying to enable {meta.Name}");
+                    Logger.loader.Error(e);
+                    return null; // is enable failure a full load failure?
+                }
             }
             catch (AmbiguousMatchException)
             {

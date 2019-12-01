@@ -1,7 +1,7 @@
 ﻿namespace IPA
 {
     /// <summary>
-    /// Provides methods to allow runtime enabling and disabling of a plugin.
+    /// Provides methods to allow runtime disabling of a plugin.
     /// </summary>
     public interface IDisablablePlugin
     {

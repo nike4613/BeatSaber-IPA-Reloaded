@@ -1,27 +1,28 @@
 ﻿{
-    "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
-    "author": "DaNike",
-    "description": [
-        "#![IPA.Loader.description.md]",
-        "A mod loader specifically for Beat Saber."
-    ],
-    "gameVersion": "1.3.0",
-    "id": "BSIPA",
-    "name": "Beat Saber IPA",
-    "version": "4.0.0-beta.1",
-    "icon": "IPA.icon_white.png",
-    "features": [
-        "define-feature(print, IPA.Loader.Features.PrintFeature)",
-        "define-feature(debug, IPA.Loader.Features.DebugFeature)",
-        "define-feature(warn, IPA.Loader.Features.WarnFeature)",
-        "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
-        "define-feature(add-in, IPA.Loader.Features.AddInFeature)",
-        "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
-        "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)"
-    ],
-    "links": {
-        "project-home": "https://beat-saber-modding-group.github.io/BeatSaber-IPA-Reloaded/index.html",
-        "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
-        "donate": "https://ko-fi.com/danike"
-    }
+  "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
+  "author": "DaNike",
+  "description": [
+    "#![IPA.Loader.description.md]",
+    "A mod loader specifically for Beat Saber."
+  ],
+  "gameVersion": "1.5.0",
+  "id": "BSIPA",
+  "name": "Beat Saber IPA",
+  "version": "4.0.0-beta.1",
+  "icon": "IPA.icon_white.png",
+  "features": [
+    "define-feature(print, IPA.Loader.Features.PrintFeature)",
+    "define-feature(debug, IPA.Loader.Features.DebugFeature)",
+    "define-feature(warn, IPA.Loader.Features.WarnFeature)",
+    "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
+    "define-feature(no-runtime-enable, IPA.Loader.Features.NoRuntimeEnableFeature)",
+    "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
+    "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)",
+    ""
+  ],
+  "links": {
+    "project-home": "https://beat-saber-modding-group.github.io/BeatSaber-IPA-Reloaded/index.html",
+    "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
+    "donate": "https://ko-fi.com/danike"
+  }
 }
