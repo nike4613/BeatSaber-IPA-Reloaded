@@ -113,9 +113,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lib.Harmony">
-      <Version>1.2.0.1</Version>
-    </PackageReference>
     <PackageReference Include="Mono.Cecil">
       <Version>0.10.4</Version>
     </PackageReference>

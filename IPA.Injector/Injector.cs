@@ -45,6 +45,8 @@ namespace IPA.Injector
                 if (Environment.GetCommandLineArgs().Contains("--verbose"))
                     WinConsole.Initialize();
 
+                Console.WriteLine("Setting up library loading");
+
                 SetupLibraryLoading();
 
                 /*var otherNewtonsoft = Path.Combine(
@@ -62,13 +64,13 @@ namespace IPA.Injector
                 // this is weird, but it prevents Mono from having issues loading the type.
                 // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
                 var unused = StandardLogger.PrintFilter;
-                #region // Above hack explaination
+#region // Above hack explaination
                 /* 
                  * Due to an unknown bug in the version of Mono that Unity uses, if the first access to StandardLogger
                  * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
                  * the above static property (or maybe any, but I don't really know) it behaves as expected and works fine.
                  */
-                #endregion
+#endregion
 
                 log.Debug("Initializing logger");
 
@@ -125,7 +127,7 @@ namespace IPA.Injector
 
         private static void InstallHarmonyProtections()
         { // proxy function to delay resolution
-            HarmonyProtector.Protect();
+            HarmonyProtectorProxy.ProtectNull();
         }
 
         private static void InstallBootstrapPatch()
@@ -144,7 +146,7 @@ namespace IPA.Injector
 
             loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
 
-            #region Insert patch into UnityEngine.CoreModule.dll
+#region Insert patch into UnityEngine.CoreModule.dll
 
             {
                 var unityPath = Path.Combine(managedPath,
@@ -236,7 +238,7 @@ namespace IPA.Injector
                 CriticalSection.ExitExecuteSection();
             }
 
-            #endregion Insert patch into UnityEngine.CoreModule.dll
+#endregion Insert patch into UnityEngine.CoreModule.dll
 
             loader.Debug("Ensuring Assembly-CSharp is virtualized");
             
@@ -244,7 +246,7 @@ namespace IPA.Injector
                 var ascPath = Path.Combine(managedPath,
                     "Assembly-CSharp.dll");
 
-                #region Virtualize Assembly-CSharp.dll
+#region Virtualize Assembly-CSharp.dll
 
                 {
                     CriticalSection.EnterExecuteSection();
@@ -255,9 +257,9 @@ namespace IPA.Injector
                     CriticalSection.ExitExecuteSection();
                 }
 
-                #endregion Virtualize Assembly-CSharp.dll
+#endregion Virtualize Assembly-CSharp.dll
 
-                #region Anti-Yeet
+#region Anti-Yeet
 
                 CriticalSection.EnterExecuteSection();
 
@@ -285,7 +287,7 @@ namespace IPA.Injector
 
                 CriticalSection.ExitExecuteSection();
 
-                #endregion
+#endregion
             }
         }
 
