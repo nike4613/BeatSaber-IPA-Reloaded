@@ -9,8 +9,8 @@
 #include <stdio.h>
 
 static HANDLE log_handle;
-char buffer[8192];
-wchar_t bufferW[8192];
+static char buffer[8192];
+static wchar_t bufferW[8192];
 
 inline void init_logger()
 {
