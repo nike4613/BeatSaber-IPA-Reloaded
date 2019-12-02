@@ -7,7 +7,7 @@ namespace IPA.Config
     /// An interface for configuration providers.
     /// </summary>
     public interface IConfigProvider
-    {
+    { // TODO: rework this
         /// <summary>
         /// Loads the data provided by this <see cref="IConfigProvider"/> into an object of type <typeparamref name="T"/>.
         /// </summary>
