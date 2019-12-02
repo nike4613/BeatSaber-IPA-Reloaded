@@ -630,7 +630,7 @@ namespace IPA.Loader
                 Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
             try
-            {
+            { // TODO: add dependency checking for when features prevent loading
                 Load(meta);
 
                 Feature denyingFeature = null;

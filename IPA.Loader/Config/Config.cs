@@ -166,7 +166,7 @@ namespace IPA.Config
         /// <param name="onChange">an action to perform on value change</param>
         /// <returns>a <see cref="Ref{T}"/> to an ever-changing value, mirroring whatever the file contains.</returns>
         public static Ref<T> MakeLink<T>(this IConfigProvider config, Action<IConfigProvider, Ref<T>> onChange = null)
-        {
+        { // TODO: rework this stuff
             Ref<T> @ref = config.Parse<T>();
             void ChangeDelegate()
             {
