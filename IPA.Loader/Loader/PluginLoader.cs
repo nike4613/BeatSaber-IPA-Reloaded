@@ -311,7 +311,7 @@ namespace IPA.Loader
                     if (!meta.IsSelf)
                     {
                         var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
-                                                                   .Where(r => r != null)
+                                                                   .NonNull()
                                                                    .FirstOrDefault(r => r.Name == name);
                         if (resc == null)
                         {
@@ -488,7 +488,7 @@ namespace IPA.Loader
         {
             var metadata = new List<PluginMetadata>();
             var pluginsToLoad = new Dictionary<string, Version>();
-            var disabledLookup = DisabledPlugins.Where(m => m.Id != null).ToDictionary(m => m.Id, m => m.Version);
+            var disabledLookup = DisabledPlugins.NonNull(m => m.Id).ToDictionary(m => m.Id, m => m.Version);
             foreach (var meta in PluginsMetadata)
             {
                 bool load = true;
@@ -705,7 +705,7 @@ namespace IPA.Loader
         {
             InitFeatures();
             DisabledPlugins.ForEach(Load); // make sure they get loaded into memory so their metadata and stuff can be read more easily
-            return PluginsMetadata.Select(InitPlugin).Where(p => p != null).ToList();
+            return PluginsMetadata.Select(InitPlugin).NonNull().ToList();
         }
     }
 }
