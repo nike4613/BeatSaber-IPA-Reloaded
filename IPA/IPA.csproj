@@ -114,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Mono.Cecil">
-      <Version>0.10.4</Version>
+      <Version>0.11.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

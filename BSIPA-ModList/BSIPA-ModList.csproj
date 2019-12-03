@@ -108,7 +108,7 @@
       <Version>0.15.1</Version>
     </PackageReference>
     <PackageReference Include="SemanticVersioning">
-      <Version>1.2.0</Version>
+      <Version>1.2.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
