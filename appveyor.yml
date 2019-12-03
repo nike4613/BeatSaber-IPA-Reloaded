@@ -17,7 +17,7 @@ install:
   - git submodule update --init --recursive
   - nuget restore
   - ps: |
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:BUILD_DOC -Eq 'yes')
         {
             #git checkout $env:APPVEYOR_REPO_BRANCH -q
             choco install docfx -y
