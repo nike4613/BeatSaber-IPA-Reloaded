@@ -395,7 +395,7 @@ namespace IPA.Updating.BeatMods
                 }
 
                 var ver = modsMatching.Value
-                    .Where(nullCheck => nullCheck != null) // entry is not null
+                    .NonNull() // entry is not null
                     .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion) // game version matches
                     .Where(approvalCheck => approvalCheck.Status == ApiEndpoint.Mod.ApprovedStatus) // version approved
                     // TODO: fix; it seems wrong somehow

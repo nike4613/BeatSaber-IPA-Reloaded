@@ -86,9 +86,9 @@ namespace BSIPA_ModList.UI
 
                 _warningsQueue.Clear();
 
-                var enabledPlugins = PluginManager.AllPlugins.Select(p => p.Metadata).Where(x => x.Id != null).ToDictionary(x => x.Id, y => y.Version);
-                var ignoredPlugins = PluginLoader.ignoredPlugins.Where(x => x.Id != null).ToDictionary(x => x.Id, y => y.Version);
-                var disabledPlugins = PluginManager.DisabledPlugins.Where(x => x.Id != null).ToDictionary(x => x.Id, y => y.Version);
+                var enabledPlugins = PluginManager.AllPlugins.Select(p => p.Metadata).NonNull(x => x.Id).ToDictionary(x => x.Id, y => y.Version);
+                var ignoredPlugins = PluginLoader.ignoredPlugins.NonNull(x => x.Id).ToDictionary(x => x.Id, y => y.Version);
+                var disabledPlugins = PluginManager.DisabledPlugins.NonNull(x => x.Id).ToDictionary(x => x.Id, y => y.Version);
 
                 // iterate only disabled and ignored, as thats where missing deps can end up
                 foreach (var meta in PluginManager.DisabledPlugins.Concat(PluginLoader.ignoredPlugins))
