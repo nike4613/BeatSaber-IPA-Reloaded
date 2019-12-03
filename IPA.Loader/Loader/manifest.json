@@ -17,7 +17,7 @@
     "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
     "define-feature(no-runtime-enable, IPA.Loader.Features.NoRuntimeEnableFeature)",
     "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
-    "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)",
+    "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)"
   ],
   "links": {
     "project-home": "https://beat-saber-modding-group.github.io/BeatSaber-IPA-Reloaded/index.html",
