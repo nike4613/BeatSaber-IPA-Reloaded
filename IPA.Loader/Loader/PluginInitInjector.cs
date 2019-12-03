@@ -64,6 +64,9 @@ namespace IPA.Loader
         private static readonly List<TypedInjector> injectors = new List<TypedInjector>
         {
             new TypedInjector(typeof(Logger), (prev, param, meta) => prev ?? new StandardLogger(meta.Name)),
+#pragma warning disable CS0618 // Type or member is obsolete
+            new TypedInjector(typeof(IModPrefs), (prev, param, meta) => prev ?? new ModPrefs(meta)),
+#pragma warning restore CS0618 // Type or member is obsolete
             new TypedInjector(typeof(PluginLoader.PluginMetadata), (prev, param, meta) => prev ?? meta),
             new TypedInjector(typeof(IConfigProvider), (prev, param, meta) =>
             {
