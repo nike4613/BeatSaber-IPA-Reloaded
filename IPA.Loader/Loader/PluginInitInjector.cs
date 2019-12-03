@@ -33,17 +33,42 @@ namespace IPA.Loader
         /// <param name="injector">the function to call for injection.</param>
         public static void AddInjector(Type type, InjectParameter injector)
         {
-            injectors.Add(Tuple.Create(type, injector));
+            injectors.Add(new TypedInjector(type, injector));
         }
 
-        private static readonly List<Tuple<Type, InjectParameter>> injectors = new List<Tuple<Type, InjectParameter>>
+        private struct TypedInjector : IEquatable<TypedInjector>
         {
-            new Tuple<Type, InjectParameter>(typeof(Logger), (prev, param, meta) => prev ?? new StandardLogger(meta.Name)),
+            public Type Type;
+            public InjectParameter Injector;
+
+            public TypedInjector(Type t, InjectParameter i)
+            { Type = t; Injector = i; }
+
+            public object Inject(object prev, ParameterInfo info, PluginLoader.PluginMetadata meta)
+                => Injector(prev, info, meta);
+
+            public bool Equals(TypedInjector other)
+                => Type == other.Type && Injector == other.Injector;
+
+            public override bool Equals(object obj) 
+                => obj is TypedInjector i && Equals(i);
+
+
+            public override int GetHashCode()
+                => Type.GetHashCode() ^ Injector.GetHashCode();
+
+            public static bool operator ==(TypedInjector a, TypedInjector b) => a.Equals(b);
+            public static bool operator !=(TypedInjector a, TypedInjector b) => !a.Equals(b);
+        }
+
+        private static readonly List<TypedInjector> injectors = new List<TypedInjector>
+        {
+            new TypedInjector(typeof(Logger), (prev, param, meta) => prev ?? new StandardLogger(meta.Name)),
 #pragma warning disable CS0618 // Type or member is obsolete
-            new Tuple<Type, InjectParameter>(typeof(IModPrefs), (prev, param, meta) => prev ?? new ModPrefs(meta)),
+            new TypedInjector(typeof(IModPrefs), (prev, param, meta) => prev ?? new ModPrefs(meta)),
 #pragma warning restore CS0618 // Type or member is obsolete
-            new Tuple<Type, InjectParameter>(typeof(PluginLoader.PluginMetadata), (prev, param, meta) => prev ?? meta),
-            new Tuple<Type, InjectParameter>(typeof(IConfigProvider), (prev, param, meta) =>
+            new TypedInjector(typeof(PluginLoader.PluginMetadata), (prev, param, meta) => prev ?? meta),
+            new TypedInjector(typeof(IConfigProvider), (prev, param, meta) =>
             {
                 if (prev != null) return prev;
                 var cfgProvider = Config.Config.GetProviderFor(meta.Name, param);
@@ -51,6 +76,28 @@ namespace IPA.Loader
                 return cfgProvider;
             })
         };
+
+        private static int? MatchPriority(Type target, Type source)
+        {
+            if (target == source) return int.MaxValue;
+            if (!target.IsAssignableFrom(source)) return null;
+            if (!target.IsInterface && !source.IsSubclassOf(target)) return int.MinValue;
+
+            int value = 0;
+            while (true)
+            {
+                if (source == null) return value;
+                if (target.IsInterface && source.GetInterfaces().Contains(target))
+                    return value;
+                else if (target == source)
+                    return value;
+                else
+                {
+                    value--; // lower priority
+                    source = source.BaseType;
+                }
+            }
+        }
 
         internal static void Inject(MethodInfo init, PluginLoader.PluginInfo info)
         {
@@ -60,21 +107,28 @@ namespace IPA.Loader
             var initArgs = new List<object>();
             var initParams = init.GetParameters();
 
-            var previousValues = new Dictionary<Tuple<Type, InjectParameter>, object>(injectors.Count);
+            var previousValues = new Dictionary<TypedInjector, object>(injectors.Count);
 
             foreach (var param in initParams)
             {
                 var paramType = param.ParameterType;
 
                 var value = paramType.GetDefault();
-                // TODO: make this work on closest match
-                foreach (var pair in injectors.Where(t => paramType.IsAssignableFrom(t.Item1)))
+
+                var toUse = injectors.Select(i => (inject: i, priority: MatchPriority(paramType, i.Type)))  // check match priority, combine it
+                                     .Where(t => t.priority != null)                                        // filter null priorities
+                                     .Select(t => (t.inject, priority: t.priority.Value))                   // remove nullable
+                                     .OrderByDescending(t => t.priority)                                    // sort by value
+                                     .Select(t => t.inject);                                                // remove priority value
+
+                // this tries injectors in order of closest match by type provided 
+                foreach (var pair in toUse)
                 {
                     object prev = null;
                     if (previousValues.ContainsKey(pair))
                         prev = previousValues[pair];
 
-                    var val = pair.Item2?.Invoke(prev, param, meta);
+                    var val = pair.Inject(prev, param, meta);
 
                     if (previousValues.ContainsKey(pair))
                         previousValues[pair] = val;
