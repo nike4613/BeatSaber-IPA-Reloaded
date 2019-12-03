@@ -81,7 +81,7 @@ namespace BSIPA_ModList.UI
                 if (_mainFlow == null)
                 {
                     _mainFlow = FindObjectOfType<MainFlowCoordinator>();
-                    _warningDialog = _mainFlow.GetPrivateField<SimpleDialogPromptViewController>("_simpleDialogPromptViewController");
+                    _warningDialog = _mainFlow.GetField<SimpleDialogPromptViewController>("_simpleDialogPromptViewController");
                 }
 
                 _warningsQueue.Clear();
@@ -147,12 +147,12 @@ namespace BSIPA_ModList.UI
                                                         (warning.IgnoredDependencies.Length > 0 ? $"\nIgnored:\n<color=#C2B2B2>{string.Join("\n", warning.IgnoredDependencies)}</color>" : "") +
                                                         (warning.DisabledDependencies.Length > 0 ? $"\nDisabled:\n<color=#C2C2C2>{string.Join("\n", warning.DisabledDependencies)}</color>" : "")
                                                         , "Okay", WarningDialogDidFinish);
-            _mainFlow.InvokePrivateMethod("PresentViewController", _warningDialog, null, true);
+            _mainFlow.InvokeMethod("PresentViewController", _warningDialog, null, true);
         }
 
         private static void WarningDialogDidFinish(int button)
         {
-            _mainFlow.InvokePrivateMethod("DismissViewController", _warningDialog, null, (_warningsQueue.Count > 0));
+            _mainFlow.InvokeMethod("DismissViewController", _warningDialog, null, (_warningsQueue.Count > 0));
 
             if (_warningsQueue.Count > 0)
             {

@@ -59,7 +59,7 @@ namespace BSIPA_ModList.UI
             flowController = mlfc;
 
             if (rowTransformOriginal == null)
-                rowTransformOriginal = MenuButtonUI.Instance.GetPrivateField<RectTransform>("menuButtonsOriginal");
+                rowTransformOriginal = MenuButtonUI.Instance.GetField<RectTransform>("menuButtonsOriginal");
 
             // i also have no clue why this is necessary
             rectTransform.anchorMin = new Vector2(0f, 0f);
