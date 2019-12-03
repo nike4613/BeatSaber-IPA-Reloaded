@@ -250,10 +250,10 @@ namespace BSIPA_ModList.UI.ViewControllers
             }
 
             scrView = gameObject.AddComponent<ScrollView>();
-            scrView.SetPrivateField("_pageUpButton", pageUp);
-            scrView.SetPrivateField("_pageDownButton", pageDown);
-            scrView.SetPrivateField("_contentRectTransform", content);
-            scrView.SetPrivateField("_viewport", viewport);
+            scrView.SetField("_pageUpButton", pageUp);
+            scrView.SetField("_pageDownButton", pageDown);
+            scrView.SetField("_contentRectTransform", content);
+            scrView.SetField("_viewport", viewport);
 
             gameObject.SetActive(true);
         }
