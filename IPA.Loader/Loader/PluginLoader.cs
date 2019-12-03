@@ -535,9 +535,9 @@ namespace IPA.Loader
         internal static void InitFeatures()
         {
             var parsedFeatures = PluginsMetadata.Select(m =>
-                    Tuple.Create(m,
-                        m.Manifest.Features.Select(f => 
-                            Tuple.Create(f, Ref.Create<Feature.FeatureParse?>(null))
+                    (metadata: m,
+                     features: m.Manifest.Features.Select(feature => 
+                            (feature, parsed: Ref.Create<Feature.FeatureParse?>(null))
                         ).ToList()
                     )
                 ).ToList();
@@ -546,30 +546,30 @@ namespace IPA.Loader
             {
                 DefineFeature.NewFeature = false;
 
-                foreach (var plugin in parsedFeatures)
-                    for (var i = 0; i < plugin.Item2.Count; i++)
+                foreach (var (metadata, features) in parsedFeatures)
+                    for (var i = 0; i < features.Count; i++)
                     {
-                        var feature = plugin.Item2[i];
+                        var feature = features[i];
 
-                        var success = Feature.TryParseFeature(feature.Item1, plugin.Item1, out var featureObj,
-                            out var exception, out var valid, out var parsed, feature.Item2.Value);
+                        var success = Feature.TryParseFeature(feature.feature, metadata, out var featureObj,
+                            out var exception, out var valid, out var parsed, feature.parsed.Value);
 
                         if (!success && !valid && featureObj == null && exception == null) // no feature of type found
-                            feature.Item2.Value = parsed;
+                            feature.parsed.Value = parsed;
                         else if (success)
                         {
                             if (valid && featureObj.StoreOnPlugin)
-                                plugin.Item1.InternalFeatures.Add(featureObj);
+                                metadata.InternalFeatures.Add(featureObj);
                             else if (!valid)
                                 Logger.features.Warn(
-                                    $"Feature not valid on {plugin.Item1.Name}: {featureObj.InvalidMessage}");
-                            plugin.Item2.RemoveAt(i--);
+                                    $"Feature not valid on {metadata.Name}: {featureObj.InvalidMessage}");
+                            features.RemoveAt(i--);
                         }
                         else
                         {
-                            Logger.features.Error($"Error parsing feature definition on {plugin.Item1.Name}");
+                            Logger.features.Error($"Error parsing feature definition on {metadata.Name}");
                             Logger.features.Error(exception);
-                            plugin.Item2.RemoveAt(i--);
+                            features.RemoveAt(i--);
                         }
                     }
 
@@ -580,11 +580,11 @@ namespace IPA.Loader
 
             foreach (var plugin in parsedFeatures)
             {
-                if (plugin.Item2.Count <= 0) continue;
+                if (plugin.features.Count <= 0) continue;
 
-                Logger.features.Warn($"On plugin {plugin.Item1.Name}:");
-                foreach (var feature in plugin.Item2)
-                    Logger.features.Warn($"    Feature not found with name {feature.Item1}");
+                Logger.features.Warn($"On plugin {plugin.metadata.Name}:");
+                foreach (var feature in plugin.features)
+                    Logger.features.Warn($"    Feature not found with name {feature.feature}");
             }
         }
 
