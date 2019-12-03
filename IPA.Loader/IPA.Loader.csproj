@@ -149,13 +149,16 @@
       <Version>1.2.0.1</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
-      <Version>0.10.4</Version>
+      <Version>0.11.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.2</Version>
+      <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Portable.System.ValueTuple">
+      <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="SemanticVersioning">
-      <Version>1.2.0</Version>
+      <Version>1.2.2</Version>
     </PackageReference>
     <PackageReference Include="AsyncBridge">
       <Version>0.3.1</Version>
