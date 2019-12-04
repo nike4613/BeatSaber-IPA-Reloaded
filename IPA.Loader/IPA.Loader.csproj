@@ -87,6 +87,7 @@
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
+    <Compile Include="Config\IConfigStore.cs" />
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="JsonConverters\AlmostVersionConverter.cs" />
     <Compile Include="JsonConverters\MultilineStringConverter.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Updating\BeatMods\ApiEndpoint.cs" />
     <Compile Include="Updating\BeatMods\Updater.cs" />
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Synchronization.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Utilities\Win32.cs" />
   </ItemGroup>
@@ -171,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="icon_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\Async\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
