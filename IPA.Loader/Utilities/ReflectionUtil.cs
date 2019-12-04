@@ -70,7 +70,7 @@ namespace IPA.Utilities
         public static void SetProperty<T>(this T obj, string propertyName, object value) where T : class
         {
             var prop = typeof(T).GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            prop?.SetValue(obj, value);
+            prop?.SetValue(obj, value, null);
         }
 
         /// <summary>
