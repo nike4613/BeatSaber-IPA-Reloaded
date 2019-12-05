@@ -1,7 +1,6 @@
 ::from ./bsinstalldir.txt
 "Beat Saber_Data/
 ""Managed/
-"""Assembly-CSharp.dll
 """Unity.TextMeshPro.dll
 """UnityEngine.
 """"dll?alias=UnityEngine.Net4.dll
@@ -26,6 +25,14 @@
 "Plugins/
 ""BeatSaberCustomUI.
 """dll
+
+::startopt
+::from ./bsinstalldir.txt
+"Beat Saber_Data/
+""Managed/
+"""Assembly-CSharp.dll
+"""MainAssembly.dll
+::endopt
 
 ::startopt
 ::from ./mdinstalldir.txt
