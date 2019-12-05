@@ -171,4 +171,12 @@ namespace Net3_Proxy
                 new object());
 
     }
+
+    public static class SemaphoreSlimExtesnions
+    { // TODO: finish the WaitAsync members
+        /*public static Task WaitAsync(this SemaphoreSlim self)
+        {
+            return null;
+        }*/
+    }
 }
