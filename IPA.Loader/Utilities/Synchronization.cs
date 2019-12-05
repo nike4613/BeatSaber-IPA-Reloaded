@@ -8,119 +8,157 @@ using System.Threading.Tasks;
 namespace IPA.Utilities
 {
     /// <summary>
-    /// Utilities for inter-thread synchronization. All Locker method acquire their object immediately.
+    /// Utilities for inter-thread synchronization. All Locker method acquire their object immediately,
+    /// and should only be used with <see langword="using"/> to automatically release them.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// The canonical usage of *all* of the member functions is as follows, substituting <see cref="Lock(Mutex)"/>
+    /// with whichever member you want to use, according to your lock type.
+    /// </para>
+    /// <code>
+    /// using var _locker = Synchronization.Lock(mutex);
+    /// </code>
+    /// </example>
     public static class Synchronization
     {
-        #region Public types
+        #region Locker structs
         /// <summary>
-        /// A synchronization state locker that releases its state when its <see cref="IDisposable.Dispose"/>
-        /// method is called. ALWAYS use with a <see langword="using"/> block or statement. Otherwise, the locker
-        /// may not release the object be released properly.
+        /// A locker for a <see cref="Mutex"/> that automatically releases when it is disposed.
+        /// Create this with <see cref="Lock(Mutex)"/>.
         /// </summary>
-        public interface ISyncStateLocker : IDisposable { }
-
-        /// <summary>
-        /// A locker type for <see cref="ReaderWriterLockSlim"/> locks. 
-        /// ALWAYS use with a <see langword="using"/> block or statement. Otherwise, the locker
-        /// may not release the object be released properly.
-        /// </summary>
-        public interface IReadWriteLocker : ISyncStateLocker { }
-
-        /// <summary>
-        /// An upgradable locker type for <see cref="ReaderWriterLockSlim"/>. 
-        /// ALWAYS use with a <see langword="using"/> block or statement. Otherwise, the locker
-        /// may not release the object be released properly.
-        /// </summary>
-        public interface IUpgradableLocker : IReadWriteLocker
-        {
-            /// <summary>
-            /// Upgrades the locker and gives a new locker to manage the upgraded lock.
-            /// </summary>
-            /// <returns>the locker to use with <see langword="using"/> to manage the write lock</returns>
-            IReadWriteLocker Upgrade();
-        }
-        #endregion
-
-        #region Implementations
-        private sealed class MutexLocker : ISyncStateLocker
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="Lock(Mutex)"/>
+        public struct MutexLocker : IDisposable
         {
             private readonly Mutex mutex;
 
-            public MutexLocker(Mutex mutex)
+            internal MutexLocker(Mutex mutex)
             {
                 this.mutex = mutex;
                 mutex.WaitOne(); // wait and acquire mutex
             }
 
-            public void Dispose() => mutex.ReleaseMutex(); // release mutex
+            void IDisposable.Dispose() => mutex.ReleaseMutex(); // release mutex
         }
 
-        private sealed class SemaphoreLocker : ISyncStateLocker
+        /// <summary>
+        /// A locker for a <see cref="Semaphore"/> that automatically releases when it is disposed.
+        /// Create this with <see cref="Lock(Semaphore)"/>.
+        /// </summary>
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="Lock(Semaphore)"/>
+        public struct SemaphoreLocker : IDisposable
         {
             private readonly Semaphore sem;
 
-            public SemaphoreLocker(Semaphore sem)
+            internal SemaphoreLocker(Semaphore sem)
             {
                 this.sem = sem;
                 sem.WaitOne();
             }
 
-            public void Dispose() => sem.Release();
+            void IDisposable.Dispose() => sem.Release();
         }
 
-        private sealed class SemaphoreSlimLocker : ISyncStateLocker
+        /// <summary>
+        /// A locker for a <see cref="SemaphoreSlim"/> that automatically releases when it is disposed.
+        /// Create this with <see cref="Lock(SemaphoreSlim)"/>.
+        /// </summary>
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="Lock(SemaphoreSlim)"/>
+        public struct SemaphoreSlimLocker : IDisposable
         {
             private readonly SemaphoreSlim sem;
 
-            public SemaphoreSlimLocker(SemaphoreSlim sem)
+            internal SemaphoreSlimLocker(SemaphoreSlim sem)
             {
                 this.sem = sem;
                 sem.Wait();
             }
 
-            public void Dispose() => sem.Release();
+            void IDisposable.Dispose() => sem.Release();
         }
 
-        private sealed class ReaderWriterLockSlimWriteLocker : IReadWriteLocker
+        /// <summary>
+        /// A locker for a <see cref="SemaphoreSlim"/> that was created asynchronously and automatically releases
+        /// when it is disposed. Create this with <see cref="LockAsync(SemaphoreSlim)"/>.
+        /// </summary>
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="LockAsync(SemaphoreSlim)"/>
+        public struct SemaphoreSlimAsyncLocker : IDisposable
+        {
+            private readonly SemaphoreSlim sem;
+
+            internal SemaphoreSlimAsyncLocker(SemaphoreSlim sem) => this.sem = sem;
+            internal Task Lock() => sem.WaitAsync();
+
+            void IDisposable.Dispose() => sem.Release();
+        }
+
+        /// <summary>
+        /// A locker for a write lock on a <see cref="ReaderWriterLockSlim"/> that automatically releases when
+        /// it is disposed. Create this with <see cref="LockWrite(ReaderWriterLockSlim)"/>.
+        /// </summary>
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="LockWrite(ReaderWriterLockSlim)"/>
+        public struct ReaderWriterLockSlimWriteLocker : IDisposable
         {
             private readonly ReaderWriterLockSlim rwl;
 
-            public ReaderWriterLockSlimWriteLocker(ReaderWriterLockSlim lck)
+            internal ReaderWriterLockSlimWriteLocker(ReaderWriterLockSlim lck)
             {
                 rwl = lck;
                 rwl.EnterWriteLock();
             }
 
-            public void Dispose() => rwl.ExitWriteLock();
+            void IDisposable.Dispose() => rwl.ExitWriteLock();
         }
 
-        private sealed class ReaderWriterLockSlimReadLocker : IReadWriteLocker
+        /// <summary>
+        /// A locker for a read lock on a <see cref="ReaderWriterLockSlim"/> that automatically releases when
+        /// it is disposed. Create this with <see cref="LockRead(ReaderWriterLockSlim)"/>.
+        /// </summary>
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="LockRead(ReaderWriterLockSlim)"/>
+        public struct ReaderWriterLockSlimReadLocker : IDisposable
         {
             private readonly ReaderWriterLockSlim rwl;
 
-            public ReaderWriterLockSlimReadLocker(ReaderWriterLockSlim lck)
+            internal ReaderWriterLockSlimReadLocker(ReaderWriterLockSlim lck)
             {
                 rwl = lck;
                 rwl.EnterReadLock();
             }
 
-            public void Dispose() => rwl.ExitReadLock();
+            void IDisposable.Dispose() => rwl.ExitReadLock();
         }
 
-        private sealed class ReaderWriterLockSlimUpgradableReadLocker : IUpgradableLocker
+        /// <summary>
+        /// A locker for an upgradable read lock on a <see cref="ReaderWriterLockSlim"/> that automatically releases
+        /// when it is disposed. Create this with <see cref="LockReadUpgradable(ReaderWriterLockSlim)"/>.
+        /// </summary>
+        /// <seealso cref="Synchronization"/>
+        /// <seealso cref="LockReadUpgradable(ReaderWriterLockSlim)"/>
+        public struct ReaderWriterLockSlimUpgradableReadLocker : IDisposable
         {
             private readonly ReaderWriterLockSlim rwl;
 
-            public ReaderWriterLockSlimUpgradableReadLocker(ReaderWriterLockSlim lck)
+            internal ReaderWriterLockSlimUpgradableReadLocker(ReaderWriterLockSlim lck)
             {
                 rwl = lck;
                 rwl.EnterUpgradeableReadLock();
             }
 
-            public IReadWriteLocker Upgrade() => new ReaderWriterLockSlimWriteLocker(rwl);
+            /// <summary>
+            /// Creates a locker for a write lock on the <see cref="ReaderWriterLockSlim"/> associated with this locker,
+            /// upgrading the current thread's lock.
+            /// </summary>
+            /// <returns>a locker for the new write lock</returns>
+            /// <seealso cref="Synchronization"/>
+            public ReaderWriterLockSlimWriteLocker Upgrade() => new ReaderWriterLockSlimWriteLocker(rwl);
 
-            public void Dispose() => rwl.ExitUpgradeableReadLock();
+            void IDisposable.Dispose() => rwl.ExitUpgradeableReadLock();
         }
         #endregion
 
@@ -128,46 +166,58 @@ namespace IPA.Utilities
         // TODO: add async fun stuff to this
 
         /// <summary>
-        /// Creates an <see cref="ISyncStateLocker"/> for a mutex.
+        /// Creates a locker for a mutex.
         /// </summary>
         /// <param name="mut">the mutex to acquire</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
-        public static ISyncStateLocker Locker(Mutex mut) => new MutexLocker(mut);
+        public static MutexLocker Lock(Mutex mut) => new MutexLocker(mut);
 
         /// <summary>
-        /// Creates an <see cref="ISyncStateLocker"/> for a semaphore.
+        /// Creates a locker for a semaphore.
         /// </summary>
         /// <param name="sem">the semaphore to acquire</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
-        public static ISyncStateLocker Locker(Semaphore sem) => new SemaphoreLocker(sem);
+        public static SemaphoreLocker Lock(Semaphore sem) => new SemaphoreLocker(sem);
 
         /// <summary>
-        /// Creates an <see cref="ISyncStateLocker"/> for a slim semaphore.
+        /// Creates a locker for a slim semaphore.
         /// </summary>
         /// <param name="sem">the slim semaphore to acquire</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
-        public static ISyncStateLocker Locker(SemaphoreSlim sem) => new SemaphoreSlimLocker(sem);
+        public static SemaphoreSlimLocker Lock(SemaphoreSlim sem) => new SemaphoreSlimLocker(sem);
 
         /// <summary>
-        /// Creates an <see cref="IReadWriteLocker"/> for a <see cref="ReaderWriterLockSlim"/>.
+        /// Creates a locker for a slim semaphore asynchronously.
+        /// </summary>
+        /// <param name="sem">the slim semaphore to acquire async</param>
+        /// <returns>the locker to use with <see langword="using"/></returns>
+        public static async Task<SemaphoreSlimAsyncLocker> LockAsync(SemaphoreSlim sem)
+        {
+            var locker = new SemaphoreSlimAsyncLocker(sem);
+            await locker.Lock();
+            return locker;
+        }
+
+        /// <summary>
+        /// Creates a locker for a write lock <see cref="ReaderWriterLockSlim"/>.
         /// </summary>
         /// <param name="rwl">the lock to acquire in write mode</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
-        public static IReadWriteLocker LockWrite(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimWriteLocker(rwl);
+        public static ReaderWriterLockSlimWriteLocker LockWrite(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimWriteLocker(rwl);
 
         /// <summary>
-        /// Creates an <see cref="IReadWriteLocker"/> for a <see cref="ReaderWriterLockSlim"/>.
+        /// Creates a locker for a read lock on a <see cref="ReaderWriterLockSlim"/>.
         /// </summary>
         /// <param name="rwl">the lock to acquire in read mode</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
-        public static IReadWriteLocker LockRead(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimReadLocker(rwl);
+        public static ReaderWriterLockSlimReadLocker LockRead(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimReadLocker(rwl);
 
         /// <summary>
-        /// Creates an <see cref="IUpgradableLocker"/> for a <see cref="ReaderWriterLockSlim"/>.
+        /// Creates a locker for an upgradable read lock on a <see cref="ReaderWriterLockSlim"/>.
         /// </summary>
         /// <param name="rwl">the lock to acquire in upgradable read mode</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
-        public static IUpgradableLocker LockReadUpgradable(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimUpgradableReadLocker(rwl);
+        public static ReaderWriterLockSlimUpgradableReadLocker LockReadUpgradable(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimUpgradableReadLocker(rwl);
         #endregion
     }
 }
