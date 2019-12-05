@@ -269,7 +269,7 @@ namespace IPA.Logging
             var started = new HashSet<LogPrinter>();
             while (logQueue.TryTake(out var msg, Timeout.Infinite))
             {
-                StdoutInterceptor.Intercept();
+                StdoutInterceptor.Intercept(); // only runs once, after the first message is queued
                 do
                 {
                     var logger = msg.Logger;
@@ -309,7 +309,7 @@ namespace IPA.Logging
 
                     if (debugConfig != null && debugConfig.HideMessagesForPerformance 
                         && logQueue.Count > debugConfig.HideLogThreshold)
-                    { // spam filtering (if queue has more tha 512 elements)
+                    { // spam filtering (if queue has more than HideLogThreshold elements)
                         logWaitEvent.Reset(); // pause incoming log requests
 
                         // clear loggers for this instance, to print the message to all affected logs
