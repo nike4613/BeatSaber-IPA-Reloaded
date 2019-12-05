@@ -237,15 +237,23 @@ namespace IPA.Injector
             
             {
                 var ascPath = Path.Combine(managedPath,
-                    "Assembly-CSharp.dll");
+                    "MainAssembly.dll"); // TODO: change to config option for other games
 
                 #region Virtualize Assembly-CSharp.dll
 
                 {
                     CriticalSection.EnterExecuteSection();
 
-                    var ascModule = VirtualizedModule.Load(ascPath);
-                    ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+                    try
+                    {
+                        var ascModule = VirtualizedModule.Load(ascPath);
+                        ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+                    }
+                    catch (Exception e) 
+                    {
+                        loader.Error($"Could not virtualize {ascPath}");
+                        loader.Error(e);
+                    }
 
                     CriticalSection.ExitExecuteSection();
                 }
