@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET3
+using Net3_Proxy;
+#endif
 
 namespace IPA.Utilities
 {
@@ -22,7 +25,7 @@ namespace IPA.Utilities
     /// </example>
     public static class Synchronization
     {
-        #region Locker structs
+#region Locker structs
         /// <summary>
         /// A locker for a <see cref="Mutex"/> that automatically releases when it is disposed.
         /// Create this with <see cref="Lock(Mutex)"/>.
@@ -80,6 +83,7 @@ namespace IPA.Utilities
             void IDisposable.Dispose() => sem.Release();
         }
 
+#if NET4
         /// <summary>
         /// A locker for a <see cref="SemaphoreSlim"/> that was created asynchronously and automatically releases
         /// when it is disposed. Create this with <see cref="LockAsync(SemaphoreSlim)"/>.
@@ -95,6 +99,7 @@ namespace IPA.Utilities
 
             void IDisposable.Dispose() => sem.Release();
         }
+#endif
 
         /// <summary>
         /// A locker for a write lock on a <see cref="ReaderWriterLockSlim"/> that automatically releases when
@@ -160,9 +165,9 @@ namespace IPA.Utilities
 
             void IDisposable.Dispose() => rwl.ExitUpgradeableReadLock();
         }
-        #endregion
+#endregion
 
-        #region Accessors
+#region Accessors
         // TODO: add async fun stuff to this
 
         /// <summary>
@@ -186,6 +191,7 @@ namespace IPA.Utilities
         /// <returns>the locker to use with <see langword="using"/></returns>
         public static SemaphoreSlimLocker Lock(SemaphoreSlim sem) => new SemaphoreSlimLocker(sem);
 
+#if NET4 // TODO: make this work on NET3 too
         /// <summary>
         /// Creates a locker for a slim semaphore asynchronously.
         /// </summary>
@@ -197,6 +203,7 @@ namespace IPA.Utilities
             await locker.Lock();
             return locker;
         }
+#endif
 
         /// <summary>
         /// Creates a locker for a write lock <see cref="ReaderWriterLockSlim"/>.
@@ -218,6 +225,6 @@ namespace IPA.Utilities
         /// <param name="rwl">the lock to acquire in upgradable read mode</param>
         /// <returns>the locker to use with <see langword="using"/></returns>
         public static ReaderWriterLockSlimUpgradableReadLocker LockReadUpgradable(ReaderWriterLockSlim rwl) => new ReaderWriterLockSlimUpgradableReadLocker(rwl);
-        #endregion
+#endregion
     }
 }
