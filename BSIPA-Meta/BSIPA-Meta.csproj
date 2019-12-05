@@ -7,11 +7,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>BSIPA_Meta</RootNamespace>
     <AssemblyName>Meta Project</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86-Net4' Or '$(Platform)' == 'x86-Net3' ">
     <ProxyPlatform>Win32</ProxyPlatform>
@@ -87,14 +88,12 @@
   <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
-    
     <ItemGroup>
       <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(NoVerboseConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(NoVerboseConfig)\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
     </ItemGroup>
-  
     <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
     <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />

@@ -96,7 +96,7 @@ namespace IPA.Injector
 
                 GameVersionEarly.Load();
 
-                HarmonyProtector.Protect();
+                //HarmonyProtector.Protect();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
