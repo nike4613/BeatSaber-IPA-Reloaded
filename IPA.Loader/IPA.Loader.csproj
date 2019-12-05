@@ -86,6 +86,9 @@
   <ItemGroup>
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
+    <Compile Include="Config\Data\List.cs" />
+    <Compile Include="Config\Data\Map.cs" />
+    <Compile Include="Config\Data\Value.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\IConfigStore.cs" />
     <Compile Include="Config\SelfConfig.cs" />
