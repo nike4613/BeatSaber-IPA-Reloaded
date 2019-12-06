@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 
-namespace IPA.Config.ConfigProviders
+namespace IPA.Config.Providers
 {
     [Config.Type("json")]
     internal class JsonConfigProvider : IConfigProvider
