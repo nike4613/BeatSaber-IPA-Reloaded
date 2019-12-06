@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IPA.Config.Data
 {
     /// <summary>
     /// A list of <see cref="Value"/>s for serialization by an <see cref="IConfigProvider"/>.
+    /// Use <see cref="Value.List"/> or <see cref="Value.From(IEnumerable{Value})"/> to create.
     /// </summary>
     public sealed class List : Value, IList<Value>
     {
         private readonly List<Value> values = new List<Value>();
+
+        internal List() { }
 
         /// <summary>
         /// Gets the value at the given index in this <see cref="List"/>.
@@ -33,6 +37,15 @@ namespace IPA.Config.Data
         /// <param name="item">the <see cref="Value"/> to add</param>
         /// <seealso cref="ICollection{T}.Add(T)"/>
         public void Add(Value item) => values.Add(item);
+
+        /// <summary>
+        /// Adds a range of <see cref="Value"/>s to the end of this <see cref="List"/>.
+        /// </summary>
+        /// <param name="vals">the range of <see cref="Value"/>s to add</param>
+        public void AddRange(IEnumerable<Value> vals)
+        {
+            foreach (var val in vals) Add(val);
+        }
 
         /// <summary>
         /// Clears the <see cref="List"/>.
@@ -93,6 +106,13 @@ namespace IPA.Config.Data
         /// <param name="index">the index to remove a <see cref="Value"/> at</param>
         /// <seealso cref="IList{T}.RemoveAt(int)"/>
         public void RemoveAt(int index) => values.RemoveAt(index);
+
+        /// <summary>
+        /// Converts this <see cref="Value"/> into a human-readable format.
+        /// </summary>
+        /// <returns>a comma-seperated list of the result of <see cref="Value.ToString"/> wrapped in square brackets</returns>
+        public override string ToString()
+            => $"[{string.Join(",",this.Select(v => v.ToString()))}]";
 
         IEnumerator IEnumerable.GetEnumerator() => ((IList<Value>)values).GetEnumerator();
     }

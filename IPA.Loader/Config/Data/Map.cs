@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IPA.Config.Data
 {
 
     /// <summary>
     /// A map of <see cref="string"/> to <see cref="Value"/> for serialization by an <see cref="IConfigProvider"/>.
+    /// Use <see cref="Value.Map"/> or <see cref="Value.From(IDictionary{string, Value})"/> to create.
     /// </summary>
     public sealed class Map : Value, IDictionary<string, Value>
     {
         private readonly Dictionary<string, Value> values = new Dictionary<string, Value>();
+
+        internal Map() { }
 
         /// <summary>
         /// Accesses the <see cref="Value"/> at <paramref name="key"/> in the map.
@@ -98,6 +102,13 @@ namespace IPA.Config.Data
         public bool TryGetValue(string key, out Value value) => values.TryGetValue(key, out value);
 
         IEnumerator IEnumerable.GetEnumerator() => ((IDictionary<string, Value>)values).GetEnumerator();
+
+        /// <summary>
+        /// Converts this <see cref="Value"/> into a human-readable format.
+        /// </summary>
+        /// <returns>a JSON-like set of key-value pairs</returns>
+        public override string ToString()
+            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value.ToString()}"))}}}";
     }
 
 
