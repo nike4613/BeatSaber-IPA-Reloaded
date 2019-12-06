@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Config.cs" />
-    <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
+    <Compile Include="Config\Providers\JsonConfigProvider.cs" />
     <Compile Include="Config\Data\List.cs" />
     <Compile Include="Config\Data\Map.cs" />
     <Compile Include="Config\Data\Primitives.cs" />
@@ -93,6 +93,7 @@
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\IConfigStore.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="Config\Stores\GeneratedStore.cs" />
     <Compile Include="JsonConverters\AlmostVersionConverter.cs" />
     <Compile Include="JsonConverters\MultilineStringConverter.cs" />
     <Compile Include="Loader\Composite\CompositeBSPlugin.cs" />

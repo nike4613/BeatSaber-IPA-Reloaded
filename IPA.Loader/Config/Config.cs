@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using IPA.Config.ConfigProviders;
+using IPA.Config.Providers;
 using IPA.Utilities;
 #if NET3
 using Net3_Proxy;
