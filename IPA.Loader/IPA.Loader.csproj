@@ -88,6 +88,7 @@
     <Compile Include="Config\ConfigProviders\JsonConfigProvider.cs" />
     <Compile Include="Config\Data\List.cs" />
     <Compile Include="Config\Data\Map.cs" />
+    <Compile Include="Config\Data\Primitives.cs" />
     <Compile Include="Config\Data\Value.cs" />
     <Compile Include="Config\IConfigProvider.cs" />
     <Compile Include="Config\IConfigStore.cs" />
