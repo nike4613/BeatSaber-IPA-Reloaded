@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using IPA.Config.Providers;
 using IPA.Utilities;
 #if NET3
@@ -19,7 +20,7 @@ namespace IPA.Config
     {
         static Config()
         {
-            JsonConfigProvider.RegisterConfig();
+            //JsonConfigProvider.RegisterConfig();
         }
 
         /// <inheritdoc />
@@ -110,19 +111,18 @@ namespace IPA.Config
         /// <param name="type">the type to register</param>
         public static void Register(Type type)
         {
-            if (!(type.GetCustomAttribute(typeof(TypeAttribute)) is TypeAttribute ext))
-                throw new InvalidOperationException("Type does not have TypeAttribute");
+            var inst = Activator.CreateInstance(type) as IConfigProvider;
+            if (inst == null)
+                throw new ArgumentException($"Type not an {nameof(IConfigProvider)}");
 
-            if (!typeof(IConfigProvider).IsAssignableFrom(type))
-                throw new InvalidOperationException("Type not IConfigProvider");
+            if (registeredProviders.ContainsKey(inst.Extension))
+                throw new InvalidOperationException($"Extension provider for {inst.Extension} already exists");
 
-            if (registeredProviders.ContainsKey(ext.Extension))
-                throw new InvalidOperationException($"Extension provider for {ext.Extension} already exists");
-
-            registeredProviders.Add(ext.Extension, type);
+            registeredProviders.Add(inst.Extension, type);
         }
 
-        private static List<Tuple<Ref<DateTime>, IConfigProvider>> configProviders = new List<Tuple<Ref<DateTime>, IConfigProvider>>();
+        private static List<IConfigProvider> configProviders = new List<IConfigProvider>();
+        private static ConditionalWeakTable<IConfigProvider, FileInfo> file = new ConditionalWeakTable<IConfigProvider, FileInfo>();
 
         /// <summary>
         /// Gets an <see cref="IConfigProvider"/> using the specified list of preferred config types.
@@ -135,11 +135,9 @@ namespace IPA.Config
             var chosenExt = extensions.FirstOrDefault(s => registeredProviders.ContainsKey(s)) ?? "json";
             var type = registeredProviders[chosenExt];
             var provider = Activator.CreateInstance(type) as IConfigProvider;
-            if (provider != null)
-            {
-                provider.Filename = Path.Combine(BeatSaber.UserDataPath, configName);
-                configProviders.Add(Tuple.Create(Ref.Create(provider.LastModified), provider));
-            }
+            configProviders.Add(provider);
+
+            // TODO: rething this one a bit
 
             return provider;
         }
@@ -154,108 +152,5 @@ namespace IPA.Config
 
             return GetProviderFor(modName, prefs);
         }
-
-        private static Dictionary<IConfigProvider, Action> linkedProviders =
-            new Dictionary<IConfigProvider, Action>();
-
-        /// <summary>
-        /// Creates a linked <see cref="Ref{T}"/> for the config provider. This <see cref="Ref{T}"/> will be automatically updated whenever the file on-disk changes.
-        /// </summary>
-        /// <typeparam name="T">the type of the parsed value</typeparam>
-        /// <param name="config">the <see cref="IConfigProvider"/> to create a link to</param>
-        /// <param name="onChange">an action to perform on value change</param>
-        /// <returns>a <see cref="Ref{T}"/> to an ever-changing value, mirroring whatever the file contains.</returns>
-        public static Ref<T> MakeLink<T>(this IConfigProvider config, Action<IConfigProvider, Ref<T>> onChange = null)
-        { // TODO: rework this stuff
-            Ref<T> @ref = config.Parse<T>();
-            void ChangeDelegate()
-            {
-                @ref.Value = config.Parse<T>();
-                onChange?.Invoke(config, @ref);
-            }
-
-            if (linkedProviders.ContainsKey(config))
-                linkedProviders[config] = (Action) Delegate.Combine(linkedProviders[config], (Action) ChangeDelegate);
-            else
-                linkedProviders.Add(config, ChangeDelegate);
-
-            ChangeDelegate();
-
-            return @ref;
-        }
-
-        /// <summary>
-        /// Removes all linked <see cref="Ref{T}"/> such that they are no longer updated.
-        /// </summary>
-        /// <param name="config">the <see cref="IConfigProvider"/> to unlink</param>
-        public static void RemoveLinks(this IConfigProvider config)
-        {
-            if (linkedProviders.ContainsKey(config))
-                linkedProviders.Remove(config);
-        }
-
-        internal static void Update()
-        {
-            foreach (var provider in configProviders)
-            {
-                if (provider.Item2.LastModified > provider.Item1.Value)
-                {
-                    try
-                    {
-                        provider.Item2.Load(); // auto reload if it changes
-                        provider.Item1.Value = provider.Item2.LastModified;
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.config.Error("Error when trying to load config");
-                        Logging.Logger.config.Error(e);
-                    }
-                }
-                if (provider.Item2.HasChanged)
-                {
-                    try
-                    {
-                        provider.Item2.Save();
-                        provider.Item1.Value = Utils.CurrentTime();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.config.Error("Error when trying to save config");
-                        Logging.Logger.config.Error(e);
-                    }
-                }
-
-                if (provider.Item2.InMemoryChanged)
-                {
-                    provider.Item2.InMemoryChanged = false;
-                    try
-                    {
-                        if (linkedProviders.ContainsKey(provider.Item2))
-                            linkedProviders[provider.Item2]();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.config.Error("Error running link change events");
-                        Logging.Logger.config.Error(e);
-                    }
-                }
-            }
-        }
-
-        internal static void Save()
-        {
-            foreach (var provider in configProviders)
-                if (provider.Item2.HasChanged)
-                    try
-                    {
-                        provider.Item2.Save();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.config.Error("Error when trying to save config");
-                        Logging.Logger.config.Error(e);
-                    }
-        }
-
     }
 }
