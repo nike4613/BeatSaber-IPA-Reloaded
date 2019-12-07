@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using IPA.Utilities;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -108,7 +109,7 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>a JSON-like set of key-value pairs</returns>
         public override string ToString()
-            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value.ToString()}"))}}}";
+            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value.ToString()}").StrJP())}}}";
     }
 
 
