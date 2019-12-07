@@ -35,7 +35,7 @@ namespace IPA.Config
 
         public static void Load()
         {
-            LoaderConfig = Config.GetProviderFor(IPAName, "json");
+            LoaderConfig = Config.GetConfigFor(IPAName, "json");
         }
 
         public static void ReadCommandLine(string[] args)

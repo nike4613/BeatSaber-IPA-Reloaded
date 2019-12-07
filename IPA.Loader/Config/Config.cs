@@ -9,6 +9,7 @@ using IPA.Utilities;
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
+using Array = Net3_Proxy.Array;
 #endif
 
 namespace IPA.Config
@@ -16,39 +17,13 @@ namespace IPA.Config
     /// <summary>
     /// A class to handle updating ConfigProviders automatically
     /// </summary>
-    public static class Config
+    public class Config
     {
         static Config()
         {
             //JsonConfigProvider.RegisterConfig();
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Defines the type of the <see cref="T:IPA.Config.IConfigProvider" />
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Class)]
-        public class TypeAttribute : Attribute
-        {
-            /// <summary>
-            /// The extension associated with this type, without the '.'
-            /// </summary>
-            /// <value>the extension to register the config provider as</value>
-            // ReSharper disable once UnusedAutoPropertyAccessor.Global
-            public string Extension { get; private set; }
-
-            /// <inheritdoc />
-            /// <summary>
-            /// Constructs the attribute with a specified extension.
-            /// </summary>
-            /// <param name="ext">the extension associated with this type, without the '.'</param>
-            public TypeAttribute(string ext)
-            {
-                Extension = ext;
-            }
-        }
-
-        /// <inheritdoc />
         /// <summary>
         /// Specifies that a particular parameter is preferred to be a specific type of <see cref="T:IPA.Config.IConfigProvider" />. If it is not available, also specifies backups. If none are available, the default is used.
         /// </summary>
@@ -73,10 +48,10 @@ namespace IPA.Config
             }
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// Specifies a preferred config name, instead of using the plugin's name.
         /// </summary>
+        [AttributeUsage(AttributeTargets.Parameter)]
         public class NameAttribute : Attribute
         {
             /// <summary>
@@ -97,7 +72,7 @@ namespace IPA.Config
             }
         }
 
-        private static readonly Dictionary<string, Type> registeredProviders = new Dictionary<string, Type>();
+        private static readonly Dictionary<string, IConfigProvider> registeredProviders = new Dictionary<string, IConfigProvider>();
 
         /// <summary>
         /// Registers a <see cref="IConfigProvider"/> to use for configs.
@@ -118,39 +93,70 @@ namespace IPA.Config
             if (registeredProviders.ContainsKey(inst.Extension))
                 throw new InvalidOperationException($"Extension provider for {inst.Extension} already exists");
 
-            registeredProviders.Add(inst.Extension, type);
+            registeredProviders.Add(inst.Extension, inst);
         }
 
-        private static List<IConfigProvider> configProviders = new List<IConfigProvider>();
-        private static ConditionalWeakTable<IConfigProvider, FileInfo> file = new ConditionalWeakTable<IConfigProvider, FileInfo>();
+        private static Dictionary<Config, FileInfo> files = new Dictionary<Config, FileInfo>();
 
         /// <summary>
-        /// Gets an <see cref="IConfigProvider"/> using the specified list of preferred config types.
+        /// Gets a <see cref="Config"/> object using the specified list of preferred config types.
         /// </summary>
         /// <param name="configName">the name of the mod for this config</param>
         /// <param name="extensions">the preferred config types to try to get</param>
-        /// <returns>an <see cref="IConfigProvider"/> of the requested type, or of type JSON.</returns>
-        public static IConfigProvider GetProviderFor(string configName, params string[] extensions)
+        /// <returns>a <see cref="Config"/> using the requested format, or of type JSON.</returns>
+        public static Config GetConfigFor(string configName, params string[] extensions)
         {
             var chosenExt = extensions.FirstOrDefault(s => registeredProviders.ContainsKey(s)) ?? "json";
-            var type = registeredProviders[chosenExt];
-            var provider = Activator.CreateInstance(type) as IConfigProvider;
-            configProviders.Add(provider);
+            var provider = registeredProviders[chosenExt];
 
-            // TODO: rething this one a bit
+            var config = new Config(configName, provider);
 
-            return provider;
+            var filename = Path.Combine(BeatSaber.UserDataPath, configName + "." + provider.Extension);
+            files.Add(config, new FileInfo(filename));
+
+            RegisterConfigObject(config);
+
+            return config;
         }
         
-        internal static IConfigProvider GetProviderFor(string modName, ParameterInfo info)
+        internal static Config GetProviderFor(string modName, ParameterInfo info)
         {
-            var prefs = new string[0];
+            var prefs = Array.Empty<string>();
             if (info.GetCustomAttribute<PreferAttribute>() is PreferAttribute prefer)
                 prefs = prefer.PreferenceOrder;
             if (info.GetCustomAttribute<NameAttribute>() is NameAttribute name)
                 modName = name.Name;
 
-            return GetProviderFor(modName, prefs);
+            return GetConfigFor(modName, prefs);
+        }
+
+        private static void RegisterConfigObject(Config obj)
+        {
+            // TODO: implement
+        }
+
+        /// <summary>
+        /// Gets the name associated with this <see cref="Config"/> object.
+        /// </summary>
+        public string Name { get; private set; }
+        /// <summary>
+        /// Gets the <see cref="IConfigProvider"/> associated with this <see cref="Config"/> object.
+        /// </summary>
+        public IConfigProvider Provider { get; private set; }
+
+        internal readonly HashSet<IConfigStore> Stores = new HashSet<IConfigStore>();
+
+        /// <summary>
+        /// Adds an <see cref="IConfigStore"/> to this <see cref="Config"/> object.
+        /// </summary>
+        /// <param name="store">the <see cref="IConfigStore"/> to add to this instance</param>
+        /// <returns><see langword="true"/> if the <see cref="IConfigStore"/> was not already registered to this <see cref="Config"/> object,
+        /// otherwise <see langword="false"/></returns>
+        public bool AddStore(IConfigStore store) => Stores.Add(store);
+
+        private Config(string name, IConfigProvider provider)
+        {
+            Name = name; Provider = provider;
         }
     }
 }
