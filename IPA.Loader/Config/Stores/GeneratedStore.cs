@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -154,6 +155,8 @@ namespace IPA.Config.Stores
             var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
 
             var GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
+
+            // TODO: possibly move all of this manual IL over to Linq.Expressions
 
             #region Parse base object structure
             var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
@@ -426,6 +429,11 @@ namespace IPA.Config.Stores
 
             var genType = typeBuilder.CreateType();
 
+            var parentParam = Expression.Parameter(typeof(IGeneratedStore), "parent");
+            var creatorDel = Expression.Lambda<Func<IGeneratedStore, IConfigStore>>(
+                Expression.New(ctor, parentParam), parentParam
+            ).Compile();
+
             { // register a member map
                 var dict = new Dictionary<string, Type>();
                 foreach (var kvp in structure)
@@ -433,7 +441,7 @@ namespace IPA.Config.Stores
                 memberMaps.Add(type, dict);
             }
 
-            return null;
+            return creatorDel;
         }
 
         // expects the this param to be on the stack
