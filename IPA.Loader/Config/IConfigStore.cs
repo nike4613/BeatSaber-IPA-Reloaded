@@ -35,6 +35,10 @@ namespace IPA.Config
         /// Writes the config structure stored by the current <see cref="IConfigStore"/> to the given
         /// <see cref="IConfigProvider"/>.
         /// </summary>
+        /// <remarks>
+        /// The calling code will have entered a read lock on <see cref="WriteSyncObject"/> when
+        /// this is called.
+        /// </remarks>
         /// <param name="provider">the provider to write to</param>
         void WriteTo(IConfigProvider provider);
 
@@ -42,7 +46,11 @@ namespace IPA.Config
         /// Reads the config structure from the given <see cref="IConfigProvider"/> into the current 
         /// <see cref="IConfigStore"/>.
         /// </summary>
-        /// <param name="provider"></param>
+        /// <remarks>
+        /// The calling code will have entered a write lock on <see cref="WriteSyncObject"/> when
+        /// this is called.
+        /// </remarks>
+        /// <param name="provider">the provider to read from</param>
         void ReadFrom(IConfigProvider provider);
 
     }
