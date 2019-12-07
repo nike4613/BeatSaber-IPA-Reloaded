@@ -1,4 +1,5 @@
 ﻿using IPA.Config.Data;
+using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,7 @@ namespace IPA.Config.Stores
             public void ReadFrom(IConfigProvider provider)
             {
                 // TODO: implement
+                Logger.config.Debug("Generated impl ReadFrom");
             }
 
             internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));
@@ -75,6 +77,7 @@ namespace IPA.Config.Stores
             {
                 var values = generated.Values;
                 // TODO: implement
+                Logger.config.Debug("Generated impl WriteTo");
             }
         }
 
@@ -125,12 +128,49 @@ namespace IPA.Config.Stores
 
         private static Func<IGeneratedStore, IConfigStore> MakeCreator(Type type)
         {
+            var baseCtor = type.GetConstructor(Type.EmptyTypes); // get a default constructor
+            if (baseCtor == null)
+                throw new ArgumentException("Config type does not have a public parameterless constructor");
+
             var typeBuilder = Module.DefineType($"{type.FullName}.Generated", 
                 TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class, type);
 
             var typeField = typeBuilder.DefineField("<>_type", typeof(Type), FieldAttributes.Private | FieldAttributes.InitOnly);
             var implField = typeBuilder.DefineField("<>_impl", typeof(Impl), FieldAttributes.Private | FieldAttributes.InitOnly);
             var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
+
+            var GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
+
+            #region Constructor
+            // takes its parent
+            var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(IGeneratedStore) });
+            {
+                var il = ctor.GetILGenerator();
+
+                il.Emit(OpCodes.Ldarg_0); // keep this at bottom of stack
+
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Call, baseCtor);
+
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Ldarg_1); // load parent
+                il.Emit(OpCodes.Stfld, parentField);
+
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Ldtoken, type);
+                il.Emit(OpCodes.Call, GetTypeFromHandle); // effectively typeof(type)
+                il.Emit(OpCodes.Stfld, typeField);
+
+                //il.Emit(OpCodes.Dup); // do this if there are additional initializations that need to be done to this type later
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Newobj, Impl.Ctor);
+                il.Emit(OpCodes.Stfld, implField);
+
+                // TODO: do additional initializations for List, etc
+
+                il.Emit(OpCodes.Ret);
+            }
+            #endregion
 
             const MethodAttributes propertyMethodAttr = MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
 
