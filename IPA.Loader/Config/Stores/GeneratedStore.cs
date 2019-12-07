@@ -155,7 +155,7 @@ namespace IPA.Config.Stores
 
             var GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
 
-#region Parse base object structure
+            #region Parse base object structure
             var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
             if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null; // limit this to just the one thing
 
@@ -191,9 +191,9 @@ namespace IPA.Config.Stores
 
                 structure.Add(smi.Name, smi);
             }
-#endregion
+            #endregion
 
-#region Constructor
+            #region Constructor
             // takes its parent
             var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(IGeneratedStore) });
             {
@@ -225,13 +225,13 @@ namespace IPA.Config.Stores
 
                 il.Emit(OpCodes.Ret);
             }
-#endregion
+            #endregion
 
             const MethodAttributes propertyMethodAttr = MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
             const MethodAttributes virtualPropertyMethodAttr = propertyMethodAttr | MethodAttributes.Virtual | MethodAttributes.Final;
             const MethodAttributes virtualMemberMethod = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.Final;
 
-#region IGeneratedStore
+            #region IGeneratedStore
             typeBuilder.AddInterfaceImplementation(typeof(IGeneratedStore));
 
             var IGeneratedStore_t = typeof(IGeneratedStore);
@@ -241,7 +241,7 @@ namespace IPA.Config.Stores
             var IGeneratedStore_GetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetGetMethod();
             var IGeneratedStore_SetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetSetMethod();
 
-#region IGeneratedStore.Impl
+            #region IGeneratedStore.Impl
             var implProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Impl), PropertyAttributes.None, typeof(Impl), null);
             var implPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Impl)}", virtualPropertyMethodAttr, implProp.PropertyType, Type.EmptyTypes);
             implProp.SetGetMethod(implPropGet);
@@ -254,8 +254,8 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Ldfld, implField); // load impl field
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#region IGeneratedStore.Type
+            #endregion
+            #region IGeneratedStore.Type
             var typeProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Type), PropertyAttributes.None, typeof(Type), null);
             var typePropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Type)}", virtualPropertyMethodAttr, typeProp.PropertyType, Type.EmptyTypes);
             typeProp.SetGetMethod(typePropGet);
@@ -268,8 +268,8 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Ldfld, typeField); // load impl field
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#region IGeneratedStore.Parent
+            #endregion
+            #region IGeneratedStore.Parent
             var parentProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Parent), PropertyAttributes.None, typeof(IGeneratedStore), null);
             var parentPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Parent)}", virtualPropertyMethodAttr, parentProp.PropertyType, Type.EmptyTypes);
             parentProp.SetGetMethod(parentPropGet);
@@ -282,8 +282,8 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Ldfld, parentField); // load impl field
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#region IGeneratedStore.Values
+            #endregion
+            #region IGeneratedStore.Values
             var valuesProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Values), PropertyAttributes.None, typeof(Value), null);
             var valuesPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Values)}", virtualPropertyMethodAttr, valuesProp.PropertyType, Type.EmptyTypes);
             var valuesPropSet = typeBuilder.DefineMethod($"<s>{nameof(IGeneratedStore.Values)}", virtualPropertyMethodAttr, null, new[] { valuesProp.PropertyType });
@@ -308,10 +308,10 @@ namespace IPA.Config.Stores
 
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#endregion
+            #endregion
+            #endregion
 
-#region IConfigStore
+            #region IConfigStore
             typeBuilder.AddInterfaceImplementation(typeof(IConfigStore));
 
             var IConfigStore_t = typeof(IConfigStore);
@@ -320,7 +320,7 @@ namespace IPA.Config.Stores
             var IConfigStore_WriteTo = IConfigStore_t.GetMethod(nameof(IConfigStore.WriteTo));
             var IConfigStore_ReadFrom = IConfigStore_t.GetMethod(nameof(IConfigStore.ReadFrom));
 
-#region IConfigStore.SyncObject
+            #region IConfigStore.SyncObject
             var syncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.SyncObject), PropertyAttributes.None, typeof(WaitHandle), null);
             var syncObjPropGet = typeBuilder.DefineMethod($"<g>{nameof(IConfigStore.SyncObject)}", virtualPropertyMethodAttr, syncObjProp.PropertyType, Type.EmptyTypes);
             syncObjProp.SetGetMethod(syncObjPropGet);
@@ -335,8 +335,8 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, Impl.SyncObjectGetMethod);
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#region IConfigStore.WriteSyncObject
+            #endregion
+            #region IConfigStore.WriteSyncObject
             var writeSyncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.WriteSyncObject), PropertyAttributes.None, typeof(WaitHandle), null);
             var writeSyncObjPropGet = typeBuilder.DefineMethod($"<g>{nameof(IConfigStore.WriteSyncObject)}", virtualPropertyMethodAttr, writeSyncObjProp.PropertyType, Type.EmptyTypes);
             writeSyncObjProp.SetGetMethod(writeSyncObjPropGet);
@@ -351,8 +351,8 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, Impl.WriteSyncObjectGetMethod);
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#region IConfigStore.WriteTo
+            #endregion
+            #region IConfigStore.WriteTo
             var writeTo = typeBuilder.DefineMethod($"<>{nameof(IConfigStore.WriteTo)}", virtualMemberMethod, null, new[] { typeof(IConfigProvider) });
             typeBuilder.DefineMethodOverride(writeTo, IConfigStore_WriteTo);
 
@@ -366,8 +366,8 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, Impl.WriteToMethod);
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#region IConfigStore.ReadFrom
+            #endregion
+            #region IConfigStore.ReadFrom
             var readFrom = typeBuilder.DefineMethod($"<>{nameof(IConfigStore.ReadFrom)}", virtualMemberMethod, null, new[] { typeof(IConfigProvider) });
             typeBuilder.DefineMethodOverride(readFrom, IConfigStore_ReadFrom);
 
@@ -381,10 +381,10 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, Impl.ReadFromMethod);
                 il.Emit(OpCodes.Ret);
             }
-#endregion
-#endregion
+            #endregion
+            #endregion
 
-#region Changed
+            #region Changed
             var coreChanged = typeBuilder.DefineMethod(
                 "<>Changed",
                 MethodAttributes.Public | MethodAttributes.HideBySig,
@@ -420,7 +420,7 @@ namespace IPA.Config.Stores
 
                 coreChanged = changedMethod; // switch to calling this version instead of just the default
             }
-#endregion
+            #endregion
 
             // TODO: generate overrides for all the virtual properties
 
