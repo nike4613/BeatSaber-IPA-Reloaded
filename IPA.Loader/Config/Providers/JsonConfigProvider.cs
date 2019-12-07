@@ -7,8 +7,8 @@ using System.ComponentModel;
 using System.IO;
 
 namespace IPA.Config.Providers
-{
-    [Config.Type("json")]
+{ // TODO: implement this for the new provider system
+    /*[Config.Type("json")]
     internal class JsonConfigProvider : IConfigProvider
     {
         public static void RegisterConfig()
@@ -123,5 +123,5 @@ namespace IPA.Config.Providers
             HasChanged = true;
             InMemoryChanged = true;
         }
-    }
+    }*/
 }
