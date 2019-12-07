@@ -108,7 +108,7 @@ namespace IPA.Config.Stores
                 if (assembly == null)
                 {
                     var name = new AssemblyName("IPA.Config.Generated");
-                    assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
+                    assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.RunAndSave);
                 }
 
                 return assembly;
@@ -126,6 +126,14 @@ namespace IPA.Config.Stores
             }
         }
 
+        private struct SerializedMemberInfo
+        {
+            public string Name;
+            public MemberInfo Member;
+            public bool IsVirtual;
+            public Type Type;
+        }
+
         private static Func<IGeneratedStore, IConfigStore> MakeCreator(Type type)
         {
             var baseCtor = type.GetConstructor(Type.EmptyTypes); // get a default constructor
@@ -140,6 +148,44 @@ namespace IPA.Config.Stores
             var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
 
             var GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
+
+            #region Parse base object structure
+            var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
+            if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null; // limit this to just the one thing
+
+            var structure = new Dictionary<string, SerializedMemberInfo>();
+
+            // TODO: incorporate attributes
+            
+            // only looks at public properties
+            foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var smi = new SerializedMemberInfo
+                {
+                    Name = prop.Name,
+                    Member = prop,
+                    IsVirtual = (prop.GetGetMethod(true)?.IsVirtual ?? false) ||
+                                (prop.GetSetMethod(true)?.IsVirtual ?? false),
+                    Type = prop.PropertyType
+                };
+
+                structure.Add(smi.Name, smi);
+            }
+
+            // only look at public fields
+            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var smi = new SerializedMemberInfo
+                {
+                    Name = field.Name,
+                    Member = field,
+                    IsVirtual = false,
+                    Type = field.FieldType
+                };
+
+                structure.Add(smi.Name, smi);
+            }
+            #endregion
 
             #region Constructor
             // takes its parent
@@ -161,26 +207,38 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, GetTypeFromHandle); // effectively typeof(type)
                 il.Emit(OpCodes.Stfld, typeField);
 
-                //il.Emit(OpCodes.Dup); // do this if there are additional initializations that need to be done to this type later
+                il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Newobj, Impl.Ctor);
                 il.Emit(OpCodes.Stfld, implField);
 
-                // TODO: do additional initializations for List, etc
+                foreach (var kvp in structure)
+                    EmitMemberFix(il, kvp.Value);
+
+                il.Emit(OpCodes.Pop);
 
                 il.Emit(OpCodes.Ret);
             }
             #endregion
 
             const MethodAttributes propertyMethodAttr = MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
+            const MethodAttributes virtualPropertyMethodAttr = propertyMethodAttr | MethodAttributes.Virtual | MethodAttributes.Final;
 
             #region IGeneratedStore
             typeBuilder.AddInterfaceImplementation(typeof(IGeneratedStore));
 
+            var IGeneratedStore_t = typeof(IGeneratedStore);
+            var IGeneratedStore_GetImpl = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Impl)).GetGetMethod();
+            var IGeneratedStore_GetType = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Type)).GetGetMethod();
+            var IGeneratedStore_GetParent = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Parent)).GetGetMethod();
+            var IGeneratedStore_GetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetGetMethod();
+            var IGeneratedStore_SetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetSetMethod();
+
             #region IGeneratedStore.Impl
             var implProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Impl), PropertyAttributes.None, typeof(Impl), null);
-            var implPropGet = typeBuilder.DefineMethod($"get_{nameof(IGeneratedStore.Impl)}", propertyMethodAttr, implProp.PropertyType, Type.EmptyTypes);
+            var implPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Impl)}", virtualPropertyMethodAttr, implProp.PropertyType, Type.EmptyTypes);
             implProp.SetGetMethod(implPropGet);
+            typeBuilder.DefineMethodOverride(implPropGet, IGeneratedStore_GetImpl);
 
             {
                 var il = implPropGet.GetILGenerator();
@@ -192,8 +250,9 @@ namespace IPA.Config.Stores
             #endregion
             #region IGeneratedStore.Type
             var typeProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Type), PropertyAttributes.None, typeof(Type), null);
-            var typePropGet = typeBuilder.DefineMethod($"get_{nameof(IGeneratedStore.Type)}", propertyMethodAttr, typeProp.PropertyType, Type.EmptyTypes);
+            var typePropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Type)}", virtualPropertyMethodAttr, typeProp.PropertyType, Type.EmptyTypes);
             typeProp.SetGetMethod(typePropGet);
+            typeBuilder.DefineMethodOverride(typePropGet, IGeneratedStore_GetType);
 
             {
                 var il = typePropGet.GetILGenerator();
@@ -205,8 +264,9 @@ namespace IPA.Config.Stores
             #endregion
             #region IGeneratedStore.Parent
             var parentProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Parent), PropertyAttributes.None, typeof(IGeneratedStore), null);
-            var parentPropGet = typeBuilder.DefineMethod($"get_{nameof(IGeneratedStore.Parent)}", propertyMethodAttr, parentProp.PropertyType, Type.EmptyTypes);
+            var parentPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Parent)}", virtualPropertyMethodAttr, parentProp.PropertyType, Type.EmptyTypes);
             parentProp.SetGetMethod(parentPropGet);
+            typeBuilder.DefineMethodOverride(parentPropGet, IGeneratedStore_GetParent);
 
             {
                 var il = parentPropGet.GetILGenerator();
@@ -218,10 +278,12 @@ namespace IPA.Config.Stores
             #endregion
             #region IGeneratedStore.Values
             var valuesProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Values), PropertyAttributes.None, typeof(Value), null);
-            var valuesPropGet = typeBuilder.DefineMethod($"get_{nameof(IGeneratedStore.Values)}", propertyMethodAttr, valuesProp.PropertyType, Type.EmptyTypes);
-            var valuesPropSet = typeBuilder.DefineMethod($"set_{nameof(IGeneratedStore.Values)}", propertyMethodAttr, null, new[] { valuesProp.PropertyType });
+            var valuesPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Values)}", virtualPropertyMethodAttr, valuesProp.PropertyType, Type.EmptyTypes);
+            var valuesPropSet = typeBuilder.DefineMethod($"<s>{nameof(IGeneratedStore.Values)}", virtualPropertyMethodAttr, null, new[] { valuesProp.PropertyType });
             valuesProp.SetGetMethod(valuesPropGet);
+            typeBuilder.DefineMethodOverride(valuesPropGet, IGeneratedStore_GetValues);
             valuesProp.SetSetMethod(valuesPropSet);
+            typeBuilder.DefineMethodOverride(valuesPropSet, IGeneratedStore_SetValues);
 
             { // this is non-locking because the only code that will call this will already own the correct lock
                 var il = valuesPropGet.GetILGenerator();
@@ -242,7 +304,53 @@ namespace IPA.Config.Stores
             #endregion
             #endregion
 
+            #region Changed
+            var coreChanged = typeBuilder.DefineMethod(
+                "<>Changed",
+                MethodAttributes.Public | MethodAttributes.HideBySig,
+                null, Type.EmptyTypes);
+
+            {
+                var il = coreChanged.GetILGenerator();
+
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Call, Impl.ImplSignalChangedMethod);
+                il.Emit(OpCodes.Ret); // simply call our impl's SignalChanged method and return
+            }
+
+            if (baseChanged != null) {
+                var changedMethod = typeBuilder.DefineMethod( // copy to override baseChanged
+                    baseChanged.Name, 
+                    MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.Final | MethodAttributes.HideBySig, 
+                    null, Type.EmptyTypes);
+                typeBuilder.DefineMethodOverride(changedMethod, baseChanged);
+
+                {
+                    var il = changedMethod.GetILGenerator();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, baseChanged); // call base
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Tailcall);
+                    il.Emit(OpCodes.Call, coreChanged); // call back to the core change method
+
+                    il.Emit(OpCodes.Ret);
+                }
+
+                coreChanged = changedMethod; // switch to calling this version instead of just the default
+            }
+            #endregion
+
+            // TODO: generate overrides for all the virtual properties
+
             return null;
+        }
+
+        // expects the this param to be on the stack
+        private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member)
+        {
+
         }
 
     }
