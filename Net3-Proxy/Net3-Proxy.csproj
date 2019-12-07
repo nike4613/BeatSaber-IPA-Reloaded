@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Array.cs" />
     <Compile Include="Directory.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="File.cs" />
