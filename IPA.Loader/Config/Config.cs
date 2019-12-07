@@ -21,7 +21,7 @@ namespace IPA.Config
     {
         static Config()
         {
-            //JsonConfigProvider.RegisterConfig();
+            JsonConfigProvider.RegisterConfig();
         }
 
         /// <summary>

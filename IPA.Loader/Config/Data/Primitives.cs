@@ -36,6 +36,12 @@ namespace IPA.Config.Data
         public long Value { get; set; }
 
         /// <summary>
+        /// Coerces this <see cref="Integer"/> into a <see cref="FloatingPoint"/>.
+        /// </summary>
+        /// <returns>a <see cref="FloatingPoint"/> representing the closest approximation of <see cref="Value"/></returns>
+        public FloatingPoint AsFloat() => Float(Value);
+
+        /// <summary>
         /// Converts this <see cref="Data.Value"/> into a human-readable format.
         /// </summary>
         /// <returns>the result of <c>Value.ToString()</c></returns>
@@ -52,6 +58,12 @@ namespace IPA.Config.Data
         /// The actual value fo this <see cref="FloatingPoint"/> object.
         /// </summary>
         public double Value { get; set; }
+
+        /// <summary>
+        /// Coerces this <see cref="FloatingPoint"/> into an <see cref="Integer"/>.
+        /// </summary>
+        /// <returns>a <see cref="Integer"/> representing the closest approximation of <see cref="Value"/></returns>
+        public Integer AsInteger() => Integer((long)Value);
 
         /// <summary>
         /// Converts this <see cref="Data.Value"/> into a human-readable format.

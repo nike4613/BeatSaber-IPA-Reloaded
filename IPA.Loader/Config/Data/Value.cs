@@ -38,6 +38,7 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>an empty <see cref="Map"/></returns>
         /// <seealso cref="From(IDictionary{string, Value})"/>
+        /// <seealso cref="From(IEnumerable{KeyValuePair{string, Value}})"/>
         public static Map Map() => new Map();
 
         /// <summary>
@@ -122,7 +123,18 @@ namespace IPA.Config.Data
         /// <param name="vals">the dictionary of <see cref="Value"/>s to initialize the <see cref="Data.Map"/> wtih</param>
         /// <returns>a <see cref="Data.Map"/> containing the content of <paramref name="vals"/></returns>
         /// <seealso cref="Map"/>
-        public static Map From(IDictionary<string, Value> vals)
+        /// <seealso cref="From(IEnumerable{KeyValuePair{string, Value}})"/>
+        public static Map From(IDictionary<string, Value> vals) => From(vals as IEnumerable<KeyValuePair<string, Value>>);
+
+        /// <summary>
+        /// Creates a new <see cref="Data.Map"/> holding the content of an <see cref="IEnumerable{T}"/>
+        /// of <see cref="KeyValuePair{TKey, TValue}"/> of <see cref="string"/> to <see cref="Value"/>.
+        /// </summary>
+        /// <param name="vals">the enumerable of <see cref="KeyValuePair{TKey, TValue}"/> of name to <see cref="Value"/></param>
+        /// <returns>a <see cref="Data.Map"/> containing the content of <paramref name="vals"/></returns>
+        /// <seealso cref="Map"/>
+        /// <seealso cref="From(IDictionary{string, Value})"/>
+        public static Map From(IEnumerable<KeyValuePair<string, Value>> vals)
         {
             if (vals == null) return null;
             var m = Map();

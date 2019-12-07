@@ -8,7 +8,17 @@ namespace IPA.Config
     /// An interface for configuration providers.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Implementers must provide a default constructor. Do not assume that <see cref="File"/> will ever be set for a given object.
+    /// </para>
+    /// <para>
+    /// Implementers are expected to preserve the typing of values passed to <see cref="Store"/> when returned from <see cref="Load"/>.
+    /// The only exceptions to this are the numeric types, <see cref="Integer"/> and <see cref="FloatingPoint"/>, since they can be coerced
+    /// to each other with <see cref="Integer.AsFloat"/> and <see cref="FloatingPoint.AsInteger"/> respectively. The provider <i>should</i>
+    /// however store and recover <see cref="Integer"/> with as much precision as is possible. For example, a JSON provider may decide to
+    /// decode all numbers that have an integral value, even if they were originally <see cref="FloatingPoint"/>, as <see cref="Integer"/>.
+    /// This is reasonable, as <see cref="Integer"/> is more precise, particularly with larger values, than <see cref="FloatingPoint"/>.
+    /// </para>
     /// </remarks>
     public interface IConfigProvider
     {
