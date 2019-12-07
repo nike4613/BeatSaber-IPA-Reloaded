@@ -168,8 +168,6 @@ namespace IPA.Utilities
 #endregion
 
 #region Accessors
-        // TODO: add async fun stuff to this
-
         /// <summary>
         /// Creates a locker for a mutex.
         /// </summary>
