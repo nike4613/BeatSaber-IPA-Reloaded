@@ -106,6 +106,7 @@ namespace IPA.Config.Stores
             {
                 // TODO: implement
                 Logger.config.Debug("Generated impl ReadFrom");
+                Logger.config.Debug($"Read {provider.Load()}");
             }
 
             internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));

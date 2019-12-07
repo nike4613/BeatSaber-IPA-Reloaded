@@ -1,14 +1,17 @@
-﻿using IPA.Logging;
+﻿using IPA.Config.Data;
+using IPA.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Collections.Generic;
+using Boolean = IPA.Config.Data.Boolean;
 
 namespace IPA.Config.Providers
-{ // TODO: implement this for the new provider system
-    /*[Config.Type("json")]
+{
     internal class JsonConfigProvider : IConfigProvider
     {
         public static void RegisterConfig()
@@ -16,112 +19,138 @@ namespace IPA.Config.Providers
             Config.Register<JsonConfigProvider>();
         }
 
-        private JObject jsonObj;
+        public string Extension => "json";
 
-#if NET4
-        // TODO: create a wrapper that allows empty object creation
-        public dynamic Dynamic => jsonObj;
-#endif
+        public FileInfo File { get; set; }
 
-        public bool HasChanged { get; private set; }
-        public bool InMemoryChanged { get; set; }
-
-        public DateTime LastModified => File.GetLastWriteTime(Filename + ".json");
-
-        private string _filename;
-
-        public string Filename
+        public Value Load()
         {
-            get => _filename;
-            set
+            if (!File.Exists) return Value.Null();
+
+            JToken jtok;
+            using (var sreader = new StreamReader(File.OpenRead()))
             {
-                if (_filename != null)
-                    throw new InvalidOperationException("Can only assign to Filename once");
-                _filename = value;
+                using var jreader = new JsonTextReader(sreader);
+                jtok = JToken.ReadFrom(jreader);
+            }
+
+            try
+            {
+                return VisitToValue(jtok);
+            }
+            catch (Exception e)
+            {
+                Logger.config.Error($"Error reading JSON file {File.FullName}; ignoring");
+                Logger.config.Error(e);
+                return Value.Null();
             }
         }
 
-        public void Load()
+        private Value VisitToValue(JToken tok)
         {
-            Logger.config.Debug($"Loading file {Filename}.json");
+            if (tok == null) return Value.Null();
 
-            var fileInfo = new FileInfo(Filename + ".json");
-            if (fileInfo.Exists)
+            switch (tok.Type)
             {
-                string json = File.ReadAllText(fileInfo.FullName);
-                try
-                {
-                    jsonObj = JObject.Parse(json);
-                }
-                catch (Exception e)
-                {
-                    Logger.config.Error($"Error parsing JSON in file {Filename}.json; resetting to empty JSON");
-                    Logger.config.Error(e);
-                    jsonObj = new JObject();
-                    File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
-                }
+                case JTokenType.Raw: // idk if the parser will normally emit a Raw type, but just to be safe
+                    return VisitToValue(JToken.Parse((tok as JRaw).Value as string));
+                case JTokenType.Undefined:
+                case JTokenType.Bytes: // never used by Newtonsoft
+                case JTokenType.Comment: // never used by Newtonsoft
+                case JTokenType.Constructor: // never used by Newtonsoft
+                case JTokenType.Property: // never used by Newtonsoft
+                case JTokenType.Null: 
+                    return Value.Null();
+                case JTokenType.Boolean:
+                    return Value.Bool(((tok as JValue).Value as bool?) ?? false);
+                case JTokenType.String:
+                    var val = (tok as JValue).Value;
+                    if (val is string s) return Value.Text(s);
+                    else if (val is char c) return Value.Text("" + c);
+                    else return Value.Text(string.Empty);
+                case JTokenType.Integer:
+                    val = (tok as JValue).Value;
+                    if (val is long l) return Value.Integer(l);
+                    else if (val is ulong u) return Value.Integer((long)u);
+                    else return Value.Integer(0);
+                case JTokenType.Float:
+                    val = (tok as JValue).Value;
+                    if (val is decimal dec) return Value.Float((double)dec);
+                    else if (val is double dou) return Value.Float(dou);
+                    else if (val is float flo) return Value.Float(flo);
+                    else return Value.Float(0); // default to 0 if something breaks
+                case JTokenType.Date:
+                    val = (tok as JValue).Value;
+                    if (val is DateTime dt) return Value.Text(dt.ToString());
+                    else if (val is DateTimeOffset dto) return Value.Text(dto.ToString());
+                    else return Value.Text("Unknown Date-type token");
+                case JTokenType.TimeSpan:
+                    val = (tok as JValue).Value;
+                    if (val is TimeSpan ts) return Value.Text(ts.ToString());
+                    else return Value.Text("Unknown TimeSpan-type token");
+                case JTokenType.Guid:
+                    val = (tok as JValue).Value;
+                    if (val is Guid g) return Value.Text(g.ToString());
+                    else return Value.Text("Unknown Guid-type token");
+                case JTokenType.Uri:
+                    val = (tok as JValue).Value;
+                    if (val is Uri ur) return Value.Text(ur.ToString());
+                    else return Value.Text("Unknown Uri-type token");
+                case JTokenType.Array:
+                    return Value.From((tok as JArray).Select(VisitToValue));
+                case JTokenType.Object:
+                    return Value.From((tok as IEnumerable<KeyValuePair<string, JToken>>)
+                        .Select(kvp => new KeyValuePair<string, Value>(kvp.Key, VisitToValue(kvp.Value))));
+                default:
+                    throw new ArgumentException($"Unknown {nameof(JTokenType)} in parameter");
             }
-            else
+        }
+
+        public void Store(Value value)
+        {
+            if (File.Directory.Exists)
+                File.Directory.Create();
+
+            try
             {
-                jsonObj = new JObject();
+                var tok = VisitToToken(value);
+
+                using var swriter = new StreamWriter(File.OpenWrite());
+                using var jwriter = new JsonTextWriter(swriter);
+                tok.WriteTo(jwriter);
             }
-
-            SetupListeners();
-            InMemoryChanged = true;
+            catch (Exception e)
+            {
+                Logger.config.Error($"Error serializing value for {File.FullName}");
+                Logger.config.Error(e);
+            }
         }
 
-        private void SetupListeners()
-        {
-            jsonObj.PropertyChanged += JsonObj_PropertyChanged;
-            jsonObj.ListChanged += JsonObj_ListChanged;
-#if NET4
-            jsonObj.CollectionChanged += JsonObj_CollectionChanged;
-#endif
+        private JToken VisitToToken(Value val) 
+        { 
+            switch (val)
+            {
+                case Text t:
+                    return new JValue(t.Value);
+                case Boolean b:
+                    return new JValue(b.Value);
+                case Integer i:
+                    return new JValue(i.Value);
+                case FloatingPoint f:
+                    return new JValue(f.Value);
+                case List l:
+                    var jarr = new JArray();
+                    foreach (var tok in l.Select(VisitToToken)) jarr.Add(tok);
+                    return jarr;
+                case Map m:
+                    var jobj = new JObject();
+                    foreach (var kvp in m) jobj.Add(kvp.Key, VisitToToken(kvp.Value));
+                    return jobj;
+                case null:
+                    return JValue.CreateNull();
+                default:
+                    throw new ArgumentException($"Unsupported subtype of {nameof(Value)}");
+            }
         }
-
-#if NET4
-        private void JsonObj_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            HasChanged = true;
-            InMemoryChanged = true;
-        }
-#endif
-
-        private void JsonObj_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            HasChanged = true;
-            InMemoryChanged = true;
-        }
-
-        private void JsonObj_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            HasChanged = true;
-            InMemoryChanged = true;
-        }
-
-        public T Parse<T>()
-        {
-            if (jsonObj == null)
-                return default(T);
-            return jsonObj.ToObject<T>();
-        }
-
-        public void Save()
-        {
-            Logger.config.Debug($"Saving file {Filename}.json");
-            if (!Directory.Exists(Path.GetDirectoryName(Filename)))
-                Directory.CreateDirectory(Path.GetDirectoryName(Filename) ?? throw new InvalidOperationException());
-            File.WriteAllText(Filename + ".json", JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
-
-            HasChanged = false;
-        }
-
-        public void Store<T>(T obj)
-        {
-            jsonObj = JObject.FromObject(obj);
-            SetupListeners();
-            HasChanged = true;
-            InMemoryChanged = true;
-        }
-    }*/
+    }
 }
