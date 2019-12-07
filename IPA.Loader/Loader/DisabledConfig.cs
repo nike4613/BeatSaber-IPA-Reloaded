@@ -32,7 +32,7 @@ namespace IPA.Loader
 
         public static void Load()
         {
-            Provider = Config.Config.GetProviderFor("Disabled Mods", "json");
+            Provider = Config.Config.GetConfigFor("Disabled Mods", "json");
         }
 
         public bool Reset = true;

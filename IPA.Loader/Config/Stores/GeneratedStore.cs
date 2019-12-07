@@ -16,6 +16,35 @@ using Array = Net3_Proxy.Array;
 
 namespace IPA.Config.Stores
 {
+    /// <summary>
+    /// A class providing an extension for <see cref="Config"/> to make it easy to use generated
+    /// config stores.
+    /// </summary>
+    public static class GeneratedStoreExtensions
+    {
+        /// <summary>
+        /// Creates a generated <see cref="IConfigStore"/> of type <typeparamref name="T"/>, registers it to
+        /// the <see cref="Config"/> object, and returns it.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <typeparamref name="T"/> must be a non-<see langword="sealed"/> <see langword="class"/>.
+        /// </para>
+        /// <para>
+        /// TODO: describe details of generated stores
+        /// </para>
+        /// </remarks>
+        /// <typeparam name="T">the type to wrap</typeparam>
+        /// <param name="cfg">the <see cref="Config"/> to register to</param>
+        /// <returns>a generated instance of <typeparamref name="T"/> as a special <see cref="IConfigStore"/></returns>
+        public static T Generated<T>(this Config cfg) where T : class
+        {
+            var ret = GeneratedStore.Create<T>();
+            cfg.AddStore(ret as IConfigStore);
+            return ret;
+        }
+    }
+
     internal static class GeneratedStore
     {
         private interface IGeneratedStore
