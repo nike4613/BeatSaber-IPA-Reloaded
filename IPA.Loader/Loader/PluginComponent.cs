@@ -78,6 +78,10 @@ namespace IPA.Loader
 
             ConfigRuntime.SaveAll();
 
+#if DEBUG
+            Config.Stores.GeneratedStore.DebugSaveAssembly("GeneratedAssembly.dll");
+#endif
+
             quitting = true;
         }
 

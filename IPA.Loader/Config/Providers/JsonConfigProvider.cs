@@ -55,10 +55,20 @@ namespace IPA.Config.Providers
                 case JTokenType.Raw: // idk if the parser will normally emit a Raw type, but just to be safe
                     return VisitToValue(JToken.Parse((tok as JRaw).Value as string));
                 case JTokenType.Undefined:
+                    Logger.config.Warn("Found JTokenType.Undefined");
+                    goto case JTokenType.Null;
                 case JTokenType.Bytes: // never used by Newtonsoft
+                    Logger.config.Warn("Found JTokenType.Bytes");
+                    goto case JTokenType.Null;
                 case JTokenType.Comment: // never used by Newtonsoft
+                    Logger.config.Warn("Found JTokenType.Comment");
+                    goto case JTokenType.Null;
                 case JTokenType.Constructor: // never used by Newtonsoft
+                    Logger.config.Warn("Found JTokenType.Constructor");
+                    goto case JTokenType.Null;
                 case JTokenType.Property: // never used by Newtonsoft
+                    Logger.config.Warn("Found JTokenType.Property");
+                    goto case JTokenType.Null;
                 case JTokenType.Null: 
                     return Value.Null();
                 case JTokenType.Boolean:

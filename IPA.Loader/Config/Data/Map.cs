@@ -109,7 +109,7 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>a JSON-like set of key-value pairs</returns>
         public override string ToString()
-            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value.ToString()}").StrJP())}}}";
+            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value?.ToString() ?? "null"}").StrJP())}}}";
     }
 
 

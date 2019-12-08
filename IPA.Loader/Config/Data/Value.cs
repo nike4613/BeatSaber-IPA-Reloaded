@@ -54,7 +54,7 @@ namespace IPA.Config.Data
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="Data.Text"/> wrapping <paramref name="val"/></returns>
         /// <seealso cref="From(string)"/>
-        public static Text Text(string val) => val == null ? new Text { Value = val } : null;
+        public static Text Text(string val) => val == null ? null : new Text { Value = val };
 
         /// <summary>
         /// Creates a new <see cref="Value"/> wrapping a <see cref="long"/>.
