@@ -20,6 +20,7 @@ namespace IPA.Config
         {
             LoaderConfig = Config.GetConfigFor(IPAName, "json");
             Instance = LoaderConfig.Generated<SelfConfig>();
+            GeneratedStore.DebugSaveAssembly("GeneratedAssembly.dll");
         }
 
         public static void ReadCommandLine(string[] args)

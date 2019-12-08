@@ -150,6 +150,7 @@ namespace IPA.Config
             if (Store != null)
                 throw new InvalidOperationException($"{nameof(SetStore)} can only be called once");
             Store = store;
+            ConfigRuntime.ConfigChanged();
         }
 
         /// <summary>
