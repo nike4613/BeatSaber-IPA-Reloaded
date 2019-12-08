@@ -9,10 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.IO;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
 #endif
+
+[assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.GeneratedAssemblyName)]
 
 namespace IPA.Config.Stores
 {
@@ -54,7 +58,7 @@ namespace IPA.Config.Stores
 
     internal static class GeneratedStore
     {
-        private interface IGeneratedStore
+        internal interface IGeneratedStore
         {
             /// <summary>
             /// serializes/deserializes to Value
@@ -65,7 +69,7 @@ namespace IPA.Config.Stores
             Impl Impl { get; }
         }
 
-        private class Impl : IConfigStore
+        internal class Impl : IConfigStore
         {
             private IGeneratedStore generated;
 
@@ -80,27 +84,27 @@ namespace IPA.Config.Stores
             internal static MethodInfo WriteSyncObjectGetMethod = typeof(Impl).GetProperty(nameof(WriteSyncObject)).GetGetMethod();
 
             internal static MethodInfo ImplSignalChangedMethod = typeof(Impl).GetMethod(nameof(ImplSignalChanged));
-            internal static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s).SignalChanged();
-            internal void SignalChanged() => resetEvent.Set(); 
+            public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s).SignalChanged();
+            public void SignalChanged() => resetEvent.Set(); 
 
             internal static MethodInfo ImplTakeReadMethod = typeof(Impl).GetMethod(nameof(ImplTakeRead));
-            internal static void ImplTakeRead(IGeneratedStore s) => FindImpl(s).TakeRead();
-            internal void TakeRead() => WriteSyncObject.EnterReadLock();
+            public static void ImplTakeRead(IGeneratedStore s) => FindImpl(s).TakeRead();
+            public void TakeRead() => WriteSyncObject.EnterReadLock();
 
             internal static MethodInfo ImplReleaseReadMethod = typeof(Impl).GetMethod(nameof(ImplReleaseRead));
-            internal static void ImplReleaseRead(IGeneratedStore s) => FindImpl(s).ReleaseRead();
-            internal void ReleaseRead() => WriteSyncObject.ExitWriteLock();
+            public static void ImplReleaseRead(IGeneratedStore s) => FindImpl(s).ReleaseRead();
+            public void ReleaseRead() => WriteSyncObject.ExitWriteLock();
 
             internal static MethodInfo ImplTakeWriteMethod = typeof(Impl).GetMethod(nameof(ImplTakeWrite));
-            internal static void ImplTakeWrite(IGeneratedStore s) => FindImpl(s).TakeWrite();
-            internal void TakeWrite() => WriteSyncObject.EnterWriteLock();
+            public static void ImplTakeWrite(IGeneratedStore s) => FindImpl(s).TakeWrite();
+            public void TakeWrite() => WriteSyncObject.EnterWriteLock();
 
             internal static MethodInfo ImplReleaseWriteMethod = typeof(Impl).GetMethod(nameof(ImplReleaseWrite));
-            internal static void ImplReleaseWrite(IGeneratedStore s) => FindImpl(s).ReleaseWrite();
-            internal void ReleaseWrite() => WriteSyncObject.ExitWriteLock();
+            public static void ImplReleaseWrite(IGeneratedStore s) => FindImpl(s).ReleaseWrite();
+            public void ReleaseWrite() => WriteSyncObject.ExitWriteLock();
 
             internal static MethodInfo FindImplMethod = typeof(Impl).GetMethod(nameof(FindImpl));
-            internal static Impl FindImpl(IGeneratedStore store)
+            public static Impl FindImpl(IGeneratedStore store)
             {
                 while (store != null) store = store.Parent; // walk to the top of the tree
                 return store?.Impl;
@@ -144,6 +148,8 @@ namespace IPA.Config.Stores
             }
         }
 
+        internal const string GeneratedAssemblyName = "IPA.Config.Generated";
+
         private static AssemblyBuilder assembly = null;
         private static AssemblyBuilder Assembly
         {
@@ -151,20 +157,26 @@ namespace IPA.Config.Stores
             {
                 if (assembly == null)
                 {
-                    var name = new AssemblyName("IPA.Config.Generated");
+                    var name = new AssemblyName(GeneratedAssemblyName);
                     assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.RunAndSave);
                 }
 
                 return assembly;
             }
         }
+
+        internal static void DebugSaveAssembly(string file)
+        {
+            Assembly.Save(file);
+        }
+
         private static ModuleBuilder module = null;
         private static ModuleBuilder Module
         {
             get
             {
                 if (module == null)
-                    module = Assembly.DefineDynamicModule(Assembly.GetName().Name);
+                    module = Assembly.DefineDynamicModule(Assembly.GetName().Name + ".dll");
 
                 return module;
             }
@@ -412,7 +424,7 @@ namespace IPA.Config.Stores
             typeBuilder.DefineMethodOverride(readFrom, IConfigStore_ReadFrom);
 
             {
-                var il = writeTo.GetILGenerator();
+                var il = readFrom.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Call, Impl.FindImplMethod);

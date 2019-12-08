@@ -67,6 +67,11 @@ namespace IPA.Config
             AddConfigToWatchers(cfg);
         }
 
+        public static void ConfigChanged()
+        {
+            configsChangedWatcher.Set();
+        }
+
         private static void AddConfigToWatchers(Config config)
         {
             var dir = config.File.Directory;
@@ -173,14 +178,24 @@ namespace IPA.Config
         {
             while (true)
             {
-                var configArr = configs.ToArray();
-                var waitHandles = configArr.Select(c => c.Store.SyncObject)
-                                         .Prepend(configsChangedWatcher)
-                                         .ToArray();
-                var index = WaitHandle.WaitAny(waitHandles);
+                var configArr = configs.Where(c => c.Store != null).ToArray();
+                int index = -1;
+                try
+                {
+                    var waitHandles = configArr.Select(c => c.Store.SyncObject)
+                                             .Prepend(configsChangedWatcher)
+                                             .ToArray();
+                    index = WaitHandle.WaitAny(waitHandles);
+                }
+                catch (Exception e)
+                {
+                    Logger.config.Error($"Error waiting for in-memory updates");
+                    Logger.config.Error(e);
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                }
 
-                if (index == 0)
-                { // we got a signal that the configs collection changed, loop around
+                if (index <= 0)
+                { // we got a signal that the configs collection changed, loop around, or errored
                     continue;
                 }
 
