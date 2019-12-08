@@ -131,6 +131,7 @@
     <Compile Include="Utilities\BeatSaber.cs" />
     <Compile Include="Utilities\AlmostVersion.cs" />
     <Compile Include="Utilities\CriticalSection.cs" />
+    <Compile Include="Utilities\EnumerableExtensions.cs" />
     <Compile Include="Utilities\Ref.cs" />
     <Compile Include="Utilities\ReflectionUtil.cs" />
     <Compile Include="Loader\Composite\CompositeIPAPlugin.cs" />
