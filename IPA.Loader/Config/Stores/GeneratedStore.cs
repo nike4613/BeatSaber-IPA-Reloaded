@@ -24,7 +24,8 @@ namespace IPA.Config.Stores
     {
         /// <summary>
         /// Creates a generated <see cref="IConfigStore"/> of type <typeparamref name="T"/>, registers it to
-        /// the <see cref="Config"/> object, and returns it.
+        /// the <see cref="Config"/> object, and returns it. This also forces a synchronous config load via
+        /// <see cref="Config.LoadSync"/> if <paramref name="loadSync"/> is <see langword="true"/>.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -36,11 +37,17 @@ namespace IPA.Config.Stores
         /// </remarks>
         /// <typeparam name="T">the type to wrap</typeparam>
         /// <param name="cfg">the <see cref="Config"/> to register to</param>
+        /// <param name="loadSync">whether to synchronously load the content, or trigger an async load</param>
         /// <returns>a generated instance of <typeparamref name="T"/> as a special <see cref="IConfigStore"/></returns>
-        public static T Generated<T>(this Config cfg) where T : class
+        public static T Generated<T>(this Config cfg, bool loadSync = true) where T : class
         {
             var ret = GeneratedStore.Create<T>();
             cfg.SetStore(ret as IConfigStore);
+            if (loadSync)
+                cfg.LoadSync();
+            else
+                cfg.LoadAsync();
+
             return ret;
         }
     }

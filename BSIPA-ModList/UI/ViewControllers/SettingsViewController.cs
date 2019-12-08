@@ -20,19 +20,19 @@ namespace BSIPA_ModList.UI
             showEnableDisable = menu.AddBool("Show Enable/Disable Button", "If enabled, BSIPA mods will have a button to enable or disable them.");
 
             autoCheck.applyImmediately = true;
-            autoCheck.GetValue += () => IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates;
+            autoCheck.GetValue += () => IPA.Config.SelfConfig.Instance.Value.Updates.AutoCheckUpdates;
             autoCheck.SetValue += val =>
             {
-                IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoCheckUpdates = val;
-                IPA.Config.SelfConfig.LoaderConfig.Store(IPA.Config.SelfConfig.SelfConfigRef.Value);
+                IPA.Config.SelfConfig.Instance.Value.Updates.AutoCheckUpdates = val;
+                IPA.Config.SelfConfig.LoaderConfig.Store(IPA.Config.SelfConfig.Instance.Value);
             };
 
             autoUpdate.applyImmediately = true;
-            autoUpdate.GetValue += () => IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate;
+            autoUpdate.GetValue += () => IPA.Config.SelfConfig.Instance.Value.Updates.AutoUpdate;
             autoUpdate.SetValue += val =>
             {
-                IPA.Config.SelfConfig.SelfConfigRef.Value.Updates.AutoUpdate = val;
-                IPA.Config.SelfConfig.LoaderConfig.Store(IPA.Config.SelfConfig.SelfConfigRef.Value);
+                IPA.Config.SelfConfig.Instance.Value.Updates.AutoUpdate = val;
+                IPA.Config.SelfConfig.LoaderConfig.Store(IPA.Config.SelfConfig.Instance.Value);
             };
 
             showEnableDisable.applyImmediately = true;

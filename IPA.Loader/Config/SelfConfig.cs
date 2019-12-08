@@ -1,6 +1,7 @@
 ﻿// BEGIN: section ignore
 using IPA.Logging;
 using IPA.Utilities;
+using IPA.Config.Stores;
 // END: section ignore
 using Newtonsoft.Json;
 
@@ -11,31 +12,14 @@ namespace IPA.Config
         // This is to allow the doc generation to parse this file and use Newtonsoft to generate a JSON schema
         // BEGIN: section ignore
 
-        private static IConfigProvider _loaderConfig;
+        public static Config LoaderConfig { get; set; }
 
-        public static IConfigProvider LoaderConfig
-        {
-            get => _loaderConfig;
-            set
-            {
-                _loaderConfig?.RemoveLinks();
-                value.Load();
-                SelfConfigRef = value.MakeLink<SelfConfig>((c, v) =>
-                {
-                    if (v.Value.Regenerate)
-                        c.Store(v.Value = new SelfConfig { Regenerate = false });
-
-                    StandardLogger.Configure(v.Value);
-                });
-                _loaderConfig = value;
-            }
-        }
-
-        public static Ref<SelfConfig> SelfConfigRef = new SelfConfig();
+        public static SelfConfig Instance = new SelfConfig();
 
         public static void Load()
         {
             LoaderConfig = Config.GetConfigFor(IPAName, "json");
+            Instance = LoaderConfig.Generated<SelfConfig>();
         }
 
         public static void ReadCommandLine(string[] args)
@@ -81,12 +65,12 @@ namespace IPA.Config
         {
             public bool AutoUpdate = true;
             // LINE: ignore 2
-            public static bool AutoUpdate_ => SelfConfigRef.Value.Updates.AutoUpdate
+            public static bool AutoUpdate_ => Instance.Updates.AutoUpdate
                                            &&   CommandLineValues.Updates.AutoUpdate;
 
             public bool AutoCheckUpdates = true;
             // LINE: ignore 2
-            public static bool AutoCheckUpdates_ => SelfConfigRef.Value.Updates.AutoCheckUpdates
+            public static bool AutoCheckUpdates_ => Instance.Updates.AutoCheckUpdates
                                                  &&   CommandLineValues.Updates.AutoCheckUpdates;
         }
 
@@ -96,35 +80,35 @@ namespace IPA.Config
         {
             public bool ShowCallSource = false;
             // LINE: ignore 2
-            public static bool ShowCallSource_ => SelfConfigRef.Value.Debug.ShowCallSource
+            public static bool ShowCallSource_ => Instance.Debug.ShowCallSource
                                                ||   CommandLineValues.Debug.ShowCallSource;
 
             public bool ShowDebug = false;
             // LINE: ignore 2
-            public static bool ShowDebug_ => SelfConfigRef.Value.Debug.ShowDebug
+            public static bool ShowDebug_ => Instance.Debug.ShowDebug
                                           ||   CommandLineValues.Debug.ShowDebug;
 
             // This option only takes effect after a full game restart, unless new logs are created again
             public bool CondenseModLogs = false;
             // LINE: ignore 2
-            public static bool CondenseModLogs_ => SelfConfigRef?.Value.Debug.CondenseModLogs ?? false
+            public static bool CondenseModLogs_ => Instance?.Debug.CondenseModLogs ?? false
                                                 ||   CommandLineValues.Debug.CondenseModLogs;
 
             public bool ShowHandledErrorStackTraces = false;
             // LINE: ignore
-            public static bool ShowHandledErrorStackTraces_ => SelfConfigRef.Value.Debug.ShowHandledErrorStackTraces;
+            public static bool ShowHandledErrorStackTraces_ => Instance.Debug.ShowHandledErrorStackTraces;
 
             public bool HideMessagesForPerformance = true;
             // LINE: ignore
-            public static bool HideMessagesForPerformance_ => SelfConfigRef.Value.Debug.HideMessagesForPerformance;
+            public static bool HideMessagesForPerformance_ => Instance.Debug.HideMessagesForPerformance;
 
             public int HideLogThreshold = 512;
             // LINE: ignore
-            public static int HideLogThreshold_ => SelfConfigRef.Value.Debug.HideLogThreshold;
+            public static int HideLogThreshold_ => Instance.Debug.HideLogThreshold;
 
             public bool ShowTrace = false;
             // LINE: ignore 2
-            public static bool ShowTrace_ => SelfConfigRef.Value.Debug.ShowTrace
+            public static bool ShowTrace_ => Instance.Debug.ShowTrace
                                           ||   CommandLineValues.Debug.ShowTrace;
         }
 
@@ -132,12 +116,12 @@ namespace IPA.Config
 
         public bool YeetMods = true;
         // LINE: ignore 2
-        public static bool YeetMods_ => SelfConfigRef.Value.YeetMods 
+        public static bool YeetMods_ => Instance.YeetMods 
                                      &&   CommandLineValues.YeetMods;
 
         [JsonProperty(Required = Required.Default)]
         public string LastGameVersion = null;
         // LINE: ignore
-        public static string LastGameVersion_ => SelfConfigRef.Value.LastGameVersion;
+        public static string LastGameVersion_ => Instance.LastGameVersion;
     }
 }

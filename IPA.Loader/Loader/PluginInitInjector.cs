@@ -68,12 +68,10 @@ namespace IPA.Loader
             new TypedInjector(typeof(IModPrefs), (prev, param, meta) => prev ?? new ModPrefs(meta)),
 #pragma warning restore CS0618 // Type or member is obsolete
             new TypedInjector(typeof(PluginLoader.PluginMetadata), (prev, param, meta) => prev ?? meta),
-            new TypedInjector(typeof(IConfigProvider), (prev, param, meta) =>
+            new TypedInjector(typeof(Config.Config), (prev, param, meta) =>
             {
                 if (prev != null) return prev;
-                var cfgProvider = Config.Config.GetProviderFor(meta.Name, param);
-                cfgProvider.Load();
-                return cfgProvider;
+                return Config.Config.GetConfigFor(meta.Name, param);
             })
         };
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using IPA.Config.Providers;
 using IPA.Utilities;
 #if NET3
@@ -116,7 +117,7 @@ namespace IPA.Config
             return config;
         }
         
-        internal static Config GetProviderFor(string modName, ParameterInfo info)
+        internal static Config GetConfigFor(string modName, ParameterInfo info)
         {
             var prefs = Array.Empty<string>();
             if (info.GetCustomAttribute<PreferAttribute>() is PreferAttribute prefer)
@@ -150,6 +151,16 @@ namespace IPA.Config
                 throw new InvalidOperationException($"{nameof(SetStore)} can only be called once");
             Store = store;
         }
+
+        /// <summary>
+        /// Forces a synchronous load from disk.
+        /// </summary>
+        public void LoadSync() => LoadAsync().Wait();
+
+        /// <summary>
+        /// Forces an asynchronous load from disk.
+        /// </summary>
+        public Task LoadAsync() => ConfigRuntime.TriggerFileLoad(this);
 
         private Config(string name, IConfigProvider provider, FileInfo file)
         {
