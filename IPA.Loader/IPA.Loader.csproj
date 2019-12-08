@@ -127,6 +127,7 @@
     <Compile Include="Config\ModPrefs.cs" />
     <Compile Include="JsonConverters\SemverRangeConverter.cs" />
     <Compile Include="JsonConverters\SemverVersionConverter.cs" />
+    <Compile Include="Utilities\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Utilities\BeatSaber.cs" />
     <Compile Include="Utilities\AlmostVersion.cs" />
     <Compile Include="Utilities\CriticalSection.cs" />
