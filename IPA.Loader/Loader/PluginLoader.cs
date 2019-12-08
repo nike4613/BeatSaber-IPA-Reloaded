@@ -26,7 +26,12 @@ namespace IPA.Loader
     /// </summary>
     public class PluginLoader
     {
-        internal static Task LoadTask() => Task.Factory.StartNew(() =>
+        internal static Task LoadTask() =>
+#if NET3
+            TaskEx.Run(() =>
+#else
+            Task.Run(() =>
+#endif
         {
             YeetIfNeeded();
 
