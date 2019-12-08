@@ -18,14 +18,27 @@ namespace IPA.Utilities.Async
         private readonly CancellationTokenSource exitTokenSource = new CancellationTokenSource();
 
         /// <summary>
+        /// Gets whether or not the underlying thread has been started.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        public bool IsRunning
+        {
+            get
+            {
+                ThrowIfDisposed();
+                return runThread.IsAlive;
+            }
+        }
+
+        /// <summary>
         /// Starts the thread that executes tasks scheduled with this <see cref="TaskScheduler"/>
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
-        public void StartThread()
+        public void Start()
         {
             ThrowIfDisposed();
 
-            runThread.Start();
+            runThread.Start(this);
         }
 
         /// <summary>
@@ -47,7 +60,6 @@ namespace IPA.Utilities.Async
             var retTasks = new List<Task>();
             retTasks.AddRange(tasks);
 
-            Dispose(true);
             return retTasks;
         }
 
@@ -64,7 +76,6 @@ namespace IPA.Utilities.Async
 
             tasks.CompleteAdding();
             runThread.Join();
-            Dispose(true);
         }
 
         /// <summary>
