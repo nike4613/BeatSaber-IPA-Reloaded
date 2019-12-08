@@ -28,8 +28,8 @@ namespace IPA.Config
         private static readonly AutoResetEvent configsChangedWatcher = new AutoResetEvent(false);
         private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
-        private static readonly ConditionalWeakTable<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
-            = new ConditionalWeakTable<FileSystemWatcher, ConcurrentBag<Config>>();
+        private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
+            = new ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>>();
         private static SingleThreadTaskScheduler loadScheduler = null;
         private static TaskFactory loadFactory = null;
         private static Thread saveThread = null;
@@ -99,7 +99,7 @@ namespace IPA.Config
 
             watcher.EnableRaisingEvents = false; // disable while we do shit
 
-            var bag = watcherTrackConfigs.GetOrCreateValue(watcher);
+            var bag = watcherTrackConfigs.GetOrAdd(watcher, w => new ConcurrentBag<Config>());
             // we don't need to check containment because this function will only be called once per config ever
             bag.Add(config);
 
