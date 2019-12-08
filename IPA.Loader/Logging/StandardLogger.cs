@@ -305,7 +305,7 @@ namespace IPA.Logging
                         }
                     }
 
-                    var debugConfig = SelfConfig.SelfConfigRef?.Value?.Debug;
+                    var debugConfig = SelfConfig.Instance?.Debug;
 
                     if (debugConfig != null && debugConfig.HideMessagesForPerformance 
                         && logQueue.Count > debugConfig.HideLogThreshold)

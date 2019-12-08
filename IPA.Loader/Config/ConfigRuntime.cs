@@ -114,6 +114,42 @@ namespace IPA.Config
 
         public static Task TriggerFileLoad(Config config) => loadFactory.StartNew(() => LoadTask(config));
 
+        public static Task TriggerLoadAll()
+            => Task.WhenAll(configs.Select(TriggerFileLoad));
+
+        /// <summary>
+        /// this is synchronous, unlike <see cref="TriggerFileLoad(Config)"/>
+        /// </summary>
+        /// <param name="config"></param>
+        public static void Save(Config config)
+        {
+            var store = config.Store;
+
+            try
+            {
+                using var readLock = Synchronization.LockRead(store.WriteSyncObject);
+                lock (config.Provider)
+                {
+                    config.Provider.File = config.File;
+                    store.WriteTo(config.Provider);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.config.Error($"{nameof(IConfigStore)} for {config.File} errored while writing to disk");
+                Logger.config.Error(e);
+            }
+        }
+
+        /// <summary>
+        /// this is synchronous, unlike <see cref="TriggerLoadAll"/>
+        /// </summary>
+        public static void SaveAll()
+        {
+            foreach (var config in configs)
+                Save(config);
+        }
+
         private static void LoadTask(Config config)
         { // these tasks will always be running in the same thread as each other
             try
@@ -149,23 +185,7 @@ namespace IPA.Config
                 }
 
                 // otherwise, we have a thing that changed in a store
-                var config = configArr[index - 1];
-                var store = config.Store;
-
-                try
-                {
-                    using var readLock = Synchronization.LockRead(store.WriteSyncObject);
-                    lock (config.Provider)
-                    {
-                        config.Provider.File = config.File;
-                        store.WriteTo(config.Provider);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.config.Error($"{nameof(IConfigStore)} for {config.File} errored while writing to disk");
-                    Logger.config.Error(e);
-                }
+                Save(configArr[index - 1]);
             }
         }
     }

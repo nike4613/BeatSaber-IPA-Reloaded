@@ -105,8 +105,7 @@ namespace IPA.Loader
             var dependents = BSMetas.Where(m => m.Metadata.Dependencies.Contains(plugin.Metadata)).ToList();
             needsRestart = dependents.Aggregate(needsRestart, (b, p) => DisablePlugin(p) || b);
 
-            DisabledConfig.Ref.Value.DisabledModIds.Add(plugin.Metadata.Id ?? plugin.Metadata.Name);
-            DisabledConfig.Provider.Store(DisabledConfig.Ref.Value);
+            DisabledConfig.Instance.DisabledModIds.Add(plugin.Metadata.Id ?? plugin.Metadata.Name);
 
             if (!needsRestart && plugin.Plugin is IDisablablePlugin disable)
             {
@@ -167,8 +166,7 @@ namespace IPA.Loader
 
             Logger.loader.Info($"Enabling {plugin.Name}");
 
-            DisabledConfig.Ref.Value.DisabledModIds.Remove(plugin.Id ?? plugin.Name);
-            DisabledConfig.Provider.Store(DisabledConfig.Ref.Value);
+            DisabledConfig.Instance.DisabledModIds.Remove(plugin.Id ?? plugin.Name);
 
             var needsRestart = true;
 

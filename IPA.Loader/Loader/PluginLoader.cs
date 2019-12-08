@@ -154,8 +154,7 @@ namespace IPA.Loader
                     Directory.CreateDirectory(pluginDir);
             }
 
-            SelfConfig.SelfConfigRef.Value.LastGameVersion = gameVer.ToString();
-            SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
+            SelfConfig.Instance.LastGameVersion = gameVer.ToString();
         }
 
         internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();
@@ -409,7 +408,7 @@ namespace IPA.Loader
         {
             var enabled = new List<PluginMetadata>(PluginsMetadata.Count);
 
-            var disabled = DisabledConfig.Ref.Value.DisabledModIds;
+            var disabled = DisabledConfig.Instance.DisabledModIds;
             foreach (var meta in PluginsMetadata)
             {
                 if (disabled.Contains(meta.Id ?? meta.Name))
@@ -523,7 +522,7 @@ namespace IPA.Loader
                 else if (disable)
                 {
                     DisabledPlugins.Add(meta);
-                    DisabledConfig.Ref.Value.DisabledModIds.Add(meta.Id ?? meta.Name);
+                    DisabledConfig.Instance.DisabledModIds.Add(meta.Id ?? meta.Name);
                 }
                 else
                     ignoredPlugins.Add(meta);

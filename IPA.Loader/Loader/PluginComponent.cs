@@ -39,24 +39,18 @@ namespace IPA.Loader
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
-
-            Config.Config.Save();
         }
 
         void Update()
         {
             bsPlugins.OnUpdate();
             ipaPlugins.OnUpdate();
-
-            Config.Config.Update();
         }
 
         void LateUpdate()
         {
             bsPlugins.OnLateUpdate();
             ipaPlugins.OnLateUpdate();
-
-            //Config.Config.Update();
         }
 
         void FixedUpdate()
@@ -82,7 +76,7 @@ namespace IPA.Loader
             bsPlugins.OnApplicationQuit();
             ipaPlugins.OnApplicationQuit();
 
-            Config.Config.Save();
+            ConfigRuntime.SaveAll();
 
             quitting = true;
         }
