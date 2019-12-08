@@ -113,7 +113,7 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>a comma-seperated list of the result of <see cref="Value.ToString"/> wrapped in square brackets</returns>
         public override string ToString()
-            => $"[{string.Join(",",this.Select(v => v.ToString()).StrJP())}]";
+            => $"[{string.Join(",",this.Select(v => v?.ToString() ?? "null").StrJP())}]";
 
         IEnumerator IEnumerable.GetEnumerator() => ((IList<Value>)values).GetEnumerator();
     }

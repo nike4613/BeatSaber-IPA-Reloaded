@@ -106,7 +106,7 @@ namespace IPA.Config.Stores
             internal static MethodInfo FindImplMethod = typeof(Impl).GetMethod(nameof(FindImpl));
             public static Impl FindImpl(IGeneratedStore store)
             {
-                while (store != null) store = store.Parent; // walk to the top of the tree
+                while (store?.Parent != null) store = store.Parent; // walk to the top of the tree
                 return store?.Impl;
             }
 
@@ -176,7 +176,7 @@ namespace IPA.Config.Stores
             get
             {
                 if (module == null)
-                    module = Assembly.DefineDynamicModule(Assembly.GetName().Name + ".dll");
+                    module = Assembly.DefineDynamicModule(Assembly.GetName().Name, Assembly.GetName().Name + ".dll");
 
                 return module;
             }
