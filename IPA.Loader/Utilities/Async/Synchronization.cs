@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Net3_Proxy;
 #endif
 
-namespace IPA.Utilities
+namespace IPA.Utilities.Async
 {
     /// <summary>
     /// Utilities for inter-thread synchronization. All Locker method acquire their object immediately,
