@@ -119,8 +119,13 @@ namespace IPA.Config
 
         public static Task TriggerFileLoad(Config config) => loadFactory.StartNew(() => LoadTask(config));
 
-        public static Task TriggerLoadAll()
-            => Task.WhenAll(configs.Select(TriggerFileLoad));
+        public static Task TriggerLoadAll() =>
+#if NET3
+            TaskEx
+#else
+            Task
+#endif
+            .WhenAll(configs.Select(TriggerFileLoad));
 
         /// <summary>
         /// this is synchronous, unlike <see cref="TriggerFileLoad(Config)"/>
