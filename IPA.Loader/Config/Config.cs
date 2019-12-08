@@ -136,16 +136,20 @@ namespace IPA.Config
         /// </summary>
         public IConfigProvider Provider { get; private set; }
 
-        internal readonly HashSet<IConfigStore> Stores = new HashSet<IConfigStore>();
+        internal IConfigStore Store = null;
         internal readonly FileInfo File;
 
         /// <summary>
-        /// Adds an <see cref="IConfigStore"/> to this <see cref="Config"/> object.
+        /// Sets this object's <see cref="IConfigStore"/>. Can only be called once.
         /// </summary>
         /// <param name="store">the <see cref="IConfigStore"/> to add to this instance</param>
-        /// <returns><see langword="true"/> if the <see cref="IConfigStore"/> was not already registered to this <see cref="Config"/> object,
-        /// otherwise <see langword="false"/></returns>
-        public bool AddStore(IConfigStore store) => Stores.Add(store);
+        /// <exception cref="InvalidOperationException">If this was called before.</exception>
+        public void SetStore(IConfigStore store)
+        {
+            if (Store != null)
+                throw new InvalidOperationException($"{nameof(SetStore)} can only be called once");
+            Store = store;
+        }
 
         private Config(string name, IConfigProvider provider, FileInfo file)
         {

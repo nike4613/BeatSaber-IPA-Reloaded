@@ -9,6 +9,7 @@ using IPA.Utilities;
 using IPA.Utilities.Async;
 using System.IO;
 using System.Runtime.CompilerServices;
+using IPA.Logging;
 
 namespace IPA.Config
 {
@@ -29,24 +30,24 @@ namespace IPA.Config
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
         private static readonly ConditionalWeakTable<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
             = new ConditionalWeakTable<FileSystemWatcher, ConcurrentBag<Config>>();
-        private static SingleThreadTaskScheduler writeScheduler = null;
-        private static TaskFactory writeFactory = null;
-        private static Thread readThread = null;
+        private static SingleThreadTaskScheduler loadScheduler = null;
+        private static TaskFactory loadFactory = null;
+        private static Thread saveThread = null;
 
         private static void TryStartRuntime()
         {
-            if (writeScheduler == null || !writeScheduler.IsRunning)
+            if (loadScheduler == null || !loadScheduler.IsRunning)
             {
-                writeFactory = null;
-                writeScheduler = new SingleThreadTaskScheduler();
-                writeScheduler.Start();
+                loadFactory = null;
+                loadScheduler = new SingleThreadTaskScheduler();
+                loadScheduler.Start();
             }
-            if (writeFactory == null)
-                writeFactory = new TaskFactory(writeScheduler);
-            if (readThread == null || !readThread.IsAlive)
+            if (loadFactory == null)
+                loadFactory = new TaskFactory(loadScheduler);
+            if (saveThread == null || !saveThread.IsAlive)
             {
-                readThread = new Thread(ReadThread);
-                readThread.Start();
+                saveThread = new Thread(SaveThread);
+                saveThread.Start();
             }
         }
 
@@ -59,6 +60,7 @@ namespace IPA.Config
 
                 configs.Add(cfg);
             }
+            configsChangedWatcher.Set();
 
             TryStartRuntime();
 
@@ -107,17 +109,64 @@ namespace IPA.Config
 
             var config = bag.FirstOrDefault(c => c.File.FullName == e.FullPath);
             if (config != null)
-                writeFactory.StartNew(() => WriteTask(config).Wait());
+                TriggerFileLoad(config);
         }
 
-        private static async Task WriteTask(Config config)
-        {
+        public static Task TriggerFileLoad(Config config) => loadFactory.StartNew(() => LoadTask(config));
 
+        private static void LoadTask(Config config)
+        { // these tasks will always be running in the same thread as each other
+            try
+            {
+                var store = config.Store;
+                using var writeLock = Synchronization.LockWrite(store.WriteSyncObject);
+                lock (config.Provider)
+                {
+                    config.Provider.File = config.File;
+                    store.ReadFrom(config.Provider);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.config.Error($"{nameof(IConfigStore)} for {config.File} errored while reading from the {nameof(IConfigProvider)}");
+                Logger.config.Error(e);
+            }
         } 
 
-        private static void ReadThread()
+        private static void SaveThread()
         {
+            while (true)
+            {
+                var configArr = configs.ToArray();
+                var waitHandles = configArr.Select(c => c.Store.SyncObject)
+                                         .Prepend(configsChangedWatcher)
+                                         .ToArray();
+                var index = WaitHandle.WaitAny(waitHandles);
 
+                if (index == 0)
+                { // we got a signal that the configs collection changed, loop around
+                    continue;
+                }
+
+                // otherwise, we have a thing that changed in a store
+                var config = configArr[index - 1];
+                var store = config.Store;
+
+                try
+                {
+                    using var readLock = Synchronization.LockRead(store.WriteSyncObject);
+                    lock (config.Provider)
+                    {
+                        config.Provider.File = config.File;
+                        store.WriteTo(config.Provider);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.config.Error($"{nameof(IConfigStore)} for {config.File} errored while writing to disk");
+                    Logger.config.Error(e);
+                }
+            }
         }
     }
 }

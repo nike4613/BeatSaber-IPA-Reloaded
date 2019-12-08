@@ -40,7 +40,7 @@ namespace IPA.Config.Stores
         public static T Generated<T>(this Config cfg) where T : class
         {
             var ret = GeneratedStore.Create<T>();
-            cfg.AddStore(ret as IConfigStore);
+            cfg.SetStore(ret as IConfigStore);
             return ret;
         }
     }
