@@ -25,10 +25,11 @@ namespace IPA.Config
         }
 
         /// <summary>
-        /// Specifies that a particular parameter is preferred to be a specific type of <see cref="T:IPA.Config.IConfigProvider" />. If it is not available, also specifies backups. If none are available, the default is used.
+        /// Specifies that a particular parameter is preferred to use a particular <see cref="IConfigProvider" />. 
+        /// If it is not available, also specifies backups. If none are available, the default is used.
         /// </summary>
         [AttributeUsage(AttributeTargets.Parameter)]
-        public class PreferAttribute : Attribute
+        public sealed class PreferAttribute : Attribute
         {
             /// <summary>
             /// The order of preference for the config type. 
@@ -52,7 +53,7 @@ namespace IPA.Config
         /// Specifies a preferred config name, instead of using the plugin's name.
         /// </summary>
         [AttributeUsage(AttributeTargets.Parameter)]
-        public class NameAttribute : Attribute
+        public sealed class NameAttribute : Attribute
         {
             /// <summary>
             /// The name to use for the config.
@@ -96,8 +97,6 @@ namespace IPA.Config
             registeredProviders.Add(inst.Extension, inst);
         }
 
-        private static Dictionary<Config, FileInfo> files = new Dictionary<Config, FileInfo>();
-
         /// <summary>
         /// Gets a <see cref="Config"/> object using the specified list of preferred config types.
         /// </summary>
@@ -109,12 +108,10 @@ namespace IPA.Config
             var chosenExt = extensions.FirstOrDefault(s => registeredProviders.ContainsKey(s)) ?? "json";
             var provider = registeredProviders[chosenExt];
 
-            var config = new Config(configName, provider);
-
             var filename = Path.Combine(BeatSaber.UserDataPath, configName + "." + provider.Extension);
-            files.Add(config, new FileInfo(filename));
+            var config = new Config(configName, provider, new FileInfo(filename));
 
-            RegisterConfigObject(config);
+            ConfigRuntime.RegisterConfig(config);
 
             return config;
         }
@@ -130,11 +127,6 @@ namespace IPA.Config
             return GetConfigFor(modName, prefs);
         }
 
-        private static void RegisterConfigObject(Config obj)
-        {
-            // TODO: implement
-        }
-
         /// <summary>
         /// Gets the name associated with this <see cref="Config"/> object.
         /// </summary>
@@ -145,6 +137,7 @@ namespace IPA.Config
         public IConfigProvider Provider { get; private set; }
 
         internal readonly HashSet<IConfigStore> Stores = new HashSet<IConfigStore>();
+        internal readonly FileInfo File;
 
         /// <summary>
         /// Adds an <see cref="IConfigStore"/> to this <see cref="Config"/> object.
@@ -154,9 +147,9 @@ namespace IPA.Config
         /// otherwise <see langword="false"/></returns>
         public bool AddStore(IConfigStore store) => Stores.Add(store);
 
-        private Config(string name, IConfigProvider provider)
+        private Config(string name, IConfigProvider provider, FileInfo file)
         {
-            Name = name; Provider = provider;
+            Name = name; Provider = provider; File = file;
         }
     }
 }
