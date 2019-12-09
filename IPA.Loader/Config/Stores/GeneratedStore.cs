@@ -115,17 +115,19 @@ namespace IPA.Config.Stores
             internal static MethodInfo ReadFromMethod = typeof(Impl).GetMethod(nameof(ReadFrom));
             public void ReadFrom(IConfigProvider provider)
             {
-                // TODO: implement
+                var values = provider.Load();
                 Logger.config.Debug("Generated impl ReadFrom");
-                Logger.config.Debug($"Read {provider.Load()}");
+                Logger.config.Debug($"Read {values}");
+                generated.Values = values;
             }
 
             internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));
             public void WriteTo(IConfigProvider provider)
             {
                 var values = generated.Values;
-                // TODO: implement
                 Logger.config.Debug("Generated impl WriteTo");
+                Logger.config.Debug($"Serialized {values}");
+                provider.Store(values);
             }
         }
 
@@ -187,6 +189,7 @@ namespace IPA.Config.Stores
             public string Name;
             public MemberInfo Member;
             public bool IsVirtual;
+            public bool IsField;
             public Type Type;
         }
 
@@ -203,17 +206,16 @@ namespace IPA.Config.Stores
             var implField = typeBuilder.DefineField("<>_impl", typeof(Impl), FieldAttributes.Private | FieldAttributes.InitOnly);
             var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
 
-            var GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
 
-            // TODO: possibly move all of this manual IL over to Linq.Expressions
+            // none of this can be Expressions because CompileToMethod requires a static target method for some dumbass reason
 
             #region Parse base object structure
             var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
             if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null; // limit this to just the one thing
 
-            var structure = new Dictionary<string, SerializedMemberInfo>();
+            var structure = new List<SerializedMemberInfo>();
 
-            // TODO: incorporate attributes
+            // TODO: incorporate attributes/base types
             
             // only looks at public properties
             foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -224,10 +226,11 @@ namespace IPA.Config.Stores
                     Member = prop,
                     IsVirtual = (prop.GetGetMethod(true)?.IsVirtual ?? false) ||
                                 (prop.GetSetMethod(true)?.IsVirtual ?? false),
+                    IsField = false,
                     Type = prop.PropertyType
                 };
 
-                structure.Add(smi.Name, smi);
+                structure.Add(smi);
             }
 
             // only look at public fields
@@ -238,17 +241,17 @@ namespace IPA.Config.Stores
                     Name = field.Name,
                     Member = field,
                     IsVirtual = false,
+                    IsField = true,
                     Type = field.FieldType
                 };
 
-                structure.Add(smi.Name, smi);
+                structure.Add(smi);
             }
             #endregion
 
             #region Constructor
-            // takes its parent
             var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(IGeneratedStore) });
-            {
+            { // because this is a constructor, it has to be raw IL
                 var il = ctor.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0); // keep this at bottom of stack
@@ -261,8 +264,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Stfld, parentField);
 
                 il.Emit(OpCodes.Dup);
-                il.Emit(OpCodes.Ldtoken, type);
-                il.Emit(OpCodes.Call, GetTypeFromHandle); // effectively typeof(type)
+                EmitTypeof(il, type);
                 il.Emit(OpCodes.Stfld, typeField);
 
                 il.Emit(OpCodes.Dup);
@@ -270,12 +272,13 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Newobj, Impl.Ctor);
                 il.Emit(OpCodes.Stfld, implField);
 
-                foreach (var kvp in structure)
-                    EmitMemberFix(il, kvp.Value);
+                foreach (var member in structure)
+                    EmitMemberFix(il, member);
 
                 il.Emit(OpCodes.Pop);
 
                 il.Emit(OpCodes.Ret);
+                
             }
             #endregion
 
@@ -347,8 +350,20 @@ namespace IPA.Config.Stores
             { // this is non-locking because the only code that will call this will already own the correct lock
                 var il = valuesPropGet.GetILGenerator();
 
-                // TODO: implement get_Values
-                il.Emit(OpCodes.Ldnull);
+                var Map_Add = typeof(Map).GetMethod(nameof(Map.Add));
+
+                il.Emit(OpCodes.Call, typeof(Value).GetMethod(nameof(Value.Map)));
+                // the map is now at the top of the stack
+
+                foreach (var member in structure)
+                {
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Ldstr, member.Name); // TODO: make this behave with annotations
+                    EmitSerializeMember(il, member);
+                    il.Emit(OpCodes.Call, Map_Add);
+                }
+
+                // the map is still at the top of the stack, return it
 
                 il.Emit(OpCodes.Ret);
             }
@@ -356,8 +371,70 @@ namespace IPA.Config.Stores
             { // this is non-locking because the only code that will call this will already own the correct lock
                 var il = valuesPropSet.GetILGenerator();
 
-                // TODO: implement set_Values
+                var Map_t = typeof(Map);
+                var Map_TryGetValue = Map_t.GetMethod(nameof(Map.TryGetValue));
+                var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
 
+                var valueLocal = il.DeclareLocal(typeof(Value));
+
+                var nonNull = il.DefineLabel();
+
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Brtrue, nonNull);
+
+                il.Emit(OpCodes.Ldnull);
+                il.Emit(OpCodes.Ldnull);
+                il.Emit(OpCodes.Ldstr, $"Attempting to deserialize null");
+                il.Emit(OpCodes.Tailcall);
+                il.Emit(OpCodes.Call, LogErrorMethod);
+                il.Emit(OpCodes.Ret);
+
+                il.MarkLabel(nonNull);
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Isinst, Map_t);
+                il.Emit(OpCodes.Dup); // duplicate cloned value
+                var notMapError = il.DefineLabel();
+                il.Emit(OpCodes.Brtrue, notMapError);
+                // handle error
+                il.Emit(OpCodes.Pop); // removes the duplicate value
+                EmitTypeof(il, Map_t);
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Callvirt, Object_GetType);
+                il.Emit(OpCodes.Ldstr, $"Invalid root for deserializing {type.FullName}");
+                il.Emit(OpCodes.Tailcall);
+                il.Emit(OpCodes.Call, LogErrorMethod);
+                il.Emit(OpCodes.Ret);
+
+                var nextLabel = notMapError;
+
+                // head of stack is Map instance
+                foreach (var member in structure)
+                {
+                    il.MarkLabel(nextLabel);
+                    nextLabel = il.DefineLabel();
+                    var endErrorLabel = il.DefineLabel();
+
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Ldstr, member.Name);
+                    il.Emit(OpCodes.Ldloca_S, valueLocal);
+                    il.Emit(OpCodes.Call, Map_TryGetValue);
+                    il.Emit(OpCodes.Brtrue_S, endErrorLabel);
+
+                    il.Emit(OpCodes.Ldnull);
+                    il.Emit(OpCodes.Ldnull);
+                    il.Emit(OpCodes.Ldstr, $"Missing key {member.Name}");
+                    il.Emit(OpCodes.Call, LogErrorMethod);
+                    il.Emit(OpCodes.Br, nextLabel);
+
+                    il.MarkLabel(endErrorLabel);
+
+                    il.Emit(OpCodes.Ldloc_S, valueLocal);
+                    EmitDeserializeMember(il, member, nextLabel);
+                }
+
+                il.MarkLabel(nextLabel);
+
+                il.Emit(OpCodes.Pop); // removes the duplicate value
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -485,18 +562,46 @@ namespace IPA.Config.Stores
 
             { // register a member map
                 var dict = new Dictionary<string, Type>();
-                foreach (var kvp in structure)
-                    dict.Add(kvp.Key, kvp.Value.Type);
+                foreach (var member in structure)
+                    dict.Add(member.Name, member.Type);
                 memberMaps.Add(type, dict);
             }
 
             return creatorDel;
         }
 
+        private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
+        internal static void LogError(Type expected, Type found, string message)
+        {
+            Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}{(found == null ? "" : $", found {found}")})")}");
+        }
+
         // expects the this param to be on the stack
         private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member)
         {
+            // TODO: impl
+        }
 
+
+        private static readonly MethodInfo Type_GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
+        private static void EmitTypeof(ILGenerator il, Type type)
+        {
+            il.Emit(OpCodes.Ldtoken, type);
+            il.Emit(OpCodes.Call, Type_GetTypeFromHandle);
+        }
+
+        // emit takes no args, leaves Value at top of stack
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member)
+        {
+            // TODO: impl
+            il.Emit(OpCodes.Ldnull);
+        }
+
+        // emit takes the value being deserialized, logs on error, leaves nothing on stack
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel)
+        {
+            // TODO: impl
+            il.Emit(OpCodes.Pop);
         }
 
     }

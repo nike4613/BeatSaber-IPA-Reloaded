@@ -125,8 +125,9 @@ namespace IPA.Config.Providers
             {
                 var tok = VisitToToken(value);
 
-                using var swriter = new StreamWriter(File.OpenWrite());
+                using var swriter = new StreamWriter(File.Open(FileMode.Create, FileAccess.Write));
                 using var jwriter = new JsonTextWriter(swriter);
+                jwriter.Formatting = Formatting.Indented;
                 tok.WriteTo(jwriter);
             }
             catch (Exception e)
