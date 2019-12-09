@@ -7,12 +7,13 @@ namespace IPA.Config.Data
 {
 
     /// <summary>
-    /// A map of <see cref="string"/> to <see cref="Value"/> for serialization by an <see cref="IConfigProvider"/>.
+    /// A ordered map of <see cref="string"/> to <see cref="Value"/> for serialization by an <see cref="IConfigProvider"/>.
     /// Use <see cref="Value.Map"/> or <see cref="Value.From(IDictionary{string, Value})"/> to create.
     /// </summary>
     public sealed class Map : Value, IDictionary<string, Value>
     {
         private readonly Dictionary<string, Value> values = new Dictionary<string, Value>();
+        private readonly List<string> keyOrder = new List<string>();
 
         internal Map() { }
 
@@ -28,11 +29,15 @@ namespace IPA.Config.Data
         /// Gets a collection of the keys for the <see cref="Map"/>.
         /// </summary>
         /// <seealso cref="IDictionary{TKey, TValue}.Keys"/>
-        public ICollection<string> Keys => values.Keys;
+        public ICollection<string> Keys => keyOrder;
 
         /// <summary>
         /// Gets a collection of the values in the <see cref="Map"/>.
         /// </summary>
+        /// <remarks>
+        /// Unlike all other iterables given by <see cref="Map"/>, this does <i>not</i>
+        /// guarantee that order is maintained.
+        /// </remarks>
         /// <seealso cref="IDictionary{TKey, TValue}.Values"/>
         public ICollection<Value> Values => values.Values;
 
@@ -50,16 +55,24 @@ namespace IPA.Config.Data
         /// <param name="key">the key to put the value at</param>
         /// <param name="value">the <see cref="Value"/> to add</param>
         /// <seealso cref="IDictionary{TKey, TValue}.Add(TKey, TValue)"/>
-        public void Add(string key, Value value) => values.Add(key, value);
+        public void Add(string key, Value value)
+        {
+            values.Add(key, value);
+            keyOrder.Add(key);
+        }
 
         void ICollection<KeyValuePair<string, Value>>.Add(KeyValuePair<string, Value> item) 
-            => ((IDictionary<string, Value>)values).Add(item);
+            => Add(item.Key, item.Value);
 
         /// <summary>
         /// Clears the <see cref="Map"/> of its key-value pairs.
         /// </summary>
         /// <seealso cref="ICollection{T}.Clear"/>
-        public void Clear() => values.Clear();
+        public void Clear()
+        {
+            values.Clear();
+            keyOrder.Clear();
+        }
 
         bool ICollection<KeyValuePair<string, Value>>.Contains(KeyValuePair<string, Value> item) 
             => ((IDictionary<string, Value>)values).Contains(item);
@@ -80,7 +93,11 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>an <see cref="IEnumerator{T}"/> of key-value pairs in this <see cref="Map"/></returns>
         /// <seealso cref="IEnumerable{T}.GetEnumerator()"/>
-        public IEnumerator<KeyValuePair<string, Value>> GetEnumerator() => values.GetEnumerator();
+        public IEnumerator<KeyValuePair<string, Value>> GetEnumerator()
+        {
+            foreach (var key in keyOrder)
+                yield return new KeyValuePair<string, Value>(key, this[key]);
+        }
 
         /// <summary>
         /// Removes the object associated with a key in this <see cref="Map"/>.
@@ -88,10 +105,10 @@ namespace IPA.Config.Data
         /// <param name="key">the key to remove</param>
         /// <returns><see langword="true"/> if the key existed, <see langword="false"/> otherwise</returns>
         /// <seealso cref="IDictionary{TKey, TValue}.Remove(TKey)"/>
-        public bool Remove(string key) => values.Remove(key);
+        public bool Remove(string key) => values.Remove(key) && keyOrder.Remove(key);
 
         bool ICollection<KeyValuePair<string, Value>>.Remove(KeyValuePair<string, Value> item) 
-            => ((IDictionary<string, Value>)values).Remove(item);
+            => ((IDictionary<string, Value>)values).Remove(item) && (keyOrder.Remove(item.Key) || true);
 
         /// <summary>
         /// Gets the value associated with the specified key.
@@ -102,7 +119,7 @@ namespace IPA.Config.Data
         /// <seealso cref="IDictionary{TKey, TValue}.TryGetValue(TKey, out TValue)"/>
         public bool TryGetValue(string key, out Value value) => values.TryGetValue(key, out value);
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IDictionary<string, Value>)values).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Converts this <see cref="Value"/> into a human-readable format.
