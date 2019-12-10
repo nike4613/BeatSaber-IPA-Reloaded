@@ -382,11 +382,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Brtrue, nonNull);
 
-                il.Emit(OpCodes.Ldnull);
-                il.Emit(OpCodes.Ldnull);
-                il.Emit(OpCodes.Ldstr, $"Attempting to deserialize null");
-                il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, LogErrorMethod);
+                EmitLogError(il, "Attempting to deserialize null", tailcall: true);
                 il.Emit(OpCodes.Ret);
 
                 il.MarkLabel(nonNull);
@@ -397,12 +393,12 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Brtrue, notMapError);
                 // handle error
                 il.Emit(OpCodes.Pop); // removes the duplicate value
-                EmitTypeof(il, Map_t);
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Callvirt, Object_GetType);
-                il.Emit(OpCodes.Ldstr, $"Invalid root for deserializing {type.FullName}");
-                il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, LogErrorMethod);
+                EmitLogError(il, $"Invalid root for deserializing {type.FullName}", tailcall: true,
+                    expected: il => EmitTypeof(il, Map_t), found: il =>
+                    {
+                        il.Emit(OpCodes.Ldarg_1);
+                        il.Emit(OpCodes.Callvirt, Object_GetType);
+                    });
                 il.Emit(OpCodes.Ret);
 
                 var nextLabel = notMapError;
@@ -420,16 +416,13 @@ namespace IPA.Config.Stores
                     il.Emit(OpCodes.Call, Map_TryGetValue);
                     il.Emit(OpCodes.Brtrue_S, endErrorLabel);
 
-                    il.Emit(OpCodes.Ldnull);
-                    il.Emit(OpCodes.Ldnull);
-                    il.Emit(OpCodes.Ldstr, $"Missing key {member.Name}");
-                    il.Emit(OpCodes.Call, LogErrorMethod);
+                    EmitLogError(il, $"Missing key {member.Name}", tailcall: false);
                     il.Emit(OpCodes.Br, nextLabel);
 
                     il.MarkLabel(endErrorLabel);
 
                     il.Emit(OpCodes.Ldloc_S, valueLocal);
-                    EmitDeserializeMember(il, member, nextLabel);
+                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal));
                 }
 
                 il.MarkLabel(nextLabel);
@@ -570,10 +563,22 @@ namespace IPA.Config.Stores
             return creatorDel;
         }
 
+        private static void EmitLogError(ILGenerator il, string message, bool tailcall = false, Action<ILGenerator> expected = null, Action<ILGenerator> found = null)
+        {
+            if (expected == null) expected = il => il.Emit(OpCodes.Ldnull);
+            if (found == null) found = il => il.Emit(OpCodes.Ldnull);
+
+            expected(il);
+            found(il);
+            il.Emit(OpCodes.Ldstr, message);
+            if (tailcall) il.Emit(OpCodes.Tailcall);
+            il.Emit(OpCodes.Call, LogErrorMethod);
+        }
+
         private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogError(Type expected, Type found, string message)
         {
-            Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}{(found == null ? "" : $", found {found}")})")}");
+            Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
         }
 
         // expects the this param to be on the stack
@@ -597,11 +602,70 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Ldnull);
         }
 
-        // emit takes the value being deserialized, logs on error, leaves nothing on stack
-        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel)
+        private static Type GetExpectedValueTypeForType(Type valT)
         {
-            // TODO: impl
+            if (typeof(Value).IsAssignableFrom(valT)) // this is a Value subtype
+                return valT;
+            // TODO: fill this out the rest of the way
+            return typeof(string); // something that will always fail
+        }
+
+        internal static class Deserializers
+        {
+
+        }
+
+        // emit takes the value being deserialized, logs on error, leaves nothing on stack
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue)
+        {
+            var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
+
+            var implLabel = il.DefineLabel();
+            var passedTypeCheck = il.DefineLabel();
+            var expectType = GetExpectedValueTypeForType(member.Type);
+
+            il.Emit(OpCodes.Dup);
+            il.Emit(OpCodes.Brtrue_S, implLabel); // null check
+
+            if (member.Type.IsValueType)
+            {
+                il.Emit(OpCodes.Pop);
+                EmitLogError(il, $"Member {member.Name} ({member.Type}) not nullable", tailcall: false,
+                    expected: il => EmitTypeof(il, expectType));
+                il.Emit(OpCodes.Br, nextLabel);
+            }
+            else
+            {
+                // TODO: deserialize null sanely
+                il.Emit(OpCodes.Nop);
+
+                il.Emit(OpCodes.Pop);
+                il.Emit(OpCodes.Br, nextLabel);
+            }
+
+            il.MarkLabel(implLabel);
+
+            il.Emit(OpCodes.Isinst, expectType); //replaces on stack
+            il.Emit(OpCodes.Dup); // duplicate cloned value
+            il.Emit(OpCodes.Brtrue, passedTypeCheck); // null check
+
             il.Emit(OpCodes.Pop);
+            EmitLogError(il, $"Unexpected type deserializing {member.Name}; type not nullable", tailcall: false,
+                expected: il => EmitTypeof(il, expectType), found: il =>
+                {
+                    getValue(il);
+                    il.Emit(OpCodes.Callvirt, Object_GetType);
+                });
+            il.Emit(OpCodes.Br, nextLabel);
+
+            il.MarkLabel(passedTypeCheck);
+
+            {
+                // TODO: actually write the value
+                il.Emit(OpCodes.Nop);
+            }
+
+            il.Emit(OpCodes.Pop); // this is just so the stack is balanced (currently removing the result of Isinst)
         }
 
     }
