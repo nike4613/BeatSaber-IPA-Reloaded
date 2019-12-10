@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.IO;
+using Boolean = IPA.Config.Data.Boolean;
+using System.Collections;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -216,6 +218,7 @@ namespace IPA.Config.Stores
             var structure = new List<SerializedMemberInfo>();
 
             // TODO: incorporate attributes/base types
+            // TODO: ignore probs without setter
             
             // only looks at public properties
             foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -403,6 +406,8 @@ namespace IPA.Config.Stores
 
                 var nextLabel = notMapError;
 
+                var locals = new List<LocalBuilder>();
+
                 // head of stack is Map instance
                 foreach (var member in structure)
                 {
@@ -422,7 +427,7 @@ namespace IPA.Config.Stores
                     il.MarkLabel(endErrorLabel);
 
                     il.Emit(OpCodes.Ldloc_S, valueLocal);
-                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal));
+                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), locals);
                 }
 
                 il.MarkLabel(nextLabel);
@@ -563,6 +568,7 @@ namespace IPA.Config.Stores
             return creatorDel;
         }
 
+        #region Utility
         private static void EmitLogError(ILGenerator il, string message, bool tailcall = false, Action<ILGenerator> expected = null, Action<ILGenerator> found = null)
         {
             if (expected == null) expected = il => il.Emit(OpCodes.Ldnull);
@@ -574,6 +580,47 @@ namespace IPA.Config.Stores
             if (tailcall) il.Emit(OpCodes.Tailcall);
             il.Emit(OpCodes.Call, LogErrorMethod);
         }
+
+        private static readonly MethodInfo Type_GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
+        private static void EmitTypeof(ILGenerator il, Type type)
+        {
+            il.Emit(OpCodes.Ldtoken, type);
+            il.Emit(OpCodes.Call, Type_GetTypeFromHandle);
+        }
+
+        private static void EmitNumberConvertTo(ILGenerator il, Type to, Type from)
+        { // WARNING: THIS USES THE NO-OVERFLOW OPCODES
+            if (to == typeof(IntPtr)) il.Emit(OpCodes.Conv_I);
+            else if (to == typeof(UIntPtr)) il.Emit(OpCodes.Conv_U);
+            else if (to == typeof(sbyte)) il.Emit(OpCodes.Conv_I1);
+            else if (to == typeof(byte)) il.Emit(OpCodes.Conv_U1);
+            else if (to == typeof(short)) il.Emit(OpCodes.Conv_I2);
+            else if (to == typeof(ushort)) il.Emit(OpCodes.Conv_U2);
+            else if (to == typeof(int)) il.Emit(OpCodes.Conv_I4);
+            else if (to == typeof(uint)) il.Emit(OpCodes.Conv_U4);
+            else if (to == typeof(long)) il.Emit(OpCodes.Conv_I8);
+            else if (to == typeof(ulong)) il.Emit(OpCodes.Conv_U8);
+            else if (to == typeof(float))
+            {
+                if (from == typeof(byte)
+                 || from == typeof(ushort)
+                 || from == typeof(uint)
+                 || from == typeof(ulong)
+                 || from == typeof(UIntPtr)) il.Emit(OpCodes.Conv_R_Un);
+                il.Emit(OpCodes.Conv_R4);
+            }
+            else if (to == typeof(double))
+            {
+                if (from == typeof(byte)
+                 || from == typeof(ushort)
+                 || from == typeof(uint)
+                 || from == typeof(ulong)
+                 || from == typeof(UIntPtr)) il.Emit(OpCodes.Conv_R_Un);
+                il.Emit(OpCodes.Conv_R8);
+            }
+        }
+        #endregion
+
 
         private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogError(Type expected, Type found, string message)
@@ -587,36 +634,80 @@ namespace IPA.Config.Stores
             // TODO: impl
         }
 
-
-        private static readonly MethodInfo Type_GetTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
-        private static void EmitTypeof(ILGenerator il, Type type)
-        {
-            il.Emit(OpCodes.Ldtoken, type);
-            il.Emit(OpCodes.Call, Type_GetTypeFromHandle);
-        }
-
+        #region Serialize
         // emit takes no args, leaves Value at top of stack
         private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member)
         {
             // TODO: impl
             il.Emit(OpCodes.Ldnull);
         }
+        #endregion
+
+        #region Deserialize
 
         private static Type GetExpectedValueTypeForType(Type valT)
         {
             if (typeof(Value).IsAssignableFrom(valT)) // this is a Value subtype
                 return valT;
+            if (valT == typeof(string)) return typeof(Text);
+            if (valT == typeof(bool)) return typeof(Boolean);
+            if (valT == typeof(byte)
+             || valT == typeof(sbyte)
+             || valT == typeof(short)
+             || valT == typeof(ushort)
+             || valT == typeof(int)
+             || valT == typeof(uint)
+             || valT == typeof(long)
+             || valT == typeof(ulong)) return typeof(Integer);
+            if (valT == typeof(float)
+             || valT == typeof(double)
+             || valT == typeof(decimal)) return typeof(FloatingPoint);
+            if (typeof(IEnumerable).IsAssignableFrom(valT)) return typeof(List);
+
             // TODO: fill this out the rest of the way
-            return typeof(string); // something that will always fail
+            // TODO: support converters
+
+            return typeof(Map); // default for various objects
         }
 
-        internal static class Deserializers
+        // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
+        // after, top of stack will be thing to write to field
+        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Label nextLabel)
         {
+            if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
 
+            var expected = GetExpectedValueTypeForType(targetType);
+            if (expected == typeof(Text))
+            {
+                var getter = expected.GetProperty(nameof(Text.Value)).GetGetMethod();
+                il.Emit(OpCodes.Call, getter);
+            }
+            else if (expected == typeof(Boolean))
+            {
+                var getter = expected.GetProperty(nameof(Boolean.Value)).GetGetMethod();
+                il.Emit(OpCodes.Call, getter);
+            }
+            else if (expected == typeof(Integer))
+            {
+                var getter = expected.GetProperty(nameof(Integer.Value)).GetGetMethod();
+                il.Emit(OpCodes.Call, getter);
+                EmitNumberConvertTo(il, targetType, getter.ReturnType);
+            }
+            else if (expected == typeof(FloatingPoint))
+            {
+                var getter = expected.GetProperty(nameof(FloatingPoint.Value)).GetGetMethod();
+                il.Emit(OpCodes.Call, getter);
+                EmitNumberConvertTo(il, targetType, getter.ReturnType);
+            } // TODO: implement stuff for lists and maps of various types (probably call out somewhere else to figure out what to do)
+            else // TODO: support converters
+            {
+                il.Emit(OpCodes.Pop);
+                il.Emit(OpCodes.Ldnull);
+            }
         }
 
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
-        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue)
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, List<LocalBuilder> locals)
         {
             var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
 
@@ -627,6 +718,34 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Brtrue_S, implLabel); // null check
 
+            void EmitStore(Action<ILGenerator> value)
+            {
+                il.Emit(OpCodes.Ldarg_0); // load this
+                value(il);
+
+                if (member.IsField)
+                    il.Emit(OpCodes.Stfld, member.Member as FieldInfo);
+                else
+                { // member is a property
+                    var prop = member.Member as PropertyInfo;
+                    var setter = prop.GetSetMethod();
+                    if (setter == null) throw new InvalidOperationException($"Property {member.Name} does not have a setter and is not ignored");
+
+                    il.Emit(OpCodes.Call, setter);
+                }
+            }
+
+            LocalBuilder GetLocal(Type ty, int i = 0)
+            {
+                var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
+                if (builder == null)
+                {
+                    builder = il.DeclareLocal(ty);
+                    locals.Add(builder);
+                }
+                return builder;
+            }
+
             if (member.Type.IsValueType)
             {
                 il.Emit(OpCodes.Pop);
@@ -636,10 +755,8 @@ namespace IPA.Config.Stores
             }
             else
             {
-                // TODO: deserialize null sanely
-                il.Emit(OpCodes.Nop);
-
                 il.Emit(OpCodes.Pop);
+                EmitStore(il => il.Emit(OpCodes.Ldnull));
                 il.Emit(OpCodes.Br, nextLabel);
             }
 
@@ -650,7 +767,7 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Brtrue, passedTypeCheck); // null check
 
             il.Emit(OpCodes.Pop);
-            EmitLogError(il, $"Unexpected type deserializing {member.Name}; type not nullable", tailcall: false,
+            EmitLogError(il, $"Unexpected type deserializing {member.Name}", tailcall: false,
                 expected: il => EmitTypeof(il, expectType), found: il =>
                 {
                     getValue(il);
@@ -660,13 +777,11 @@ namespace IPA.Config.Stores
 
             il.MarkLabel(passedTypeCheck);
 
-            {
-                // TODO: actually write the value
-                il.Emit(OpCodes.Nop);
-            }
-
-            il.Emit(OpCodes.Pop); // this is just so the stack is balanced (currently removing the result of Isinst)
+            var local = GetLocal(member.Type);
+            EmitDeserializeValue(il, member.Type, nextLabel);
+            il.Emit(OpCodes.Stloc, local);
+            EmitStore(il => il.Emit(OpCodes.Ldloc, local));
         }
-
+        #endregion
     }
 }
