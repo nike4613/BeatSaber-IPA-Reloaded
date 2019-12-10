@@ -305,6 +305,11 @@ namespace IPA.Injector
             /*if (otherNewtonsoftJson != null)
                 Assembly.LoadFrom(otherNewtonsoftJson);*/
 
+#if DEBUG
+            Config.Stores.GeneratedStore.DebugSaveAssembly("GeneratedAssembly.dll");
+#endif
+
+
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
                 var level = UnityLogRedirector.LogTypeToLevel(type);
