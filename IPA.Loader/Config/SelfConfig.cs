@@ -65,12 +65,12 @@ namespace IPA.Config
         {
             public bool AutoUpdate = true;
             // LINE: ignore 2
-            public static bool AutoUpdate_ => Instance.Updates.AutoUpdate
+            public static bool AutoUpdate_ => (Instance?.Updates?.AutoUpdate ?? true)
                                            &&   CommandLineValues.Updates.AutoUpdate;
 
             public bool AutoCheckUpdates = true;
             // LINE: ignore 2
-            public static bool AutoCheckUpdates_ => Instance.Updates.AutoCheckUpdates
+            public static bool AutoCheckUpdates_ => (Instance?.Updates?.AutoCheckUpdates ?? true)
                                                  &&   CommandLineValues.Updates.AutoCheckUpdates;
         }
 
@@ -80,35 +80,35 @@ namespace IPA.Config
         {
             public bool ShowCallSource = false;
             // LINE: ignore 2
-            public static bool ShowCallSource_ => Instance.Debug.ShowCallSource
+            public static bool ShowCallSource_ => (Instance?.Debug?.ShowCallSource ?? false)
                                                ||   CommandLineValues.Debug.ShowCallSource;
 
             public bool ShowDebug = false;
             // LINE: ignore 2
-            public static bool ShowDebug_ => Instance.Debug.ShowDebug
+            public static bool ShowDebug_ => (Instance?.Debug?.ShowDebug ?? false)
                                           ||   CommandLineValues.Debug.ShowDebug;
 
             // This option only takes effect after a full game restart, unless new logs are created again
             public bool CondenseModLogs = false;
             // LINE: ignore 2
-            public static bool CondenseModLogs_ => Instance?.Debug.CondenseModLogs ?? false
+            public static bool CondenseModLogs_ => (Instance?.Debug?.CondenseModLogs ?? false)
                                                 ||   CommandLineValues.Debug.CondenseModLogs;
 
             public bool ShowHandledErrorStackTraces = false;
             // LINE: ignore
-            public static bool ShowHandledErrorStackTraces_ => Instance.Debug.ShowHandledErrorStackTraces;
+            public static bool ShowHandledErrorStackTraces_ => Instance?.Debug?.ShowHandledErrorStackTraces ?? false;
 
             public bool HideMessagesForPerformance = true;
             // LINE: ignore
-            public static bool HideMessagesForPerformance_ => Instance.Debug.HideMessagesForPerformance;
+            public static bool HideMessagesForPerformance_ => Instance?.Debug?.HideMessagesForPerformance ?? true;
 
             public int HideLogThreshold = 512;
             // LINE: ignore
-            public static int HideLogThreshold_ => Instance.Debug.HideLogThreshold;
+            public static int HideLogThreshold_ => Instance?.Debug?.HideLogThreshold ?? 512;
 
             public bool ShowTrace = false;
             // LINE: ignore 2
-            public static bool ShowTrace_ => Instance.Debug.ShowTrace
+            public static bool ShowTrace_ => (Instance?.Debug?.ShowTrace ?? false)
                                           ||   CommandLineValues.Debug.ShowTrace;
         }
 
@@ -116,12 +116,12 @@ namespace IPA.Config
 
         public bool YeetMods = true;
         // LINE: ignore 2
-        public static bool YeetMods_ => Instance.YeetMods 
+        public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
 
         [JsonProperty(Required = Required.Default)]
         public string LastGameVersion = null;
         // LINE: ignore
-        public static string LastGameVersion_ => Instance.LastGameVersion;
+        public static string LastGameVersion_ => Instance?.LastGameVersion;
     }
 }
