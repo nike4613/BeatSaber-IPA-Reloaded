@@ -22,6 +22,11 @@ namespace IPA.Config
             Instance = LoaderConfig.Generated<SelfConfig>();
         }
 
+        protected internal virtual void OnReload()
+        {
+            StandardLogger.Configure(this);
+        }
+
         public static void ReadCommandLine(string[] args)
         {
             foreach (var arg in args)
