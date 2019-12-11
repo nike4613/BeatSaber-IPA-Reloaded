@@ -26,8 +26,13 @@ namespace IPA.Config.Stores
     /// A class providing an extension for <see cref="Config"/> to make it easy to use generated
     /// config stores.
     /// </summary>
-    public static class GeneratedStoreExtensions
+    public static class GeneratedExtension
     {
+        /// <summary>
+        /// The name of the assembly that internals must be visible to to allow internal protection.
+        /// </summary>
+        public const string AssemblyVisibilityTarget = GeneratedStore.GeneratedAssemblyName;
+
         /// <summary>
         /// Creates a generated <see cref="IConfigStore"/> of type <typeparamref name="T"/>, registers it to
         /// the <see cref="Config"/> object, and returns it. This also forces a synchronous config load via
@@ -35,7 +40,25 @@ namespace IPA.Config.Stores
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <typeparamref name="T"/> must be a non-<see langword="sealed"/> <see langword="class"/>.
+        /// <typeparamref name="T"/> must be a public non-<see langword="sealed"/> <see langword="class"/>.
+        /// It can also be internal, but in that case, then your assembly must have the following attribute
+        /// to allow the generated code to reference it.
+        /// <code>
+        /// [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget)]
+        /// </code>
+        /// </para>
+        /// <para>
+        /// If the <typeparamref name="T"/> declares a <see langword="public"/> or <see langword="protected"/>, <see langword="virtual"/>
+        /// method <c>Changed()</c>, then that method may be called to artificially signal to the runtime that the content of the object 
+        /// has changed. That method will also be called after the write locks are released when a property is set anywhere in the owning
+        /// tree. This will only be called on the outermost generated object of the config structure, even if the change being signaled
+        /// is somewhere deep into the tree.
+        /// </para>
+        /// <para>
+        /// Similarly, <typeparamref name="T"/> can declare a <see langword="public"/> or <see langword="protected"/>, <see langword="virtual"/> 
+        /// method <c>OnReload()</c>, which will be called on the filesystem reader thread after the object has been repopulated with new data 
+        /// values. It will be called <i>after</i> the write lock for this object is released. This will only be called on the outermost generated
+        /// object of the config structure.
         /// </para>
         /// <para>
         /// TODO: describe details of generated stores
@@ -69,6 +92,7 @@ namespace IPA.Config.Stores
             Type Type { get; }
             IGeneratedStore Parent { get; }
             Impl Impl { get; }
+            void OnReload();
         }
 
         internal class Impl : IConfigStore
@@ -95,7 +119,7 @@ namespace IPA.Config.Stores
 
             internal static MethodInfo ImplReleaseReadMethod = typeof(Impl).GetMethod(nameof(ImplReleaseRead));
             public static void ImplReleaseRead(IGeneratedStore s) => FindImpl(s).ReleaseRead();
-            public void ReleaseRead() => WriteSyncObject.ExitWriteLock();
+            public void ReleaseRead() => WriteSyncObject.ExitReadLock();
 
             internal static MethodInfo ImplTakeWriteMethod = typeof(Impl).GetMethod(nameof(ImplTakeWrite));
             public static void ImplTakeWrite(IGeneratedStore s) => FindImpl(s).TakeWrite();
@@ -121,6 +145,10 @@ namespace IPA.Config.Stores
                 Logger.config.Debug("Generated impl ReadFrom");
                 Logger.config.Debug($"Read {values}");
                 generated.Values = values;
+
+                ReleaseWrite();
+                generated.OnReload();
+                TakeWrite(); // must take again for runtime to be happy (which is unfortunate)
             }
 
             internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));
@@ -139,6 +167,11 @@ namespace IPA.Config.Stores
         public static T Create<T>() where T : class => (T)Create(typeof(T));
 
         public static IConfigStore Create(Type type) => Create(type, null);
+
+        private static readonly MethodInfo CreateGParent = 
+            typeof(GeneratedStore).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static, null, 
+                                             CallingConventions.Any, new[] { typeof(IGeneratedStore) }, Array.Empty<ParameterModifier>());
+        internal static T Create<T>(IGeneratedStore parent) where T : class => (T)Create(typeof(T), parent);
 
         private static IConfigStore Create(Type type, IGeneratedStore parent)
         {
@@ -201,7 +234,7 @@ namespace IPA.Config.Stores
             if (baseCtor == null)
                 throw new ArgumentException("Config type does not have a public parameterless constructor");
 
-            var typeBuilder = Module.DefineType($"{type.FullName}.Generated", 
+            var typeBuilder = Module.DefineType($"{type.FullName}<Generated>", 
                 TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class, type);
 
             var typeField = typeBuilder.DefineField("<>_type", typeof(Type), FieldAttributes.Private | FieldAttributes.InitOnly);
@@ -212,8 +245,10 @@ namespace IPA.Config.Stores
             // none of this can be Expressions because CompileToMethod requires a static target method for some dumbass reason
 
             #region Parse base object structure
-            var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
+            var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
             if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null; // limit this to just the one thing
+            var baseOnReload = type.GetMethod("OnReload", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
+            if (baseOnReload != null && !baseOnReload.IsVirtual) baseOnReload = null; // limit this to just the one thing
 
             var structure = new List<SerializedMemberInfo>();
 
@@ -298,7 +333,25 @@ namespace IPA.Config.Stores
             var IGeneratedStore_GetParent = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Parent)).GetGetMethod();
             var IGeneratedStore_GetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetGetMethod();
             var IGeneratedStore_SetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetSetMethod();
+            var IGeneratedStore_OnReload = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.OnReload));
 
+            #region IGeneratedStore.OnReload
+            var onReload = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore.OnReload)}", virtualMemberMethod, null, Type.EmptyTypes);
+            typeBuilder.DefineMethodOverride(onReload, IGeneratedStore_OnReload);
+            if (baseOnReload != null) typeBuilder.DefineMethodOverride(onReload, baseOnReload);
+
+            {
+                var il = onReload.GetILGenerator();
+
+                if (baseOnReload != null)
+                {
+                    il.Emit(OpCodes.Ldarg_0); // load this
+                    il.Emit(OpCodes.Tailcall);
+                    il.Emit(OpCodes.Call, baseOnReload); // load impl field
+                }
+                il.Emit(OpCodes.Ret);
+            }
+            #endregion
             #region IGeneratedStore.Impl
             var implProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Impl), PropertyAttributes.None, typeof(Impl), null);
             var implPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Impl)}", virtualPropertyMethodAttr, implProp.PropertyType, Type.EmptyTypes);
@@ -619,6 +672,13 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Conv_R8);
             }
         }
+
+        private static void EmitCreateChildGenerated(ILGenerator il, Type childType)
+        {
+            var method = CreateGParent.MakeGenericMethod(childType);
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Call, method);
+        }
         #endregion
 
 
@@ -670,9 +730,21 @@ namespace IPA.Config.Stores
             return typeof(Map); // default for various objects
         }
 
+        private static void EmitDeserializeGeneratedValue(ILGenerator il, Type targetType, Type srcType, Func<Type, int, LocalBuilder> GetLocal)
+        {
+            var IGeneratedStore_ValueSet = typeof(IGeneratedStore).GetProperty(nameof(IGeneratedStore.Values)).GetSetMethod();
+
+            var valuel = GetLocal(srcType, 0);
+            il.Emit(OpCodes.Stloc, valuel);
+            EmitCreateChildGenerated(il, targetType);
+            il.Emit(OpCodes.Dup);
+            il.Emit(OpCodes.Ldloc, valuel);
+            il.Emit(OpCodes.Callvirt, IGeneratedStore_ValueSet);
+        }
+
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
-        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Label nextLabel)
+        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Label nextLabel, Func<Type, int, LocalBuilder> GetLocal)
         {
             if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
 
@@ -699,6 +771,10 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, getter);
                 EmitNumberConvertTo(il, targetType, getter.ReturnType);
             } // TODO: implement stuff for lists and maps of various types (probably call out somewhere else to figure out what to do)
+            else if (expected == typeof(Map))
+            {
+                EmitDeserializeGeneratedValue(il, targetType, expected, GetLocal);
+            }
             else // TODO: support converters
             {
                 il.Emit(OpCodes.Pop);
@@ -714,9 +790,6 @@ namespace IPA.Config.Stores
             var implLabel = il.DefineLabel();
             var passedTypeCheck = il.DefineLabel();
             var expectType = GetExpectedValueTypeForType(member.Type);
-
-            il.Emit(OpCodes.Dup);
-            il.Emit(OpCodes.Brtrue_S, implLabel); // null check
 
             void EmitStore(Action<ILGenerator> value)
             {
@@ -746,6 +819,9 @@ namespace IPA.Config.Stores
                 return builder;
             }
 
+            il.Emit(OpCodes.Dup);
+            il.Emit(OpCodes.Brtrue_S, implLabel); // null check
+
             if (member.Type.IsValueType)
             {
                 il.Emit(OpCodes.Pop);
@@ -766,6 +842,39 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Dup); // duplicate cloned value
             il.Emit(OpCodes.Brtrue, passedTypeCheck); // null check
 
+            var errorHandle = il.DefineLabel();
+
+            // special cases to handle coersion between Float and Int
+            if (expectType == typeof(FloatingPoint))
+            {
+                var specialTypeCheck = il.DefineLabel();
+                il.Emit(OpCodes.Pop);
+                getValue(il);
+                il.Emit(OpCodes.Isinst, typeof(Integer)); //replaces on stack
+                il.Emit(OpCodes.Dup); // duplicate cloned value
+                il.Emit(OpCodes.Brfalse, errorHandle); // null check
+
+                var Integer_CoerceToFloat = typeof(Integer).GetMethod(nameof(Integer.AsFloat));
+                il.Emit(OpCodes.Call, Integer_CoerceToFloat);
+
+                il.Emit(OpCodes.Br, passedTypeCheck);
+            }
+            else if (expectType == typeof(Integer))
+            {
+                var specialTypeCheck = il.DefineLabel();
+                il.Emit(OpCodes.Pop);
+                getValue(il);
+                il.Emit(OpCodes.Isinst, typeof(FloatingPoint)); //replaces on stack
+                il.Emit(OpCodes.Dup); // duplicate cloned value
+                il.Emit(OpCodes.Brfalse, errorHandle); // null check
+
+                var Float_CoerceToInt = typeof(FloatingPoint).GetMethod(nameof(FloatingPoint.AsInteger));
+                il.Emit(OpCodes.Call, Float_CoerceToInt);
+
+                il.Emit(OpCodes.Br, passedTypeCheck);
+            }
+
+            il.MarkLabel(errorHandle);
             il.Emit(OpCodes.Pop);
             EmitLogError(il, $"Unexpected type deserializing {member.Name}", tailcall: false,
                 expected: il => EmitTypeof(il, expectType), found: il =>
@@ -778,7 +887,7 @@ namespace IPA.Config.Stores
             il.MarkLabel(passedTypeCheck);
 
             var local = GetLocal(member.Type);
-            EmitDeserializeValue(il, member.Type, nextLabel);
+            EmitDeserializeValue(il, member.Type, nextLabel, GetLocal);
             il.Emit(OpCodes.Stloc, local);
             EmitStore(il => il.Emit(OpCodes.Ldloc, local));
         }
