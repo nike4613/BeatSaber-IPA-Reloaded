@@ -18,6 +18,7 @@ namespace IPA.Utilities
 		public static void SetField(this object obj, string fieldName, object value)
 		{
 			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
 			prop?.SetValue(obj, value);
 		}
 
@@ -31,6 +32,7 @@ namespace IPA.Utilities
         public static void SetField<T>(this T obj, string fieldName, object value) where T : class
         {
             var prop = typeof(T).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
             prop?.SetValue(obj, value);
         }
 		
@@ -44,7 +46,8 @@ namespace IPA.Utilities
 		public static T GetField<T>(this object obj, string fieldName)
 		{
 			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-			var value = prop?.GetValue(obj);
+            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
+            var value = prop?.GetValue(obj);
 			return (T) value;
 		}
 		
@@ -57,7 +60,8 @@ namespace IPA.Utilities
 		public static void SetProperty(this object obj, string propertyName, object value)
 		{
 			var prop = obj.GetType().GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			prop?.SetValue(obj, value, null);
+            if (prop == null) throw new ArgumentException($"Property {propertyName} does not exist", nameof(propertyName));
+            prop?.SetValue(obj, value, null);
 		}
 
         /// <summary>
@@ -70,6 +74,7 @@ namespace IPA.Utilities
         public static void SetProperty<T>(this T obj, string propertyName, object value) where T : class
         {
             var prop = typeof(T).GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (prop == null) throw new ArgumentException($"Property {propertyName} does not exist", nameof(propertyName));
             prop?.SetValue(obj, value, null);
         }
 
@@ -83,6 +88,7 @@ namespace IPA.Utilities
 		public static object InvokeMethod(this object obj, string methodName, params object[] methodArgs)
 		{
 			MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (dynMethod == null) throw new ArgumentException($"Method {methodName} does not exist", nameof(methodName));
 			return dynMethod?.Invoke(obj, methodArgs);
 		}
 
@@ -97,6 +103,7 @@ namespace IPA.Utilities
         public static object InvokeMethod<T>(this T obj, string methodName, params object[] args) where T : class
         {
             var dynMethod = typeof(T).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (dynMethod == null) throw new ArgumentException($"Method {methodName} does not exist", nameof(methodName));
             return dynMethod?.Invoke(obj, args);
         }
 
