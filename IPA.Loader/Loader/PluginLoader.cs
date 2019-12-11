@@ -247,7 +247,6 @@ namespace IPA.Loader
                     {
                         if (type.Namespace != pluginNs) continue;
 
-                        // TODO: change this to just IPlugin
                         if (type.HasInterface(typeof(IPlugin).FullName))
                         {
                             metadata.PluginType = type;
