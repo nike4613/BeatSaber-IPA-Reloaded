@@ -139,6 +139,7 @@ namespace IPA.Config
 
         internal IConfigStore Store = null;
         internal readonly FileInfo File;
+        internal int Writes = 0;
 
         /// <summary>
         /// Sets this object's <see cref="IConfigStore"/>. Can only be called once.
