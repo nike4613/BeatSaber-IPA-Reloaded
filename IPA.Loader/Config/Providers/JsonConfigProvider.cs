@@ -85,9 +85,9 @@ namespace IPA.Config.Providers
                     else return Value.Integer(0);
                 case JTokenType.Float:
                     val = (tok as JValue).Value;
-                    if (val is decimal dec) return Value.Float((double)dec);
-                    else if (val is double dou) return Value.Float(dou);
-                    else if (val is float flo) return Value.Float(flo);
+                    if (val is decimal dec) return Value.Float(dec);
+                    else if (val is double dou) return Value.Float((decimal)dou);
+                    else if (val is float flo) return Value.Float((decimal)flo);
                     else return Value.Float(0); // default to 0 if something breaks
                 case JTokenType.Date:
                     val = (tok as JValue).Value;
