@@ -50,14 +50,14 @@ namespace IPA.Config.Data
 
     /// <summary>
     /// A <see cref="Value"/> representing a floating point value. This may hold a 
-    /// <see cref="double"/>'s  worth of data.
+    /// <see cref="decimal"/>'s  worth of data.
     /// </summary>
     public sealed class FloatingPoint : Value
     {
         /// <summary>
         /// The actual value fo this <see cref="FloatingPoint"/> object.
         /// </summary>
-        public double Value { get; set; }
+        public decimal Value { get; set; }
 
         /// <summary>
         /// Coerces this <see cref="FloatingPoint"/> into an <see cref="Integer"/>.

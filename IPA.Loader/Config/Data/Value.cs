@@ -76,15 +76,15 @@ namespace IPA.Config.Data
         /// </summary>
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="FloatingPoint"/> wrapping <paramref name="val"/></returns>
-        /// <seealso cref="Float(double)"/>
-        public static FloatingPoint From(double val) => Float(val);
+        /// <seealso cref="Float(decimal)"/>
+        public static FloatingPoint From(decimal val) => Float(val);
         /// <summary>
-        /// Creates a new <see cref="FloatingPoint"/> wrapping a <see cref="double"/>.
+        /// Creates a new <see cref="FloatingPoint"/> wrapping a <see cref="decimal"/>.
         /// </summary>
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="FloatingPoint"/> wrapping <paramref name="val"/></returns>
-        /// <seealso cref="From(double)"/>
-        public static FloatingPoint Float(double val) => new FloatingPoint { Value = val };
+        /// <seealso cref="From(decimal)"/>
+        public static FloatingPoint Float(decimal val) => new FloatingPoint { Value = val };
 
         /// <summary>
         /// Creates a new <see cref="Value"/> wrapping a <see cref="bool"/>.
