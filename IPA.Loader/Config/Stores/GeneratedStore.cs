@@ -411,11 +411,24 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, typeof(Value).GetMethod(nameof(Value.Map)));
                 // the map is now at the top of the stack
 
+                var locals = new List<LocalBuilder>();
+
+                LocalBuilder GetLocal(Type ty, int i = 0)
+                {
+                    var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
+                    if (builder == null)
+                    {
+                        builder = il.DeclareLocal(ty);
+                        locals.Add(builder);
+                    }
+                    return builder;
+                }
+
                 foreach (var member in structure)
                 {
                     il.Emit(OpCodes.Dup);
                     il.Emit(OpCodes.Ldstr, member.Name); // TODO: make this behave with annotations
-                    EmitSerializeMember(il, member);
+                    EmitSerializeMember(il, member, GetLocal);
                     il.Emit(OpCodes.Call, Map_Add);
                 }
 
@@ -461,6 +474,17 @@ namespace IPA.Config.Stores
 
                 var locals = new List<LocalBuilder>();
 
+                LocalBuilder GetLocal(Type ty, int i = 0)
+                {
+                    var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
+                    if (builder == null)
+                    {
+                        builder = il.DeclareLocal(ty);
+                        locals.Add(builder);
+                    }
+                    return builder;
+                }
+
                 // head of stack is Map instance
                 foreach (var member in structure)
                 {
@@ -480,7 +504,7 @@ namespace IPA.Config.Stores
                     il.MarkLabel(endErrorLabel);
 
                     il.Emit(OpCodes.Ldloc_S, valueLocal);
-                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), locals);
+                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal);
                 }
 
                 il.MarkLabel(nextLabel);
@@ -641,9 +665,59 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Call, Type_GetTypeFromHandle);
         }
 
+        private static Type Decimal_t = typeof(decimal);
+        private static ConstructorInfo Decimal_FromFloat = Decimal_t.GetConstructor(new[] { typeof(float) });
+        private static ConstructorInfo Decimal_FromDouble = Decimal_t.GetConstructor(new[] { typeof(double) });
+        private static ConstructorInfo Decimal_FromInt = Decimal_t.GetConstructor(new[] { typeof(int) });
+        private static ConstructorInfo Decimal_FromUInt = Decimal_t.GetConstructor(new[] { typeof(uint) });
+        private static ConstructorInfo Decimal_FromLong = Decimal_t.GetConstructor(new[] { typeof(long) });
+        private static ConstructorInfo Decimal_FromULong = Decimal_t.GetConstructor(new[] { typeof(ulong) });
         private static void EmitNumberConvertTo(ILGenerator il, Type to, Type from)
         { // WARNING: THIS USES THE NO-OVERFLOW OPCODES
-            if (to == typeof(IntPtr)) il.Emit(OpCodes.Conv_I);
+            if (to == from) return;
+            if (to == Decimal_t)
+            {
+                if (from == typeof(float)) il.Emit(OpCodes.Newobj, Decimal_FromFloat);
+                else if (from == typeof(double)) il.Emit(OpCodes.Newobj, Decimal_FromDouble);
+                else if (from == typeof(long)) il.Emit(OpCodes.Newobj, Decimal_FromLong);
+                else if (from == typeof(ulong)) il.Emit(OpCodes.Newobj, Decimal_FromULong);
+                else if (from == typeof(int)) il.Emit(OpCodes.Newobj, Decimal_FromInt);
+                else if (from == typeof(uint)) il.Emit(OpCodes.Newobj, Decimal_FromUInt);
+                else if (from == typeof(IntPtr))
+                {
+                    EmitNumberConvertTo(il, typeof(long), from);
+                    EmitNumberConvertTo(il, to, typeof(long));
+                }
+                else if (from == typeof(UIntPtr))
+                {
+                    EmitNumberConvertTo(il, typeof(ulong), from);
+                    EmitNumberConvertTo(il, to, typeof(ulong));
+                }
+                else 
+                { // if the source is anything else, we first convert to int because that can contain all other values
+                    EmitNumberConvertTo(il, typeof(int), from);
+                    EmitNumberConvertTo(il, to, typeof(int));
+                };
+            }
+            else if (from == Decimal_t)
+            {
+                if (to == typeof(IntPtr))
+                {
+                    EmitNumberConvertTo(il, typeof(long), from);
+                    EmitNumberConvertTo(il, to, typeof(long));
+                }
+                else if (to == typeof(UIntPtr))
+                {
+                    EmitNumberConvertTo(il, typeof(ulong), from);
+                    EmitNumberConvertTo(il, to, typeof(ulong));
+                }
+                else
+                {
+                    var method = Decimal_t.GetMethod($"To{to.Name}"); // conveniently, this is the pattern of the to* names
+                    il.Emit(OpCodes.Call, method);
+                }
+            }
+            else if (to == typeof(IntPtr)) il.Emit(OpCodes.Conv_I);
             else if (to == typeof(UIntPtr)) il.Emit(OpCodes.Conv_U);
             else if (to == typeof(sbyte)) il.Emit(OpCodes.Conv_I1);
             else if (to == typeof(byte)) il.Emit(OpCodes.Conv_U1);
@@ -695,11 +769,91 @@ namespace IPA.Config.Stores
         }
 
         #region Serialize
+
         // emit takes no args, leaves Value at top of stack
-        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member)
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, Func<Type, int, LocalBuilder> GetLocal)
         {
-            // TODO: impl
-            il.Emit(OpCodes.Ldnull);
+            void EmitLoad()
+            {
+                il.Emit(OpCodes.Ldarg_0); // load this
+
+                if (member.IsField)
+                    il.Emit(OpCodes.Ldfld, member.Member as FieldInfo);
+                else
+                { // member is a property
+                    var prop = member.Member as PropertyInfo;
+                    var getter = prop.GetGetMethod();
+                    if (getter == null) throw new InvalidOperationException($"Property {member.Name} does not have a getter and is not ignored");
+
+                    il.Emit(OpCodes.Call, getter);
+                }
+            }
+
+            // TODO: implement Nullable<T>
+
+            EmitLoad();
+
+            var endSerialize = il.DefineLabel();
+
+            if (!member.Type.IsValueType)
+            {
+                var passedNull = il.DefineLabel();
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Brtrue, passedNull);
+
+                il.Emit(OpCodes.Pop);
+                il.Emit(OpCodes.Ldnull);
+                il.Emit(OpCodes.Br, endSerialize);
+
+                il.MarkLabel(passedNull);
+            }
+
+            var targetType = GetExpectedValueTypeForType(member.Type);
+            if (targetType == typeof(Text))
+            { // only happens when arg is a string or char
+                var TextCreate = typeof(Value).GetMethod(nameof(Value.Text));
+                if (member.Type == typeof(char))
+                {
+                    var strFromChar = typeof(char).GetMethod(nameof(char.ToString), new[] { typeof(char) });
+                    il.Emit(OpCodes.Call, strFromChar);
+                }
+                il.Emit(OpCodes.Call, TextCreate);
+            }
+            else if (targetType == typeof(Boolean))
+            {
+                var BoolCreate = typeof(Value).GetMethod(nameof(Value.Bool));
+                il.Emit(OpCodes.Call, BoolCreate);
+            }
+            else if (targetType == typeof(Integer))
+            {
+                var IntCreate = typeof(Value).GetMethod(nameof(Value.Integer));
+                EmitNumberConvertTo(il, IntCreate.GetParameters()[0].ParameterType, member.Type);
+                il.Emit(OpCodes.Call, IntCreate);
+            }
+            else if (targetType == typeof(FloatingPoint))
+            {
+                var FloatCreate = typeof(Value).GetMethod(nameof(Value.Float));
+                EmitNumberConvertTo(il, FloatCreate.GetParameters()[0].ParameterType, member.Type);
+                il.Emit(OpCodes.Call, FloatCreate);
+            }
+            else if (targetType == typeof(List))
+            {
+                // TODO: impl this
+                il.Emit(OpCodes.Pop);
+                il.Emit(OpCodes.Ldnull);
+            }
+            else if (targetType == typeof(Map))
+            {
+                // TODO: support other aggregate types
+
+                // for now, we assume that its a generated type implementing IGeneratedStore
+                var IGeneratedStore_ValueGet = typeof(IGeneratedStore).GetProperty(nameof(IGeneratedStore.Values)).GetGetMethod();
+                il.Emit(OpCodes.Callvirt, IGeneratedStore_ValueGet);
+            }
+
+            il.MarkLabel(endSerialize);
+
+            // TODO: implement converters
         }
         #endregion
 
@@ -709,7 +863,8 @@ namespace IPA.Config.Stores
         {
             if (typeof(Value).IsAssignableFrom(valT)) // this is a Value subtype
                 return valT;
-            if (valT == typeof(string)) return typeof(Text);
+            if (valT == typeof(string)
+             || valT == typeof(char)) return typeof(Text);
             if (valT == typeof(bool)) return typeof(Boolean);
             if (valT == typeof(byte)
              || valT == typeof(sbyte)
@@ -744,15 +899,20 @@ namespace IPA.Config.Stores
 
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
-        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Label nextLabel, Func<Type, int, LocalBuilder> GetLocal)
+        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Type expected, Func<Type, int, LocalBuilder> GetLocal)
         {
             if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
 
-            var expected = GetExpectedValueTypeForType(targetType);
             if (expected == typeof(Text))
             {
                 var getter = expected.GetProperty(nameof(Text.Value)).GetGetMethod();
                 il.Emit(OpCodes.Call, getter);
+                if (targetType == typeof(char))
+                {
+                    var strIndex = typeof(string).GetProperty("Chars").GetGetMethod(); // string's indexer is specially named Chars
+                    il.Emit(OpCodes.Ldc_I4_0);
+                    il.Emit(OpCodes.Call, strIndex);
+                }
             }
             else if (expected == typeof(Boolean))
             {
@@ -783,7 +943,7 @@ namespace IPA.Config.Stores
         }
 
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
-        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, List<LocalBuilder> locals)
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, Func<Type, int, LocalBuilder> GetLocal)
         {
             var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
 
@@ -808,19 +968,10 @@ namespace IPA.Config.Stores
                 }
             }
 
-            LocalBuilder GetLocal(Type ty, int i = 0)
-            {
-                var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
-                if (builder == null)
-                {
-                    builder = il.DeclareLocal(ty);
-                    locals.Add(builder);
-                }
-                return builder;
-            }
-
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Brtrue_S, implLabel); // null check
+
+            // TODO: support Nullable<T>
 
             if (member.Type.IsValueType)
             {
@@ -886,8 +1037,8 @@ namespace IPA.Config.Stores
 
             il.MarkLabel(passedTypeCheck);
 
-            var local = GetLocal(member.Type);
-            EmitDeserializeValue(il, member.Type, nextLabel, GetLocal);
+            var local = GetLocal(member.Type, 0);
+            EmitDeserializeValue(il, member.Type, expectType, GetLocal);
             il.Emit(OpCodes.Stloc, local);
             EmitStore(il => il.Emit(OpCodes.Ldloc, local));
         }
