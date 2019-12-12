@@ -64,68 +64,68 @@ namespace IPA.Config
 
         // END: section ignore
 
-        public bool Regenerate = true;
+        public virtual bool Regenerate { get; set; } = true;
 
         public class Updates_
         {
-            public bool AutoUpdate = true;
+            public virtual bool AutoUpdate { get; set; } = true;
             // LINE: ignore 2
             public static bool AutoUpdate_ => (Instance?.Updates?.AutoUpdate ?? true)
                                            &&   CommandLineValues.Updates.AutoUpdate;
 
-            public bool AutoCheckUpdates = true;
+            public virtual bool AutoCheckUpdates { get; set; } = true;
             // LINE: ignore 2
             public static bool AutoCheckUpdates_ => (Instance?.Updates?.AutoCheckUpdates ?? true)
                                                  &&   CommandLineValues.Updates.AutoCheckUpdates;
         }
 
-        public Updates_ Updates = new Updates_();
+        public virtual Updates_ Updates { get; set; } = new Updates_();
 
         public class Debug_
         {
-            public bool ShowCallSource = false;
+            public virtual bool ShowCallSource { get; set; } = false;
             // LINE: ignore 2
             public static bool ShowCallSource_ => (Instance?.Debug?.ShowCallSource ?? false)
                                                ||   CommandLineValues.Debug.ShowCallSource;
 
-            public bool ShowDebug = false;
+            public virtual bool ShowDebug { get; set; } = false;
             // LINE: ignore 2
             public static bool ShowDebug_ => (Instance?.Debug?.ShowDebug ?? false)
                                           ||   CommandLineValues.Debug.ShowDebug;
 
             // This option only takes effect after a full game restart, unless new logs are created again
-            public bool CondenseModLogs = false;
+            public virtual bool CondenseModLogs { get; set; } = false;
             // LINE: ignore 2
             public static bool CondenseModLogs_ => (Instance?.Debug?.CondenseModLogs ?? false)
                                                 ||   CommandLineValues.Debug.CondenseModLogs;
 
-            public bool ShowHandledErrorStackTraces = false;
+            public virtual bool ShowHandledErrorStackTraces { get; set; } = false;
             // LINE: ignore
             public static bool ShowHandledErrorStackTraces_ => Instance?.Debug?.ShowHandledErrorStackTraces ?? false;
 
-            public bool HideMessagesForPerformance = true;
+            public virtual bool HideMessagesForPerformance { get; set; } = true;
             // LINE: ignore
             public static bool HideMessagesForPerformance_ => Instance?.Debug?.HideMessagesForPerformance ?? true;
 
-            public int HideLogThreshold = 512;
+            public virtual int HideLogThreshold { get; set; } = 512;
             // LINE: ignore
             public static int HideLogThreshold_ => Instance?.Debug?.HideLogThreshold ?? 512;
 
-            public bool ShowTrace = false;
+            public virtual bool ShowTrace { get; set; } = false;
             // LINE: ignore 2
             public static bool ShowTrace_ => (Instance?.Debug?.ShowTrace ?? false)
                                           ||   CommandLineValues.Debug.ShowTrace;
         }
 
-        public Debug_ Debug = new Debug_();
+        public virtual Debug_ Debug { get; set; } = new Debug_();
 
-        public bool YeetMods = true;
+        public virtual bool YeetMods { get; set; } = true;
         // LINE: ignore 2
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
 
         [JsonProperty(Required = Required.Default)]
-        public string LastGameVersion = null;
+        public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore
         public static string LastGameVersion_ => Instance?.LastGameVersion;
     }
