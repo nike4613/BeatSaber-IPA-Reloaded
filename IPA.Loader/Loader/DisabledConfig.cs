@@ -21,8 +21,14 @@ namespace IPA.Loader
             Instance = Disabled.Generated<DisabledConfig>();
         }
 
-        public bool Reset = true;
+        public virtual bool Reset { get; set; } = true;
 
-        public HashSet<string> DisabledModIds = new HashSet<string>();
+        public virtual HashSet<string> DisabledModIds { get; set; } = new HashSet<string>();
+
+        protected virtual void OnReload()
+        {
+            if (DisabledModIds == null)
+                DisabledModIds = new HashSet<string>();
+        }
     }
 }
