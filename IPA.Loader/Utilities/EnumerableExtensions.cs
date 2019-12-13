@@ -41,5 +41,35 @@ namespace IPA.Utilities
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
+
+        /// <summary>
+        /// LINQ extension method that filters <see langword="null"/> elements out of an enumeration.
+        /// </summary>
+        /// <typeparam name="T">the type of the enumeration</typeparam>
+        /// <param name="self">the enumeration to filter</param>
+        /// <returns>a filtered enumerable</returns>
+        public static IEnumerable<T> NonNull<T>(this IEnumerable<T> self) where T : class
+            => self.Where(o => o != null);
+
+        /// <summary>
+        /// LINQ extension method that filters <see langword="null"/> elements out of an enumeration based on a converter.
+        /// </summary>
+        /// <typeparam name="T">the type of the enumeration</typeparam>
+        /// <typeparam name="U">the type to compare to null</typeparam>
+        /// <param name="self">the enumeration to filter</param>
+        /// <param name="pred">the predicate to select for filtering</param>
+        /// <returns>a filtered enumerable</returns>
+        public static IEnumerable<T> NonNull<T, U>(this IEnumerable<T> self, Func<T, U> pred) where T : class where U : class
+            => self.Where(o => pred(o) != null);
+
+        /// <summary>
+        /// LINQ extension method that filters <see langword="null"/> elements from an enumeration of nullable types.
+        /// </summary>
+        /// <typeparam name="T">the underlying type of the nullable enumeration</typeparam>
+        /// <param name="self">the enumeration to filter</param>
+        /// <returns>a filtered enumerable</returns>
+        public static IEnumerable<T> NonNull<T>(this IEnumerable<T?> self) where T : struct
+            => self.Where(o => o != null).Select(o => o.Value);
+
     }
 }
