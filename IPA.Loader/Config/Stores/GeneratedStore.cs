@@ -85,14 +85,13 @@ namespace IPA.Config.Stores
     {
         internal interface IGeneratedStore
         {
-            /// <summary>
-            /// serializes/deserializes to Value
-            /// </summary>
-            Value Values { get; set; }
             Type Type { get; }
             IGeneratedStore Parent { get; }
             Impl Impl { get; }
             void OnReload();
+
+            Value Serialize();
+            void Deserialize(Value val);
         }
 
         internal class Impl : IConfigStore
@@ -144,7 +143,7 @@ namespace IPA.Config.Stores
                 var values = provider.Load();
                 Logger.config.Debug("Generated impl ReadFrom");
                 Logger.config.Debug($"Read {values}");
-                generated.Values = values;
+                generated.Deserialize(values);
 
                 ReleaseWrite();
                 generated.OnReload();
@@ -154,7 +153,7 @@ namespace IPA.Config.Stores
             internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));
             public void WriteTo(IConfigProvider provider)
             {
-                var values = generated.Values;
+                var values = generated.Serialize();
                 Logger.config.Debug("Generated impl WriteTo");
                 Logger.config.Debug($"Serialized {values}");
                 provider.Store(values);
@@ -331,8 +330,8 @@ namespace IPA.Config.Stores
             var IGeneratedStore_GetImpl = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Impl)).GetGetMethod();
             var IGeneratedStore_GetType = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Type)).GetGetMethod();
             var IGeneratedStore_GetParent = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Parent)).GetGetMethod();
-            var IGeneratedStore_GetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetGetMethod();
-            var IGeneratedStore_SetValues = IGeneratedStore_t.GetProperty(nameof(IGeneratedStore.Values)).GetSetMethod();
+            var IGeneratedStore_Serialize = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Serialize));
+            var IGeneratedStore_Deserialize = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Deserialize));
             var IGeneratedStore_OnReload = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.OnReload));
 
             #region IGeneratedStore.OnReload
@@ -394,17 +393,12 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Ret);
             }
             #endregion
-            #region IGeneratedStore.Values
-            var valuesProp = typeBuilder.DefineProperty(nameof(IGeneratedStore.Values), PropertyAttributes.None, typeof(Value), null);
-            var valuesPropGet = typeBuilder.DefineMethod($"<g>{nameof(IGeneratedStore.Values)}", virtualPropertyMethodAttr, valuesProp.PropertyType, Type.EmptyTypes);
-            var valuesPropSet = typeBuilder.DefineMethod($"<s>{nameof(IGeneratedStore.Values)}", virtualPropertyMethodAttr, null, new[] { valuesProp.PropertyType });
-            valuesProp.SetGetMethod(valuesPropGet);
-            typeBuilder.DefineMethodOverride(valuesPropGet, IGeneratedStore_GetValues);
-            valuesProp.SetSetMethod(valuesPropSet);
-            typeBuilder.DefineMethodOverride(valuesPropSet, IGeneratedStore_SetValues);
+            #region IGeneratedStore.Serialize
+            var serializeGen = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore.Serialize)}", virtualPropertyMethodAttr, IGeneratedStore_Serialize.ReturnType, Type.EmptyTypes);
+            typeBuilder.DefineMethodOverride(serializeGen, IGeneratedStore_Serialize);
 
             { // this is non-locking because the only code that will call this will already own the correct lock
-                var il = valuesPropGet.GetILGenerator();
+                var il = serializeGen.GetILGenerator();
 
                 var Map_Add = typeof(Map).GetMethod(nameof(Map.Add));
 
@@ -436,9 +430,14 @@ namespace IPA.Config.Stores
 
                 il.Emit(OpCodes.Ret);
             }
+            #endregion
+            #region IGeneratedStore.Deserialize
+            var deserializeGen = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore.Deserialize)}", virtualPropertyMethodAttr, null,
+                new[] { IGeneratedStore_Deserialize.GetParameters()[0].ParameterType });
+            typeBuilder.DefineMethodOverride(deserializeGen, IGeneratedStore_Deserialize);
 
             { // this is non-locking because the only code that will call this will already own the correct lock
-                var il = valuesPropSet.GetILGenerator();
+                var il = deserializeGen.GetILGenerator();
 
                 var Map_t = typeof(Map);
                 var Map_TryGetValue = Map_t.GetMethod(nameof(Map.TryGetValue));
@@ -847,8 +846,8 @@ namespace IPA.Config.Stores
                 // TODO: support other aggregate types
 
                 // for now, we assume that its a generated type implementing IGeneratedStore
-                var IGeneratedStore_ValueGet = typeof(IGeneratedStore).GetProperty(nameof(IGeneratedStore.Values)).GetGetMethod();
-                il.Emit(OpCodes.Callvirt, IGeneratedStore_ValueGet);
+                var IGeneratedStore_Serialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Serialize));
+                il.Emit(OpCodes.Callvirt, IGeneratedStore_Serialize);
             }
 
             il.MarkLabel(endSerialize);
@@ -887,14 +886,14 @@ namespace IPA.Config.Stores
 
         private static void EmitDeserializeGeneratedValue(ILGenerator il, Type targetType, Type srcType, Func<Type, int, LocalBuilder> GetLocal)
         {
-            var IGeneratedStore_ValueSet = typeof(IGeneratedStore).GetProperty(nameof(IGeneratedStore.Values)).GetSetMethod();
+            var IGeneratedStore_Deserialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Deserialize));
 
             var valuel = GetLocal(srcType, 0);
             il.Emit(OpCodes.Stloc, valuel);
             EmitCreateChildGenerated(il, targetType);
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Ldloc, valuel);
-            il.Emit(OpCodes.Callvirt, IGeneratedStore_ValueSet);
+            il.Emit(OpCodes.Callvirt, IGeneratedStore_Deserialize);
         }
 
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
