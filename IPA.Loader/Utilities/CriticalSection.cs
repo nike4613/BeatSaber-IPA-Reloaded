@@ -18,9 +18,6 @@ namespace IPA.Utilities
         {
             Logger.log.Debug("Configuring exit handlers");
 
-            AppDomain.CurrentDomain.ProcessExit -= Reset;
-            AppDomain.CurrentDomain.ProcessExit += Reset;
-
             ResetExitHandlers();
         }
 
@@ -52,7 +49,7 @@ namespace IPA.Utilities
                 uint filterMax,
                 ref Win32.PeekMessageParams removeMsg);
 
-            [DllImport("winhttp")]
+            [DllImport("bsipa-doorstop")]
             public static extern void SetPeekMessageHook(
                 [MarshalAs(UnmanagedType.FunctionPtr)]
                 PeekMessageHook hook);
@@ -138,6 +135,8 @@ namespace IPA.Utilities
         {
             _handler = null;
             isInExecuteSection = false;
+
+            Reset(null, null);
 
             if (exitRecieved)
                 Environment.Exit(1);
