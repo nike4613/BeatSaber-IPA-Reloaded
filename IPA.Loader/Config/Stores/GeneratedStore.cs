@@ -42,7 +42,7 @@ namespace IPA.Config.Stores
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <typeparamref name="T"/> must be a public non-<see langword="sealed"/> <see langword="class"/>.
+        /// <typeparamref name="T"/> must be a public non-<see langword="sealed"/> class.
         /// It can also be internal, but in that case, then your assembly must have the following attribute
         /// to allow the generated code to reference it.
         /// <code>
@@ -50,8 +50,8 @@ namespace IPA.Config.Stores
         /// </code>
         /// </para>
         /// <para>
-        /// Only fields and properties that are <see langword="public"/> or <see langword="protected"/> will be considered, and only properties
-        /// where both the getter and setter are <see langword="public"/> or <see langword="protected"/> are considered. Any fields or properties
+        /// Only fields and properties that are public or protected will be considered, and only properties
+        /// where both the getter and setter are public or protected are considered. Any fields or properties
         /// with an <see cref="IgnoreAttribute"/> applied to them are also ignored. Having properties be <see langword="virtual"/> is not strictly
         /// necessary, however it allows the generated type to keep track of changes and lock around them so that the config will auto-save.
         /// </para>
@@ -59,14 +59,14 @@ namespace IPA.Config.Stores
         /// All of the attributes in the <see cref="Attributes"/> namespace are handled as described by them.
         /// </para>
         /// <para>
-        /// If the <typeparamref name="T"/> declares a <see langword="public"/> or <see langword="protected"/>, <see langword="virtual"/>
+        /// If the <typeparamref name="T"/> declares a public or protected, <see langword="virtual"/>
         /// method <c>Changed()</c>, then that method may be called to artificially signal to the runtime that the content of the object 
         /// has changed. That method will also be called after the write locks are released when a property is set anywhere in the owning
         /// tree. This will only be called on the outermost generated object of the config structure, even if the change being signaled
         /// is somewhere deep into the tree.
         /// </para>
         /// <para>
-        /// Similarly, <typeparamref name="T"/> can declare a <see langword="public"/> or <see langword="protected"/>, <see langword="virtual"/> 
+        /// Similarly, <typeparamref name="T"/> can declare a public or protected, <see langword="virtual"/> 
         /// method <c>OnReload()</c>, which will be called on the filesystem reader thread after the object has been repopulated with new data 
         /// values. It will be called <i>after</i> the write lock for this object is released. This will only be called on the outermost generated
         /// object of the config structure.
