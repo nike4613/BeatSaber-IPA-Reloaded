@@ -1,4 +1,5 @@
 ﻿using IPA.Config.Data;
+using IPA.Config.Stores.Attributes;
 using IPA.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,13 @@ using System.Runtime.CompilerServices;
 using System.IO;
 using Boolean = IPA.Config.Data.Boolean;
 using System.Collections;
+using IPA.Utilities;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
 #endif
 
-[assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.GeneratedAssemblyName)]
+[assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget)]
 
 namespace IPA.Config.Stores
 {
@@ -46,6 +48,15 @@ namespace IPA.Config.Stores
         /// <code>
         /// [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget)]
         /// </code>
+        /// </para>
+        /// <para>
+        /// Only fields and properties that are <see langword="public"/> or <see langword="protected"/> will be considered, and only properties
+        /// where both the getter and setter are <see langword="public"/> or <see langword="protected"/> are considered. Any fields or properties
+        /// with an <see cref="IgnoreAttribute"/> applied to them are also ignored. Having properties be <see langword="virtual"/> is not strictly
+        /// necessary, however it allows the generated type to keep track of changes and lock around them so that the config will auto-save.
+        /// </para>
+        /// <para>
+        /// All of the attributes in the <see cref="Attributes"/> namespace are handled as described by them.
         /// </para>
         /// <para>
         /// If the <typeparamref name="T"/> declares a <see langword="public"/> or <see langword="protected"/>, <see langword="virtual"/>
@@ -222,9 +233,18 @@ namespace IPA.Config.Stores
         {
             public string Name;
             public MemberInfo Member;
+            public Type Type;
+            public bool AllowNull;
             public bool IsVirtual;
             public bool IsField;
-            public Type Type;
+            public bool IsNullable;
+
+            // invalid for objects with IsNullabe false
+            public Type NullableWrappedType => Nullable.GetUnderlyingType(Type);
+            // invalid for objects with IsNullabe false
+            public PropertyInfo Nullable_HasValue => Type.GetProperty(nameof(Nullable<int>.HasValue));
+            // invalid for objects with IsNullabe false
+            public PropertyInfo Nullable_Value => Type.GetProperty(nameof(Nullable<int>.Value));
         }
 
         private static Func<IGeneratedStore, IConfigStore> MakeCreator(Type type)
@@ -251,15 +271,48 @@ namespace IPA.Config.Stores
 
             var structure = new List<SerializedMemberInfo>();
 
-            // TODO: incorporate attributes/base types
-            // TODO: ignore probs without setter
-            
-            // only looks at public properties
-            foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            // TODO: support converters
+
+            bool ProcessAttributesFor(MemberInfo member, Type memberType, out string name, out bool allowNull, out bool isNullable)
             {
+                var attrs = member.GetCustomAttributes(true);
+                var ignores = attrs.Select(o => o as IgnoreAttribute).NonNull();
+                if (ignores.Any()) // we ignore
+                {
+                    name = null;
+                    allowNull = false;
+                    isNullable = false;
+                    return false;
+                }
+
+                var nonNullables = attrs.Select(o => o as NonNullableAttribute).NonNull();
+
+                name = member.Name;
+                isNullable = memberType.IsConstructedGenericType
+                          && memberType.GetGenericTypeDefinition() == typeof(Nullable<>);
+                allowNull = !nonNullables.Any() && (!memberType.IsValueType || isNullable);
+
+                var nameAttr = attrs.Select(o => o as SerializedNameAttribute).NonNull().FirstOrDefault();
+                if (nameAttr != null)
+                    name = nameAttr.Name;
+
+                return true;
+            }
+            
+            // only looks at public/protected properties
+            foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (prop.GetSetMethod(true)?.IsPrivate ?? true) 
+                { // we enter this block if the setter is inacessible or doesn't exist
+                    continue; // ignore props without setter
+                }
+                if (prop.GetGetMethod(true)?.IsPrivate ?? true)
+                { // we enter this block if the getter is inacessible or doesn't exist
+                    continue; // ignore props without getter
+                }
+
                 var smi = new SerializedMemberInfo
                 {
-                    Name = prop.Name,
                     Member = prop,
                     IsVirtual = (prop.GetGetMethod(true)?.IsVirtual ?? false) ||
                                 (prop.GetSetMethod(true)?.IsVirtual ?? false),
@@ -267,20 +320,25 @@ namespace IPA.Config.Stores
                     Type = prop.PropertyType
                 };
 
+                if (!ProcessAttributesFor(smi.Member, smi.Type, out smi.Name, out smi.AllowNull, out smi.IsNullable)) continue;
+
                 structure.Add(smi);
             }
 
-            // only look at public fields
-            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+            // only look at public/protected fields
+            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
+                if (field.IsPrivate) continue;
+
                 var smi = new SerializedMemberInfo
                 {
-                    Name = field.Name,
                     Member = field,
                     IsVirtual = false,
                     IsField = true,
                     Type = field.FieldType
                 };
+
+                if (!ProcessAttributesFor(smi.Member, smi.Type, out smi.Name, out smi.AllowNull, out smi.IsNullable)) continue;
 
                 structure.Add(smi);
             }
@@ -788,17 +846,17 @@ namespace IPA.Config.Stores
                 }
             }
 
-            // TODO: implement Nullable<T>
-
             EmitLoad();
 
             var endSerialize = il.DefineLabel();
 
-            if (!member.Type.IsValueType)
+            if (member.AllowNull)
             {
                 var passedNull = il.DefineLabel();
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Brtrue, passedNull);
+
+                // TODO: add special check for nullables
 
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
@@ -972,7 +1030,7 @@ namespace IPA.Config.Stores
 
             // TODO: support Nullable<T>
 
-            if (member.Type.IsValueType)
+            if (!member.AllowNull)
             {
                 il.Emit(OpCodes.Pop);
                 EmitLogError(il, $"Member {member.Name} ({member.Type}) not nullable", tailcall: false,
