@@ -153,7 +153,7 @@ namespace IPA.Loader
         /// <param name="plugin">the plugin to enable</param>
         /// <returns>whether a restart is needed to activate</returns>
         public static bool EnablePlugin(PluginMetadata plugin)
-        {
+        { // TODO: fix some of this behaviour, by adding better support for runtime enable/disable of mods
             if (plugin == null) return false;
 
             if (plugin.IsBare)
