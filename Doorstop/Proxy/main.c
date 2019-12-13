@@ -181,6 +181,17 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 
     mono_install_unhandled_exception_hook(unhandledException, NULL);
 
+    wchar_t* dll_path_w; // self path
+    size_t dll_path_len = get_module_path((HINSTANCE)&__ImageBase, &dll_path_w, NULL, 0);
+    char* self_dll_path = memalloc(dll_path_len + 1);
+    WideCharToMultiByte(CP_UTF8, 0, dll_path_w, -1, self_dll_path, dll_path_len + 1, NULL, NULL);
+
+    mono_dllmap_insert(NULL, "i:bsipa-doorstop", NULL, self_dll_path, NULL); // remap `bsipa-doorstop` to this assembly
+
+    memfree(self_dll_path);
+    memfree(dll_path_w);
+
+
     unhandledMutex = CreateMutexW(NULL, FALSE, NULL);
 
 	LOG("Invoking method!\n");
