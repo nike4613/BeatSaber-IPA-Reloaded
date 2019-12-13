@@ -237,7 +237,7 @@ namespace IPA.Config.Stores
             public bool AllowNull;
             public bool IsVirtual;
             public bool IsField;
-            public bool IsNullable;
+            public bool IsNullable; // signifies whether this is a Nullable<T>
 
             // invalid for objects with IsNullabe false
             public Type NullableWrappedType => Nullable.GetUnderlyingType(Type);
@@ -245,6 +245,8 @@ namespace IPA.Config.Stores
             public PropertyInfo Nullable_HasValue => Type.GetProperty(nameof(Nullable<int>.HasValue));
             // invalid for objects with IsNullabe false
             public PropertyInfo Nullable_Value => Type.GetProperty(nameof(Nullable<int>.Value));
+            // invalid for objects with IsNullabe false
+            public ConstructorInfo Nullable_Construct => Type.GetConstructor(new[] { NullableWrappedType });
         }
 
         private static Func<IGeneratedStore, IConfigStore> MakeCreator(Type type)
@@ -853,10 +855,11 @@ namespace IPA.Config.Stores
             if (member.AllowNull)
             {
                 var passedNull = il.DefineLabel();
-                il.Emit(OpCodes.Dup);
-                il.Emit(OpCodes.Brtrue, passedNull);
 
-                // TODO: add special check for nullables
+                il.Emit(OpCodes.Dup);
+                if (member.IsNullable)
+                    il.Emit(OpCodes.Call, member.Nullable_HasValue.GetGetMethod());
+                il.Emit(OpCodes.Brtrue, passedNull);
 
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
@@ -864,6 +867,9 @@ namespace IPA.Config.Stores
 
                 il.MarkLabel(passedNull);
             }
+
+            if (member.IsNullable)
+                il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
 
             var targetType = GetExpectedValueTypeForType(member.Type);
             if (targetType == typeof(Text))
@@ -954,6 +960,12 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Callvirt, IGeneratedStore_Deserialize);
         }
 
+        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, Func<Type, int, LocalBuilder> GetLocal)
+        {
+            EmitDeserializeValue(il, member.NullableWrappedType, expected, GetLocal);
+            il.Emit(OpCodes.Newobj, member.Nullable_Construct);
+        }
+
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
         private static void EmitDeserializeValue(ILGenerator il, Type targetType, Type expected, Func<Type, int, LocalBuilder> GetLocal)
@@ -1006,7 +1018,7 @@ namespace IPA.Config.Stores
 
             var implLabel = il.DefineLabel();
             var passedTypeCheck = il.DefineLabel();
-            var expectType = GetExpectedValueTypeForType(member.Type);
+            var expectType = GetExpectedValueTypeForType(member.IsNullable ? member.NullableWrappedType : member.Type);
 
             void EmitStore(Action<ILGenerator> value)
             {
@@ -1028,13 +1040,20 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Brtrue_S, implLabel); // null check
 
-            // TODO: support Nullable<T>
-
             if (!member.AllowNull)
             {
                 il.Emit(OpCodes.Pop);
                 EmitLogError(il, $"Member {member.Name} ({member.Type}) not nullable", tailcall: false,
                     expected: il => EmitTypeof(il, expectType));
+                il.Emit(OpCodes.Br, nextLabel);
+            }
+            else if (member.IsNullable)
+            {
+                il.Emit(OpCodes.Pop);
+                var valTLocal = GetLocal(member.Type, 0);
+                il.Emit(OpCodes.Ldloca, valTLocal);
+                il.Emit(OpCodes.Initobj, member.Type);
+                EmitStore(il => il.Emit(OpCodes.Ldloc, valTLocal));
                 il.Emit(OpCodes.Br, nextLabel);
             }
             else
@@ -1095,7 +1114,8 @@ namespace IPA.Config.Stores
             il.MarkLabel(passedTypeCheck);
 
             var local = GetLocal(member.Type, 0);
-            EmitDeserializeValue(il, member.Type, expectType, GetLocal);
+            if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
+            else EmitDeserializeValue(il, member.Type, expectType, GetLocal);
             il.Emit(OpCodes.Stloc, local);
             EmitStore(il => il.Emit(OpCodes.Ldloc, local));
         }
