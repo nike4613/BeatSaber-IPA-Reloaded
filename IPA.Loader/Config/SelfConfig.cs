@@ -4,6 +4,7 @@ using IPA.Utilities;
 using IPA.Config.Stores;
 // END: section ignore
 using Newtonsoft.Json;
+using IPA.Config.Stores.Attributes;
 
 namespace IPA.Config
 {
@@ -79,6 +80,9 @@ namespace IPA.Config
                                                  &&   CommandLineValues.Updates.AutoCheckUpdates;
         }
 
+        // LINE: ignore
+        [NonNullable]
+        [JsonProperty(Required = Required.DisallowNull)] // the JsonProperty annotations are for the generated schema
         public virtual Updates_ Updates { get; set; } = new Updates_();
 
         public class Debug_
@@ -117,6 +121,9 @@ namespace IPA.Config
                                           ||   CommandLineValues.Debug.ShowTrace;
         }
 
+        // LINE: ignore
+        [NonNullable]
+        [JsonProperty(Required = Required.DisallowNull)]
         public virtual Debug_ Debug { get; set; } = new Debug_();
 
         public virtual bool YeetMods { get; set; } = true;
@@ -124,7 +131,6 @@ namespace IPA.Config
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
 
-        [JsonProperty(Required = Required.Default)]
         public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore
         public static string LastGameVersion_ => Instance?.LastGameVersion;
