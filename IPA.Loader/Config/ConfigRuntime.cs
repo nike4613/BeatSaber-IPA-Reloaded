@@ -10,6 +10,8 @@ using IPA.Utilities.Async;
 using System.IO;
 using System.Runtime.CompilerServices;
 using IPA.Logging;
+using UnityEngine;
+using Logger = IPA.Logging.Logger;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -59,6 +61,8 @@ namespace IPA.Config
         }
 
         private static void ShutdownRuntime(object sender, EventArgs e)
+            => ShutdownRuntime();
+        internal static void ShutdownRuntime()
         {
             watcherTrackConfigs.Clear();
             var watchList = watchers.ToArray();

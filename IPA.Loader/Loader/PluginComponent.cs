@@ -76,6 +76,8 @@ namespace IPA.Loader
             bsPlugins.OnApplicationQuit();
             ipaPlugins.OnApplicationQuit();
 
+            ConfigRuntime.ShutdownRuntime(); // this seems to be needed
+
             quitting = true;
         }
 
