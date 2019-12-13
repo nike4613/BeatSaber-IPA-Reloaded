@@ -16,7 +16,7 @@ namespace IPA
         /// Called when a plugin is enabled. This is where you should set up Harmony patches and the like.
         /// </summary>
         /// <remarks>
-        /// This will be called after Init, and will be called when the plugin loads normally too.
+        /// This will be called after <c>Init</c>, and will be called when the plugin loads normally too.
         /// When a plugin is disabled at startup, neither this nor Init will be called until it is enabled.
         /// 
         /// Init will only ever be called once.
@@ -27,6 +27,8 @@ namespace IPA
         /// Gets invoked when the application is closed.
         /// </summary>
         void OnApplicationQuit();
+
+        // TODO: move more of these out of IPlugin
 
         /// <summary>
         /// Gets invoked on every graphic update.

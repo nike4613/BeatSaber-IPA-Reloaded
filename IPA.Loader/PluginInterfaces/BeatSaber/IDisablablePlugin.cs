@@ -5,16 +5,6 @@
     /// </summary>
     public interface IDisablablePlugin
     {
-        /*/// <summary>
-        /// Called when a plugin is enabled. This is where you should set up Harmony patches and the like.
-        /// </summary>
-        /// <remarks>
-        /// This will be called after Init, and will be called when the plugin loads normally too.
-        /// When a plugin is disabled at startup, neither this nor Init will be called until it is enabled.
-        /// 
-        /// Init will only ever be called once.
-        /// </remarks>
-        void OnEnable();*/
 
         /// <summary>
         /// Called when a plugin is disabled at runtime. This should disable things like Harmony patches and unsubscribe

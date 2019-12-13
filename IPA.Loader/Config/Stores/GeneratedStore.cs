@@ -288,7 +288,7 @@ namespace IPA.Config.Stores
                 var nonNullables = attrs.Select(o => o as NonNullableAttribute).NonNull();
 
                 name = member.Name;
-                isNullable = memberType.IsConstructedGenericType
+                isNullable = memberType.IsConstructedGenericType // TODO: figure out something to support this in .NET 3
                           && memberType.GetGenericTypeDefinition() == typeof(Nullable<>);
                 allowNull = !nonNullables.Any() && (!memberType.IsValueType || isNullable);
 
