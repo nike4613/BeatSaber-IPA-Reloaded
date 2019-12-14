@@ -1,3 +1,7 @@
+---
+uid: articles.start.user
+---
+
 # Installing BSIPA
 
 > [!NOTE]
