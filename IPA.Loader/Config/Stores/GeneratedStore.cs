@@ -177,8 +177,7 @@ namespace IPA.Config.Stores
             }
         }
 
-        private static Dictionary<Type, Func<IGeneratedStore, IConfigStore>> generatedCreators = new Dictionary<Type, Func<IGeneratedStore, IConfigStore>>();
-        private static Dictionary<Type, Dictionary<string, Type>> memberMaps = new Dictionary<Type, Dictionary<string, Type>>();
+        private static readonly Dictionary<Type, (GeneratedStoreCreator ctor, Type type)> generatedCreators = new Dictionary<Type, (GeneratedStoreCreator ctor, Type type)>();
 
         public static T Create<T>() where T : class => (T)Create(typeof(T));
 
@@ -190,14 +189,29 @@ namespace IPA.Config.Stores
         internal static T Create<T>(IGeneratedStore parent) where T : class => (T)Create(typeof(T), parent);
 
         private static IConfigStore Create(Type type, IGeneratedStore parent)
+            => GetCreator(type)(parent);
+
+        internal static GeneratedStoreCreator GetCreator(Type t)
         {
-            if (generatedCreators.TryGetValue(type, out var creator))
-                return creator(parent);
+            if (generatedCreators.TryGetValue(t, out var gen))
+                return gen.ctor;
             else
             {
-                creator = MakeCreator(type);
-                generatedCreators.Add(type, creator);
-                return creator(parent);
+                gen = MakeCreator(t);
+                generatedCreators.Add(t, gen);
+                return gen.ctor;
+            }
+        }
+
+        internal static Type GetGeneratedType(Type t)
+        {
+            if (generatedCreators.TryGetValue(t, out var gen))
+                return gen.type;
+            else
+            {
+                gen = MakeCreator(t);
+                generatedCreators.Add(t, gen);
+                return gen.type;
             }
         }
 
@@ -259,8 +273,12 @@ namespace IPA.Config.Stores
             public ConstructorInfo Nullable_Construct => Type.GetConstructor(new[] { NullableWrappedType });
         }
 
-        private static Func<IGeneratedStore, IConfigStore> MakeCreator(Type type)
+        internal delegate IConfigStore GeneratedStoreCreator(IGeneratedStore parent);
+
+        private static (GeneratedStoreCreator ctor, Type type) MakeCreator(Type type)
         {
+            if (!type.IsClass) throw new ArgumentException("Config type is not a class");
+
             var baseCtor = type.GetConstructor(Type.EmptyTypes); // get a default constructor
             if (baseCtor == null)
                 throw new ArgumentException("Config type does not have a public parameterless constructor");
@@ -758,18 +776,11 @@ namespace IPA.Config.Stores
             var genType = typeBuilder.CreateType();
 
             var parentParam = Expression.Parameter(typeof(IGeneratedStore), "parent");
-            var creatorDel = Expression.Lambda<Func<IGeneratedStore, IConfigStore>>(
+            var creatorDel = Expression.Lambda<GeneratedStoreCreator>(
                 Expression.New(ctor, parentParam), parentParam
             ).Compile();
 
-            { // register a member map
-                var dict = new Dictionary<string, Type>();
-                foreach (var member in structure)
-                    dict.Add(member.Name, member.Type);
-                memberMaps.Add(type, dict);
-            }
-
-            return creatorDel;
+            return (creatorDel, genType);
         }
 
         private delegate LocalBuilder GetLocal(Type type, int idx = 0);
