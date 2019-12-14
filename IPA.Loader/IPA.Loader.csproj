@@ -95,6 +95,7 @@
     <Compile Include="Config\IConfigStore.cs" />
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="Config\Stores\Attributes.cs" />
+    <Compile Include="Config\Stores\Converters.cs" />
     <Compile Include="Config\Stores\GeneratedStore.cs" />
     <Compile Include="Config\Stores\GeneratedStoreCollections.cs" />
     <Compile Include="Config\Stores\ValueConverter.cs" />
