@@ -1,9 +1,5 @@
 ﻿using IPA.Config.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IPA.Config.Stores
 {
@@ -12,10 +8,10 @@ namespace IPA.Config.Stores
     /// <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>.
     /// </summary>
     /// <remarks>
-    /// The object returned from <see cref="FromValue(Value)"/>, if fed into <see cref="ToValue(object)"/>,
-    /// should return equivalent <see cref="Value"/> structures. Similarly, if the result of <see cref="ToValue(object)"/>
-    /// is fed into <see cref="FromValue(Value)"/>, the resulting object should be equivalent to the one passed to 
-    /// <see cref="ToValue(object)"/>.
+    /// The object returned from <see cref="FromValue(Value, object)"/>, if fed into <see cref="ToValue(object, object)"/>,
+    /// should return equivalent <see cref="Value"/> structures. Similarly, if the result of <see cref="ToValue(object, object)"/>
+    /// is fed into <see cref="FromValue(Value, object)"/>, the resulting object should be equivalent to the one passed to 
+    /// <see cref="ToValue(object, object)"/>.
     /// </remarks>
     public interface IValueConverter
     {
@@ -23,14 +19,16 @@ namespace IPA.Config.Stores
         /// Converts the given object to a <see cref="Value"/>.
         /// </summary>
         /// <param name="obj">the object to convert</param>
+        /// <param name="parent">the owning object of <paramref name="obj"/></param>
         /// <returns>a representation of <paramref name="obj"/> as a <see cref="Value"/> structure</returns>
-        Value ToValue(object obj);
+        Value ToValue(object obj, object parent);
         /// <summary>
         /// Converts the given <see cref="Value"/> to the object type handled by this converter.
         /// </summary>
         /// <param name="value">the <see cref="Value"/> to deserialize</param>
+        /// <param name="parent">the object that will own the result</param>
         /// <returns>the deserialized object</returns>
-        object FromValue(Value value);
+        object FromValue(Value value, object parent);
         /// <summary>
         /// Gets the type that this <see cref="IValueConverter"/> handles.
         /// </summary>
@@ -48,19 +46,21 @@ namespace IPA.Config.Stores
         /// Converts the given object to a <see cref="Value"/>.
         /// </summary>
         /// <param name="obj">the object to convert</param>
+        /// <param name="parent">the owning object of <paramref name="obj"/></param>
         /// <returns>a representation of <paramref name="obj"/> as a <see cref="Value"/> structure</returns>
-        /// <seealso cref="IValueConverter.ToValue(object)"/>
-        public abstract Value ToValue(T obj);
+        /// <seealso cref="IValueConverter.ToValue"/>
+        public abstract Value ToValue(T obj, object parent);
         /// <summary>
         /// Converts the given <see cref="Value"/> to the object type handled by this converter.
         /// </summary>
         /// <param name="value">the <see cref="Value"/> to deserialize</param>
+        /// <param name="parent">the object that will own the result</param>
         /// <returns>the deserialized object</returns>
-        /// <seealso cref="IValueConverter.FromValue(Value)"/>
-        public abstract T FromValue(Value value);
+        /// <seealso cref="IValueConverter.FromValue"/>
+        public abstract T FromValue(Value value, object parent);
 
-        Value IValueConverter.ToValue(object obj) => ToValue((T)obj);
-        object IValueConverter.FromValue(Value value) => FromValue(value);
+        Value IValueConverter.ToValue(object obj, object parent) => ToValue((T)obj, parent);
+        object IValueConverter.FromValue(Value value, object parent) => FromValue(value, parent);
         Type IValueConverter.Type => typeof(T);
     }
 }
