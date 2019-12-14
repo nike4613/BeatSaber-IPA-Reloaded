@@ -1,5 +1,5 @@
 ---
-uid: getting_started
+uid: articles.start
 ---
 
 # Getting Started

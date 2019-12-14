@@ -1,3 +1,7 @@
+---
+uid: articles.command_line
+---
+
 # The Command Line
 
 BSIPA has 2 command lines: the installer, and the game.

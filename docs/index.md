@@ -13,10 +13,6 @@ Beat Saber IPA - The mod injector tailored for Beat Saber
 3. Run **IPA.exe**
 4. Start the game as usual
 
-A console window should open before the game starts if the installation was successful.
-
-To disable this console window, pass `--no-console` to the game.
-
 ## How To Uninstall
 
 1. Drag & drop the game exe onto **IPA.exe** while holding <kbd>Alt</kbd>
@@ -37,10 +33,10 @@ Unconsumed arguments will be passed on to the game in case of `--launch`.
 
 1. Create a new **Class Library** C# project (.NET 4.6)
 2. Download a release and add **IPA.Loader.dll** to your references
-3. Implement `IBeatSaberPlugin` or `IEnhancedBeatSaberPlugin`
+3. Implement `IPA.IPlugin` or `IPA.IEnhancedPlugin`
 4. Build the project and copy the DLL into the Plugins folder of the game.
 
-See [Developing](https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/wiki/Developing) for more information.
+See [Developing](xref:articles.start.dev) for more information.
 
 ## How To Keep The Game Patched
 
