@@ -87,3 +87,10 @@ uid: articles.start.user
 
 Thats really all you have to do! The installation should persist across game updates for as long as `winhttp.dll` is present in
 the game directory, though your plugins will be moved to a different folder when it does update so things don't break horribly.
+
+## Uninstalling
+
+Uninstalling is fairly simple, and can be done one of two ways:
+
+1. Drag the game executable over `IPA.exe` while holding <kbd>Alt</kbd>.
+2. Open a command prompt or Powershell terminal and run `.\IPA.exe -rn`. (see <xref:articles.command_line> for what those options mean)
