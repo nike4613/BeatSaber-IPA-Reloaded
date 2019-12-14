@@ -28,6 +28,11 @@ namespace IPA.Config
             StandardLogger.Configure(this);
         }
 
+        protected internal virtual void Changed()
+        {
+            Logger.log.Debug("SelfConfig Changed called");
+        }
+
         public static void ReadCommandLine(string[] args)
         {
             foreach (var arg in args)

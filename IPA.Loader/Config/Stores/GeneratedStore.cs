@@ -63,7 +63,7 @@ namespace IPA.Config.Stores
         /// method <c>Changed()</c>, then that method may be called to artificially signal to the runtime that the content of the object 
         /// has changed. That method will also be called after the write locks are released when a property is set anywhere in the owning
         /// tree. This will only be called on the outermost generated object of the config structure, even if the change being signaled
-        /// is somewhere deep into the tree.
+        /// is somewhere deep into the tree. TODO: is this a good idea?
         /// </para>
         /// <para>
         /// Similarly, <typeparamref name="T"/> can declare a public or protected, <see langword="virtual"/> 
@@ -101,6 +101,8 @@ namespace IPA.Config.Stores
             Impl Impl { get; }
             void OnReload();
 
+            void Changed();
+
             Value Serialize();
             void Deserialize(Value val);
         }
@@ -121,7 +123,11 @@ namespace IPA.Config.Stores
 
             internal static MethodInfo ImplSignalChangedMethod = typeof(Impl).GetMethod(nameof(ImplSignalChanged));
             public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s).SignalChanged();
-            public void SignalChanged() => resetEvent.Set(); 
+            public void SignalChanged() => resetEvent.Set();
+
+            internal static MethodInfo ImplInvokeChangedMethod = typeof(Impl).GetMethod(nameof(ImplInvokeChanged));
+            public static void ImplInvokeChanged(IGeneratedStore s) => FindImpl(s).InvokeChanged();
+            public void InvokeChanged() => generated.Changed();
 
             internal static MethodInfo ImplTakeReadMethod = typeof(Impl).GetMethod(nameof(ImplTakeRead));
             public static void ImplTakeRead(IGeneratedStore s) => FindImpl(s).TakeRead();
@@ -369,8 +375,12 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Newobj, Impl.Ctor);
                 il.Emit(OpCodes.Stfld, implField);
 
+                var GetLocal = MakeGetLocal(il);
+
                 foreach (var member in structure)
-                    EmitMemberFix(il, member);
+                {
+                    EmitMemberFix(il, member, GetLocal);
+                }
 
                 il.Emit(OpCodes.Pop);
 
@@ -393,6 +403,7 @@ namespace IPA.Config.Stores
             var IGeneratedStore_Serialize = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Serialize));
             var IGeneratedStore_Deserialize = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Deserialize));
             var IGeneratedStore_OnReload = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.OnReload));
+            var IGeneratedStore_Changed = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Changed));
 
             #region IGeneratedStore.OnReload
             var onReload = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore.OnReload)}", virtualMemberMethod, null, Type.EmptyTypes);
@@ -465,18 +476,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, typeof(Value).GetMethod(nameof(Value.Map)));
                 // the map is now at the top of the stack
 
-                var locals = new List<LocalBuilder>();
-
-                LocalBuilder GetLocal(Type ty, int i = 0)
-                {
-                    var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
-                    if (builder == null)
-                    {
-                        builder = il.DeclareLocal(ty);
-                        locals.Add(builder);
-                    }
-                    return builder;
-                }
+                var GetLocal = MakeGetLocal(il);
 
                 foreach (var member in structure)
                 {
@@ -531,18 +531,7 @@ namespace IPA.Config.Stores
 
                 var nextLabel = notMapError;
 
-                var locals = new List<LocalBuilder>();
-
-                LocalBuilder GetLocal(Type ty, int i = 0)
-                {
-                    var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
-                    if (builder == null)
-                    {
-                        builder = il.DeclareLocal(ty);
-                        locals.Add(builder);
-                    }
-                    return builder;
-                }
+                var GetLocal = MakeGetLocal(il);
 
                 // head of stack is Map instance
                 foreach (var member in structure)
@@ -650,7 +639,7 @@ namespace IPA.Config.Stores
             #region Changed
             var coreChanged = typeBuilder.DefineMethod(
                 "<>Changed",
-                MethodAttributes.Public | MethodAttributes.HideBySig,
+                virtualMemberMethod,
                 null, Type.EmptyTypes);
 
             {
@@ -663,8 +652,8 @@ namespace IPA.Config.Stores
 
             if (baseChanged != null) {
                 var changedMethod = typeBuilder.DefineMethod( // copy to override baseChanged
-                    baseChanged.Name, 
-                    MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.Final | MethodAttributes.HideBySig, 
+                    baseChanged.Name,
+                    virtualMemberMethod, 
                     null, Type.EmptyTypes);
                 typeBuilder.DefineMethodOverride(changedMethod, baseChanged);
 
@@ -683,9 +672,79 @@ namespace IPA.Config.Stores
 
                 coreChanged = changedMethod; // switch to calling this version instead of just the default
             }
+
+            typeBuilder.DefineMethodOverride(coreChanged, IGeneratedStore_Changed);
             #endregion
 
             // TODO: generate overrides for all the virtual properties
+
+            foreach (var member in structure.Where(m => m.IsVirtual))
+            { // IsVirtual implies !IsField
+                var prop = member.Member as PropertyInfo;
+                var get = prop.GetGetMethod(true);
+                var set = prop.GetSetMethod(true);
+
+                var propBuilder = typeBuilder.DefineProperty($"{member.Name}#", PropertyAttributes.None, member.Type, null);
+                var propGet = typeBuilder.DefineMethod($"<g>{propBuilder.Name}", virtualPropertyMethodAttr, member.Type, Type.EmptyTypes);
+                propBuilder.SetGetMethod(propGet);
+                typeBuilder.DefineMethodOverride(propGet, get);
+
+                {
+                    var il = propGet.GetILGenerator();
+
+                    var local = il.DeclareLocal(member.Type);
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, Impl.ImplTakeReadMethod); // take the read lock
+
+                    il.BeginExceptionBlock();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, get); // call base getter
+                    il.Emit(OpCodes.Stloc, local);
+
+                    il.BeginFinallyBlock();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, Impl.ImplReleaseReadMethod); // release the read lock
+
+                    il.EndExceptionBlock();
+
+                    il.Emit(OpCodes.Ldloc, local);
+                    il.Emit(OpCodes.Ret);
+                }
+
+                var propSet = typeBuilder.DefineMethod($"<s>{propBuilder.Name}", virtualPropertyMethodAttr, null, new[] { member.Type });
+                propBuilder.SetSetMethod(propSet);
+                typeBuilder.DefineMethodOverride(propSet, set);
+
+                { // TODO: decide if i want to correct the value before or after i take the write lock
+                    var il = propSet.GetILGenerator();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, Impl.ImplTakeWriteMethod); // take the write lock
+
+                    il.BeginExceptionBlock();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
+                    EmitCorrectMember(il, member);
+                    il.Emit(OpCodes.Call, set);
+
+                    il.BeginFinallyBlock();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, Impl.ImplReleaseWriteMethod); // release the write lock
+
+                    il.EndExceptionBlock();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, Impl.ImplInvokeChangedMethod);
+
+                    il.Emit(OpCodes.Ret);
+                }
+
+            }
 
             var genType = typeBuilder.CreateType();
 
@@ -704,7 +763,92 @@ namespace IPA.Config.Stores
             return creatorDel;
         }
 
+        private delegate LocalBuilder GetLocal(Type type, int idx = 0);
+
+        private static GetLocal MakeGetLocal(ILGenerator il)
+        { // TODO: improve this shit a bit so that i can release a hold of a variable and do more auto managing
+            var locals = new List<LocalBuilder>();
+
+            LocalBuilder GetLocal(Type ty, int i = 0)
+            { // TODO: pull this garbage out somewhere sane somehow
+                var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
+                if (builder == null)
+                {
+                    builder = il.DeclareLocal(ty);
+                    locals.Add(builder);
+                }
+                return builder;
+            }
+
+            return GetLocal;
+        }
+
+        private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
+        internal static void LogError(Type expected, Type found, string message)
+        {
+            Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
+        }
+
+        private static bool NeedsCorrection(SerializedMemberInfo member)
+        {
+            return false;
+        }
+
+        // expects start value on stack, exits with final value on stack
+        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member)
+        {
+            if (!NeedsCorrection(member)) return;
+
+            // TODO: impl
+        }
+
+        // expects the this param to be on the stack
+        private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
+        {
+            if (!NeedsCorrection(member)) return;
+
+            var local = GetLocal(member.Type);
+
+            EmitLoad(il, member); // load the member
+            EmitCorrectMember(il, member); // correct it
+            il.Emit(OpCodes.Stloc, local);
+            EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local));
+        }
+
         #region Utility
+        private static void EmitLoad(ILGenerator il, SerializedMemberInfo member)
+        {
+            il.Emit(OpCodes.Ldarg_0); // load this
+
+            if (member.IsField)
+                il.Emit(OpCodes.Ldfld, member.Member as FieldInfo);
+            else
+            { // member is a property
+                var prop = member.Member as PropertyInfo;
+                var getter = prop.GetGetMethod();
+                if (getter == null) throw new InvalidOperationException($"Property {member.Name} does not have a getter and is not ignored");
+
+                il.Emit(OpCodes.Call, getter);
+            }
+        }
+
+        private static void EmitStore(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> value)
+        {
+            il.Emit(OpCodes.Ldarg_0); // load this
+            value(il);
+
+            if (member.IsField)
+                il.Emit(OpCodes.Stfld, member.Member as FieldInfo);
+            else
+            { // member is a property
+                var prop = member.Member as PropertyInfo;
+                var setter = prop.GetSetMethod();
+                if (setter == null) throw new InvalidOperationException($"Property {member.Name} does not have a setter and is not ignored");
+
+                il.Emit(OpCodes.Call, setter);
+            }
+        }
+
         private static void EmitLogError(ILGenerator il, string message, bool tailcall = false, Action<ILGenerator> expected = null, Action<ILGenerator> found = null)
         {
             if (expected == null) expected = il => il.Emit(OpCodes.Ldnull);
@@ -814,41 +958,12 @@ namespace IPA.Config.Stores
         }
         #endregion
 
-
-        private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
-        internal static void LogError(Type expected, Type found, string message)
-        {
-            Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
-        }
-
-        // expects the this param to be on the stack
-        private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member)
-        {
-            // TODO: impl
-        }
-
         #region Serialize
 
         // emit takes no args, leaves Value at top of stack
-        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, Func<Type, int, LocalBuilder> GetLocal)
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
         {
-            void EmitLoad()
-            {
-                il.Emit(OpCodes.Ldarg_0); // load this
-
-                if (member.IsField)
-                    il.Emit(OpCodes.Ldfld, member.Member as FieldInfo);
-                else
-                { // member is a property
-                    var prop = member.Member as PropertyInfo;
-                    var getter = prop.GetGetMethod();
-                    if (getter == null) throw new InvalidOperationException($"Property {member.Name} does not have a getter and is not ignored");
-
-                    il.Emit(OpCodes.Call, getter);
-                }
-            }
-
-            EmitLoad();
+            EmitLoad(il, member);
 
             var endSerialize = il.DefineLabel();
 
@@ -901,7 +1016,7 @@ namespace IPA.Config.Stores
             }
             else if (targetType == typeof(List))
             {
-                // TODO: impl this
+                // TODO: impl this (enumerables)
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }
@@ -948,7 +1063,7 @@ namespace IPA.Config.Stores
             return typeof(Map); // default for various objects
         }
 
-        private static void EmitDeserializeGeneratedValue(ILGenerator il, Type targetType, Type srcType, Func<Type, int, LocalBuilder> GetLocal)
+        private static void EmitDeserializeGeneratedValue(ILGenerator il, Type targetType, Type srcType, GetLocal GetLocal)
         {
             var IGeneratedStore_Deserialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Deserialize));
 
@@ -960,7 +1075,7 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Callvirt, IGeneratedStore_Deserialize);
         }
 
-        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, Func<Type, int, LocalBuilder> GetLocal)
+        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, GetLocal GetLocal)
         {
             EmitDeserializeValue(il, member.NullableWrappedType, expected, GetLocal);
             il.Emit(OpCodes.Newobj, member.Nullable_Construct);
@@ -968,7 +1083,7 @@ namespace IPA.Config.Stores
 
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
-        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Type expected, Func<Type, int, LocalBuilder> GetLocal)
+        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Type expected, GetLocal GetLocal)
         {
             if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
 
@@ -1012,30 +1127,13 @@ namespace IPA.Config.Stores
         }
 
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
-        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, Func<Type, int, LocalBuilder> GetLocal)
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, GetLocal GetLocal)
         {
             var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
 
             var implLabel = il.DefineLabel();
             var passedTypeCheck = il.DefineLabel();
             var expectType = GetExpectedValueTypeForType(member.IsNullable ? member.NullableWrappedType : member.Type);
-
-            void EmitStore(Action<ILGenerator> value)
-            {
-                il.Emit(OpCodes.Ldarg_0); // load this
-                value(il);
-
-                if (member.IsField)
-                    il.Emit(OpCodes.Stfld, member.Member as FieldInfo);
-                else
-                { // member is a property
-                    var prop = member.Member as PropertyInfo;
-                    var setter = prop.GetSetMethod();
-                    if (setter == null) throw new InvalidOperationException($"Property {member.Name} does not have a setter and is not ignored");
-
-                    il.Emit(OpCodes.Call, setter);
-                }
-            }
 
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Brtrue_S, implLabel); // null check
@@ -1053,13 +1151,13 @@ namespace IPA.Config.Stores
                 var valTLocal = GetLocal(member.Type, 0);
                 il.Emit(OpCodes.Ldloca, valTLocal);
                 il.Emit(OpCodes.Initobj, member.Type);
-                EmitStore(il => il.Emit(OpCodes.Ldloc, valTLocal));
+                EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, valTLocal));
                 il.Emit(OpCodes.Br, nextLabel);
             }
             else
             {
                 il.Emit(OpCodes.Pop);
-                EmitStore(il => il.Emit(OpCodes.Ldnull));
+                EmitStore(il, member, il => il.Emit(OpCodes.Ldnull));
                 il.Emit(OpCodes.Br, nextLabel);
             }
 
@@ -1117,7 +1215,7 @@ namespace IPA.Config.Stores
             if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
             else EmitDeserializeValue(il, member.Type, expectType, GetLocal);
             il.Emit(OpCodes.Stloc, local);
-            EmitStore(il => il.Emit(OpCodes.Ldloc, local));
+            EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local));
         }
         #endregion
     }
