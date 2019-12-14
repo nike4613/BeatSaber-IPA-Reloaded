@@ -12,6 +12,10 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
+#if NET4
+using Task = System.Threading.Tasks.Task;
+using TaskEx = System.Threading.Tasks.Task;
+#endif
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
@@ -27,11 +31,7 @@ namespace IPA.Loader
     public class PluginLoader
     {
         internal static Task LoadTask() =>
-#if NET3
             TaskEx.Run(() =>
-#else
-            Task.Run(() =>
-#endif
         {
             YeetIfNeeded();
 
