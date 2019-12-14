@@ -245,6 +245,10 @@ namespace IPA.Config.Stores
             public bool IsField;
             public bool IsNullable; // signifies whether this is a Nullable<T>
 
+            public bool IsGenericConverter; // used so we can call directly to the generic version if it is
+            public Type Converter;
+            public Type ConverterTarget;
+
             // invalid for objects with IsNullabe false
             public Type NullableWrappedType => Nullable.GetUnderlyingType(Type);
             // invalid for objects with IsNullabe false
@@ -281,28 +285,33 @@ namespace IPA.Config.Stores
 
             // TODO: support converters
 
-            bool ProcessAttributesFor(MemberInfo member, Type memberType, out string name, out bool allowNull, out bool isNullable)
+            static bool ProcessAttributesFor(ref SerializedMemberInfo member)
             {
-                var attrs = member.GetCustomAttributes(true);
+                var attrs = member.Member.GetCustomAttributes(true);
                 var ignores = attrs.Select(o => o as IgnoreAttribute).NonNull();
                 if (ignores.Any()) // we ignore
                 {
-                    name = null;
-                    allowNull = false;
-                    isNullable = false;
                     return false;
                 }
 
                 var nonNullables = attrs.Select(o => o as NonNullableAttribute).NonNull();
 
-                name = member.Name;
-                isNullable = memberType.IsGenericType
-                          && memberType.GetGenericTypeDefinition() == typeof(Nullable<>);
-                allowNull = !nonNullables.Any() && (!memberType.IsValueType || isNullable);
+                member.Name = member.Member.Name;
+                member.IsNullable = member.Type.IsGenericType
+                          && member.Type.GetGenericTypeDefinition() == typeof(Nullable<>);
+                member.AllowNull = !nonNullables.Any() && (!member.Type.IsValueType || member.IsNullable);
 
                 var nameAttr = attrs.Select(o => o as SerializedNameAttribute).NonNull().FirstOrDefault();
                 if (nameAttr != null)
-                    name = nameAttr.Name;
+                    member.Name = nameAttr.Name;
+
+                var converterAttr = attrs.Select(o => o as UseConverterAttribute).NonNull().FirstOrDefault();
+                if (converterAttr != null)
+                {
+                    member.Converter = converterAttr.ConverterType;
+                    member.ConverterTarget = converterAttr.ConverterTargetType;
+                    member.IsGenericConverter = member.ConverterTarget != null;
+                }
 
                 return true;
             }
@@ -328,7 +337,7 @@ namespace IPA.Config.Stores
                     Type = prop.PropertyType
                 };
 
-                if (!ProcessAttributesFor(smi.Member, smi.Type, out smi.Name, out smi.AllowNull, out smi.IsNullable)) continue;
+                if (!ProcessAttributesFor(ref smi)) continue;
 
                 structure.Add(smi);
             }
@@ -346,7 +355,7 @@ namespace IPA.Config.Stores
                     Type = field.FieldType
                 };
 
-                if (!ProcessAttributesFor(smi.Member, smi.Type, out smi.Name, out smi.AllowNull, out smi.IsNullable)) continue;
+                if (!ProcessAttributesFor(ref smi)) continue;
 
                 structure.Add(smi);
             }

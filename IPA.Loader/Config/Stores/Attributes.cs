@@ -22,6 +22,40 @@ namespace IPA.Config.Stores.Attributes
     public sealed class NonNullableAttribute : Attribute { }
 
     /// <summary>
+    /// Indicates that a given field or property in an object being wrapped by <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>
+    /// should be serialized and deserialized using the provided converter instead of the default mechanism.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public sealed class UseConverterAttribute : Attribute
+    {
+        /// <summary>
+        /// Gets the type of the converter to use.
+        /// </summary>
+        public Type ConverterType { get; private set; }
+        /// <summary>
+        /// Gets the target type of the converter if it is avaliable at instantiation time, otherwise
+        /// <see langword="null"/>.
+        /// </summary>
+        public Type ConverterTargetType => ConverterType.BaseType.IsGenericType ?
+                                                ConverterType.BaseType.GetGenericArguments()[0] :
+                                                null;
+
+        /// <summary>
+        /// Creates a new <see cref="UseConverterAttribute"/> with a  given <see cref="ConverterType"/>.
+        /// </summary>
+        /// <param name="converterType">tpy type to assign to <see cref="ConverterType"/></param>
+        public UseConverterAttribute(Type converterType)
+        {
+            ConverterType = converterType;
+
+            var implInterface = ConverterType.GetInterfaces().Contains(typeof(IValueConverter));
+            var inheritGeneric = ConverterType.BaseType.IsGenericType &&
+                                 ConverterType.BaseType.GetGenericTypeDefinition() == typeof(ValueConverter<>);
+            if (!implInterface && !inheritGeneric) throw new ArgumentException("Type is not a value converter!");
+        }
+    }
+
+    /// <summary>
     /// Specifies a name for the serialized field or property in an object being wrapped by 
     /// <see cref="GeneratedExtension.Generated{T}(Config, bool)"/> that is different from the member name itself.
     /// </summary>
