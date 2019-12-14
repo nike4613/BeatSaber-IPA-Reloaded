@@ -2,9 +2,9 @@
 using IPA.Logging;
 using IPA.Utilities;
 using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
 // END: section ignore
 using Newtonsoft.Json;
-using IPA.Config.Stores.Attributes;
 
 namespace IPA.Config
 {
