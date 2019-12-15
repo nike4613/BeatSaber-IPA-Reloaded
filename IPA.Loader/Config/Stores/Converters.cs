@@ -1,4 +1,5 @@
 ﻿using IPA.Config.Data;
+using IPA.Config.Stores.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -169,6 +170,24 @@ namespace IPA.Config.Stores.Converters
         /// <returns>a <see cref="Value"/> tree representing <paramref name="obj"/>.</returns>
         public override Value ToValue(T? obj, object parent)
             => obj == null ? null : baseConverter.ToValue(obj.Value, parent);
+    }
+
+    /// <summary>
+    /// A converter for a <see cref="Nullable{T}"/> that default-constructs a converter of type <typeparamref name="TConverter"/>
+    /// to use as the underlying converter. Use this in the <see cref="UseConverterAttribute"/>.
+    /// </summary>
+    /// <typeparam name="T">the underlying type of the <see cref="Nullable{T}"/></typeparam>
+    /// <typeparam name="TConverter">the type to use as an underlying converter</typeparam>
+    /// <seealso cref="NullableConverter{T}"/>
+    public class NullableConverter<T, TConverter> : NullableConverter<T> 
+        where T : struct 
+        where TConverter : ValueConverter<T>, new()
+    {
+        /// <summary>
+        /// Creates a converter with a new <typeparamref name="TConverter"/> as the underlying converter.
+        /// </summary>
+        /// <seealso cref="NullableConverter{T}.NullableConverter(ValueConverter{T})"/>
+        public NullableConverter() : base(new TConverter()) { }
     }
 
     internal class StringConverter : ValueConverter<string>

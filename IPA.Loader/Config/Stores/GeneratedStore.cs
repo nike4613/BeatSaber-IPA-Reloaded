@@ -325,10 +325,10 @@ namespace IPA.Config.Stores
 
                 var converterAttr = attrs.Select(o => o as UseConverterAttribute).NonNull().FirstOrDefault();
                 if (converterAttr != null)
-                {
+                { // TODO: figure out how to represent chaining
                     member.Converter = converterAttr.ConverterType;
                     member.ConverterTarget = converterAttr.ConverterTargetType;
-                    member.IsGenericConverter = member.ConverterTarget != null;
+                    member.IsGenericConverter = converterAttr.IsGenericConverter;
                 }
 
                 return true;
