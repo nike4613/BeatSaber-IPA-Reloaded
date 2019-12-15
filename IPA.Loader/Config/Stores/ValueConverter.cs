@@ -8,10 +8,17 @@ namespace IPA.Config.Stores
     /// <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// The object returned from <see cref="FromValue(Value, object)"/>, if fed into <see cref="ToValue(object, object)"/>,
     /// should return equivalent <see cref="Value"/> structures. Similarly, if the result of <see cref="ToValue(object, object)"/>
     /// is fed into <see cref="FromValue(Value, object)"/>, the resulting object should be equivalent to the one passed to 
     /// <see cref="ToValue(object, object)"/>.
+    /// </para>
+    /// <para>
+    /// The <c>parent</c> parameter to <see cref="ToValue(object, object)"/> and <see cref="FromValue(Value, object)"/> should
+    /// be (ideally) the the top of the serialization tree, or some other generated object in that tree, rather than some arbitrary
+    /// object in the middle that is not managed by the generatd config system.
+    /// </para>
     /// </remarks>
     public interface IValueConverter
     {
