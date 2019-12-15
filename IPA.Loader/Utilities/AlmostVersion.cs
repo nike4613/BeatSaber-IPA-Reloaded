@@ -216,7 +216,7 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// The opposite of <see cref="operator ==(AlmostVersion, AlmostVersion)"/>. Equivalent to <code>!(l == r)</code>.
+        /// The opposite of <see cref="operator ==(AlmostVersion, AlmostVersion)"/>. Equivalent to <c>!(l == r)</c>.
         /// </summary>
         /// <param name="l">the first value to compare</param>
         /// <param name="r">the second value to compare</param>
