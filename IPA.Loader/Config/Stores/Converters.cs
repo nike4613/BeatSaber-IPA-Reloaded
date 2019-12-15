@@ -179,7 +179,7 @@ namespace IPA.Config.Stores.Converters
     /// <typeparam name="T">the underlying type of the <see cref="Nullable{T}"/></typeparam>
     /// <typeparam name="TConverter">the type to use as an underlying converter</typeparam>
     /// <seealso cref="NullableConverter{T}"/>
-    public class NullableConverter<T, TConverter> : NullableConverter<T> 
+    public sealed class NullableConverter<T, TConverter> : NullableConverter<T> 
         where T : struct 
         where TConverter : ValueConverter<T>, new()
     {
