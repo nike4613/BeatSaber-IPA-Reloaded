@@ -192,7 +192,7 @@ namespace IPA.Config.Stores.Converters
     internal class LongConverter : ValueConverter<long>
     {
         public override long FromValue(Value value, object parent)
-            => (value as Integer)?.Value ?? (long)(value as FloatingPoint).Value;
+            => Converter.IntValue(value) ?? throw new ArgumentException("Value not a numeric value", nameof(value));
 
         public override Value ToValue(long obj, object parent)
             => Value.From(obj);
@@ -201,7 +201,7 @@ namespace IPA.Config.Stores.Converters
     internal class ULongConverter : ValueConverter<ulong>
     {
         public override ulong FromValue(Value value, object parent)
-            => (ulong)((value as FloatingPoint)?.Value ?? (value as Integer).Value);
+            => (ulong)(Converter.FloatValue(value) ?? throw new ArgumentException("Value not a numeric value", nameof(value)));
 
         public override Value ToValue(ulong obj, object parent)
             => Value.From(obj);
@@ -276,7 +276,7 @@ namespace IPA.Config.Stores.Converters
     internal class DecimalConverter : ValueConverter<decimal>
     {
         public override decimal FromValue(Value value, object parent)
-            => (value as FloatingPoint)?.Value ?? (value as Integer).Value;
+            => Converter.FloatValue(value) ?? throw new ArgumentException("Value not a numeric value", nameof(value));
         public override Value ToValue(decimal obj, object parent)
             => Value.From(obj);
     }
