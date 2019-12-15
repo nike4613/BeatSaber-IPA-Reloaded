@@ -249,7 +249,7 @@ namespace IPA.Config.Stores
             }
         }
 
-        private struct SerializedMemberInfo
+        private class SerializedMemberInfo
         {
             public string Name;
             public MemberInfo Member;
@@ -259,9 +259,11 @@ namespace IPA.Config.Stores
             public bool IsField;
             public bool IsNullable; // signifies whether this is a Nullable<T>
 
+            public bool HasConverter;
             public bool IsGenericConverter; // used so we can call directly to the generic version if it is
             public Type Converter;
             public Type ConverterTarget;
+            public FieldInfo ConverterField;
 
             // invalid for objects with IsNullabe false
             public Type NullableWrappedType => Nullable.GetUnderlyingType(Type);
@@ -303,7 +305,7 @@ namespace IPA.Config.Stores
 
             // TODO: support converters
 
-            static bool ProcessAttributesFor(ref SerializedMemberInfo member)
+            bool ProcessAttributesFor(ref SerializedMemberInfo member)
             {
                 var attrs = member.Member.GetCustomAttributes(true);
                 var ignores = attrs.Select(o => o as IgnoreAttribute).NonNull();
@@ -323,13 +325,56 @@ namespace IPA.Config.Stores
                 if (nameAttr != null)
                     member.Name = nameAttr.Name;
 
+                member.HasConverter = false;
                 var converterAttr = attrs.Select(o => o as UseConverterAttribute).NonNull().FirstOrDefault();
                 if (converterAttr != null)
-                { // TODO: figure out how to represent chaining
+                {
                     member.Converter = converterAttr.ConverterType;
-                    member.ConverterTarget = converterAttr.ConverterTargetType;
                     member.IsGenericConverter = converterAttr.IsGenericConverter;
+
+                    if (member.Converter.GetConstructor(Type.EmptyTypes) == null)
+                    {
+                        Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not default-constructible");
+                        goto endConverterAttr; // is there a better control flow structure to do this?
+                    }
+
+                    if (member.Converter.ContainsGenericParameters)
+                    {
+                        Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that has unfilled type parameters");
+                        goto endConverterAttr;
+                    }
+
+                    if (member.Converter.IsInterface || member.Converter.IsAbstract)
+                    {
+                        Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not constructible");
+                        goto endConverterAttr;
+                    }
+
+                    var targetType = converterAttr.ConverterTargetType;
+                    if (!member.IsGenericConverter)
+                    {
+                        try
+                        {
+                            var conv = Activator.CreateInstance(converterAttr.ConverterType) as IValueConverter;
+                            targetType = conv.Type;
+                        }
+                        catch
+                        {
+                            Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter who's target type could not be determined");
+                            goto endConverterAttr;
+                        }
+                    }
+                    if (targetType != member.Type)
+                    {
+                        Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not of the member's type");
+                        goto endConverterAttr;
+                    }
+
+                    member.ConverterTarget = targetType;
+
+                    member.HasConverter = true;
                 }
+                endConverterAttr: 
 
                 return true;
             }
@@ -379,9 +424,40 @@ namespace IPA.Config.Stores
             }
             #endregion
 
+            #region Converter fields
+            var uniqueConverterTypes = structure.Where(m => m.HasConverter).Select(m => m.Converter).Distinct().ToArray();
+            var converterFields = new Dictionary<Type, FieldInfo>(uniqueConverterTypes.Length);
+
+            foreach (var convType in uniqueConverterTypes)
+            {
+                var field = typeBuilder.DefineField($"<converter>_{convType.FullName}", convType, 
+                    FieldAttributes.Private | FieldAttributes.InitOnly | FieldAttributes.Static);
+                converterFields.Add(convType, field);
+
+                foreach (var member in structure.Where(m => m.HasConverter && m.Converter == convType))
+                    member.ConverterField = field;
+            }
+            #endregion
+
+            #region Static constructor
+            var cctor = typeBuilder.DefineConstructor(MethodAttributes.Static, CallingConventions.Any, Type.EmptyTypes);
+            {
+                var il = cctor.GetILGenerator();
+               
+                foreach (var kvp in converterFields)
+                {
+                    var typeCtor = kvp.Key.GetConstructor(Type.EmptyTypes);
+                    il.Emit(OpCodes.Newobj, typeCtor);
+                    il.Emit(OpCodes.Stsfld, kvp.Value);
+                }
+
+                il.Emit(OpCodes.Ret);
+            }
+            #endregion
+
             #region Constructor
             var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(IGeneratedStore) });
-            { // because this is a constructor, it has to be raw IL
+            {
                 var il = ctor.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0); // keep this at bottom of stack
@@ -703,8 +779,8 @@ namespace IPA.Config.Stores
             typeBuilder.DefineMethodOverride(coreChanged, IGeneratedStore_Changed);
             #endregion
 
-            // TODO: generate overrides for all the virtual properties
 
+            #region Members
             foreach (var member in structure.Where(m => m.IsVirtual))
             { // IsVirtual implies !IsField
                 var prop = member.Member as PropertyInfo;
@@ -772,6 +848,7 @@ namespace IPA.Config.Stores
                 }
 
             }
+            #endregion
 
             var genType = typeBuilder.CreateType();
 
