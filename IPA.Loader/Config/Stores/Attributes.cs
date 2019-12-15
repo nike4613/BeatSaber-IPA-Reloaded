@@ -31,14 +31,12 @@ namespace IPA.Config.Stores.Attributes
         /// <summary>
         /// Gets the type of the converter to use.
         /// </summary>
-        public Type ConverterType { get; private set; }
+        public Type ConverterType { get; }
         /// <summary>
         /// Gets the target type of the converter if it is avaliable at instantiation time, otherwise
         /// <see langword="null"/>.
         /// </summary>
-        public Type ConverterTargetType => ConverterType.BaseType.IsGenericType ?
-                                                ConverterType.BaseType.GetGenericArguments()[0] :
-                                                null;
+        public Type ConverterTargetType { get; }
 
         /// <summary>
         /// Gets whether or not this converter is a generic <see cref="ValueConverter{T}"/>.
@@ -53,10 +51,16 @@ namespace IPA.Config.Stores.Attributes
         {
             ConverterType = converterType;
 
+            var baseT = ConverterType.BaseType;
+            while (baseT != null && baseT != typeof(object) && 
+                (!baseT.IsGenericType || baseT.GetGenericTypeDefinition() != typeof(ValueConverter<>)))
+                baseT = baseT.BaseType;
+            if (baseT == typeof(object)) ConverterTargetType = null;
+            else ConverterTargetType = baseT.GetGenericArguments()[0];
+
             var implInterface = ConverterType.GetInterfaces().Contains(typeof(IValueConverter));
-            var inheritGeneric = ConverterType.BaseType.IsGenericType &&
-                                 ConverterType.BaseType.GetGenericTypeDefinition() == typeof(ValueConverter<>);
-            if (!implInterface && !inheritGeneric) throw new ArgumentException("Type is not a value converter!");
+
+            if (ConverterTargetType == null && !implInterface) throw new ArgumentException("Type is not a value converter!");
         }
     }
 
