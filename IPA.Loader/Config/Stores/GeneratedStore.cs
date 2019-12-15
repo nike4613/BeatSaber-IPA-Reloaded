@@ -430,7 +430,7 @@ namespace IPA.Config.Stores
 
             foreach (var convType in uniqueConverterTypes)
             {
-                var field = typeBuilder.DefineField($"<converter>_{convType.FullName}", convType, 
+                var field = typeBuilder.DefineField($"<converter>_{convType}", convType, 
                     FieldAttributes.Private | FieldAttributes.InitOnly | FieldAttributes.Static);
                 converterFields.Add(convType, field);
 
@@ -440,7 +440,7 @@ namespace IPA.Config.Stores
             #endregion
 
             #region Static constructor
-            var cctor = typeBuilder.DefineConstructor(MethodAttributes.Static, CallingConventions.Any, Type.EmptyTypes);
+            var cctor = typeBuilder.DefineConstructor(MethodAttributes.Static, CallingConventions.Standard, Type.EmptyTypes);
             {
                 var il = cctor.GetILGenerator();
                
