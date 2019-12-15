@@ -23,7 +23,7 @@ namespace IPA.Config.Stores.Attributes
 
     /// <summary>
     /// Indicates that a given field or property in an object being wrapped by <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>
-    /// should be serialized and deserialized using the provided converter instead of the default mechanism.
+    /// should be serialized and deserialized using the provided converter instead of the default mechanism. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public sealed class UseConverterAttribute : Attribute
@@ -39,6 +39,11 @@ namespace IPA.Config.Stores.Attributes
         public Type ConverterTargetType => ConverterType.BaseType.IsGenericType ?
                                                 ConverterType.BaseType.GetGenericArguments()[0] :
                                                 null;
+
+        /// <summary>
+        /// Gets whether or not this converter is a generic <see cref="ValueConverter{T}"/>.
+        /// </summary>
+        public bool IsGenericConverter => ConverterTargetType != null;
 
         /// <summary>
         /// Creates a new <see cref="UseConverterAttribute"/> with a  given <see cref="ConverterType"/>.

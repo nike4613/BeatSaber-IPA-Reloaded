@@ -19,6 +19,9 @@ namespace IPA.Config.Stores
     /// be (ideally) the the top of the serialization tree, or some other generated object in that tree, rather than some arbitrary
     /// object in the middle that is not managed by the generatd config system.
     /// </para>
+    /// <para>
+    /// Converters do <i>not</i> need to perform null checks, as the serializer and deserializer will do that automatically.
+    /// </para>
     /// </remarks>
     public interface IValueConverter
     {

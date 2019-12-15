@@ -1,6 +1,7 @@
 ﻿using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
 using IPA.Utilities;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace IPA.Loader
 
         public virtual bool Reset { get; set; } = true;
 
+        [NonNullable]
+        [UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
         public virtual HashSet<string> DisabledModIds { get; set; } = new HashSet<string>();
 
         protected virtual void OnReload()
