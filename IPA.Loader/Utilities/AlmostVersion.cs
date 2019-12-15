@@ -193,7 +193,7 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// Compares two versions, only taking into account the numeric part of the version if they are stored as <see cref="Version"/><see langword="sealed"/>,
+        /// Compares two versions, only taking into account the numeric part of the version if they are stored as <see cref="Version"/>s,
         /// or strict equality if they are stored as <see cref="string"/>s.
         /// </summary>
         /// <remarks>
