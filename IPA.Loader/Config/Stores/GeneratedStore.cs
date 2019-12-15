@@ -276,7 +276,7 @@ namespace IPA.Config.Stores
         internal delegate IConfigStore GeneratedStoreCreator(IGeneratedStore parent);
 
         private static (GeneratedStoreCreator ctor, Type type) MakeCreator(Type type)
-        {
+        { // note that this does not and should not use converters by default for everything
             if (!type.IsClass) throw new ArgumentException("Config type is not a class");
 
             var baseCtor = type.GetConstructor(Type.EmptyTypes); // get a default constructor
@@ -1071,10 +1071,12 @@ namespace IPA.Config.Stores
              || valT == typeof(int)
              || valT == typeof(uint)
              || valT == typeof(long)
-             || valT == typeof(ulong)) return typeof(Integer);
+             || valT == typeof(IntPtr)) return typeof(Integer);
             if (valT == typeof(float)
              || valT == typeof(double)
-             || valT == typeof(decimal)) return typeof(FloatingPoint);
+             || valT == typeof(decimal)
+             || valT == typeof(ulong) // ulong gets put into this, because decimal can hold it
+             || valT == typeof(UIntPtr)) return typeof(FloatingPoint); 
             if (typeof(IEnumerable).IsAssignableFrom(valT)) return typeof(List);
 
             // TODO: fill this out the rest of the way

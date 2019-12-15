@@ -32,82 +32,268 @@ namespace IPA.Config.Stores.Converters
             => val is FloatingPoint fp ? fp.Value :
                val is Integer inte ? inte.AsFloat()?.Value :
                null;
+
+        internal interface IValConv<T>
+        {
+            ValueConverter<T> Get();
+        }
+        internal class ValConv<T> : IValConv<T> where T : struct
+        {
+            private static readonly IValConv<T> Impl = ValConvImpls.Impl as IValConv<T> ?? new ValConv<T>();
+            public ValueConverter<T> Get() => Impl.Get();
+            ValueConverter<T> IValConv<T>.Get()
+                => null; // default to null
+        }
+        private class ValConvImpls : IValConv<char>, 
+            IValConv<IntPtr>, IValConv<UIntPtr>,
+            IValConv<long>, IValConv<ulong>,
+            IValConv<int>, IValConv<uint>,
+            IValConv<short>, IValConv<ushort>,
+            IValConv<sbyte>, IValConv<byte>,
+            IValConv<float>, IValConv<double>,
+            IValConv<decimal>
+        {
+            internal static readonly ValConvImpls Impl = new ValConvImpls();
+            ValueConverter<char> IValConv<char>.Get()
+                => new CharConverter();
+            ValueConverter<long> IValConv<long>.Get()
+                => new LongConverter();
+            ValueConverter<ulong> IValConv<ulong>.Get()
+                => new ULongConverter();
+            ValueConverter<IntPtr> IValConv<IntPtr>.Get()
+                => new IntPtrConverter();
+            ValueConverter<UIntPtr> IValConv<UIntPtr>.Get()
+                => new UIntPtrConverter();
+            ValueConverter<int> IValConv<int>.Get()
+                => new IntConverter();
+            ValueConverter<uint> IValConv<uint>.Get()
+                => new UIntConverter();
+            ValueConverter<short> IValConv<short>.Get()
+                => new ShortConverter();
+            ValueConverter<ushort> IValConv<ushort>.Get()
+                => new UShortConverter();
+            ValueConverter<byte> IValConv<byte>.Get()
+                => new ByteConverter();
+            ValueConverter<sbyte> IValConv<sbyte>.Get()
+                => new SByteConverter();
+            ValueConverter<float> IValConv<float>.Get()
+                => new FloatConverter();
+            ValueConverter<double> IValConv<double>.Get()
+                => new DoubleConverter();
+            ValueConverter<decimal> IValConv<decimal>.Get()
+                => new DecimalConverter();
+        }
     }
 
     /// <summary>
-    /// A <see cref="ValueConverter{T}"/> for objects normally serialized to config via <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>.
+    /// Provides generic utilities for converters for certain types.
     /// </summary>
-    /// <typeparam name="T">the same type parameter that would be passed into <see cref="GeneratedExtension.Generated{T}(Config, bool)"/></typeparam>
-    /// <seealso cref="GeneratedExtension.Generated{T}(Config, bool)"/>
-    public class CustomObjectConverter<T> : ValueConverter<T> where T : class
+    /// <typeparam name="T">the type of the <see cref="ValueConverter{T}"/> that this works on</typeparam>
+    public static class Converter<T>
     {
-        private interface IImpl
+        private static ValueConverter<T> defaultConverter = null;
+        /// <summary>
+        /// Gets the default <see cref="ValueConverter{T}"/> for the current type.
+        /// </summary>
+        public static ValueConverter<T> Default 
         {
-            T FromValue(Value value, object parent);
-            Value ToValue(T obj, object parent);
-        }
-        private class Impl<U> : IImpl where U : class, GeneratedStore.IGeneratedStore, T
-        {
-            private static readonly GeneratedStore.GeneratedStoreCreator creator = GeneratedStore.GetCreator(typeof(T));
-
-            public T FromValue(Value value, object parent)
-            { // lots of casting here, but it works i promise (parent can be a non-IGeneratedStore, however it won't necessarily behave then)
-                var obj = creator(parent as GeneratedStore.IGeneratedStore) as U;
-                obj.Deserialize(value);
-                return obj;
-            }
-
-            public Value ToValue(T obj, object parent)
+            get
             {
-                if (obj is GeneratedStore.IGeneratedStore store)
-                    return store.Serialize();
-                else
-                    return null; // TODO: make this behave sanely instead of just giving null
+                if (defaultConverter == null) 
+                    defaultConverter = MakeDefault();
+                return defaultConverter;
             }
         }
 
-        private static readonly IImpl impl = (IImpl)Activator.CreateInstance(
-            typeof(Impl<>).MakeGenericType(GeneratedStore.GetGeneratedType(typeof(T))));
+        private static ValueConverter<T> MakeDefault()
+        {
+            var t = typeof(T);
 
-        /// <summary>
-        /// Deserializes <paramref name="value"/> into a <typeparamref name="T"/> with the given <paramref name="parent"/>.
-        /// </summary>
-        /// <param name="value">the <see cref="Value"/> to deserialize</param>
-        /// <param name="parent">the parent object that will own the deserialized value</param>
-        /// <returns>the deserialized value</returns>
-        /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public static T Deserialize(Value value, object parent)
-            => impl.FromValue(value, parent);
+            if (t.IsValueType)
+            { // we have to do this garbo to make it accept the thing that we know is a value type at instantiation time
+                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+                { // this is a Nullable
+                    return Activator.CreateInstance(typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t))) as ValueConverter<T>;
+                }
 
-        /// <summary>
-        /// Serializes <paramref name="obj"/> into a <see cref="Value"/> structure, given <paramref name="parent"/>.
-        /// </summary>
-        /// <param name="obj">the object to serialize</param>
-        /// <param name="parent">the parent object that owns <paramref name="obj"/></param>
-        /// <returns>the <see cref="Value"/> tree that represents <paramref name="obj"/></returns>
-        /// <seealso cref="ValueConverter{T}.ToValue(T, object)"/>
-        public static Value Serialize(T obj, object parent)
-            => impl.ToValue(obj, parent);
-
-        /// <summary>
-        /// Deserializes <paramref name="value"/> into a <typeparamref name="T"/> with the given <paramref name="parent"/>.
-        /// </summary>
-        /// <param name="value">the <see cref="Value"/> to deserialize</param>
-        /// <param name="parent">the parent object that will own the deserialized value</param>
-        /// <returns>the deserialized value</returns>
-        /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public override T FromValue(Value value, object parent)
-            => impl.FromValue(value, parent);
-
-        /// <summary>
-        /// Serializes <paramref name="obj"/> into a <see cref="Value"/> structure, given <paramref name="parent"/>.
-        /// </summary>
-        /// <param name="obj">the object to serialize</param>
-        /// <param name="parent">the parent object that owns <paramref name="obj"/></param>
-        /// <returns>the <see cref="Value"/> tree that represents <paramref name="obj"/></returns>
-        /// <seealso cref="ValueConverter{T}.ToValue(T, object)"/>
-        public override Value ToValue(T obj, object parent)
-            => impl.ToValue(obj, parent);
+                var valConv = Activator.CreateInstance(typeof(Converter.ValConv<>).MakeGenericType(t)) as Converter.IValConv<T>;
+                return valConv.Get();
+            }
+            else if (t == typeof(string))
+            {
+                return new StringConverter() as ValueConverter<T>;
+            }
+            else
+            {
+                return Activator.CreateInstance(typeof(CustomObjectConverter<>).MakeGenericType(t)) as ValueConverter<T>;
+            }
+        }
     }
 
+    /// <summary>
+    /// A converter for a <see cref="Nullable{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">the underlying type of the <see cref="Nullable{T}"/></typeparam>
+    public class NullableConverter<T> : ValueConverter<T?> where T : struct
+    {
+        private readonly ValueConverter<T> baseConverter;
+        /// <summary>
+        /// Creates a converter with the default converter for the base type.
+        /// Equivalent to 
+        /// <code>
+        /// new NullableConverter(Converter&lt;T&gt;.Default)
+        /// </code>
+        /// </summary>
+        /// <seealso cref="NullableConverter{T}.NullableConverter(ValueConverter{T})"/>
+        /// <seealso cref="Converter{T}.Default"/>
+        public NullableConverter() : this(Converter<T>.Default) { }
+        /// <summary>
+        /// Creates a converter with the given underlying <see cref="ValueConverter{T}"/>.
+        /// </summary>
+        /// <param name="underlying">the undlerlying <see cref="ValueConverter{T}"/> to use</param>
+        public NullableConverter(ValueConverter<T> underlying)
+            => baseConverter = underlying;
+        /// <summary>
+        /// Converts a <see cref="Value"/> tree to a value.
+        /// </summary>
+        /// <param name="value">the <see cref="Value"/> tree to convert</param>
+        /// <param name="parent">the object which will own the created object</param>
+        /// <returns>the object represented by <paramref name="value"/></returns>
+        public override T? FromValue(Value value, object parent)
+            => value == null ? null : new T?(baseConverter.FromValue(value, parent));
+        /// <summary>
+        /// Converts a nullable <typeparamref name="T"/> to a <see cref="Value"/> tree.
+        /// </summary>
+        /// <param name="obj">the value to serialize</param>
+        /// <param name="parent">the object which owns <paramref name="obj"/></param>
+        /// <returns>a <see cref="Value"/> tree representing <paramref name="obj"/>.</returns>
+        public override Value ToValue(T? obj, object parent)
+            => obj == null ? null : baseConverter.ToValue(obj.Value, parent);
+    }
+
+    internal class StringConverter : ValueConverter<string>
+    {
+        public override string FromValue(Value value, object parent)
+            => (value as Text)?.Value;
+
+        public override Value ToValue(string obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class CharConverter : ValueConverter<char>
+    {
+        public override char FromValue(Value value, object parent)
+            => (value as Text).Value[0]; // can throw nullptr
+
+        public override Value ToValue(char obj, object parent)
+            => Value.From(char.ToString(obj));
+    }
+
+    internal class LongConverter : ValueConverter<long>
+    {
+        public override long FromValue(Value value, object parent)
+            => (value as Integer)?.Value ?? (long)(value as FloatingPoint).Value;
+
+        public override Value ToValue(long obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class ULongConverter : ValueConverter<ulong>
+    {
+        public override ulong FromValue(Value value, object parent)
+            => (ulong)((value as FloatingPoint)?.Value ?? (value as Integer).Value);
+
+        public override Value ToValue(ulong obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class IntPtrConverter : ValueConverter<IntPtr>
+    {
+        public override IntPtr FromValue(Value value, object parent)
+            => (IntPtr)Converter<long>.Default.FromValue(value, parent);
+
+        public override Value ToValue(IntPtr obj, object parent)
+            => Value.From((long)obj);
+    }
+
+    internal class UIntPtrConverter : ValueConverter<UIntPtr>
+    {
+        public override UIntPtr FromValue(Value value, object parent)
+            => (UIntPtr)Converter<ulong>.Default.FromValue(value, parent);
+
+        public override Value ToValue(UIntPtr obj, object parent)
+            => Value.From((decimal)obj);
+    }
+
+    internal class IntConverter : ValueConverter<int>
+    {
+        public override int FromValue(Value value, object parent)
+            => (int)Converter<long>.Default.FromValue(value, parent);
+        public override Value ToValue(int obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class UIntConverter : ValueConverter<uint>
+    {
+        public override uint FromValue(Value value, object parent)
+            => (uint)Converter<long>.Default.FromValue(value, parent);
+        public override Value ToValue(uint obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class ShortConverter : ValueConverter<short>
+    {
+        public override short FromValue(Value value, object parent)
+            => (short)Converter<long>.Default.FromValue(value, parent);
+        public override Value ToValue(short obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class UShortConverter : ValueConverter<ushort>
+    {
+        public override ushort FromValue(Value value, object parent)
+            => (ushort)Converter<long>.Default.FromValue(value, parent);
+        public override Value ToValue(ushort obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class ByteConverter : ValueConverter<byte>
+    {
+        public override byte FromValue(Value value, object parent)
+            => (byte)Converter<long>.Default.FromValue(value, parent);
+        public override Value ToValue(byte obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class SByteConverter : ValueConverter<sbyte>
+    {
+        public override sbyte FromValue(Value value, object parent)
+            => (sbyte)Converter<long>.Default.FromValue(value, parent);
+        public override Value ToValue(sbyte obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class DecimalConverter : ValueConverter<decimal>
+    {
+        public override decimal FromValue(Value value, object parent)
+            => (value as FloatingPoint)?.Value ?? (value as Integer).Value;
+        public override Value ToValue(decimal obj, object parent)
+            => Value.From(obj);
+    }
+
+    internal class FloatConverter : ValueConverter<float>
+    {
+        public override float FromValue(Value value, object parent)
+            => (float)Converter<decimal>.Default.FromValue(value, parent);
+        public override Value ToValue(float obj, object parent)
+            => Value.From((decimal)obj);
+    }
+
+    internal class DoubleConverter : ValueConverter<double>
+    {
+        public override double FromValue(Value value, object parent)
+            => (double)Converter<decimal>.Default.FromValue(value, parent);
+        public override Value ToValue(double obj, object parent)
+            => Value.From((decimal)obj);
+    }
 }
