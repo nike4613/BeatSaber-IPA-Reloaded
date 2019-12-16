@@ -262,6 +262,7 @@ namespace IPA.Config.Stores
             public bool HasConverter;
             public bool IsGenericConverter; // used so we can call directly to the generic version if it is
             public Type Converter;
+            public Type ConverterBase;
             public Type ConverterTarget;
             public FieldInfo ConverterField;
 
@@ -371,6 +372,10 @@ namespace IPA.Config.Stores
                     }
 
                     member.ConverterTarget = targetType;
+                    if (member.IsGenericConverter)
+                        member.ConverterBase = typeof(ValueConverter<>).MakeGenericType(targetType);
+                    else
+                        member.ConverterBase = typeof(IValueConverter);
 
                     member.HasConverter = true;
                 }
@@ -1083,7 +1088,35 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
 
             var targetType = GetExpectedValueTypeForType(member.Type);
-            if (targetType == typeof(Text))
+            if (member.HasConverter)
+            {
+                var stlocal = GetLocal(member.Type);
+                if (member.IsGenericConverter)
+                {
+                    var toValue = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.ToValue),
+                        new[] { member.ConverterTarget, typeof(object) });
+
+                    il.Emit(OpCodes.Stloc, stlocal);
+                    il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                    il.Emit(OpCodes.Ldloc, stlocal);
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Callvirt, toValue);
+                }
+                else
+                {
+                    var toValue = typeof(IValueConverter).GetMethod(nameof(IValueConverter.ToValue),
+                        new[] { typeof(object), typeof(object) });
+
+                    il.Emit(OpCodes.Stloc, stlocal);
+                    il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                    il.Emit(OpCodes.Ldloc, stlocal);
+                    if (member.Type.IsValueType)
+                        il.Emit(OpCodes.Box);
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Callvirt, toValue);
+                }
+            }
+            else if (targetType == typeof(Text))
             { // only happens when arg is a string or char
                 var TextCreate = typeof(Value).GetMethod(nameof(Value.Text));
                 if (member.Type == typeof(char))
@@ -1224,6 +1257,35 @@ namespace IPA.Config.Stores
             }
         }
 
+        private static void EmitDeserializeConverter(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
+        {
+            var stlocal = GetLocal(typeof(Value));
+            if (member.IsGenericConverter)
+            {
+                var fromValue = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.FromValue),
+                    new[] { typeof(Value), typeof(object) });
+
+                il.Emit(OpCodes.Stloc, stlocal);
+                il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                il.Emit(OpCodes.Ldloc, stlocal);
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Callvirt, fromValue);
+            }
+            else
+            {
+                var fromValue = typeof(IValueConverter).GetMethod(nameof(IValueConverter.FromValue),
+                    new[] { typeof(Value), typeof(object) });
+
+                il.Emit(OpCodes.Stloc, stlocal);
+                il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                il.Emit(OpCodes.Ldloc, stlocal);
+                if (member.Type.IsValueType)
+                    il.Emit(OpCodes.Box);
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Callvirt, fromValue);
+            }
+        }
+
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
         private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, GetLocal GetLocal)
         {
@@ -1261,14 +1323,20 @@ namespace IPA.Config.Stores
 
             il.MarkLabel(implLabel);
 
-            il.Emit(OpCodes.Isinst, expectType); //replaces on stack
-            il.Emit(OpCodes.Dup); // duplicate cloned value
-            il.Emit(OpCodes.Brtrue, passedTypeCheck); // null check
+            if (member.HasConverter)
+                il.Emit(OpCodes.Br, passedTypeCheck);
+            else
+            {
+                il.Emit(OpCodes.Isinst, expectType); //replaces on stack
+                il.Emit(OpCodes.Dup); // duplicate cloned value
+                il.Emit(OpCodes.Brtrue, passedTypeCheck); // null check
+            }
 
             var errorHandle = il.DefineLabel();
 
             // special cases to handle coersion between Float and Int
-            if (expectType == typeof(FloatingPoint))
+            if (member.HasConverter) { } // do nothing here
+            else if (expectType == typeof(FloatingPoint))
             {
                 var specialTypeCheck = il.DefineLabel();
                 il.Emit(OpCodes.Pop);
@@ -1310,7 +1378,8 @@ namespace IPA.Config.Stores
             il.MarkLabel(passedTypeCheck);
 
             var local = GetLocal(member.Type, 0);
-            if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
+            if (member.HasConverter) EmitDeserializeConverter(il, member, GetLocal);
+            else if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
             else EmitDeserializeValue(il, member.Type, expectType, GetLocal);
             il.Emit(OpCodes.Stloc, local);
             EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local));
