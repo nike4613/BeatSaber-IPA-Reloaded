@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Boolean = IPA.Config.Data.Boolean;
 
 namespace IPA.Config.Stores.Converters
 {
@@ -45,44 +46,31 @@ namespace IPA.Config.Stores.Converters
             ValueConverter<T> IValConv<T>.Get()
                 => null; // default to null
         }
-        private class ValConvImpls : IValConv<char>, 
+        private class ValConvImpls : IValConv<char>,
             IValConv<IntPtr>, IValConv<UIntPtr>,
             IValConv<long>, IValConv<ulong>,
             IValConv<int>, IValConv<uint>,
             IValConv<short>, IValConv<ushort>,
             IValConv<sbyte>, IValConv<byte>,
             IValConv<float>, IValConv<double>,
-            IValConv<decimal>
+            IValConv<decimal>, IValConv<bool>
         {
             internal static readonly ValConvImpls Impl = new ValConvImpls();
-            ValueConverter<char> IValConv<char>.Get()
-                => new CharConverter();
-            ValueConverter<long> IValConv<long>.Get()
-                => new LongConverter();
-            ValueConverter<ulong> IValConv<ulong>.Get()
-                => new ULongConverter();
-            ValueConverter<IntPtr> IValConv<IntPtr>.Get()
-                => new IntPtrConverter();
-            ValueConverter<UIntPtr> IValConv<UIntPtr>.Get()
-                => new UIntPtrConverter();
-            ValueConverter<int> IValConv<int>.Get()
-                => new IntConverter();
-            ValueConverter<uint> IValConv<uint>.Get()
-                => new UIntConverter();
-            ValueConverter<short> IValConv<short>.Get()
-                => new ShortConverter();
-            ValueConverter<ushort> IValConv<ushort>.Get()
-                => new UShortConverter();
-            ValueConverter<byte> IValConv<byte>.Get()
-                => new ByteConverter();
-            ValueConverter<sbyte> IValConv<sbyte>.Get()
-                => new SByteConverter();
-            ValueConverter<float> IValConv<float>.Get()
-                => new FloatConverter();
-            ValueConverter<double> IValConv<double>.Get()
-                => new DoubleConverter();
-            ValueConverter<decimal> IValConv<decimal>.Get()
-                => new DecimalConverter();
+            ValueConverter<char> IValConv<char>.Get() => new CharConverter();
+            ValueConverter<long> IValConv<long>.Get() => new LongConverter();
+            ValueConverter<ulong> IValConv<ulong>.Get() => new ULongConverter();
+            ValueConverter<IntPtr> IValConv<IntPtr>.Get() => new IntPtrConverter();
+            ValueConverter<UIntPtr> IValConv<UIntPtr>.Get() => new UIntPtrConverter();
+            ValueConverter<int> IValConv<int>.Get() => new IntConverter();
+            ValueConverter<uint> IValConv<uint>.Get() => new UIntConverter();
+            ValueConverter<short> IValConv<short>.Get() => new ShortConverter();
+            ValueConverter<ushort> IValConv<ushort>.Get() => new UShortConverter();
+            ValueConverter<byte> IValConv<byte>.Get() => new ByteConverter();
+            ValueConverter<sbyte> IValConv<sbyte>.Get() => new SByteConverter();
+            ValueConverter<float> IValConv<float>.Get() => new FloatConverter();
+            ValueConverter<double> IValConv<double>.Get() => new DoubleConverter();
+            ValueConverter<decimal> IValConv<decimal>.Get() => new DecimalConverter();
+            ValueConverter<bool> IValConv<bool>.Get() => new BooleanConverter();
         }
     }
 
@@ -314,5 +302,13 @@ namespace IPA.Config.Stores.Converters
             => (double)Converter<decimal>.Default.FromValue(value, parent);
         public override Value ToValue(double obj, object parent)
             => Value.From((decimal)obj);
+    }
+
+    internal class BooleanConverter : ValueConverter<bool>
+    {
+        public override bool FromValue(Value value, object parent)
+            => (value as Boolean).Value;
+        public override Value ToValue(bool obj, object parent)
+            => Value.From(obj);
     }
 }
