@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SemVer;
 using System;
 using System.Collections.Generic;
+using AlmostVersionConverter = IPA.JsonConverters.AlmostVersionConverter;
 using Version = SemVer.Version;
 
 namespace IPA.Loader
