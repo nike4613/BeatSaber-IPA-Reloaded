@@ -20,7 +20,7 @@ namespace IPA.Config.Stores.Converters
             private static readonly GeneratedStore.GeneratedStoreCreator creator = GeneratedStore.GetCreator(typeof(T));
 
             public T FromValue(Value value, object parent)
-            { // lots of casting here, but it works i promise (parent can be a non-IGeneratedStore, however it won't necessarily behave then)
+            { // lots of casting here, but it works i promise (probably) (parent can be a non-IGeneratedStore, however it won't necessarily behave then)
                 var obj = creator(parent as GeneratedStore.IGeneratedStore) as U;
                 obj.Deserialize(value);
                 return obj;
