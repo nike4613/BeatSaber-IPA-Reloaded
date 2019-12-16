@@ -779,7 +779,6 @@ namespace IPA.Config.Stores
             typeBuilder.DefineMethodOverride(coreChanged, IGeneratedStore_Changed);
             #endregion
 
-
             #region Members
             foreach (var member in structure.Where(m => m.IsVirtual))
             { // IsVirtual implies !IsField
