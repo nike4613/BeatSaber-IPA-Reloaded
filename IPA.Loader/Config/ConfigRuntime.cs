@@ -103,17 +103,15 @@ namespace IPA.Config
             var dir = config.File.Directory;
             if (!watchers.TryGetValue(dir, out var watcher))
             { // create the watcher
-                watcher = new FileSystemWatcher(dir.FullName, "");
-                var newWatcher = watchers.GetOrAdd(dir, watcher);
-                if (watcher != newWatcher)
-                { // if someone else beat us to adding, delete ours and switch to that new one
-                    watcher.Dispose();
-                    watcher = newWatcher;
-                }
+                watcher = watchers.GetOrAdd(dir, dir => new FileSystemWatcher(dir.FullName));
 
                 watcher.NotifyFilter =
                     NotifyFilters.FileName
-                    | NotifyFilters.LastWrite;
+                    | NotifyFilters.LastWrite
+                    | NotifyFilters.Size
+                    | NotifyFilters.LastAccess
+                    | NotifyFilters.Attributes
+                    | NotifyFilters.CreationTime;
 
                 watcher.Changed += FileChangedEvent;
                 watcher.Created += FileChangedEvent;
@@ -130,7 +128,6 @@ namespace IPA.Config
             bag.Add(config);
 
             watcher.EnableRaisingEvents = true;
-
         }
 
         private static void EnsureWritesSane(Config config)
@@ -147,7 +144,7 @@ namespace IPA.Config
             if (!watcherTrackConfigs.TryGetValue(watcher, out var bag)) return;
 
             var config = bag.FirstOrDefault(c => c.File.FullName == e.FullPath);
-            if (config != null && Interlocked.Decrement(ref config.Writes) + 1 > 0)
+            if (config != null && Interlocked.Decrement(ref config.Writes) + 1 <= 0)
             {
                 EnsureWritesSane(config);
                 TriggerFileLoad(config);
