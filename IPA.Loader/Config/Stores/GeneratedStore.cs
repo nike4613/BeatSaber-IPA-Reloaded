@@ -304,8 +304,6 @@ namespace IPA.Config.Stores
 
             var structure = new List<SerializedMemberInfo>();
 
-            // TODO: support converters
-
             bool ProcessAttributesFor(ref SerializedMemberInfo member)
             {
                 var attrs = member.Member.GetCustomAttributes(true);
@@ -874,7 +872,7 @@ namespace IPA.Config.Stores
             var locals = new List<LocalBuilder>();
 
             LocalBuilder GetLocal(Type ty, int i = 0)
-            { // TODO: pull this garbage out somewhere sane somehow
+            {
                 var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
                 if (builder == null)
                 {
@@ -1186,8 +1184,6 @@ namespace IPA.Config.Stores
             }
 
             il.MarkLabel(endSerialize);
-
-            // TODO: implement converters
         }
         #endregion
 
@@ -1216,7 +1212,6 @@ namespace IPA.Config.Stores
             if (typeof(IEnumerable).IsAssignableFrom(valT)) return typeof(List);
 
             // TODO: fill this out the rest of the way
-            // TODO: support converters
 
             return typeof(Map); // default for various objects
         }
@@ -1277,7 +1272,7 @@ namespace IPA.Config.Stores
             {
                 EmitDeserializeGeneratedValue(il, targetType, expected, GetLocal);
             }
-            else // TODO: support converters
+            else
             {
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
