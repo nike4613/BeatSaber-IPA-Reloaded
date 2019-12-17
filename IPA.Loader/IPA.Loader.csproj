@@ -4,6 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Net4</Platform>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' ">true</BuildForBeatSaber>
     <ProjectGuid>{5AD344F0-01A0-4CA8-92E5-9D095737744D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -43,6 +44,9 @@
   <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);NET3</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(BuildForBeatSaber)' == 'true' ">
+    <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>$(OutputPath)IPA.Loader.xml</DocumentationFile>

@@ -6,6 +6,7 @@ environment:
     secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
 
   do_deploy: true
+  BuildForBeatSaber: 'false'
   matrix:
     - BUILD_DOC: 'no'
     - BUILD_DOC: 'yes'
@@ -53,6 +54,12 @@ before_build:
       echo $env:Configuration $env:Platform $env:BuildingInsideVisualStudio
       
 for:
+-
+  matrix:
+    only:
+      - platform: x64-Net4
+  environment:
+    BuildForBeatSaber: 'true'
 -
   matrix:
     except:

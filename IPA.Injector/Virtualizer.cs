@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace IPA.Injector
 {
-    internal class VirtualizedModule
+    internal class VirtualizedModule : IDisposable
     {
         private readonly FileInfo file;
         private ModuleDefinition module;
@@ -31,15 +31,7 @@ namespace IPA.Injector
                 ReadingMode = ReadingMode.Immediate
             });
         }
-
-        ~VirtualizedModule()
-        {
-            module?.Dispose();
-        }
         
-        /// <summary>
-        /// 
-        /// </summary>
         public void Virtualize(AssemblyName selfName, Action beforeChangeCallback = null)
         {
             var changed = false;
@@ -121,5 +113,36 @@ namespace IPA.Injector
                 if (field.IsPrivate) field.IsFamily = true;
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    module.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        ~VirtualizedModule()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

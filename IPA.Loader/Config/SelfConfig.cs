@@ -3,8 +3,10 @@ using IPA.Logging;
 using IPA.Utilities;
 using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
 // END: section ignore
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace IPA.Config
 {
@@ -135,6 +137,21 @@ namespace IPA.Config
         // LINE: ignore 2
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
+
+        // LINE: ignore
+        [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
+        [JsonProperty(Required = Required.DisallowNull)]
+        public virtual HashSet<string> GameAssemblies { get; set; } = new HashSet<string>
+            {
+            // LINE: ignore 5
+#if BeatSaber // provide these defaults only for Beat Saber builds
+                "MainAssembly.dll", "HMLib.dll", "HMUI.dll", "VRUI.dll"
+#else // otherwise specify Assembly-CSharp.dll
+                "Assembly-CSharp.dll"
+#endif
+            };
+        // LINE: ignore
+        public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
 
         public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore
