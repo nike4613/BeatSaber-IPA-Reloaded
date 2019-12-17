@@ -580,22 +580,25 @@ namespace IPA.Config.Stores
                 var il = serializeGen.GetILGenerator();
 
                 var Map_Add = typeof(Map).GetMethod(nameof(Map.Add));
-
-                il.Emit(OpCodes.Call, typeof(Value).GetMethod(nameof(Value.Map)));
-                // the map is now at the top of the stack
+                var mapLocal = il.DeclareLocal(typeof(Map));
 
                 var GetLocal = MakeGetLocal(il);
+                var valLocal = GetLocal(typeof(Value));
+
+                il.Emit(OpCodes.Call, typeof(Value).GetMethod(nameof(Value.Map)));
+                il.Emit(OpCodes.Stloc, mapLocal);
 
                 foreach (var member in structure)
                 {
-                    il.Emit(OpCodes.Dup);
-                    il.Emit(OpCodes.Ldstr, member.Name); // TODO: make this behave with annotations
                     EmitSerializeMember(il, member, GetLocal);
+                    il.Emit(OpCodes.Stloc, valLocal);
+                    il.Emit(OpCodes.Ldloc, mapLocal);
+                    il.Emit(OpCodes.Ldstr, member.Name);
+                    il.Emit(OpCodes.Ldloc, valLocal);
                     il.Emit(OpCodes.Call, Map_Add);
                 }
 
-                // the map is still at the top of the stack, return it
-
+                il.Emit(OpCodes.Ldloc, mapLocal);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -612,6 +615,7 @@ namespace IPA.Config.Stores
                 var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
 
                 var valueLocal = il.DeclareLocal(typeof(Value));
+                var mapLocal = il.DeclareLocal(typeof(Map));
 
                 var nonNull = il.DefineLabel();
 
@@ -625,10 +629,10 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Isinst, Map_t);
                 il.Emit(OpCodes.Dup); // duplicate cloned value
+                il.Emit(OpCodes.Stloc, mapLocal);
                 var notMapError = il.DefineLabel();
                 il.Emit(OpCodes.Brtrue, notMapError);
                 // handle error
-                il.Emit(OpCodes.Pop); // removes the duplicate value
                 EmitLogError(il, $"Invalid root for deserializing {type.FullName}", tailcall: true,
                     expected: il => EmitTypeof(il, Map_t), found: il =>
                     {
@@ -648,7 +652,7 @@ namespace IPA.Config.Stores
                     nextLabel = il.DefineLabel();
                     var endErrorLabel = il.DefineLabel();
 
-                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Ldloc, mapLocal);
                     il.Emit(OpCodes.Ldstr, member.Name);
                     il.Emit(OpCodes.Ldloca_S, valueLocal);
                     il.Emit(OpCodes.Call, Map_TryGetValue);
@@ -664,8 +668,7 @@ namespace IPA.Config.Stores
                 }
 
                 il.MarkLabel(nextLabel);
-
-                il.Emit(OpCodes.Pop); // removes the duplicate value
+                
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -889,6 +892,17 @@ namespace IPA.Config.Stores
         {
             Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
         }
+        private static readonly MethodInfo LogWarningMethod = typeof(GeneratedStore).GetMethod(nameof(LogWarning), BindingFlags.NonPublic | BindingFlags.Static);
+        internal static void LogWarning(string message)
+        {
+            Logger.config.Warn(message);
+        }
+        private static readonly MethodInfo LogWarningExceptionMethod = typeof(GeneratedStore).GetMethod(nameof(LogWarningException), BindingFlags.NonPublic | BindingFlags.Static);
+        internal static void LogWarningException(Exception exception)
+        {
+            Logger.config.Warn(exception);
+        }
+
 
         private static bool NeedsCorrection(SerializedMemberInfo member)
         {
@@ -948,6 +962,13 @@ namespace IPA.Config.Stores
 
                 il.Emit(OpCodes.Call, setter);
             }
+        }
+
+        private static void EmitWarnException(ILGenerator il, string v)
+        {
+            il.Emit(OpCodes.Ldstr, v);
+            il.Emit(OpCodes.Call, LogWarningMethod);
+            il.Emit(OpCodes.Call, LogWarningExceptionMethod);
         }
 
         private static void EmitLogError(ILGenerator il, string message, bool tailcall = false, Action<ILGenerator> expected = null, Action<ILGenerator> found = null)
@@ -1091,30 +1112,36 @@ namespace IPA.Config.Stores
             if (member.HasConverter)
             {
                 var stlocal = GetLocal(member.Type);
+                var valLocal = GetLocal(typeof(Value));
+
+                il.Emit(OpCodes.Stloc, stlocal);
+                il.BeginExceptionBlock();
+                il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                il.Emit(OpCodes.Ldloc, stlocal);
+
                 if (member.IsGenericConverter)
                 {
                     var toValue = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.ToValue),
                         new[] { member.ConverterTarget, typeof(object) });
-
-                    il.Emit(OpCodes.Stloc, stlocal);
-                    il.Emit(OpCodes.Ldsfld, member.ConverterField);
-                    il.Emit(OpCodes.Ldloc, stlocal);
                     il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Callvirt, toValue);
+                    il.Emit(OpCodes.Callvirt, toValue); // TODO: figure out how to devirtualize this
                 }
                 else
                 {
                     var toValue = typeof(IValueConverter).GetMethod(nameof(IValueConverter.ToValue),
                         new[] { typeof(object), typeof(object) });
-
-                    il.Emit(OpCodes.Stloc, stlocal);
-                    il.Emit(OpCodes.Ldsfld, member.ConverterField);
-                    il.Emit(OpCodes.Ldloc, stlocal);
-                    if (member.Type.IsValueType)
                         il.Emit(OpCodes.Box);
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Callvirt, toValue);
                 }
+
+                il.Emit(OpCodes.Stloc, valLocal);
+                il.BeginCatchBlock(typeof(Exception));
+                EmitWarnException(il, "Error serializing member using converter");
+                il.Emit(OpCodes.Ldnull);
+                il.Emit(OpCodes.Stloc, valLocal);
+                il.EndExceptionBlock();
+                il.Emit(OpCodes.Ldloc, valLocal);
             }
             else if (targetType == typeof(Text))
             { // only happens when arg is a string or char
@@ -1257,33 +1284,38 @@ namespace IPA.Config.Stores
             }
         }
 
-        private static void EmitDeserializeConverter(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
+        private static void EmitDeserializeConverter(ILGenerator il, SerializedMemberInfo member, Label nextLabel, GetLocal GetLocal)
         {
             var stlocal = GetLocal(typeof(Value));
+            var valLocal = GetLocal(member.Type);
+
+            il.Emit(OpCodes.Stloc, stlocal);
+            il.BeginExceptionBlock();
+            il.Emit(OpCodes.Ldsfld, member.ConverterField);
+            il.Emit(OpCodes.Ldloc, stlocal);
+            il.Emit(OpCodes.Ldarg_0);
+
             if (member.IsGenericConverter)
             {
                 var fromValue = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.FromValue),
                     new[] { typeof(Value), typeof(object) });
-
-                il.Emit(OpCodes.Stloc, stlocal);
-                il.Emit(OpCodes.Ldsfld, member.ConverterField);
-                il.Emit(OpCodes.Ldloc, stlocal);
-                il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Callvirt, fromValue);
             }
             else
             {
                 var fromValue = typeof(IValueConverter).GetMethod(nameof(IValueConverter.FromValue),
                     new[] { typeof(Value), typeof(object) });
-
-                il.Emit(OpCodes.Stloc, stlocal);
-                il.Emit(OpCodes.Ldsfld, member.ConverterField);
-                il.Emit(OpCodes.Ldloc, stlocal);
-                if (member.Type.IsValueType)
-                    il.Emit(OpCodes.Box);
-                il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Callvirt, fromValue);
+                if (member.Type.IsValueType)
+                    il.Emit(OpCodes.Unbox);
             }
+
+            il.Emit(OpCodes.Stloc, valLocal);
+            il.BeginCatchBlock(typeof(Exception));
+            EmitWarnException(il, "Error occurred while deserializing");
+            il.Emit(OpCodes.Leave, nextLabel);
+            il.EndExceptionBlock();
+            il.Emit(OpCodes.Ldloc, valLocal);
         }
 
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
@@ -1321,12 +1353,10 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Br, nextLabel);
             }
 
-            il.MarkLabel(implLabel);
 
-            if (member.HasConverter)
-                il.Emit(OpCodes.Br, passedTypeCheck);
-            else
+            if (!member.HasConverter)
             {
+                il.MarkLabel(implLabel);
                 il.Emit(OpCodes.Isinst, expectType); //replaces on stack
                 il.Emit(OpCodes.Dup); // duplicate cloned value
                 il.Emit(OpCodes.Brtrue, passedTypeCheck); // null check
@@ -1335,7 +1365,8 @@ namespace IPA.Config.Stores
             var errorHandle = il.DefineLabel();
 
             // special cases to handle coersion between Float and Int
-            if (member.HasConverter) { } // do nothing here
+            if (member.HasConverter)
+                il.MarkLabel(implLabel);
             else if (expectType == typeof(FloatingPoint))
             {
                 var specialTypeCheck = il.DefineLabel();
@@ -1365,20 +1396,23 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Br, passedTypeCheck);
             }
 
-            il.MarkLabel(errorHandle);
-            il.Emit(OpCodes.Pop);
-            EmitLogError(il, $"Unexpected type deserializing {member.Name}", tailcall: false,
-                expected: il => EmitTypeof(il, expectType), found: il =>
-                {
-                    getValue(il);
-                    il.Emit(OpCodes.Callvirt, Object_GetType);
-                });
-            il.Emit(OpCodes.Br, nextLabel);
+            if (!member.HasConverter)
+            {
+                il.MarkLabel(errorHandle);
+                il.Emit(OpCodes.Pop);
+                EmitLogError(il, $"Unexpected type deserializing {member.Name}", tailcall: false,
+                    expected: il => EmitTypeof(il, expectType), found: il =>
+                    {
+                        getValue(il);
+                        il.Emit(OpCodes.Callvirt, Object_GetType);
+                    });
+                il.Emit(OpCodes.Br, nextLabel);
+            }
 
             il.MarkLabel(passedTypeCheck);
 
             var local = GetLocal(member.Type, 0);
-            if (member.HasConverter) EmitDeserializeConverter(il, member, GetLocal);
+            if (member.HasConverter) EmitDeserializeConverter(il, member, nextLabel, GetLocal);
             else if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
             else EmitDeserializeValue(il, member.Type, expectType, GetLocal);
             il.Emit(OpCodes.Stloc, local);
