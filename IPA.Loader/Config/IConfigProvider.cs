@@ -43,6 +43,8 @@ namespace IPA.Config
         /// </remarks>
         FileInfo File { set; }
 
+        // TODO: consider moving to asynchronous Store and Load with a FileInfo parameter
+
         /// <summary>
         /// Stores the <see cref="Value"/> given to disk in the format specified.
         /// </summary>
