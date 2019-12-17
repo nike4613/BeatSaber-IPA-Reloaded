@@ -142,7 +142,7 @@ namespace IPA.Injector
 
             loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
 
-#region Insert patch into UnityEngine.CoreModule.dll
+            #region Insert patch into UnityEngine.CoreModule.dll
 
             {
                 var unityPath = Path.Combine(managedPath,
@@ -234,65 +234,63 @@ namespace IPA.Injector
                 CriticalSection.ExitExecuteSection();
             }
 
-#endregion Insert patch into UnityEngine.CoreModule.dll
+            #endregion Insert patch into UnityEngine.CoreModule.dll
 
-            loader.Debug("Ensuring Assembly-CSharp is virtualized");
-            
+            loader.Debug("Ensuring game assemblies are virtualized");
+
+            #region Virtualize game assemblies
+            bool isFirst = true;
+            foreach(var name in SelfConfig.GameAssemblies_)
             {
-                var ascPath = Path.Combine(managedPath,
-                    "MainAssembly.dll"); // TODO: change to config option for other games
-
-#region Virtualize Assembly-CSharp.dll
-
-                {
-                    CriticalSection.EnterExecuteSection();
-
-                    try
-                    {
-                        var ascModule = VirtualizedModule.Load(ascPath);
-                        ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
-                    }
-                    catch (Exception e) 
-                    {
-                        loader.Error($"Could not virtualize {ascPath}");
-                        loader.Error(e);
-                    }
-
-                    CriticalSection.ExitExecuteSection();
-                }
-
-#endregion Virtualize Assembly-CSharp.dll
-
-#region Anti-Yeet
+                var ascPath = Path.Combine(managedPath, name);
 
                 CriticalSection.EnterExecuteSection();
 
                 try
                 {
-                    loader.Debug("Applying anti-yeet patch");
-                    
-                    var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
-                    {
-                        ReadWrite = false,
-                        InMemory = true,
-                        ReadingMode = ReadingMode.Immediate
-                    });
-                    var ascModDef = ascAsmDef.MainModule;
-
-                    var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
-                    deleter.Methods.Clear(); // delete all methods
-
-                    ascAsmDef.Write(ascPath);
+                    loader.Debug($"Virtualizing {name}");
+                    using var ascModule = VirtualizedModule.Load(ascPath);
+                    ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
                 }
-                catch (Exception)
+                catch (Exception e) 
                 {
-                    // ignore
+                    loader.Error($"Could not virtualize {ascPath}");
+                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                        loader.Error(e);
+                }
+
+                if (isFirst)
+                {
+                    try
+                    {
+                        loader.Debug("Applying anti-yeet patch");
+
+                        var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
+                        {
+                            ReadWrite = false,
+                            InMemory = true,
+                            ReadingMode = ReadingMode.Immediate
+                        });
+                        var ascModDef = ascAsmDef.MainModule;
+
+                        var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
+                        deleter.Methods.Clear(); // delete all methods
+
+                        ascAsmDef.Write(ascPath);
+
+                        isFirst = false;
+                    }
+                    catch (Exception e)
+                    {
+                        loader.Warn($"Could not apply anti-yeet patch to {ascPath}");
+                        if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                            loader.Warn(e);
+                    }
                 }
 
                 CriticalSection.ExitExecuteSection();
-
-#endregion
             }
+            #endregion
         }
 
         private static bool bootstrapped;
