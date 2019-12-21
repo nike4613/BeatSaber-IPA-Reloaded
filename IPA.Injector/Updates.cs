@@ -37,7 +37,6 @@ namespace IPA.Injector
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    // will never actually be null
                     FileName = path,
                     Arguments = $"\"-nw={Process.GetCurrentProcess().Id},s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1).StrJP()).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
                     UseShellExecute = false
