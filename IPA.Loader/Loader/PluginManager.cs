@@ -191,7 +191,7 @@ namespace IPA.Loader
                 PluginLoader.DisabledPlugins.Remove(plugin);
                 if (runtimeInfo == null)
                 {
-                    runtimeInfo = InitPlugin(plugin);
+                    runtimeInfo = InitPlugin(plugin, AllPlugins.Select(i => i.Metadata));
                     needsRestart = false;
                 }
             }
@@ -325,7 +325,7 @@ namespace IPA.Loader
             NoRuntimeEnableFeature.HaveLoadedPlugins = true;
 
             var metadataPaths = PluginsMetadata.Select(m => m.File.FullName).ToList();
-            var ignoredPaths = ignoredPlugins.Select(m => m.File.FullName).ToList();
+            var ignoredPaths = ignoredPlugins.Select(m => m.Key.File.FullName).ToList();
             var disabledPaths = DisabledPlugins.Select(m => m.File.FullName).ToList();
 
             //Copy plugins to .cache

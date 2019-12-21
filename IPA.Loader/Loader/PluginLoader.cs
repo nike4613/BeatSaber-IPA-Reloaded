@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
+using SemVer;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -267,14 +268,18 @@ namespace IPA.Loader
                 {
                     Logger.loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
                     Logger.loader.Error(e);
-                    ignoredPlugins.Add(metadata);
+                    ignoredPlugins.Add(metadata, new IgnoreReason(Reason.Error)
+                    {
+                        ReasonText = "An error ocurred loading the data",
+                        Error = e
+                    });
                 }
             }
 
             IEnumerable<string> bareManifests = Directory.GetFiles(BeatSaber.PluginsPath, "*.json");
             bareManifests = bareManifests.Concat(Directory.GetFiles(BeatSaber.PluginsPath, "*.manifest"));
             foreach (var manifest in bareManifests)
-            {
+            { // TODO: maybe find a way to allow a bare manifest to specify an associated file
                 try
                 {
                     var metadata = new PluginMetadata
@@ -323,16 +328,13 @@ namespace IPA.Loader
                             continue;
                         }
 
-                        using (var reader = new StreamReader(resc.GetResourceStream()))
-                            description = reader.ReadToEnd();
+                        using var reader = new StreamReader(resc.GetResourceStream());
+                        description = reader.ReadToEnd();
                     }
                     else
                     {
-                        using (var descriptionReader =
-                            new StreamReader(
-                                meta.Assembly.GetManifestResourceStream(name) ??
-                                throw new InvalidOperationException()))
-                            description = descriptionReader.ReadToEnd();
+                        using var descriptionReader = new StreamReader(meta.Assembly.GetManifestResourceStream(name));
+                        description = descriptionReader.ReadToEnd();
                     }
 
                     meta.Manifest.Description = description;
@@ -340,16 +342,39 @@ namespace IPA.Loader
             }
         }
 
+        internal enum Reason
+        {
+            Error, Duplicate, Conflict, Dependency,
+            Released,
+            Feature
+        }
+        internal struct IgnoreReason
+        {
+
+            public Reason Reason { get; }
+            public string ReasonText { get; set; }
+            public Exception Error { get; set; }
+            public PluginMetadata RelatedTo { get; set; }
+            public IgnoreReason(Reason reason)
+            {
+                Reason = reason;
+                ReasonText = null;
+                Error = null;
+                RelatedTo = null;
+            }
+        }
+
         // keep track of these for the updater; it should still be able to update mods not loaded
         // TODO: add ignore reason
-        internal static HashSet<PluginMetadata> ignoredPlugins = new HashSet<PluginMetadata>();
+        // the thing -> the reason
+        internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
 
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => b.Version.CompareTo(a.Version));
             
             var ids = new HashSet<string>();
-            var ignore = new HashSet<PluginMetadata>();
+            var ignore = new Dictionary<PluginMetadata, IgnoreReason>();
             var resolved = new List<PluginMetadata>(PluginsMetadata.Count);
             foreach (var meta in PluginsMetadata)
             {
@@ -358,15 +383,20 @@ namespace IPA.Loader
                     if (ids.Contains(meta.Id))
                     {
                         Logger.loader.Warn($"Found duplicates of {meta.Id}, using newest");
-                        ignore.Add(meta);
-                        ignoredPlugins.Add(meta);
+                        var ireason = new IgnoreReason(Reason.Duplicate)
+                        {
+                            ReasonText = $"Duplicate entry of same ID ({meta.Id})",
+                            RelatedTo = resolved.First(p => p.Id == meta.Id)
+                        };
+                        ignore.Add(meta, ireason);
+                        ignoredPlugins.Add(meta, ireason);
                         continue; // because of sorted order, hightest order will always be the first one
                     }
 
                     bool processedLater = false;
                     foreach (var meta2 in PluginsMetadata)
                     {
-                        if (ignore.Contains(meta2)) continue;
+                        if (ignore.ContainsKey(meta2)) continue;
                         if (meta == meta2)
                         {
                             processedLater = true;
@@ -378,25 +408,33 @@ namespace IPA.Loader
                         var range = meta2.Manifest.Conflicts[meta.Id];
                         if (!range.IsSatisfied(meta.Version)) continue;
 
-                        Logger.loader.Warn($"{meta.Id}@{meta.Version} conflicts with {meta2.Name}");
+                        Logger.loader.Warn($"{meta.Id}@{meta.Version} conflicts with {meta2.Id}");
 
                         if (processedLater)
                         {
                             Logger.loader.Warn($"Ignoring {meta2.Name}");
-                            ignore.Add(meta2);
+                            ignore.Add(meta2, new IgnoreReason(Reason.Conflict)
+                            {
+                                ReasonText = $"{meta.Id}@{meta.Version} conflicts with {meta2.Id}",
+                                RelatedTo = meta
+                            });
                         }
                         else
                         {
                             Logger.loader.Warn($"Ignoring {meta.Name}");
-                            ignore.Add(meta);
+                            ignore.Add(meta, new IgnoreReason(Reason.Conflict)
+                            {
+                                ReasonText = $"{meta2.Id}@{meta2.Version} conflicts with {meta.Id}",
+                                RelatedTo = meta2
+                            });
                             break;
                         }
                     }
                 }
 
-                if (ignore.Contains(meta))
+                if (ignore.TryGetValue(meta, out var reason))
                 {
-                    ignoredPlugins.Add(meta);
+                    ignoredPlugins.Add(meta, reason);
                     continue;
                 }
                 if (meta.Id != null)
@@ -430,7 +468,7 @@ namespace IPA.Loader
             Logger.loader.Debug(string.Join(", ", PluginsMetadata.Select(p => p.ToString()).StrJP()));
 #endif
 
-            bool InsertInto(HashSet<PluginMetadata> root, PluginMetadata meta, bool isRoot = false)
+            static bool InsertInto(HashSet<PluginMetadata> root, PluginMetadata meta, bool isRoot = false)
             { // this is slow, and hella recursive
                 bool inserted = false;
                 foreach (var sr in root)
@@ -469,7 +507,7 @@ namespace IPA.Loader
             foreach (var meta in PluginsMetadata)
                 InsertInto(pluginTree, meta, true);
 
-            void DeTree(List<PluginMetadata> into, HashSet<PluginMetadata> tree)
+            static void DeTree(List<PluginMetadata> into, HashSet<PluginMetadata> tree)
             {
                 foreach (var st in tree)
                     if (!into.Contains(st))
@@ -494,8 +532,7 @@ namespace IPA.Loader
             var disabledLookup = DisabledPlugins.NonNull(m => m.Id).ToDictionary(m => m.Id, m => m.Version);
             foreach (var meta in PluginsMetadata)
             {
-                bool load = true;
-                bool disable = false;
+                var missingDeps = new List<(string id, Range version, bool disabled)>();
                 foreach (var dep in meta.Manifest.Dependencies)
                 {
 #if DEBUG
@@ -504,32 +541,36 @@ namespace IPA.Loader
                     if (pluginsToLoad.ContainsKey(dep.Key) && dep.Value.IsSatisfied(pluginsToLoad[dep.Key]))
                         continue;
 
-                    load = false;
-
                     if (disabledLookup.ContainsKey(dep.Key) && dep.Value.IsSatisfied(disabledLookup[dep.Key]))
                     {
-                        disable = true;
                         Logger.loader.Warn($"Dependency {dep.Key} was found, but disabled. Disabling {meta.Name} too.");
+                        missingDeps.Add((dep.Key, dep.Value, true));
                     }
                     else
+                    {
                         Logger.loader.Warn($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
-
-                    break;
+                        missingDeps.Add((dep.Key, dep.Value, false));
+                    }
                 }
 
-                if (load)
+                if (missingDeps.Count == 0)
                 {
                     metadata.Add(meta);
                     if (meta.Id != null)
                         pluginsToLoad.Add(meta.Id, meta.Version);
                 }
-                else if (disable)
+                else if (missingDeps.Any(t => !t.disabled))
+                { // missing deps
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
+                    {
+                        ReasonText = $"Missing dependencies {string.Join(", ", missingDeps.Where(t => !t.disabled).Select(t => $"{t.id}@{t.version}").StrJP())}"
+                    });
+                }
+                else
                 {
                     DisabledPlugins.Add(meta);
                     DisabledConfig.Instance.DisabledModIds.Add(meta.Id ?? meta.Name);
                 }
-                else
-                    ignoredPlugins.Add(meta);
             }
 
             PluginsMetadata = metadata;
@@ -594,12 +635,12 @@ namespace IPA.Loader
         internal static void ReleaseAll(bool full = false)
         {
             if (full)
-                ignoredPlugins = new HashSet<PluginMetadata>();
+                ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
             else
             {
                 foreach (var m in PluginsMetadata)
-                    ignoredPlugins.Add(m);
-                foreach (var m in ignoredPlugins)
+                    ignoredPlugins.Add(m, new IgnoreReason(Reason.Released));
+                foreach (var m in ignoredPlugins.Keys)
                 { // clean them up so we can still use the metadata for updates
                     m.InternalFeatures.Clear();
                     m.PluginType = null;
@@ -618,7 +659,7 @@ namespace IPA.Loader
                 meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
         }
 
-        internal static PluginInfo InitPlugin(PluginMetadata meta)
+        internal static PluginInfo InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
             if (meta.PluginType == null)
                 return new PluginInfo()
@@ -633,7 +674,33 @@ namespace IPA.Loader
                 Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
             try
-            { // TODO: add dependency checking for when features prevent loading
+            {
+                foreach (var dep in meta.Dependencies)
+                {
+                    if (alreadyLoaded.Contains(dep)) continue;
+
+                    // otherwise...
+
+                    if (ignoredPlugins.TryGetValue(dep, out var reason))
+                    { // was added to the ignore list
+                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
+                        {
+                            ReasonText = $"Dependency was ignored at load time: {reason.ReasonText}",
+                            RelatedTo = dep
+                        });
+                    }
+                    else
+                    { // was not added to ignore list
+                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
+                        {
+                            ReasonText = $"Dependency was not already loaded at load time, but was also not ignored",
+                            RelatedTo = dep
+                        });
+                    }
+
+                    return null;
+                }
+
                 Load(meta);
 
                 Feature denyingFeature = null;
@@ -641,7 +708,10 @@ namespace IPA.Loader
                 {
                     Logger.loader.Warn(
                         $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from loading! {denyingFeature?.InvalidMessage}");
-                    ignoredPlugins.Add(meta);
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
+                    {
+                        ReasonText = $"Denied in {nameof(Feature.BeforeLoad)} of feature {denyingFeature?.GetType()}:\n\t{denyingFeature?.InvalidMessage}"
+                    });
                     return null;
                 }
 
@@ -659,7 +729,10 @@ namespace IPA.Loader
                     {
                         Logger.loader.Warn(
                             $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from initializing! {denyingFeature?.InvalidMessage}");
-                        ignoredPlugins.Add(meta);
+                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
+                        {
+                            ReasonText = $"Denied in {nameof(Feature.BeforeInit)} of feature {denyingFeature?.GetType()}:\n\t{denyingFeature?.InvalidMessage}"
+                        });
                         return null;
                     }
 
@@ -689,7 +762,8 @@ namespace IPA.Loader
             }
             catch (AmbiguousMatchException)
             {
-                Logger.loader.Error($"Only one Init allowed per plugin (ambiguous match in {meta.Name})");
+                Logger.loader.Critical($"Only one Init allowed per plugin (ambiguous match in {meta.Name})");
+                Logger.loader.Critical("@Developer: you *really* should fix this");
                 // not adding to ignoredPlugins here because this should only happen in a development context
                 // if someone fucks this up on release thats on them
                 return null;
@@ -697,7 +771,11 @@ namespace IPA.Loader
             catch (Exception e)
             {
                 Logger.loader.Error($"Could not init plugin {meta.Name}: {e}");
-                ignoredPlugins.Add(meta);
+                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Error)
+                {
+                    ReasonText = "Error ocurred while initializing",
+                    Error = e
+                });
                 return null;
             }
 
@@ -708,7 +786,20 @@ namespace IPA.Loader
         {
             InitFeatures();
             DisabledPlugins.ForEach(Load); // make sure they get loaded into memory so their metadata and stuff can be read more easily
-            return PluginsMetadata.Select(InitPlugin).NonNull().ToList();
+
+            var list = new List<PluginInfo>();
+            var loaded = new HashSet<PluginMetadata>();
+            foreach (var meta in PluginsMetadata)
+            {
+                var info = InitPlugin(meta, loaded);
+                if (info != null)
+                {
+                    list.Add(info);
+                    loaded.Add(meta);
+                }
+            }
+
+            return list;
         }
     }
 }

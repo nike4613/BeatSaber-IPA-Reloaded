@@ -36,13 +36,13 @@ namespace IPA.Loader
         public Dictionary<string, Range> Conflicts = new Dictionary<string, Range>();
 
         [JsonProperty("features", Required = Required.DisallowNull)]
-        public string[] Features = new string[0];
+        public string[] Features = Array.Empty<string>();
 
         [JsonProperty("loadBefore", Required = Required.DisallowNull)]
-        public string[] LoadBefore = new string[0];
+        public string[] LoadBefore = Array.Empty<string>();
 
         [JsonProperty("loadAfter", Required = Required.DisallowNull)]
-        public string[] LoadAfter = new string[0];
+        public string[] LoadAfter = Array.Empty<string>();
 
         [JsonProperty("icon", Required = Required.DisallowNull)]
         public string IconPath = null;
