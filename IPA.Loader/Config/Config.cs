@@ -131,14 +131,15 @@ namespace IPA.Config
         /// <summary>
         /// Gets the name associated with this <see cref="Config"/> object.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
         /// <summary>
         /// Gets the <see cref="IConfigProvider"/> associated with this <see cref="Config"/> object.
         /// </summary>
-        public IConfigProvider Provider { get; private set; }
+        public IConfigProvider Provider { get; }
 
         internal IConfigStore Store = null;
         internal readonly FileInfo File;
+        internal readonly ConfigProvider configProvider;
         internal int Writes = 0;
 
         /// <summary>
@@ -166,7 +167,8 @@ namespace IPA.Config
 
         private Config(string name, IConfigProvider provider, FileInfo file)
         {
-            Name = name; Provider = provider; File = file;
+            Name = name; Provider = provider; File = file; 
+            configProvider = new ConfigProvider(file, provider);
         }
     }
 }
