@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Installing BSIPA </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Installing BSIPA ">
+    <meta name="generator" content="docfx 2.48.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="installing-bsipa">Installing BSIPA</h1>
+
+<div class="NOTE"><h5>Note</h5><p>This guide assumes that you are starting completely fresh.</p>
+</div>
+<ol>
+<li><p>Grab a release from the GitHub <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases">Releases page</a>.
+Make sure to download <code>BSIPA.zip</code>, as <code>ModList.zip</code> contains the Beat Saber mod for showing your mods in-game, not the loader itself.</p>
+</li>
+<li><p>Extract the zip into your game installation directory. There should now be a folder named <code>IPA</code> and a file named <code>IPA.exe</code> in
+the same folder as the game executable.</p>
+<p>For example, if you are installing BSIPA in Beat Saber, it might look like this after extraction:</p>
+<p><img src="../images/install-extracted.png" alt="What your game directory may look like after extracting BSIPA"></p>
+</li>
+<li><p>Run <code>IPA.exe</code> by double clicking it. A console window should pop up, and eventually, a gold message asking you to press a key
+will appear. Here is an example of a successful installation:</p>
+<p><img src="../images/install-successful.png" alt="A successful installation"></p>
+<div class="NOTE"><h5>Note</h5><p>In some cases, this may fail, something like this: <img src="../images/install-failed.png" alt="A failing installation"></p>
+<p>In these cases, try dragging the game executable over <code>IPA.exe</code>.</p>
+</div>
+<p>After installing, your game directory should look something like this:
+<img src="../images/install-correct.png" alt="A properly installed BSIPA"></p>
+<div class="NOTE"><h5>Note</h5><p>At this point it is recommended to run the game once before continuing, to ensure that things are installed correctly.</p>
+<p>The first run should create a <code>UserData</code> folder with <code>Beat Saber IPA.json</code> and <code>Disabled Mods.json</code>, as well as a
+<code>Logs</code> folder with several subfolders with their own files. If these are created, then the installation was very
+likely successful.</p>
+</div>
+<div class="TIP"><h5>Tip</h5><p>If you are not installing BSIPA on Beat Saber, you probably want to go to the config at <code>UserData/Beat Saber IPA.json</code>
+and set both of the following to <code>false</code>:</p>
+<pre><code class="lang-json">{
+  ...
+  &quot;Updates&quot;: {
+    &quot;AutoUpdate&quot;: false,
+    &quot;AutoCheckUpdates&quot;: false
+  },
+  ...
+}
+</code></pre></div>
+</li>
+<li><p>From here, just place all of your plugins in the <code>Plugins</code> folder, and you&#39;re all set!</p>
+<p>Many plugins will come in a zip such that the root of the zip represents the game install directory, so all you may have to
+do is extract the plugin into the game installation folder.</p>
+</li>
+</ol>
+<p>Thats really all you have to do! The installation should persist across game updates for as long as <code>winhttp.dll</code> is present in
+the game directory, though your plugins will be moved to a different folder when it does update so things don&#39;t break horribly.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/e6097054b26d7a7cf584f5acb928b92b168ebc2c/docs/articles/start-user.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
