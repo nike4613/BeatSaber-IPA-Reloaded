@@ -85,16 +85,16 @@ namespace IPA.Injector
 
                 CriticalSection.Configure();
 
-                Updates.InstallPendingUpdates();
-
-                LibLoader.SetupAssemblyFilenames(true);
-
                 loader.Debug("Prepping bootstrapper");
 
                 // updates backup
                 InstallBootstrapPatch();
 
+                LibLoader.SetupAssemblyFilenames(true);
+
                 GameVersionEarly.Load();
+
+                Updates.InstallPendingUpdates();
 
                 //HarmonyProtector.Protect();
 

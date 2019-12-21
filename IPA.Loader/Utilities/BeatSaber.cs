@@ -46,6 +46,20 @@ namespace IPA.Utilities
             }
         }
 
+        internal static bool IsGameVersionBoundary { get; private set; }
+        internal static AlmostVersion OldVersion { get; private set; }
+        internal static void CheckGameVersionBoundary()
+        {
+            var gameVer = GameVersion;
+            var lastVerS = SelfConfig.LastGameVersion_;
+            var OldVersion = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
+
+            IsGameVersionBoundary = OldVersion != null && gameVer != OldVersion;
+
+            SelfConfig.SelfConfigRef.Value.LastGameVersion = gameVer.ToString();
+            SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
+        }
+
         /// <summary>
         /// The different types of releases of the game.
         /// </summary>

@@ -136,14 +136,11 @@ namespace IPA.Loader
         internal static void YeetIfNeeded()
         {
             string pluginDir = BeatSaber.PluginsPath;
-            var gameVer = BeatSaber.GameVersion;
-            var lastVerS = SelfConfig.LastGameVersion_;
-            var lastVer = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
 
-            if (SelfConfig.YeetMods_ && lastVer != null && gameVer != lastVer)
+            if (SelfConfig.YeetMods_ && BeatSaber.IsGameVersionBoundary)
             {
-                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {lastVer} Plugins");
-                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {gameVer} Plugins");
+                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {BeatSaber.OldVersion} Plugins");
+                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {BeatSaber.GameVersion} Plugins");
 
                 if (Directory.Exists(oldPluginsName))
                     Directory.Delete(oldPluginsName, true);
@@ -153,9 +150,6 @@ namespace IPA.Loader
                 else
                     Directory.CreateDirectory(pluginDir);
             }
-
-            SelfConfig.SelfConfigRef.Value.LastGameVersion = gameVer.ToString();
-            SelfConfig.LoaderConfig.Store(SelfConfig.SelfConfigRef.Value);
         }
 
         internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();

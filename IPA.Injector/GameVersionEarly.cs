@@ -15,7 +15,7 @@ namespace IPA.Injector
 {
     internal static class GameVersionEarly
     {
-        internal static string ResolveDataPath(string installDir) => 
+        internal static string ResolveDataPath(string installDir) =>
             Directory.EnumerateDirectories(installDir, "*_Data").First();
 
         internal static string GlobalGameManagers(string installDir) =>
@@ -53,7 +53,11 @@ namespace IPA.Injector
 
         internal static SemVer.Version SafeParseVersion() => new SemVer.Version(GetGameVersion(), true);
 
-        private static void _Load() => BeatSaber.SetEarlyGameVersion(SafeParseVersion());
+        private static void _Load() 
+        {
+            BeatSaber.SetEarlyGameVersion(SafeParseVersion());
+            BeatSaber.CheckGameVersionBoundary();
+        }
 
         internal static void Load()
         {
