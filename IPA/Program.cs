@@ -23,7 +23,7 @@ namespace IPA
             Unknown
         }
 
-        public const string FileVersion = "3.13.4";
+        public const string FileVersion = "3.13.5";
 
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
