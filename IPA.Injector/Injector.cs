@@ -85,12 +85,12 @@ namespace IPA.Injector
 
                 CriticalSection.Configure();
 
+                Updates.InstallPendingUpdates();
+
                 loader.Debug("Prepping bootstrapper");
-                
+
                 // updates backup
                 InstallBootstrapPatch();
-
-                Updates.InstallPendingUpdates();
 
                 LibLoader.SetupAssemblyFilenames(true);
 
