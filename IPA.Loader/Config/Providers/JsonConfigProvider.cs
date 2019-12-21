@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Collections.Generic;
 using Boolean = IPA.Config.Data.Boolean;
+using System.Threading.Tasks;
 
 namespace IPA.Config.Providers
 {
@@ -21,14 +22,12 @@ namespace IPA.Config.Providers
 
         public string Extension => "json";
 
-        public FileInfo File { get; set; }
-
-        public Value Load()
+        public Value Load(FileInfo file)
         {
-            if (!File.Exists) return Value.Null();
+            if (!file.Exists) return Value.Null();
 
             JToken jtok;
-            using (var sreader = new StreamReader(File.OpenRead()))
+            using (var sreader = new StreamReader(file.OpenRead()))
             {
                 using var jreader = new JsonTextReader(sreader);
                 jtok = JToken.ReadFrom(jreader);
@@ -40,7 +39,7 @@ namespace IPA.Config.Providers
             }
             catch (Exception e)
             {
-                Logger.config.Error($"Error reading JSON file {File.FullName}; ignoring");
+                Logger.config.Error($"Error reading JSON file {file.FullName}; ignoring");
                 Logger.config.Error(e);
                 return Value.Null();
             }
@@ -116,23 +115,25 @@ namespace IPA.Config.Providers
             }
         }
 
-        public void Store(Value value)
+        public void Store(Value value, FileInfo file)
         {
-            if (File.Directory.Exists)
-                File.Directory.Create();
+            if (file.Directory.Exists)
+                file.Directory.Create();
 
             try
             {
                 var tok = VisitToToken(value);
 
-                using var swriter = new StreamWriter(File.Open(FileMode.Create, FileAccess.Write));
-                using var jwriter = new JsonTextWriter(swriter);
-                jwriter.Formatting = Formatting.Indented;
+                using var swriter = new StreamWriter(file.Open(FileMode.Create, FileAccess.Write));
+                using var jwriter = new JsonTextWriter(swriter)
+                {
+                    Formatting = Formatting.Indented
+                };
                 tok.WriteTo(jwriter);
             }
             catch (Exception e)
             {
-                Logger.config.Error($"Error serializing value for {File.FullName}");
+                Logger.config.Error($"Error serializing value for {file.FullName}");
                 Logger.config.Error(e);
             }
         }

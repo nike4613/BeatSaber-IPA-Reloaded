@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using IPA.Config.Data;
 
 namespace IPA.Config
@@ -32,30 +33,44 @@ namespace IPA.Config
         string Extension { get; }
 
         /// <summary>
-        /// Sets the file that this provider will read and write to.
-        /// </summary>
-        /// <remarks>
-        /// The provider is expected to gracefully handle this changing at any point, 
-        /// and is expected to close any old file handles when this is reassigned.
-        /// This may be set to the same file multiple times in this object's lifetime.
-        /// This will always have been set at least once before any calls to <see cref="Load"/>
-        /// or <see cref="Store"/> are made.
-        /// </remarks>
-        FileInfo File { set; }
-
-        // TODO: consider moving to asynchronous Store and Load with a FileInfo parameter
-
-        /// <summary>
         /// Stores the <see cref="Value"/> given to disk in the format specified.
         /// </summary>
         /// <param name="value">the <see cref="Value"/> to store</param>
-        void Store(Value value);
+        /// <param name="file">the file to write to</param>
+        void Store(Value value, FileInfo file);
 
         /// <summary>
         /// Loads a <see cref="Value"/> from disk in whatever format this provider provides
         /// and returns it.
         /// </summary>
+        /// <param name="file">the file to read from</param>
         /// <returns>the <see cref="Value"/> loaded</returns>
-        Value Load();
+        Value Load(FileInfo file);
+    }
+
+    /// <summary>
+    /// A wrapper for an <see cref="IConfigProvider"/> and the <see cref="FileInfo"/> to use with it.
+    /// </summary>
+    public class ConfigProvider // this *should* be a struct imo, but mono doesn't seem to like that
+    {
+        private readonly FileInfo file;
+        private readonly IConfigProvider provider;
+
+        internal ConfigProvider(FileInfo file, IConfigProvider provider)
+        {
+            this.file = file; this.provider = provider;
+        }
+
+        /// <summary>
+        /// Stores the <see cref="Value"/> given to disk in the format specified.
+        /// </summary>
+        /// <param name="value">the <see cref="Value"/> to store</param>
+        public void Store(Value value) => provider.Store(value, file);
+        /// <summary>
+        /// Loads a <see cref="Value"/> from disk in whatever format this provider provides
+        /// and returns it.
+        /// </summary>
+        /// <returns>the <see cref="Value"/> loaded</returns>
+        public Value Load() => provider.Load(file);
     }
 }

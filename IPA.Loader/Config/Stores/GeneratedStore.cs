@@ -155,7 +155,7 @@ namespace IPA.Config.Stores
 
 
             internal static MethodInfo ReadFromMethod = typeof(Impl).GetMethod(nameof(ReadFrom));
-            public void ReadFrom(IConfigProvider provider)
+            public void ReadFrom(ConfigProvider provider)
             {
                 var values = provider.Load();
                 Logger.config.Debug("Generated impl ReadFrom");
@@ -168,7 +168,7 @@ namespace IPA.Config.Stores
             }
 
             internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));
-            public void WriteTo(IConfigProvider provider)
+            public void WriteTo(ConfigProvider provider)
             {
                 var values = generated.Serialize();
                 Logger.config.Debug("Generated impl WriteTo");
@@ -714,7 +714,7 @@ namespace IPA.Config.Stores
             }
             #endregion
             #region IConfigStore.WriteTo
-            var writeTo = typeBuilder.DefineMethod($"<>{nameof(IConfigStore.WriteTo)}", virtualMemberMethod, null, new[] { typeof(IConfigProvider) });
+            var writeTo = typeBuilder.DefineMethod($"<>{nameof(IConfigStore.WriteTo)}", virtualMemberMethod, null, new[] { typeof(ConfigProvider) });
             typeBuilder.DefineMethodOverride(writeTo, IConfigStore_WriteTo);
 
             {
@@ -729,7 +729,7 @@ namespace IPA.Config.Stores
             }
             #endregion
             #region IConfigStore.ReadFrom
-            var readFrom = typeBuilder.DefineMethod($"<>{nameof(IConfigStore.ReadFrom)}", virtualMemberMethod, null, new[] { typeof(IConfigProvider) });
+            var readFrom = typeBuilder.DefineMethod($"<>{nameof(IConfigStore.ReadFrom)}", virtualMemberMethod, null, new[] { typeof(ConfigProvider) });
             typeBuilder.DefineMethodOverride(readFrom, IConfigStore_ReadFrom);
 
             {

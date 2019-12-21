@@ -40,7 +40,7 @@ namespace IPA.Config
         /// this is called.
         /// </remarks>
         /// <param name="provider">the provider to write to</param>
-        void WriteTo(IConfigProvider provider);
+        void WriteTo(ConfigProvider provider);
 
         /// <summary>
         /// Reads the config structure from the given <see cref="IConfigProvider"/> into the current 
@@ -51,7 +51,7 @@ namespace IPA.Config
         /// this is called.
         /// </remarks>
         /// <param name="provider">the provider to read from</param>
-        void ReadFrom(IConfigProvider provider);
+        void ReadFrom(ConfigProvider provider);
 
     }
 }

@@ -151,10 +151,11 @@ namespace IPA.Config
             }
         }
 
-        public static Task TriggerFileLoad(Config config) => loadFactory.StartNew(() => LoadTask(config));
+        public static Task TriggerFileLoad(Config config)
+            => loadFactory.StartNew(() => LoadTask(config));
 
-        public static Task TriggerLoadAll() =>
-            TaskEx.WhenAll(configs.Select(TriggerFileLoad));
+        public static Task TriggerLoadAll()
+            => TaskEx.WhenAll(configs.Select(TriggerFileLoad));
 
         /// <summary>
         /// this is synchronous, unlike <see cref="TriggerFileLoad(Config)"/>
@@ -167,13 +168,10 @@ namespace IPA.Config
             try
             {
                 using var readLock = Synchronization.LockRead(store.WriteSyncObject);
-                lock (config.Provider)
-                {
-                    config.Provider.File = config.File;
-                    EnsureWritesSane(config);
-                    Interlocked.Increment(ref config.Writes);
-                    store.WriteTo(config.Provider);
-                }
+
+                EnsureWritesSane(config);
+                Interlocked.Increment(ref config.Writes);
+                store.WriteTo(config.configProvider);
             }
             catch (ThreadAbortException)
             {
@@ -201,11 +199,7 @@ namespace IPA.Config
             {
                 var store = config.Store;
                 using var writeLock = Synchronization.LockWrite(store.WriteSyncObject);
-                lock (config.Provider)
-                {
-                    config.Provider.File = config.File;
-                    store.ReadFrom(config.Provider);
-                }
+                store.ReadFrom(config.configProvider);
             }
             catch (Exception e)
             {
