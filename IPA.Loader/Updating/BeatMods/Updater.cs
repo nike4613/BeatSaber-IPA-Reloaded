@@ -212,7 +212,7 @@ namespace IPA.Updating.BeatMods
                 }
             }
 
-            foreach (var meta in PluginLoader.ignoredPlugins)
+            foreach (var meta in PluginLoader.ignoredPlugins.Keys)
             { // update ignored
                 if (meta.Id != null)
                 { // updatable
