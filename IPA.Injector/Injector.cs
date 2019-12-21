@@ -90,11 +90,11 @@ namespace IPA.Injector
                 // updates backup
                 InstallBootstrapPatch();
 
+                GameVersionEarly.Load();
+
                 Updates.InstallPendingUpdates();
 
                 LibLoader.SetupAssemblyFilenames(true);
-
-                GameVersionEarly.Load();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
