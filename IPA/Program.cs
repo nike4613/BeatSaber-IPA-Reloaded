@@ -27,19 +27,19 @@ namespace IPA
 
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
-        public static readonly ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h") { DocString = "prints this message" };
-        public static readonly ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w") { DocString = "waits for the specified PID to exit", ValueString = "PID" };
-        public static readonly ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f") { DocString = "forces the operation to go through" };
-        public static readonly ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r") { DocString = "reverts the IPA installation" };
-        public static readonly ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n") { DocString = "doesn't wait for user input after the operation" };
-        public static readonly ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s") { DocString = "uses value_ as arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
-        public static readonly ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l") { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
-        //public static readonly ArgumentFlag ArgDestructive = new ArgumentFlag("--destructive", "-d") { DocString = "patches the game using the now outdated destructive methods" };
+        public static readonly ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h")          { DocString = "prints this message" };
+        public static readonly ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w")    { DocString = "waits for the specified PID to exit", ValueString = "PID" };
+        public static readonly ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f")        { DocString = "forces the operation to go through" };
+        public static readonly ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r")      { DocString = "reverts the IPA installation" };
+        public static readonly ArgumentFlag ArgNoRevert = new ArgumentFlag("--no-revert", "-R") { DocString = "prevents a normal installation from first reverting" };
+        public static readonly ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n")      { DocString = "doesn't wait for user input after the operation" };
+        public static readonly ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s")        { DocString = "uses the specified arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
+        public static readonly ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l")      { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
 
         [STAThread]
         public static void Main(string[] args)
         {
-            Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch/*, ArgDestructive*/).Process();
+            Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch, ArgNoRevert).Process();
 
             if (ArgHelp)
             {
@@ -159,10 +159,13 @@ namespace IPA
                 {
                     var backup = new BackupUnit(context);
 
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("Restoring old version... ");
-                    if (BackupManager.HasBackup(context))
-                        BackupManager.Restore(context);
+                    if (!ArgNoRevert)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("Restoring old version... ");
+                        if (BackupManager.HasBackup(context))
+                            BackupManager.Restore(context);
+                    }
 
                     var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
                     bool isFlat = Directory.Exists(nativePluginFolder) &&

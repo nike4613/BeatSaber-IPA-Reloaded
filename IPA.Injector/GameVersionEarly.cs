@@ -58,7 +58,7 @@ namespace IPA.Injector
         internal static void Load()
         {
             // This exists for the same reason the wierdness in Injector.Main does
-            var unused = Type.GetType("SemVer.Version, SemVer", false);
+            _ = Type.GetType("SemVer.Version, SemVer", false);
 
             _Load();
         }

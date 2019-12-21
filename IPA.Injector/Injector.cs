@@ -87,12 +87,12 @@ namespace IPA.Injector
 
                 Updates.InstallPendingUpdates();
 
+                LibLoader.SetupAssemblyFilenames(true);
+
                 loader.Debug("Prepping bootstrapper");
 
                 // updates backup
                 InstallBootstrapPatch();
-
-                LibLoader.SetupAssemblyFilenames(true);
 
                 GameVersionEarly.Load();
 
