@@ -3,7 +3,7 @@
     /// <summary>
     /// Provides methods to allow runtime disabling of a plugin.
     /// </summary>
-    public interface IDisablablePlugin
+    public interface IDisablablePlugin : IPlugin
     {
 
         /// <summary>

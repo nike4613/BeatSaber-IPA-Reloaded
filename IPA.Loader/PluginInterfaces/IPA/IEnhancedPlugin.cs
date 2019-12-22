@@ -7,7 +7,7 @@ namespace IPA.Old
     /// <summary>
     /// An enhanced version of the standard IPA plugin.
     /// </summary>
-    [Obsolete("When building plugins for Beat Saber, use IEnhancedBeatSaberPlugin")]
+    [Obsolete("When building plugins for Beat Saber, use IPA.IEnhancedPlugin")]
     public interface IEnhancedPlugin : IPlugin
     {
         /// <summary>

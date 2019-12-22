@@ -10,7 +10,22 @@ namespace IPA
     /// <summary>
     /// An enhanced version of a standard BeatSaber plugin.
     /// </summary>
-    public interface IEnhancedPlugin : IPlugin, IGenericEnhancedPlugin
+    public interface IEnhancedPlugin : IPlugin
     {
+
+        /// <summary>
+        /// Gets invoked on every graphic update.
+        /// </summary>
+        void OnUpdate();
+
+        /// <summary>
+        /// Gets invoked on ever physics update.
+        /// </summary>
+        void OnFixedUpdate();
+
+        /// <summary>
+        /// Called after Update.
+        /// </summary>
+        void OnLateUpdate();
     }
 }
