@@ -13,6 +13,7 @@ namespace IPA.Loader
         private CompositeBSPlugin bsPlugins;
         private CompositeIPAPlugin ipaPlugins;
         private bool quitting;
+        private static bool initialized = false;
 
         internal static PluginComponent Create()
         {
@@ -23,22 +24,28 @@ namespace IPA.Loader
         {
             DontDestroyOnLoad(gameObject);
 
-            PluginManager.Load();
+            if (!initialized)
+            {
+                PluginManager.Load();
 
-            bsPlugins = new CompositeBSPlugin(PluginManager.BSMetas);
+                bsPlugins = new CompositeBSPlugin(PluginManager.BSMetas);
 #pragma warning disable 618
-            ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
+                ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
-#if NET4
-            gameObject.AddComponent<Updating.BeatMods.Updater>();
+#if BeatSaber
+                gameObject.AddComponent<Updating.BeatMods.Updater>();
 #endif
 
-            ipaPlugins.OnApplicationStart();
-            
-            SceneManager.activeSceneChanged += OnActiveSceneChanged;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
+                bsPlugins.OnEnable();
+                ipaPlugins.OnApplicationStart();
+
+                SceneManager.activeSceneChanged += OnActiveSceneChanged;
+                SceneManager.sceneLoaded += OnSceneLoaded;
+                SceneManager.sceneUnloaded += OnSceneUnloaded;
+
+                initialized = true;
+            }
         }
 
         void Update()

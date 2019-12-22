@@ -4,8 +4,8 @@
 namespace IPA.Old
 {
     /// <summary>
-    /// Interface for generic Illusion unity plugins. Every class that implements this will be loaded if the DLL is placed at
-    /// data/Managed/Plugins.
+    /// Interface for generic Illusion unity plugins. Every class that implements this will be loaded if the DLL is placed in
+    /// Plugins.
     /// </summary>
     [Obsolete("When building plugins for Beat Saber, use IBeatSaberPlugin")]
     public interface IPlugin

@@ -30,7 +30,7 @@ namespace IPA.Updating.BeatMods
         internal const string SpecialDeletionsFile = "$$delete";
     }
 
-#if NET4
+#if BeatSaber
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     internal partial class Updater : MonoBehaviour
     {

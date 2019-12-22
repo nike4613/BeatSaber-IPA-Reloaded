@@ -352,9 +352,8 @@ namespace IPA.Loader
                 { // fix type references
                     if (@ref.FullName == "IllusionPlugin.IPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
                     if (@ref.FullName == "IllusionPlugin.IEnhancedPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.IBeatSaberPlugin") @ref.Namespace = "IPA"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.IEnhancedBeatSaberPlugin") @ref.Namespace = "IPA"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.BeatSaber.ModsaberModInfo") @ref.Namespace = "IPA"; //@ref.Name = "";
+                    if (@ref.FullName == "IllusionPlugin.IBeatSaberPlugin") { @ref.Namespace = "IPA"; @ref.Name = nameof(IPlugin); }
+                    if (@ref.FullName == "IllusionPlugin.IEnhancedBeatSaberPlugin") { @ref.Namespace = "IPA"; @ref.Name = nameof(IEnhancedPlugin); }
                     if (@ref.FullName == "IllusionPlugin.IniFile") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
                     if (@ref.FullName == "IllusionPlugin.IModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
                     if (@ref.FullName == "IllusionPlugin.ModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
@@ -371,7 +370,6 @@ namespace IPA.Loader
                     if (@ref.FullName == "IllusionInjector.Updating.Backup.BackupUnit") @ref.Namespace = "IPA.Updating.Backup"; //@ref.Name = "";
                     if (@ref.Namespace == "IllusionInjector.Utilities") @ref.Namespace = "IPA.Utilities"; //@ref.Name = "";
                     if (@ref.Namespace == "IllusionInjector.Logging.Printers") @ref.Namespace = "IPA.Logging.Printers"; //@ref.Name = "";
-                    if (@ref.Namespace == "IllusionInjector.Updating.ModsaberML") @ref.Namespace = "IPA.Updating.ModSaber"; //@ref.Name = "";
                 }
                 module.Write(pluginCopy);
 
@@ -383,9 +381,10 @@ namespace IPA.Loader
             foreach (string s in copiedPlugins)
             {
                 var result = LoadPluginsFromFile(s);
-                _ipaPlugins.AddRange(result.Item2);
+                if (result == null) continue;
+                _ipaPlugins.AddRange(result.NonNull());
             }
-            
+
             Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {Application.unityVersion}");
             Logger.log.Info($"Game version {BeatSaber.GameVersion}");
@@ -404,12 +403,12 @@ namespace IPA.Loader
             Logger.log.Info("-----------------------------");
         }
 
-        private static Tuple<IEnumerable<PluginInfo>, IEnumerable<Old.IPlugin>> LoadPluginsFromFile(string file)
+        private static IEnumerable<Old.IPlugin> LoadPluginsFromFile(string file)
         {
             var ipaPlugins = new List<Old.IPlugin>();
 
             if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return new Tuple<IEnumerable<PluginInfo>, IEnumerable<Old.IPlugin>>(null, ipaPlugins);
+                return ipaPlugins;
 
             T OptionalGetPlugin<T>(Type t) where T : class
             {
@@ -456,7 +455,7 @@ namespace IPA.Loader
                 Logger.loader.Error(e);
             }
 
-            return new Tuple<IEnumerable<PluginInfo>, IEnumerable<Old.IPlugin>>(null, ipaPlugins);
+            return ipaPlugins;
         }
 
         internal static class AppInfo
