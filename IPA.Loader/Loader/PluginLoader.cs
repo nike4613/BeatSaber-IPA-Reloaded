@@ -360,7 +360,6 @@ namespace IPA.Loader
         }
 
         // keep track of these for the updater; it should still be able to update mods not loaded
-        // TODO: add ignore reason
         // the thing -> the reason
         internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
 
@@ -744,7 +743,7 @@ namespace IPA.Loader
                         Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
                     }
 
-                try // TODO: move this out to after all plugins have been inited
+                /*try // TODO: move this out to after all plugins have been inited
                 {
                     instance.OnEnable();
                 }
@@ -753,7 +752,7 @@ namespace IPA.Loader
                     Logger.loader.Error($"Error occurred trying to enable {meta.Name}");
                     Logger.loader.Error(e);
                     return null; // is enable failure a full load failure?
-                }
+                }*/
             }
             catch (AmbiguousMatchException)
             {
