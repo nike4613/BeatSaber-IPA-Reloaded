@@ -28,18 +28,6 @@ namespace IPA
         /// </summary>
         void OnApplicationQuit();
 
-        // TODO: move more of these out of IPlugin
-
-        /// <summary>
-        /// Gets invoked on every graphic update.
-        /// </summary>
-        void OnUpdate();
-
-        /// <summary>
-        /// Gets invoked on ever physics update.
-        /// </summary>
-        void OnFixedUpdate();
-
         /// <summary>
         /// Gets invoked whenever a scene is loaded.
         /// </summary>

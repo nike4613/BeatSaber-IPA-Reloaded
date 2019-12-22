@@ -128,7 +128,6 @@
     <Compile Include="PluginInterfaces\BeatSaber\IDisablablePlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IEnhancedPlugin.cs" />
     <Compile Include="PluginInterfaces\BeatSaber\IPlugin.cs" />
-    <Compile Include="PluginInterfaces\IGenericEnhancedPlugin.cs" />
     <Compile Include="Config\IniFile.cs" />
     <Compile Include="PluginInterfaces\IPA\IEnhancedPlugin.cs" />
     <Compile Include="PluginInterfaces\IPA\IPlugin.cs" />

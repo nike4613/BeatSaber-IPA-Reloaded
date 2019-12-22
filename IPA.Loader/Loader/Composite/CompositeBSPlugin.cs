@@ -43,21 +43,25 @@ namespace IPA.Loader.Composite
             }
         }
         
-        public void OnUpdate() {
-            Invoke(plugin => plugin.Plugin.OnUpdate());
+        public void OnUpdate()
+        {
+            Invoke(plugin => {
+                if (plugin.Plugin is IEnhancedPlugin saberPlugin)
+                    saberPlugin.OnUpdate();
+            });
         }
 
-        public void OnFixedUpdate() {
-            Invoke(plugin => plugin.Plugin.OnFixedUpdate());
+        public void OnFixedUpdate()
+        {
+            Invoke(plugin => {
+                if (plugin.Plugin is IEnhancedPlugin saberPlugin)
+                    saberPlugin.OnFixedUpdate();
+            });
         }
-
-        public string Name => throw new InvalidOperationException();
-
-        public string Version => throw new InvalidOperationException();
 
         public void OnLateUpdate() {
             Invoke(plugin => {
-                if (plugin.Plugin is IGenericEnhancedPlugin saberPlugin)
+                if (plugin.Plugin is IEnhancedPlugin saberPlugin)
                     saberPlugin.OnLateUpdate();
             });
         }
