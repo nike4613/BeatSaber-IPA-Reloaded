@@ -106,10 +106,14 @@ namespace IPA.Config.Stores
             Value Serialize();
             void Deserialize(Value val);
         }
+        internal interface IGeneratedStore<T> : IGeneratedStore where T : class
+        {
+            void CopyFrom(T source);
+        }
 
         internal class Impl : IConfigStore
         {
-            private IGeneratedStore generated;
+            private readonly IGeneratedStore generated;
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
@@ -672,6 +676,49 @@ namespace IPA.Config.Stores
             #endregion
             #endregion
 
+            #region IGeneratedStore<T>
+            var IGeneratedStore_T_t = typeof(IGeneratedStore<>).MakeGenericType(type);
+            typeBuilder.AddInterfaceImplementation(IGeneratedStore_T_t);
+
+            var IGeneratedStore_T_CopyFrom = IGeneratedStore_T_t.GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
+
+            #region IGeneratedStore<T>.CopyFrom
+            var copyFrom = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore<Config>.CopyFrom)}", virtualMemberMethod, null, new[] { type });
+            typeBuilder.DefineMethodOverride(copyFrom, IGeneratedStore_T_CopyFrom);
+
+            {
+                var il = copyFrom.GetILGenerator();
+
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Call, Impl.ImplTakeWriteMethod); // take the write lock
+
+                var GetLocal = MakeGetLocal(il);
+
+                foreach (var member in structure)
+                {
+                    il.BeginExceptionBlock();
+
+                    EmitStore(il, member, il =>
+                    {
+                        EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
+                        EmitCorrectMember(il, member, GetLocal);
+                    });
+
+                    il.BeginCatchBlock(typeof(Exception));
+
+                    EmitWarnException(il, $"Error while copying from member {member.Name}");
+
+                    il.EndExceptionBlock();
+                }
+
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Call, Impl.ImplReleaseWriteMethod); // release write lock
+
+                il.Emit(OpCodes.Ret);
+            }
+            #endregion
+            #endregion
+
             #region IConfigStore
             typeBuilder.AddInterfaceImplementation(typeof(IConfigStore));
 
@@ -829,6 +876,8 @@ namespace IPA.Config.Stores
                 { // TODO: decide if i want to correct the value before or after i take the write lock
                     var il = propSet.GetILGenerator();
 
+                    var GetLocal = MakeGetLocal(il);
+
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Call, Impl.ImplTakeWriteMethod); // take the write lock
 
@@ -836,7 +885,7 @@ namespace IPA.Config.Stores
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
-                    EmitCorrectMember(il, member);
+                    EmitCorrectMember(il, member, GetLocal);
                     il.Emit(OpCodes.Call, set);
 
                     il.BeginFinallyBlock();
@@ -904,15 +953,47 @@ namespace IPA.Config.Stores
 
         private static bool NeedsCorrection(SerializedMemberInfo member)
         {
+            var expectType = GetExpectedValueTypeForType(member.IsNullable ? member.NullableWrappedType : member.Type);
+
+            if (expectType == typeof(Map)) // TODO: make this slightly saner
+                return true;
             return false;
         }
 
         // expects start value on stack, exits with final value on stack
-        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member)
+        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
         {
             if (!NeedsCorrection(member)) return;
 
+            var endLabel = il.DefineLabel();
+
+            if (member.IsNullable)
+            {
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Call, member.Nullable_HasValue.GetGetMethod());
+                il.Emit(OpCodes.Brfalse, endLabel);
+                il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
+            }
+
             // TODO: impl
+
+            // currently the only thing for this is where expect == Map, so do generate shit
+            il.Emit(OpCodes.Dup);
+            il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+            il.Emit(OpCodes.Brtrue_S, endLabel); // our input is already something we like
+
+            var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(member.Type).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
+            var valLocal = GetLocal(member.Type);
+            il.Emit(OpCodes.Stloc, valLocal);
+            EmitCreateChildGenerated(il, member.Type);
+            il.Emit(OpCodes.Dup);
+            il.Emit(OpCodes.Ldloc, valLocal);
+            il.Emit(OpCodes.Callvirt, copyFrom);
+
+            if (member.IsNullable)
+                il.Emit(OpCodes.Newobj, member.Nullable_Construct);
+
+            il.MarkLabel(endLabel);
         }
 
         // expects the this param to be on the stack
@@ -920,18 +1001,22 @@ namespace IPA.Config.Stores
         {
             if (!NeedsCorrection(member)) return;
 
-            var local = GetLocal(member.Type);
+            //var local = GetLocal(member.Type);
 
-            EmitLoad(il, member); // load the member
-            EmitCorrectMember(il, member); // correct it
-            il.Emit(OpCodes.Stloc, local);
-            EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local));
+            EmitStore(il, member, il =>
+            {
+                EmitLoad(il, member); // load the member
+                EmitCorrectMember(il, member, GetLocal); // correct it
+            });
         }
 
         #region Utility
-        private static void EmitLoad(ILGenerator il, SerializedMemberInfo member)
+        private static void EmitLoad(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> thisarg = null)
         {
-            il.Emit(OpCodes.Ldarg_0); // load this
+            if (thisarg == null)
+                thisarg = il => il.Emit(OpCodes.Ldarg_0);
+
+            thisarg(il); // load this
 
             if (member.IsField)
                 il.Emit(OpCodes.Ldfld, member.Member as FieldInfo);

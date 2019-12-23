@@ -15,13 +15,15 @@ namespace IPA.Config.Stores.Converters
             T FromValue(Value value, object parent);
             Value ToValue(T obj, object parent);
         }
-        private class Impl<U> : IImpl where U : class, GeneratedStore.IGeneratedStore, T
+        private class Impl<U> : IImpl where U : class, GeneratedStore.IGeneratedStore<T>, T
         {
             private static readonly GeneratedStore.GeneratedStoreCreator creator = GeneratedStore.GetCreator(typeof(T));
+            private static U Create(GeneratedStore.IGeneratedStore parent)
+                => creator(parent) as U;
 
             public T FromValue(Value value, object parent)
             { // lots of casting here, but it works i promise (probably) (parent can be a non-IGeneratedStore, however it won't necessarily behave then)
-                var obj = creator(parent as GeneratedStore.IGeneratedStore) as U;
+                var obj = Create(parent as GeneratedStore.IGeneratedStore);
                 obj.Deserialize(value);
                 return obj;
             }
@@ -31,7 +33,11 @@ namespace IPA.Config.Stores.Converters
                 if (obj is GeneratedStore.IGeneratedStore store)
                     return store.Serialize();
                 else
-                    return null; // TODO: make this behave sanely instead of just giving null
+                {
+                    var newObj = Create(null);
+                    newObj.CopyFrom(obj);
+                    return newObj.Serialize();
+                }
             }
         }
 
