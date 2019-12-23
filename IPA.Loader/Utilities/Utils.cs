@@ -204,9 +204,7 @@ namespace IPA.Utilities
         internal static IEnumerable<string> StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */);
 #endif
 #if NET3
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string[] StrJP(this IEnumerable<string> a) => a.ToArray();
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string[] StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */).ToArray();
 #endif
     }
