@@ -89,7 +89,6 @@ namespace IPA.Config
 
         // LINE: ignore
         [NonNullable]
-        [JsonProperty(Required = Required.DisallowNull)] // the JsonProperty annotations are for the generated schema
         public virtual Updates_ Updates { get; set; } = new Updates_();
 
         public class Debug_
@@ -130,7 +129,6 @@ namespace IPA.Config
 
         // LINE: ignore
         [NonNullable]
-        [JsonProperty(Required = Required.DisallowNull)]
         public virtual Debug_ Debug { get; set; } = new Debug_();
 
         public virtual bool YeetMods { get; set; } = true;
@@ -140,7 +138,6 @@ namespace IPA.Config
 
         // LINE: ignore
         [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
-        [JsonProperty(Required = Required.DisallowNull)]
         public virtual HashSet<string> GameAssemblies { get; set; } = new HashSet<string>
             {
             // LINE: ignore 5
@@ -153,6 +150,7 @@ namespace IPA.Config
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
 
+        [JsonProperty(Required = Required.DisallowNull)] // Used for documentation schema generation
         public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore
         public static string LastGameVersion_ => Instance?.LastGameVersion;

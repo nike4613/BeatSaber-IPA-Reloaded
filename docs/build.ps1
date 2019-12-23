@@ -96,7 +96,7 @@ if (-not (Test-Path $ipaExe -PathType Leaf)) {
     msbuild -p:Configuration=Release -p:Platform=AnyCPU -p:SolutionDir=.. "$ipaRoot/IPA.csproj"
 }
 
-& $ipaExe --help > .\articles\_ipa_command_line.txt
+& "$ipaExe" --help > .\articles\_ipa_command_line.txt
 
 & docfx build --globalMetadataFiles link_branch.json @Args
 if ($lastexitcode -ne 0) {
