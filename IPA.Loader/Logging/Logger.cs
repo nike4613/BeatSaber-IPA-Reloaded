@@ -171,7 +171,7 @@ namespace IPA.Logging
             /// <summary>
             /// Used for when the level is undefined.
             /// </summary>
-            Undefined = Byte.MaxValue
+            Undefined = byte.MaxValue
         }
 
         /// <summary>
