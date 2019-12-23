@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using Mono.Cecil;
+using System.Runtime.CompilerServices;
 #if NET3
 using File = Net3_Proxy.File;
 #endif
@@ -197,11 +198,15 @@ namespace IPA.Utilities
         }
 
 #if NET4
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IEnumerable<string> StrJP(this IEnumerable<string> a) => a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IEnumerable<string> StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */);
 #endif
 #if NET3
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string[] StrJP(this IEnumerable<string> a) => a.ToArray();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string[] StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */).ToArray();
 #endif
     }
