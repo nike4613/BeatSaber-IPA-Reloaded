@@ -64,6 +64,13 @@ uid: articles.start.user
     >   ...
     > }
     > ```
+    >
+    > [!TIP]
+    > Depending on the game, you may have to set the config member `GameAssemblies` to the names of the assemblies
+    > that the game uses for BSIPA to virtualize them properly.
+    >
+    > For Beat Saber distrobutions, this will be set according to the version that it was built for by default.
+    > Otherwise, it will contain just `Assembly-CSharp.dll` since most games use that default.
 
  4. From here, just place all of your plugins in the `Plugins` folder, and you're all set!
 
