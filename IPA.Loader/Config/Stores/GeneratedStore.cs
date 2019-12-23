@@ -290,16 +290,6 @@ namespace IPA.Config.Stores
             if (baseCtor == null)
                 throw new ArgumentException("Config type does not have a public parameterless constructor");
 
-            var typeBuilder = Module.DefineType($"{type.FullName}<Generated>", 
-                TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class, type);
-
-            var typeField = typeBuilder.DefineField("<>_type", typeof(Type), FieldAttributes.Private | FieldAttributes.InitOnly);
-            var implField = typeBuilder.DefineField("<>_impl", typeof(Impl), FieldAttributes.Private | FieldAttributes.InitOnly);
-            var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
-
-
-            // none of this can be Expressions because CompileToMethod requires a static target method for some dumbass reason
-
             #region Parse base object structure
             var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
             if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null; // limit this to just the one thing
@@ -381,15 +371,15 @@ namespace IPA.Config.Stores
 
                     member.HasConverter = true;
                 }
-                endConverterAttr: 
+            endConverterAttr:
 
                 return true;
             }
-            
+
             // only looks at public/protected properties
             foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                if (prop.GetSetMethod(true)?.IsPrivate ?? true) 
+                if (prop.GetSetMethod(true)?.IsPrivate ?? true)
                 { // we enter this block if the setter is inacessible or doesn't exist
                     continue; // ignore props without setter
                 }
@@ -430,6 +420,13 @@ namespace IPA.Config.Stores
                 structure.Add(smi);
             }
             #endregion
+
+            var typeBuilder = Module.DefineType($"{type.FullName}<Generated>", 
+                TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Class, type);
+
+            var typeField = typeBuilder.DefineField("<>_type", typeof(Type), FieldAttributes.Private | FieldAttributes.InitOnly);
+            var implField = typeBuilder.DefineField("<>_impl", typeof(Impl), FieldAttributes.Private | FieldAttributes.InitOnly);
+            var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
 
             #region Converter fields
             var uniqueConverterTypes = structure.Where(m => m.HasConverter).Select(m => m.Converter).Distinct().ToArray();

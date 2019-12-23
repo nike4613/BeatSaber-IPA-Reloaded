@@ -412,8 +412,7 @@ namespace IPA.Loader
 
             T OptionalGetPlugin<T>(Type t) where T : class
             {
-                // use typeof() to allow for easier renaming (in an ideal world this compiles to a string, but ¯\_(ツ)_/¯)
-                if (t.GetInterface(typeof(T).Name) != null)
+                if (t.FindInterfaces((t, o) => t == (o as Type), typeof(T)).Length > 0)
                 {
                     try
                     {
