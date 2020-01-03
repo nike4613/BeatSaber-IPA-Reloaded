@@ -27,7 +27,7 @@ namespace IPA.Config
 
         protected internal virtual void OnReload()
         {
-            StandardLogger.Configure(this);
+            StandardLogger.Configure();
         }
 
         protected internal virtual void Changed()
