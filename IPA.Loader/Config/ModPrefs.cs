@@ -201,7 +201,7 @@ namespace IPA.Config
 
         bool IModPrefs.HasKey(string section, string name)
         {
-            return _instance.IniReadValue(section, name) != null;
+            return (_instance.IniReadValue(section, name)?.Length ?? 0) > 0;
         }
         /// <summary>
         /// Checks whether or not a key exists in the ini.
