@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine.SceneManagement;
 
 namespace IPA
 {
@@ -10,6 +11,7 @@ namespace IPA
     /// Mods implemented with this interface should handle being enabled at runtime properly, unless marked
     /// with the "no-runtime-enable" feature.
     /// </remarks>
+    [Obsolete("Use the attribute-based system instead.")]
     public interface IPlugin
     {
         /// <summary>
