@@ -17,6 +17,7 @@ namespace IPA
         }
     }
 
+    // TODO: figure out a better name for this
     public enum RuntimeOptions
     {
         SingleStartInit,
