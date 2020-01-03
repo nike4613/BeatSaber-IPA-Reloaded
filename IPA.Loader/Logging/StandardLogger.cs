@@ -104,7 +104,7 @@ namespace IPA.Logging
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
         /// <value>the global filter level</value>
-        internal static LogLevel PrintFilter { get; set; } = LogLevel.All;
+        public static LogLevel PrintFilter { get; internal set; } = LogLevel.All;
         private static bool showTrace = false;
 
         private readonly List<LogPrinter> printers = new List<LogPrinter>();
