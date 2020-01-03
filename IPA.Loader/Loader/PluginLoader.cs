@@ -272,9 +272,9 @@ namespace IPA.Loader
                                         return;
                                     }
 
-                                    var val = rtOptionsArg.Value?.GetType();
-                                    Logger.loader.Debug($"value type is {(val == null ? "null" : val.FullName)}");
+                                    var rtOptionsValInt = (int)rtOptionsArg.Value; // `int` is the underlying type of RuntimeOptions
 
+                                    meta.RuntimeOptions = (RuntimeOptions)rtOptionsValInt;
                                     meta.IsAttributePlugin = true;
                                     meta.PluginType = type;
                                     return;
