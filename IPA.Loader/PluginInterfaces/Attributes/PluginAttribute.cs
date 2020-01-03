@@ -9,6 +9,7 @@ namespace IPA
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class PluginAttribute : Attribute
     {
+        // whenever this changes, PluginLoader.LoadMetadata must also change
         public RuntimeOptions RuntimeOptions { get; }
         public PluginAttribute(RuntimeOptions runtimeOptions)
         {
