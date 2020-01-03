@@ -104,7 +104,7 @@ namespace IPA.Logging
         /// All levels defined by this filter will be sent to loggers. All others will be ignored.
         /// </summary>
         /// <value>the global filter level</value>
-        public static LogLevel PrintFilter { get; set; } = LogLevel.All;
+        internal static LogLevel PrintFilter { get; set; } = LogLevel.All;
         private static bool showTrace = false;
 
         private readonly List<LogPrinter> printers = new List<LogPrinter>();
@@ -115,8 +115,7 @@ namespace IPA.Logging
         /// <summary>
         /// Configures internal debug settings based on the config passed in.
         /// </summary>
-        /// <param name="cfg"></param>
-        internal static void Configure(SelfConfig cfg)
+        internal static void Configure()
         {
             showSourceClass = SelfConfig.Debug_.ShowCallSource_;
             PrintFilter = SelfConfig.Debug_.ShowDebug_ ? LogLevel.All : LogLevel.InfoUp;
