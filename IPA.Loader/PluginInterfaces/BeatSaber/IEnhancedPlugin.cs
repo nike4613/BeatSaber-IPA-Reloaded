@@ -10,6 +10,7 @@ namespace IPA
     /// <summary>
     /// An enhanced version of a standard BeatSaber plugin.
     /// </summary>
+    [Obsolete("Use the attribute-based system instead.")]
     public interface IEnhancedPlugin : IPlugin
     {
 

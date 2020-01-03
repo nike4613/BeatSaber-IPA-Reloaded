@@ -1,8 +1,11 @@
-﻿namespace IPA
+﻿using System;
+
+namespace IPA
 {
     /// <summary>
     /// Provides methods to allow runtime disabling of a plugin.
     /// </summary>
+    [Obsolete("Use the attribute-based system instead.")]
     public interface IDisablablePlugin : IPlugin
     {
 
