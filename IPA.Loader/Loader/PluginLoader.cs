@@ -118,6 +118,9 @@ namespace IPA.Loader
                 }
             }
 
+            public RuntimeOptions RuntimeOptions { get; internal set; }
+            public bool IsAttributePlugin { get; internal set; } = false;
+
             /// <summary>
             /// Gets all of the metadata as a readable string.
             /// </summary>
@@ -239,20 +242,70 @@ namespace IPA.Loader
                         continue;
                     }
 
-                    foreach (var type in pluginModule.Types)
+                    void TryGetNamespacedPluginType(string ns, PluginMetadata meta)
                     {
-                        if (type.Namespace != pluginNs) continue;
-
-                        if (type.HasInterface(typeof(IPlugin).FullName))
+                        foreach (var type in pluginModule.Types)
                         {
-                            metadata.PluginType = type;
-                            break;
+                            if (type.Namespace != ns) continue;
+
+                            if (type.HasCustomAttributes)
+                            {
+                                var attr = type.CustomAttributes.FirstOrDefault(a => a.Constructor.DeclaringType.FullName == typeof(PluginAttribute).FullName);
+                                if (attr != null)
+                                {
+                                    if (!attr.HasConstructorArguments)
+                                    {
+                                        Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has no arguments");
+                                        return;
+                                    }
+
+                                    var args = attr.ConstructorArguments;
+                                    if (args.Count != 1)
+                                    {
+                                        Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has unexpected number of arguments");
+                                        return;
+                                    }
+                                    var rtOptionsArg = args[0];
+                                    if (rtOptionsArg.Type.FullName != typeof(RuntimeOptions).FullName)
+                                    {
+                                        Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but first argument is of unexpected type {rtOptionsArg.Type.FullName}");
+                                        return;
+                                    }
+
+                                    var val = rtOptionsArg.Value?.GetType();
+                                    Logger.loader.Debug($"value type is {(val == null ? "null" : val.FullName)}");
+
+                                    meta.IsAttributePlugin = true;
+                                    meta.PluginType = type;
+                                    return;
+                                }
+                            }
+
+                            if (type.HasInterface(typeof(IPlugin).FullName))
+                            {
+                                Logger.loader.Warn("Interface-based plugin found");
+                                meta.RuntimeOptions = RuntimeOptions.SingleDynamicInit;
+                                meta.PluginType = type;
+                                return;
+                            }
                         }
                     }
 
+                    var hint = metadata.Manifest.Misc?.PluginMainHint;
+
+                    if (hint != null)
+                    {
+                        var type = pluginModule.GetType(hint);
+                        if (type != null)
+                            TryGetNamespacedPluginType(hint, metadata);
+                    }
+
+                    if (metadata.PluginType == null)
+                        TryGetNamespacedPluginType(pluginNs, metadata);
+
                     if (metadata.PluginType == null)
                     {
-                        Logger.loader.Error($"No plugin found in the manifest namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
+                        Logger.loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
                         continue;
                     }
 
@@ -340,8 +393,7 @@ namespace IPA.Loader
         internal enum Reason
         {
             Error, Duplicate, Conflict, Dependency,
-            Released,
-            Feature
+            Released, Feature, Unsupported
         }
         internal struct IgnoreReason
         {
@@ -655,6 +707,12 @@ namespace IPA.Loader
 
         internal static PluginInfo InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
+            if (meta.IsAttributePlugin)
+            {
+                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Unsupported) { ReasonText = "Attribute plugins are currently not supported" });
+                return null;
+            }
+
             if (meta.PluginType == null)
                 return new PluginInfo()
                 {

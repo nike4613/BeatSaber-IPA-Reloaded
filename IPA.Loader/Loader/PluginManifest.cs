@@ -66,5 +66,15 @@ namespace IPA.Loader
 
         [JsonProperty("links", Required = Required.DisallowNull)]
         public LinksObject Links = null;
+
+        [Serializable]
+        public class MiscObject
+        {
+            [JsonProperty("plugin-hint", Required = Required.DisallowNull)]
+            public string PluginMainHint = null;
+        }
+
+        [JsonProperty("misc", Required = Required.DisallowNull)]
+        public MiscObject Misc = null;
     }
 }
