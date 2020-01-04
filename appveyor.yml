@@ -77,7 +77,7 @@ for:
   skip_tags: false
   build_script:
   - ps: |
-        if ($True)
+        if ($env:BUILD_DOC -Eq 'yes')
         {
             cd docs
             
