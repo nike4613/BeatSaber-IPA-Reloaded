@@ -63,8 +63,8 @@ for:
   skip_tags: true
 - 
   matrix:
-    except:
-    - BUILD_DOC: 'no'
+    only:
+    - BUILD_DOC: 'yes'
 
   artifacts:
   environment:
@@ -72,91 +72,88 @@ for:
   skip_tags: false
   build_script:
   - ps: |
-        if ($env:BUILD_DOC -Eq 'yes')
-        {
-            cd docs
+        cd docs
             
-            $tagsName = "tags"
-            $branchName = "branch"
+        $tagsName = "tags"
+        $branchName = "branch"
             
-            function Git-Do {
-                git config --global core.autocrlf true
-                git config --global credential.helper store
-                Add-Content "$HOME\.git-credentials" "https://$($env:gh_token):x-oauth-basic@github.com`n"
-                git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
-                git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
-                git clone -q "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
+        function Git-Do {
+            git config --global core.autocrlf true
+            git config --global credential.helper store
+            Add-Content "$HOME\.git-credentials" "https://$($env:gh_token):x-oauth-basic@github.com`n"
+            git config --global user.email $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL
+            git config --global user.name $env:APPVEYOR_REPO_COMMIT_AUTHOR
+            git clone -q "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded.git" -b gh-pages origin_site
             
-                if (-Not (Test-Path origin_site/$tagsName))
-                { New-Item -ItemType directory -Path origin_site/$tagsName }
-                if (-Not (Test-Path origin_site/$branchName))
-                { New-Item -ItemType directory -Path origin_site/$branchName }
-            }
-            
-            function Do-DocFX
-            {
-                Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
-                powershell .\build.ps1
-                if ($lastexitcode -ne 0){
-                    throw [System.Exception] "docfx build failed with exit code $lastexitcode."
-                }
-            }
-            
-            if ($env:APPVEYOR_REPO_TAG -eq "true" -And $env:APPVEYOR_REPO_BRANCH -eq 'master')
-            { # Copy current site into tags
-                & Do-DocFX
-                
-                & Git-Do
-                
-                cd origin_site # make things a bit easier
-                
-                $tagPath = "$tagsName/$env:APPVEYOR_REPO_TAG_NAME"
-                Move-Item ../_site $tagPath
-                
-                git add -A 2>&1
-                git commit -q -a -m "Saved tag $env:APPVEYOR_REPO_TAG_NAME" 2>&1
-            }
-            elseif (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
-            { # Generate docs
-                $message = ""
-                if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
-                { # do the special generation for master
-                    & Do-DocFX 
-                    
-                    & Git-Do
-                    
-                    Move-Item origin_site/.git _site
-                    Move-Item origin_site/$tagsName _site
-                    Move-Item origin_site/$branchName _site
-                    
-                    cd _site
-                    
-                    $message = "Generated Docs -- $env:APPVEYOR_REPO_COMMIT_MESSAGE"
-                }
-                else
-                { # generate for another branch; this is more similar to the tag code
-                    & Do-DocFX
-                    
-                    & Git-Do
-                    
-                    cd origin_site # make things a bit easier
-                    
-                    $branchPath = "$branchName/$env:APPVEYOR_REPO_BRANCH"
-                    # force remove it
-                    Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
-                    Remove-Item $branchPath -Force
-                    
-                    # move generated into place
-                    Move-Item ../_site $branchPath
-                    
-                    $message = "Generated Docs ($env:APPVEYOR_REPO_BRANCH) -- $env:APPVEYOR_REPO_COMMIT_MESSAGE"
-                }
-                git add -A 2>&1
-                git commit -q -a -m "$message" 2>&1
-            }
-            
-            git push -q origin gh-pages 2>&1 
+            if (-Not (Test-Path origin_site/$tagsName))
+            { New-Item -ItemType directory -Path origin_site/$tagsName }
+            if (-Not (Test-Path origin_site/$branchName))
+            { New-Item -ItemType directory -Path origin_site/$branchName }
         }
+            
+        function Do-DocFX
+        {
+            Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:APPVEYOR_REPO_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
+            powershell .\build.ps1
+            if ($lastexitcode -ne 0){
+                throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+            }
+        }
+            
+        if ($env:APPVEYOR_REPO_TAG -eq "true" -And $env:APPVEYOR_REPO_BRANCH -eq 'master')
+        { # Copy current site into tags
+            & Do-DocFX
+                
+            & Git-Do
+                
+            cd origin_site # make things a bit easier
+                
+            $tagPath = "$tagsName/$env:APPVEYOR_REPO_TAG_NAME"
+            Move-Item ../_site $tagPath
+                
+            git add -A 2>&1
+            git commit -q -a -m "Saved tag $env:APPVEYOR_REPO_TAG_NAME" 2>&1
+        }
+        elseif (-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        { # Generate docs
+            $message = ""
+            if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
+            { # do the special generation for master
+                & Do-DocFX 
+                    
+                & Git-Do
+                    
+                Move-Item origin_site/.git _site
+                Move-Item origin_site/$tagsName _site
+                Move-Item origin_site/$branchName _site
+                    
+                cd _site
+                    
+                $message = "Generated Docs -- $env:APPVEYOR_REPO_COMMIT_MESSAGE"
+            }
+            else
+            { # generate for another branch; this is more similar to the tag code
+                & Do-DocFX
+                    
+                & Git-Do
+                    
+                cd origin_site # make things a bit easier
+                    
+                $branchPath = "$branchName/$env:APPVEYOR_REPO_BRANCH"
+                # force remove it
+                Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
+                Remove-Item $branchPath -Force
+                    
+                # move generated into place
+                Move-Item ../_site $branchPath
+                    
+                $message = "Generated Docs ($env:APPVEYOR_REPO_BRANCH) -- $env:APPVEYOR_REPO_COMMIT_MESSAGE"
+            }
+            git add -A 2>&1
+            git commit -q -a -m "$message" 2>&1
+        }
+            
+        git push -q origin gh-pages 2>&1
 
 branches:
   except:
