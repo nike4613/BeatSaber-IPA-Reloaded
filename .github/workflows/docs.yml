@@ -7,11 +7,20 @@ on:
 
 jobs:
   docs:
+    env:
+      ORIGIN_SITE: _origin_site
+      TAGS_DIR: tags
+      BRANCH_DIR: branch
+      SOURCE_COMMIT: ${{ github.sha }}
+      SOURCE_REF: ${{ github.ref }}
     name: Generate docs
     runs-on: windows-latest
     steps:
-      - name: Configure git
-        run: git config --global core.autocrlf true
+      - name: Configure Git
+        run: 
+          - git config --global core.autocrlf true
+          - git config --global user.email ${{ github.actor }}@users.noreply.github.com
+          - git config --global user.name ${{ github.actor }}
       - name: Checkout branch
         uses: actions/checkout@v2
       - name: Checkout submodules
@@ -27,8 +36,6 @@ jobs:
         with:
           args: install docfx -y
       - name: Build docs
-        env: 
-          SOURCE_COMMIT: ${{ github.sha }}
         shell: powershell
         working-directory: ./docs
         run: |
@@ -37,18 +44,45 @@ jobs:
           if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
           }
-      - name: Publish master site to GitHub pages
-        uses: seanmiddleditch/gha-publish-to-git@master
+      - name: Checkout current pages
+        uses: actions/checkout@v2
         with:
-          branch: gh-pages
-          github-token: ${{ secrets.pagesCommitToken }}
-          source_folder: docs/_site
+          ref: gh-pages
+          token: ${{ secrets.pagesCommitToken }}
+          path: docs/${{ env.ORIGIN_SITE }}
+      - name: Publish master site to GitHub pages
+        shell: powershell
+        working-directory: ./docs
+        run: |
+          Move-Item "$env:ORIGIN_SITE/.git" _site
+          Move-Item "$env:ORIGIN_SITE/$env:TAGS_DIR" _site
+          Move-Item "$env:ORIGIN_SITE/$env:BRANCH_DIR" _site
+
+          cd _site
+          git add -A 2>&1
+
+          $srcMessage = (git show -s --format=%B $env:SOURCE_COMMIT) -join "`n"
+          git commit -q -a -m "Generated Docs -- $srcMessage"
+          
+          git push -q origin gh-pages 
         if: github.ref == 'master'
       - name: Publish branch site to GitHub pages
-        uses: seanmiddleditch/gha-publish-to-git@master
-        with:
-          branch: gh-pages
-          github-token: ${{ secrets.pagesCommitToken }}
-          source_folder: docs/_site
-          target_folder: branch/${{ github.ref }}
+        shell: powershell
+        working-directory: ./docs/${{ env.ORIGIN_SITE }}
+        run: |
+          $branchPath = "$env:BRANCH_DIR/$env:SOURCE_REF"
+
+          # force remove it
+          Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
+          Remove-Item $branchPath -Force
+              
+          # move generated into place
+          Move-Item ../_site $branchPath
+
+          git add -A 2>&1
+
+          $srcMessage = (git show -s --format=%B $env:SOURCE_COMMIT) -join "`n"
+          git commit -q -a -m "Generated Docs ($env:SOURCE_REF) -- $srcMessage"
+          
+          git push -q origin gh-pages 
         if: github.ref != 'master'
