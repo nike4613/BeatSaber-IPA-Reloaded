@@ -11,16 +11,17 @@ jobs:
       ORIGIN_SITE: _origin_site
       TAGS_DIR: tags
       BRANCH_DIR: branch
-      SOURCE_COMMIT: ${{ github.sha }}
-      SOURCE_REF: ${{ github.ref }}
     name: Generate docs
     runs-on: windows-latest
     steps:
       - name: Configure Git
+        shell: powershell
         run: |
           git config --global core.autocrlf true
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com
-          git config --global user.name ${{ github.actor }}
+          git config --global user.email ([$env:GITHUB_ACTOR,"@users.noreply.github.com" -join "")
+          git config --global user.name $env:GITHUB_ACTOR
+          $env:BRANCH_NAME = (git rev-parse --abbrev-ref $env:GITHUB_REF) -join ""
+          echo $env:BRANCH_NAME
       - name: Checkout branch
         uses: actions/checkout@v2
       - name: Checkout submodules
@@ -39,11 +40,12 @@ jobs:
         shell: powershell
         working-directory: ./docs
         run: |
-          Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:SOURCE_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
+          Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:GITHUB_SHA`",`"apiSpecFolder`":`"docs/override`"}}"
           powershell .\build.ps1
           if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
           }
+          echo $env:BRANCH_NAME
       - name: Checkout current pages
         uses: actions/checkout@v2
         with:
@@ -61,28 +63,33 @@ jobs:
           cd _site
           git add -A 2>&1
 
-          $srcMessage = (git show -s --format=%B $env:SOURCE_COMMIT) -join "`n"
+          $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
           git commit -q -a -m "Generated Docs -- $srcMessage"
           
           git push -q origin gh-pages 
-        if: github.ref == 'master'
+        if: env.BRANCH_NAME == 'master'
       - name: Publish branch site to GitHub pages
         shell: powershell
         working-directory: ./docs/${{ env.ORIGIN_SITE }}
         run: |
-          $branchPath = "$env:BRANCH_DIR/$env:SOURCE_REF"
+          if (-Not (Test-Path $env:BRANCH_DIR))
+          { New-Item -ItemType directory -Path $env:BRANCH_DIR }
 
-          # force remove it
-          Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
-          Remove-Item $branchPath -Force
+          $branchPath = "$env:BRANCH_DIR/$env:BRANCH_NAME"
+
+          if (Test-Path $branchPath) {
+            # force remove it
+            Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
+            Remove-Item $branchPath -Force
+          }
               
           # move generated into place
           Move-Item ../_site $branchPath
 
           git add -A 2>&1
 
-          $srcMessage = (git show -s --format=%B $env:SOURCE_COMMIT) -join "`n"
-          git commit -q -a -m "Generated Docs ($env:SOURCE_REF) -- $srcMessage"
+          $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
+          git commit -q -a -m "Generated Docs ($env:BRANCH_NAME) -- $srcMessage"
           
           git push -q origin gh-pages 
-        if: github.ref != 'master'
+        if: env.BRANCH_NAME != 'master'
