@@ -15,12 +15,30 @@ namespace IPA.Utilities
         /// <param name="obj">the object instance</param>
         /// <param name="fieldName">the field to set</param>
         /// <param name="value">the value to set it to</param>
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="fieldName"/> is not a member of <paramref name="obj"/></exception>
 		public static void SetPrivateField(this object obj, string fieldName, object value)
 		{
-			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			prop?.SetValue(obj, value);
+            Type targetType = obj.GetType();
+            obj.SetPrivateField(fieldName, value, targetType);
 		}
-		
+
+        /// <summary>
+        /// Sets a (potentially) private field on the target object. <paramref name="targetType"/> specifies the <see cref="Type"/> the field belongs to. 
+        /// </summary>
+        /// <param name="obj">the object instance</param>
+        /// <param name="fieldName">the field to set</param>
+        /// <param name="value">the value to set it to</param>
+        /// <param name="targetType">the object type the field belongs to</param>
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="fieldName"/> is not a member of <paramref name="obj"/></exception>
+        /// <exception cref="ArgumentException">thrown when <paramref name="obj"/> isn't assignable as <paramref name="targetType"/></exception>
+		public static void SetPrivateField(this object obj, string fieldName, object value, Type targetType)
+        {
+            var prop = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (prop == null)
+                throw new InvalidOperationException($"{fieldName} is not a member of {targetType.Name}");
+            prop.SetValue(obj, value);
+        }
+
         /// <summary>
         /// Gets the value of a (potentially) private field.
         /// </summary>
@@ -28,24 +46,47 @@ namespace IPA.Utilities
         /// <param name="obj">the object instance to pull from</param>
         /// <param name="fieldName">the name of the field to read</param>
         /// <returns>the value of the field</returns>
-		public static T GetPrivateField<T>(this object obj, string fieldName)
-		{
-			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-			var value = prop?.GetValue(obj);
-			return (T) value;
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="fieldName"/> is not a member of <paramref name="obj"/></exception>
+        public static T GetPrivateField<T>(this object obj, string fieldName)
+        {
+            Type targetType = obj.GetType();
+            return obj.GetPrivateField<T>(fieldName, targetType);
 		}
-		
+
+        /// <summary>
+        /// Gets the value of a (potentially) private field. <paramref name="targetType"/> specifies the <see cref="Type"/> the field belongs to
+        /// </summary>
+        /// <typeparam name="T">the type of the field (result casted)</typeparam>
+        /// <param name="obj">the object instance to pull from</param>
+        /// <param name="fieldName">the name of the field to read</param>
+        /// <param name="targetType">the object type the field belongs to</param>
+        /// <returns>the value of the field</returns>
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="fieldName"/> is not a member of <paramref name="obj"/></exception>
+        /// <exception cref="ArgumentException">thrown when <paramref name="obj"/> isn't assignable as <paramref name="targetType"/></exception>
+        public static T GetPrivateField<T>(this object obj, string fieldName, Type targetType)
+        {
+            var prop = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (prop == null)
+                throw new InvalidOperationException($"{fieldName} is not a member of {targetType.Name}");
+            var value = prop.GetValue(obj);
+            return (T)value;
+        }
+
         /// <summary>
         /// Sets a (potentially) private property on the target object.
         /// </summary>
         /// <param name="obj">the target object instance</param>
         /// <param name="propertyName">the name of the property</param>
         /// <param name="value">the value to set it to</param>
-		public static void SetPrivateProperty(this object obj, string propertyName, object value)
-		{
-			var prop = obj.GetType()
-				.GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			prop?.SetValue(obj, value, null);
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="propertyName"/> is not a member of <paramref name="obj"/></exception>
+        public static void SetPrivateProperty(this object obj, string propertyName, object value)
+        {
+            Type targetType = obj.GetType();
+            var prop = targetType
+                .GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (prop == null)
+                throw new InvalidOperationException($"{propertyName} is not a member of {targetType.Name}");
+            prop.SetValue(obj, value, null);
 		}
 
         /// <summary>
@@ -55,10 +96,14 @@ namespace IPA.Utilities
         /// <param name="methodName">the method name</param>
         /// <param name="methodParams">the method parameters</param>
         /// <returns>the return value</returns>
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="methodName"/> is not a member of <paramref name="obj"/></exception>
 		public static object InvokePrivateMethod(this object obj, string methodName, params object[] methodParams)
-		{
-			MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-			return dynMethod?.Invoke(obj, methodParams);
+        {
+            Type targetType = obj.GetType();
+            MethodInfo dynMethod = targetType.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (dynMethod == null)
+                throw new InvalidOperationException($"{methodName} is not a member of {targetType.Name}");
+            return dynMethod.Invoke(obj, methodParams);
 		}
 
         /// <summary>
