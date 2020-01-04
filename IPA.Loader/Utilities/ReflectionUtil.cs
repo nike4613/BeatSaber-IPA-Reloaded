@@ -28,7 +28,7 @@ namespace IPA.Utilities
         /// <param name="obj">the object instance</param>
         /// <param name="fieldName">the field to set</param>
         /// <param name="value">the value to set it to</param>
-        /// <param name="targetType">the object type the field belongs to</param>
+        /// <param name="targetType">the object <see cref="Type"/> the field belongs to</param>
         /// <exception cref="InvalidOperationException">thrown when <paramref name="fieldName"/> is not a member of <paramref name="obj"/></exception>
         /// <exception cref="ArgumentException">thrown when <paramref name="obj"/> isn't assignable as <paramref name="targetType"/></exception>
 		public static void SetPrivateField(this object obj, string fieldName, object value, Type targetType)
@@ -54,12 +54,12 @@ namespace IPA.Utilities
 		}
 
         /// <summary>
-        /// Gets the value of a (potentially) private field. <paramref name="targetType"/> specifies the <see cref="Type"/> the field belongs to
+        /// Gets the value of a (potentially) private field. <paramref name="targetType"/> specifies the <see cref="Type"/> the field belongs to.
         /// </summary>
         /// <typeparam name="T">the type of the field (result casted)</typeparam>
         /// <param name="obj">the object instance to pull from</param>
         /// <param name="fieldName">the name of the field to read</param>
-        /// <param name="targetType">the object type the field belongs to</param>
+        /// <param name="targetType">the object <see cref="Type"/> the field belongs to</param>
         /// <returns>the value of the field</returns>
         /// <exception cref="InvalidOperationException">thrown when <paramref name="fieldName"/> is not a member of <paramref name="obj"/></exception>
         /// <exception cref="ArgumentException">thrown when <paramref name="obj"/> isn't assignable as <paramref name="targetType"/></exception>
@@ -82,12 +82,26 @@ namespace IPA.Utilities
         public static void SetPrivateProperty(this object obj, string propertyName, object value)
         {
             Type targetType = obj.GetType();
+            obj.SetPrivateProperty(propertyName, value, targetType);
+		}
+
+        /// <summary>
+        /// Sets a (potentially) private property on the target object.
+        /// </summary>
+        /// <param name="obj">the target object instance</param>
+        /// <param name="propertyName">the name of the property</param>
+        /// <param name="value">the value to set it to</param>
+        /// <param name="targetType">the object <see cref="Type"/> the property belongs to</param>
+        /// <exception cref="InvalidOperationException">thrown when <paramref name="propertyName"/> is not a member of <paramref name="obj"/></exception>
+        /// <exception cref="ArgumentException">thrown when <paramref name="obj"/> isn't assignable as <paramref name="targetType"/></exception>
+        public static void SetPrivateProperty(this object obj, string propertyName, object value, Type targetType)
+        {
             var prop = targetType
                 .GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (prop == null)
                 throw new InvalidOperationException($"{propertyName} is not a member of {targetType.Name}");
             prop.SetValue(obj, value, null);
-		}
+        }
 
         /// <summary>
         /// Invokes a (potentially) private method.
