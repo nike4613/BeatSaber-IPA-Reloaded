@@ -20,7 +20,6 @@ install:
   - ps: |
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:BUILD_DOC -Eq 'yes')
         {
-            #git checkout $env:APPVEYOR_REPO_BRANCH -q
             choco install docfx -y
         }
 
@@ -48,10 +47,6 @@ matrix:
       platform: x64-Net3
     - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
       platform: x86-Net3
-
-before_build:
-- ps: |
-      echo $env:Configuration $env:Platform $env:BuildingInsideVisualStudio
       
 for:
 -
@@ -127,13 +122,13 @@ for:
                 if ($env:APPVEYOR_REPO_BRANCH -eq 'master')
                 { # do the special generation for master
                     & Do-DocFX 
-                
+                    
                     & Git-Do
-                
+                    
                     Move-Item origin_site/.git _site
                     Move-Item origin_site/$tagsName _site
                     Move-Item origin_site/$branchName _site
-                
+                    
                     cd _site
                     
                     $message = "Generated Docs -- $env:APPVEYOR_REPO_COMMIT_MESSAGE"
@@ -141,11 +136,11 @@ for:
                 else
                 { # generate for another branch; this is more similar to the tag code
                     & Do-DocFX
-                
+                    
                     & Git-Do
-                
+                    
                     cd origin_site # make things a bit easier
-                
+                    
                     $branchPath = "$branchName/$env:APPVEYOR_REPO_BRANCH"
                     # force remove it
                     Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
