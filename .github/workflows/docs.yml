@@ -1,0 +1,54 @@
+name: Routine Docs
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+
+jobs:
+  docs:
+    name: Generate docs
+    runs-on: windows-latest
+    steps:
+      - name: Configure git
+        run: git config --global core.autocrlf true
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Locate MSBuild
+        uses: warrenbuckley/Setup-MSBuild@v1
+      - name: Setup Nuget
+        uses: warrenbuckley/Setup-Nuget@v1
+      - name: Nuget Restore
+        run: nuget restore
+      - name: Install DocFX
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install docfx -y
+      - name: Build docs
+        env: 
+          SOURCE_COMMIT: ${{ github.sha }}
+        shell: powershell
+        working-directory: ./docs
+        run: |
+          Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:SOURCE_COMMIT`",`"apiSpecFolder`":`"docs/override`"}}"
+          powershell .\build.ps1
+          if ($lastexitcode -ne 0){
+              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+          }
+      - name: Publish master site to GitHub pages
+        uses: seanmiddleditch/gha-publish-to-git@master
+        with:
+          branch: gh-pages
+          github-token: ${{ secrets.pagesCommitToken }}
+          source_folder: docs/_site
+        if: github.ref == 'master'
+      - name: Publish branch site to GitHub pages
+        uses: seanmiddleditch/gha-publish-to-git@master
+        with:
+          branch: gh-pages
+          github-token: ${{ secrets.pagesCommitToken }}
+          source_folder: docs/_site
+          target_folder: branch/${{ github.ref }}
+        if: github.ref != 'master'
