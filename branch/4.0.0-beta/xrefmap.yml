@@ -5366,6 +5366,15 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.GetField(Of T)(System.Object, System.String)
   nameWithType: ReflectionUtil.GetField<T>(Object, String)
   nameWithType.vb: ReflectionUtil.GetField(Of T)(Object, String)
+- uid: IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)
+  name: GetField<T, U>(U, String)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_
+  commentId: M:IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)
+  name.vb: GetField(Of T, U)(U, String)
+  fullName: IPA.Utilities.ReflectionUtil.GetField<T, U>(U, System.String)
+  fullName.vb: IPA.Utilities.ReflectionUtil.GetField(Of T, U)(U, System.String)
+  nameWithType: ReflectionUtil.GetField<T, U>(U, String)
+  nameWithType.vb: ReflectionUtil.GetField(Of T, U)(U, String)
 - uid: IPA.Utilities.ReflectionUtil.InvokeMethod(System.Object,System.String,System.Object[])
   name: InvokeMethod(Object, String, Object[])
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod_System_Object_System_String_System_Object___
