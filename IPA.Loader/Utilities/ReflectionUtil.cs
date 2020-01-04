@@ -7,20 +7,20 @@ namespace IPA.Utilities
     /// <summary>
     /// A utility class providing reflection helper methods.
     /// </summary>
-	public static class ReflectionUtil
-	{
+    public static class ReflectionUtil
+    {
         /// <summary>
         /// Sets a field on the target object.
         /// </summary>
         /// <param name="obj">the object instance</param>
         /// <param name="fieldName">the field to set</param>
         /// <param name="value">the value to set it to</param>
-		public static void SetField(this object obj, string fieldName, object value)
-		{
-			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        public static void SetField(this object obj, string fieldName, object value)
+        {
+            var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
-			prop?.SetValue(obj, value);
-		}
+            prop?.SetValue(obj, value);
+        }
 
         /// <summary>
         /// Sets a field on the target object, as gotten from <typeparamref name="T"/>.
@@ -43,13 +43,13 @@ namespace IPA.Utilities
         /// <param name="obj">the object instance to pull from</param>
         /// <param name="fieldName">the name of the field to read</param>
         /// <returns>the value of the field</returns>
-		public static T GetField<T>(this object obj, string fieldName)
-		{
-			var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+        public static T GetField<T>(this object obj, string fieldName)
+        {
+            var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
             if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
             var value = prop?.GetValue(obj);
-			return (T) value;
-		}
+            return (T) value;
+        }
 		
         /// <summary>
         /// Sets a property on the target object.
@@ -57,12 +57,12 @@ namespace IPA.Utilities
         /// <param name="obj">the target object instance</param>
         /// <param name="propertyName">the name of the property</param>
         /// <param name="value">the value to set it to</param>
-		public static void SetProperty(this object obj, string propertyName, object value)
-		{
-			var prop = obj.GetType().GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        public static void SetProperty(this object obj, string propertyName, object value)
+        {
+            var prop = obj.GetType().GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (prop == null) throw new ArgumentException($"Property {propertyName} does not exist", nameof(propertyName));
             prop?.SetValue(obj, value, null);
-		}
+        }
 
         /// <summary>
         /// Sets a property on the target object, as gotten from <typeparamref name="T"/>
@@ -85,12 +85,12 @@ namespace IPA.Utilities
         /// <param name="methodName">the method name</param>
         /// <param name="methodArgs">the method arguments</param>
         /// <returns>the return value</returns>
-		public static object InvokeMethod(this object obj, string methodName, params object[] methodArgs)
-		{
-			MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        public static object InvokeMethod(this object obj, string methodName, params object[] methodArgs)
+        {
+            MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (dynMethod == null) throw new ArgumentException($"Method {methodName} does not exist", nameof(methodName));
-			return dynMethod?.Invoke(obj, methodArgs);
-		}
+            return dynMethod?.Invoke(obj, methodArgs);
+        }
 
         /// <summary>
         /// Invokes a method from <typeparamref name="T"/> on an object.
@@ -116,9 +116,7 @@ namespace IPA.Utilities
         /// <param name="methodArgs">the method's arguments</param>
         /// <returns>the return value</returns>
         public static T InvokeMethod<T>(this object obj, string methodName, params object[] methodArgs)
-        {
-            return (T)InvokeMethod(obj, methodName, methodArgs);
-        }
+            => (T)InvokeMethod(obj, methodName, methodArgs);
 
         /// <summary>
         /// Invokes a method from <typeparamref name="U"/> on an object.
@@ -130,9 +128,7 @@ namespace IPA.Utilities
         /// <param name="methodArgs">the method's arguments</param>
         /// <returns>the return value</returns>
         public static T InvokeMethod<T, U>(this U obj, string methodName, params object[] methodArgs) where U : class
-        {
-            return (T)obj.InvokeMethod(methodName, methodArgs);
-        }
+            => (T)obj.InvokeMethod(methodName, methodArgs);
 
         /// <summary>
         /// Copies a component <paramref name="original"/> to a component of <paramref name="overridingType"/> on the destination <see cref="GameObject"/>.
