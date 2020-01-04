@@ -20,12 +20,15 @@ jobs:
           git config --global core.autocrlf true
           git config --global user.email (($env:GITHUB_ACTOR,"@users.noreply.github.com") -join "")
           git config --global user.name $env:GITHUB_ACTOR
-          $env:BRANCH_NAME = (git rev-parse --abbrev-ref $env:GITHUB_REF) -join ""
-          echo $env:BRANCH_NAME
       - name: Checkout branch
         uses: actions/checkout@v2
       - name: Checkout submodules
         run: git submodule update --init --recursive
+      - name: Set branch name variable
+        shell: powershell
+        run: |
+          $env:BRANCH_NAME = (git rev-parse --abbrev-ref $env:GITHUB_REF) -join ""
+          echo $env:BRANCH_NAME
       - name: Locate MSBuild
         uses: warrenbuckley/Setup-MSBuild@v1
       - name: Setup Nuget
