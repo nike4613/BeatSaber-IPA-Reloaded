@@ -49,8 +49,6 @@ jobs:
           if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
           }
-
-          Get-ChildItem
       - name: Publish master site to GitHub pages
         shell: powershell
         working-directory: ./docs
@@ -70,19 +68,20 @@ jobs:
         if: github.ref == 'refs/heads/master'
       - name: Publish branch site to GitHub pages
         shell: powershell
-        working-directory: ./docs/${{ env.ORIGIN_SITE }}
+        working-directory: ./docs
         run: |
           $ErrorActionPreference = "Continue"
 
-          Get-ChildItem ..
+          $branchName = (git rev-parse --abbrev-ref=loose $env:GITHUB_REF) -join ""
+          $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
 
+          cd $env:ORIGIN_SITE
+          
           if (-Not (Test-Path $env:BRANCH_DIR)) {
             New-Item -ItemType directory -Path $env:BRANCH_DIR
           }
 
-          $branchName = (git rev-parse --prefix .. --abbrev-ref=loose $env:GITHUB_REF) -join ""
           $branchPath = "$env:BRANCH_DIR/$branchName"
-
           if (Test-Path $branchPath) {
             # force remove it
             Get-ChildItem -Path $branchPath -Recurse | Remove-Item -Force -Recurse
@@ -94,7 +93,6 @@ jobs:
 
           git add -A 2>&1
 
-          $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
           git commit -q -a -m "Generated Docs ($branchName) -- $srcMessage"
           
           git push -q origin gh-pages 
