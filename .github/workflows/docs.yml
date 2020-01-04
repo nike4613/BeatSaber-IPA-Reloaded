@@ -47,7 +47,7 @@ jobs:
           Add-Content link_branch.json "{`"_gitContribute`":{`"sourceBranch`":`"$env:GITHUB_SHA`",`"apiSpecFolder`":`"docs/override`"}}"
           powershell .\build.ps1
           if ($lastexitcode -ne 0){
-              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+            throw [System.Exception] "docfx build failed with exit code $lastexitcode."
           }
       - name: Publish master site to GitHub pages
         shell: powershell
@@ -76,7 +76,7 @@ jobs:
           $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
 
           cd $env:ORIGIN_SITE
-          
+
           if (-Not (Test-Path $env:BRANCH_DIR)) {
             New-Item -ItemType directory -Path $env:BRANCH_DIR
           }
