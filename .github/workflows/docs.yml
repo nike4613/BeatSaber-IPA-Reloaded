@@ -34,6 +34,12 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install docfx -y
+      - name: Checkout current pages
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          token: ${{ secrets.pagesCommitToken }}
+          path: docs/${{ env.ORIGIN_SITE }}
       - name: Build docs
         shell: powershell
         working-directory: ./docs
@@ -43,12 +49,8 @@ jobs:
           if ($lastexitcode -ne 0){
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
           }
-      - name: Checkout current pages
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-          token: ${{ secrets.pagesCommitToken }}
-          path: docs/${{ env.ORIGIN_SITE }}
+
+          Get-ChildItem
       - name: Publish master site to GitHub pages
         shell: powershell
         working-directory: ./docs
@@ -70,10 +72,15 @@ jobs:
         shell: powershell
         working-directory: ./docs/${{ env.ORIGIN_SITE }}
         run: |
-          if (-Not (Test-Path $env:BRANCH_DIR))
-          { New-Item -ItemType directory -Path $env:BRANCH_DIR }
+          $ErrorActionPreference = "Continue"
 
-          $branchName = (git rev-parse --abbrev-ref $env:GITHUB_REF) -join ""
+          Get-ChildItem ..
+
+          if (-Not (Test-Path $env:BRANCH_DIR)) {
+            New-Item -ItemType directory -Path $env:BRANCH_DIR
+          }
+
+          $branchName = (git rev-parse --prefix .. --abbrev-ref=loose $env:GITHUB_REF) -join ""
           $branchPath = "$env:BRANCH_DIR/$branchName"
 
           if (Test-Path $branchPath) {
@@ -85,7 +92,6 @@ jobs:
           # move generated into place
           Move-Item ../_site $branchPath
 
-          $ErrorActionPreference = "SilentlyContinue"
           git add -A 2>&1
 
           $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
