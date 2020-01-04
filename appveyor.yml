@@ -14,6 +14,9 @@ environment:
 pull_requests:
   do_not_increment_build_number: true
 
+init:
+  - git config --global core.autocrlf true
+
 install:
   - git submodule update --init --recursive
   - nuget restore
