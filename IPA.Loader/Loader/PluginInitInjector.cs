@@ -5,6 +5,7 @@ using System.Reflection;
 using IPA.Config;
 using IPA.Logging;
 using IPA.Utilities;
+using System.Linq.Expressions;
 #if NET3
 using Net3_Proxy;
 #endif
@@ -94,13 +95,21 @@ namespace IPA.Loader
             }
         }
 
-        internal static void Inject(MethodInfo init, PluginLoader.PluginInfo info)
+        private static readonly MethodInfo InjectMethod = typeof(PluginInitInjector).GetMethod(nameof(Inject), BindingFlags.NonPublic | BindingFlags.Static);
+        internal static Expression InjectedCallExpr(ParameterInfo[] initParams, Expression meta, Func<IEnumerable<Expression>, Expression> exprGen)
         {
-            var instance = info.Plugin;
-            var meta = info.Metadata;
+            var arr = Expression.Variable(typeof(object[]));
+            return Expression.Block(
+                Expression.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta)),
+                exprGen(initParams
+                            .Select(p => p.ParameterType)
+                            .Select((t, i) => Expression.Convert(
+                                Expression.ArrayIndex(arr, Expression.Constant(i)), t))));
+        }
 
+        internal static object[] Inject(ParameterInfo[] initParams, PluginLoader.PluginMetadata meta)
+        {
             var initArgs = new List<object>();
-            var initParams = init.GetParameters();
 
             var previousValues = new Dictionary<TypedInjector, object>(injectors.Count);
 
@@ -138,7 +147,8 @@ namespace IPA.Loader
                 initArgs.Add(value);
             }
 
-            init.Invoke(instance, initArgs.ToArray());
+            //init.Invoke(instance, initArgs.ToArray());
+            return initArgs.ToArray();
         }
     }
 }

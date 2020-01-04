@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
 using SemVer;
+using System.Linq.Expressions;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -128,9 +129,88 @@ namespace IPA.Loader
             public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName, BeatSaber.InstallPath)}'";
         }
 
+        internal class PluginExecutor
+        {
+            public PluginMetadata Metadata { get; }
+            public PluginExecutor(PluginMetadata meta)
+            {
+                Metadata = meta;
+            }
+
+
+            private object pluginObject = null;
+            private Func<PluginMetadata, object> CreatePlugin { get; set; }
+            private Action<object> LifecycleEnable { get; set; }
+            // disable may be async (#24)
+            private Func<object, Task> LifecycleDisable { get; set; }
+
+            public void Create()
+            {
+                if (pluginObject != null) return;
+                pluginObject = CreatePlugin(Metadata);
+            }
+
+            public void Enable() => LifecycleEnable(pluginObject);
+            public Task Disable() => LifecycleDisable(pluginObject);
+
+
+            private void PrepareDelegates()
+            { // TODO: use custom exception types or something
+                Load(Metadata);
+                var type = Metadata.Assembly.GetType(Metadata.PluginType.FullName);
+
+                { // TODO: what do i want the visibiliy of Init methods to be?
+                    var ctors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                                    .Select(c => (c, attr: c.GetCustomAttribute<InitAttribute>()))
+                                    .NonNull(t => t.attr)
+                                    .OrderByDescending(t => t.c.GetParameters().Length)
+                                    .Select(t => t.c).ToArray();
+                    if (ctors.Length > 1)
+                        Logger.loader.Warn($"Plugin {Metadata.Name} has multiple [Init] constructors. Picking the one with the most parameters.");
+
+                    bool usingDefaultCtor = false;
+                    var ctor = ctors.FirstOrDefault();
+                    if (ctor == null)
+                    { // this is a normal case
+                        usingDefaultCtor = true;
+                        ctor = type.GetConstructor(Type.EmptyTypes);
+                        if (ctor == null)
+                            throw new InvalidOperationException($"{type.FullName} does not expose a public default constructor and has no constructors marked [Init]");
+                    }
+
+                    var initMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                        .Select(m => (m, attr:m.GetCustomAttribute<InitAttribute>()))
+                                        .NonNull(t => t.attr).Select(t => t.m).ToArray();
+                    // verify that they don't have lifecycle attributes on them
+                    foreach (var method in initMethods)
+                    {
+                        var attrs = method.GetCustomAttributes(typeof(IEdgeLifecycleAttribute), false);
+                        if (attrs.Length != 0)
+                            throw new InvalidOperationException($"Method {method} on {type.FullName} has both an [Init] attribute and a lifecycle attribute.");
+                    }
+
+                    var metaParam = Expression.Parameter(typeof(PluginMetadata));
+                    var objVar = Expression.Variable(type);
+                    var createExpr = Expression.Lambda<Func<PluginMetadata, object>>(
+                        Expression.Block(
+                            initMethods
+                                .Select(m => PluginInitInjector.InjectedCallExpr(m.GetParameters(), metaParam, es => Expression.Call(objVar, m, es)))
+                                .Prepend(Expression.Assign(objVar, 
+                                    usingDefaultCtor 
+                                        ? Expression.New(ctor) 
+                                        : PluginInitInjector.InjectedCallExpr(ctor.GetParameters(), metaParam, es => Expression.New(ctor, es))))
+                                .Append(objVar)),
+                        metaParam);
+                    // TODO: since this new system will be doing a fuck load of compilation, maybe add FastExpressionCompiler
+                    CreatePlugin = createExpr.Compile();
+                }
+            }
+        }
+
         /// <summary>
         /// A container object for all the data relating to a plugin.
         /// </summary>
+        [Obsolete("No longer useful as a construct")]
         public class PluginInfo
         {
             internal IPlugin Plugin { get; set; }
@@ -788,7 +868,8 @@ namespace IPA.Loader
                         return null;
                     }
 
-                    PluginInitInjector.Inject(init, info);
+                    var args = PluginInitInjector.Inject(init.GetParameters(), meta);
+                    init.Invoke(info.Plugin, args);
                 }
 
                 foreach (var feature in meta.Features)
@@ -800,17 +881,6 @@ namespace IPA.Loader
                     {
                         Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
                     }
-
-                /*try // TODO: move this out to after all plugins have been inited
-                {
-                    instance.OnEnable();
-                }
-                catch (Exception e)
-                {
-                    Logger.loader.Error($"Error occurred trying to enable {meta.Name}");
-                    Logger.loader.Error(e);
-                    return null; // is enable failure a full load failure?
-                }*/
             }
             catch (AmbiguousMatchException)
             {

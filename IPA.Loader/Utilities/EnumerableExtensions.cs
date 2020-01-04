@@ -34,9 +34,39 @@ namespace IPA.Utilities
             }
 
             public IEnumerator<T> GetEnumerator()
-            {
+            { // TODO: a custom impl that is less garbage
                 yield return first;
                 foreach (var v in rest) yield return v;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        /// <summary>
+        /// Adds a value to the end of the sequence.
+        /// </summary>
+        /// <typeparam name="T">the type of the elements of <paramref name="seq"/></typeparam>
+        /// <param name="seq">a sequence of values</param>
+        /// <param name="app">the value to append to <paramref name="seq"/></param>
+        /// <returns>a new sequence ending with <paramref name="app"/></returns>
+        public static IEnumerable<T> Append<T>(this IEnumerable<T> seq, T app)
+            => new AppendEnumerable<T>(seq, app);
+
+        private sealed class AppendEnumerable<T> : IEnumerable<T>
+        {
+            private readonly IEnumerable<T> rest;
+            private readonly T last;
+
+            public AppendEnumerable(IEnumerable<T> rest, T last)
+            {
+                this.rest = rest;
+                this.last = last;
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            { // TODO: a custom impl that is less garbage
+                foreach (var v in rest) yield return v;
+                yield return last;
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -59,7 +89,7 @@ namespace IPA.Utilities
         /// <param name="self">the enumeration to filter</param>
         /// <param name="pred">the predicate to select for filtering</param>
         /// <returns>a filtered enumerable</returns>
-        public static IEnumerable<T> NonNull<T, U>(this IEnumerable<T> self, Func<T, U> pred) where T : class where U : class
+        public static IEnumerable<T> NonNull<T, U>(this IEnumerable<T> self, Func<T, U> pred) where U : class
             => self.Where(o => pred(o) != null);
 
         /// <summary>
