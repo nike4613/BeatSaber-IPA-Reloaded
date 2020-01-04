@@ -18,7 +18,7 @@ jobs:
         shell: powershell
         run: |
           git config --global core.autocrlf true
-          git config --global user.email ([$env:GITHUB_ACTOR,"@users.noreply.github.com" -join "")
+          git config --global user.email (($env:GITHUB_ACTOR,"@users.noreply.github.com") -join "")
           git config --global user.name $env:GITHUB_ACTOR
           $env:BRANCH_NAME = (git rev-parse --abbrev-ref $env:GITHUB_REF) -join ""
           echo $env:BRANCH_NAME
