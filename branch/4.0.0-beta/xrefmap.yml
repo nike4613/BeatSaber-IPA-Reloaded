@@ -5029,6 +5029,22 @@ references:
   commentId: T:IPA.Utilities.EnumerableExtensions
   fullName: IPA.Utilities.EnumerableExtensions
   nameWithType: EnumerableExtensions
+- uid: IPA.Utilities.EnumerableExtensions.Append*
+  name: Append
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_Append_
+  commentId: Overload:IPA.Utilities.EnumerableExtensions.Append
+  isSpec: "True"
+  fullName: IPA.Utilities.EnumerableExtensions.Append
+  nameWithType: EnumerableExtensions.Append
+- uid: IPA.Utilities.EnumerableExtensions.Append``1(System.Collections.Generic.IEnumerable{``0},``0)
+  name: Append<T>(IEnumerable<T>, T)
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_Append__1_System_Collections_Generic_IEnumerable___0____0_
+  commentId: M:IPA.Utilities.EnumerableExtensions.Append``1(System.Collections.Generic.IEnumerable{``0},``0)
+  name.vb: Append(Of T)(IEnumerable(Of T), T)
+  fullName: IPA.Utilities.EnumerableExtensions.Append<T>(System.Collections.Generic.IEnumerable<T>, T)
+  fullName.vb: IPA.Utilities.EnumerableExtensions.Append(Of T)(System.Collections.Generic.IEnumerable(Of T), T)
+  nameWithType: EnumerableExtensions.Append<T>(IEnumerable<T>, T)
+  nameWithType.vb: EnumerableExtensions.Append(Of T)(IEnumerable(Of T), T)
 - uid: IPA.Utilities.EnumerableExtensions.NonNull*
   name: NonNull
   href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull_
