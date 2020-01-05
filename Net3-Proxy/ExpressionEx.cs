@@ -143,6 +143,9 @@ namespace Net3_Proxy
 				Type lastType = null;
 				var rest = new List<Expression<Action>>(list.Count);
 
+				if (list.Count == 0)
+					list.Add(info.Param);
+
 				for (int i = 0; i < list.Count; i++)
 				{
 					var expr = list[i];
