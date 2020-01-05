@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
+using Expression = System.Linq.Expressions.Expression;
+using ExpressionEx = System.Linq.Expressions.Expression;
 #endif
 #if NET3
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ using Directory = Net3_Proxy.Directory;
 
 namespace IPA.Loader
 {
+    // NOTE: TaskEx.WhenAll() (Task.WhenAll() in .NET 4) returns CompletedTask if it has no arguments, which we need for .NET 3
     internal class PluginExecutor
     {
         public PluginMetadata Metadata { get; }
@@ -29,7 +32,7 @@ namespace IPA.Loader
             {
                 CreatePlugin = m => null;
                 LifecycleEnable = o => { };
-                LifecycleDisable = o => TaskEx.CompletedTask;
+                LifecycleDisable = o => TaskEx.WhenAll();
             }
             else
                 PrepareDelegates();
@@ -95,13 +98,13 @@ namespace IPA.Loader
 
             // TODO: how do I make this work for .NET 3? FEC.LightExpression but hacked to work on .NET 3?
             var metaParam = Expression.Parameter(typeof(PluginMetadata), "meta");
-            var objVar = Expression.Variable(type, "objVar");
-            var persistVar = Expression.Variable(typeof(object), "persistVar");
+            var objVar = ExpressionEx.Variable(type, "objVar");
+            var persistVar = ExpressionEx.Variable(typeof(object), "persistVar");
             var createExpr = Expression.Lambda<Func<PluginMetadata, object>>(
-                Expression.Block(new[] { objVar, persistVar },
+                ExpressionEx.Block(new[] { objVar, persistVar },
                     initMethods
                         .Select(m => PluginInitInjector.InjectedCallExpr(m.GetParameters(), metaParam, persistVar, es => Expression.Call(objVar, m, es)))
-                        .Prepend(Expression.Assign(objVar,
+                        .Prepend(ExpressionEx.Assign(objVar,
                             usingDefaultCtor
                                 ? Expression.New(ctor)
                                 : PluginInitInjector.InjectedCallExpr(ctor.GetParameters(), metaParam, persistVar, es => Expression.New(ctor, es))))
@@ -133,12 +136,12 @@ namespace IPA.Loader
             }
 
             var objParam = Expression.Parameter(typeof(object), "obj");
-            var instVar = Expression.Variable(type, "inst");
+            var instVar = ExpressionEx.Variable(type, "inst");
             var createExpr = Expression.Lambda<Action<object>>(
-                Expression.Block(new[] { instVar },
+                ExpressionEx.Block(new[] { instVar },
                     enableMethods
-                        .Select(m => Expression.Call(instVar, m))
-                        .Prepend<Expression>(Expression.Assign(instVar, Expression.Convert(objParam, type)))),
+                        .Select(m => (Expression)Expression.Call(instVar, m))
+                        .Prepend(ExpressionEx.Assign(instVar, Expression.Convert(objParam, type)))),
                 objParam);
             return createExpr.Compile();
         }
@@ -152,7 +155,7 @@ namespace IPA.Loader
             if (disableMethods.Length == 0)
             {
                 Logger.loader.Notice($"Plugin {name} has no methods marked [OnExit] or [OnDisable]. Is this intentional?");
-                return o => Task.CompletedTask;
+                return o => TaskEx.WhenAll();
             }
 
             var taskMethods = new List<MethodInfo>();
@@ -175,24 +178,24 @@ namespace IPA.Loader
                 nonTaskMethods.Add(m);
             }
 
-            Expression<Func<Task>> completedTaskDel = () => TaskEx.CompletedTask;
+            Expression<Func<Task>> completedTaskDel = () => TaskEx.WhenAll();
             var getCompletedTask = completedTaskDel.Body;
             var taskWhenAll = typeof(TaskEx).GetMethod(nameof(TaskEx.WhenAll), new[] { typeof(Task[]) });
 
             var objParam = Expression.Parameter(typeof(object), "obj");
-            var instVar = Expression.Variable(type, "inst");
+            var instVar = ExpressionEx.Variable(type, "inst");
             var createExpr = Expression.Lambda<Func<object, Task>>(
-                Expression.Block(new[] { instVar },
+                ExpressionEx.Block(new[] { instVar },
                     nonTaskMethods
-                        .Select(m => Expression.Call(instVar, m))
-                        .Prepend<Expression>(Expression.Assign(instVar, Expression.Convert(objParam, type)))
+                        .Select(m => (Expression)Expression.Call(instVar, m))
+                        .Prepend(ExpressionEx.Assign(instVar, Expression.Convert(objParam, type)))
                         .Append(
                             taskMethods.Count == 0 
                                 ? getCompletedTask
                                 : Expression.Call(taskWhenAll,
                                     Expression.NewArrayInit(typeof(Task),
                                         taskMethods.Select(m => 
-                                            Expression.Convert(Expression.Call(instVar, m), typeof(Task))))))),
+                                            (Expression)Expression.Convert(Expression.Call(instVar, m), typeof(Task))))))),
                 objParam);
             return createExpr.Compile();
         }

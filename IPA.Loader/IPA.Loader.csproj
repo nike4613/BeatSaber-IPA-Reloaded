@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Net4</Platform>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' ">true</BuildForBeatSaber>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(Platform)' == 'Net4' ">true</BuildForBeatSaber>
     <ProjectGuid>{5AD344F0-01A0-4CA8-92E5-9D095737744D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>

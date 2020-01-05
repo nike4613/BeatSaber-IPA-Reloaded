@@ -6,6 +6,10 @@ using IPA.Config;
 using IPA.Logging;
 using IPA.Utilities;
 using System.Linq.Expressions;
+#if NET4
+using Expression = System.Linq.Expressions.Expression;
+using ExpressionEx = System.Linq.Expressions.Expression;
+#endif
 #if NET3
 using Net3_Proxy;
 #endif
@@ -124,14 +128,14 @@ namespace IPA.Loader
         }
 
         private static readonly MethodInfo InjectMethod = typeof(PluginInitInjector).GetMethod(nameof(Inject), BindingFlags.NonPublic | BindingFlags.Static);
-        internal static Expression InjectedCallExpr(ParameterInfo[] initParams, Expression meta, ParameterExpression persistVar, Func<IEnumerable<Expression>, Expression> exprGen)
+        internal static Expression InjectedCallExpr(ParameterInfo[] initParams, Expression meta, Expression persistVar, Func<IEnumerable<Expression>, Expression> exprGen)
         {
-            var arr = Expression.Variable(typeof(object[]), "initArr");
-            return Expression.Block(new[] { arr },
-                Expression.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta, persistVar)),
+            var arr = ExpressionEx.Variable(typeof(object[]), "initArr");
+            return ExpressionEx.Block(new[] { arr },
+                ExpressionEx.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta, persistVar)),
                 exprGen(initParams
                             .Select(p => p.ParameterType)
-                            .Select((t, i) => Expression.Convert(
+                            .Select((t, i) => (Expression)Expression.Convert(
                                 Expression.ArrayIndex(arr, Expression.Constant(i)), t))));
         }
 

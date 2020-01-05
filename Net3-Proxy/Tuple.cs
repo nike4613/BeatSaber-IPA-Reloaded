@@ -18,7 +18,7 @@ namespace Net3_Proxy
     }
 
     [Serializable]
-    public class Tuple<T1, T2> : IComparable
+    public class Tuple<T1, T2> : IComparable, IComparable<Tuple<T1, T2>>
     {
         public T1 Item1 { get; private set; }
         public T2 Item2 { get; private set; }
@@ -39,9 +39,7 @@ namespace Net3_Proxy
             if (obj == null) return 1;
             var tup = obj as Tuple<T1, T2>;
             if (tup == null) throw new ArgumentException($"Argument must be of type {GetType()}.", "other");
-            int num = Comparer<T1>.Default.Compare(Item1, tup.Item1);
-            if (num != 0) return num;
-            return Comparer<T2>.Default.Compare(Item2, tup.Item2);
+            return CompareTo(tup);
         }
 
         public override int GetHashCode() => 
@@ -49,5 +47,47 @@ namespace Net3_Proxy
 
         public override string ToString() =>
             $"({Item1}, {Item2})";
+
+        public int CompareTo(Tuple<T1, T2> tup)
+        {
+            int num = Comparer<T1>.Default.Compare(Item1, tup.Item1);
+            if (num != 0) return num;
+            return Comparer<T2>.Default.Compare(Item2, tup.Item2);
+        }
+
+        public static bool operator ==(Tuple<T1, T2> left, Tuple<T1, T2> right)
+        {
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Tuple<T1, T2> left, Tuple<T1, T2> right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator <(Tuple<T1, T2> left, Tuple<T1, T2> right)
+        {
+            return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+        }
+
+        public static bool operator <=(Tuple<T1, T2> left, Tuple<T1, T2> right)
+        {
+            return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >(Tuple<T1, T2> left, Tuple<T1, T2> right)
+        {
+            return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+        }
+
+        public static bool operator >=(Tuple<T1, T2> left, Tuple<T1, T2> right)
+        {
+            return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
+        }
     }
 }
