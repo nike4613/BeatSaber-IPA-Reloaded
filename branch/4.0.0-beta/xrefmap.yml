@@ -1341,12 +1341,12 @@ references:
   commentId: T:IPA.Config.ModPrefs
   fullName: IPA.Config.ModPrefs
   nameWithType: ModPrefs
-- uid: IPA.Config.ModPrefs.#ctor(IPA.Loader.PluginLoader.PluginMetadata)
-  name: ModPrefs(PluginLoader.PluginMetadata)
-  href: api/IPA.Config.ModPrefs.html#IPA_Config_ModPrefs__ctor_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Config.ModPrefs.#ctor(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Config.ModPrefs.ModPrefs(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: ModPrefs.ModPrefs(PluginLoader.PluginMetadata)
+- uid: IPA.Config.ModPrefs.#ctor(IPA.Loader.PluginMetadata)
+  name: ModPrefs(PluginMetadata)
+  href: api/IPA.Config.ModPrefs.html#IPA_Config_ModPrefs__ctor_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Config.ModPrefs.#ctor(IPA.Loader.PluginMetadata)
+  fullName: IPA.Config.ModPrefs.ModPrefs(IPA.Loader.PluginMetadata)
+  nameWithType: ModPrefs.ModPrefs(PluginMetadata)
 - uid: IPA.Config.ModPrefs.#ctor*
   name: ModPrefs
   href: api/IPA.Config.ModPrefs.html#IPA_Config_ModPrefs__ctor_
@@ -2719,12 +2719,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.Features.Feature.BeforeInit
   nameWithType: Feature.BeforeInit
-- uid: IPA.Loader.Features.Feature.BeforeLoad(IPA.Loader.PluginLoader.PluginMetadata)
-  name: BeforeLoad(PluginLoader.PluginMetadata)
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_BeforeLoad_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Loader.Features.Feature.BeforeLoad(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Loader.Features.Feature.BeforeLoad(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: Feature.BeforeLoad(PluginLoader.PluginMetadata)
+- uid: IPA.Loader.Features.Feature.BeforeLoad(IPA.Loader.PluginMetadata)
+  name: BeforeLoad(PluginMetadata)
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_BeforeLoad_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.Features.Feature.BeforeLoad(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.Features.Feature.BeforeLoad(IPA.Loader.PluginMetadata)
+  nameWithType: Feature.BeforeLoad(PluginMetadata)
 - uid: IPA.Loader.Features.Feature.BeforeLoad*
   name: BeforeLoad
   href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_BeforeLoad_
@@ -2745,15 +2745,15 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.Features.Feature.Evaluate
   nameWithType: Feature.Evaluate
-- uid: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginLoader.PluginMetadata,System.String[])
-  name: Initialize(PluginLoader.PluginMetadata, String[])
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_Initialize_IPA_Loader_PluginLoader_PluginMetadata_System_String___
-  commentId: M:IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginLoader.PluginMetadata,System.String[])
-  name.vb: Initialize(PluginLoader.PluginMetadata, String())
-  fullName: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginLoader.PluginMetadata, System.String[])
-  fullName.vb: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginLoader.PluginMetadata, System.String())
-  nameWithType: Feature.Initialize(PluginLoader.PluginMetadata, String[])
-  nameWithType.vb: Feature.Initialize(PluginLoader.PluginMetadata, String())
+- uid: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,System.String[])
+  name: Initialize(PluginMetadata, String[])
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_Initialize_IPA_Loader_PluginMetadata_System_String___
+  commentId: M:IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,System.String[])
+  name.vb: Initialize(PluginMetadata, String())
+  fullName: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata, System.String[])
+  fullName.vb: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata, System.String())
+  nameWithType: Feature.Initialize(PluginMetadata, String[])
+  nameWithType.vb: Feature.Initialize(PluginMetadata, String())
 - uid: IPA.Loader.Features.Feature.Initialize*
   name: Initialize
   href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_Initialize_
@@ -2774,12 +2774,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.Features.Feature.InvalidMessage
   nameWithType: Feature.InvalidMessage
-- uid: IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginLoader.PluginMetadata)
-  name: RequireLoaded(PluginLoader.PluginMetadata)
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_RequireLoaded_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: Feature.RequireLoaded(PluginLoader.PluginMetadata)
+- uid: IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginMetadata)
+  name: RequireLoaded(PluginMetadata)
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_RequireLoaded_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.Features.Feature.RequireLoaded(IPA.Loader.PluginMetadata)
+  nameWithType: Feature.RequireLoaded(PluginMetadata)
 - uid: IPA.Loader.Features.Feature.RequireLoaded*
   name: RequireLoaded
   href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_RequireLoaded_
@@ -2850,155 +2850,6 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginLoader.PluginInfo.Metadata
   nameWithType: PluginLoader.PluginInfo.Metadata
-- uid: IPA.Loader.PluginLoader.PluginMetadata
-  name: PluginLoader.PluginMetadata
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html
-  commentId: T:IPA.Loader.PluginLoader.PluginMetadata
-  fullName: IPA.Loader.PluginLoader.PluginMetadata
-  nameWithType: PluginLoader.PluginMetadata
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Assembly
-  name: Assembly
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Assembly
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.Assembly
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Assembly
-  nameWithType: PluginLoader.PluginMetadata.Assembly
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Assembly*
-  name: Assembly
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Assembly_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.Assembly
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Assembly
-  nameWithType: PluginLoader.PluginMetadata.Assembly
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Features
-  name: Features
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Features
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.Features
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Features
-  nameWithType: PluginLoader.PluginMetadata.Features
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Features*
-  name: Features
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Features_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.Features
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Features
-  nameWithType: PluginLoader.PluginMetadata.Features
-- uid: IPA.Loader.PluginLoader.PluginMetadata.File
-  name: File
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_File
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.File
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.File
-  nameWithType: PluginLoader.PluginMetadata.File
-- uid: IPA.Loader.PluginLoader.PluginMetadata.File*
-  name: File
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_File_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.File
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.File
-  nameWithType: PluginLoader.PluginMetadata.File
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Id
-  name: Id
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Id
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.Id
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Id
-  nameWithType: PluginLoader.PluginMetadata.Id
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Id*
-  name: Id
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Id_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.Id
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Id
-  nameWithType: PluginLoader.PluginMetadata.Id
-- uid: IPA.Loader.PluginLoader.PluginMetadata.IsAttributePlugin
-  name: IsAttributePlugin
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_IsAttributePlugin
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.IsAttributePlugin
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.IsAttributePlugin
-  nameWithType: PluginLoader.PluginMetadata.IsAttributePlugin
-- uid: IPA.Loader.PluginLoader.PluginMetadata.IsAttributePlugin*
-  name: IsAttributePlugin
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_IsAttributePlugin_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.IsAttributePlugin
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.IsAttributePlugin
-  nameWithType: PluginLoader.PluginMetadata.IsAttributePlugin
-- uid: IPA.Loader.PluginLoader.PluginMetadata.IsBare
-  name: IsBare
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_IsBare
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.IsBare
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.IsBare
-  nameWithType: PluginLoader.PluginMetadata.IsBare
-- uid: IPA.Loader.PluginLoader.PluginMetadata.IsBare*
-  name: IsBare
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_IsBare_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.IsBare
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.IsBare
-  nameWithType: PluginLoader.PluginMetadata.IsBare
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Name
-  name: Name
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Name
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.Name
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Name
-  nameWithType: PluginLoader.PluginMetadata.Name
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Name*
-  name: Name
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Name_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.Name
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Name
-  nameWithType: PluginLoader.PluginMetadata.Name
-- uid: IPA.Loader.PluginLoader.PluginMetadata.PluginType
-  name: PluginType
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_PluginType
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.PluginType
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.PluginType
-  nameWithType: PluginLoader.PluginMetadata.PluginType
-- uid: IPA.Loader.PluginLoader.PluginMetadata.PluginType*
-  name: PluginType
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_PluginType_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.PluginType
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.PluginType
-  nameWithType: PluginLoader.PluginMetadata.PluginType
-- uid: IPA.Loader.PluginLoader.PluginMetadata.RuntimeOptions
-  name: RuntimeOptions
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_RuntimeOptions
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.RuntimeOptions
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.RuntimeOptions
-  nameWithType: PluginLoader.PluginMetadata.RuntimeOptions
-- uid: IPA.Loader.PluginLoader.PluginMetadata.RuntimeOptions*
-  name: RuntimeOptions
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_RuntimeOptions_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.RuntimeOptions
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.RuntimeOptions
-  nameWithType: PluginLoader.PluginMetadata.RuntimeOptions
-- uid: IPA.Loader.PluginLoader.PluginMetadata.ToString
-  name: ToString()
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_ToString
-  commentId: M:IPA.Loader.PluginLoader.PluginMetadata.ToString
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.ToString()
-  nameWithType: PluginLoader.PluginMetadata.ToString()
-- uid: IPA.Loader.PluginLoader.PluginMetadata.ToString*
-  name: ToString
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_ToString_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.ToString
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.ToString
-  nameWithType: PluginLoader.PluginMetadata.ToString
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Version
-  name: Version
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Version
-  commentId: P:IPA.Loader.PluginLoader.PluginMetadata.Version
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Version
-  nameWithType: PluginLoader.PluginMetadata.Version
-- uid: IPA.Loader.PluginLoader.PluginMetadata.Version*
-  name: Version
-  href: api/IPA.Loader.PluginLoader.PluginMetadata.html#IPA_Loader_PluginLoader_PluginMetadata_Version_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginMetadata.Version
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginMetadata.Version
-  nameWithType: PluginLoader.PluginMetadata.Version
 - uid: IPA.Loader.PluginManager
   name: PluginManager
   href: api/IPA.Loader.PluginManager.html
@@ -3050,12 +2901,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.DisablePlugin
   nameWithType: PluginManager.DisablePlugin
-- uid: IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginLoader.PluginMetadata)
-  name: EnablePlugin(PluginLoader.PluginMetadata)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnablePlugin_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: PluginManager.EnablePlugin(PluginLoader.PluginMetadata)
+- uid: IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginMetadata)
+  name: EnablePlugin(PluginMetadata)
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnablePlugin_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginMetadata)
+  nameWithType: PluginManager.EnablePlugin(PluginMetadata)
 - uid: IPA.Loader.PluginManager.EnablePlugin(System.String)
   name: EnablePlugin(String)
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnablePlugin_System_String_
@@ -3134,12 +2985,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.GetPluginFromModSaberName
   nameWithType: PluginManager.GetPluginFromModSaberName
-- uid: IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginLoader.PluginMetadata)
-  name: InfoFromMetadata(PluginLoader.PluginMetadata)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_InfoFromMetadata_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: PluginManager.InfoFromMetadata(PluginLoader.PluginMetadata)
+- uid: IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginMetadata)
+  name: InfoFromMetadata(PluginMetadata)
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_InfoFromMetadata_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginMetadata)
+  nameWithType: PluginManager.InfoFromMetadata(PluginMetadata)
 - uid: IPA.Loader.PluginManager.InfoFromMetadata*
   name: InfoFromMetadata
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_InfoFromMetadata_
@@ -3147,12 +2998,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.InfoFromMetadata
   nameWithType: PluginManager.InfoFromMetadata
-- uid: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginLoader.PluginMetadata)
-  name: IsDisabled(PluginLoader.PluginMetadata)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsDisabled_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: PluginManager.IsDisabled(PluginLoader.PluginMetadata)
+- uid: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginMetadata)
+  name: IsDisabled(PluginMetadata)
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsDisabled_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginMetadata)
+  nameWithType: PluginManager.IsDisabled(PluginMetadata)
 - uid: IPA.Loader.PluginManager.IsDisabled*
   name: IsDisabled
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsDisabled_
@@ -3160,12 +3011,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.IsDisabled
   nameWithType: PluginManager.IsDisabled
-- uid: IPA.Loader.PluginManager.IsEnabled(IPA.Loader.PluginLoader.PluginMetadata)
-  name: IsEnabled(PluginLoader.PluginMetadata)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsEnabled_IPA_Loader_PluginLoader_PluginMetadata_
-  commentId: M:IPA.Loader.PluginManager.IsEnabled(IPA.Loader.PluginLoader.PluginMetadata)
-  fullName: IPA.Loader.PluginManager.IsEnabled(IPA.Loader.PluginLoader.PluginMetadata)
-  nameWithType: PluginManager.IsEnabled(PluginLoader.PluginMetadata)
+- uid: IPA.Loader.PluginManager.IsEnabled(IPA.Loader.PluginMetadata)
+  name: IsEnabled(PluginMetadata)
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsEnabled_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.PluginManager.IsEnabled(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.PluginManager.IsEnabled(IPA.Loader.PluginMetadata)
+  nameWithType: PluginManager.IsEnabled(PluginMetadata)
 - uid: IPA.Loader.PluginManager.IsEnabled*
   name: IsEnabled
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsEnabled_
@@ -3210,6 +3061,155 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.Plugins
   nameWithType: PluginManager.Plugins
+- uid: IPA.Loader.PluginMetadata
+  name: PluginMetadata
+  href: api/IPA.Loader.PluginMetadata.html
+  commentId: T:IPA.Loader.PluginMetadata
+  fullName: IPA.Loader.PluginMetadata
+  nameWithType: PluginMetadata
+- uid: IPA.Loader.PluginMetadata.Assembly
+  name: Assembly
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Assembly
+  commentId: P:IPA.Loader.PluginMetadata.Assembly
+  fullName: IPA.Loader.PluginMetadata.Assembly
+  nameWithType: PluginMetadata.Assembly
+- uid: IPA.Loader.PluginMetadata.Assembly*
+  name: Assembly
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Assembly_
+  commentId: Overload:IPA.Loader.PluginMetadata.Assembly
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Assembly
+  nameWithType: PluginMetadata.Assembly
+- uid: IPA.Loader.PluginMetadata.Features
+  name: Features
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Features
+  commentId: P:IPA.Loader.PluginMetadata.Features
+  fullName: IPA.Loader.PluginMetadata.Features
+  nameWithType: PluginMetadata.Features
+- uid: IPA.Loader.PluginMetadata.Features*
+  name: Features
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Features_
+  commentId: Overload:IPA.Loader.PluginMetadata.Features
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Features
+  nameWithType: PluginMetadata.Features
+- uid: IPA.Loader.PluginMetadata.File
+  name: File
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_File
+  commentId: P:IPA.Loader.PluginMetadata.File
+  fullName: IPA.Loader.PluginMetadata.File
+  nameWithType: PluginMetadata.File
+- uid: IPA.Loader.PluginMetadata.File*
+  name: File
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_File_
+  commentId: Overload:IPA.Loader.PluginMetadata.File
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.File
+  nameWithType: PluginMetadata.File
+- uid: IPA.Loader.PluginMetadata.Id
+  name: Id
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Id
+  commentId: P:IPA.Loader.PluginMetadata.Id
+  fullName: IPA.Loader.PluginMetadata.Id
+  nameWithType: PluginMetadata.Id
+- uid: IPA.Loader.PluginMetadata.Id*
+  name: Id
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Id_
+  commentId: Overload:IPA.Loader.PluginMetadata.Id
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Id
+  nameWithType: PluginMetadata.Id
+- uid: IPA.Loader.PluginMetadata.IsAttributePlugin
+  name: IsAttributePlugin
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsAttributePlugin
+  commentId: P:IPA.Loader.PluginMetadata.IsAttributePlugin
+  fullName: IPA.Loader.PluginMetadata.IsAttributePlugin
+  nameWithType: PluginMetadata.IsAttributePlugin
+- uid: IPA.Loader.PluginMetadata.IsAttributePlugin*
+  name: IsAttributePlugin
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsAttributePlugin_
+  commentId: Overload:IPA.Loader.PluginMetadata.IsAttributePlugin
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.IsAttributePlugin
+  nameWithType: PluginMetadata.IsAttributePlugin
+- uid: IPA.Loader.PluginMetadata.IsBare
+  name: IsBare
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsBare
+  commentId: P:IPA.Loader.PluginMetadata.IsBare
+  fullName: IPA.Loader.PluginMetadata.IsBare
+  nameWithType: PluginMetadata.IsBare
+- uid: IPA.Loader.PluginMetadata.IsBare*
+  name: IsBare
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsBare_
+  commentId: Overload:IPA.Loader.PluginMetadata.IsBare
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.IsBare
+  nameWithType: PluginMetadata.IsBare
+- uid: IPA.Loader.PluginMetadata.Name
+  name: Name
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Name
+  commentId: P:IPA.Loader.PluginMetadata.Name
+  fullName: IPA.Loader.PluginMetadata.Name
+  nameWithType: PluginMetadata.Name
+- uid: IPA.Loader.PluginMetadata.Name*
+  name: Name
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Name_
+  commentId: Overload:IPA.Loader.PluginMetadata.Name
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Name
+  nameWithType: PluginMetadata.Name
+- uid: IPA.Loader.PluginMetadata.PluginType
+  name: PluginType
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginType
+  commentId: P:IPA.Loader.PluginMetadata.PluginType
+  fullName: IPA.Loader.PluginMetadata.PluginType
+  nameWithType: PluginMetadata.PluginType
+- uid: IPA.Loader.PluginMetadata.PluginType*
+  name: PluginType
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginType_
+  commentId: Overload:IPA.Loader.PluginMetadata.PluginType
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.PluginType
+  nameWithType: PluginMetadata.PluginType
+- uid: IPA.Loader.PluginMetadata.RuntimeOptions
+  name: RuntimeOptions
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_RuntimeOptions
+  commentId: P:IPA.Loader.PluginMetadata.RuntimeOptions
+  fullName: IPA.Loader.PluginMetadata.RuntimeOptions
+  nameWithType: PluginMetadata.RuntimeOptions
+- uid: IPA.Loader.PluginMetadata.RuntimeOptions*
+  name: RuntimeOptions
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_RuntimeOptions_
+  commentId: Overload:IPA.Loader.PluginMetadata.RuntimeOptions
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.RuntimeOptions
+  nameWithType: PluginMetadata.RuntimeOptions
+- uid: IPA.Loader.PluginMetadata.ToString
+  name: ToString()
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_ToString
+  commentId: M:IPA.Loader.PluginMetadata.ToString
+  fullName: IPA.Loader.PluginMetadata.ToString()
+  nameWithType: PluginMetadata.ToString()
+- uid: IPA.Loader.PluginMetadata.ToString*
+  name: ToString
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_ToString_
+  commentId: Overload:IPA.Loader.PluginMetadata.ToString
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.ToString
+  nameWithType: PluginMetadata.ToString
+- uid: IPA.Loader.PluginMetadata.Version
+  name: Version
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Version
+  commentId: P:IPA.Loader.PluginMetadata.Version
+  fullName: IPA.Loader.PluginMetadata.Version
+  nameWithType: PluginMetadata.Version
+- uid: IPA.Loader.PluginMetadata.Version*
+  name: Version
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Version_
+  commentId: Overload:IPA.Loader.PluginMetadata.Version
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Version
+  nameWithType: PluginMetadata.Version
 - uid: IPA.Logging
   name: IPA.Logging
   href: api/IPA.Logging.html
