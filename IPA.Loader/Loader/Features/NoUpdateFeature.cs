@@ -2,7 +2,7 @@
 {
     internal class NoUpdateFeature : Feature
     {
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         {
             return meta.Id != null;
         }

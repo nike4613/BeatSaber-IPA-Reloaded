@@ -1,0 +1,189 @@
+﻿using IPA.Logging;
+using IPA.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Linq.Expressions;
+#if NET4
+using Task = System.Threading.Tasks.Task;
+#endif
+#if NET3
+using Net3_Proxy;
+using Path = Net3_Proxy.Path;
+using File = Net3_Proxy.File;
+using Directory = Net3_Proxy.Directory;
+#endif
+
+namespace IPA.Loader
+{
+    internal class PluginExecutor
+    {
+        public PluginMetadata Metadata { get; }
+        public PluginExecutor(PluginMetadata meta)
+        {
+            Metadata = meta;
+            PrepareDelegates();
+        }
+
+
+        private object pluginObject = null;
+        private Func<PluginMetadata, object> CreatePlugin { get; set; }
+        private Action<object> LifecycleEnable { get; set; }
+        // disable may be async (#24)
+        private Func<object, Task> LifecycleDisable { get; set; }
+
+        public void Create()
+        {
+            if (pluginObject != null) return;
+            pluginObject = CreatePlugin(Metadata);
+        }
+
+        public void Enable() => LifecycleEnable(pluginObject);
+        public Task Disable() => LifecycleDisable(pluginObject);
+
+
+        private void PrepareDelegates()
+        { // TODO: use custom exception types or something
+            PluginLoader.Load(Metadata);
+            var type = Metadata.Assembly.GetType(Metadata.PluginType.FullName);
+
+            CreatePlugin = MakeCreateFunc(type, Metadata.Name);
+            LifecycleEnable = MakeLifecycleEnableFunc(type, Metadata.Name);
+            LifecycleDisable = MakeLifecycleDisableFunc(type, Metadata.Name);
+        }
+
+        private static Func<PluginMetadata, object> MakeCreateFunc(Type type, string name)
+        { // TODO: what do i want the visibiliy of Init methods to be?
+            var ctors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                            .Select(c => (c, attr: c.GetCustomAttribute<InitAttribute>()))
+                            .NonNull(t => t.attr)
+                            .OrderByDescending(t => t.c.GetParameters().Length)
+                            .Select(t => t.c).ToArray();
+            if (ctors.Length > 1)
+                Logger.loader.Warn($"Plugin {name} has multiple [Init] constructors. Picking the one with the most parameters.");
+
+            bool usingDefaultCtor = false;
+            var ctor = ctors.FirstOrDefault();
+            if (ctor == null)
+            { // this is a normal case
+                usingDefaultCtor = true;
+                ctor = type.GetConstructor(Type.EmptyTypes);
+                if (ctor == null)
+                    throw new InvalidOperationException($"{type.FullName} does not expose a public default constructor and has no constructors marked [Init]");
+            }
+
+            var initMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                .Select(m => (m, attr: m.GetCustomAttribute<InitAttribute>()))
+                                .NonNull(t => t.attr).Select(t => t.m).ToArray();
+            // verify that they don't have lifecycle attributes on them
+            foreach (var method in initMethods)
+            {
+                var attrs = method.GetCustomAttributes(typeof(IEdgeLifecycleAttribute), false);
+                if (attrs.Length != 0)
+                    throw new InvalidOperationException($"Method {method} on {type.FullName} has both an [Init] attribute and a lifecycle attribute.");
+            }
+
+            // TODO: how do I make this work for .NET 3? FEC.LightExpression but hacked to work on .NET 3?
+            var metaParam = Expression.Parameter(typeof(PluginMetadata));
+            var objVar = Expression.Variable(type);
+            var createExpr = Expression.Lambda<Func<PluginMetadata, object>>(
+                Expression.Block(
+                    initMethods
+                        .Select(m => PluginInitInjector.InjectedCallExpr(m.GetParameters(), metaParam, es => Expression.Call(objVar, m, es)))
+                        .Prepend(Expression.Assign(objVar,
+                            usingDefaultCtor
+                                ? Expression.New(ctor)
+                                : PluginInitInjector.InjectedCallExpr(ctor.GetParameters(), metaParam, es => Expression.New(ctor, es))))
+                        .Append(Expression.Convert(objVar, typeof(object)))),
+                metaParam);
+            // TODO: since this new system will be doing a fuck load of compilation, maybe add FastExpressionCompiler
+            return createExpr.Compile();
+        }
+        private static Action<object> MakeLifecycleEnableFunc(Type type, string name)
+        {
+            var enableMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                    .Select(m => (m, attrs: m.GetCustomAttributes(typeof(IEdgeLifecycleAttribute), false)))
+                                    .Select(t => (t.m, attrs: t.attrs.Cast<IEdgeLifecycleAttribute>()))
+                                    .Where(t => t.attrs.Any(a => a.Type == EdgeLifecycleType.Enable))
+                                    .Select(t => t.m).ToArray();
+            if (enableMethods.Length == 0)
+            {
+                Logger.loader.Notice($"Plugin {name} has no methods marked [OnStart] or [OnEnable]. Is this intentional?");
+                return o => { };
+            }
+
+            foreach (var m in enableMethods)
+            {
+                if (m.GetParameters().Length > 0)
+                    throw new InvalidOperationException($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and has parameters.");
+                if (m.ReturnType != typeof(void))
+                    Logger.loader.Warn($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and returns a value. It will be ignored.");
+            }
+
+            var objParam = Expression.Parameter(typeof(object));
+            var instVar = Expression.Variable(type);
+            var createExpr = Expression.Lambda<Action<object>>(
+                Expression.Block(
+                    enableMethods
+                        .Select(m => Expression.Call(instVar, m))
+                        .Prepend<Expression>(Expression.Assign(instVar, Expression.Convert(objParam, type)))),
+                objParam);
+            return createExpr.Compile();
+        }
+        private static Func<object, Task> MakeLifecycleDisableFunc(Type type, string name)
+        {
+            var disableMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                    .Select(m => (m, attrs: m.GetCustomAttributes(typeof(IEdgeLifecycleAttribute), false)))
+                                    .Select(t => (t.m, attrs: t.attrs.Cast<IEdgeLifecycleAttribute>()))
+                                    .Where(t => t.attrs.Any(a => a.Type == EdgeLifecycleType.Disable))
+                                    .Select(t => t.m).ToArray();
+            if (disableMethods.Length == 0)
+            {
+                Logger.loader.Notice($"Plugin {name} has no methods marked [OnExit] or [OnDisable]. Is this intentional?");
+                return o => Task.CompletedTask;
+            }
+
+            var taskMethods = new List<MethodInfo>();
+            var nonTaskMethods = new List<MethodInfo>();
+            foreach (var m in disableMethods)
+            {
+                if (m.GetParameters().Length > 0)
+                    throw new InvalidOperationException($"Method {m} on {type.FullName} is marked [OnExit] or [OnDisable] and has parameters.");
+                if (m.ReturnType != typeof(void))
+                {
+                    if (typeof(Task).IsAssignableFrom(m.ReturnType))
+                    {
+                        taskMethods.Add(m);
+                        continue;
+                    }
+                    else
+                        Logger.loader.Warn($"Method {m} on {type.FullName} is marked [OnExit] or [OnDisable] and returns a non-Task value. It will be ignored.");
+                }
+
+                nonTaskMethods.Add(m);
+            }
+
+            Expression<Func<Task>> completedTaskDel = () => Task.CompletedTask;
+            var getCompletedTask = completedTaskDel.Body;
+            var taskWhenAll = typeof(Task).GetMethod(nameof(Task.WhenAll), BindingFlags.Public | BindingFlags.Static);
+
+            var objParam = Expression.Parameter(typeof(object));
+            var instVar = Expression.Variable(type);
+            var createExpr = Expression.Lambda<Func<object, Task>>(
+                Expression.Block(
+                    nonTaskMethods
+                        .Select(m => Expression.Call(instVar, m))
+                        .Prepend<Expression>(Expression.Assign(instVar, Expression.Convert(objParam, type)))
+                        .Append(
+                            taskMethods.Count == 0 
+                                ? getCompletedTask
+                                : Expression.Call(taskWhenAll,
+                                    Expression.NewArrayInit(typeof(Task),
+                                        taskMethods.Select(m => 
+                                            Expression.Convert(Expression.Call(instVar, m), typeof(Task))))))),
+                objParam);
+            return createExpr.Compile();
+        }
+    }
+}

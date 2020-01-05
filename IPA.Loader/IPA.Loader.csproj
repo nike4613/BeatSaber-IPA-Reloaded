@@ -112,15 +112,16 @@
     <Compile Include="Loader\Features\ConfigProviderFeature.cs" />
     <Compile Include="Loader\Features\DefineFeature.cs" />
     <Compile Include="Loader\Features\InitInjectorFeature.cs" />
-    <Compile Include="Loader\Features\NoRuntimeEnableFeature.cs" />
     <Compile Include="Loader\Features\NoUpdateFeature.cs" />
     <Compile Include="Loader\Features\PrintFeature.cs" />
     <Compile Include="Loader\HarmonyProtector.cs" />
+    <Compile Include="Loader\PluginExecutor.cs" />
     <Compile Include="Loader\PluginInitInjector.cs" />
     <Compile Include="Loader\LibLoader.cs" />
     <Compile Include="Loader\Features\Feature.cs" />
     <Compile Include="Loader\PluginLoader.cs" />
     <Compile Include="Loader\PluginManifest.cs" />
+    <Compile Include="Loader\PluginMetadata.cs" />
     <Compile Include="Logging\ConsoleWindow.cs" />
     <Compile Include="Logging\Printers\ColorlessConsolePrinter.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />

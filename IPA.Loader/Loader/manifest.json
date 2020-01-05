@@ -15,7 +15,6 @@
     "define-feature(debug, IPA.Loader.Features.DebugFeature)",
     "define-feature(warn, IPA.Loader.Features.WarnFeature)",
     "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
-    "define-feature(no-runtime-enable, IPA.Loader.Features.NoRuntimeEnableFeature)",
     "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
     "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)"
   ],

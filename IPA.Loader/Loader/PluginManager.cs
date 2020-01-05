@@ -322,7 +322,6 @@ namespace IPA.Loader
 
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
-            NoRuntimeEnableFeature.HaveLoadedPlugins = true;
 
             var metadataPaths = PluginsMetadata.Select(m => m.File.FullName).ToList();
             var ignoredPaths = ignoredPlugins.Select(m => m.Key.File.FullName).ToList();
