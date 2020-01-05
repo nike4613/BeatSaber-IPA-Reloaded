@@ -10,6 +10,7 @@ using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
 #endif
 #if NET3
+using System.Threading.Tasks;
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
 using File = Net3_Proxy.File;

@@ -7,9 +7,7 @@ namespace Net3_Proxy
     public static class Path
     {
         internal static void Validate(string path)
-        {
-            Path.Validate(path, "path");
-        }
+            => Validate(path, nameof(path));
 
         internal static void Validate(string path, string parameterName)
         {
