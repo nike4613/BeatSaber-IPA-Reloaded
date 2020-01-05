@@ -61,20 +61,20 @@ namespace IPA.Loader.Features
         /// </summary>
         /// <param name="plugin">the plugin to be initialized</param>
         /// <returns>whether or not to call the Init method</returns>
-        public virtual bool BeforeInit(PluginLoader.PluginInfo plugin) => true;
+        public virtual bool BeforeInit(PluginMetadata plugin) => true;
 
         /// <summary>
         /// Called after a plugin has been fully initialized, whether or not there is an `Init` method. This should never throw an exception.
         /// </summary>
         /// <param name="plugin">the plugin that was just initialized</param>
         /// <param name="pluginInstance">the instance of the plugin being initialized</param>
-        public virtual void AfterInit(PluginLoader.PluginInfo plugin, IPlugin pluginInstance) => AfterInit(plugin);
+        public virtual void AfterInit(PluginMetadata plugin, object pluginInstance) => AfterInit(plugin);
 
         /// <summary>
         /// Called after a plugin has been fully initialized, whether or not there is an `Init` method. This should never throw an exception.
         /// </summary>
         /// <param name="plugin">the plugin that was just initialized</param>
-        public virtual void AfterInit(PluginLoader.PluginInfo plugin) { }
+        public virtual void AfterInit(PluginMetadata plugin) { }
 
         /// <summary>
         /// Ensures a plugin's assembly is loaded. Do not use unless you need to.

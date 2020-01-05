@@ -193,6 +193,7 @@ namespace IPA.Logging
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
+            // FIXME: trace doesn't seem to ever actually appear
             if (!showTrace && level == Level.Trace) return;
 
             // make sure that the queue isn't being cleared

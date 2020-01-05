@@ -622,15 +622,118 @@ namespace IPA.Loader
                 meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
         }
 
-        internal static PluginInfo InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
+        internal static PluginExecutor InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
-            if (meta.IsAttributePlugin)
+            if (meta.Manifest.GameVersion != BeatSaber.GameVersion)
+                Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
+
+            if (!meta.IsAttributePlugin)
             {
-                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Unsupported) { ReasonText = "Attribute plugins are currently not supported" });
+                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Unsupported) { ReasonText = "Non-attribute plugins are currently not supported" });
                 return null;
             }
 
-            if (meta.PluginType == null)
+            if (meta.IsSelf)
+                return new PluginExecutor(meta, true);
+
+            foreach (var dep in meta.Dependencies)
+            {
+                if (alreadyLoaded.Contains(dep)) continue;
+
+                // otherwise...
+
+                if (ignoredPlugins.TryGetValue(dep, out var reason))
+                { // was added to the ignore list
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
+                    {
+                        ReasonText = $"Dependency was ignored at load time: {reason.ReasonText}",
+                        RelatedTo = dep
+                    });
+                }
+                else
+                { // was not added to ignore list
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
+                    {
+                        ReasonText = $"Dependency was not already loaded at load time, but was also not ignored",
+                        RelatedTo = dep
+                    });
+                }
+
+                return null;
+            }
+
+            Load(meta);
+
+            foreach (var feature in meta.Features)
+            {
+                if (!feature.BeforeLoad(meta))
+                {
+                    Logger.loader.Warn(
+                        $"Feature {feature?.GetType()} denied plugin {meta.Name} from loading! {feature?.InvalidMessage}");
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
+                    {
+                        ReasonText = $"Denied in {nameof(Feature.BeforeLoad)} of feature {feature?.GetType()}:\n\t{feature?.InvalidMessage}"
+                    });
+                    return null;
+                }
+            }
+
+            PluginExecutor exec;
+            try
+            {
+                exec = new PluginExecutor(meta, false);
+            }
+            catch (Exception e)
+            {
+                Logger.loader.Error($"Error creating executor for {meta.Name}");
+                Logger.loader.Error(e);
+                return null;
+            }
+
+            foreach (var feature in meta.Features)
+            {
+                if (!feature.BeforeInit(meta))
+                {
+                    Logger.loader.Warn(
+                        $"Feature {feature?.GetType()} denied plugin {meta.Name} from initializing! {feature?.InvalidMessage}");
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
+                    {
+                        ReasonText = $"Denied in {nameof(Feature.BeforeInit)} of feature {feature?.GetType()}:\n\t{feature?.InvalidMessage}"
+                    });
+                    return null;
+                }
+            }
+                
+            try
+            {
+                exec.Create();
+            }
+            catch (Exception e)
+            {
+                Logger.loader.Error($"Could not init plugin {meta.Name}");
+                Logger.loader.Error(e);
+                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Error)
+                {
+                    ReasonText = "Error ocurred while initializing",
+                    Error = e
+                });
+                return null;
+            }
+
+            foreach (var feature in meta.Features)
+                try
+                {
+                    feature.AfterInit(meta, exec.Instance);
+                }
+                catch (Exception e)
+                {
+                    Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
+                }
+
+            return exec;
+
+            #region Interface plugin support
+            /*if (meta.IsSelf)
                 return new PluginInfo()
                 {
                     Metadata = meta,
@@ -638,9 +741,6 @@ namespace IPA.Loader
                 };
 
             var info = new PluginInfo();
-
-            if (meta.Manifest.GameVersion != BeatSaber.GameVersion)
-                Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
             try
             {
@@ -738,22 +838,23 @@ namespace IPA.Loader
                 return null;
             }
 
-            return info;
+            return info;*/
+            #endregion
         }
 
-        internal static List<PluginInfo> LoadPlugins()
+        internal static List<PluginExecutor> LoadPlugins()
         {
             InitFeatures();
             DisabledPlugins.ForEach(Load); // make sure they get loaded into memory so their metadata and stuff can be read more easily
 
-            var list = new List<PluginInfo>();
+            var list = new List<PluginExecutor>();
             var loaded = new HashSet<PluginMetadata>();
             foreach (var meta in PluginsMetadata)
             {
-                var info = InitPlugin(meta, loaded);
-                if (info != null)
+                var exec = InitPlugin(meta, loaded);
+                if (exec != null)
                 {
-                    list.Add(info);
+                    list.Add(exec);
                     loaded.Add(meta);
                 }
             }

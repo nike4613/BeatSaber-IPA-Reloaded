@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Linq.Expressions;
 #if NET4
 using Task = System.Threading.Tasks.Task;
+using TaskEx = System.Threading.Tasks.Task;
 #endif
 #if NET3
 using Net3_Proxy;
@@ -20,14 +21,21 @@ namespace IPA.Loader
     internal class PluginExecutor
     {
         public PluginMetadata Metadata { get; }
-        public PluginExecutor(PluginMetadata meta)
+        public PluginExecutor(PluginMetadata meta, bool isSelf)
         {
             Metadata = meta;
-            PrepareDelegates();
+            if (isSelf)
+            {
+                CreatePlugin = m => null;
+                LifecycleEnable = o => { };
+                LifecycleDisable = o => TaskEx.CompletedTask;
+            }
+            else
+                PrepareDelegates();
         }
 
 
-        private object pluginObject = null;
+        public object Instance { get; private set; } = null;
         private Func<PluginMetadata, object> CreatePlugin { get; set; }
         private Action<object> LifecycleEnable { get; set; }
         // disable may be async (#24)
@@ -35,12 +43,12 @@ namespace IPA.Loader
 
         public void Create()
         {
-            if (pluginObject != null) return;
-            pluginObject = CreatePlugin(Metadata);
+            if (Instance != null) return;
+            Instance = CreatePlugin(Metadata);
         }
 
-        public void Enable() => LifecycleEnable(pluginObject);
-        public Task Disable() => LifecycleDisable(pluginObject);
+        public void Enable() => LifecycleEnable(Instance);
+        public Task Disable() => LifecycleDisable(Instance);
 
 
         private void PrepareDelegates()
@@ -85,21 +93,23 @@ namespace IPA.Loader
             }
 
             // TODO: how do I make this work for .NET 3? FEC.LightExpression but hacked to work on .NET 3?
-            var metaParam = Expression.Parameter(typeof(PluginMetadata));
-            var objVar = Expression.Variable(type);
+            var metaParam = Expression.Parameter(typeof(PluginMetadata), "meta");
+            var objVar = Expression.Variable(type, "objVar");
+            var persistVar = Expression.Variable(typeof(object), "persistVar");
             var createExpr = Expression.Lambda<Func<PluginMetadata, object>>(
-                Expression.Block(
+                Expression.Block(new[] { objVar, persistVar },
                     initMethods
-                        .Select(m => PluginInitInjector.InjectedCallExpr(m.GetParameters(), metaParam, es => Expression.Call(objVar, m, es)))
+                        .Select(m => PluginInitInjector.InjectedCallExpr(m.GetParameters(), metaParam, persistVar, es => Expression.Call(objVar, m, es)))
                         .Prepend(Expression.Assign(objVar,
                             usingDefaultCtor
                                 ? Expression.New(ctor)
-                                : PluginInitInjector.InjectedCallExpr(ctor.GetParameters(), metaParam, es => Expression.New(ctor, es))))
+                                : PluginInitInjector.InjectedCallExpr(ctor.GetParameters(), metaParam, persistVar, es => Expression.New(ctor, es))))
                         .Append(Expression.Convert(objVar, typeof(object)))),
                 metaParam);
             // TODO: since this new system will be doing a fuck load of compilation, maybe add FastExpressionCompiler
             return createExpr.Compile();
         }
+        // TODO: make enable and disable able to take a bool indicating which it is
         private static Action<object> MakeLifecycleEnableFunc(Type type, string name)
         {
             var enableMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
@@ -121,10 +131,10 @@ namespace IPA.Loader
                     Logger.loader.Warn($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and returns a value. It will be ignored.");
             }
 
-            var objParam = Expression.Parameter(typeof(object));
-            var instVar = Expression.Variable(type);
+            var objParam = Expression.Parameter(typeof(object), "obj");
+            var instVar = Expression.Variable(type, "inst");
             var createExpr = Expression.Lambda<Action<object>>(
-                Expression.Block(
+                Expression.Block(new[] { instVar },
                     enableMethods
                         .Select(m => Expression.Call(instVar, m))
                         .Prepend<Expression>(Expression.Assign(instVar, Expression.Convert(objParam, type)))),
@@ -164,14 +174,14 @@ namespace IPA.Loader
                 nonTaskMethods.Add(m);
             }
 
-            Expression<Func<Task>> completedTaskDel = () => Task.CompletedTask;
+            Expression<Func<Task>> completedTaskDel = () => TaskEx.CompletedTask;
             var getCompletedTask = completedTaskDel.Body;
-            var taskWhenAll = typeof(Task).GetMethod(nameof(Task.WhenAll), BindingFlags.Public | BindingFlags.Static);
+            var taskWhenAll = typeof(TaskEx).GetMethod(nameof(TaskEx.WhenAll), new[] { typeof(Task[]) });
 
-            var objParam = Expression.Parameter(typeof(object));
-            var instVar = Expression.Variable(type);
+            var objParam = Expression.Parameter(typeof(object), "obj");
+            var instVar = Expression.Variable(type, "inst");
             var createExpr = Expression.Lambda<Func<object, Task>>(
-                Expression.Block(
+                Expression.Block(new[] { instVar },
                     nonTaskMethods
                         .Select(m => Expression.Call(instVar, m))
                         .Prepend<Expression>(Expression.Assign(instVar, Expression.Convert(objParam, type)))

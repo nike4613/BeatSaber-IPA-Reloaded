@@ -75,7 +75,7 @@ namespace IPA.Updating.BeatMods
 
             public bool MetaRequestFailed { get; set; }
 
-            public PluginLoader.PluginInfo LocalPluginMeta { get; set; }
+            public PluginMetadata LocalPluginMeta { get; set; }
 
             public bool IsLegacy { get; set; } = false;
 
@@ -200,7 +200,7 @@ namespace IPA.Updating.BeatMods
                         Name = msinfo.Id,
                         Version = msinfo.Version,
                         Requirement = new Range($">={msinfo.Version}"),
-                        LocalPluginMeta = plugin
+                        LocalPluginMeta = msinfo
                     };
 
                     if (msinfo.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
@@ -221,11 +221,7 @@ namespace IPA.Updating.BeatMods
                         Name = meta.Id,
                         Version = meta.Version,
                         Requirement = new Range($">={meta.Version}"),
-                        LocalPluginMeta = new PluginLoader.PluginInfo
-                        {
-                            Metadata = meta,
-                            Plugin = null
-                        }
+                        LocalPluginMeta = meta
                     };
 
                     if (meta.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
@@ -246,11 +242,7 @@ namespace IPA.Updating.BeatMods
                         Name = meta.Id,
                         Version = meta.Version,
                         Requirement = new Range($">={meta.Version}"),
-                        LocalPluginMeta = new PluginLoader.PluginInfo
-                        {
-                            Metadata = meta,
-                            Plugin = null
-                        }
+                        LocalPluginMeta = meta
                     };
 
                     if (meta.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
@@ -645,7 +637,7 @@ namespace IPA.Updating.BeatMods
 
             try
             {
-                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.Metadata.IsSelf).Unwrap();
+                bool shouldDeleteOldFile = !(item.LocalPluginMeta?.IsSelf).Unwrap();
 
                 using (var zipFile = ZipFile.Read(stream))
                 {
@@ -682,7 +674,7 @@ namespace IPA.Updating.BeatMods
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
                                 if (item.LocalPluginMeta != null && 
-                                    Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath))
+                                    Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, BeatSaber.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 /*if (targetFile.Exists)
@@ -701,7 +693,7 @@ namespace IPA.Updating.BeatMods
                 }
                 
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.Metadata.File.FullName, BeatSaber.InstallPath) });
+                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, BeatSaber.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
@@ -710,7 +702,7 @@ namespace IPA.Updating.BeatMods
                 throw;
             }
 
-            if ((item.LocalPluginMeta?.Metadata.IsSelf).Unwrap())
+            if ((item.LocalPluginMeta?.IsSelf).Unwrap())
             { // currently updating self, so copy to working dir and update
                 NeedsManualRestart = true; // flag so that ModList keeps the restart button hidden
                 Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
@@ -719,7 +711,7 @@ namespace IPA.Updating.BeatMods
                 Process.Start(new ProcessStartInfo
                 {
                     // will never actually be null
-                    FileName = item.LocalPluginMeta?.Metadata.File.FullName ?? throw new InvalidOperationException(),
+                    FileName = item.LocalPluginMeta?.File.FullName ?? throw new InvalidOperationException(),
                     Arguments = $"-nw={Process.GetCurrentProcess().Id}",
                     UseShellExecute = false
                 });

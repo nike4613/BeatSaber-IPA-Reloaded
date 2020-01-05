@@ -303,10 +303,6 @@ namespace IPA.Injector
             /*if (otherNewtonsoftJson != null)
                 Assembly.LoadFrom(otherNewtonsoftJson);*/
 
-#if DEBUG
-            Config.Stores.GeneratedStore.DebugSaveAssembly("GeneratedAssembly.dll");
-#endif
-
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
@@ -337,6 +333,10 @@ namespace IPA.Injector
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
             PluginComponent.Create();
+
+#if DEBUG
+            Config.Stores.GeneratedStore.DebugSaveAssembly("GeneratedAssembly.dll");
+#endif
         }
     }
 }

@@ -33,19 +33,16 @@ namespace IPA.Loader
         /// <summary>
         /// An <see cref="IEnumerable"/> of new Beat Saber plugins
         /// </summary>
-        internal static IEnumerable<IPlugin> BSPlugins => (_bsPlugins ?? throw new InvalidOperationException()).Select(p => p.Plugin);
-        private static List<PluginInfo> _bsPlugins;
-        internal static IEnumerable<PluginInfo> BSMetas => _bsPlugins;
+        private static List<PluginExecutor> _bsPlugins;
+        internal static IEnumerable<PluginExecutor> BSMetas => _bsPlugins;
 
         /// <summary>
         /// Gets info about the plugin with the specified name.
         /// </summary>
         /// <param name="name">the name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin info for the requested plugin or null</returns>
-        public static PluginInfo GetPlugin(string name)
-        {
-            return BSMetas.FirstOrDefault(p => p.Metadata.Name == name);
-        }
+        public static PluginMetadata GetPlugin(string name)
+            => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Name == name);
 
         /// <summary>
         /// Gets info about the plugin with the specified ModSaber name.
@@ -53,17 +50,15 @@ namespace IPA.Loader
         /// <param name="name">the ModSaber name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin info for the requested plugin or null</returns>
         [Obsolete("Old name. Use GetPluginFromId instead.")]
-        public static PluginInfo GetPluginFromModSaberName(string name) => GetPluginFromId(name);
+        public static PluginMetadata GetPluginFromModSaberName(string name) => GetPluginFromId(name);
 
         /// <summary>
         /// Gets info about the plugin with the specified ID.
         /// </summary>
         /// <param name="name">the ID name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin info for the requested plugin or null</returns>
-        public static PluginInfo GetPluginFromId(string name)
-        {
-            return BSMetas.FirstOrDefault(p => p.Metadata.Id == name);
-        }
+        public static PluginMetadata GetPluginFromId(string name)
+            => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Id == name);
 
         /// <summary>
         /// Gets a disabled plugin's metadata by its name.
@@ -81,6 +76,8 @@ namespace IPA.Loader
         public static PluginMetadata GetDisabledPluginFromId(string name) =>
             DisabledPlugins.FirstOrDefault(p => p.Id == name);
 
+        // TODO: rewrite below
+        /*
         /// <summary>
         /// Disables a plugin, and all dependents.
         /// </summary>
@@ -220,7 +217,7 @@ namespace IPA.Loader
         /// <param name="pluginId">the ID, or name if the ID is null, of the plugin to enable</param>
         /// <returns>whether a restart is needed to activate</returns>
         public static bool EnablePlugin(string pluginId) => 
-            EnablePlugin(GetDisabledPluginFromId(pluginId) ?? GetDisabledPlugin(pluginId));
+            EnablePlugin(GetDisabledPluginFromId(pluginId) ?? GetDisabledPlugin(pluginId));*/
 
         /// <summary>
         /// Checks if a given plugin is disabled.
@@ -269,8 +266,9 @@ namespace IPA.Loader
         /// Gets a list of all BSIPA plugins.
         /// </summary>
         /// <value>a collection of all enabled plugins as <see cref="PluginInfo"/>s</value>
-        public static IEnumerable<PluginInfo> AllPlugins => BSMetas;
+        public static IEnumerable<PluginMetadata> AllPlugins => BSMetas.Select(p => p.Metadata);
 
+        /*
         /// <summary>
         /// Converts a plugin's metadata to a <see cref="PluginInfo"/>.
         /// </summary>
@@ -281,8 +279,9 @@ namespace IPA.Loader
             if (IsDisabled(meta))
                 return runtimeDisabled.FirstOrDefault(p => p.Metadata == meta);
             else
-                return AllPlugins.FirstOrDefault(p => p.Metadata == meta);
+                return AllPlugins.FirstOrDefault(p => p == meta);
         }
+        */
 
         /// <summary>
         /// An <see cref="IEnumerable"/> of old IPA plugins.
@@ -301,7 +300,7 @@ namespace IPA.Loader
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
-            _bsPlugins = new List<PluginInfo>();
+            _bsPlugins = new List<PluginExecutor>();
             _ipaPlugins = new List<Old.IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
