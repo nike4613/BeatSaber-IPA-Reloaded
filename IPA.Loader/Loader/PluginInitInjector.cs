@@ -23,9 +23,9 @@ namespace IPA.Loader
         /// </summary>
         /// <param name="previous">the previous return value of the function, or <see langword="null"/> if never called for plugin.</param>
         /// <param name="param">the <see cref="ParameterInfo"/> of the parameter being injected.</param>
-        /// <param name="meta">the <see cref="PluginLoader.PluginMetadata"/> for the plugin being loaded.</param>
+        /// <param name="meta">the <see cref="PluginMetadata"/> for the plugin being loaded.</param>
         /// <returns>the value to inject into that parameter.</returns>
-        public delegate object InjectParameter(object previous, ParameterInfo param, PluginLoader.PluginMetadata meta);
+        public delegate object InjectParameter(object previous, ParameterInfo param, PluginMetadata meta);
 
         /// <summary>
         /// Adds an injector to be used when calling future plugins' Init methods.
@@ -45,7 +45,7 @@ namespace IPA.Loader
             public TypedInjector(Type t, InjectParameter i)
             { Type = t; Injector = i; }
 
-            public object Inject(object prev, ParameterInfo info, PluginLoader.PluginMetadata meta)
+            public object Inject(object prev, ParameterInfo info, PluginMetadata meta)
                 => Injector(prev, info, meta);
 
             public bool Equals(TypedInjector other)
@@ -65,7 +65,7 @@ namespace IPA.Loader
         private static readonly List<TypedInjector> injectors = new List<TypedInjector>
         {
             new TypedInjector(typeof(Logger), (prev, param, meta) => prev ?? new StandardLogger(meta.Name)),
-            new TypedInjector(typeof(PluginLoader.PluginMetadata), (prev, param, meta) => prev ?? meta),
+            new TypedInjector(typeof(PluginMetadata), (prev, param, meta) => prev ?? meta),
             new TypedInjector(typeof(Config.Config), (prev, param, meta) =>
             {
                 if (prev != null) return prev;
@@ -107,7 +107,7 @@ namespace IPA.Loader
                                 Expression.ArrayIndex(arr, Expression.Constant(i)), t))));
         }
 
-        internal static object[] Inject(ParameterInfo[] initParams, PluginLoader.PluginMetadata meta)
+        internal static object[] Inject(ParameterInfo[] initParams, PluginMetadata meta)
         {
             var initArgs = new List<object>();
 

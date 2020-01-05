@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+#if NET3
+using Array = Net3_Proxy.Array;
+#endif
 
 namespace IPA.Loader.Features
 {
@@ -8,7 +11,7 @@ namespace IPA.Loader.Features
     {
         protected internal override bool StoreOnPlugin => false;
 
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         { // parameters should be (assembly qualified lookup type, [fully qualified type]:[method name])
           // method should be static
             if (parameters.Length != 2)
@@ -71,8 +74,8 @@ namespace IPA.Loader.Features
                                   {
                                       typeof(object),
                                       typeof(ParameterInfo),
-                                      typeof(PluginLoader.PluginMetadata)
-                                  }, new ParameterModifier[0]);
+                                      typeof(PluginMetadata)
+                                  }, Array.Empty<ParameterModifier>());
             }
             catch (Exception e)
             {

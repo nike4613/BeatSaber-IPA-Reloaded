@@ -5,7 +5,7 @@ namespace IPA.Loader.Features
 {
     internal class PrintFeature : Feature
     {
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         {
             Logger.features.Info($"{meta.Name}: {string.Join(" ", parameters)}");
             return true;
@@ -14,7 +14,7 @@ namespace IPA.Loader.Features
 
     internal class DebugFeature : Feature
     {
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         {
             Logger.features.Debug($"{meta.Name}: {string.Join(" ", parameters)}");
             return true;
@@ -23,7 +23,7 @@ namespace IPA.Loader.Features
 
     internal class WarnFeature : Feature
     {
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         {
             Logger.features.Warn($"{meta.Name}: {string.Join(" ", parameters)}");
             return true;

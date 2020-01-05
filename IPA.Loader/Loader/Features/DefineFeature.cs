@@ -9,7 +9,7 @@ namespace IPA.Loader.Features
 
         protected internal override bool StoreOnPlugin => false;
 
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         { // parameters should be (name, fully qualified type)
             if (parameters.Length != 2)
             {
@@ -47,6 +47,12 @@ namespace IPA.Loader.Features
                 }
 
                 InvalidMessage = $"Could not find {filename} while loading type";
+                return false;
+            }
+
+            if (type == null)
+            {
+                InvalidMessage = $"Invalid type name {parameters[1]}";
                 return false;
             }
 

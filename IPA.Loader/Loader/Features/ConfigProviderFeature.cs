@@ -5,7 +5,7 @@ namespace IPA.Loader.Features
 {
     internal class ConfigProviderFeature : Feature
     {
-        public override bool Initialize(PluginLoader.PluginMetadata meta, string[] parameters)
+        public override bool Initialize(PluginMetadata meta, string[] parameters)
         {// parameters should be (fully qualified name of provider type)
             if (parameters.Length != 1)
             {
