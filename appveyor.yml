@@ -7,9 +7,7 @@ environment:
 
   do_deploy: true
   BuildForBeatSaber: 'false'
-  matrix:
-    - BUILD_DOC: 'no'
-    #- BUILD_DOC: 'yes'
+  BUILD_DOC: 'no'
 
 pull_requests:
   do_not_increment_build_number: true
@@ -42,14 +40,9 @@ artifacts: # When Net3 is added, this will need to be moved to the for block to 
     name: BSIPA-$(platform)
 
 matrix:
-  exclude:
-    # Don't exclude Release_Net4|x64
-    - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
-      platform: x86-Net4
-    - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
-      platform: x64-Net3
-    - BUILD_DOC: 'yes' # Add one of these for most configuration sets, so we don't dupe
-      platform: x86-Net3
+  allow_failures:
+    - platform: x64-Net3
+    - platform: x86-Net3
       
 for:
 -
