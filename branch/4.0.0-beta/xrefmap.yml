@@ -2687,18 +2687,18 @@ references:
   commentId: T:IPA.Loader.Features.Feature
   fullName: IPA.Loader.Features.Feature
   nameWithType: Feature
-- uid: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginLoader.PluginInfo)
-  name: AfterInit(PluginLoader.PluginInfo)
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginLoader_PluginInfo_
-  commentId: M:IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginLoader.PluginInfo)
-  fullName: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginLoader.PluginInfo)
-  nameWithType: Feature.AfterInit(PluginLoader.PluginInfo)
-- uid: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginLoader.PluginInfo,IPA.IPlugin)
-  name: AfterInit(PluginLoader.PluginInfo, IPlugin)
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginLoader_PluginInfo_IPA_IPlugin_
-  commentId: M:IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginLoader.PluginInfo,IPA.IPlugin)
-  fullName: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginLoader.PluginInfo, IPA.IPlugin)
-  nameWithType: Feature.AfterInit(PluginLoader.PluginInfo, IPlugin)
+- uid: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata)
+  name: AfterInit(PluginMetadata)
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata)
+  nameWithType: Feature.AfterInit(PluginMetadata)
+- uid: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata,System.Object)
+  name: AfterInit(PluginMetadata, Object)
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginMetadata_System_Object_
+  commentId: M:IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata,System.Object)
+  fullName: IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata, System.Object)
+  nameWithType: Feature.AfterInit(PluginMetadata, Object)
 - uid: IPA.Loader.Features.Feature.AfterInit*
   name: AfterInit
   href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_AfterInit_
@@ -2706,12 +2706,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.Features.Feature.AfterInit
   nameWithType: Feature.AfterInit
-- uid: IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginLoader.PluginInfo)
-  name: BeforeInit(PluginLoader.PluginInfo)
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_BeforeInit_IPA_Loader_PluginLoader_PluginInfo_
-  commentId: M:IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginLoader.PluginInfo)
-  fullName: IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginLoader.PluginInfo)
-  nameWithType: Feature.BeforeInit(PluginLoader.PluginInfo)
+- uid: IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginMetadata)
+  name: BeforeInit(PluginMetadata)
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_BeforeInit_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginMetadata)
+  nameWithType: Feature.BeforeInit(PluginMetadata)
 - uid: IPA.Loader.Features.Feature.BeforeInit*
   name: BeforeInit
   href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_BeforeInit_
@@ -2882,44 +2882,6 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.DisabledPlugins
   nameWithType: PluginManager.DisabledPlugins
-- uid: IPA.Loader.PluginManager.DisablePlugin(IPA.Loader.PluginLoader.PluginInfo)
-  name: DisablePlugin(PluginLoader.PluginInfo)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_DisablePlugin_IPA_Loader_PluginLoader_PluginInfo_
-  commentId: M:IPA.Loader.PluginManager.DisablePlugin(IPA.Loader.PluginLoader.PluginInfo)
-  fullName: IPA.Loader.PluginManager.DisablePlugin(IPA.Loader.PluginLoader.PluginInfo)
-  nameWithType: PluginManager.DisablePlugin(PluginLoader.PluginInfo)
-- uid: IPA.Loader.PluginManager.DisablePlugin(System.String)
-  name: DisablePlugin(String)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_DisablePlugin_System_String_
-  commentId: M:IPA.Loader.PluginManager.DisablePlugin(System.String)
-  fullName: IPA.Loader.PluginManager.DisablePlugin(System.String)
-  nameWithType: PluginManager.DisablePlugin(String)
-- uid: IPA.Loader.PluginManager.DisablePlugin*
-  name: DisablePlugin
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_DisablePlugin_
-  commentId: Overload:IPA.Loader.PluginManager.DisablePlugin
-  isSpec: "True"
-  fullName: IPA.Loader.PluginManager.DisablePlugin
-  nameWithType: PluginManager.DisablePlugin
-- uid: IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginMetadata)
-  name: EnablePlugin(PluginMetadata)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnablePlugin_IPA_Loader_PluginMetadata_
-  commentId: M:IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginMetadata)
-  fullName: IPA.Loader.PluginManager.EnablePlugin(IPA.Loader.PluginMetadata)
-  nameWithType: PluginManager.EnablePlugin(PluginMetadata)
-- uid: IPA.Loader.PluginManager.EnablePlugin(System.String)
-  name: EnablePlugin(String)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnablePlugin_System_String_
-  commentId: M:IPA.Loader.PluginManager.EnablePlugin(System.String)
-  fullName: IPA.Loader.PluginManager.EnablePlugin(System.String)
-  nameWithType: PluginManager.EnablePlugin(String)
-- uid: IPA.Loader.PluginManager.EnablePlugin*
-  name: EnablePlugin
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnablePlugin_
-  commentId: Overload:IPA.Loader.PluginManager.EnablePlugin
-  isSpec: "True"
-  fullName: IPA.Loader.PluginManager.EnablePlugin
-  nameWithType: PluginManager.EnablePlugin
 - uid: IPA.Loader.PluginManager.GetDisabledPlugin(System.String)
   name: GetDisabledPlugin(String)
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_GetDisabledPlugin_System_String_
@@ -2985,19 +2947,6 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.GetPluginFromModSaberName
   nameWithType: PluginManager.GetPluginFromModSaberName
-- uid: IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginMetadata)
-  name: InfoFromMetadata(PluginMetadata)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_InfoFromMetadata_IPA_Loader_PluginMetadata_
-  commentId: M:IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginMetadata)
-  fullName: IPA.Loader.PluginManager.InfoFromMetadata(IPA.Loader.PluginMetadata)
-  nameWithType: PluginManager.InfoFromMetadata(PluginMetadata)
-- uid: IPA.Loader.PluginManager.InfoFromMetadata*
-  name: InfoFromMetadata
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_InfoFromMetadata_
-  commentId: Overload:IPA.Loader.PluginManager.InfoFromMetadata
-  isSpec: "True"
-  fullName: IPA.Loader.PluginManager.InfoFromMetadata
-  nameWithType: PluginManager.InfoFromMetadata
 - uid: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginMetadata)
   name: IsDisabled(PluginMetadata)
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsDisabled_IPA_Loader_PluginMetadata_
