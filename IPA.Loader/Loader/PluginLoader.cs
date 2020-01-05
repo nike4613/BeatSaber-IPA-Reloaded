@@ -29,7 +29,7 @@ namespace IPA.Loader
     /// <summary>
     /// A type to manage the loading of plugins.
     /// </summary>
-    public class PluginLoader
+    internal class PluginLoader
     {
         internal static Task LoadTask() =>
             TaskEx.Run(() =>
@@ -201,7 +201,7 @@ namespace IPA.Loader
                             if (type.HasInterface(typeof(IPlugin).FullName))
                             {
                                 Logger.loader.Warn("Interface-based plugin found");
-                                meta.RuntimeOptions = RuntimeOptions.SingleDynamicInit;
+                                meta.IsAttributePlugin = false;
                                 meta.PluginType = type;
                                 return;
                             }

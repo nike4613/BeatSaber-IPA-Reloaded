@@ -82,7 +82,14 @@ namespace IPA.Loader
             }
         }
 
+        /// <summary>
+        /// The <see cref="IPA.RuntimeOptions"/> that the plugin specified in its <see cref="PluginAttribute"/>.
+        /// </summary>
         public RuntimeOptions RuntimeOptions { get; internal set; }
+        /// <summary>
+        /// Whether the plugin referred to by this metadata object is a BSIPA 4 attribute plugin.
+        /// </summary>
+        /// <value><see langword="true"/> if the plugin is a BSIPA 4 plugin, <see langword="false"/> if it is a BSIPA 3 plugin.</value>
         public bool IsAttributePlugin { get; internal set; } = false;
 
         /// <summary>

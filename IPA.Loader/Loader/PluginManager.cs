@@ -30,9 +30,6 @@ namespace IPA.Loader
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
         
-        /// <summary>
-        /// An <see cref="IEnumerable"/> of new Beat Saber plugins
-        /// </summary>
         private static List<PluginExecutor> _bsPlugins;
         internal static IEnumerable<PluginExecutor> BSMetas => _bsPlugins;
 
@@ -40,23 +37,15 @@ namespace IPA.Loader
         /// Gets info about the plugin with the specified name.
         /// </summary>
         /// <param name="name">the name of the plugin to get (must be an exact match)</param>
-        /// <returns>the plugin info for the requested plugin or null</returns>
+        /// <returns>the plugin metadata for the requested plugin or <see langword="null"/> if it doesn't exist or is disabled</returns>
         public static PluginMetadata GetPlugin(string name)
             => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Name == name);
-
-        /// <summary>
-        /// Gets info about the plugin with the specified ModSaber name.
-        /// </summary>
-        /// <param name="name">the ModSaber name of the plugin to get (must be an exact match)</param>
-        /// <returns>the plugin info for the requested plugin or null</returns>
-        [Obsolete("Old name. Use GetPluginFromId instead.")]
-        public static PluginMetadata GetPluginFromModSaberName(string name) => GetPluginFromId(name);
 
         /// <summary>
         /// Gets info about the plugin with the specified ID.
         /// </summary>
         /// <param name="name">the ID name of the plugin to get (must be an exact match)</param>
-        /// <returns>the plugin info for the requested plugin or null</returns>
+        /// <returns>the plugin metadata for the requested plugin or <see langword="null"/> if it doesn't exist or is disabled</returns>
         public static PluginMetadata GetPluginFromId(string name)
             => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Id == name);
 
@@ -245,7 +234,7 @@ namespace IPA.Loader
         /// </summary>
         /// <param name="plugin">the plugin that was enabled</param>
         /// <param name="needsRestart">whether it needs a restart to take effect</param>
-        public delegate void PluginEnableDelegate(PluginInfo plugin, bool needsRestart);
+        public delegate void PluginEnableDelegate(PluginMetadata plugin, bool needsRestart);
         /// <summary>
         /// An invoker for the <see cref="PluginDisabled"/> event.
         /// </summary>
@@ -265,7 +254,7 @@ namespace IPA.Loader
         /// <summary>
         /// Gets a list of all BSIPA plugins.
         /// </summary>
-        /// <value>a collection of all enabled plugins as <see cref="PluginInfo"/>s</value>
+        /// <value>a collection of all enabled plugins as <see cref="PluginMetadata"/>s</value>
         public static IEnumerable<PluginMetadata> AllPlugins => BSMetas.Select(p => p.Metadata);
 
         /*
@@ -284,7 +273,7 @@ namespace IPA.Loader
         */
 
         /// <summary>
-        /// An <see cref="IEnumerable"/> of old IPA plugins.
+        /// An <see cref="IEnumerable{T}"/> of old IPA plugins.
         /// </summary>
         /// <value>all legacy plugin instances</value>
         [Obsolete("I mean, IPlugin shouldn't be used, so why should this? Not renaming to extend support for old plugins.")]

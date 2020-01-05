@@ -13,7 +13,7 @@ using Net3_Proxy;
 namespace IPA.Loader
 {
     /// <summary>
-    /// The type that handles value injecting into a plugin's Init.
+    /// The type that handles value injecting into a plugin's initialization methods.
     /// </summary>
     public static class PluginInitInjector
     {
