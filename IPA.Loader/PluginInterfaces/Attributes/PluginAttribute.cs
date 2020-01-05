@@ -43,16 +43,18 @@ namespace IPA
     public enum RuntimeOptions
     {
         /// <summary>
+        /// <para>
         /// Indicates that this plugin expects to be initialized and enabled with the game, and disabled with the game.
-        /// </summary>
-        /// <remarks>
+        /// </para>
+        /// <para>
         /// With this option set, whether or not the plugin is disabled during a given run is constant for that entire run.
-        /// </remarks>
+        /// </para>
+        /// </summary>
         SingleStartInit,
         /// <summary>
+        /// <para>
         /// Indicates that this plugin supports runtime enabling and disabling.
-        /// </summary>
-        /// <remarks>
+        /// </para>
         /// <para>
         /// When this is set, the plugin may be disabled at reasonable points during runtime. As with <see cref="SingleStartInit"/>,
         /// it will be initialized and enabled with the game if it is enabled on startup, and disabled with the game if it is enabled
@@ -66,7 +68,7 @@ namespace IPA
         /// When a plugin with this set is disabled mid-game, the plugin instance will <b>NOT</b> be destroyed, and will instead be
         /// re-used for subsequent enables. The plugin is expected to handle this gracefully, and behave in a way that makes sense.
         /// </para>
-        /// </remarks>
+        /// </summary>
         DynamicInit
     }
 
