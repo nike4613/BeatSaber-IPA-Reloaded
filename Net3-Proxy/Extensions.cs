@@ -49,7 +49,7 @@ namespace Net3_Proxy
         {
             if (searchPattern == null)
             {
-                throw new ArgumentNullException("searchPattern");
+                throw new ArgumentNullException(nameof(searchPattern));
             }
             return CreateEnumerateFilesIterator(self, searchPattern, searchOption);
         }
@@ -79,11 +79,11 @@ namespace Net3_Proxy
         {
             if (destination == null)
             {
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
             }
             if (bufferSize <= 0)
             {
-                throw new ArgumentOutOfRangeException("bufferSize", "Positive number required.");
+                throw new ArgumentOutOfRangeException(nameof(bufferSize), "Positive number required.");
             }
             if (!src.CanRead && !src.CanWrite)
             {
