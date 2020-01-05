@@ -96,22 +96,27 @@ namespace IPA.Loader
         }
 
         private static readonly MethodInfo InjectMethod = typeof(PluginInitInjector).GetMethod(nameof(Inject), BindingFlags.NonPublic | BindingFlags.Static);
-        internal static Expression InjectedCallExpr(ParameterInfo[] initParams, Expression meta, Func<IEnumerable<Expression>, Expression> exprGen)
+        internal static Expression InjectedCallExpr(ParameterInfo[] initParams, Expression meta, ParameterExpression persistVar, Func<IEnumerable<Expression>, Expression> exprGen)
         {
-            var arr = Expression.Variable(typeof(object[]));
-            return Expression.Block(
-                Expression.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta)),
+            var arr = Expression.Variable(typeof(object[]), "initArr");
+            return Expression.Block(new[] { arr },
+                Expression.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta, persistVar)),
                 exprGen(initParams
                             .Select(p => p.ParameterType)
                             .Select((t, i) => Expression.Convert(
                                 Expression.ArrayIndex(arr, Expression.Constant(i)), t))));
         }
 
-        internal static object[] Inject(ParameterInfo[] initParams, PluginMetadata meta)
+        internal static object[] Inject(ParameterInfo[] initParams, PluginMetadata meta, ref object persist)
         {
             var initArgs = new List<object>();
 
-            var previousValues = new Dictionary<TypedInjector, object>(injectors.Count);
+            var previousValues = persist as Dictionary<TypedInjector, object>;
+            if (previousValues == null)
+            {
+                previousValues = new Dictionary<TypedInjector, object>(injectors.Count);
+                persist = previousValues;
+            }
 
             foreach (var param in initParams)
             {
