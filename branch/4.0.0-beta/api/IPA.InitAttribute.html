@@ -83,7 +83,8 @@
   
   <h1 id="IPA_InitAttribute" data-uid="IPA.InitAttribute" class="text-break">Class InitAttribute
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Marks a method or a constructor as an inialization method.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -243,6 +244,14 @@
     <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public sealed class InitAttribute : Attribute, _Attribute</code></pre>
   </div>
+  <h5 id="IPA_InitAttribute_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>
+If more than one constructor is marked with this attribute, the one with the most parameters, whether or not they can be injected, will be used.
+</p>
+<p>
+Parameter injection is done with <a class="xref" href="IPA.Loader.PluginInitInjector.html">PluginInitInjector</a>.
+</p>
+</div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.interopservices._attribute">System.Runtime.InteropServices._Attribute</a>
@@ -278,6 +287,11 @@ public sealed class InitAttribute : Attribute, _Attribute</code></pre>
   <div>
       <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T, U&gt;(U, String, Object[])</a>
   </div>
+  <h3 id="seealso">See Also</h3>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.PluginAttribute.html">PluginAttribute</a></div>
+      <div><a class="xref" href="IPA.Loader.PluginInitInjector.html">PluginInitInjector</a></div>
+  </div>
 </article>
           </div>
           
@@ -289,7 +303,7 @@ public sealed class InitAttribute : Attribute, _Attribute</code></pre>
                     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_InitAttribute.md&amp;value=---%0Auid%3A%20IPA.InitAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/674742a4156d8375ece0cb7bf8a48df6d5ebc7de/IPA.Loader/PluginInterfaces/Attributes/PluginAttribute.cs/#L30" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/9705692cbf53e5b1f7667f378696cf6ea482054b/IPA.Loader/PluginInterfaces/Attributes/PluginAttribute.cs/#L86" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

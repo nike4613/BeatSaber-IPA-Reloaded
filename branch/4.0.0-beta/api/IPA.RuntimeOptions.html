@@ -83,7 +83,8 @@
   
   <h1 id="IPA_RuntimeOptions" data-uid="IPA.RuntimeOptions" class="text-break">Enum RuntimeOptions
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Options that a plugin must specify to describe how it expects to be run.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.html">IPA</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
@@ -103,18 +104,25 @@
     <tbody>
       <tr>
         <td id="IPA_RuntimeOptions_DynamicInit">DynamicInit</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="IPA_RuntimeOptions_SingleDynamicInit">SingleDynamicInit</td>
-        <td></td>
+        <td><p>Indicates that this plugin supports runtime enabling and disabling.</p>
+</td>
       </tr>
       <tr>
         <td id="IPA_RuntimeOptions_SingleStartInit">SingleStartInit</td>
-        <td></td>
+        <td><p>Indicates that this plugin expects to be initialized and enabled with the game, and disabled with the game.</p>
+</td>
       </tr>
     </tbody>
   </thead></thead></table>
+  <h5 id="IPA_RuntimeOptions_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.PluginAttribute.html">PluginAttribute</a></div>
+      <div><a class="xref" href="IPA.InitAttribute.html">InitAttribute</a></div>
+      <div><a class="xref" href="IPA.OnEnableAttribute.html">OnEnableAttribute</a></div>
+      <div><a class="xref" href="IPA.OnDisableAttribute.html">OnDisableAttribute</a></div>
+      <div><a class="xref" href="IPA.OnStartAttribute.html">OnStartAttribute</a></div>
+      <div><a class="xref" href="IPA.OnExitAttribute.html">OnExitAttribute</a></div>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField_System_Object_System_String_System_Object_">ReflectionUtil.SetField(String, Object)</a>
@@ -157,7 +165,7 @@
                     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_RuntimeOptions.md&amp;value=---%0Auid%3A%20IPA.RuntimeOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/674742a4156d8375ece0cb7bf8a48df6d5ebc7de/IPA.Loader/PluginInterfaces/Attributes/PluginAttribute.cs/#L21" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/9705692cbf53e5b1f7667f378696cf6ea482054b/IPA.Loader/PluginInterfaces/Attributes/PluginAttribute.cs/#L43" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

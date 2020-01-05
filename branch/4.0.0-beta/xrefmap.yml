@@ -2825,31 +2825,6 @@ references:
   commentId: T:IPA.Loader.PluginInitInjector.InjectParameter
   fullName: IPA.Loader.PluginInitInjector.InjectParameter
   nameWithType: PluginInitInjector.InjectParameter
-- uid: IPA.Loader.PluginLoader
-  name: PluginLoader
-  href: api/IPA.Loader.PluginLoader.html
-  commentId: T:IPA.Loader.PluginLoader
-  fullName: IPA.Loader.PluginLoader
-  nameWithType: PluginLoader
-- uid: IPA.Loader.PluginLoader.PluginInfo
-  name: PluginLoader.PluginInfo
-  href: api/IPA.Loader.PluginLoader.PluginInfo.html
-  commentId: T:IPA.Loader.PluginLoader.PluginInfo
-  fullName: IPA.Loader.PluginLoader.PluginInfo
-  nameWithType: PluginLoader.PluginInfo
-- uid: IPA.Loader.PluginLoader.PluginInfo.Metadata
-  name: Metadata
-  href: api/IPA.Loader.PluginLoader.PluginInfo.html#IPA_Loader_PluginLoader_PluginInfo_Metadata
-  commentId: P:IPA.Loader.PluginLoader.PluginInfo.Metadata
-  fullName: IPA.Loader.PluginLoader.PluginInfo.Metadata
-  nameWithType: PluginLoader.PluginInfo.Metadata
-- uid: IPA.Loader.PluginLoader.PluginInfo.Metadata*
-  name: Metadata
-  href: api/IPA.Loader.PluginLoader.PluginInfo.html#IPA_Loader_PluginLoader_PluginInfo_Metadata_
-  commentId: Overload:IPA.Loader.PluginLoader.PluginInfo.Metadata
-  isSpec: "True"
-  fullName: IPA.Loader.PluginLoader.PluginInfo.Metadata
-  nameWithType: PluginLoader.PluginInfo.Metadata
 - uid: IPA.Loader.PluginManager
   name: PluginManager
   href: api/IPA.Loader.PluginManager.html
@@ -2934,19 +2909,6 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.GetPluginFromId
   nameWithType: PluginManager.GetPluginFromId
-- uid: IPA.Loader.PluginManager.GetPluginFromModSaberName(System.String)
-  name: GetPluginFromModSaberName(String)
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_GetPluginFromModSaberName_System_String_
-  commentId: M:IPA.Loader.PluginManager.GetPluginFromModSaberName(System.String)
-  fullName: IPA.Loader.PluginManager.GetPluginFromModSaberName(System.String)
-  nameWithType: PluginManager.GetPluginFromModSaberName(String)
-- uid: IPA.Loader.PluginManager.GetPluginFromModSaberName*
-  name: GetPluginFromModSaberName
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_GetPluginFromModSaberName_
-  commentId: Overload:IPA.Loader.PluginManager.GetPluginFromModSaberName
-  isSpec: "True"
-  fullName: IPA.Loader.PluginManager.GetPluginFromModSaberName
-  nameWithType: PluginManager.GetPluginFromModSaberName
 - uid: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginMetadata)
   name: IsDisabled(PluginMetadata)
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsDisabled_IPA_Loader_PluginMetadata_
@@ -4164,12 +4126,6 @@ references:
   commentId: F:IPA.RuntimeOptions.DynamicInit
   fullName: IPA.RuntimeOptions.DynamicInit
   nameWithType: RuntimeOptions.DynamicInit
-- uid: IPA.RuntimeOptions.SingleDynamicInit
-  name: SingleDynamicInit
-  href: api/IPA.RuntimeOptions.html#IPA_RuntimeOptions_SingleDynamicInit
-  commentId: F:IPA.RuntimeOptions.SingleDynamicInit
-  fullName: IPA.RuntimeOptions.SingleDynamicInit
-  nameWithType: RuntimeOptions.SingleDynamicInit
 - uid: IPA.RuntimeOptions.SingleStartInit
   name: SingleStartInit
   href: api/IPA.RuntimeOptions.html#IPA_RuntimeOptions_SingleStartInit
