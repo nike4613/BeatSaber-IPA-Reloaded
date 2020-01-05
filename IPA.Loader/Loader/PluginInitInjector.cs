@@ -15,6 +15,34 @@ namespace IPA.Loader
     /// <summary>
     /// The type that handles value injecting into a plugin's initialization methods.
     /// </summary>
+    /// <remarks>
+    /// The default injectors and what they provide are shown in this table.
+    /// <list type="table">
+    /// <listheader>
+    /// <term>Parameter Type</term>
+    /// <description>Injected Value</description>
+    /// </listheader>
+    /// <item>
+    /// <term><see cref="Logger"/></term>
+    /// <description>A <see cref="StandardLogger"/> specialized for the plugin being injected</description>
+    /// </item>
+    /// <item>
+    /// <term><see cref="PluginMetadata"/></term>
+    /// <description>The <see cref="PluginMetadata"/> of the plugin being injected</description>
+    /// </item>
+    /// <item>
+    /// <term><see cref="Config.Config"/></term>
+    /// <description>
+    /// <para>A <see cref="Config.Config"/> object for the plugin being injected.</para>
+    /// <para>
+    /// These parameters may have <see cref="Config.Config.NameAttribute"/> and <see cref="Config.Config.PreferAttribute"/> to control
+    /// how it is constructed.
+    /// </para>
+    /// </description>
+    /// </item>
+    /// </list>
+    /// For all of the default injectors, only one of each will be generated, and any later parameters will recieve the same value as the first one.
+    /// </remarks>
     public static class PluginInitInjector
     {
 
