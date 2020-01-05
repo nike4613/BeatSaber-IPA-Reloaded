@@ -16,7 +16,8 @@ using Array = Net3_Proxy.Array;
 namespace IPA.Config
 {
     /// <summary>
-    /// A class to handle updating ConfigProviders automatically
+    /// An abstraction of a config file on disk, which handles synchronizing between a memory representation and the
+    /// disk representation.
     /// </summary>
     public class Config
     {
