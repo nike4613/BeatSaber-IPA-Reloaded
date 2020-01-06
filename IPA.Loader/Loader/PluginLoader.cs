@@ -44,21 +44,6 @@ namespace IPA.Loader
             ResolveDependencies();
         });
 
-        /// <summary>
-        /// A container object for all the data relating to a plugin.
-        /// </summary>
-        [Obsolete("No longer useful as a construct")]
-        public class PluginInfo
-        {
-            internal IPlugin Plugin { get; set; }
-
-            /// <summary>
-            /// Metadata for the plugin.
-            /// </summary>
-            /// <value>the metadata for this plugin</value>
-            public PluginMetadata Metadata { get; internal set; } = new PluginMetadata();
-        }
-
         internal static void YeetIfNeeded()
         {
             string pluginDir = BeatSaber.PluginsPath;
@@ -196,14 +181,6 @@ namespace IPA.Loader
                                     meta.PluginType = type;
                                     return;
                                 }
-                            }
-
-                            if (type.HasInterface(typeof(IPlugin).FullName))
-                            {
-                                Logger.loader.Warn("Interface-based plugin found");
-                                meta.IsAttributePlugin = false;
-                                meta.PluginType = type;
-                                return;
                             }
                         }
                     }

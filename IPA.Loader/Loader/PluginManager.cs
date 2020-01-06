@@ -222,12 +222,11 @@ namespace IPA.Loader
         /// <returns><see langword="true"/> if the plugin is enabled, <see langword="false"/> otherwise.</returns>
         public static bool IsEnabled(PluginMetadata meta) => BSMetas.Any(p => p.Metadata == meta);
 
-        private static readonly List<PluginInfo> runtimeDisabled = new List<PluginInfo>();
         /// <summary>
         /// Gets a list of disabled BSIPA plugins.
         /// </summary>
         /// <value>a collection of all disabled plugins as <see cref="PluginMetadata"/></value>
-        public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins.Concat(runtimeDisabled.Select(p => p.Metadata));
+        public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins;
 
         /// <summary>
         /// An invoker for the <see cref="PluginEnabled"/> event.
