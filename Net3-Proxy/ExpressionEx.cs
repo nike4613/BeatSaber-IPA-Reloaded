@@ -166,7 +166,10 @@ namespace Net3_Proxy
 				}
 
 				Expression topBody;
-				if (lastType != null)
+
+				if (rest.Count == 0)
+					topBody = info.Param;
+				else if (lastType != null)
 				{
 					var execSeq = ExecuteSequenceTyped.MakeGenericMethod(lastType);
 					topBody = Expression.Call(null, execSeq, last, Expression.NewArrayInit(typeof(Action), rest.Cast<Expression>()));
