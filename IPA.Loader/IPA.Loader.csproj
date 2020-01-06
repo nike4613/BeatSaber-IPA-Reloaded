@@ -128,9 +128,6 @@
     <Compile Include="Logging\StdoutInterceptor.cs" />
     <Compile Include="PluginInterfaces\Attributes\LifecycleAttributes.cs" />
     <Compile Include="PluginInterfaces\Attributes\PluginAttribute.cs" />
-    <Compile Include="PluginInterfaces\BeatSaber\IDisablablePlugin.cs" />
-    <Compile Include="PluginInterfaces\BeatSaber\IEnhancedPlugin.cs" />
-    <Compile Include="PluginInterfaces\BeatSaber\IPlugin.cs" />
     <Compile Include="Config\IniFile.cs" />
     <Compile Include="PluginInterfaces\IPA\IEnhancedPlugin.cs" />
     <Compile Include="PluginInterfaces\IPA\IPlugin.cs" />
