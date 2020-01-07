@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
+  "author": "ExampleMan",
+  "description": [
+    "#![Demo.description.md]",
+    "A demo plugin written for the BSIPA basic tutorial."
+  ],
+  "gameVersion": "1.6.0",
+  "id": null,
+  "name": "Demo Plugin",
+  "version": "0.0.1",
+  "features": [
+
+  ],
+  "links": {
+    "project-home": "https://example.com/demo-plugin",
+    "project-source": "https://github.com/exampleman/demo-plugin/",
+    "donate": "https://ko-fi.com/exampleman"
+  },
+  "misc": {
+    "plugin-hint": "Demo.Plugin"
+  }
+}

@@ -12,7 +12,8 @@
         "TMP Exporter/**.csproj",
         "BuildTools/**.csproj",
         "Doorstop/**.csproj",
-        "Net3-Proxy/**.csproj"
+        "Net3-Proxy/**.csproj",
+        "docs/**.csproj"
       ]
     }],
     "dest": "api",
