@@ -1,0 +1,10 @@
+{
+  "default": true,
+  "line-length": false,
+  "no-inline-html": {
+    "allowed_elements": ["kbd"]
+  },
+  "single-h1": {
+    "front_matter_title": ""
+  }
+}
