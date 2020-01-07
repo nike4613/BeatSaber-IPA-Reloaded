@@ -57,7 +57,7 @@
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default", "templates/material/material", "templates/fix_urls"
+      "default", "templates/material/material", "templates/fix_urls", "templates/bsipa_custom"
     ],
     "globalMetadata": {
       "_enableSearch": true,
