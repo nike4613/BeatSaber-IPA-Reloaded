@@ -6,5 +6,8 @@
   },
   "single-h1": {
     "front_matter_title": ""
+  },
+  "no-trailing-punctuation": {
+    "punctuation": ",;:!?。，；：！？"
   }
 }
