@@ -19,7 +19,7 @@ uid: articles.start.user
     > There are a few tricks for figuring out which file you need. If the game has a folder called `MonoBleedingEdge` in the install directory, then you
     > need one of the `Net4` builds. To determine *which* build to use, right click on the game executable, go to the `Compatability` tab, check the
     > `Run this program in compatability mode for` checkbox, and look and see if the dropdown has any Windows XP emulation options. If it does, the
-    > application is 32 bit, and you need to get one of the x86 builds. Otherwise, get one of the x64 builds. 
+    > application is 32 bit, and you need to get one of the x86 builds. Otherwise, get one of the x64 builds.
     >
     > Make sure to uncheck that checkbox before leaving the menu.
 
