@@ -46,7 +46,7 @@ namespace IPA.Config.Stores.Attributes
         /// <summary>
         /// Creates a new <see cref="UseConverterAttribute"/> with a  given <see cref="ConverterType"/>.
         /// </summary>
-        /// <param name="converterType">tpy type to assign to <see cref="ConverterType"/></param>
+        /// <param name="converterType">the type to assign to <see cref="ConverterType"/></param>
         public UseConverterAttribute(Type converterType)
         {
             ConverterType = converterType;

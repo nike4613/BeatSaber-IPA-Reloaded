@@ -15,10 +15,22 @@ namespace Demo
     {
         public static PluginConfig Instance { get; set; }
 
+        public class SubThingsObject
+        {
+            /*
+            public double DoubleValue { get; set; } = 2.718281828459045;
+            */
+            
+            public virtual double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
         /*
         public int IntValue { get; set; } = 42;
 
         public float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public SubThingsObject SubThings { get; set; } = new SubThingsObject();
 
         [UseConverter(typeof(ListConverter<string>))]
         public List<string> ListValue { get; set; } = new List<string>();
@@ -30,6 +42,9 @@ namespace Demo
         public virtual int IntValue { get; set; } = 42;
 
         public virtual float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
 
         [UseConverter(typeof(ListConverter<string>))]
         public virtual List<string> ListValue { get; set; } = new List<string>();

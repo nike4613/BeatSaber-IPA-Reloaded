@@ -57,7 +57,7 @@ namespace IPA.Loader.Features
             }
             catch (Exception e)
             {
-                InvalidMessage = $"Error generated while creating delegate: {e}";
+                InvalidMessage = $"Error while registering config provider: {e}";
                 return false;
             }
         }
