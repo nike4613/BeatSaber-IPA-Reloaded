@@ -123,6 +123,10 @@ that the file that will be loaded from will be `UserData/Demo Plugin.json` for o
 applying attributes to the <xref:IPA.Config.Config> parameter, namely <xref:IPA.Config.Config.NameAttribute> to control the name, and
 <xref:IPA.Config.Config.PreferAttribute> to control the type. If the type preferences aren't registered though, it will just fall back to JSON.
 
+At this point, your main plugin file should look something like this:
+
+[!code-cs[Plugin.cs](./dev-resources/Plugin.cs?range=1-8,12-16,17-24,26,39,50-51,52-55,60-63,65-)]
+
 ***
 
 But what about more complex types than just `int` and `float`? What if you want sub-objects?
@@ -181,5 +185,9 @@ If a type implements <xref:System.Collections.Generic.ICollection`1>, <xref:IPA.
 
 It, like most other BSIPA provided aggregate converters, provides a type argument overload <xref:IPA.Config.Stores.Converters.CollectionConverter`3>
 to compose other converters with it to handle unusual element types.
+
+Now after all that, your plugin class has not changed, and your config class should look something like this:
+
+[!code-cs[PluginConfig.cs#basic-complete](./dev-resources/PluginConfig.cs?range=1,3-6,9-10,12,15-19,21,25-26,28-39,69-)]
 
 ***
