@@ -243,7 +243,44 @@ your only interaction with the user&#39;s preferences.</p>
 that the file that will be loaded from will be <code>UserData/Demo Plugin.json</code> for our demo plugin. You can, however, control both of those by
 applying attributes to the <a class="xref" href="../api/IPA.Config.Config.html">Config</a> parameter, namely <a class="xref" href="../api/IPA.Config.Config.NameAttribute.html">Config.NameAttribute</a> to control the name, and
 <a class="xref" href="../api/IPA.Config.Config.PreferAttribute.html">Config.PreferAttribute</a> to control the type. If the type preferences aren&#39;t registered though, it will just fall back to JSON.</p>
-<hr>
+<p>At this point, your main plugin file should look something like this:</p>
+<pre><code class="lang-cs" name="Plugin.cs">using System;
+using IPA;
+using IPA.Logging;
+using IPA.Config;
+using IPA.Config.Stores;
+
+namespace Demo
+{
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    internal class Plugin
+    {
+        public static Logger log { get; private set; }
+
+        [Init]
+        public Plugin(Logger logger, Config conf)
+        {
+            log = logger;
+            PluginConfig.Instance = conf.Generated&lt;PluginConfig&gt;();
+            log.Debug(&quot;Config loaded&quot;);
+
+            // setup that does not require game code
+        }
+
+        [OnStart]
+        public void OnStart()
+        {
+            // setup that requires game code
+        }
+
+        [OnExit]
+        public void OnExit()
+        {
+            // teardown
+        }
+    }
+}
+</code></pre><hr>
 <p>But what about more complex types than just <code>int</code> and <code>float</code>? What if you want sub-objects?</p>
 <p>Those are supported natively, and so are very easy to set up. We just add this to the config class:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#sub-basic">public class SubThingsObject
@@ -287,7 +324,38 @@ collections. In fact, the <a class="xref" href="../api/IPA.Config.Stores.Convert
 If a type implements <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a>, <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a> can convert it.</p>
 <p>It, like most other BSIPA provided aggregate converters, provides a type argument overload <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-3.html">CollectionConverter&lt;T, TCollection, TConverter&gt;</a>
 to compose other converters with it to handle unusual element types.</p>
-<hr>
+<p>Now after all that, your plugin class has not changed, and your config class should look something like this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+
+namespace Demo
+{
+    public class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public class SubThingsObject
+        {
+            public double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
+        public int IntValue { get; set; } = 42;
+
+        public float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+        [UseConverter(typeof(ListConverter&lt;string&gt;))]
+        public List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+        [UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+        public HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+    }
+}
+</code></pre><hr>
 </article>
           </div>
           
@@ -296,7 +364,7 @@ to compose other converters with it to handle unusual element types.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/852f168bfd848b3000981cc873a837ac377cc824/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/d204b57305eda05419cec63d9e823a2d16a96ccb/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
