@@ -37,6 +37,12 @@ namespace Demo
         }
         */
 
+        [Init]
+        public void Init(Logger logger)
+        {
+            // logger will be the same instance as log currently is
+        }
+
         /*
         [OnEnable]
         public void OnEnable()
