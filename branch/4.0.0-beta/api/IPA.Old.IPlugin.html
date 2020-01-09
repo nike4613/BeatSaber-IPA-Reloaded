@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IPlugin
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IPlugin
+   ">
+    <meta name="generator" content="docfx 2.48.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IPA.Old.IPlugin">
+  
+  
+  <h1 id="IPA_Old_IPlugin" data-uid="IPA.Old.IPlugin" class="text-break">Interface IPlugin
+  </h1>
+  <div class="markdown level0 summary"><p>Interface for generic Illusion unity plugins. Every class that implements this will be loaded if the DLL is placed in
+Plugins.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Old.html">IPA.Old</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Old_IPlugin_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;When building plugins for Beat Saber, use IBeatSaberPlugin&quot;)]
+public interface IPlugin</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_Name.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L16">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_Name_" data-uid="IPA.Old.IPlugin.Name*"></a>
+  <h4 id="IPA_Old_IPlugin_Name" data-uid="IPA.Old.IPlugin.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets the name of the plugin.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_Version.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.Version%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L21">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_Version_" data-uid="IPA.Old.IPlugin.Version*"></a>
+  <h4 id="IPA_Old_IPlugin_Version" data-uid="IPA.Old.IPlugin.Version">Version</h4>
+  <div class="markdown level1 summary"><p>Gets the version of the plugin.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string Version { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_OnApplicationQuit.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.OnApplicationQuit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L31">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_OnApplicationQuit_" data-uid="IPA.Old.IPlugin.OnApplicationQuit*"></a>
+  <h4 id="IPA_Old_IPlugin_OnApplicationQuit" data-uid="IPA.Old.IPlugin.OnApplicationQuit">OnApplicationQuit()</h4>
+  <div class="markdown level1 summary"><p>Gets invoked when the application is closed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void OnApplicationQuit()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_OnApplicationStart.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.OnApplicationStart%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L26">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_OnApplicationStart_" data-uid="IPA.Old.IPlugin.OnApplicationStart*"></a>
+  <h4 id="IPA_Old_IPlugin_OnApplicationStart" data-uid="IPA.Old.IPlugin.OnApplicationStart">OnApplicationStart()</h4>
+  <div class="markdown level1 summary"><p>Gets invoked when the application is started.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void OnApplicationStart()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_OnFixedUpdate.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.OnFixedUpdate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L53">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_OnFixedUpdate_" data-uid="IPA.Old.IPlugin.OnFixedUpdate*"></a>
+  <h4 id="IPA_Old_IPlugin_OnFixedUpdate" data-uid="IPA.Old.IPlugin.OnFixedUpdate">OnFixedUpdate()</h4>
+  <div class="markdown level1 summary"><p>Gets invoked on ever physics update.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void OnFixedUpdate()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_OnLevelWasInitialized_System_Int32_.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.OnLevelWasInitialized(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L43">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_OnLevelWasInitialized_" data-uid="IPA.Old.IPlugin.OnLevelWasInitialized*"></a>
+  <h4 id="IPA_Old_IPlugin_OnLevelWasInitialized_System_Int32_" data-uid="IPA.Old.IPlugin.OnLevelWasInitialized(System.Int32)">OnLevelWasInitialized(Int32)</h4>
+  <div class="markdown level1 summary"><p>Gets invoked after the first update cycle after a level was loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void OnLevelWasInitialized(int level)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">level</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_OnLevelWasLoaded_System_Int32_.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.OnLevelWasLoaded(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L37">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_OnLevelWasLoaded_" data-uid="IPA.Old.IPlugin.OnLevelWasLoaded*"></a>
+  <h4 id="IPA_Old_IPlugin_OnLevelWasLoaded_System_Int32_" data-uid="IPA.Old.IPlugin.OnLevelWasLoaded(System.Int32)">OnLevelWasLoaded(Int32)</h4>
+  <div class="markdown level1 summary"><p>Gets invoked whenever a level is loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void OnLevelWasLoaded(int level)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">level</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin_OnUpdate.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin.OnUpdate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L48">View Source</a>
+  </span>
+  <a id="IPA_Old_IPlugin_OnUpdate_" data-uid="IPA.Old.IPlugin.OnUpdate*"></a>
+  <h4 id="IPA_Old_IPlugin_OnUpdate" data-uid="IPA.Old.IPlugin.OnUpdate">OnUpdate()</h4>
+  <div class="markdown level1 summary"><p>Gets invoked on every graphic update.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void OnUpdate()</code></pre>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField_System_Object_System_String_System_Object_">ReflectionUtil.SetField(Object, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__1___0_System_String_System_Object_">ReflectionUtil.SetField&lt;T&gt;(T, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__1_System_Object_System_String_">ReflectionUtil.GetField&lt;T&gt;(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;T, U&gt;(U, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty_System_Object_System_String_System_Object_">ReflectionUtil.SetProperty(Object, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__1___0_System_String_System_Object_">ReflectionUtil.SetProperty&lt;T&gt;(T, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod_System_Object_System_String_System_Object___">ReflectionUtil.InvokeMethod(Object, String, Object[])</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__1___0_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T&gt;(T, String, Object[])</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__1_System_Object_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T&gt;(Object, String, Object[])</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T, U&gt;(U, String, Object[])</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Old_IPlugin.md&amp;value=---%0Auid%3A%20IPA.Old.IPlugin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/3577afbe53ce019f4755013ead2322564d72b767/IPA.Loader/PluginInterfaces/IPA/IPlugin.cs/#L10" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
