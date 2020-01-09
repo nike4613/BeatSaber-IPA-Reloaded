@@ -52,7 +52,7 @@ namespace IPA.Utilities
         {
             var gameVer = GameVersion;
             var lastVerS = SelfConfig.LastGameVersion_;
-            var OldVersion = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
+            OldVersion = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
 
             IsGameVersionBoundary = OldVersion != null && gameVer != OldVersion;
 
