@@ -1,7 +1,0 @@
-table p {
-  margin-bottom: .5em;
-}
-
-table p:last-child {
-  margin-bottom: 0px;
-}
