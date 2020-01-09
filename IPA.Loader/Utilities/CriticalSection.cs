@@ -43,7 +43,7 @@ namespace IPA.Utilities
                 uint filterMax,
                 ref Win32.PeekMessageParams removeMsg);
 
-            [DllImport("winhttp")]
+            [DllImport("bsipa-doorstop")]
             public static extern void SetPeekMessageHook(
                 [MarshalAs(UnmanagedType.FunctionPtr)]
                 PeekMessageHook hook);
