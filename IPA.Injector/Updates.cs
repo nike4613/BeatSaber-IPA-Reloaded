@@ -27,7 +27,7 @@ namespace IPA.Injector
 
         private static void InstallPendingSelfUpdates()
         {
-            var path = Path.Combine(BeatSaber.InstallPath, "IPA.exe");
+            var path = Path.Combine(UnityGame.InstallPath, "IPA.exe");
             if (!File.Exists(path)) return;
 
             var ipaVersion = new Version(FileVersionInfo.GetVersionInfo(path).FileVersion);
@@ -49,7 +49,7 @@ namespace IPA.Injector
 
         private static void InstallPendingModUpdates()
         {
-            var pendingDir = Path.Combine(BeatSaber.InstallPath, "IPA", "Pending");
+            var pendingDir = Path.Combine(UnityGame.InstallPath, "IPA", "Pending");
             if (!Directory.Exists(pendingDir)) return; 
             
             // there are pending updates, install
@@ -67,7 +67,7 @@ namespace IPA.Injector
             {
                 try
                 {
-                    File.Delete(Path.Combine(BeatSaber.InstallPath, file));
+                    File.Delete(Path.Combine(UnityGame.InstallPath, file));
                 }
                 catch (Exception e)
                 {
@@ -134,7 +134,7 @@ namespace IPA.Injector
 
             try
             {
-                Utils.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(BeatSaber.InstallPath), onCopyException: (e, f) =>
+                Utils.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(UnityGame.InstallPath), onCopyException: (e, f) =>
                 {
                     updater.Error($"Error copying file {Utils.GetRelativePath(f.FullName, pendingDir)} from Pending:");
                     updater.Error(e);

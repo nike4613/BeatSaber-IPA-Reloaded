@@ -23,7 +23,7 @@ namespace IPA.Injector
 
         internal static string GetGameVersion()
         {
-            var mgr = GlobalGameManagers(BeatSaber.InstallPath);
+            var mgr = GlobalGameManagers(UnityGame.InstallPath);
 
             using (var stream = File.OpenRead(mgr))
             using (var reader = new BinaryReader(stream, Encoding.UTF8))
@@ -55,8 +55,8 @@ namespace IPA.Injector
 
         private static void _Load() 
         {
-            BeatSaber.SetEarlyGameVersion(SafeParseVersion());
-            BeatSaber.CheckGameVersionBoundary();
+            UnityGame.SetEarlyGameVersion(SafeParseVersion());
+            UnityGame.CheckGameVersionBoundary();
         }
 
         internal static void Load()
