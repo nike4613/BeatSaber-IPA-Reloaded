@@ -122,6 +122,7 @@
     <Compile Include="Loader\PluginLoader.cs" />
     <Compile Include="Loader\PluginManifest.cs" />
     <Compile Include="Loader\PluginMetadata.cs" />
+    <Compile Include="Loader\StateTransitionTransaction.cs" />
     <Compile Include="Logging\ConsoleWindow.cs" />
     <Compile Include="Logging\Printers\ColorlessConsolePrinter.cs" />
     <Compile Include="Logging\Printers\PluginSubLogPrinter.cs" />

@@ -177,7 +177,6 @@ namespace IPA.Loader
                                     var rtOptionsValInt = (int)rtOptionsArg.Value; // `int` is the underlying type of RuntimeOptions
 
                                     meta.RuntimeOptions = (RuntimeOptions)rtOptionsValInt;
-                                    meta.IsAttributePlugin = true;
                                     meta.PluginType = type;
                                     return;
                                 }
@@ -604,12 +603,6 @@ namespace IPA.Loader
             if (meta.Manifest.GameVersion != UnityGame.GameVersion)
                 Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
-            if (!meta.IsAttributePlugin)
-            {
-                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Unsupported) { ReasonText = "Non-attribute plugins are currently not supported" });
-                return null;
-            }
-
             if (meta.IsSelf)
                 return new PluginExecutor(meta, true);
 
@@ -708,115 +701,6 @@ namespace IPA.Loader
                 }
 
             return exec;
-
-            #region Interface plugin support
-            /*if (meta.IsSelf)
-                return new PluginInfo()
-                {
-                    Metadata = meta,
-                    Plugin = null
-                };
-
-            var info = new PluginInfo();
-
-            try
-            {
-                foreach (var dep in meta.Dependencies)
-                {
-                    if (alreadyLoaded.Contains(dep)) continue;
-
-                    // otherwise...
-
-                    if (ignoredPlugins.TryGetValue(dep, out var reason))
-                    { // was added to the ignore list
-                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
-                        {
-                            ReasonText = $"Dependency was ignored at load time: {reason.ReasonText}",
-                            RelatedTo = dep
-                        });
-                    }
-                    else
-                    { // was not added to ignore list
-                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
-                        {
-                            ReasonText = $"Dependency was not already loaded at load time, but was also not ignored",
-                            RelatedTo = dep
-                        });
-                    }
-
-                    return null;
-                }
-
-                Load(meta);
-
-                Feature denyingFeature = null;
-                if (!meta.Features.All(f => (denyingFeature = f).BeforeLoad(meta)))
-                {
-                    Logger.loader.Warn(
-                        $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from loading! {denyingFeature?.InvalidMessage}");
-                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
-                    {
-                        ReasonText = $"Denied in {nameof(Feature.BeforeLoad)} of feature {denyingFeature?.GetType()}:\n\t{denyingFeature?.InvalidMessage}"
-                    });
-                    return null;
-                }
-
-                var type = meta.Assembly.GetType(meta.PluginType.FullName);
-                var instance = Activator.CreateInstance(type) as IPlugin;
-
-                info.Metadata = meta;
-                info.Plugin = instance;
-
-                var init = type.GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
-                if (init != null)
-                {
-                    denyingFeature = null;
-                    if (!meta.Features.All(f => (denyingFeature = f).BeforeInit(info)))
-                    {
-                        Logger.loader.Warn(
-                            $"Feature {denyingFeature?.GetType()} denied plugin {meta.Name} from initializing! {denyingFeature?.InvalidMessage}");
-                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
-                        {
-                            ReasonText = $"Denied in {nameof(Feature.BeforeInit)} of feature {denyingFeature?.GetType()}:\n\t{denyingFeature?.InvalidMessage}"
-                        });
-                        return null;
-                    }
-
-                    var args = PluginInitInjector.Inject(init.GetParameters(), meta);
-                    init.Invoke(info.Plugin, args);
-                }
-
-                foreach (var feature in meta.Features)
-                    try
-                    {
-                        feature.AfterInit(info, info.Plugin);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
-                    }
-            }
-            catch (AmbiguousMatchException)
-            {
-                Logger.loader.Critical($"Only one Init allowed per plugin (ambiguous match in {meta.Name})");
-                Logger.loader.Critical("@Developer: you *really* should fix this");
-                // not adding to ignoredPlugins here because this should only happen in a development context
-                // if someone fucks this up on release thats on them
-                return null;
-            }
-            catch (Exception e)
-            {
-                Logger.loader.Error($"Could not init plugin {meta.Name}: {e}");
-                ignoredPlugins.Add(meta, new IgnoreReason(Reason.Error)
-                {
-                    ReasonText = "Error ocurred while initializing",
-                    Error = e
-                });
-                return null;
-            }
-
-            return info;*/
-            #endregion
         }
 
         internal static List<PluginExecutor> LoadPlugins()
