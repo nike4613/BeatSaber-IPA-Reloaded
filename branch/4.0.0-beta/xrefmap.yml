@@ -4749,6 +4749,29 @@ references:
   commentId: T:IPA.Utilities.CriticalSection
   fullName: IPA.Utilities.CriticalSection
   nameWithType: CriticalSection
+- uid: IPA.Utilities.CriticalSection.AutoExecuteSection
+  name: CriticalSection.AutoExecuteSection
+  href: api/IPA.Utilities.CriticalSection.AutoExecuteSection.html
+  commentId: T:IPA.Utilities.CriticalSection.AutoExecuteSection
+  fullName: IPA.Utilities.CriticalSection.AutoExecuteSection
+  nameWithType: CriticalSection.AutoExecuteSection
+- uid: IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.CriticalSection.AutoExecuteSection.html#IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.CriticalSection.AutoExecuteSection.System.IDisposable.Dispose()
+  nameWithType: CriticalSection.AutoExecuteSection.IDisposable.Dispose()
+  nameWithType.vb: CriticalSection.AutoExecuteSection.System.IDisposable.Dispose()
+- uid: IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.CriticalSection.AutoExecuteSection.html#IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.CriticalSection.AutoExecuteSection.System.IDisposable.Dispose
+  nameWithType: CriticalSection.AutoExecuteSection.IDisposable.Dispose
+  nameWithType.vb: CriticalSection.AutoExecuteSection.System.IDisposable.Dispose
 - uid: IPA.Utilities.CriticalSection.EnterExecuteSection
   name: EnterExecuteSection()
   href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterExecuteSection
@@ -4762,19 +4785,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.CriticalSection.EnterExecuteSection
   nameWithType: CriticalSection.EnterExecuteSection
-- uid: IPA.Utilities.CriticalSection.EnterGCSection
-  name: EnterGCSection()
-  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterGCSection
-  commentId: M:IPA.Utilities.CriticalSection.EnterGCSection
-  fullName: IPA.Utilities.CriticalSection.EnterGCSection()
-  nameWithType: CriticalSection.EnterGCSection()
-- uid: IPA.Utilities.CriticalSection.EnterGCSection*
-  name: EnterGCSection
-  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterGCSection_
-  commentId: Overload:IPA.Utilities.CriticalSection.EnterGCSection
+- uid: IPA.Utilities.CriticalSection.ExecuteSection
+  name: ExecuteSection()
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExecuteSection
+  commentId: M:IPA.Utilities.CriticalSection.ExecuteSection
+  fullName: IPA.Utilities.CriticalSection.ExecuteSection()
+  nameWithType: CriticalSection.ExecuteSection()
+- uid: IPA.Utilities.CriticalSection.ExecuteSection*
+  name: ExecuteSection
+  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExecuteSection_
+  commentId: Overload:IPA.Utilities.CriticalSection.ExecuteSection
   isSpec: "True"
-  fullName: IPA.Utilities.CriticalSection.EnterGCSection
-  nameWithType: CriticalSection.EnterGCSection
+  fullName: IPA.Utilities.CriticalSection.ExecuteSection
+  nameWithType: CriticalSection.ExecuteSection
 - uid: IPA.Utilities.CriticalSection.ExitExecuteSection
   name: ExitExecuteSection()
   href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitExecuteSection
@@ -4788,19 +4811,6 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.CriticalSection.ExitExecuteSection
   nameWithType: CriticalSection.ExitExecuteSection
-- uid: IPA.Utilities.CriticalSection.ExitGCSection
-  name: ExitGCSection()
-  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitGCSection
-  commentId: M:IPA.Utilities.CriticalSection.ExitGCSection
-  fullName: IPA.Utilities.CriticalSection.ExitGCSection()
-  nameWithType: CriticalSection.ExitGCSection()
-- uid: IPA.Utilities.CriticalSection.ExitGCSection*
-  name: ExitGCSection
-  href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_ExitGCSection_
-  commentId: Overload:IPA.Utilities.CriticalSection.ExitGCSection
-  isSpec: "True"
-  fullName: IPA.Utilities.CriticalSection.ExitGCSection
-  nameWithType: CriticalSection.ExitGCSection
 - uid: IPA.Utilities.EnumerableExtensions
   name: EnumerableExtensions
   href: api/IPA.Utilities.EnumerableExtensions.html

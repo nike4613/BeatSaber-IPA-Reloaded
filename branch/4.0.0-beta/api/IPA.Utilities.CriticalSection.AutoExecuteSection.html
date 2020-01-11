@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Delegate PluginInitInjector.InjectParameter
+    <title>Struct CriticalSection.AutoExecuteSection
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Delegate PluginInitInjector.InjectParameter
+    <meta name="title" content="Struct CriticalSection.AutoExecuteSection
    ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -79,66 +79,66 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="IPA.Loader.PluginInitInjector.InjectParameter">
+            <article class="content wrap" id="_content" data-uid="IPA.Utilities.CriticalSection.AutoExecuteSection">
   
   
-  <h1 id="IPA_Loader_PluginInitInjector_InjectParameter" data-uid="IPA.Loader.PluginInitInjector.InjectParameter" class="text-break">Delegate PluginInitInjector.InjectParameter
+  <h1 id="IPA_Utilities_CriticalSection_AutoExecuteSection" data-uid="IPA.Utilities.CriticalSection.AutoExecuteSection" class="text-break">Struct CriticalSection.AutoExecuteSection
   </h1>
-  <div class="markdown level0 summary"><p>A typed injector for a plugin&apos;s Init method. When registered, called for all associated types. If it returns null, the default for the type will be used.</p>
+  <div class="markdown level0 summary"><p>A struct that allows <code>using</code> blocks to manage an execute section.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Loader.html">IPA.Loader</a></h6>
-  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
-  <h5 id="IPA_Loader_PluginInitInjector_InjectParameter_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate object InjectParameter(object previous, ParameterInfo param, PluginMetadata meta);</code></pre>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><span class="parametername">previous</span></td>
-        <td><p>the previous return value of the function, or <span class="xref">null</span> if never called for plugin.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.reflection.parameterinfo">ParameterInfo</a></td>
-        <td><span class="parametername">param</span></td>
-        <td><p>the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.reflection.parameterinfo">ParameterInfo</a> of the parameter being injected.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="IPA.Loader.PluginMetadata.html">PluginMetadata</a></td>
-        <td><span class="parametername">meta</span></td>
-        <td><p>the <a class="xref" href="IPA.Loader.PluginMetadata.html">PluginMetadata</a> for the plugin being loaded.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><p>the value to inject into that parameter.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.equals#System_ValueType_Equals_System_Object_">ValueType.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.gethashcode#System_ValueType_GetHashCode">ValueType.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.tostring#System_ValueType_ToString">ValueType.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Utilities_CriticalSection_AutoExecuteSection_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public struct AutoExecuteSection : IDisposable</code></pre>
+  </div>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection.AutoExecuteSection.System%23IDisposable%23Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/6459dcc7622aa07911a03ea4367a50081cc1fca6/IPA.Loader/Utilities/CriticalSection.cs/#L122">View Source</a>
+  </span>
+  <a id="IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose_" data-uid="IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose*"></a>
+  <h4 id="IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose" data-uid="IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose">IDisposable.Dispose()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void IDisposable.Dispose()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField_System_Object_System_String_System_Object_">ReflectionUtil.SetField(Object, String, Object)</a>
@@ -178,10 +178,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Loader_PluginInitInjector_InjectParameter.md&amp;value=---%0Auid%3A%20IPA.Loader.PluginInitInjector.InjectParameter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_CriticalSection_AutoExecuteSection.md&amp;value=---%0Auid%3A%20IPA.Utilities.CriticalSection.AutoExecuteSection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/6459dcc7622aa07911a03ea4367a50081cc1fca6/IPA.Loader/Loader/PluginInitInjector.cs/#L60" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/6459dcc7622aa07911a03ea4367a50081cc1fca6/IPA.Loader/Utilities/CriticalSection.cs/#L112" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
