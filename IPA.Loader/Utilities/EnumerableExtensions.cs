@@ -33,10 +33,53 @@ namespace IPA.Utilities
                 this.first = first;
             }
 
-            public IEnumerator<T> GetEnumerator()
-            { // TODO: a custom impl that is less garbage
-                yield return first;
-                foreach (var v in rest) yield return v;
+            public IEnumerator<T> GetEnumerator() => new PrependEnumerator(this);
+
+            private sealed class PrependEnumerator : IEnumerator<T>
+            {
+                private readonly IEnumerator<T> restEnum;
+                private readonly PrependEnumerable<T> enumerable;
+                private int state = 0;
+                public PrependEnumerator(PrependEnumerable<T> enumerable)
+                {
+                    this.enumerable = enumerable;
+                    restEnum = enumerable.rest.GetEnumerator();
+                }
+
+                public T Current { get; private set; }
+
+                object IEnumerator.Current => Current;
+
+                public void Dispose() => restEnum.Dispose();
+
+                public bool MoveNext()
+                {
+                    switch (state)
+                    {
+                        case 0:
+                            Current = enumerable.first;
+                            state++;
+                            return true;
+                        case 1:
+                            if (!restEnum.MoveNext())
+                            {
+                                state = 2;
+                                return false;
+                            }
+                            else
+                                Current = restEnum.Current;
+                            return true;
+                        case 2:
+                        default:
+                            return false;
+                    }
+                }
+
+                public void Reset()
+                {
+                    restEnum.Reset();
+                    state = 0;
+                }
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -63,10 +106,53 @@ namespace IPA.Utilities
                 this.last = last;
             }
 
-            public IEnumerator<T> GetEnumerator()
-            { // TODO: a custom impl that is less garbage
-                foreach (var v in rest) yield return v;
-                yield return last;
+            public IEnumerator<T> GetEnumerator() => new AppendEnumerator(this);
+
+            private sealed class AppendEnumerator : IEnumerator<T>
+            {
+                private readonly IEnumerator<T> restEnum;
+                private readonly AppendEnumerable<T> enumerable;
+                private int state = 0;
+                public AppendEnumerator(AppendEnumerable<T> enumerable)
+                {
+                    this.enumerable = enumerable;
+                    restEnum = enumerable.rest.GetEnumerator();
+                }
+
+                public T Current { get; private set; }
+
+                object IEnumerator.Current => Current;
+
+                public void Dispose() => restEnum.Dispose();
+
+                public bool MoveNext()
+                {
+                    switch (state)
+                    {
+                        case 0:
+                            if (!restEnum.MoveNext())
+                            {
+                                state = 1;
+                                goto case 1;
+                            }
+                            else
+                                Current = restEnum.Current;
+                            return true;
+                        case 1:
+                            Current = enumerable.last;
+                            state++;
+                            return true;
+                        case 2:
+                        default:
+                            return false;
+                    }
+                }
+
+                public void Reset()
+                {
+                    restEnum.Reset();
+                    state = 0;
+                }
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

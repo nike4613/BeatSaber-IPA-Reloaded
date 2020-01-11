@@ -96,7 +96,6 @@ namespace IPA.Loader
                     throw new InvalidOperationException($"Method {method} on {type.FullName} has both an [Init] attribute and a lifecycle attribute.");
             }
 
-            // TODO: how do I make this work for .NET 3? FEC.LightExpression but hacked to work on .NET 3?
             var metaParam = Expression.Parameter(typeof(PluginMetadata), "meta");
             var objVar = ExpressionEx.Variable(type, "objVar");
             var persistVar = ExpressionEx.Variable(typeof(object), "persistVar");
