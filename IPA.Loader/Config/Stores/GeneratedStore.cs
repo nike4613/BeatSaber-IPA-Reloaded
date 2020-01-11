@@ -72,6 +72,11 @@ namespace IPA.Config.Stores
         /// object of the config structure.
         /// </para>
         /// <para>
+        /// Similarly, <typeparamref name="T"/> can declare a public or protected, <see langword="virtual"/> 
+        /// method <c>CopyFrom(ConfigType)</c> (the first parameter is the type it is defined on), which may be called to copy the properties from
+        /// another object of its type easily, and more importantly, as only one change. Its body will be executed after the values have been copied.
+        /// </para>
+        /// <para>
         /// TODO: describe details of generated stores
         /// </para>
         /// </remarks>
@@ -120,10 +125,12 @@ namespace IPA.Config.Stores
 
             private readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
             public WaitHandle SyncObject => resetEvent;
-            internal static MethodInfo SyncObjectGetMethod = typeof(Impl).GetProperty(nameof(SyncObject)).GetGetMethod();
+            public static WaitHandle ImplGetSyncObject(IGeneratedStore s) => FindImpl(s).SyncObject;
+            internal static MethodInfo ImplGetSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetSyncObject));
 
             public ReaderWriterLockSlim WriteSyncObject { get; } = new ReaderWriterLockSlim();
-            internal static MethodInfo WriteSyncObjectGetMethod = typeof(Impl).GetProperty(nameof(WriteSyncObject)).GetGetMethod();
+            public static ReaderWriterLockSlim ImplGetWriteSyncObject(IGeneratedStore s) => FindImpl(s)?.WriteSyncObject;
+            internal static MethodInfo ImplGetWriteSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetWriteSyncObject));
 
             internal static MethodInfo ImplSignalChangedMethod = typeof(Impl).GetMethod(nameof(ImplSignalChanged));
             public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s).SignalChanged();
@@ -149,7 +156,7 @@ namespace IPA.Config.Stores
             public static void ImplReleaseWrite(IGeneratedStore s) => FindImpl(s).ReleaseWrite();
             public void ReleaseWrite() => WriteSyncObject.ExitWriteLock();
 
-            internal static MethodInfo FindImplMethod = typeof(Impl).GetMethod(nameof(FindImpl));
+
             public static Impl FindImpl(IGeneratedStore store)
             {
                 while (store?.Parent != null) store = store.Parent; // walk to the top of the tree
@@ -157,8 +164,8 @@ namespace IPA.Config.Stores
             }
 
 
-
-            internal static MethodInfo ReadFromMethod = typeof(Impl).GetMethod(nameof(ReadFrom));
+            internal static MethodInfo ImplReadFromMethod = typeof(Impl).GetMethod(nameof(ImplReadFrom));
+            public static void ImplReadFrom(IGeneratedStore s, ConfigProvider provider) => FindImpl(s).ReadFrom(provider);
             public void ReadFrom(ConfigProvider provider)
             {
                 var values = provider.Load();
@@ -171,7 +178,8 @@ namespace IPA.Config.Stores
                 TakeWrite(); // must take again for runtime to be happy (which is unfortunate)
             }
 
-            internal static MethodInfo WriteToMethod = typeof(Impl).GetMethod(nameof(WriteTo));
+            internal static MethodInfo ImplWriteToMethod = typeof(Impl).GetMethod(nameof(ImplWriteTo));
+            public static void ImplWriteTo(IGeneratedStore s, ConfigProvider provider) => FindImpl(s).WriteTo(provider);
             public void WriteTo(ConfigProvider provider)
             {
                 var values = generated.Serialize();
@@ -292,9 +300,11 @@ namespace IPA.Config.Stores
 
             #region Parse base object structure
             var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
-            if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null; // limit this to just the one thing
+            if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null;
             var baseOnReload = type.GetMethod("OnReload", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
-            if (baseOnReload != null && !baseOnReload.IsVirtual) baseOnReload = null; // limit this to just the one thing
+            if (baseOnReload != null && !baseOnReload.IsVirtual) baseOnReload = null;
+            var baseCopyFrom = type.GetMethod("CopyFrom", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { type }, Array.Empty<ParameterModifier>());
+            if (baseCopyFrom != null && !baseCopyFrom.IsVirtual) baseCopyFrom = null;
 
             var structure = new List<SerializedMemberInfo>();
 
@@ -477,10 +487,14 @@ namespace IPA.Config.Stores
                 EmitTypeof(il, type);
                 il.Emit(OpCodes.Stfld, typeField);
 
+                var noImplLabel = il.DefineLabel();
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Brtrue, noImplLabel);
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Newobj, Impl.Ctor);
                 il.Emit(OpCodes.Stfld, implField);
+                il.MarkLabel(noImplLabel);
 
                 var GetLocal = MakeGetLocal(il);
 
@@ -735,9 +749,8 @@ namespace IPA.Config.Stores
                 var il = syncObjPropGet.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, Impl.FindImplMethod);
                 il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, Impl.SyncObjectGetMethod);
+                il.Emit(OpCodes.Call, Impl.ImplGetSyncObjectMethod);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -751,9 +764,8 @@ namespace IPA.Config.Stores
                 var il = writeSyncObjPropGet.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, Impl.FindImplMethod);
                 il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, Impl.WriteSyncObjectGetMethod);
+                il.Emit(OpCodes.Call, Impl.ImplGetWriteSyncObjectMethod);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -765,10 +777,9 @@ namespace IPA.Config.Stores
                 var il = writeTo.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, Impl.FindImplMethod);
                 il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, Impl.WriteToMethod);
+                il.Emit(OpCodes.Call, Impl.ImplWriteToMethod);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -780,10 +791,9 @@ namespace IPA.Config.Stores
                 var il = readFrom.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, Impl.FindImplMethod);
                 il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, Impl.ReadFromMethod);
+                il.Emit(OpCodes.Call, Impl.ImplReadFromMethod);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -827,6 +837,36 @@ namespace IPA.Config.Stores
             }
 
             typeBuilder.DefineMethodOverride(coreChanged, IGeneratedStore_Changed);
+            #endregion
+
+            #region base.CopyFrom
+            if (baseCopyFrom != null)
+            {
+                var pubCopyFrom = typeBuilder.DefineMethod(
+                    baseCopyFrom.Name,
+                    virtualMemberMethod,
+                    null, new[] { type });
+                typeBuilder.DefineMethodOverride(pubCopyFrom, baseCopyFrom);
+
+                {
+                    var il = pubCopyFrom.GetILGenerator();
+
+                    // TODO: use transactional changes
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Call, copyFrom); // call internal
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Call, baseCopyFrom); // call base
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Tailcall);
+                    il.Emit(OpCodes.Call, coreChanged); // call changed
+                    il.Emit(OpCodes.Ret);
+                }
+            }
             #endregion
 
             #region Members
