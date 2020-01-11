@@ -33,17 +33,19 @@ namespace IPA.Utilities
                 this.first = first;
             }
 
-            public IEnumerator<T> GetEnumerator() => new PrependEnumerator(this);
+            public PrependEnumerator GetEnumerator() => new PrependEnumerator(this);
 
-            private sealed class PrependEnumerator : IEnumerator<T>
+            public struct PrependEnumerator : IEnumerator<T>
             {
                 private readonly IEnumerator<T> restEnum;
                 private readonly PrependEnumerable<T> enumerable;
-                private int state = 0;
-                public PrependEnumerator(PrependEnumerable<T> enumerable)
+                private int state;
+                internal PrependEnumerator(PrependEnumerable<T> enumerable)
                 {
                     this.enumerable = enumerable;
                     restEnum = enumerable.rest.GetEnumerator();
+                    state = 0;
+                    Current = default;
                 }
 
                 public T Current { get; private set; }
@@ -82,6 +84,7 @@ namespace IPA.Utilities
                 }
             }
 
+            IEnumerator<T> IEnumerable<T>.GetEnumerator() => new PrependEnumerator(this);
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
@@ -106,17 +109,19 @@ namespace IPA.Utilities
                 this.last = last;
             }
 
-            public IEnumerator<T> GetEnumerator() => new AppendEnumerator(this);
+            public AppendEnumerator GetEnumerator() => new AppendEnumerator(this);
 
-            private sealed class AppendEnumerator : IEnumerator<T>
+            public struct AppendEnumerator : IEnumerator<T>
             {
                 private readonly IEnumerator<T> restEnum;
                 private readonly AppendEnumerable<T> enumerable;
-                private int state = 0;
-                public AppendEnumerator(AppendEnumerable<T> enumerable)
+                private int state;
+                internal AppendEnumerator(AppendEnumerable<T> enumerable)
                 {
                     this.enumerable = enumerable;
                     restEnum = enumerable.rest.GetEnumerator();
+                    state = 0;
+                    Current = default;
                 }
 
                 public T Current { get; private set; }
@@ -155,6 +160,7 @@ namespace IPA.Utilities
                 }
             }
 
+            IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
