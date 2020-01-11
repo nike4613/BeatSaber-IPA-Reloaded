@@ -66,6 +66,10 @@ namespace IPA.Loader
         public static PluginMetadata GetDisabledPluginFromId(string name) =>
             DisabledPlugins.FirstOrDefault(p => p.Id == name);
 
+        /// <summary>
+        /// Creates a new transaction for mod enabling and disabling mods simultaneously.
+        /// </summary>
+        /// <returns>a new <see cref="StateTransitionTransaction"/> that captures the current state of loaded mods</returns>
         public static StateTransitionTransaction PluginStateTransaction()
             => new StateTransitionTransaction(AllPlugins, DisabledPlugins);
 
