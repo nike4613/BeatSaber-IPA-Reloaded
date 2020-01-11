@@ -35,7 +35,7 @@ namespace IPA.Loader
         internal static IEnumerable<PluginExecutor> BSMetas => _bsPlugins;
 
         /// <summary>
-        /// Gets info about the plugin with the specified name.
+        /// Gets info about the enabled plugin with the specified name.
         /// </summary>
         /// <param name="name">the name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin metadata for the requested plugin or <see langword="null"/> if it doesn't exist or is disabled</returns>
@@ -43,7 +43,7 @@ namespace IPA.Loader
             => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Name == name);
 
         /// <summary>
-        /// Gets info about the plugin with the specified ID.
+        /// Gets info about the enabled plugin with the specified ID.
         /// </summary>
         /// <param name="name">the ID name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin metadata for the requested plugin or <see langword="null"/> if it doesn't exist or is disabled</returns>
