@@ -388,7 +388,7 @@ namespace IPA.Updating.BeatMods
 
                 var ver = modsMatching.Value
                     .NonNull() // entry is not null
-                    .Where(versionCheck => versionCheck.GameVersion == BeatSaber.GameVersion) // game version matches
+                    .Where(versionCheck => versionCheck.GameVersion == UnityGame.GameVersion) // game version matches
                     .Where(approvalCheck => approvalCheck.Status == ApiEndpoint.Mod.ApprovedStatus) // version approved
                     // TODO: fix; it seems wrong somehow
                     .Where(conflictsCheck => dep.Conflicts == null || !dep.Conflicts.IsSatisfied(conflictsCheck.Version)) // not a conflicting version
@@ -458,7 +458,7 @@ namespace IPA.Updating.BeatMods
             DownloadProgress progress, DownloadFailed dlFail, DownloadFinish finish,
             InstallFailed installFail, InstallFinish installFinish)
         { // (3.2)
-            Logger.updater.Debug($"Release: {BeatSaber.ReleaseType}");
+            Logger.updater.Debug($"Release: {UnityGame.ReleaseType}");
 
             var mod = new Ref<ApiEndpoint.Mod>(null);
             yield return GetModInfo(item.Name, item.ResolvedVersion.ToString(), mod);
@@ -471,7 +471,7 @@ namespace IPA.Updating.BeatMods
                 yield break;
             }
 
-            var releaseName = BeatSaber.ReleaseType == BeatSaber.Release.Steam 
+            var releaseName = UnityGame.ReleaseType == UnityGame.Release.Steam 
                 ? ApiEndpoint.Mod.DownloadsObject.TypeSteam : ApiEndpoint.Mod.DownloadsObject.TypeOculus;
             var platformFile = mod.Value.Downloads.First(f => f.Type == ApiEndpoint.Mod.DownloadsObject.TypeUniversal || f.Type == releaseName);
 
@@ -628,10 +628,10 @@ namespace IPA.Updating.BeatMods
             if (!Utils.UnsafeCompare(hash, fileInfo.Hash))
                 throw new Exception("The hash for the file doesn't match what is defined");*/
 
-            var targetDir = Path.Combine(BeatSaber.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
+            var targetDir = Path.Combine(UnityGame.InstallPath, "IPA", Path.GetRandomFileName() + "_Pending");
             Directory.CreateDirectory(targetDir);
 
-            var eventualOutput = Path.Combine(BeatSaber.InstallPath, "IPA", "Pending");
+            var eventualOutput = Path.Combine(UnityGame.InstallPath, "IPA", "Pending");
             if (!Directory.Exists(eventualOutput))
                 Directory.CreateDirectory(eventualOutput);
 
@@ -674,7 +674,7 @@ namespace IPA.Updating.BeatMods
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
                                 if (item.LocalPluginMeta != null && 
-                                    Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, BeatSaber.InstallPath))
+                                    Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, UnityGame.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
                                 /*if (targetFile.Exists)
@@ -693,7 +693,7 @@ namespace IPA.Updating.BeatMods
                 }
                 
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
-                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, BeatSaber.InstallPath) });
+                    File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, UnityGame.InstallPath) });
             }
             catch (Exception)
             { // something failed; restore
@@ -705,8 +705,8 @@ namespace IPA.Updating.BeatMods
             if ((item.LocalPluginMeta?.IsSelf).Unwrap())
             { // currently updating self, so copy to working dir and update
                 NeedsManualRestart = true; // flag so that ModList keeps the restart button hidden
-                Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(BeatSaber.InstallPath));
-                var deleteFile = Path.Combine(BeatSaber.InstallPath, SpecialDeletionsFile);
+                Utils.CopyAll(new DirectoryInfo(targetDir), new DirectoryInfo(UnityGame.InstallPath));
+                var deleteFile = Path.Combine(UnityGame.InstallPath, SpecialDeletionsFile);
                 if (File.Exists(deleteFile)) File.Delete(deleteFile);
                 Process.Start(new ProcessStartInfo
                 {

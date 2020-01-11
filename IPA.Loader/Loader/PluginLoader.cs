@@ -46,12 +46,12 @@ namespace IPA.Loader
 
         internal static void YeetIfNeeded()
         {
-            string pluginDir = BeatSaber.PluginsPath;
+            string pluginDir = UnityGame.PluginsPath;
 
-            if (SelfConfig.YeetMods_ && BeatSaber.IsGameVersionBoundary)
+            if (SelfConfig.YeetMods_ && UnityGame.IsGameVersionBoundary)
             {
-                var oldPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {BeatSaber.OldVersion} Plugins");
-                var newPluginsName = Path.Combine(BeatSaber.InstallPath, $"Old {BeatSaber.GameVersion} Plugins");
+                var oldPluginsName = Path.Combine(UnityGame.InstallPath, $"Old {UnityGame.OldVersion} Plugins");
+                var newPluginsName = Path.Combine(UnityGame.InstallPath, $"Old {UnityGame.GameVersion} Plugins");
 
                 if (Directory.Exists(oldPluginsName))
                     Directory.Delete(oldPluginsName, true);
@@ -70,14 +70,14 @@ namespace IPA.Loader
 
         internal static void LoadMetadata()
         {
-            string[] plugins = Directory.GetFiles(BeatSaber.PluginsPath, "*.dll");
+            string[] plugins = Directory.GetFiles(UnityGame.PluginsPath, "*.dll");
 
             try
             {
                 var selfMeta = new PluginMetadata
                 {
                     Assembly = Assembly.GetExecutingAssembly(),
-                    File = new FileInfo(Path.Combine(BeatSaber.InstallPath, "IPA.exe")),
+                    File = new FileInfo(Path.Combine(UnityGame.InstallPath, "IPA.exe")),
                     PluginType = null,
                     IsSelf = true
                 };
@@ -103,7 +103,7 @@ namespace IPA.Loader
             {
                 var metadata = new PluginMetadata
                 {
-                    File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, plugin)),
+                    File = new FileInfo(Path.Combine(UnityGame.PluginsPath, plugin)),
                     IsSelf = false
                 };
 
@@ -218,15 +218,15 @@ namespace IPA.Loader
                 }
             }
 
-            IEnumerable<string> bareManifests = Directory.GetFiles(BeatSaber.PluginsPath, "*.json");
-            bareManifests = bareManifests.Concat(Directory.GetFiles(BeatSaber.PluginsPath, "*.manifest"));
+            IEnumerable<string> bareManifests = Directory.GetFiles(UnityGame.PluginsPath, "*.json");
+            bareManifests = bareManifests.Concat(Directory.GetFiles(UnityGame.PluginsPath, "*.manifest"));
             foreach (var manifest in bareManifests)
             { // TODO: maybe find a way to allow a bare manifest to specify an associated file
                 try
                 {
                     var metadata = new PluginMetadata
                     {
-                        File = new FileInfo(Path.Combine(BeatSaber.PluginsPath, manifest)),
+                        File = new FileInfo(Path.Combine(UnityGame.PluginsPath, manifest)),
                         IsSelf = false,
                         IsBare = true,
                     };
@@ -601,7 +601,7 @@ namespace IPA.Loader
 
         internal static PluginExecutor InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
-            if (meta.Manifest.GameVersion != BeatSaber.GameVersion)
+            if (meta.Manifest.GameVersion != UnityGame.GameVersion)
                 Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
             if (!meta.IsAttributePlugin)

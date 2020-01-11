@@ -283,7 +283,7 @@ namespace IPA.Loader
 
         internal static void Load()
         {
-            string pluginDirectory = BeatSaber.PluginsPath;
+            string pluginDirectory = UnityGame.PluginsPath;
 
             // Process.GetCurrentProcess().MainModule crashes the game and Assembly.GetEntryAssembly() is NULL,
             // so we need to resort to P/Invoke
@@ -373,7 +373,7 @@ namespace IPA.Loader
 
             Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {Application.unityVersion}");
-            Logger.log.Info($"Game version {BeatSaber.GameVersion}");
+            Logger.log.Info($"Game version {UnityGame.GameVersion}");
             Logger.log.Info("-----------------------------");
             Logger.log.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
             Logger.log.Info("-----------------------------");

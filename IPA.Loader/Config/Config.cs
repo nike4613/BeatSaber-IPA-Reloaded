@@ -110,7 +110,7 @@ namespace IPA.Config
             var chosenExt = extensions.FirstOrDefault(s => registeredProviders.ContainsKey(s)) ?? "json";
             var provider = registeredProviders[chosenExt];
 
-            var filename = Path.Combine(BeatSaber.UserDataPath, configName + "." + provider.Extension);
+            var filename = Path.Combine(UnityGame.UserDataPath, configName + "." + provider.Extension);
             var config = new Config(configName, provider, new FileInfo(filename));
 
             ConfigRuntime.RegisterConfig(config);

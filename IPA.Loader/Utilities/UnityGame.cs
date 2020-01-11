@@ -12,7 +12,7 @@ namespace IPA.Utilities
     /// <summary>
     /// Provides some basic utility methods and properties of Beat Saber
     /// </summary>
-    public static class BeatSaber
+    public static class UnityGame
     {
         private static AlmostVersion _gameVersion;
         /// <summary>
@@ -77,6 +77,9 @@ namespace IPA.Utilities
         /// <summary>
         /// Gets the <see cref="Release"/> type of this installation of Beat Saber
         /// </summary>
+        /// <remarks>
+        /// This only gives a
+        /// </remarks>
         /// <value>the type of release this is</value>
         public static Release ReleaseType => (_releaseCache ?? (_releaseCache = FindSteamVRAsset() ? Release.Steam : Release.Oculus)).Value;
 
@@ -118,7 +121,7 @@ namespace IPA.Utilities
 
         private static bool FindSteamVRAsset()
         {
-            // these require assembly qualified names....
+            // TODO: fix this so that it works more consistently and generally
             var steamUser = Type.GetType("Steamworks.SteamUser, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
 
             return steamUser != null;
