@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace IPA.Loader
 {
+    /// <summary>
+    /// A class to represent a transaction for changing the state of loaded mods.
+    /// </summary>
     public sealed class StateTransitionTransaction : IDisposable
     {
         private readonly HashSet<PluginMetadata> currentlyEnabled;
@@ -19,23 +22,64 @@ namespace IPA.Loader
             currentlyDisabled = new HashSet<PluginMetadata>(disabled.ToArray());
         }
 
+        /// <summary>
+        /// Gets whether or not a game restart will be necessary to fully apply this transaction.
+        /// </summary>
+        /// <value><see langword="true"/> if any mod who's state is changed cannot be changed at runtime, <see langword="false"/> otherwise</value>
         public bool WillNeedRestart => toEnable.Concat(toDisable).Any(m => m.RuntimeOptions != RuntimeOptions.DynamicInit);
 
         internal IEnumerable<PluginMetadata> ToEnable => toEnable;
         internal IEnumerable<PluginMetadata> ToDisable => toDisable;
 
-        public IEnumerable<PluginMetadata> EnabledPlugins => currentlyEnabled.Except(toDisable).Concat(toEnable);
-        public IEnumerable<PluginMetadata> DisabledPlugins => currentlyDisabled.Except(toEnable).Concat(toDisable);
+        /// <summary>
+        /// Gets a list of plugins that are enabled according to this transaction's current state.
+        /// </summary>
+        public IEnumerable<PluginMetadata> EnabledPlugins 
+            => ThrowIfDisposed<IEnumerable<PluginMetadata>>() 
+            ?? currentlyEnabled.Except(toDisable).Concat(toEnable);
+        /// <summary>
+        /// Gets a list of plugins that are disabled according to this transaction's current state.
+        /// </summary>
+        public IEnumerable<PluginMetadata> DisabledPlugins 
+            => ThrowIfDisposed<IEnumerable<PluginMetadata>>()
+            ?? currentlyDisabled.Except(toEnable).Concat(toDisable);
 
+        /// <summary>
+        /// Checks if a plugin is enabled according to this transaction's current state.
+        /// </summary>
+        /// <remarks>
+        /// <para>This should be roughly equivalent to <c>EnabledPlugins.Contains(meta)</c>, but more performant.</para>
+        /// <para>This should also always return the inverse of <see cref="IsDisabled(PluginMetadata)"/> for valid plugins.</para>
+        /// </remarks>
+        /// <param name="meta">the plugin to check</param>
+        /// <returns><see langword="true"/> if the plugin is enabled, <see langword="false"/> otherwise</returns>
+        /// <seealso cref="EnabledPlugins"/>
+        /// <see cref="IsDisabled(PluginMetadata)"/>
         public bool IsEnabled(PluginMetadata meta)
             => ThrowIfDisposed<bool>()
             || (currentlyEnabled.Contains(meta) && !toDisable.Contains(meta))
             || toEnable.Contains(meta);
+        /// <summary>
+        /// Checks if a plugin is disabled according to this transaction's current state.
+        /// </summary>
+        /// <remarks>
+        /// <para>This should be roughly equivalent to <c>DisabledPlugins.Contains(meta)</c>, but more performant.</para>
+        /// <para>This should also always return the inverse of <see cref="IsEnabled(PluginMetadata)"/> for valid plugins.</para>
+        /// </remarks>
+        /// <param name="meta">the plugin to check</param>
+        /// <returns><see langword="true"/> if the plugin is disabled, <see langword="false"/> otherwise</returns>
+        /// <seealso cref="DisabledPlugins"/>
+        /// <see cref="IsEnabled(PluginMetadata)"/>
         public bool IsDisabled(PluginMetadata meta)
             => ThrowIfDisposed<bool>()
             || (currentlyDisabled.Contains(meta) && !toEnable.Contains(meta))
             || toDisable.Contains(meta);
 
+        /// <summary>
+        /// Enables a plugin in this transaction.
+        /// </summary>
+        /// <param name="meta">the plugin to enable</param>
+        /// <returns><see langword="true"/> if the transaction's state was changed, <see langword="false"/> otherwise</returns>
         public bool Enable(PluginMetadata meta)
         { // returns whether or not state was changed
             ThrowIfDisposed();
@@ -49,6 +93,11 @@ namespace IPA.Loader
             return true;
         }
 
+        /// <summary>
+        /// Disables a plugin in this transaction.
+        /// </summary>
+        /// <param name="meta">the plugin to disable</param>
+        /// <returns><see langword="true"/> if the transaction's state was changed, <see langword="false"/> otherwise</returns>
         public bool Disable(PluginMetadata meta)
         { // returns whether or not state was changed
             ThrowIfDisposed();
@@ -62,7 +111,11 @@ namespace IPA.Loader
             return true;
         }
 
-        public Task Commit() => PluginManager.CommitTransaction(this);
+        /// <summary>
+        /// Commits this transaction to actual state, enabling and disabling plugins as necessary.
+        /// </summary>
+        /// <returns>a <see cref="Task"/> which completes whenever all disables complete</returns>
+        public Task Commit() => ThrowIfDisposed<Task>() ?? PluginManager.CommitTransaction(this);
 
         private void ThrowIfDisposed() => ThrowIfDisposed<byte>();
         private T ThrowIfDisposed<T>()
@@ -73,6 +126,9 @@ namespace IPA.Loader
         }
 
         private bool disposed = false;
+        /// <summary>
+        /// Disposes and discards this transaction without committing it.
+        /// </summary>
         public void Dispose()
             => disposed = true;
     }
