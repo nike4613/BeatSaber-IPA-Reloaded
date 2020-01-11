@@ -107,6 +107,32 @@ namespace IPA.Utilities
         private static volatile bool exitRecieved = false;
 
         /// <summary>
+        /// A struct that allows <c>using</c> blocks to manage an execute section.
+        /// </summary>
+        public struct AutoExecuteSection : IDisposable
+        {
+            private readonly bool constructed;
+            internal AutoExecuteSection(bool val) 
+            {
+                constructed = val && !isInExecuteSection;
+                if (constructed)
+                    EnterExecuteSection();
+            }
+
+            void IDisposable.Dispose()
+            {
+                if (constructed)
+                    ExitExecuteSection();
+            }
+        }
+
+        /// <summary>
+        /// Creates an <see cref="AutoExecuteSection"/> for automated management of an execute section.
+        /// </summary>
+        /// <returns>the new <see cref="AutoExecuteSection"/> that manages the section</returns>
+        public static AutoExecuteSection ExecuteSection() => new AutoExecuteSection(true);
+
+        /// <summary>
         /// Enters a critical execution section. Does not nest.
         /// </summary>
         /// <note>
@@ -143,45 +169,5 @@ namespace IPA.Utilities
         }
 
         #endregion
-
-        #region GC section
-
-        // i wish i could reference GC_enable and GC_disable directly
-        [DllImport("mono-2.0-bdwgc")]
-        private static extern void mono_unity_gc_enable();
-        [DllImport("mono-2.0-bdwgc")]
-        private static extern void mono_unity_gc_disable();
-
-        /// <summary>
-        /// Enters a GC critical section. Each call to this must be paired with a call to <see cref="ExitGCSection"/>.
-        /// </summary>
-        /// <note>
-        /// During a GC critical section, no GCs will occur. 
-        /// 
-        /// This may throw an <see cref="EntryPointNotFoundException"/> if the build of Mono the game is running on does
-        /// not have `mono_unity_gc_disable` exported. Use with caution.
-        /// </note>
-        public static void EnterGCSection()
-        {
-            mono_unity_gc_disable();
-        }
-
-
-        /// <summary>
-        /// Exits a GC critical section. Each call to this must have a preceding call to <see cref="EnterGCSection"/>.
-        /// </summary>
-        /// <note>
-        /// During a GC critical section, no GCs will occur. 
-        /// 
-        /// This may throw an <see cref="EntryPointNotFoundException"/> if the build of Mono the game is running on does
-        /// not have `mono_unity_gc_enable` exported. Use with caution.
-        /// </note>
-        public static void ExitGCSection()
-        {
-            mono_unity_gc_enable();
-        }
-
-        #endregion
-
     }
 }

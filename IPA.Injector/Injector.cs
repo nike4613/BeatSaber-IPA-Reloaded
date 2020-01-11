@@ -78,14 +78,14 @@ namespace IPA.Injector
 
                 if (AntiPiracy.IsInvalid(Environment.CurrentDirectory))
                 {
-                    loader.Error("Invalid installation; please buy the game to run BSIPA.");
+                    log.Error("Invalid installation; please buy the game to run BSIPA.");
 
                     return;
                 }
 
                 CriticalSection.Configure();
 
-                loader.Debug("Prepping bootstrapper");
+                injector.Debug("Prepping bootstrapper");
                 
                 // updates backup
                 InstallBootstrapPatch();
@@ -134,13 +134,13 @@ namespace IPA.Injector
             var dataDir = new DirectoryInfo(managedPath).Parent.Name;
             var gameName = dataDir.Substring(0, dataDir.Length - 5);
 
-            loader.Debug("Finding backup");
+            injector.Debug("Finding backup");
             var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", gameName);
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
-                loader.Warn("No backup found! Was BSIPA installed using the installer?");
+                injector.Warn("No backup found! Was BSIPA installed using the installer?");
 
-            loader.Debug("Ensuring patch on UnityEngine.CoreModule exists");
+            injector.Debug("Ensuring patch on UnityEngine.CoreModule exists");
 
             #region Insert patch into UnityEngine.CoreModule.dll
 
@@ -149,7 +149,7 @@ namespace IPA.Injector
                     "UnityEngine.CoreModule.dll");
 
                 // this is a critical section because if you exit in here, CoreModule can die
-                CriticalSection.EnterExecuteSection();
+                using var critSec = CriticalSection.ExecuteSection();
 
                 var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
                 {
@@ -173,6 +173,13 @@ namespace IPA.Injector
                 }
 
                 var application = unityModDef.GetType("UnityEngine", "Application");
+
+                if (application == null)
+                {
+                    injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Application!"
+                        + "Nothing to patch to get ourselves into the Unity run cycle!");
+                    goto endPatchCoreModule;
+                }
 
                 MethodDefinition cctor = null;
                 foreach (var m in application.Methods)
@@ -230,13 +237,11 @@ namespace IPA.Injector
                     bkp?.Add(unityPath);
                     unityAsmDef.Write(unityPath);
                 }
-
-                CriticalSection.ExitExecuteSection();
             }
-
+            endPatchCoreModule:
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
-            loader.Debug("Ensuring game assemblies are virtualized");
+            injector.Debug("Ensuring game assemblies are virtualized");
 
             #region Virtualize game assemblies
             bool isFirst = true;
@@ -244,26 +249,26 @@ namespace IPA.Injector
             {
                 var ascPath = Path.Combine(managedPath, name);
 
-                CriticalSection.EnterExecuteSection();
+                using var execSec = CriticalSection.ExecuteSection();
 
                 try
                 {
-                    loader.Debug($"Virtualizing {name}");
+                    injector.Debug($"Virtualizing {name}");
                     using var ascModule = VirtualizedModule.Load(ascPath);
                     ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
                 }
                 catch (Exception e) 
                 {
-                    loader.Error($"Could not virtualize {ascPath}");
+                    injector.Error($"Could not virtualize {ascPath}");
                     if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                        loader.Error(e);
+                        injector.Error(e);
                 }
 
                 if (isFirst)
                 {
                     try
                     {
-                        loader.Debug("Applying anti-yeet patch");
+                        injector.Debug("Applying anti-yeet patch");
 
                         var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
                         {
@@ -282,13 +287,11 @@ namespace IPA.Injector
                     }
                     catch (Exception e)
                     {
-                        loader.Warn($"Could not apply anti-yeet patch to {ascPath}");
+                        injector.Warn($"Could not apply anti-yeet patch to {ascPath}");
                         if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                            loader.Warn(e);
+                            injector.Warn(e);
                     }
                 }
-
-                CriticalSection.ExitExecuteSection();
             }
             #endregion
         }
