@@ -2837,6 +2837,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.Plugins
   nameWithType: PluginManager.Plugins
+- uid: IPA.Loader.PluginManager.PluginStateTransaction
+  name: PluginStateTransaction()
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_PluginStateTransaction
+  commentId: M:IPA.Loader.PluginManager.PluginStateTransaction
+  fullName: IPA.Loader.PluginManager.PluginStateTransaction()
+  nameWithType: PluginManager.PluginStateTransaction()
+- uid: IPA.Loader.PluginManager.PluginStateTransaction*
+  name: PluginStateTransaction
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_PluginStateTransaction_
+  commentId: Overload:IPA.Loader.PluginManager.PluginStateTransaction
+  isSpec: "True"
+  fullName: IPA.Loader.PluginManager.PluginStateTransaction
+  nameWithType: PluginManager.PluginStateTransaction
 - uid: IPA.Loader.PluginMetadata
   name: PluginMetadata
   href: api/IPA.Loader.PluginMetadata.html
@@ -2895,19 +2908,6 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.Id
   nameWithType: PluginMetadata.Id
-- uid: IPA.Loader.PluginMetadata.IsAttributePlugin
-  name: IsAttributePlugin
-  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsAttributePlugin
-  commentId: P:IPA.Loader.PluginMetadata.IsAttributePlugin
-  fullName: IPA.Loader.PluginMetadata.IsAttributePlugin
-  nameWithType: PluginMetadata.IsAttributePlugin
-- uid: IPA.Loader.PluginMetadata.IsAttributePlugin*
-  name: IsAttributePlugin
-  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsAttributePlugin_
-  commentId: Overload:IPA.Loader.PluginMetadata.IsAttributePlugin
-  isSpec: "True"
-  fullName: IPA.Loader.PluginMetadata.IsAttributePlugin
-  nameWithType: PluginMetadata.IsAttributePlugin
 - uid: IPA.Loader.PluginMetadata.IsBare
   name: IsBare
   href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IsBare
@@ -2986,6 +2986,129 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.Version
   nameWithType: PluginMetadata.Version
+- uid: IPA.Loader.StateTransitionTransaction
+  name: StateTransitionTransaction
+  href: api/IPA.Loader.StateTransitionTransaction.html
+  commentId: T:IPA.Loader.StateTransitionTransaction
+  fullName: IPA.Loader.StateTransitionTransaction
+  nameWithType: StateTransitionTransaction
+- uid: IPA.Loader.StateTransitionTransaction.Commit
+  name: Commit()
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Commit
+  commentId: M:IPA.Loader.StateTransitionTransaction.Commit
+  fullName: IPA.Loader.StateTransitionTransaction.Commit()
+  nameWithType: StateTransitionTransaction.Commit()
+- uid: IPA.Loader.StateTransitionTransaction.Commit*
+  name: Commit
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Commit_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.Commit
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.Commit
+  nameWithType: StateTransitionTransaction.Commit
+- uid: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata)
+  name: Disable(PluginMetadata)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata)
+  nameWithType: StateTransitionTransaction.Disable(PluginMetadata)
+- uid: IPA.Loader.StateTransitionTransaction.Disable*
+  name: Disable
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.Disable
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.Disable
+  nameWithType: StateTransitionTransaction.Disable
+- uid: IPA.Loader.StateTransitionTransaction.DisabledPlugins
+  name: DisabledPlugins
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_DisabledPlugins
+  commentId: P:IPA.Loader.StateTransitionTransaction.DisabledPlugins
+  fullName: IPA.Loader.StateTransitionTransaction.DisabledPlugins
+  nameWithType: StateTransitionTransaction.DisabledPlugins
+- uid: IPA.Loader.StateTransitionTransaction.DisabledPlugins*
+  name: DisabledPlugins
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_DisabledPlugins_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.DisabledPlugins
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.DisabledPlugins
+  nameWithType: StateTransitionTransaction.DisabledPlugins
+- uid: IPA.Loader.StateTransitionTransaction.Dispose
+  name: Dispose()
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Dispose
+  commentId: M:IPA.Loader.StateTransitionTransaction.Dispose
+  fullName: IPA.Loader.StateTransitionTransaction.Dispose()
+  nameWithType: StateTransitionTransaction.Dispose()
+- uid: IPA.Loader.StateTransitionTransaction.Dispose*
+  name: Dispose
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Dispose_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.Dispose
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.Dispose
+  nameWithType: StateTransitionTransaction.Dispose
+- uid: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata)
+  name: Enable(PluginMetadata)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata)
+  nameWithType: StateTransitionTransaction.Enable(PluginMetadata)
+- uid: IPA.Loader.StateTransitionTransaction.Enable*
+  name: Enable
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.Enable
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.Enable
+  nameWithType: StateTransitionTransaction.Enable
+- uid: IPA.Loader.StateTransitionTransaction.EnabledPlugins
+  name: EnabledPlugins
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_EnabledPlugins
+  commentId: P:IPA.Loader.StateTransitionTransaction.EnabledPlugins
+  fullName: IPA.Loader.StateTransitionTransaction.EnabledPlugins
+  nameWithType: StateTransitionTransaction.EnabledPlugins
+- uid: IPA.Loader.StateTransitionTransaction.EnabledPlugins*
+  name: EnabledPlugins
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_EnabledPlugins_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.EnabledPlugins
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.EnabledPlugins
+  nameWithType: StateTransitionTransaction.EnabledPlugins
+- uid: IPA.Loader.StateTransitionTransaction.IsDisabled(IPA.Loader.PluginMetadata)
+  name: IsDisabled(PluginMetadata)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_IsDisabled_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.StateTransitionTransaction.IsDisabled(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.StateTransitionTransaction.IsDisabled(IPA.Loader.PluginMetadata)
+  nameWithType: StateTransitionTransaction.IsDisabled(PluginMetadata)
+- uid: IPA.Loader.StateTransitionTransaction.IsDisabled*
+  name: IsDisabled
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_IsDisabled_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.IsDisabled
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.IsDisabled
+  nameWithType: StateTransitionTransaction.IsDisabled
+- uid: IPA.Loader.StateTransitionTransaction.IsEnabled(IPA.Loader.PluginMetadata)
+  name: IsEnabled(PluginMetadata)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_IsEnabled_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.StateTransitionTransaction.IsEnabled(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.StateTransitionTransaction.IsEnabled(IPA.Loader.PluginMetadata)
+  nameWithType: StateTransitionTransaction.IsEnabled(PluginMetadata)
+- uid: IPA.Loader.StateTransitionTransaction.IsEnabled*
+  name: IsEnabled
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_IsEnabled_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.IsEnabled
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.IsEnabled
+  nameWithType: StateTransitionTransaction.IsEnabled
+- uid: IPA.Loader.StateTransitionTransaction.WillNeedRestart
+  name: WillNeedRestart
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_WillNeedRestart
+  commentId: P:IPA.Loader.StateTransitionTransaction.WillNeedRestart
+  fullName: IPA.Loader.StateTransitionTransaction.WillNeedRestart
+  nameWithType: StateTransitionTransaction.WillNeedRestart
+- uid: IPA.Loader.StateTransitionTransaction.WillNeedRestart*
+  name: WillNeedRestart
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_WillNeedRestart_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.WillNeedRestart
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.WillNeedRestart
+  nameWithType: StateTransitionTransaction.WillNeedRestart
 - uid: IPA.Logging
   name: IPA.Logging
   href: api/IPA.Logging.html
