@@ -604,7 +604,7 @@ namespace IPA.Loader
                 Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
 
             if (meta.IsSelf)
-                return new PluginExecutor(meta, true);
+                return new PluginExecutor(meta, PluginExecutor.Special.Self);
 
             foreach (var dep in meta.Dependencies)
             {
@@ -632,6 +632,9 @@ namespace IPA.Loader
                 return null;
             }
 
+            if (meta.IsBare)
+                return new PluginExecutor(meta, PluginExecutor.Special.Bare);
+
             Load(meta);
 
             foreach (var feature in meta.Features)
@@ -651,7 +654,7 @@ namespace IPA.Loader
             PluginExecutor exec;
             try
             {
-                exec = new PluginExecutor(meta, false);
+                exec = new PluginExecutor(meta);
             }
             catch (Exception e)
             {

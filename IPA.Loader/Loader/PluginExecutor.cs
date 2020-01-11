@@ -24,11 +24,18 @@ namespace IPA.Loader
     // NOTE: TaskEx.WhenAll() (Task.WhenAll() in .NET 4) returns CompletedTask if it has no arguments, which we need for .NET 3
     internal class PluginExecutor
     {
+        public enum Special
+        {
+            None, Self, Bare
+        }
+
         public PluginMetadata Metadata { get; }
-        public PluginExecutor(PluginMetadata meta, bool isSelf)
+        public Special SpecialType { get; }
+        public PluginExecutor(PluginMetadata meta, Special specialType = Special.None)
         {
             Metadata = meta;
-            if (isSelf)
+            SpecialType = specialType;
+            if (specialType != Special.None)
             {
                 CreatePlugin = m => null;
                 LifecycleEnable = o => { };
