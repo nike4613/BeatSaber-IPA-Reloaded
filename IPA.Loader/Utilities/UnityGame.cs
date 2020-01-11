@@ -69,9 +69,9 @@ namespace IPA.Utilities
             /// </summary>
             Steam,
             /// <summary>
-            /// Indicates an Oculus release.
+            /// Indicates a non-Steam release.
             /// </summary>
-            Oculus
+            Other
         }
         private static Release? _releaseCache;
         /// <summary>
@@ -81,7 +81,7 @@ namespace IPA.Utilities
         /// This only gives a
         /// </remarks>
         /// <value>the type of release this is</value>
-        public static Release ReleaseType => (_releaseCache ?? (_releaseCache = FindSteamVRAsset() ? Release.Steam : Release.Oculus)).Value;
+        public static Release ReleaseType => (_releaseCache ?? (_releaseCache = CheckIsSteam() ? Release.Steam : Release.Other)).Value;
 
         private static string _installRoot;
         /// <summary>
@@ -119,12 +119,11 @@ namespace IPA.Utilities
         /// <value>the path to the user data directory</value>
         public static string UserDataPath => Path.Combine(InstallPath, "UserData");
 
-        private static bool FindSteamVRAsset()
+        private static bool CheckIsSteam()
         {
-            // TODO: fix this so that it works more consistently and generally
-            var steamUser = Type.GetType("Steamworks.SteamUser, Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", false);
-
-            return steamUser != null;
+            var installDirInfo = new DirectoryInfo(InstallPath);
+            return installDirInfo.Parent?.Name == "common"
+                && installDirInfo.Parent?.Parent?.Name == "steamapps";
         }
     }
 }
