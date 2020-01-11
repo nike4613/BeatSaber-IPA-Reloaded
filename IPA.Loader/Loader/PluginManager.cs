@@ -14,6 +14,7 @@ using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using static IPA.Loader.PluginLoader;
 using IPA.Loader.Features;
+using System.Threading.Tasks;
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
@@ -64,6 +65,14 @@ namespace IPA.Loader
         /// <returns>the metadata for the corresponding plugin</returns>
         public static PluginMetadata GetDisabledPluginFromId(string name) =>
             DisabledPlugins.FirstOrDefault(p => p.Id == name);
+
+        public static StateTransitionTransaction PluginStateTransaction()
+            => new StateTransitionTransaction(AllPlugins, DisabledPlugins);
+
+        internal static Task CommitTransaction(StateTransitionTransaction transaction)
+        {
+            throw new NotImplementedException();
+        }
 
         // TODO: rewrite below
         /*
@@ -251,7 +260,7 @@ namespace IPA.Loader
         public static event PluginDisableDelegate PluginDisabled;
 
         /// <summary>
-        /// Gets a list of all BSIPA plugins.
+        /// Gets a list of all enabled BSIPA plugins.
         /// </summary>
         /// <value>a collection of all enabled plugins as <see cref="PluginMetadata"/>s</value>
         public static IEnumerable<PluginMetadata> AllPlugins => BSMetas.Select(p => p.Metadata);

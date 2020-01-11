@@ -50,6 +50,7 @@ namespace IPA
         /// With this option set, whether or not the plugin is disabled during a given run is constant for that entire run.
         /// </para>
         /// </summary>
+        // enabled exactly once and never disabled
         SingleStartInit,
         /// <summary>
         /// <para>
@@ -69,6 +70,7 @@ namespace IPA
         /// re-used for subsequent enables. The plugin is expected to handle this gracefully, and behave in a way that makes sense.
         /// </para>
         /// </summary>
+        // both enabled and disabled at runtime
         DynamicInit
     }
 
