@@ -5364,14 +5364,14 @@ references:
   fullName: IPA.Utilities.ReflectionUtil.GetField
   nameWithType: ReflectionUtil.GetField
 - uid: IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)
-  name: GetField<T, U>(U, String)
+  name: GetField<U, T>(T, String)
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_
   commentId: M:IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)
-  name.vb: GetField(Of T, U)(U, String)
-  fullName: IPA.Utilities.ReflectionUtil.GetField<T, U>(U, System.String)
-  fullName.vb: IPA.Utilities.ReflectionUtil.GetField(Of T, U)(U, System.String)
-  nameWithType: ReflectionUtil.GetField<T, U>(U, String)
-  nameWithType.vb: ReflectionUtil.GetField(Of T, U)(U, String)
+  name.vb: GetField(Of U, T)(T, String)
+  fullName: IPA.Utilities.ReflectionUtil.GetField<U, T>(T, System.String)
+  fullName.vb: IPA.Utilities.ReflectionUtil.GetField(Of U, T)(T, System.String)
+  nameWithType: ReflectionUtil.GetField<U, T>(T, String)
+  nameWithType.vb: ReflectionUtil.GetField(Of U, T)(T, String)
 - uid: IPA.Utilities.ReflectionUtil.GetProperty*
   name: GetProperty
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty_
@@ -5379,15 +5379,15 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.GetProperty
   nameWithType: ReflectionUtil.GetProperty
-- uid: IPA.Utilities.ReflectionUtil.GetProperty``2(``0,System.String)
-  name: GetProperty<T, U>(T, String)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___0_System_String_
-  commentId: M:IPA.Utilities.ReflectionUtil.GetProperty``2(``0,System.String)
-  name.vb: GetProperty(Of T, U)(T, String)
-  fullName: IPA.Utilities.ReflectionUtil.GetProperty<T, U>(T, System.String)
-  fullName.vb: IPA.Utilities.ReflectionUtil.GetProperty(Of T, U)(T, System.String)
-  nameWithType: ReflectionUtil.GetProperty<T, U>(T, String)
-  nameWithType.vb: ReflectionUtil.GetProperty(Of T, U)(T, String)
+- uid: IPA.Utilities.ReflectionUtil.GetProperty``2(``1,System.String)
+  name: GetProperty<U, T>(T, String)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_
+  commentId: M:IPA.Utilities.ReflectionUtil.GetProperty``2(``1,System.String)
+  name.vb: GetProperty(Of U, T)(T, String)
+  fullName: IPA.Utilities.ReflectionUtil.GetProperty<U, T>(T, System.String)
+  fullName.vb: IPA.Utilities.ReflectionUtil.GetProperty(Of U, T)(T, System.String)
+  nameWithType: ReflectionUtil.GetProperty<U, T>(T, String)
+  nameWithType.vb: ReflectionUtil.GetProperty(Of U, T)(T, String)
 - uid: IPA.Utilities.ReflectionUtil.InvokeMethod*
   name: InvokeMethod
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod_
@@ -5395,24 +5395,15 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.InvokeMethod
   nameWithType: ReflectionUtil.InvokeMethod
-- uid: IPA.Utilities.ReflectionUtil.InvokeMethod``1(``0,System.String,System.Object[])
-  name: InvokeMethod<T>(T, String, Object[])
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__1___0_System_String_System_Object___
-  commentId: M:IPA.Utilities.ReflectionUtil.InvokeMethod``1(``0,System.String,System.Object[])
-  name.vb: InvokeMethod(Of T)(T, String, Object())
-  fullName: IPA.Utilities.ReflectionUtil.InvokeMethod<T>(T, System.String, System.Object[])
-  fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(Of T)(T, System.String, System.Object())
-  nameWithType: ReflectionUtil.InvokeMethod<T>(T, String, Object[])
-  nameWithType.vb: ReflectionUtil.InvokeMethod(Of T)(T, String, Object())
 - uid: IPA.Utilities.ReflectionUtil.InvokeMethod``2(``1,System.String,System.Object[])
-  name: InvokeMethod<T, U>(U, String, Object[])
+  name: InvokeMethod<U, T>(T, String, Object[])
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___
   commentId: M:IPA.Utilities.ReflectionUtil.InvokeMethod``2(``1,System.String,System.Object[])
-  name.vb: InvokeMethod(Of T, U)(U, String, Object())
-  fullName: IPA.Utilities.ReflectionUtil.InvokeMethod<T, U>(U, System.String, System.Object[])
-  fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(Of T, U)(U, System.String, System.Object())
-  nameWithType: ReflectionUtil.InvokeMethod<T, U>(U, String, Object[])
-  nameWithType.vb: ReflectionUtil.InvokeMethod(Of T, U)(U, String, Object())
+  name.vb: InvokeMethod(Of U, T)(T, String, Object())
+  fullName: IPA.Utilities.ReflectionUtil.InvokeMethod<U, T>(T, System.String, System.Object[])
+  fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(Of U, T)(T, System.String, System.Object())
+  nameWithType: ReflectionUtil.InvokeMethod<U, T>(T, String, Object[])
+  nameWithType.vb: ReflectionUtil.InvokeMethod(Of U, T)(T, String, Object())
 - uid: IPA.Utilities.ReflectionUtil.SetField*
   name: SetField
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField_
