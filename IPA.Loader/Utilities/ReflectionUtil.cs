@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 
 namespace IPA.Utilities
@@ -7,52 +8,23 @@ namespace IPA.Utilities
     /// <summary>
     /// A utility class providing reflection helper methods.
     /// </summary>
-    public static class ReflectionUtil
+    public static partial class ReflectionUtil
     {
-        /// <summary>
-        /// Sets a field on the target object.
-        /// </summary>
-        /// <param name="obj">the object instance</param>
-        /// <param name="fieldName">the field to set</param>
-        /// <param name="value">the value to set it to</param>
-        /// <exception cref="ArgumentException">if <paramref name="fieldName"/> does not exist on the runtime type of <paramref name="obj"/></exception>
-        public static void SetField(this object obj, string fieldName, object value)
-        {
-            var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
-            prop?.SetValue(obj, value);
-        }
+        internal static readonly FieldInfo DynamicMethodReturnType = 
+            typeof(DynamicMethod).GetField("returnType", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         /// <summary>
         /// Sets a field on the target object, as gotten from <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">the type to get the field from</typeparam>
+        /// <typeparam name="U">the type of the field to set</typeparam>
         /// <param name="obj">the object instance</param>
         /// <param name="fieldName">the field to set</param>
         /// <param name="value">the value to set it to</param>
-        /// <exception cref="ArgumentException">if <paramref name="fieldName"/> does not exist on <typeparamref name="T"/></exception>
-        public static void SetField<T>(this T obj, string fieldName, object value)
-        {
-            var prop = typeof(T).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
-            prop?.SetValue(obj, value);
-        }
-
-        /// <summary>
-        /// Gets the value of a field.
-        /// </summary>
-        /// <typeparam name="T">the type of the field (result casted)</typeparam>
-        /// <param name="obj">the object instance to pull from</param>
-        /// <param name="fieldName">the name of the field to read</param>
-        /// <returns>the value of the field</returns>
-        /// <exception cref="ArgumentException">if <paramref name="fieldName"/> does not exist on the runtime type of <paramref name="obj"/></exception>
-        public static T GetField<T>(this object obj, string fieldName)
-        {
-            var prop = obj.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
-            var value = prop?.GetValue(obj);
-            return (T) value;
-        }
+        /// <exception cref="MissingFieldException">if <paramref name="fieldName"/> does not exist on <typeparamref name="T"/></exception>
+        /// <seealso cref="FieldAccessor{T, U}.Set(ref T, string, U)"/>
+        public static void SetField<T, U>(this T obj, string fieldName, U value)
+            => FieldAccessor<T, U>.Set(ref obj, fieldName, value);
 
         /// <summary>
         /// Gets the value of a field.
@@ -62,58 +34,36 @@ namespace IPA.Utilities
         /// <param name="obj">the object instance to pull from</param>
         /// <param name="fieldName">the name of the field to read</param>
         /// <returns>the value of the field</returns>
-        /// <exception cref="ArgumentException">if <paramref name="fieldName"/> does not exist on <typeparamref name="U"/></exception>
+        /// <exception cref="MissingFieldException">if <paramref name="fieldName"/> does not exist on <typeparamref name="U"/></exception>
+        /// <seealso cref="FieldAccessor{T, U}.Get(ref T, string)"/>
         public static T GetField<T, U>(this U obj, string fieldName)
-        {
-            var prop = typeof(U).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (prop == null) throw new ArgumentException($"Field {fieldName} does not exist", nameof(fieldName));
-            var value = prop?.GetValue(obj);
-            return (T)value;
-        }
+            => FieldAccessor<U, T>.Get(ref obj, fieldName);
 
         /// <summary>
-        /// Sets a property on the target object.
-        /// </summary>
-        /// <param name="obj">the target object instance</param>
-        /// <param name="propertyName">the name of the property</param>
-        /// <param name="value">the value to set it to</param>
-        /// <exception cref="ArgumentException">if <paramref name="propertyName"/> does not exist on the runtime type of <paramref name="obj"/></exception>
-        public static void SetProperty(this object obj, string propertyName, object value)
-        {
-            var prop = obj.GetType().GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (prop == null) throw new ArgumentException($"Property {propertyName} does not exist", nameof(propertyName));
-            prop?.SetValue(obj, value, null);
-        }
-
-        /// <summary>
-        /// Sets a property on the target object, as gotten from <typeparamref name="T"/>
+        /// Sets a property on the target object, as gotten from <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">the type to get the property from</typeparam>
+        /// <typeparam name="U">the type of the property to set</typeparam>
         /// <param name="obj">the object instance</param>
         /// <param name="propertyName">the property to set</param>
         /// <param name="value">the value to set it to</param>
-        /// <exception cref="ArgumentException">if <paramref name="propertyName"/> does not exist on <typeparamref name="T"/></exception>
-        public static void SetProperty<T>(this T obj, string propertyName, object value)
-        {
-            var prop = typeof(T).GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (prop == null) throw new ArgumentException($"Property {propertyName} does not exist", nameof(propertyName));
-            prop?.SetValue(obj, value, null);
-        }
+        /// <exception cref="MissingMemberException">if <paramref name="propertyName"/> does not exist on <typeparamref name="T"/></exception>
+        /// <seealso cref="PropertyAccessor{T, U}.Set(ref T, string, U)"/>
+        public static void SetProperty<T, U>(this T obj, string propertyName, U value)
+            => PropertyAccessor<T, U>.Set(ref obj, propertyName, value);
 
         /// <summary>
-        /// Invokes a method on an object.
+        /// Gets a property on the target object, as gotten from <typeparamref name="T"/>.
         /// </summary>
-        /// <param name="obj">the object to call from</param>
-        /// <param name="methodName">the method name</param>
-        /// <param name="methodArgs">the method arguments</param>
-        /// <returns>the return value</returns>
-        /// <exception cref="ArgumentException">if <paramref name="methodName"/> does not exist on the runtime type of <paramref name="obj"/></exception>
-        public static object InvokeMethod(this object obj, string methodName, params object[] methodArgs)
-        {
-            MethodInfo dynMethod = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (dynMethod == null) throw new ArgumentException($"Method {methodName} does not exist", nameof(methodName));
-            return dynMethod?.Invoke(obj, methodArgs);
-        }
+        /// <typeparam name="T">the type to get the property from</typeparam>
+        /// <typeparam name="U">the type of the property to get</typeparam>
+        /// <param name="obj">the object instance</param>
+        /// <param name="propertyName">the property to get</param>
+        /// <returns>the value of the property</returns>
+        /// <exception cref="MissingMemberException">if <paramref name="propertyName"/> does not exist on <typeparamref name="T"/></exception>
+        /// <seealso cref="PropertyAccessor{T, U}.Get(ref T, string)"/>
+        public static U GetProperty<T, U>(this T obj, string propertyName)
+            => PropertyAccessor<T, U>.Get(ref obj, propertyName);
 
         /// <summary>
         /// Invokes a method from <typeparamref name="T"/> on an object.
@@ -130,19 +80,6 @@ namespace IPA.Utilities
             if (dynMethod == null) throw new ArgumentException($"Method {methodName} does not exist", nameof(methodName));
             return dynMethod?.Invoke(obj, args);
         }
-
-        /// <summary>
-        /// Invokes a method.
-        /// </summary>
-        /// <typeparam name="T">the return type</typeparam>
-        /// <param name="obj">the object instance</param>
-        /// <param name="methodName">the method name to call</param>
-        /// <param name="methodArgs">the method's arguments</param>
-        /// <returns>the return value</returns>
-        /// <exception cref="ArgumentException">if <paramref name="methodName"/> does not exist on the runtime type of <paramref name="obj"/></exception>
-        /// <seealso cref="InvokeMethod(object, string, object[])"/>
-        public static T InvokeMethod<T>(this object obj, string methodName, params object[] methodArgs)
-            => (T)InvokeMethod(obj, methodName, methodArgs);
 
         /// <summary>
         /// Invokes a method from <typeparamref name="U"/> on an object.
