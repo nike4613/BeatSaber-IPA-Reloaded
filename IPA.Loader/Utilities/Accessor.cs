@@ -36,7 +36,7 @@ namespace IPA.Utilities
 
             var il = dyn.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
-            if (!typeof(U).IsValueType)
+            if (!typeof(T).IsValueType)
                 il.Emit(OpCodes.Ldind_Ref);
             il.Emit(OpCodes.Ldflda, field);
             il.Emit(OpCodes.Ret);
