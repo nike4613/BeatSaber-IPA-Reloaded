@@ -36,6 +36,8 @@ namespace IPA.Utilities
 
             var il = dyn.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
+            if (!typeof(U).IsValueType)
+                il.Emit(OpCodes.Ldind_Ref);
             il.Emit(OpCodes.Ldflda, field);
             il.Emit(OpCodes.Ret);
 
@@ -148,8 +150,8 @@ namespace IPA.Utilities
             if (prop == null)
                 throw new MissingMemberException(typeof(T).Name, propName);
 
-            var getM = prop.GetGetMethod();
-            var setM = prop.GetSetMethod();
+            var getM = prop.GetGetMethod(true);
+            var setM = prop.GetSetMethod(true);
             Getter getter = null;
             Setter setter = null;
             if (getM != null)
