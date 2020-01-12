@@ -25,8 +25,11 @@ namespace IPA.Config
             Instance = LoaderConfig.Generated<SelfConfig>();
         }
 
+        protected virtual void CopyFrom(SelfConfig cfg) { }
         protected internal virtual void OnReload()
         {
+            if (Regenerate)
+                CopyFrom(new SelfConfig());
             StandardLogger.Configure();
         }
 
@@ -72,7 +75,7 @@ namespace IPA.Config
 
         // END: section ignore
 
-        public virtual bool Regenerate { get; set; } = true;
+        public virtual bool Regenerate { get; set; } = false;
 
         public class Updates_
         {
