@@ -113,7 +113,7 @@ namespace IPA.Config.Stores
         }
         internal interface IGeneratedStore<T> : IGeneratedStore where T : class
         {
-            void CopyFrom(T source);
+            void CopyFrom(T source, bool useLock);
         }
 
         internal class Impl : IConfigStore
@@ -500,7 +500,7 @@ namespace IPA.Config.Stores
 
                 foreach (var member in structure)
                 {
-                    EmitMemberFix(il, member, GetLocal);
+                    EmitMemberFix(il, member, false, GetLocal);
                 }
 
                 il.Emit(OpCodes.Pop);
@@ -694,14 +694,18 @@ namespace IPA.Config.Stores
             var IGeneratedStore_T_CopyFrom = IGeneratedStore_T_t.GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
 
             #region IGeneratedStore<T>.CopyFrom
-            var copyFrom = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore<Config>.CopyFrom)}", virtualMemberMethod, null, new[] { type });
+            var copyFrom = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore<Config>.CopyFrom)}", virtualMemberMethod, null, new[] { type, typeof(bool) });
             typeBuilder.DefineMethodOverride(copyFrom, IGeneratedStore_T_CopyFrom);
 
             {
                 var il = copyFrom.GetILGenerator();
 
+                var startLock = il.DefineLabel();
+                il.Emit(OpCodes.Ldarg_2);
+                il.Emit(OpCodes.Brfalse, startLock);
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Call, Impl.ImplTakeWriteMethod); // take the write lock
+                il.MarkLabel(startLock);
 
                 var GetLocal = MakeGetLocal(il);
 
@@ -712,7 +716,7 @@ namespace IPA.Config.Stores
                     EmitStore(il, member, il =>
                     {
                         EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
-                        EmitCorrectMember(il, member, GetLocal);
+                        EmitCorrectMember(il, member, false, GetLocal);
                     });
 
                     il.BeginCatchBlock(typeof(Exception));
@@ -722,9 +726,12 @@ namespace IPA.Config.Stores
                     il.EndExceptionBlock();
                 }
 
+                var endLock = il.DefineLabel();
+                il.Emit(OpCodes.Ldarg_2);
+                il.Emit(OpCodes.Brfalse, endLock);
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Call, Impl.ImplReleaseWriteMethod); // release write lock
-
+                il.MarkLabel(endLock);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -855,6 +862,7 @@ namespace IPA.Config.Stores
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Ldc_I4_1);
                     il.Emit(OpCodes.Call, copyFrom); // call internal
 
                     il.Emit(OpCodes.Ldarg_0);
@@ -922,7 +930,7 @@ namespace IPA.Config.Stores
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
-                    EmitCorrectMember(il, member, GetLocal);
+                    EmitCorrectMember(il, member, false, GetLocal);
                     il.Emit(OpCodes.Call, set);
 
                     il.BeginFinallyBlock();
@@ -998,7 +1006,7 @@ namespace IPA.Config.Stores
         }
 
         // expects start value on stack, exits with final value on stack
-        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
+        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, GetLocal GetLocal)
         {
             if (!NeedsCorrection(member)) return;
 
@@ -1012,7 +1020,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
             }
 
-            // TODO: impl
+            // TODO: impl the rest of this
 
             // currently the only thing for this is where expect == Map, so do generate shit
             il.Emit(OpCodes.Dup);
@@ -1025,6 +1033,7 @@ namespace IPA.Config.Stores
             EmitCreateChildGenerated(il, member.Type);
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Ldloc, valLocal);
+            il.Emit(shouldLock ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
             il.Emit(OpCodes.Callvirt, copyFrom);
 
             if (member.IsNullable)
@@ -1034,7 +1043,7 @@ namespace IPA.Config.Stores
         }
 
         // expects the this param to be on the stack
-        private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
+        private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member, bool shouldLock, GetLocal GetLocal)
         {
             if (!NeedsCorrection(member)) return;
 
@@ -1043,7 +1052,7 @@ namespace IPA.Config.Stores
             EmitStore(il, member, il =>
             {
                 EmitLoad(il, member); // load the member
-                EmitCorrectMember(il, member, GetLocal); // correct it
+                EmitCorrectMember(il, member, shouldLock, GetLocal); // correct it
             });
         }
 

@@ -35,7 +35,7 @@ namespace IPA.Config.Stores.Converters
                 else
                 {
                     var newObj = Create(null);
-                    newObj.CopyFrom(obj);
+                    newObj.CopyFrom(obj, false); // don't use lock because it won't be used
                     return newObj.Serialize();
                 }
             }
