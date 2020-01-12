@@ -29,15 +29,15 @@ namespace IPA.Utilities
         /// <summary>
         /// Gets the value of a field.
         /// </summary>
-        /// <typeparam name="T">the type of the field (result casted)</typeparam>
-        /// <typeparam name="U">the type to get the field from</typeparam>
+        /// <typeparam name="T">the type to get the field from</typeparam>
+        /// <typeparam name="U">the type of the field (result casted)</typeparam>
         /// <param name="obj">the object instance to pull from</param>
         /// <param name="fieldName">the name of the field to read</param>
         /// <returns>the value of the field</returns>
-        /// <exception cref="MissingFieldException">if <paramref name="fieldName"/> does not exist on <typeparamref name="U"/></exception>
+        /// <exception cref="MissingFieldException">if <paramref name="fieldName"/> does not exist on <typeparamref name="T"/></exception>
         /// <seealso cref="FieldAccessor{T, U}.Get(ref T, string)"/>
-        public static T GetField<T, U>(this U obj, string fieldName)
-            => FieldAccessor<U, T>.Get(ref obj, fieldName);
+        public static U GetField<U, T>(this T obj, string fieldName)
+            => FieldAccessor<T, U>.Get(ref obj, fieldName);
 
         /// <summary>
         /// Sets a property on the target object, as gotten from <typeparamref name="T"/>.
@@ -62,7 +62,7 @@ namespace IPA.Utilities
         /// <returns>the value of the property</returns>
         /// <exception cref="MissingMemberException">if <paramref name="propertyName"/> does not exist on <typeparamref name="T"/></exception>
         /// <seealso cref="PropertyAccessor{T, U}.Get(ref T, string)"/>
-        public static U GetProperty<T, U>(this T obj, string propertyName)
+        public static U GetProperty<U, T>(this T obj, string propertyName)
             => PropertyAccessor<T, U>.Get(ref obj, propertyName);
 
         /// <summary>
@@ -73,27 +73,13 @@ namespace IPA.Utilities
         /// <param name="methodName">the method's name</param>
         /// <param name="args">the method arguments</param>
         /// <returns>the return value</returns>
-        /// <exception cref="ArgumentException">if <paramref name="methodName"/> does not exist on <typeparamref name="T"/></exception>
-        public static object InvokeMethod<T>(this T obj, string methodName, params object[] args)
+        /// <exception cref="MissingMethodException">if <paramref name="methodName"/> does not exist on <typeparamref name="T"/></exception>
+        public static U InvokeMethod<U, T>(this T obj, string methodName, params object[] args)
         {
             var dynMethod = typeof(T).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (dynMethod == null) throw new ArgumentException($"Method {methodName} does not exist", nameof(methodName));
-            return dynMethod?.Invoke(obj, args);
+            if (dynMethod == null) throw new MissingMethodException($"Method {methodName} does not exist", nameof(methodName));
+            return (U)dynMethod?.Invoke(obj, args);
         }
-
-        /// <summary>
-        /// Invokes a method from <typeparamref name="U"/> on an object.
-        /// </summary>
-        /// <typeparam name="T">the return type</typeparam>
-        /// <typeparam name="U">the type to search for the method on</typeparam>
-        /// <param name="obj">the object instance</param>
-        /// <param name="methodName">the method name to call</param>
-        /// <param name="methodArgs">the method's arguments</param>
-        /// <returns>the return value</returns>
-        /// <exception cref="ArgumentException">if <paramref name="methodName"/> does not exist on <typeparamref name="U"/></exception>
-        /// <seealso cref="InvokeMethod{T}(T, string, object[])"/>
-        public static T InvokeMethod<T, U>(this U obj, string methodName, params object[] methodArgs)
-            => (T)InvokeMethod(obj, methodName, methodArgs);
 
         /// <summary>
         /// Copies a component <paramref name="original"/> to a component of <paramref name="overridingType"/> on the destination <see cref="GameObject"/>.
