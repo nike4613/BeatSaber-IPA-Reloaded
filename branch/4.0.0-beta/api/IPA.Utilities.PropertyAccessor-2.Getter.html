@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum Logger.Level
+    <title>Delegate PropertyAccessor&lt;T, U&gt;.Getter
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum Logger.Level
+    <meta name="title" content="Delegate PropertyAccessor&lt;T, U&gt;.Getter
    ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -79,90 +79,72 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="IPA.Logging.Logger.Level">
+            <article class="content wrap" id="_content" data-uid="IPA.Utilities.PropertyAccessor`2.Getter">
   
   
-  <h1 id="IPA_Logging_Logger_Level" data-uid="IPA.Logging.Logger.Level" class="text-break">Enum Logger.Level
+  <h1 id="IPA_Utilities_PropertyAccessor_2_Getter" data-uid="IPA.Utilities.PropertyAccessor`2.Getter" class="text-break">Delegate PropertyAccessor&lt;T, U&gt;.Getter
   </h1>
-  <div class="markdown level0 summary"><p>An enum specifying the level of the message. Resembles Syslog.</p>
+  <div class="markdown level0 summary"><p>A getter for a property.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Logging.html">IPA.Logging</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
-  <h5 id="IPA_Logging_Logger_Level_syntax">Syntax</h5>
+  <h5 id="IPA_Utilities_PropertyAccessor_2_Getter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum Level : byte</code></pre>
+    <pre><code class="lang-csharp hljs">public delegate U Getter(T obj);</code></pre>
   </div>
-  <h3 id="fields">Fields
-  </h3>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
+        <th>Type</th>
         <th>Name</th>
         <th>Description</th>
       </tr>
-    <thead>
+    </thead>
     <tbody>
       <tr>
-        <td id="IPA_Logging_Logger_Level_Critical">Critical</td>
-        <td><p>A critical error message.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_Debug">Debug</td>
-        <td><p>A debug message.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_Error">Error</td>
-        <td><p>An error message.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_Info">Info</td>
-        <td><p>An informational message.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_None">None</td>
-        <td><p>No associated level. These never get shown.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_Notice">Notice</td>
-        <td><p>A notice. More significant than Info, but less than a warning.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_Trace">Trace</td>
-        <td><p>A trace message. These are ignored <em>incredibly</em> early.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="IPA_Logging_Logger_Level_Warning">Warning</td>
-        <td><p>A warning message.</p>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>the object it is a member of</p>
 </td>
       </tr>
     </tbody>
-  </thead></thead></table>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">U</span></td>
+        <td><p>the value of the property</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;Logger.Level, U&gt;(String, U)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;T, Logger.Level&gt;(String)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;T, U&gt;(U, String)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;Logger.Level, U&gt;(String, U)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___0_System_String_">ReflectionUtil.GetProperty&lt;Logger.Level, U&gt;(String)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___0_System_String_">ReflectionUtil.GetProperty&lt;T, U&gt;(T, String)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__1___0_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;Logger.Level&gt;(String, Object[])</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__1___0_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T&gt;(T, String, Object[])</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T, Logger.Level&gt;(String, Object[])</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;T, U&gt;(U, String, Object[])</a>
   </div>
 </article>
           </div>
@@ -172,10 +154,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Logging_Logger_Level.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Level%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_PropertyAccessor_2_Getter.md&amp;value=---%0Auid%3A%20IPA.Utilities.PropertyAccessor%602.Getter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/707a8610a5a05da70ace0f1342987020596a4880/IPA.Loader/Logging/Logger.cs/#L53" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/707a8610a5a05da70ace0f1342987020596a4880/IPA.Loader/Utilities/Accessor.cs/#L135" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

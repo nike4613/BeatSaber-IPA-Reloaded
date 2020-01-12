@@ -4957,6 +4957,224 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Extensions.WithEnding
   nameWithType: Extensions.WithEnding
+- uid: IPA.Utilities.FieldAccessor`2
+  name: FieldAccessor<T, U>
+  href: api/IPA.Utilities.FieldAccessor-2.html
+  commentId: T:IPA.Utilities.FieldAccessor`2
+  name.vb: FieldAccessor(Of T, U)
+  fullName: IPA.Utilities.FieldAccessor<T, U>
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U)
+  nameWithType: FieldAccessor<T, U>
+  nameWithType.vb: FieldAccessor(Of T, U)
+- uid: IPA.Utilities.FieldAccessor`2.Access(`0@,System.String)
+  name: Access(ref T, String)
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Access__0__System_String_
+  commentId: M:IPA.Utilities.FieldAccessor`2.Access(`0@,System.String)
+  name.vb: Access(ByRef T, String)
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Access(ref T, System.String)
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Access(ByRef T, System.String)
+  nameWithType: FieldAccessor<T, U>.Access(ref T, String)
+  nameWithType.vb: FieldAccessor(Of T, U).Access(ByRef T, String)
+- uid: IPA.Utilities.FieldAccessor`2.Access*
+  name: Access
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Access_
+  commentId: Overload:IPA.Utilities.FieldAccessor`2.Access
+  isSpec: "True"
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Access
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Access
+  nameWithType: FieldAccessor<T, U>.Access
+  nameWithType.vb: FieldAccessor(Of T, U).Access
+- uid: IPA.Utilities.FieldAccessor`2.Accessor
+  name: FieldAccessor<T, U>.Accessor
+  href: api/IPA.Utilities.FieldAccessor-2.Accessor.html
+  commentId: T:IPA.Utilities.FieldAccessor`2.Accessor
+  name.vb: FieldAccessor(Of T, U).Accessor
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Accessor
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Accessor
+  nameWithType: FieldAccessor<T, U>.Accessor
+  nameWithType.vb: FieldAccessor(Of T, U).Accessor
+- uid: IPA.Utilities.FieldAccessor`2.Get(`0,System.String)
+  name: Get(T, String)
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Get__0_System_String_
+  commentId: M:IPA.Utilities.FieldAccessor`2.Get(`0,System.String)
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Get(T, System.String)
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Get(T, System.String)
+  nameWithType: FieldAccessor<T, U>.Get(T, String)
+  nameWithType.vb: FieldAccessor(Of T, U).Get(T, String)
+- uid: IPA.Utilities.FieldAccessor`2.Get(`0@,System.String)
+  name: Get(ref T, String)
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Get__0__System_String_
+  commentId: M:IPA.Utilities.FieldAccessor`2.Get(`0@,System.String)
+  name.vb: Get(ByRef T, String)
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Get(ref T, System.String)
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Get(ByRef T, System.String)
+  nameWithType: FieldAccessor<T, U>.Get(ref T, String)
+  nameWithType.vb: FieldAccessor(Of T, U).Get(ByRef T, String)
+- uid: IPA.Utilities.FieldAccessor`2.Get*
+  name: Get
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Get_
+  commentId: Overload:IPA.Utilities.FieldAccessor`2.Get
+  isSpec: "True"
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Get
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Get
+  nameWithType: FieldAccessor<T, U>.Get
+  nameWithType.vb: FieldAccessor(Of T, U).Get
+- uid: IPA.Utilities.FieldAccessor`2.GetAccessor(System.String)
+  name: GetAccessor(String)
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_GetAccessor_System_String_
+  commentId: M:IPA.Utilities.FieldAccessor`2.GetAccessor(System.String)
+  fullName: IPA.Utilities.FieldAccessor<T, U>.GetAccessor(System.String)
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).GetAccessor(System.String)
+  nameWithType: FieldAccessor<T, U>.GetAccessor(String)
+  nameWithType.vb: FieldAccessor(Of T, U).GetAccessor(String)
+- uid: IPA.Utilities.FieldAccessor`2.GetAccessor*
+  name: GetAccessor
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_GetAccessor_
+  commentId: Overload:IPA.Utilities.FieldAccessor`2.GetAccessor
+  isSpec: "True"
+  fullName: IPA.Utilities.FieldAccessor<T, U>.GetAccessor
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).GetAccessor
+  nameWithType: FieldAccessor<T, U>.GetAccessor
+  nameWithType.vb: FieldAccessor(Of T, U).GetAccessor
+- uid: IPA.Utilities.FieldAccessor`2.Set(`0,System.String,`1)
+  name: Set(T, String, U)
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Set__0_System_String__1_
+  commentId: M:IPA.Utilities.FieldAccessor`2.Set(`0,System.String,`1)
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Set(T, System.String, U)
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Set(T, System.String, U)
+  nameWithType: FieldAccessor<T, U>.Set(T, String, U)
+  nameWithType.vb: FieldAccessor(Of T, U).Set(T, String, U)
+- uid: IPA.Utilities.FieldAccessor`2.Set(`0@,System.String,`1)
+  name: Set(ref T, String, U)
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Set__0__System_String__1_
+  commentId: M:IPA.Utilities.FieldAccessor`2.Set(`0@,System.String,`1)
+  name.vb: Set(ByRef T, String, U)
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Set(ref T, System.String, U)
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Set(ByRef T, System.String, U)
+  nameWithType: FieldAccessor<T, U>.Set(ref T, String, U)
+  nameWithType.vb: FieldAccessor(Of T, U).Set(ByRef T, String, U)
+- uid: IPA.Utilities.FieldAccessor`2.Set*
+  name: Set
+  href: api/IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Set_
+  commentId: Overload:IPA.Utilities.FieldAccessor`2.Set
+  isSpec: "True"
+  fullName: IPA.Utilities.FieldAccessor<T, U>.Set
+  fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Set
+  nameWithType: FieldAccessor<T, U>.Set
+  nameWithType.vb: FieldAccessor(Of T, U).Set
+- uid: IPA.Utilities.PropertyAccessor`2
+  name: PropertyAccessor<T, U>
+  href: api/IPA.Utilities.PropertyAccessor-2.html
+  commentId: T:IPA.Utilities.PropertyAccessor`2
+  name.vb: PropertyAccessor(Of T, U)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U)
+  nameWithType: PropertyAccessor<T, U>
+  nameWithType.vb: PropertyAccessor(Of T, U)
+- uid: IPA.Utilities.PropertyAccessor`2.Get(`0,System.String)
+  name: Get(T, String)
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Get__0_System_String_
+  commentId: M:IPA.Utilities.PropertyAccessor`2.Get(`0,System.String)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Get(T, System.String)
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Get(T, System.String)
+  nameWithType: PropertyAccessor<T, U>.Get(T, String)
+  nameWithType.vb: PropertyAccessor(Of T, U).Get(T, String)
+- uid: IPA.Utilities.PropertyAccessor`2.Get(`0@,System.String)
+  name: Get(ref T, String)
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Get__0__System_String_
+  commentId: M:IPA.Utilities.PropertyAccessor`2.Get(`0@,System.String)
+  name.vb: Get(ByRef T, String)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Get(ref T, System.String)
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Get(ByRef T, System.String)
+  nameWithType: PropertyAccessor<T, U>.Get(ref T, String)
+  nameWithType.vb: PropertyAccessor(Of T, U).Get(ByRef T, String)
+- uid: IPA.Utilities.PropertyAccessor`2.Get*
+  name: Get
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Get_
+  commentId: Overload:IPA.Utilities.PropertyAccessor`2.Get
+  isSpec: "True"
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Get
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Get
+  nameWithType: PropertyAccessor<T, U>.Get
+  nameWithType.vb: PropertyAccessor(Of T, U).Get
+- uid: IPA.Utilities.PropertyAccessor`2.GetGetter(System.String)
+  name: GetGetter(String)
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_GetGetter_System_String_
+  commentId: M:IPA.Utilities.PropertyAccessor`2.GetGetter(System.String)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.GetGetter(System.String)
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).GetGetter(System.String)
+  nameWithType: PropertyAccessor<T, U>.GetGetter(String)
+  nameWithType.vb: PropertyAccessor(Of T, U).GetGetter(String)
+- uid: IPA.Utilities.PropertyAccessor`2.GetGetter*
+  name: GetGetter
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_GetGetter_
+  commentId: Overload:IPA.Utilities.PropertyAccessor`2.GetGetter
+  isSpec: "True"
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.GetGetter
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).GetGetter
+  nameWithType: PropertyAccessor<T, U>.GetGetter
+  nameWithType.vb: PropertyAccessor(Of T, U).GetGetter
+- uid: IPA.Utilities.PropertyAccessor`2.GetSetter(System.String)
+  name: GetSetter(String)
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_GetSetter_System_String_
+  commentId: M:IPA.Utilities.PropertyAccessor`2.GetSetter(System.String)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.GetSetter(System.String)
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).GetSetter(System.String)
+  nameWithType: PropertyAccessor<T, U>.GetSetter(String)
+  nameWithType.vb: PropertyAccessor(Of T, U).GetSetter(String)
+- uid: IPA.Utilities.PropertyAccessor`2.GetSetter*
+  name: GetSetter
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_GetSetter_
+  commentId: Overload:IPA.Utilities.PropertyAccessor`2.GetSetter
+  isSpec: "True"
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.GetSetter
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).GetSetter
+  nameWithType: PropertyAccessor<T, U>.GetSetter
+  nameWithType.vb: PropertyAccessor(Of T, U).GetSetter
+- uid: IPA.Utilities.PropertyAccessor`2.Getter
+  name: PropertyAccessor<T, U>.Getter
+  href: api/IPA.Utilities.PropertyAccessor-2.Getter.html
+  commentId: T:IPA.Utilities.PropertyAccessor`2.Getter
+  name.vb: PropertyAccessor(Of T, U).Getter
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Getter
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Getter
+  nameWithType: PropertyAccessor<T, U>.Getter
+  nameWithType.vb: PropertyAccessor(Of T, U).Getter
+- uid: IPA.Utilities.PropertyAccessor`2.Set(`0,System.String,`1)
+  name: Set(T, String, U)
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Set__0_System_String__1_
+  commentId: M:IPA.Utilities.PropertyAccessor`2.Set(`0,System.String,`1)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Set(T, System.String, U)
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Set(T, System.String, U)
+  nameWithType: PropertyAccessor<T, U>.Set(T, String, U)
+  nameWithType.vb: PropertyAccessor(Of T, U).Set(T, String, U)
+- uid: IPA.Utilities.PropertyAccessor`2.Set(`0@,System.String,`1)
+  name: Set(ref T, String, U)
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Set__0__System_String__1_
+  commentId: M:IPA.Utilities.PropertyAccessor`2.Set(`0@,System.String,`1)
+  name.vb: Set(ByRef T, String, U)
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Set(ref T, System.String, U)
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Set(ByRef T, System.String, U)
+  nameWithType: PropertyAccessor<T, U>.Set(ref T, String, U)
+  nameWithType.vb: PropertyAccessor(Of T, U).Set(ByRef T, String, U)
+- uid: IPA.Utilities.PropertyAccessor`2.Set*
+  name: Set
+  href: api/IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Set_
+  commentId: Overload:IPA.Utilities.PropertyAccessor`2.Set
+  isSpec: "True"
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Set
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Set
+  nameWithType: PropertyAccessor<T, U>.Set
+  nameWithType.vb: PropertyAccessor(Of T, U).Set
+- uid: IPA.Utilities.PropertyAccessor`2.Setter
+  name: PropertyAccessor<T, U>.Setter
+  href: api/IPA.Utilities.PropertyAccessor-2.Setter.html
+  commentId: T:IPA.Utilities.PropertyAccessor`2.Setter
+  name.vb: PropertyAccessor(Of T, U).Setter
+  fullName: IPA.Utilities.PropertyAccessor<T, U>.Setter
+  fullName.vb: IPA.Utilities.PropertyAccessor(Of T, U).Setter
+  nameWithType: PropertyAccessor<T, U>.Setter
+  nameWithType.vb: PropertyAccessor(Of T, U).Setter
 - uid: IPA.Utilities.Ref
   name: Ref
   href: api/IPA.Utilities.Ref.html
@@ -5145,15 +5363,6 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.GetField
   nameWithType: ReflectionUtil.GetField
-- uid: IPA.Utilities.ReflectionUtil.GetField``1(System.Object,System.String)
-  name: GetField<T>(Object, String)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__1_System_Object_System_String_
-  commentId: M:IPA.Utilities.ReflectionUtil.GetField``1(System.Object,System.String)
-  name.vb: GetField(Of T)(Object, String)
-  fullName: IPA.Utilities.ReflectionUtil.GetField<T>(System.Object, System.String)
-  fullName.vb: IPA.Utilities.ReflectionUtil.GetField(Of T)(System.Object, System.String)
-  nameWithType: ReflectionUtil.GetField<T>(Object, String)
-  nameWithType.vb: ReflectionUtil.GetField(Of T)(Object, String)
 - uid: IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)
   name: GetField<T, U>(U, String)
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_
@@ -5163,15 +5372,22 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.GetField(Of T, U)(U, System.String)
   nameWithType: ReflectionUtil.GetField<T, U>(U, String)
   nameWithType.vb: ReflectionUtil.GetField(Of T, U)(U, String)
-- uid: IPA.Utilities.ReflectionUtil.InvokeMethod(System.Object,System.String,System.Object[])
-  name: InvokeMethod(Object, String, Object[])
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod_System_Object_System_String_System_Object___
-  commentId: M:IPA.Utilities.ReflectionUtil.InvokeMethod(System.Object,System.String,System.Object[])
-  name.vb: InvokeMethod(Object, String, Object())
-  fullName: IPA.Utilities.ReflectionUtil.InvokeMethod(System.Object, System.String, System.Object[])
-  fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(System.Object, System.String, System.Object())
-  nameWithType: ReflectionUtil.InvokeMethod(Object, String, Object[])
-  nameWithType.vb: ReflectionUtil.InvokeMethod(Object, String, Object())
+- uid: IPA.Utilities.ReflectionUtil.GetProperty*
+  name: GetProperty
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty_
+  commentId: Overload:IPA.Utilities.ReflectionUtil.GetProperty
+  isSpec: "True"
+  fullName: IPA.Utilities.ReflectionUtil.GetProperty
+  nameWithType: ReflectionUtil.GetProperty
+- uid: IPA.Utilities.ReflectionUtil.GetProperty``2(``0,System.String)
+  name: GetProperty<T, U>(T, String)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___0_System_String_
+  commentId: M:IPA.Utilities.ReflectionUtil.GetProperty``2(``0,System.String)
+  name.vb: GetProperty(Of T, U)(T, String)
+  fullName: IPA.Utilities.ReflectionUtil.GetProperty<T, U>(T, System.String)
+  fullName.vb: IPA.Utilities.ReflectionUtil.GetProperty(Of T, U)(T, System.String)
+  nameWithType: ReflectionUtil.GetProperty<T, U>(T, String)
+  nameWithType.vb: ReflectionUtil.GetProperty(Of T, U)(T, String)
 - uid: IPA.Utilities.ReflectionUtil.InvokeMethod*
   name: InvokeMethod
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod_
@@ -5188,15 +5404,6 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(Of T)(T, System.String, System.Object())
   nameWithType: ReflectionUtil.InvokeMethod<T>(T, String, Object[])
   nameWithType.vb: ReflectionUtil.InvokeMethod(Of T)(T, String, Object())
-- uid: IPA.Utilities.ReflectionUtil.InvokeMethod``1(System.Object,System.String,System.Object[])
-  name: InvokeMethod<T>(Object, String, Object[])
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__1_System_Object_System_String_System_Object___
-  commentId: M:IPA.Utilities.ReflectionUtil.InvokeMethod``1(System.Object,System.String,System.Object[])
-  name.vb: InvokeMethod(Of T)(Object, String, Object())
-  fullName: IPA.Utilities.ReflectionUtil.InvokeMethod<T>(System.Object, System.String, System.Object[])
-  fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(Of T)(System.Object, System.String, System.Object())
-  nameWithType: ReflectionUtil.InvokeMethod<T>(Object, String, Object[])
-  nameWithType.vb: ReflectionUtil.InvokeMethod(Of T)(Object, String, Object())
 - uid: IPA.Utilities.ReflectionUtil.InvokeMethod``2(``1,System.String,System.Object[])
   name: InvokeMethod<T, U>(U, String, Object[])
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___
@@ -5206,12 +5413,6 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.InvokeMethod(Of T, U)(U, System.String, System.Object())
   nameWithType: ReflectionUtil.InvokeMethod<T, U>(U, String, Object[])
   nameWithType.vb: ReflectionUtil.InvokeMethod(Of T, U)(U, String, Object())
-- uid: IPA.Utilities.ReflectionUtil.SetField(System.Object,System.String,System.Object)
-  name: SetField(Object, String, Object)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField_System_Object_System_String_System_Object_
-  commentId: M:IPA.Utilities.ReflectionUtil.SetField(System.Object,System.String,System.Object)
-  fullName: IPA.Utilities.ReflectionUtil.SetField(System.Object, System.String, System.Object)
-  nameWithType: ReflectionUtil.SetField(Object, String, Object)
 - uid: IPA.Utilities.ReflectionUtil.SetField*
   name: SetField
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField_
@@ -5219,21 +5420,15 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.SetField
   nameWithType: ReflectionUtil.SetField
-- uid: IPA.Utilities.ReflectionUtil.SetField``1(``0,System.String,System.Object)
-  name: SetField<T>(T, String, Object)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__1___0_System_String_System_Object_
-  commentId: M:IPA.Utilities.ReflectionUtil.SetField``1(``0,System.String,System.Object)
-  name.vb: SetField(Of T)(T, String, Object)
-  fullName: IPA.Utilities.ReflectionUtil.SetField<T>(T, System.String, System.Object)
-  fullName.vb: IPA.Utilities.ReflectionUtil.SetField(Of T)(T, System.String, System.Object)
-  nameWithType: ReflectionUtil.SetField<T>(T, String, Object)
-  nameWithType.vb: ReflectionUtil.SetField(Of T)(T, String, Object)
-- uid: IPA.Utilities.ReflectionUtil.SetProperty(System.Object,System.String,System.Object)
-  name: SetProperty(Object, String, Object)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty_System_Object_System_String_System_Object_
-  commentId: M:IPA.Utilities.ReflectionUtil.SetProperty(System.Object,System.String,System.Object)
-  fullName: IPA.Utilities.ReflectionUtil.SetProperty(System.Object, System.String, System.Object)
-  nameWithType: ReflectionUtil.SetProperty(Object, String, Object)
+- uid: IPA.Utilities.ReflectionUtil.SetField``2(``0,System.String,``1)
+  name: SetField<T, U>(T, String, U)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_
+  commentId: M:IPA.Utilities.ReflectionUtil.SetField``2(``0,System.String,``1)
+  name.vb: SetField(Of T, U)(T, String, U)
+  fullName: IPA.Utilities.ReflectionUtil.SetField<T, U>(T, System.String, U)
+  fullName.vb: IPA.Utilities.ReflectionUtil.SetField(Of T, U)(T, System.String, U)
+  nameWithType: ReflectionUtil.SetField<T, U>(T, String, U)
+  nameWithType.vb: ReflectionUtil.SetField(Of T, U)(T, String, U)
 - uid: IPA.Utilities.ReflectionUtil.SetProperty*
   name: SetProperty
   href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty_
@@ -5241,15 +5436,15 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.SetProperty
   nameWithType: ReflectionUtil.SetProperty
-- uid: IPA.Utilities.ReflectionUtil.SetProperty``1(``0,System.String,System.Object)
-  name: SetProperty<T>(T, String, Object)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__1___0_System_String_System_Object_
-  commentId: M:IPA.Utilities.ReflectionUtil.SetProperty``1(``0,System.String,System.Object)
-  name.vb: SetProperty(Of T)(T, String, Object)
-  fullName: IPA.Utilities.ReflectionUtil.SetProperty<T>(T, System.String, System.Object)
-  fullName.vb: IPA.Utilities.ReflectionUtil.SetProperty(Of T)(T, System.String, System.Object)
-  nameWithType: ReflectionUtil.SetProperty<T>(T, String, Object)
-  nameWithType.vb: ReflectionUtil.SetProperty(Of T)(T, String, Object)
+- uid: IPA.Utilities.ReflectionUtil.SetProperty``2(``0,System.String,``1)
+  name: SetProperty<T, U>(T, String, U)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_
+  commentId: M:IPA.Utilities.ReflectionUtil.SetProperty``2(``0,System.String,``1)
+  name.vb: SetProperty(Of T, U)(T, String, U)
+  fullName: IPA.Utilities.ReflectionUtil.SetProperty<T, U>(T, System.String, U)
+  fullName.vb: IPA.Utilities.ReflectionUtil.SetProperty(Of T, U)(T, System.String, U)
+  nameWithType: ReflectionUtil.SetProperty<T, U>(T, String, U)
+  nameWithType.vb: ReflectionUtil.SetProperty(Of T, U)(T, String, U)
 - uid: IPA.Utilities.UnityGame
   name: UnityGame
   href: api/IPA.Utilities.UnityGame.html
