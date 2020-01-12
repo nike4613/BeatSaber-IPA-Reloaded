@@ -134,13 +134,13 @@ namespace IPA.Utilities
         /// </summary>
         /// <param name="obj">the object it is a member of</param>
         /// <returns>the value of the property</returns>
-        public delegate U Getter(T obj);
+        public delegate U Getter(ref T obj);
         /// <summary>
         /// A setter for a property.
         /// </summary>
         /// <param name="obj">the object it is a member of</param>
         /// <param name="val">the new property value</param>
-        public delegate void Setter(T obj, U val);
+        public delegate void Setter(ref T obj, U val);
 
         private static readonly Dictionary<string, (Getter get, Setter set)> props = new Dictionary<string, (Getter get, Setter set)>();
 
@@ -154,10 +154,40 @@ namespace IPA.Utilities
             var setM = prop.GetSetMethod(true);
             Getter getter = null;
             Setter setter = null;
-            if (getM != null)
-                getter = (Getter)Delegate.CreateDelegate(typeof(Getter), getM);
-            if (setM != null)
-                setter = (Setter)Delegate.CreateDelegate(typeof(Setter), setM);
+
+            if (typeof(T).IsValueType)
+            {
+                if (getM != null)
+                    getter = (Getter)Delegate.CreateDelegate(typeof(Getter), getM);
+                if (setM != null)
+                    setter = (Setter)Delegate.CreateDelegate(typeof(Setter), setM);
+            }
+            else
+            {
+                if (getM != null)
+                {
+                    var dyn = new DynamicMethod($"<>_get__{propName}", typeof(U), new[] { typeof(T).MakeByRefType() }, typeof(PropertyAccessor<T, U>), true);
+                    var il = dyn.GetILGenerator();
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldind_Ref);
+                    il.Emit(OpCodes.Tailcall);
+                    il.Emit(getM.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, getM);
+                    il.Emit(OpCodes.Ret);
+                    getter = (Getter)dyn.CreateDelegate(typeof(Getter));
+                }
+                if (setM != null)
+                {
+                    var dyn = new DynamicMethod($"<>_set__{propName}", typeof(void), new[] { typeof(T).MakeByRefType(), typeof(U) }, typeof(PropertyAccessor<T, U>), true);
+                    var il = dyn.GetILGenerator();
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldind_Ref);
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Tailcall);
+                    il.Emit(setM.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, setM);
+                    il.Emit(OpCodes.Ret);
+                    setter = (Setter)dyn.CreateDelegate(typeof(Setter));
+                }
+            }
 
             return (getter, setter);
         }
@@ -197,7 +227,7 @@ namespace IPA.Utilities
         /// <exception cref="MissingMemberException">when the property does not exist</exception>
         /// <seealso cref="Get(T, string)"/>
         /// <seealso cref="GetGetter(string)"/>
-        public static U Get(ref T obj, string name) => GetGetter(name)(obj);
+        public static U Get(ref T obj, string name) => GetGetter(name)(ref obj);
         /// <summary>
         /// Gets the value of the property identified by <paramref name="name"/> on <paramref name="obj"/>.
         /// </summary>
@@ -207,7 +237,7 @@ namespace IPA.Utilities
         /// <exception cref="MissingMemberException">when the property does not exist</exception>
         /// <seealso cref="Get(ref T, string)"/>
         /// <seealso cref="GetGetter(string)"/>
-        public static U Get(T obj, string name) => GetGetter(name)(obj);
+        public static U Get(T obj, string name) => GetGetter(name)(ref obj);
         /// <summary>
         /// Sets the value of the property identified by <paramref name="name"/> on <paramref name="obj"/>.
         /// </summary>
@@ -220,7 +250,7 @@ namespace IPA.Utilities
         /// <exception cref="MissingMemberException">when the property does not exist</exception>
         /// <seealso cref="Set(T, string, U)"/>
         /// <seealso cref="GetSetter(string)"/>
-        public static void Set(ref T obj, string name, U val) => GetSetter(name)(obj, val);
+        public static void Set(ref T obj, string name, U val) => GetSetter(name)(ref obj, val);
         /// <summary>
         /// Sets the value of the property identified by <paramref name="name"/> on <paramref name="obj"/>.
         /// </summary>
@@ -233,6 +263,6 @@ namespace IPA.Utilities
         /// <exception cref="MissingMemberException">when the property does not exist</exception>
         /// <seealso cref="Set(ref T, string, U)"/>
         /// <seealso cref="GetSetter(string)"/>
-        public static void Set(T obj, string name, U val) => GetSetter(name)(obj, val);
+        public static void Set(T obj, string name, U val) => GetSetter(name)(ref obj, val);
     }
 }
