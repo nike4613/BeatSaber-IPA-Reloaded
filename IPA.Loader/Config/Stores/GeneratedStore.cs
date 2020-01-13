@@ -500,7 +500,11 @@ namespace IPA.Config.Stores
 
                 foreach (var member in structure)
                 {
-                    EmitMemberFix(il, member, false, GetLocal);
+                    EmitStore(il, member, il =>
+                    {
+                        EmitLoad(il, member); // load the member
+                        EmitCorrectMember(il, member, false, true, GetLocal); // correct it
+                    });
                 }
 
                 il.Emit(OpCodes.Pop);
@@ -716,7 +720,7 @@ namespace IPA.Config.Stores
                     EmitStore(il, member, il =>
                     {
                         EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
-                        EmitCorrectMember(il, member, false, GetLocal);
+                        EmitCorrectMember(il, member, false, false, GetLocal);
                     });
 
                     il.BeginCatchBlock(typeof(Exception));
@@ -930,7 +934,7 @@ namespace IPA.Config.Stores
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
-                    EmitCorrectMember(il, member, false, GetLocal);
+                    EmitCorrectMember(il, member, false, false, GetLocal);
                     il.Emit(OpCodes.Call, set);
 
                     il.BeginFinallyBlock();
@@ -1006,7 +1010,7 @@ namespace IPA.Config.Stores
         }
 
         // expects start value on stack, exits with final value on stack
-        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, GetLocal GetLocal)
+        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, GetLocal GetLocal)
         {
             if (!NeedsCorrection(member)) return;
 
@@ -1023,37 +1027,39 @@ namespace IPA.Config.Stores
             // TODO: impl the rest of this
 
             // currently the only thing for this is where expect == Map, so do generate shit
-            il.Emit(OpCodes.Dup);
-            il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
-            il.Emit(OpCodes.Brtrue_S, endLabel); // our input is already something we like
-
             var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(member.Type).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
+            var noCreate = il.DefineLabel();
             var valLocal = GetLocal(member.Type);
+
+            if (!alwaysNew)
+            {
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+                il.Emit(OpCodes.Brtrue_S, endLabel); // our input is already something we like
+            }
             il.Emit(OpCodes.Stloc, valLocal);
+            if (!alwaysNew)
+            {
+                EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_0));
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+                il.Emit(OpCodes.Brtrue_S, noCreate);
+                il.Emit(OpCodes.Pop);
+            }
             EmitCreateChildGenerated(il, member.Type);
+            il.MarkLabel(noCreate);
+
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Ldloc, valLocal);
             il.Emit(shouldLock ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
             il.Emit(OpCodes.Callvirt, copyFrom);
 
+            // TODO: impl the rest of this
+
             if (member.IsNullable)
                 il.Emit(OpCodes.Newobj, member.Nullable_Construct);
 
             il.MarkLabel(endLabel);
-        }
-
-        // expects the this param to be on the stack
-        private static void EmitMemberFix(ILGenerator il, SerializedMemberInfo member, bool shouldLock, GetLocal GetLocal)
-        {
-            if (!NeedsCorrection(member)) return;
-
-            //var local = GetLocal(member.Type);
-
-            EmitStore(il, member, il =>
-            {
-                EmitLoad(il, member); // load the member
-                EmitCorrectMember(il, member, shouldLock, GetLocal); // correct it
-            });
         }
 
         #region Utility
@@ -1347,13 +1353,22 @@ namespace IPA.Config.Stores
             return typeof(Map); // default for various objects
         }
 
-        private static void EmitDeserializeGeneratedValue(ILGenerator il, Type targetType, Type srcType, GetLocal GetLocal)
+        private static void EmitDeserializeGeneratedValue(ILGenerator il, SerializedMemberInfo member, Type srcType, GetLocal GetLocal)
         {
             var IGeneratedStore_Deserialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Deserialize));
 
             var valuel = GetLocal(srcType, 0);
+            var noCreate = il.DefineLabel();
+
             il.Emit(OpCodes.Stloc, valuel);
-            EmitCreateChildGenerated(il, targetType);
+            EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_0));
+            il.Emit(OpCodes.Dup);
+            il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+            il.Emit(OpCodes.Brtrue_S, noCreate);
+            il.Emit(OpCodes.Pop);
+            EmitCreateChildGenerated(il, member.Type);
+            il.MarkLabel(noCreate);
+
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Ldloc, valuel);
             il.Emit(OpCodes.Callvirt, IGeneratedStore_Deserialize);
@@ -1361,13 +1376,13 @@ namespace IPA.Config.Stores
 
         private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, GetLocal GetLocal)
         {
-            EmitDeserializeValue(il, member.NullableWrappedType, expected, GetLocal);
+            EmitDeserializeValue(il, member, member.NullableWrappedType, expected, GetLocal);
             il.Emit(OpCodes.Newobj, member.Nullable_Construct);
         }
 
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
-        private static void EmitDeserializeValue(ILGenerator il, Type targetType, Type expected, GetLocal GetLocal)
+        private static void EmitDeserializeValue(ILGenerator il, SerializedMemberInfo member, Type targetType, Type expected, GetLocal GetLocal)
         {
             if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
 
@@ -1401,7 +1416,7 @@ namespace IPA.Config.Stores
             } // TODO: implement stuff for lists and maps of various types (probably call out somewhere else to figure out what to do)
             else if (expected == typeof(Map))
             {
-                EmitDeserializeGeneratedValue(il, targetType, expected, GetLocal);
+                EmitDeserializeGeneratedValue(il, member, expected, GetLocal);
             }
             else
             {
@@ -1540,7 +1555,7 @@ namespace IPA.Config.Stores
             var local = GetLocal(member.Type, 0);
             if (member.HasConverter) EmitDeserializeConverter(il, member, nextLabel, GetLocal);
             else if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
-            else EmitDeserializeValue(il, member.Type, expectType, GetLocal);
+            else EmitDeserializeValue(il, member, member.Type, expectType, GetLocal);
             il.Emit(OpCodes.Stloc, local);
             EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local));
         }
