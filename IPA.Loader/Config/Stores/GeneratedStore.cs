@@ -1256,18 +1256,22 @@ namespace IPA.Config.Stores
 
                 if (member.IsGenericConverter)
                 {
-                    var toValue = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.ToValue),
+                    var toValueBase = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.ToValue),
                         new[] { member.ConverterTarget, typeof(object) });
+                    var toValue = member.Converter.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                        .FirstOrDefault(m => m.GetBaseDefinition() == toValueBase) ?? toValueBase;
                     il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Callvirt, toValue); // TODO: figure out how to devirtualize this
+                    il.Emit(OpCodes.Call, toValue);
                 }
                 else
                 {
-                    var toValue = typeof(IValueConverter).GetMethod(nameof(IValueConverter.ToValue),
+                    var toValueBase = typeof(IValueConverter).GetMethod(nameof(IValueConverter.ToValue),
                         new[] { typeof(object), typeof(object) });
-                        il.Emit(OpCodes.Box);
+                    var toValue = member.Converter.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                        .FirstOrDefault(m => m.GetBaseDefinition() == toValueBase) ?? toValueBase;
+                    il.Emit(OpCodes.Box);
                     il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Callvirt, toValue);
+                    il.Emit(OpCodes.Call, toValue);
                 }
 
                 il.Emit(OpCodes.Stloc, valLocal);
@@ -1438,15 +1442,19 @@ namespace IPA.Config.Stores
 
             if (member.IsGenericConverter)
             {
-                var fromValue = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.FromValue),
+                var fromValueBase = member.ConverterBase.GetMethod(nameof(ValueConverter<int>.FromValue),
                     new[] { typeof(Value), typeof(object) });
-                il.Emit(OpCodes.Callvirt, fromValue);
+                var fromValue = member.Converter.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                    .FirstOrDefault(m => m.GetBaseDefinition() == fromValueBase) ?? fromValueBase;
+                il.Emit(OpCodes.Call, fromValue);
             }
             else
             {
-                var fromValue = typeof(IValueConverter).GetMethod(nameof(IValueConverter.FromValue),
+                var fromValueBase = typeof(IValueConverter).GetMethod(nameof(IValueConverter.FromValue),
                     new[] { typeof(Value), typeof(object) });
-                il.Emit(OpCodes.Callvirt, fromValue);
+                var fromValue = member.Converter.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                    .FirstOrDefault(m => m.GetBaseDefinition() == fromValueBase) ?? fromValueBase;
+                il.Emit(OpCodes.Call, fromValue);
                 if (member.Type.IsValueType)
                     il.Emit(OpCodes.Unbox);
             }
