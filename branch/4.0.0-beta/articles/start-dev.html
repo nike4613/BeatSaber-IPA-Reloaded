@@ -243,6 +243,8 @@ your only interaction with the user&#39;s preferences.</p>
 that the file that will be loaded from will be <code>UserData/Demo Plugin.json</code> for our demo plugin. You can, however, control both of those by
 applying attributes to the <a class="xref" href="../api/IPA.Config.Config.html">Config</a> parameter, namely <a class="xref" href="../api/IPA.Config.Config.NameAttribute.html">Config.NameAttribute</a> to control the name, and
 <a class="xref" href="../api/IPA.Config.Config.PreferAttribute.html">Config.PreferAttribute</a> to control the type. If the type preferences aren&#39;t registered though, it will just fall back to JSON.</p>
+<p>The config&#39;s behaviour can be found either later here, or in the remarks section of
+<a class="xref" href="../api/IPA.Config.Stores.GeneratedExtension.html#IPA_Config_Stores_GeneratedExtension_Generated__1_IPA_Config_Config_System_Boolean_">Generated&lt;T&gt;(Config, Boolean)</a>.</p>
 <p>At this point, your main plugin file should look something like this:</p>
 <pre><code class="lang-cs" name="Plugin.cs">using System;
 using IPA;
@@ -356,7 +358,158 @@ namespace Demo
     }
 }
 </code></pre><hr>
-</article>
+<p>I mentioned earlier that your config file will be automatically reloaded -- but isn&#39;t that a bad thing? Doesn&#39;t that mean that the config could change
+under your feet without you having a way to tell?</p>
+<p>Not so- I just haven&#39;t introduced the mechanism.</p>
+<p>Define a public or protected virtual method named <code>OnReload</code>:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#on-reload">public virtual void OnReload()
+{
+    // this is called whenever the config file is reloaded from disk
+    // use it to tell all of your systems that something has changed
+    
+    // this is called off of the main thread, and is not safe to interact
+    //   with Unity in
+}
+</code></pre><p>This method will be called whenever BSIPA reloads your config from disk. When it is called, the object will already have been populated. Use it to
+notify all of your systems that configuration has changed.</p>
+<hr>
+<p>Now, we know how to read from disk, and how to use unusual types, but how do we write it back to disk?</p>
+<p>This config system is based on automatic saving (though we haven&#39;t quite gotten to the <em>automatic</em> part), and so the config is written to disk whenever
+the system recognizes that something has changed. To tell is as much, define a public or protected virtual method named <code>Changed</code>:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#changed">public virtual void Changed()
+{
+    // this is called whenever one of the virtual properties is changed
+    // can be called to signal that the content has been changed
+}
+</code></pre><p>This method can be called to tell BSIPA that this config object has changed. Later, when we enable automated change tracking, this will also be called
+when one of the config&#39;s members changes. You can use this body to validate something or, for example, write a timestamp for last change.</p>
+<hr>
+<p>I just mentioned automated change tracking -- lets add that now.</p>
+<p>To do this, just make all of the properties virtual, like so:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#auto-props">public class SubThingsObject
+{
+    public virtual double DoubleValue { get; set; } = 2.718281828459045;
+}
+
+public virtual int IntValue { get; set; } = 42;
+
+public virtual float FloatValue { get; set; } = 3.14159f;
+
+[NonNullable]
+public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+[UseConverter(typeof(ListConverter&lt;string&gt;))]
+public virtual List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+[UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+public virtual HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+</code></pre><p>Now, whenever you assign to any of those properties, your <code>Changed</code> method will be called, and the config object will be marked as changed and will be
+written to disk. Unfortunately, any properties that can be modified while only using the property getter do not trigger this, and so if you change any
+collections for example, you will have to manually call <code>Changed</code>.</p>
+<p>After doing all this, your config class should look something like this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+
+namespace Demo
+{
+    public class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public class SubThingsObject
+        {
+            public virtual double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
+        public virtual int IntValue { get; set; } = 42;
+
+        public virtual float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+        [UseConverter(typeof(ListConverter&lt;string&gt;))]
+        public virtual List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+        [UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+        public virtual HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+
+        public virtual void Changed()
+        {
+            // this is called whenever one of the virtual properties is changed
+            // can be called to signal that the content has been changed
+        }
+
+        public virtual void OnReload()
+        {
+            // this is called whenever the config file is reloaded from disk
+            // use it to tell all of your systems that something has changed
+            
+            // this is called off of the main thread, and is not safe to interact
+            //   with Unity in
+        }
+    }
+}
+</code></pre><hr>
+<p>There is one more major problem with this though: the main class is still public. Most configs shouldn&#39;t be. Lets make it internal.</p>
+<p>So we make it internal:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#internal">internal class PluginConfig
+</code></pre><p>But to make it actually work, we add this outside the namespace declaration:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#internals-visible">using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo(GeneratedExtension.AssemblyVisibilityTarget)]
+</code></pre><p>And now our full file looks like this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+
+[assembly: InternalsVisibleTo(GeneratedExtension.AssemblyVisibilityTarget)]
+
+namespace Demo
+{
+    internal class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public class SubThingsObject
+        {
+            public virtual double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
+        public virtual int IntValue { get; set; } = 42;
+
+        public virtual float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+        [UseConverter(typeof(ListConverter&lt;string&gt;))]
+        public virtual List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+        [UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+        public virtual HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+
+        public virtual void Changed()
+        {
+            // this is called whenever one of the virtual properties is changed
+            // can be called to signal that the content has been changed
+        }
+
+        public virtual void OnReload()
+        {
+            // this is called whenever the config file is reloaded from disk
+            // use it to tell all of your systems that something has changed
+            
+            // this is called off of the main thread, and is not safe to interact
+            //   with Unity in
+        }
+    }
+}
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -364,7 +517,7 @@ namespace Demo
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/45cdc3f83d01e28055b2a55bd314c77d04230bb8/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/0cb13207af5f328e71b60a58edf4989a680c2d46/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
