@@ -66,5 +66,14 @@ namespace Demo
             // this is called off of the main thread, and is not safe to interact
             //   with Unity in
         }
+
+        public virtual void CopyFrom(PluginConfig cfg)
+        {
+            // you can call this to copy the structure from the parameter to this object
+            // think of this as a magic function that "just works", and doesn't actually 
+            //   have to have a body.
+
+            // any code you put here will be called after the copy is complete though
+        }
     }
 }
