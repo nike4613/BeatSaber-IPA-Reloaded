@@ -101,7 +101,7 @@ manifest key.
 Something that many plugins want and need is configuration. Fortunately, BSIPA provides a fairly powerful configuration system out of the
 box. To start using it, first create a config class of some kind. Lets take a look at a fairly simple example of this:
 
-[!code-cs[PluginConfig.cs#basic](./dev-resources/PluginConfig.cs?range=9-10,12,15-17,28-30,69-)]
+[!code-cs[PluginConfig.cs#basic](./dev-resources/PluginConfig.cs?range=9-10,12,15-17,28-30,78-)]
 
 Notice how the class is both marked `public` **and** is not marked `sealed`. For the moment, both of these are necessary. Also notice that
 all of the members are properties. While this doesn't change much now, it will be significant in the near future.
@@ -122,6 +122,9 @@ By default, it will be named the same as is in your plugin's manifest's `name` f
 that the file that will be loaded from will be `UserData/Demo Plugin.json` for our demo plugin. You can, however, control both of those by
 applying attributes to the <xref:IPA.Config.Config> parameter, namely <xref:IPA.Config.Config.NameAttribute> to control the name, and
 <xref:IPA.Config.Config.PreferAttribute> to control the type. If the type preferences aren't registered though, it will just fall back to JSON.
+
+The config's behaviour can be found either later here, or in the remarks section of
+<xref:IPA.Config.Stores.GeneratedExtension.Generated``1(IPA.Config.Config,System.Boolean)>.
 
 At this point, your main plugin file should look something like this:
 
@@ -188,6 +191,62 @@ to compose other converters with it to handle unusual element types.
 
 Now after all that, your plugin class has not changed, and your config class should look something like this:
 
-[!code-cs[PluginConfig.cs#basic-complete](./dev-resources/PluginConfig.cs?range=1,3-6,9-10,12,15-19,21,25-26,28-39,69-)]
+[!code-cs[PluginConfig.cs#basic-complete](./dev-resources/PluginConfig.cs?range=1,3-6,9-10,12,15-19,21,25-26,28-39,78-)]
 
 ***
+
+I mentioned earlier that your config file will be automatically reloaded -- but isn't that a bad thing? Doesn't that mean that the config could change
+under your feet without you having a way to tell?
+
+Not so- I just haven't introduced the mechanism.
+
+Define a public or protected virtual method named `OnReload`:
+
+[!code-cs[PluginConfig.cs#on-reload](./dev-resources/PluginConfig.cs?range=61-68)]
+
+This method will be called whenever BSIPA reloads your config from disk. When it is called, the object will already have been populated. Use it to
+notify all of your systems that configuration has changed.
+
+***
+
+Now, we know how to read from disk, and how to use unusual types, but how do we write it back to disk?
+
+This config system is based on automatic saving (though we haven't quite gotten to the *automatic* part), and so the config is written to disk whenever
+the system recognizes that something has changed. To tell is as much, define a public or protected virtual method named `Changed`:
+
+[!code-cs[PluginConfig.cs#changed](./dev-resources/PluginConfig.cs?range=55-59)]
+
+This method can be called to tell BSIPA that this config object has changed. Later, when we enable automated change tracking, this will also be called
+when one of the config's members changes. You can use this body to validate something or, for example, write a timestamp for last change.
+
+***
+
+I just mentioned automated change tracking -- lets add that now.
+
+To do this, just make all of the properties virtual, like so:
+
+[!code-cs[PluginConfig.cs#auto-props](./dev-resources/PluginConfig.cs?range=18-19,24-26,42-53)]
+
+Now, whenever you assign to any of those properties, your `Changed` method will be called, and the config object will be marked as changed and will be
+written to disk. Unfortunately, any properties that can be modified while only using the property getter do not trigger this, and so if you change any
+collections for example, you will have to manually call `Changed`.
+
+After doing all this, your config class should look something like this:
+
+[!code-cs[PluginConfig.cs#basic-complete](./dev-resources/PluginConfig.cs?range=1,3-6,9-10,12,15-19,24,25-26,42-68,78-)]
+
+***
+
+There is one more major problem with this though: the main class is still public. Most configs shouldn't be. Lets make it internal.
+
+So we make it internal:
+
+[!code-cs[PluginConfig.cs#internal](./dev-resources/PluginConfig.cs?range=14)]
+
+But to make it actually work, we add this outside the namespace declaration:
+
+[!code-cs[PluginConfig.cs#internals-visible](./dev-resources/PluginConfig.cs?range=2,6-7)]
+
+And now our full file looks like this:
+
+[!code-cs[PluginConfig.cs#basic-complete](./dev-resources/PluginConfig.cs?range=1-10,14,15-19,24,25-26,42-68,78-)]
