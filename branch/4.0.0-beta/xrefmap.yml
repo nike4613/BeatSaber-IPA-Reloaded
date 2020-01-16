@@ -2540,6 +2540,44 @@ references:
   commentId: N:IPA.Loader
   fullName: IPA.Loader
   nameWithType: IPA.Loader
+- uid: IPA.Loader.CannotRuntimeDisableException
+  name: CannotRuntimeDisableException
+  href: api/IPA.Loader.CannotRuntimeDisableException.html
+  commentId: T:IPA.Loader.CannotRuntimeDisableException
+  fullName: IPA.Loader.CannotRuntimeDisableException
+  nameWithType: CannotRuntimeDisableException
+- uid: IPA.Loader.CannotRuntimeDisableException.#ctor(IPA.Loader.PluginMetadata)
+  name: CannotRuntimeDisableException(PluginMetadata)
+  href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.CannotRuntimeDisableException.#ctor(IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException(IPA.Loader.PluginMetadata)
+  nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(PluginMetadata)
+- uid: IPA.Loader.CannotRuntimeDisableException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  name: CannotRuntimeDisableException(SerializationInfo, StreamingContext)
+  href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_
+  commentId: M:IPA.Loader.CannotRuntimeDisableException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)
+  nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(SerializationInfo, StreamingContext)
+- uid: IPA.Loader.CannotRuntimeDisableException.#ctor*
+  name: CannotRuntimeDisableException
+  href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_
+  commentId: Overload:IPA.Loader.CannotRuntimeDisableException.#ctor
+  isSpec: "True"
+  fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException
+  nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException
+- uid: IPA.Loader.CannotRuntimeDisableException.Plugin
+  name: Plugin
+  href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException_Plugin
+  commentId: P:IPA.Loader.CannotRuntimeDisableException.Plugin
+  fullName: IPA.Loader.CannotRuntimeDisableException.Plugin
+  nameWithType: CannotRuntimeDisableException.Plugin
+- uid: IPA.Loader.CannotRuntimeDisableException.Plugin*
+  name: Plugin
+  href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException_Plugin_
+  commentId: Overload:IPA.Loader.CannotRuntimeDisableException.Plugin
+  isSpec: "True"
+  fullName: IPA.Loader.CannotRuntimeDisableException.Plugin
+  nameWithType: CannotRuntimeDisableException.Plugin
 - uid: IPA.Loader.Features
   name: IPA.Loader.Features
   href: api/IPA.Loader.Features.html
