@@ -29,6 +29,8 @@ namespace IPA.Loader
         [UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
         public virtual HashSet<string> DisabledModIds { get; set; } = new HashSet<string>();
 
+        protected internal virtual void Changed() { }
+
         protected virtual void OnReload()
         {
             if (DisabledModIds == null || Reset)
