@@ -12,9 +12,11 @@ using IPA.Utilities;
 using Mono.Cecil;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
-using static IPA.Loader.PluginLoader;
-using IPA.Loader.Features;
 using System.Threading.Tasks;
+#if NET4
+using TaskEx = System.Threading.Tasks.Task;
+using Task = System.Threading.Tasks.Task;
+#endif
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
@@ -73,9 +75,115 @@ namespace IPA.Loader
         public static StateTransitionTransaction PluginStateTransaction()
             => new StateTransitionTransaction(AllPlugins, DisabledPlugins);
 
+        private static readonly object commitTransactionLockObject = new object();
         internal static Task CommitTransaction(StateTransitionTransaction transaction)
         {
-            throw new NotImplementedException();
+            lock (commitTransactionLockObject)
+            {
+                if (transaction.CurrentlyEnabled.Except(AllPlugins)
+                               .Concat(AllPlugins.Except(transaction.CurrentlyEnabled)).Any()
+                 || transaction.CurrentlyDisabled.Except(DisabledPlugins)
+                               .Concat(DisabledPlugins.Except(transaction.DisabledPlugins)).Any())
+                { // ensure that the transaction's base state reflects the current state, otherwise throw
+                    throw new InvalidOperationException("Transaction no longer resembles the current state of plugins");
+                }
+
+
+                var toEnable = transaction.ToEnable;
+                var toDisable = transaction.ToDisable;
+                transaction.Dispose();
+
+                {
+                    // first enable the mods that need to be
+                    void DeTree(List<PluginMetadata> into, IEnumerable<PluginMetadata> tree)
+                    {
+                        foreach (var st in tree)
+                            if (toEnable.Contains(st) && !into.Contains(st))
+                            {
+                                DeTree(into, st.Dependencies);
+                                into.Add(st);
+                            }
+                    }
+
+                    var enableOrder = new List<PluginMetadata>();
+                    DeTree(enableOrder, toEnable);
+
+                    foreach (var meta in enableOrder)
+                    {
+                        var executor = runtimeDisabledPlugins.FirstOrDefault(e => e.Metadata == meta);
+                        if (executor != null)
+                            runtimeDisabledPlugins.Remove(executor);
+                        else
+                            executor = PluginLoader.InitPlugin(meta, AllPlugins);
+
+                        if (executor == null) continue; // couldn't initialize, skip to next
+
+                        PluginLoader.DisabledPlugins.Remove(meta);
+                        DisabledConfig.Instance.DisabledModIds.Remove(meta.Id ?? meta.Name);
+                        _bsPlugins.Add(executor);
+
+                        try
+                        {
+                            executor.Enable();
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.loader.Error($"Error while enabling {meta.Id}:");
+                            Logger.loader.Error(e);
+                            // this should still be considered enabled, hence its position
+                        }
+                    }
+                }
+
+                Task result;
+                {
+                    // then disable the mods that need to be
+                    static DisableExecutor MakeDisableExec(PluginExecutor e)
+                        => new DisableExecutor
+                        {
+                            Executor = e,
+                            Dependents = BSMetas.Where(f => f.Metadata.Dependencies.Contains(e.Metadata)).Select(MakeDisableExec)
+                        };
+
+                    var disableExecs = toDisable.Select(m => BSMetas.FirstOrDefault(e => e.Metadata == m)).NonNull().ToArray(); // eagerly evaluate once
+
+                    foreach (var exec in disableExecs)
+                    {
+                        runtimeDisabledPlugins.Add(exec);
+                        PluginLoader.DisabledPlugins.Add(exec.Metadata);
+                        DisabledConfig.Instance.DisabledModIds.Add(exec.Metadata.Id ?? exec.Metadata.Name);
+                        _bsPlugins.Remove(exec);
+                    }
+
+                    var disableStructure = disableExecs.Select(MakeDisableExec);
+
+                    static Task Disable(DisableExecutor exec, Dictionary<PluginExecutor, Task> alreadyDisabled)
+                    {
+                        if (alreadyDisabled.TryGetValue(exec.Executor, out var task))
+                            return task;
+                        else 
+                        {
+                            var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
+                                 .ContinueWith(t => TaskEx.WhenAll(t, exec.Executor.Disable())).Unwrap();
+                            // The WhenAll above allows us to wait for the executor to disable, but still propagate errors
+                            alreadyDisabled.Add(exec.Executor, res);
+                            return res;
+                        }
+                    }
+
+                    var disabled = new Dictionary<PluginExecutor, Task>();
+                    result = TaskEx.WhenAll(disableStructure.Select(d => Disable(d, disabled)));
+                }
+
+                DisabledConfig.Instance.Changed();
+                return result;
+            }
+        }
+
+        private struct DisableExecutor
+        {
+            public PluginExecutor Executor;
+            public IEnumerable<DisableExecutor> Dependents;
         }
 
         // TODO: rewrite below
@@ -240,6 +348,7 @@ namespace IPA.Loader
         /// </summary>
         /// <value>a collection of all disabled plugins as <see cref="PluginMetadata"/></value>
         public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins;
+        private static readonly HashSet<PluginExecutor> runtimeDisabledPlugins = new HashSet<PluginExecutor>();
 
         /// <summary>
         /// An invoker for the <see cref="PluginEnabled"/> event.
@@ -268,21 +377,6 @@ namespace IPA.Loader
         /// </summary>
         /// <value>a collection of all enabled plugins as <see cref="PluginMetadata"/>s</value>
         public static IEnumerable<PluginMetadata> AllPlugins => BSMetas.Select(p => p.Metadata);
-
-        /*
-        /// <summary>
-        /// Converts a plugin's metadata to a <see cref="PluginInfo"/>.
-        /// </summary>
-        /// <param name="meta">the metadata</param>
-        /// <returns>the plugin info</returns>
-        public static PluginInfo InfoFromMetadata(PluginMetadata meta)
-        {
-            if (IsDisabled(meta))
-                return runtimeDisabled.FirstOrDefault(p => p.Metadata == meta);
-            else
-                return AllPlugins.FirstOrDefault(p => p == meta);
-        }
-        */
 
         /// <summary>
         /// An <see cref="IEnumerable{T}"/> of old IPA plugins.
@@ -323,8 +417,8 @@ namespace IPA.Loader
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
 
-            var metadataPaths = PluginsMetadata.Select(m => m.File.FullName).ToList();
-            var ignoredPaths = ignoredPlugins.Select(m => m.Key.File.FullName).ToList();
+            var metadataPaths = PluginLoader.PluginsMetadata.Select(m => m.File.FullName).ToList();
+            var ignoredPaths = PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName).ToList();
             var disabledPaths = DisabledPlugins.Select(m => m.File.FullName).ToList();
 
             //Copy plugins to .cache

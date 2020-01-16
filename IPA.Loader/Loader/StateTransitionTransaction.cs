@@ -31,6 +31,8 @@ namespace IPA.Loader
             => ThrowIfDisposed<bool>()
             || toEnable.Concat(toDisable).Any(m => m.RuntimeOptions != RuntimeOptions.DynamicInit);
 
+        internal IEnumerable<PluginMetadata> CurrentlyEnabled => currentlyEnabled;
+        internal IEnumerable<PluginMetadata> CurrentlyDisabled => currentlyDisabled;
         internal IEnumerable<PluginMetadata> ToEnable => toEnable;
         internal IEnumerable<PluginMetadata> ToDisable => toDisable;
 
@@ -199,8 +201,24 @@ namespace IPA.Loader
         /// <summary>
         /// Commits this transaction to actual state, enabling and disabling plugins as necessary.
         /// </summary>
+        /// <remarks>
+        /// <para>After this completes, this transaction will be disposed.</para>
+        /// <para>
+        /// The <see cref="Task"/> that is returned will error if <b>any</b> of the mods being <b>disabled</b>
+        /// error. It is up to the caller to handle these in a sane way, like logging them. If nothing else, do something like this:
+        /// <code>
+        /// // get your transaction...
+        /// var complete = transaction.Commit();
+        /// complete.ContinueWith(t => {
+        ///     if (t.IsFaulted)
+        ///         Logger.log.Error($"Error disabling plugins: {t.Exception}");
+        /// }).Wait(); // if not Wait(), then something else to wait for completion
+        /// </code>
+        /// </para>
+        /// </remarks>
         /// <returns>a <see cref="Task"/> which completes whenever all disables complete</returns>
         /// <exception cref="ObjectDisposedException">if this object has been disposed</exception>
+        /// <exception cref="InvalidOperationException">if the plugins' state no longer matches this transaction's original state</exception>
         public Task Commit() => ThrowIfDisposed<Task>() ?? PluginManager.CommitTransaction(this);
 
         private void ThrowIfDisposed() => ThrowIfDisposed<byte>();
