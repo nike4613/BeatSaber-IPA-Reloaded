@@ -15,6 +15,7 @@ using Logger = IPA.Logging.Logger;
 using System.Threading.Tasks;
 #if NET4
 using TaskEx = System.Threading.Tasks.Task;
+using TaskEx6 = System.Threading.Tasks.Task;
 using Task = System.Threading.Tasks.Task;
 #endif
 #if NET3
@@ -177,7 +178,7 @@ namespace IPA.Loader
                         else 
                         {
                             if (exec.Executor.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit)
-                                return TaskEx.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
+                                return TaskEx6.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
 
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
                                  .ContinueWith(t => TaskEx.WhenAll(t, exec.Executor.Disable())).Unwrap();

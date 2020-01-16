@@ -48,6 +48,7 @@
     <Compile Include="IReadOnlyList.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskEx6.cs" />
     <Compile Include="Tuple.cs" />
     <Compile Include="TypeUtils.cs" />
     <Compile Include="Utils.cs" />
