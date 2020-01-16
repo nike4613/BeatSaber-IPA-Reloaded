@@ -3005,12 +3005,21 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.StateTransitionTransaction.Commit
   nameWithType: StateTransitionTransaction.Commit
-- uid: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata)
-  name: Disable(PluginMetadata)
-  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_IPA_Loader_PluginMetadata_
-  commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata)
-  fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata)
-  nameWithType: StateTransitionTransaction.Disable(PluginMetadata)
+- uid: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Boolean)
+  name: Disable(PluginMetadata, Boolean)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_IPA_Loader_PluginMetadata_System_Boolean_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Boolean)
+  fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, System.Boolean)
+  nameWithType: StateTransitionTransaction.Disable(PluginMetadata, Boolean)
+- uid: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name: Disable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_IPA_Loader_PluginMetadata_System_Collections_Generic_IEnumerable_IPA_Loader_PluginMetadata___System_Boolean_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name.vb: Disable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
+  fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, out System.Collections.Generic.IEnumerable<IPA.Loader.PluginMetadata>, System.Boolean)
+  fullName.vb: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, ByRef System.Collections.Generic.IEnumerable(Of IPA.Loader.PluginMetadata), System.Boolean)
+  nameWithType: StateTransitionTransaction.Disable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  nameWithType.vb: StateTransitionTransaction.Disable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
 - uid: IPA.Loader.StateTransitionTransaction.Disable*
   name: Disable
   href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_
@@ -3044,12 +3053,21 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.StateTransitionTransaction.Dispose
   nameWithType: StateTransitionTransaction.Dispose
-- uid: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata)
-  name: Enable(PluginMetadata)
-  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_IPA_Loader_PluginMetadata_
-  commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata)
-  fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata)
-  nameWithType: StateTransitionTransaction.Enable(PluginMetadata)
+- uid: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Boolean)
+  name: Enable(PluginMetadata, Boolean)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_IPA_Loader_PluginMetadata_System_Boolean_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Boolean)
+  fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, System.Boolean)
+  nameWithType: StateTransitionTransaction.Enable(PluginMetadata, Boolean)
+- uid: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name: Enable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_IPA_Loader_PluginMetadata_System_Collections_Generic_IEnumerable_IPA_Loader_PluginMetadata___System_Boolean_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name.vb: Enable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
+  fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, out System.Collections.Generic.IEnumerable<IPA.Loader.PluginMetadata>, System.Boolean)
+  fullName.vb: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, ByRef System.Collections.Generic.IEnumerable(Of IPA.Loader.PluginMetadata), System.Boolean)
+  nameWithType: StateTransitionTransaction.Enable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  nameWithType.vb: StateTransitionTransaction.Enable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
 - uid: IPA.Loader.StateTransitionTransaction.Enable*
   name: Enable
   href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_
