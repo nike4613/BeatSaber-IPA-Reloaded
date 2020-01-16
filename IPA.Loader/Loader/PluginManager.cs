@@ -88,7 +88,6 @@ namespace IPA.Loader
                     throw new InvalidOperationException("Transaction no longer resembles the current state of plugins");
                 }
 
-
                 var toEnable = transaction.ToEnable;
                 var toDisable = transaction.ToDisable;
                 transaction.Dispose();
@@ -111,26 +110,35 @@ namespace IPA.Loader
                     foreach (var meta in enableOrder)
                     {
                         var executor = runtimeDisabledPlugins.FirstOrDefault(e => e.Metadata == meta);
-                        if (executor != null)
-                            runtimeDisabledPlugins.Remove(executor);
-                        else
-                            executor = PluginLoader.InitPlugin(meta, AllPlugins);
+                        if (meta.RuntimeOptions == RuntimeOptions.DynamicInit)
+                        {
+                            if (executor != null)
+                                runtimeDisabledPlugins.Remove(executor);
+                            else
+                                executor = PluginLoader.InitPlugin(meta, AllPlugins);
 
-                        if (executor == null) continue; // couldn't initialize, skip to next
+                            if (executor == null) continue; // couldn't initialize, skip to next
+                        }
 
                         PluginLoader.DisabledPlugins.Remove(meta);
                         DisabledConfig.Instance.DisabledModIds.Remove(meta.Id ?? meta.Name);
-                        _bsPlugins.Add(executor);
 
-                        try
+                        PluginEnabled(meta, meta.RuntimeOptions != RuntimeOptions.DynamicInit);
+
+                        if (meta.RuntimeOptions == RuntimeOptions.DynamicInit)
                         {
-                            executor.Enable();
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.loader.Error($"Error while enabling {meta.Id}:");
-                            Logger.loader.Error(e);
-                            // this should still be considered enabled, hence its position
+                            _bsPlugins.Add(executor);
+
+                            try
+                            {
+                                executor.Enable();
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.loader.Error($"Error while enabling {meta.Id}:");
+                                Logger.loader.Error(e);
+                                // this should still be considered enabled, hence its position
+                            }
                         }
                     }
                 }
@@ -149,10 +157,15 @@ namespace IPA.Loader
 
                     foreach (var exec in disableExecs)
                     {
-                        runtimeDisabledPlugins.Add(exec);
                         PluginLoader.DisabledPlugins.Add(exec.Metadata);
                         DisabledConfig.Instance.DisabledModIds.Add(exec.Metadata.Id ?? exec.Metadata.Name);
-                        _bsPlugins.Remove(exec);
+                        if (exec.Metadata.RuntimeOptions == RuntimeOptions.DynamicInit)
+                        {
+                            runtimeDisabledPlugins.Add(exec);
+                            _bsPlugins.Remove(exec);
+                        }
+
+                        PluginDisabled(exec.Metadata, exec.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit);
                     }
 
                     var disableStructure = disableExecs.Select(MakeDisableExec);
@@ -163,6 +176,9 @@ namespace IPA.Loader
                             return task;
                         else 
                         {
+                            if (exec.Executor.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit)
+                                return TaskEx.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
+
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
                                  .ContinueWith(t => TaskEx.WhenAll(t, exec.Executor.Disable())).Unwrap();
                             // The WhenAll above allows us to wait for the executor to disable, but still propagate errors
