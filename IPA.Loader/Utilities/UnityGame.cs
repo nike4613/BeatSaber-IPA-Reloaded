@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 #if NET3
 using Path = Net3_Proxy.Path;
@@ -58,6 +59,16 @@ namespace IPA.Utilities
 
             SelfConfig.Instance.LastGameVersion = gameVer.ToString();
         }
+
+        private static Thread mainThread;
+        /// <summary>
+        /// Checks if the currently running code is running on the Unity main thread.
+        /// </summary>
+        /// <value><see langword="true"/> if the curent thread is the Unity main thread, <see langword="false"/> otherwise</value>
+        public static bool OnMainThread => Thread.CurrentThread.ManagedThreadId == mainThread?.ManagedThreadId;
+
+        internal static void SetMainThread() 
+            => mainThread = Thread.CurrentThread;
 
         /// <summary>
         /// The different types of releases of the game.

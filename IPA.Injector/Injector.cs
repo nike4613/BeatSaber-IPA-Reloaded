@@ -331,8 +331,6 @@ namespace IPA.Injector
             pluginAsyncLoadTask.Wait();
             permissionFixTask.Wait();
 
-            UnityGame.EnsureRuntimeGameVersion();
-
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
             PluginComponent.Create();

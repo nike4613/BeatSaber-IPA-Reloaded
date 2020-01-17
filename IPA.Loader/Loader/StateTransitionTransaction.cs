@@ -203,11 +203,10 @@ namespace IPA.Loader
         /// </summary>
         /// <remarks>
         /// <para>After this completes, this transaction will be disposed.</para>
-        /// <para>It is illegal to call this anywhere but the main Unity thread.</para>
         /// <para>
         /// The <see cref="Task"/> that is returned will error if <b>any</b> of the mods being <b>disabled</b>
         /// error. It is up to the caller to handle these in a sane way, like logging them. If nothing else, do something like this:
-        /// <code>
+        /// <code lang="csharp">
         /// // get your transaction...
         /// var complete = transaction.Commit();
         /// complete.ContinueWith(t => {
