@@ -4426,6 +4426,25 @@ references:
   commentId: N:IPA.Utilities.Async
   fullName: IPA.Utilities.Async
   nameWithType: IPA.Utilities.Async
+- uid: IPA.Utilities.Async.Coroutines
+  name: Coroutines
+  href: api/IPA.Utilities.Async.Coroutines.html
+  commentId: T:IPA.Utilities.Async.Coroutines
+  fullName: IPA.Utilities.Async.Coroutines
+  nameWithType: Coroutines
+- uid: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
+  name: WaitForTask(Task)
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_System_Threading_Tasks_Task_
+  commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
+  fullName: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
+  nameWithType: Coroutines.WaitForTask(Task)
+- uid: IPA.Utilities.Async.Coroutines.WaitForTask*
+  name: WaitForTask
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_
+  commentId: Overload:IPA.Utilities.Async.Coroutines.WaitForTask
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.Coroutines.WaitForTask
+  nameWithType: Coroutines.WaitForTask
 - uid: IPA.Utilities.Async.SingleThreadTaskScheduler
   name: SingleThreadTaskScheduler
   href: api/IPA.Utilities.Async.SingleThreadTaskScheduler.html
@@ -4876,6 +4895,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose
   nameWithType: UnityMainThreadTaskScheduler.Dispose
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory
+  name: Factory
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Factory
+  commentId: P:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory
+  nameWithType: UnityMainThreadTaskScheduler.Factory
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory*
+  name: Factory
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Factory_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Factory
+  nameWithType: UnityMainThreadTaskScheduler.Factory
 - uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks
   name: GetScheduledTasks()
   href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_GetScheduledTasks
