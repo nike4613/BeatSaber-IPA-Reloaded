@@ -84,7 +84,8 @@
   
   <h1 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler" class="text-break">Class UnityMainThreadTaskScheduler
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>A task scheduler that runs tasks on the Unity main thread via coroutines.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -151,14 +152,47 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancelling.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L54">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancelling_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling*"></a>
+  <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancelling" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling">Cancelling</h4>
+  <div class="markdown level1 summary"><p>Gets whether or not this scheduler is in the process of shutting down.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Cancelling { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><span class="xref">true</span> if the scheduler is shutting down, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_Default.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L14">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L22">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Default_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Default" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default">Default</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the default main thread scheduler that is managed by BSIPA.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -175,7 +209,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.taskscheduler">TaskScheduler</a></td>
-        <td></td>
+        <td><p>a scheduler that is managed by BSIPA</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -184,11 +219,12 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_IsRunning.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L36">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L48">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_IsRunning_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_IsRunning" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning">IsRunning</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets whether or not this scheduler is currently executing tasks.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -205,7 +241,8 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td></td>
+        <td><p><span class="xref">true</span> if the scheduler is running, <span class="xref">false</span> otherwise</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -214,11 +251,12 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTasks.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L38">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L61">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTasks_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTasks" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks">YieldAfterTasks</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets or sets the number of tasks to execute before yielding back to Unity.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -235,7 +273,40 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td></td>
+        <td><p>the number of tasks to execute per resume</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTime.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L78">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTime_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime*"></a>
+  <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTime" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime">YieldAfterTime</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the amount of time to execute tasks for before yielding back to Unity. Default is 0.5ms.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan YieldAfterTime { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></td>
+        <td><p>the amount of time to execute tasks for before yielding back to Unity</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -243,14 +314,53 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancel.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L143">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancel_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel*"></a>
+  <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancel" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel">Cancel()</h4>
+  <div class="markdown level1 summary"><p>Cancels the scheduler. If the scheduler is currently executing tasks, that batch will finish first.
+All remaining tasks will be left in the queue.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Cancel()</code></pre>
+  </div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>if this scheduler is disposed</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><p>if the scheduler is not running</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_Coroutine.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L40">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L96">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Coroutine_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Coroutine" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine">Coroutine()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>When used as a Unity coroutine, runs the scheduler. Otherwise, this is an invalid call.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -267,7 +377,29 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
-        <td></td>
+        <td><p>a Unity coroutine</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>if this scheduler is disposed</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><p>if the scheduler is already running</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -276,7 +408,7 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L125">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L222">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose">Dispose()</h4>
@@ -291,7 +423,7 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L111">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L208">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose_System_Boolean_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose(System.Boolean)">Dispose(Boolean)</h4>
@@ -323,7 +455,7 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_GetScheduledTasks.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L76">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L156">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_GetScheduledTasks_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_GetScheduledTasks" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks">GetScheduledTasks()</h4>
@@ -373,11 +505,13 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_System_Threading_Tasks_Task_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L82">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L168">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_System_Threading_Tasks_Task_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)">QueueTask(Task)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Queues a given <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a> to this scheduler. The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a> <em>must&gt;</em> be
+scheduled for this <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.taskscheduler">TaskScheduler</a> by the runtime.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -396,22 +530,40 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
         <td><span class="parametername">task</span></td>
-        <td></td>
+        <td><p>the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a> to queue</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.taskscheduler.queuetask#System_Threading_Tasks_TaskScheduler_QueueTask_System_Threading_Tasks_Task_">TaskScheduler.QueueTask(Task)</a></div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown if this object has already been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L89">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L186">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline*"></a>
   <h4 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean_" data-uid="IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)">TryExecuteTaskInline(Task, Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Rejects any attempts to execute a task inline.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -430,12 +582,14 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
         <td><span class="parametername">task</span></td>
-        <td></td>
+        <td><p>the task to attempt to execute</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><span class="parametername">taskWasPreviouslyQueued</span></td>
-        <td></td>
+        <td><p>whether the task was previously queued to this scheduler</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -450,12 +604,32 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td></td>
+        <td><span class="xref">false</span></td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.taskscheduler.tryexecutetaskinline#System_Threading_Tasks_TaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean_">TaskScheduler.TryExecuteTaskInline(Task, Boolean)</a></div>
+  <h5 id="IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This task scheduler <em>always</em> runs its tasks on the thread that it manages, therefore it doesn&apos;t
+make sense to run it inline.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown if this object has already been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
@@ -487,7 +661,7 @@
                     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Utilities_Async_UnityMainThreadTaskScheduler.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.UnityMainThreadTaskScheduler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1f0648610365cce587909c4f5a4c95ea82877bf/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/389aaebfa8758857e50d7c1b8dcfb1d57c394aab/IPA.Loader/Utilities/Async/UnityMainThreadTaskScheduler.cs/#L16" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

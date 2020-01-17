@@ -4805,6 +4805,32 @@ references:
   commentId: T:IPA.Utilities.Async.UnityMainThreadTaskScheduler
   fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler
   nameWithType: UnityMainThreadTaskScheduler
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel
+  name: Cancel()
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancel
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel()
+  nameWithType: UnityMainThreadTaskScheduler.Cancel()
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel*
+  name: Cancel
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancel_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancel
+  nameWithType: UnityMainThreadTaskScheduler.Cancel
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling
+  name: Cancelling
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancelling
+  commentId: P:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling
+  nameWithType: UnityMainThreadTaskScheduler.Cancelling
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling*
+  name: Cancelling
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Cancelling_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Cancelling
+  nameWithType: UnityMainThreadTaskScheduler.Cancelling
 - uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine
   name: Coroutine()
   href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Coroutine
@@ -4915,6 +4941,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks
   nameWithType: UnityMainThreadTaskScheduler.YieldAfterTasks
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime
+  name: YieldAfterTime
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTime
+  commentId: P:IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime
+  nameWithType: UnityMainThreadTaskScheduler.YieldAfterTime
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime*
+  name: YieldAfterTime
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTime_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTime
+  nameWithType: UnityMainThreadTaskScheduler.YieldAfterTime
 - uid: IPA.Utilities.CriticalSection
   name: CriticalSection
   href: api/IPA.Utilities.CriticalSection.html
