@@ -20,6 +20,11 @@ namespace IPA.Utilities.Async
         /// </summary>
         /// <value>a scheduler that is managed by BSIPA</value>
         public static new TaskScheduler Default { get; } = new UnityMainThreadTaskScheduler();
+        /// <summary>
+        /// Gets a factory for creating tasks on <see cref="Default"/>.
+        /// </summary>
+        /// <value>a factory for creating tasks on the default scheduler</value>
+        public static TaskFactory Factory { get; } = new TaskFactory(Default);
 
         private readonly ConcurrentDictionary<QueueItem, Task> tasks = new ConcurrentDictionary<QueueItem, Task>();
         private int queueEndPosition = 0;
@@ -90,6 +95,17 @@ namespace IPA.Utilities.Async
         /// <summary>
         /// When used as a Unity coroutine, runs the scheduler. Otherwise, this is an invalid call.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Do not ever call <see cref="UnityEngine.MonoBehaviour.StopCoroutine(IEnumerator)"/> on this
+        /// coroutine, nor <see cref="UnityEngine.MonoBehaviour.StopAllCoroutines"/> on the behaviour hosting
+        /// this coroutine. This has no way to detect this, and this object will become invalid.
+        /// </para>
+        /// <para>
+        /// If you need to stop this coroutine, first call <see cref="Cancel"/>, then wait for it to
+        /// exit on its own.
+        /// </para>
+        /// </remarks>
         /// <returns>a Unity coroutine</returns>
         /// <exception cref="ObjectDisposedException">if this scheduler is disposed</exception>
         /// <exception cref="InvalidOperationException">if the scheduler is already running</exception>
@@ -205,6 +221,10 @@ namespace IPA.Utilities.Async
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
+        /// <param name="disposing">whether or not to dispose managed objects</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -218,6 +238,9 @@ namespace IPA.Utilities.Async
             }
         }
 
+        /// <summary>
+        /// Disposes this object. This puts the object into an unusable state.
+        /// </summary>
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {

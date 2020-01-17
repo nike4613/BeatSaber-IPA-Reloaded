@@ -209,11 +209,12 @@ namespace IPA.Loader
         /// <code lang="csharp">
         /// // get your transaction...
         /// var complete = transaction.Commit();
-        /// complete.ContinueWith(t => {
+        /// await complete.ContinueWith(t => {
         ///     if (t.IsFaulted)
         ///         Logger.log.Error($"Error disabling plugins: {t.Exception}");
-        /// }).Wait(); // if not Wait(), then something else to wait for completion
+        /// });
         /// </code>
+        /// If you are running in a coroutine, you can use <see cref="Utilities.Async.Coroutines.WaitForTask(Task)"/> instead of <see langword="await"/>.
         /// </para>
         /// </remarks>
         /// <returns>a <see cref="Task"/> which completes whenever all disables complete</returns>

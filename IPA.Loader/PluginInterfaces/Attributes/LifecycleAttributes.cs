@@ -26,6 +26,9 @@ namespace IPA
     /// Typically, this will be used when the <see cref="RuntimeOptions"/> parameter of the plugins's
     /// <see cref="PluginAttribute"/> is <see cref="RuntimeOptions.DynamicInit"/>.
     /// </para>
+    /// <para>
+    /// The method marked by this attribute will always be called from the Unity main thread.
+    /// </para>
     /// </remarks>
     /// <seealso cref="PluginAttribute"/>
     /// <seealso cref="OnStartAttribute"/>
@@ -46,6 +49,9 @@ namespace IPA
     /// <para>
     /// Typically, this will be used when the <see cref="RuntimeOptions"/> parameter of the plugins's
     /// <see cref="PluginAttribute"/> is <see cref="RuntimeOptions.SingleStartInit"/>.
+    /// </para>
+    /// <para>
+    /// The method marked by this attribute will always be called from the Unity main thread.
     /// </para>
     /// </remarks>
     /// <seealso cref="PluginAttribute"/>
@@ -68,6 +74,9 @@ namespace IPA
     /// Typically, this will be used when the <see cref="RuntimeOptions"/> parameter of the plugins's
     /// <see cref="PluginAttribute"/> is <see cref="RuntimeOptions.DynamicInit"/>.
     /// </para>
+    /// <para>
+    /// The method marked by this attribute will always be called from the Unity main thread.
+    /// </para>
     /// </remarks>
     /// <seealso cref="PluginAttribute"/>
     /// <seealso cref="OnExitAttribute"/>
@@ -88,6 +97,9 @@ namespace IPA
     /// <para>
     /// Typically, this will be used when the <see cref="RuntimeOptions"/> parameter of the plugins's
     /// <see cref="PluginAttribute"/> is <see cref="RuntimeOptions.SingleStartInit"/>.
+    /// </para>
+    /// <para>
+    /// The method marked by this attribute will always be called from the Unity main thread.
     /// </para>
     /// </remarks>
     /// <seealso cref="PluginAttribute"/>
