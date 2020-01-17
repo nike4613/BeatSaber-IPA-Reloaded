@@ -13,6 +13,7 @@ using Mono.Cecil;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using System.Threading.Tasks;
+using IPA.Utilities.Async;
 #if NET4
 using TaskEx = System.Threading.Tasks.Task;
 using TaskEx6 = System.Threading.Tasks.Task;
@@ -77,7 +78,15 @@ namespace IPA.Loader
             => new StateTransitionTransaction(AllPlugins, DisabledPlugins);
 
         private static readonly object commitTransactionLockObject = new object();
+
         internal static Task CommitTransaction(StateTransitionTransaction transaction)
+        {
+            if (UnityGame.OnMainThread)
+                return CommitTransactionInternal(transaction);
+            else
+                return UnityMainThreadTaskScheduler.Factory.StartNew(() => CommitTransactionInternal(transaction)).Unwrap();
+        }
+        private static Task CommitTransactionInternal(StateTransitionTransaction transaction)
         {
             lock (commitTransactionLockObject)
             {
@@ -181,8 +190,9 @@ namespace IPA.Loader
                                 return TaskEx6.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
 
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
-                                 .ContinueWith(t => TaskEx.WhenAll(t, exec.Executor.Disable())).Unwrap();
+                                 .ContinueWith(t => TaskEx.WhenAll(t, exec.Executor.Disable()), UnityMainThreadTaskScheduler.Default).Unwrap();
                             // The WhenAll above allows us to wait for the executor to disable, but still propagate errors
+                            // By scheduling on a UnityMainThreadScheduler, we ensure that Disable() is always called on the Unity main thread
                             alreadyDisabled.Add(exec.Executor, res);
                             return res;
                         }
