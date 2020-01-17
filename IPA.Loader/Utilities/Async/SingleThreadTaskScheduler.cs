@@ -20,7 +20,7 @@ namespace IPA.Utilities.Async
         /// <summary>
         /// Gets whether or not the underlying thread has been started.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         public bool IsRunning
         {
             get
@@ -33,7 +33,7 @@ namespace IPA.Utilities.Async
         /// <summary>
         /// Starts the thread that executes tasks scheduled with this <see cref="TaskScheduler"/>
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         public void Start()
         {
             ThrowIfDisposed();
@@ -48,7 +48,7 @@ namespace IPA.Utilities.Async
         /// After this method returns, this object has been disposed and is no longer in a valid state.
         /// </remarks>
         /// <returns>an <see cref="IEnumerable{T}"/> of <see cref="Task"/>s that did not execute</returns>
-        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         public IEnumerable<Task> Exit()
         {
             ThrowIfDisposed();
@@ -69,7 +69,7 @@ namespace IPA.Utilities.Async
         /// <remarks>
         /// After this method returns, this object has been disposed and is no longer in a valid state.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         public void Join()
         {
             ThrowIfDisposed();
@@ -94,7 +94,7 @@ namespace IPA.Utilities.Async
         /// scheduled for this <see cref="TaskScheduler"/> by the runtime.
         /// </summary>
         /// <param name="task">the <see cref="Task"/> to queue</param>
-        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         protected override void QueueTask(Task task)
         {
             ThrowIfDisposed();
@@ -112,7 +112,7 @@ namespace IPA.Utilities.Async
         /// <param name="task">the task to attempt to execute</param>
         /// <param name="taskWasPreviouslyQueued">whether the task was previously queued to this scheduler</param>
         /// <returns><see langword="false"/></returns>
-        /// <exception cref="InvalidOperationException">Thrown if this object has already been disposed.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
             ThrowIfDisposed();
@@ -123,7 +123,7 @@ namespace IPA.Utilities.Async
         private void ThrowIfDisposed()
         {
             if (disposedValue)
-                throw new InvalidOperationException("Object already disposed");
+                throw new ObjectDisposedException(nameof(SingleThreadTaskScheduler));
         }
 
         private void ExecuteTasks()

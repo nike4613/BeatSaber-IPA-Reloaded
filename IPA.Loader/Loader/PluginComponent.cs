@@ -1,5 +1,7 @@
 ﻿using IPA.Config;
 using IPA.Loader.Composite;
+using IPA.Utilities;
+using IPA.Utilities.Async;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,6 +28,9 @@ namespace IPA.Loader
 
             if (!initialized)
             {
+                UnityGame.SetMainThread();
+                UnityGame.EnsureRuntimeGameVersion();
+
                 PluginManager.Load();
 
                 bsPlugins = new CompositeBSPlugin(PluginManager.BSMetas);
@@ -44,6 +49,10 @@ namespace IPA.Loader
                 SceneManager.sceneLoaded += OnSceneLoaded;
                 SceneManager.sceneUnloaded += OnSceneUnloaded;
 
+                var unitySched = UnityMainThreadTaskScheduler.Default as UnityMainThreadTaskScheduler;
+                if (!unitySched.IsRunning)
+                    StartCoroutine(unitySched.Coroutine());
+
                 initialized = true;
             }
         }
@@ -52,6 +61,10 @@ namespace IPA.Loader
         {
             bsPlugins.OnUpdate();
             ipaPlugins.OnUpdate();
+
+            var unitySched = UnityMainThreadTaskScheduler.Default as UnityMainThreadTaskScheduler;
+            if (!unitySched.IsRunning)
+                StartCoroutine(unitySched.Coroutine());
         }
 
         void LateUpdate()
