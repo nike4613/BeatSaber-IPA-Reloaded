@@ -133,7 +133,7 @@ namespace IPA.Loader
                         PluginLoader.DisabledPlugins.Remove(meta);
                         DisabledConfig.Instance.DisabledModIds.Remove(meta.Id ?? meta.Name);
 
-                        PluginEnabled(meta, meta.RuntimeOptions != RuntimeOptions.DynamicInit);
+                        PluginEnabled?.Invoke(meta, meta.RuntimeOptions != RuntimeOptions.DynamicInit);
 
                         if (meta.RuntimeOptions == RuntimeOptions.DynamicInit)
                         {
@@ -175,7 +175,7 @@ namespace IPA.Loader
                             _bsPlugins.Remove(exec);
                         }
 
-                        PluginDisabled(exec.Metadata, exec.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit);
+                        PluginDisabled?.Invoke(exec.Metadata, exec.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit);
                     }
 
                     var disableStructure = disableExecs.Select(MakeDisableExec);
