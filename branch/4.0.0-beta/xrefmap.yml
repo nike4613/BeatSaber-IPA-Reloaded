@@ -4799,6 +4799,122 @@ references:
   fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System.IDisposable.Dispose
   nameWithType: Synchronization.SemaphoreSlimLocker.IDisposable.Dispose
   nameWithType.vb: Synchronization.SemaphoreSlimLocker.System.IDisposable.Dispose
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler
+  name: UnityMainThreadTaskScheduler
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html
+  commentId: T:IPA.Utilities.Async.UnityMainThreadTaskScheduler
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler
+  nameWithType: UnityMainThreadTaskScheduler
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine
+  name: Coroutine()
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Coroutine
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine()
+  nameWithType: UnityMainThreadTaskScheduler.Coroutine()
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine*
+  name: Coroutine
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Coroutine_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Coroutine
+  nameWithType: UnityMainThreadTaskScheduler.Coroutine
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default
+  name: Default
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Default
+  commentId: P:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default
+  nameWithType: UnityMainThreadTaskScheduler.Default
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default*
+  name: Default
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Default_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Default
+  nameWithType: UnityMainThreadTaskScheduler.Default
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose
+  name: Dispose()
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose()
+  nameWithType: UnityMainThreadTaskScheduler.Dispose()
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose_System_Boolean_
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose(System.Boolean)
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose(System.Boolean)
+  nameWithType: UnityMainThreadTaskScheduler.Dispose(Boolean)
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose*
+  name: Dispose
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_Dispose_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.Dispose
+  nameWithType: UnityMainThreadTaskScheduler.Dispose
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks
+  name: GetScheduledTasks()
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_GetScheduledTasks
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks()
+  nameWithType: UnityMainThreadTaskScheduler.GetScheduledTasks()
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks*
+  name: GetScheduledTasks
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_GetScheduledTasks_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.GetScheduledTasks
+  nameWithType: UnityMainThreadTaskScheduler.GetScheduledTasks
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning
+  name: IsRunning
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_IsRunning
+  commentId: P:IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning
+  nameWithType: UnityMainThreadTaskScheduler.IsRunning
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning*
+  name: IsRunning
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_IsRunning_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning
+  nameWithType: UnityMainThreadTaskScheduler.IsRunning
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
+  name: QueueTask(Task)
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_System_Threading_Tasks_Task_
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
+  nameWithType: UnityMainThreadTaskScheduler.QueueTask(Task)
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask*
+  name: QueueTask
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask
+  nameWithType: UnityMainThreadTaskScheduler.QueueTask
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)
+  name: TryExecuteTaskInline(Task, Boolean)
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean_
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task, System.Boolean)
+  nameWithType: UnityMainThreadTaskScheduler.TryExecuteTaskInline(Task, Boolean)
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline*
+  name: TryExecuteTaskInline
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline
+  nameWithType: UnityMainThreadTaskScheduler.TryExecuteTaskInline
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks
+  name: YieldAfterTasks
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTasks
+  commentId: P:IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks
+  nameWithType: UnityMainThreadTaskScheduler.YieldAfterTasks
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks*
+  name: YieldAfterTasks
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_YieldAfterTasks_
+  commentId: Overload:IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.YieldAfterTasks
+  nameWithType: UnityMainThreadTaskScheduler.YieldAfterTasks
 - uid: IPA.Utilities.CriticalSection
   name: CriticalSection
   href: api/IPA.Utilities.CriticalSection.html
@@ -5550,6 +5666,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.UnityGame.NativeLibraryPath
   nameWithType: UnityGame.NativeLibraryPath
+- uid: IPA.Utilities.UnityGame.OnMainThread
+  name: OnMainThread
+  href: api/IPA.Utilities.UnityGame.html#IPA_Utilities_UnityGame_OnMainThread
+  commentId: P:IPA.Utilities.UnityGame.OnMainThread
+  fullName: IPA.Utilities.UnityGame.OnMainThread
+  nameWithType: UnityGame.OnMainThread
+- uid: IPA.Utilities.UnityGame.OnMainThread*
+  name: OnMainThread
+  href: api/IPA.Utilities.UnityGame.html#IPA_Utilities_UnityGame_OnMainThread_
+  commentId: Overload:IPA.Utilities.UnityGame.OnMainThread
+  isSpec: "True"
+  fullName: IPA.Utilities.UnityGame.OnMainThread
+  nameWithType: UnityGame.OnMainThread
 - uid: IPA.Utilities.UnityGame.PluginsPath
   name: PluginsPath
   href: api/IPA.Utilities.UnityGame.html#IPA_Utilities_UnityGame_PluginsPath
