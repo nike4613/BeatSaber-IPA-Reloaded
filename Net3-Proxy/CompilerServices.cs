@@ -36,6 +36,8 @@ namespace System.Runtime.CompilerServices
 
         public void Add(TKey key, TValue value)
         {
+            if (key == null)
+                throw new ArgumentException("Null key", nameof(key));
             lock (_lock)
                 items.Add(WeakRef(key), value);
         }
@@ -74,7 +76,12 @@ namespace System.Runtime.CompilerServices
             => GetValue(key, k => Activator.CreateInstance<TValue>());
 
         public bool Remove(TKey key)
-            => items.Remove(WeakRef(key));
+        {
+            if (key == null)
+                throw new ArgumentException("Null key", nameof(key));
+
+            items.Remove(WeakRef(key));
+        }
 
         public ConditionalWeakTable()
             => GCTracker.OnGC += OnGC;
