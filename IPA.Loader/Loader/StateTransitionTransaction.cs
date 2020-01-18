@@ -124,7 +124,7 @@ namespace IPA.Loader
             {
                 foreach (var dep in needsEnabled)
                 {
-                    var res = Disable(dep, out var failedDisabled, true);
+                    var res = Enable(dep, out var failedDisabled, true);
                     if (failedDisabled == null) continue;
                     disabledDeps = failedDisabled;
                     return res;
