@@ -512,6 +512,7 @@ namespace IPA.Loader
                 }
             }
 
+            DisabledConfig.Instance.Changed();
             PluginsMetadata = metadata;
         }
 
