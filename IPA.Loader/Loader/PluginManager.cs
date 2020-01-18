@@ -81,19 +81,15 @@ namespace IPA.Loader
 
         internal static Task CommitTransaction(StateTransitionTransaction transaction)
         {
-            if (UnityGame.OnMainThread)
-                return CommitTransactionInternal(transaction);
-            else
-                return UnityMainThreadTaskScheduler.Factory.StartNew(() => CommitTransactionInternal(transaction)).Unwrap();
-        }
-        private static Task CommitTransactionInternal(StateTransitionTransaction transaction)
-        {
+            if (!UnityGame.OnMainThread)
+                return UnityMainThreadTaskScheduler.Factory.StartNew(() => CommitTransaction(transaction)).Unwrap();
+
             lock (commitTransactionLockObject)
             {
                 if (transaction.CurrentlyEnabled.Except(AllPlugins)
                                .Concat(AllPlugins.Except(transaction.CurrentlyEnabled)).Any()
                  || transaction.CurrentlyDisabled.Except(DisabledPlugins)
-                               .Concat(DisabledPlugins.Except(transaction.DisabledPlugins)).Any())
+                               .Concat(DisabledPlugins.Except(transaction.CurrentlyDisabled)).Any())
                 { // ensure that the transaction's base state reflects the current state, otherwise throw
                     throw new InvalidOperationException("Transaction no longer resembles the current state of plugins");
                 }
