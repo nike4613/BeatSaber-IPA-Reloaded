@@ -52,6 +52,7 @@
     <Compile Include="Tuple.cs" />
     <Compile Include="TypeUtils.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="WeakReference.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AsyncBridge">
