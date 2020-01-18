@@ -216,6 +216,11 @@ namespace IPA.Loader
         /// </code>
         /// If you are running in a coroutine, you can use <see cref="Utilities.Async.Coroutines.WaitForTask(Task)"/> instead of <see langword="await"/>.
         /// </para>
+        /// <para>
+        /// If you are running on the Unity main thread, this will block until all enabling is done, and will return a task representing the disables.
+        /// Otherwise, the task returned represents both, and <i>will not complete</i> until Unity has done (possibly) several updates, depending on
+        /// the number of plugins being disabled, and the time they take.
+        /// </para>
         /// </remarks>
         /// <returns>a <see cref="Task"/> which completes whenever all disables complete</returns>
         /// <exception cref="ObjectDisposedException">if this object has been disposed</exception>
