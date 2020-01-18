@@ -80,7 +80,7 @@ namespace System.Runtime.CompilerServices
             if (key == null)
                 throw new ArgumentException("Null key", nameof(key));
 
-            items.Remove(WeakRef(key));
+            return items.Remove(WeakRef(key));
         }
 
         public ConditionalWeakTable()
