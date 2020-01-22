@@ -77,7 +77,12 @@ namespace IPA.Config.Stores
         /// another object of its type easily, and more importantly, as only one change. Its body will be executed after the values have been copied.
         /// </para>
         /// <para>
-        /// TODO: describe details of generated stores
+        /// Similarly, <typeparamref name="T"/> can declare a public or protected, <see langword="virtual"/> 
+        /// method <c>ChangeTransaction()</c> returning <see cref="IDisposable"/>, which may be called to get an object representing a transactional
+        /// change. This may be used to change a lot of properties at once without triggering a save multiple times. Ideally, this is used in a
+        /// <see langword="using"/> block or declaration. The <see cref="IDisposable"/> returned from your implementation will have its
+        /// <see cref="IDisposable.Dispose"/> called <i>after</i> <c>Changed()</c> is called, but <i>before</i> the write lock is released.
+        /// Unless you have a very good reason to use the nested <see cref="IDisposable"/>, avoid it.
         /// </para>
         /// </remarks>
         /// <typeparam name="T">the type to wrap</typeparam>
@@ -107,6 +112,7 @@ namespace IPA.Config.Stores
             void OnReload();
 
             void Changed();
+            IDisposable ChangeTransaction();
 
             Value Serialize();
             void Deserialize(Value val);
@@ -119,6 +125,7 @@ namespace IPA.Config.Stores
         internal class Impl : IConfigStore
         {
             private readonly IGeneratedStore generated;
+            private bool inChangeTransaction = false;
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
@@ -142,11 +149,19 @@ namespace IPA.Config.Stores
 
             internal static MethodInfo ImplTakeReadMethod = typeof(Impl).GetMethod(nameof(ImplTakeRead));
             public static void ImplTakeRead(IGeneratedStore s) => FindImpl(s).TakeRead();
-            public void TakeRead() => WriteSyncObject.EnterReadLock();
+            public void TakeRead()
+            {
+                if (!WriteSyncObject.IsWriteLockHeld)
+                    WriteSyncObject.EnterReadLock();
+            }
 
             internal static MethodInfo ImplReleaseReadMethod = typeof(Impl).GetMethod(nameof(ImplReleaseRead));
             public static void ImplReleaseRead(IGeneratedStore s) => FindImpl(s).ReleaseRead();
-            public void ReleaseRead() => WriteSyncObject.ExitReadLock();
+            public void ReleaseRead()
+            {
+                if (!WriteSyncObject.IsWriteLockHeld)
+                    WriteSyncObject.ExitReadLock();
+            }
 
             internal static MethodInfo ImplTakeWriteMethod = typeof(Impl).GetMethod(nameof(ImplTakeWrite));
             public static void ImplTakeWrite(IGeneratedStore s) => FindImpl(s).TakeWrite();
@@ -156,6 +171,44 @@ namespace IPA.Config.Stores
             public static void ImplReleaseWrite(IGeneratedStore s) => FindImpl(s).ReleaseWrite();
             public void ReleaseWrite() => WriteSyncObject.ExitWriteLock();
 
+            internal static MethodInfo ImplChangeTransactionMethod = typeof(Impl).GetMethod(nameof(ImplChangeTransaction));
+            public static IDisposable ImplChangeTransaction(IGeneratedStore s, IDisposable nest) => FindImpl(s).ChangeTransaction(nest);
+            // TODO: use some fixed pool of these, because their lifetimes are hella short
+            public IDisposable ChangeTransaction(IDisposable nest, bool takeWrite = true) 
+                => new ChangeTransactionObj(this, !inChangeTransaction, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
+
+            private sealed class ChangeTransactionObj : IDisposable
+            {
+                private readonly Impl impl;
+                private readonly bool owns;
+                private readonly bool ownsWrite;
+                private readonly IDisposable nested;
+
+                public ChangeTransactionObj(Impl impl, bool owning, IDisposable nest, bool takeWrite)
+                {
+                    this.impl = impl;
+                    nested = nest;
+                    if (owns = owning)
+                        impl.inChangeTransaction = true;
+                    if (ownsWrite = takeWrite)
+                        impl.TakeWrite();
+                }
+
+                public void Dispose()
+                {
+                    if (owns)
+                    {
+                        impl.inChangeTransaction = false;
+                        impl.InvokeChanged();
+                    }
+                    nested?.Dispose();
+                    if (ownsWrite)
+                        impl.ReleaseWrite();
+                    GC.SuppressFinalize(this);
+                }
+
+                ~ChangeTransactionObj() => Dispose();
+            }
 
             public static Impl FindImpl(IGeneratedStore store)
             {
@@ -173,9 +226,8 @@ namespace IPA.Config.Stores
                 Logger.config.Debug($"Read {values}");
                 generated.Deserialize(values);
 
-                ReleaseWrite();
+                using var transaction = generated.ChangeTransaction();
                 generated.OnReload();
-                TakeWrite(); // must take again for runtime to be happy (which is unfortunate)
             }
 
             internal static MethodInfo ImplWriteToMethod = typeof(Impl).GetMethod(nameof(ImplWriteTo));
@@ -290,6 +342,7 @@ namespace IPA.Config.Stores
 
         internal delegate IConfigStore GeneratedStoreCreator(IGeneratedStore parent);
 
+        private static bool IsMethodInvalid(MethodInfo m, Type ret) => !m.IsVirtual || m.ReturnType != ret;
         private static (GeneratedStoreCreator ctor, Type type) MakeCreator(Type type)
         { // note that this does not and should not use converters by default for everything
             if (!type.IsClass) throw new ArgumentException("Config type is not a class");
@@ -299,12 +352,18 @@ namespace IPA.Config.Stores
                 throw new ArgumentException("Config type does not have a public parameterless constructor");
 
             #region Parse base object structure
-            var baseChanged = type.GetMethod("Changed", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
-            if (baseChanged != null && !baseChanged.IsVirtual) baseChanged = null;
-            var baseOnReload = type.GetMethod("OnReload", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
-            if (baseOnReload != null && !baseOnReload.IsVirtual) baseOnReload = null;
-            var baseCopyFrom = type.GetMethod("CopyFrom", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { type }, Array.Empty<ParameterModifier>());
-            if (baseCopyFrom != null && !baseCopyFrom.IsVirtual) baseCopyFrom = null;
+            const BindingFlags overrideMemberFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            var baseChanged = type.GetMethod("Changed", overrideMemberFlags, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
+            if (baseChanged != null && IsMethodInvalid(baseChanged, typeof(void))) baseChanged = null;
+
+            var baseOnReload = type.GetMethod("OnReload", overrideMemberFlags, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
+            if (baseOnReload != null && IsMethodInvalid(baseOnReload, typeof(void))) baseOnReload = null;
+
+            var baseCopyFrom = type.GetMethod("CopyFrom", overrideMemberFlags, null, new[] { type }, Array.Empty<ParameterModifier>());
+            if (baseCopyFrom != null && IsMethodInvalid(baseCopyFrom, typeof(void))) baseCopyFrom = null;
+
+            var baseChangeTransaction = type.GetMethod("ChangeTransaction", overrideMemberFlags, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
+            if (baseChangeTransaction != null && IsMethodInvalid(baseChangeTransaction, typeof(IDisposable))) baseChangeTransaction = null;
 
             var structure = new List<SerializedMemberInfo>();
 
@@ -529,6 +588,7 @@ namespace IPA.Config.Stores
             var IGeneratedStore_Deserialize = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Deserialize));
             var IGeneratedStore_OnReload = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.OnReload));
             var IGeneratedStore_Changed = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.Changed));
+            var IGeneratedStore_ChangeTransaction = IGeneratedStore_t.GetMethod(nameof(IGeneratedStore.ChangeTransaction));
 
             #region IGeneratedStore.OnReload
             var onReload = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore.OnReload)}", virtualMemberMethod, null, Type.EmptyTypes);
@@ -691,56 +751,6 @@ namespace IPA.Config.Stores
             #endregion
             #endregion
 
-            #region IGeneratedStore<T>
-            var IGeneratedStore_T_t = typeof(IGeneratedStore<>).MakeGenericType(type);
-            typeBuilder.AddInterfaceImplementation(IGeneratedStore_T_t);
-
-            var IGeneratedStore_T_CopyFrom = IGeneratedStore_T_t.GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
-
-            #region IGeneratedStore<T>.CopyFrom
-            var copyFrom = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore<Config>.CopyFrom)}", virtualMemberMethod, null, new[] { type, typeof(bool) });
-            typeBuilder.DefineMethodOverride(copyFrom, IGeneratedStore_T_CopyFrom);
-
-            {
-                var il = copyFrom.GetILGenerator();
-
-                var startLock = il.DefineLabel();
-                il.Emit(OpCodes.Ldarg_2);
-                il.Emit(OpCodes.Brfalse, startLock);
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, Impl.ImplTakeWriteMethod); // take the write lock
-                il.MarkLabel(startLock);
-
-                var GetLocal = MakeGetLocal(il);
-
-                foreach (var member in structure)
-                {
-                    il.BeginExceptionBlock();
-
-                    EmitStore(il, member, il =>
-                    {
-                        EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
-                        EmitCorrectMember(il, member, false, false, GetLocal);
-                    });
-
-                    il.BeginCatchBlock(typeof(Exception));
-
-                    EmitWarnException(il, $"Error while copying from member {member.Name}");
-
-                    il.EndExceptionBlock();
-                }
-
-                var endLock = il.DefineLabel();
-                il.Emit(OpCodes.Ldarg_2);
-                il.Emit(OpCodes.Brfalse, endLock);
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, Impl.ImplReleaseWriteMethod); // release write lock
-                il.MarkLabel(endLock);
-                il.Emit(OpCodes.Ret);
-            }
-            #endregion
-            #endregion
-
             #region IConfigStore
             typeBuilder.AddInterfaceImplementation(typeof(IConfigStore));
 
@@ -815,39 +825,104 @@ namespace IPA.Config.Stores
                 "<>Changed",
                 virtualMemberMethod,
                 null, Type.EmptyTypes);
+            typeBuilder.DefineMethodOverride(coreChanged, IGeneratedStore_Changed);
+            if (baseChanged != null)
+                typeBuilder.DefineMethodOverride(coreChanged, baseChanged);
 
             {
                 var il = coreChanged.GetILGenerator();
 
+                if (baseChanged != null)
+                {
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, baseChanged); // call base
+                }
+
                 il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Tailcall);
                 il.Emit(OpCodes.Call, Impl.ImplSignalChangedMethod);
                 il.Emit(OpCodes.Ret); // simply call our impl's SignalChanged method and return
             }
+            #endregion
 
-            if (baseChanged != null) {
-                var changedMethod = typeBuilder.DefineMethod( // copy to override baseChanged
-                    baseChanged.Name,
-                    virtualMemberMethod, 
-                    null, Type.EmptyTypes);
-                typeBuilder.DefineMethodOverride(changedMethod, baseChanged);
+            #region ChangeTransaction
+            var coreChangeTransaction = typeBuilder.DefineMethod(
+                "<>ChangeTransaction",
+                virtualMemberMethod,
+                typeof(IDisposable), Type.EmptyTypes);
+            typeBuilder.DefineMethodOverride(coreChangeTransaction, IGeneratedStore_ChangeTransaction);
+            if (baseChangeTransaction != null)
+                typeBuilder.DefineMethodOverride(coreChangeTransaction, baseChangeTransaction);
 
+            {
+                var il = coreChangeTransaction.GetILGenerator();
+
+                il.Emit(OpCodes.Ldarg_0);
+                if (baseChangeTransaction != null)
                 {
-                    var il = changedMethod.GetILGenerator();
-
                     il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Call, baseChanged); // call base
+                    il.Emit(OpCodes.Call, baseChangeTransaction);
+                }
+                else
+                    il.Emit(OpCodes.Ldnull);
 
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Tailcall);
-                    il.Emit(OpCodes.Call, coreChanged); // call back to the core change method
+                il.Emit(OpCodes.Tailcall);
+                il.Emit(OpCodes.Call, Impl.ImplChangeTransactionMethod);
+                il.Emit(OpCodes.Ret);
+            }
+            #endregion
 
-                    il.Emit(OpCodes.Ret);
+            #region IGeneratedStore<T>
+            var IGeneratedStore_T_t = typeof(IGeneratedStore<>).MakeGenericType(type);
+            typeBuilder.AddInterfaceImplementation(IGeneratedStore_T_t);
+
+            var IGeneratedStore_T_CopyFrom = IGeneratedStore_T_t.GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
+
+            #region IGeneratedStore<T>.CopyFrom
+            var copyFrom = typeBuilder.DefineMethod($"<>{nameof(IGeneratedStore<Config>.CopyFrom)}", virtualMemberMethod, null, new[] { type, typeof(bool) });
+            typeBuilder.DefineMethodOverride(copyFrom, IGeneratedStore_T_CopyFrom);
+
+            {
+                var il = copyFrom.GetILGenerator();
+
+                var transactionLocal = il.DeclareLocal(IDisposable_t);
+
+                var startLock = il.DefineLabel();
+                il.Emit(OpCodes.Ldarg_2);
+                il.Emit(OpCodes.Brfalse, startLock);
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Call, coreChangeTransaction); // take the write lock
+                il.Emit(OpCodes.Stloc, transactionLocal);
+                il.MarkLabel(startLock);
+
+                var GetLocal = MakeGetLocal(il);
+
+                foreach (var member in structure)
+                {
+                    il.BeginExceptionBlock();
+
+                    EmitStore(il, member, il =>
+                    {
+                        EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
+                        EmitCorrectMember(il, member, false, false, GetLocal);
+                    });
+
+                    il.BeginCatchBlock(typeof(Exception));
+
+                    EmitWarnException(il, $"Error while copying from member {member.Name}");
+
+                    il.EndExceptionBlock();
                 }
 
-                coreChanged = changedMethod; // switch to calling this version instead of just the default
+                var endLock = il.DefineLabel();
+                il.Emit(OpCodes.Ldarg_2);
+                il.Emit(OpCodes.Brfalse, endLock);
+                il.Emit(OpCodes.Ldloc, transactionLocal);
+                il.Emit(OpCodes.Callvirt, IDisposable_Dispose);
+                il.MarkLabel(endLock);
+                il.Emit(OpCodes.Ret);
             }
-
-            typeBuilder.DefineMethodOverride(coreChanged, IGeneratedStore_Changed);
+            #endregion
             #endregion
 
             #region base.CopyFrom
@@ -862,20 +937,20 @@ namespace IPA.Config.Stores
                 {
                     var il = pubCopyFrom.GetILGenerator();
 
-                    // TODO: use transactional changes
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, coreChangeTransaction);
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Ldc_I4_1);
+                    il.Emit(OpCodes.Ldc_I4_0);
                     il.Emit(OpCodes.Call, copyFrom); // call internal
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Call, baseCopyFrom); // call base
 
-                    il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Tailcall);
-                    il.Emit(OpCodes.Call, coreChanged); // call changed
+                    il.Emit(OpCodes.Callvirt, IDisposable_Dispose); // dispose transaction (which calls changed)
                     il.Emit(OpCodes.Ret);
                 }
             }
@@ -925,10 +1000,12 @@ namespace IPA.Config.Stores
                 { // TODO: decide if i want to correct the value before or after i take the write lock
                     var il = propSet.GetILGenerator();
 
+                    var transactionLocal = il.DeclareLocal(IDisposable_t);
                     var GetLocal = MakeGetLocal(il);
 
                     il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Call, Impl.ImplTakeWriteMethod); // take the write lock
+                    il.Emit(OpCodes.Call, coreChangeTransaction); // take the write lock
+                    il.Emit(OpCodes.Stloc, transactionLocal);
 
                     il.BeginExceptionBlock();
 
@@ -939,13 +1016,10 @@ namespace IPA.Config.Stores
 
                     il.BeginFinallyBlock();
 
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Call, Impl.ImplReleaseWriteMethod); // release the write lock
+                    il.Emit(OpCodes.Ldloc, transactionLocal);
+                    il.Emit(OpCodes.Callvirt, IDisposable_Dispose);
 
                     il.EndExceptionBlock();
-
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Call, Impl.ImplInvokeChangedMethod);
 
                     il.Emit(OpCodes.Ret);
                 }
@@ -1124,6 +1198,9 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Ldtoken, type);
             il.Emit(OpCodes.Call, Type_GetTypeFromHandle);
         }
+
+        private static Type IDisposable_t = typeof(IDisposable);
+        private static MethodInfo IDisposable_Dispose = IDisposable_t.GetMethod(nameof(IDisposable.Dispose));
 
         private static Type Decimal_t = typeof(decimal);
         private static ConstructorInfo Decimal_FromFloat = Decimal_t.GetConstructor(new[] { typeof(float) });

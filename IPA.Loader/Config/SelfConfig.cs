@@ -29,7 +29,7 @@ namespace IPA.Config
         protected internal virtual void OnReload()
         {
             if (Regenerate)
-                CopyFrom(new SelfConfig());
+                CopyFrom(new SelfConfig { Regenerate = false });
             StandardLogger.Configure();
         }
 
@@ -75,7 +75,7 @@ namespace IPA.Config
 
         // END: section ignore
 
-        public virtual bool Regenerate { get; set; } = false;
+        public virtual bool Regenerate { get; set; } = true;
 
         public class Updates_
         {
