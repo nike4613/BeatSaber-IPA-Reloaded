@@ -23,18 +23,22 @@ namespace IPA.Loader
             Instance = Disabled.Generated<DisabledConfig>();
         }
 
-        public virtual bool Reset { get; set; } = false;
+        public virtual bool Reset { get; set; } = true;
 
         [NonNullable]
         [UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
         public virtual HashSet<string> DisabledModIds { get; set; } = new HashSet<string>();
 
         protected internal virtual void Changed() { }
+        protected internal virtual IDisposable ChangeTransaction() => null;
 
         protected virtual void OnReload()
         {
             if (DisabledModIds == null || Reset)
+            {
                 DisabledModIds = new HashSet<string>();
+                Reset = false;
+            }
         }
     }
 }

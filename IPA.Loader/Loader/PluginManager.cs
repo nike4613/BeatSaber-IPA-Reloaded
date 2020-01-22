@@ -98,6 +98,7 @@ namespace IPA.Loader
                 var toDisable = transaction.ToDisable;
                 transaction.Dispose();
 
+                using var disabledChangeTransaction = DisabledConfig.Instance.ChangeTransaction();
                 {
                     // first enable the mods that need to be
                     void DeTree(List<PluginMetadata> into, IEnumerable<PluginMetadata> tree)
@@ -198,7 +199,8 @@ namespace IPA.Loader
                     result = TaskEx.WhenAll(disableStructure.Select(d => Disable(d, disabled)));
                 }
 
-                DisabledConfig.Instance.Changed();
+                //DisabledConfig.Instance.Changed();
+                // changed is handled by transaction
                 return result;
             }
         }
