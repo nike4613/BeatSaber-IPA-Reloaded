@@ -94,6 +94,10 @@ ignored during serialization and deserialization.</p>
 that would otherwise be nullable (i.e. a reference type or a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable&lt;T&gt;</a> type) should never be null, and the 
 member will be ignored if the deserialized value is <span class="xref">null</span>.</p>
 </section>
+      <h4><a class="xref" href="IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute.html">NotifyPropertyChangesAttribute</a></h4>
+      <section><p>Indicates that the generated subclass of the attribute&apos;s target should implement <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a>.
+If the type this is applied to already inherits it, this is implied.</p>
+</section>
       <h4><a class="xref" href="IPA.Config.Stores.Attributes.SerializedNameAttribute.html">SerializedNameAttribute</a></h4>
       <section><p>Specifies a name for the serialized field or property in an object being wrapped by 
 <a class="xref" href="IPA.Config.Stores.GeneratedExtension.html#IPA_Config_Stores_GeneratedExtension_Generated__1_IPA_Config_Config_System_Boolean_">Generated&lt;T&gt;(Config, Boolean)</a> that is different from the member name itself.</p>

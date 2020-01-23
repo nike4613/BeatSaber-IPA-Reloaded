@@ -1648,6 +1648,12 @@ references:
   commentId: T:IPA.Config.Stores.Attributes.NonNullableAttribute
   fullName: IPA.Config.Stores.Attributes.NonNullableAttribute
   nameWithType: NonNullableAttribute
+- uid: IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute
+  name: NotifyPropertyChangesAttribute
+  href: api/IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute.html
+  commentId: T:IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute
+  fullName: IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute
+  nameWithType: NotifyPropertyChangesAttribute
 - uid: IPA.Config.Stores.Attributes.SerializedNameAttribute
   name: SerializedNameAttribute
   href: api/IPA.Config.Stores.Attributes.SerializedNameAttribute.html

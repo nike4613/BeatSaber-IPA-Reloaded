@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class SerializedNameAttribute
+    <title>Class NotifyPropertyChangesAttribute
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class SerializedNameAttribute
+    <meta name="title" content="Class NotifyPropertyChangesAttribute
    ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -79,20 +79,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="IPA.Config.Stores.Attributes.SerializedNameAttribute">
+            <article class="content wrap" id="_content" data-uid="IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute">
   
   
-  <h1 id="IPA_Config_Stores_Attributes_SerializedNameAttribute" data-uid="IPA.Config.Stores.Attributes.SerializedNameAttribute" class="text-break">Class SerializedNameAttribute
+  <h1 id="IPA_Config_Stores_Attributes_NotifyPropertyChangesAttribute" data-uid="IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute" class="text-break">Class NotifyPropertyChangesAttribute
   </h1>
-  <div class="markdown level0 summary"><p>Specifies a name for the serialized field or property in an object being wrapped by 
-<a class="xref" href="IPA.Config.Stores.GeneratedExtension.html#IPA_Config_Stores_GeneratedExtension_Generated__1_IPA_Config_Config_System_Boolean_">Generated&lt;T&gt;(Config, Boolean)</a> that is different from the member name itself.</p>
+  <div class="markdown level0 summary"><p>Indicates that the generated subclass of the attribute&apos;s target should implement <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a>.
+If the type this is applied to already inherits it, this is implied.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.attribute">Attribute</a></div>
-    <div class="level2"><span class="xref">SerializedNameAttribute</span></div>
+    <div class="level2"><span class="xref">NotifyPropertyChangesAttribute</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -241,103 +241,11 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Config.Stores.Attributes.html">IPA.Config.Stores.Attributes</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
-  <h5 id="IPA_Config_Stores_Attributes_SerializedNameAttribute_syntax">Syntax</h5>
+  <h5 id="IPA_Config_Stores_Attributes_NotifyPropertyChangesAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-public sealed class SerializedNameAttribute : Attribute, _Attribute</code></pre>
+    <pre><code class="lang-csharp hljs">[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+public sealed class NotifyPropertyChangesAttribute : Attribute, _Attribute</code></pre>
   </div>
-  <h5 id="IPA_Config_Stores_Attributes_SerializedNameAttribute_examples"><strong>Examples</strong></h5>
-  <p>
-When serializing the following object, we might get the JSON that follows.
-<pre><code>public class PluginConfig 
-{
-    public virtual bool BooleanField { get; set; } = true;
-}</code></pre>
-<pre><code>{
-    &quot;BooleanField&quot;: true
-}</code></pre>
-</p>
-<p>
-However, if we were to add a <a class="xref" href="IPA.Config.Stores.Attributes.SerializedNameAttribute.html">SerializedNameAttribute</a> to that field, we would get the following.
-<pre><code>public class PluginConfig 
-{
-    [SerializedName(&quot;bool&quot;)]
-    public virtual bool BooleanField { get; set; } = true;
-}</code></pre>
-<pre><code>{
-    &quot;bool&quot;: true
-}</code></pre>
-</p>
-
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Config_Stores_Attributes_SerializedNameAttribute__ctor_System_String_.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Attributes.SerializedNameAttribute.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/7e2f34d5f29a860019b2b412a601924661a92e45/IPA.Loader/Config/Stores/Attributes.cs/#L122">View Source</a>
-  </span>
-  <a id="IPA_Config_Stores_Attributes_SerializedNameAttribute__ctor_" data-uid="IPA.Config.Stores.Attributes.SerializedNameAttribute.#ctor*"></a>
-  <h4 id="IPA_Config_Stores_Attributes_SerializedNameAttribute__ctor_System_String_" data-uid="IPA.Config.Stores.Attributes.SerializedNameAttribute.#ctor(System.String)">SerializedNameAttribute(String)</h4>
-  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="IPA.Config.Stores.Attributes.SerializedNameAttribute.html">SerializedNameAttribute</a> with the given <a class="xref" href="IPA.Config.Stores.Attributes.SerializedNameAttribute.html#IPA_Config_Stores_Attributes_SerializedNameAttribute_Name">Name</a>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SerializedNameAttribute(string name)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">name</span></td>
-        <td><p>the value to assign to <a class="xref" href="IPA.Config.Stores.Attributes.SerializedNameAttribute.html#IPA_Config_Stores_Attributes_SerializedNameAttribute_Name">Name</a></p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Config_Stores_Attributes_SerializedNameAttribute_Name.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Attributes.SerializedNameAttribute.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/7e2f34d5f29a860019b2b412a601924661a92e45/IPA.Loader/Config/Stores/Attributes.cs/#L116">View Source</a>
-  </span>
-  <a id="IPA_Config_Stores_Attributes_SerializedNameAttribute_Name_" data-uid="IPA.Config.Stores.Attributes.SerializedNameAttribute.Name*"></a>
-  <h4 id="IPA_Config_Stores_Attributes_SerializedNameAttribute_Name" data-uid="IPA.Config.Stores.Attributes.SerializedNameAttribute.Name">Name</h4>
-  <div class="markdown level1 summary"><p>Gets the name to replace the member name with.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.interopservices._attribute">System.Runtime.InteropServices._Attribute</a>
@@ -366,10 +274,10 @@ However, if we were to add a <a class="xref" href="IPA.Config.Stores.Attributes.
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Config_Stores_Attributes_SerializedNameAttribute.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Attributes.SerializedNameAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/4.0.0-beta/docs/override/new?filename=IPA_Config_Stores_Attributes_NotifyPropertyChangesAttribute.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Attributes.NotifyPropertyChangesAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/7e2f34d5f29a860019b2b412a601924661a92e45/IPA.Loader/Config/Stores/Attributes.cs/#L110" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/7e2f34d5f29a860019b2b412a601924661a92e45/IPA.Loader/Config/Stores/Attributes.cs/#L14" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
