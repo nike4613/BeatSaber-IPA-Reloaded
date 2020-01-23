@@ -102,7 +102,7 @@
     <Compile Include="Config\Stores\Converters.cs" />
     <Compile Include="Config\Stores\CustomObjectConverter.cs" />
     <Compile Include="Config\Stores\CollectionConverter.cs" />
-    <Compile Include="Config\Stores\GeneratedStore.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl.cs" />
     <Compile Include="Config\Stores\GeneratedStoreCollections.cs" />
     <Compile Include="Config\Stores\ValueConverter.cs" />
     <Compile Include="JsonConverters\AlmostVersionConverter.cs" />

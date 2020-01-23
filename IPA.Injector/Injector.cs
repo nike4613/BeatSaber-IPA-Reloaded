@@ -336,7 +336,7 @@ namespace IPA.Injector
             PluginComponent.Create();
 
 #if DEBUG
-            Config.Stores.GeneratedStore.DebugSaveAssembly("GeneratedAssembly.dll");
+            Config.Stores.GeneratedStoreImpl.DebugSaveAssembly("GeneratedAssembly.dll");
 #endif
         }
     }
