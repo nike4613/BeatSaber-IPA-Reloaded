@@ -126,6 +126,7 @@ namespace IPA.Config.Stores
         {
             private readonly IGeneratedStore generated;
             private bool inChangeTransaction = false;
+            private bool changedInTransaction = false;
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
@@ -173,41 +174,61 @@ namespace IPA.Config.Stores
 
             internal static MethodInfo ImplChangeTransactionMethod = typeof(Impl).GetMethod(nameof(ImplChangeTransaction));
             public static IDisposable ImplChangeTransaction(IGeneratedStore s, IDisposable nest) => FindImpl(s).ChangeTransaction(nest);
-            // TODO: use some fixed pool of these, because their lifetimes are hella short
+            // TODO: improve trasactionals so they don't always save in every case
             public IDisposable ChangeTransaction(IDisposable nest, bool takeWrite = true) 
-                => new ChangeTransactionObj(this, !inChangeTransaction, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
+                => GetFreeTransaction().InitWith(this, !inChangeTransaction, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
+
+            private ChangeTransactionObj GetFreeTransaction()
+                => freeTransactionObjs.Count > 0 ? freeTransactionObjs.Pop()
+                                                 : new ChangeTransactionObj();
+            // TODO: maybe sometimes clean this?
+            private static readonly Stack<ChangeTransactionObj> freeTransactionObjs = new Stack<ChangeTransactionObj>();
 
             private sealed class ChangeTransactionObj : IDisposable
             {
-                private readonly Impl impl;
-                private readonly bool owns;
-                private readonly bool ownsWrite;
-                private readonly IDisposable nested;
-
-                public ChangeTransactionObj(Impl impl, bool owning, IDisposable nest, bool takeWrite)
+                private struct Data
                 {
-                    this.impl = impl;
-                    nested = nest;
-                    if (owns = owning)
-                        impl.inChangeTransaction = true;
-                    if (ownsWrite = takeWrite)
-                        impl.TakeWrite();
-                }
+                    public readonly Impl impl;
+                    public readonly bool owns;
+                    public readonly bool ownsWrite;
+                    public readonly IDisposable nested;
 
-                public void Dispose()
-                {
-                    if (owns)
+                    public Data(Impl impl, bool owning, bool takeWrite, IDisposable nest)
                     {
-                        impl.inChangeTransaction = false;
-                        impl.InvokeChanged();
+                        this.impl = impl; owns = owning; ownsWrite = takeWrite; nested = nest;
                     }
-                    nested?.Dispose();
-                    if (ownsWrite)
-                        impl.ReleaseWrite();
-                    GC.SuppressFinalize(this);
+                }
+                private Data data;
+
+                public ChangeTransactionObj InitWith(Impl impl, bool owning, IDisposable nest, bool takeWrite)
+                {
+                    data = new Data(impl, owning, takeWrite, nest);
+
+                    if (data.owns)
+                        impl.inChangeTransaction = true;
+                    if (data.ownsWrite)
+                        impl.TakeWrite();
+
+                    return this;
                 }
 
-                ~ChangeTransactionObj() => Dispose();
+                public void Dispose() => Dispose(true);
+                private void Dispose(bool addToStore)
+                {
+                    if (data.owns)
+                    {
+                        data.impl.inChangeTransaction = false;
+                        data.impl.InvokeChanged();
+                    }
+                    data.nested?.Dispose();
+                    if (data.ownsWrite)
+                        data.impl.ReleaseWrite();
+
+                    if (addToStore)
+                        freeTransactionObjs.Push(this);
+                }
+
+                ~ChangeTransactionObj() => Dispose(false);
             }
 
             public static Impl FindImpl(IGeneratedStore store)
