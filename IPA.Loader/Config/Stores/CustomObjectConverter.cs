@@ -4,10 +4,10 @@ using System;
 namespace IPA.Config.Stores.Converters
 {
     /// <summary>
-    /// A <see cref="ValueConverter{T}"/> for objects normally serialized to config via <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>.
+    /// A <see cref="ValueConverter{T}"/> for objects normally serialized to config via <see cref="GeneratedStore.Generated{T}(Config, bool)"/>.
     /// </summary>
-    /// <typeparam name="T">the same type parameter that would be passed into <see cref="GeneratedExtension.Generated{T}(Config, bool)"/></typeparam>
-    /// <seealso cref="GeneratedExtension.Generated{T}(Config, bool)"/>
+    /// <typeparam name="T">the same type parameter that would be passed into <see cref="GeneratedStore.Generated{T}(Config, bool)"/></typeparam>
+    /// <seealso cref="GeneratedStore.Generated{T}(Config, bool)"/>
     public class CustomObjectConverter<T> : ValueConverter<T> where T : class
     {
         private interface IImpl
@@ -15,22 +15,22 @@ namespace IPA.Config.Stores.Converters
             T FromValue(Value value, object parent);
             Value ToValue(T obj, object parent);
         }
-        private class Impl<U> : IImpl where U : class, GeneratedStore.IGeneratedStore<T>, T
+        private class Impl<U> : IImpl where U : class, GeneratedStoreImpl.IGeneratedStore<T>, T
         {
-            private static readonly GeneratedStore.GeneratedStoreCreator creator = GeneratedStore.GetCreator(typeof(T));
-            private static U Create(GeneratedStore.IGeneratedStore parent)
+            private static readonly GeneratedStoreImpl.GeneratedStoreCreator creator = GeneratedStoreImpl.GetCreator(typeof(T));
+            private static U Create(GeneratedStoreImpl.IGeneratedStore parent)
                 => creator(parent) as U;
 
             public T FromValue(Value value, object parent)
             { // lots of casting here, but it works i promise (probably) (parent can be a non-IGeneratedStore, however it won't necessarily behave then)
-                var obj = Create(parent as GeneratedStore.IGeneratedStore);
+                var obj = Create(parent as GeneratedStoreImpl.IGeneratedStore);
                 obj.Deserialize(value);
                 return obj;
             }
 
             public Value ToValue(T obj, object parent)
             {
-                if (obj is GeneratedStore.IGeneratedStore store)
+                if (obj is GeneratedStoreImpl.IGeneratedStore store)
                     return store.Serialize();
                 else
                 {
@@ -42,7 +42,7 @@ namespace IPA.Config.Stores.Converters
         }
 
         private static readonly IImpl impl = (IImpl)Activator.CreateInstance(
-            typeof(Impl<>).MakeGenericType(GeneratedStore.GetGeneratedType(typeof(T))));
+            typeof(Impl<>).MakeGenericType(GeneratedStoreImpl.GetGeneratedType(typeof(T))));
 
         /// <summary>
         /// Deserializes <paramref name="value"/> into a <typeparamref name="T"/> with the given <paramref name="parent"/>.

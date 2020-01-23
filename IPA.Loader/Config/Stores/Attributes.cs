@@ -15,14 +15,14 @@ namespace IPA.Config.Stores.Attributes
     public sealed class NotifyPropertyChangesAttribute : Attribute { }
 
     /// <summary>
-    /// Causes a field or property in an object being wrapped by <see cref="GeneratedExtension.Generated{T}(Config, bool)"/> to be
+    /// Causes a field or property in an object being wrapped by <see cref="GeneratedStore.Generated{T}(Config, bool)"/> to be
     /// ignored during serialization and deserialization.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public sealed class IgnoreAttribute : Attribute { }
 
     /// <summary>
-    /// Indicates that a field or property in an object being wrapped by <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>
+    /// Indicates that a field or property in an object being wrapped by <see cref="GeneratedStore.Generated{T}(Config, bool)"/>
     /// that would otherwise be nullable (i.e. a reference type or a <see cref="Nullable{T}"/> type) should never be null, and the 
     /// member will be ignored if the deserialized value is <see langword="null"/>.
     /// </summary>
@@ -30,7 +30,7 @@ namespace IPA.Config.Stores.Attributes
     public sealed class NonNullableAttribute : Attribute { }
 
     /// <summary>
-    /// Indicates that a given field or property in an object being wrapped by <see cref="GeneratedExtension.Generated{T}(Config, bool)"/>
+    /// Indicates that a given field or property in an object being wrapped by <see cref="GeneratedStore.Generated{T}(Config, bool)"/>
     /// should be serialized and deserialized using the provided converter instead of the default mechanism. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
@@ -74,7 +74,7 @@ namespace IPA.Config.Stores.Attributes
 
     /// <summary>
     /// Specifies a name for the serialized field or property in an object being wrapped by 
-    /// <see cref="GeneratedExtension.Generated{T}(Config, bool)"/> that is different from the member name itself.
+    /// <see cref="GeneratedStore.Generated{T}(Config, bool)"/> that is different from the member name itself.
     /// </summary>
     /// <example>
     /// <para>

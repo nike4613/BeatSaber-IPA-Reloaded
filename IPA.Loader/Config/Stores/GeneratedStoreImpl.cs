@@ -21,7 +21,7 @@ using Net3_Proxy;
 using Array = Net3_Proxy.Array;
 #endif
 
-[assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget)]
+[assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget)]
 
 namespace IPA.Config.Stores
 {
@@ -29,12 +29,12 @@ namespace IPA.Config.Stores
     /// A class providing an extension for <see cref="Config"/> to make it easy to use generated
     /// config stores.
     /// </summary>
-    public static class GeneratedExtension
+    public static class GeneratedStore
     {
         /// <summary>
         /// The name of the assembly that internals must be visible to to allow internal protection.
         /// </summary>
-        public const string AssemblyVisibilityTarget = GeneratedStore.GeneratedAssemblyName;
+        public const string AssemblyVisibilityTarget = GeneratedStoreImpl.GeneratedAssemblyName;
 
         /// <summary>
         /// Creates a generated <see cref="IConfigStore"/> of type <typeparamref name="T"/>, registers it to
@@ -47,7 +47,7 @@ namespace IPA.Config.Stores
         /// It can also be internal, but in that case, then your assembly must have the following attribute
         /// to allow the generated code to reference it.
         /// <code>
-        /// [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget)]
+        /// [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget)]
         /// </code>
         /// </para>
         /// <para>
@@ -97,7 +97,7 @@ namespace IPA.Config.Stores
         /// <returns>a generated instance of <typeparamref name="T"/> as a special <see cref="IConfigStore"/></returns>
         public static T Generated<T>(this Config cfg, bool loadSync = true) where T : class
         {
-            var ret = GeneratedStore.Create<T>();
+            var ret = GeneratedStoreImpl.Create<T>();
             cfg.SetStore(ret as IConfigStore);
             if (loadSync)
                 cfg.LoadSync();
@@ -106,9 +106,21 @@ namespace IPA.Config.Stores
 
             return ret;
         }
+
+        /// <summary>
+        /// Creates a generated store outside of the context of the config system.
+        /// </summary>
+        /// <remarks>
+        /// See <see cref="Generated{T}(Config, bool)"/> for more information about how it behaves.
+        /// </remarks>
+        /// <typeparam name="T">the type to wrap</typeparam>
+        /// <returns>a generated instance of <typeparamref name="T"/> implementing functionality described by <see cref="Generated{T}(Config, bool)"/></returns>
+        /// <seealso cref="Generated{T}(Config, bool)"/>
+        public static T Create<T>() where T : class
+            => GeneratedStoreImpl.Create<T>();
     }
 
-    internal static class GeneratedStore
+    internal static class GeneratedStoreImpl
     {
         internal interface IGeneratedStore
         {
@@ -279,7 +291,7 @@ namespace IPA.Config.Stores
         public static IConfigStore Create(Type type) => Create(type, null);
 
         private static readonly MethodInfo CreateGParent = 
-            typeof(GeneratedStore).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static, null, 
+            typeof(GeneratedStoreImpl).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static, null, 
                                              CallingConventions.Any, new[] { typeof(IGeneratedStore) }, Array.Empty<ParameterModifier>());
         internal static T Create<T>(IGeneratedStore parent) where T : class => (T)Create(typeof(T), parent);
 
@@ -1228,17 +1240,17 @@ namespace IPA.Config.Stores
         }
 
         #region Logs
-        private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogError(Type expected, Type found, string message)
         {
             Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
         }
-        private static readonly MethodInfo LogWarningMethod = typeof(GeneratedStore).GetMethod(nameof(LogWarning), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo LogWarningMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogWarning), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogWarning(string message)
         {
             Logger.config.Warn(message);
         }
-        private static readonly MethodInfo LogWarningExceptionMethod = typeof(GeneratedStore).GetMethod(nameof(LogWarningException), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo LogWarningExceptionMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogWarningException), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogWarningException(Exception exception)
         {
             Logger.config.Warn(exception);
