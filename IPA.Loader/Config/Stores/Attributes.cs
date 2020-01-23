@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace IPA.Config.Stores.Attributes
 {
+    /// <summary>
+    /// Indicates that the generated subclass of the attribute's target should implement <see cref="INotifyPropertyChanged"/>.
+    /// If the type this is applied to already inherits it, this is implied.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    public sealed class NotifyPropertyChangesAttribute : Attribute { }
+
     /// <summary>
     /// Causes a field or property in an object being wrapped by <see cref="GeneratedExtension.Generated{T}(Config, bool)"/> to be
     /// ignored during serialization and deserialization.
