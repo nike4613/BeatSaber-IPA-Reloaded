@@ -2361,34 +2361,50 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.NullableConverter(Of T, TConverter).NullableConverter
   nameWithType: NullableConverter<T, TConverter>.NullableConverter
   nameWithType.vb: NullableConverter(Of T, TConverter).NullableConverter
-- uid: IPA.Config.Stores.GeneratedExtension
-  name: GeneratedExtension
-  href: api/IPA.Config.Stores.GeneratedExtension.html
-  commentId: T:IPA.Config.Stores.GeneratedExtension
-  fullName: IPA.Config.Stores.GeneratedExtension
-  nameWithType: GeneratedExtension
-- uid: IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget
+- uid: IPA.Config.Stores.GeneratedStore
+  name: GeneratedStore
+  href: api/IPA.Config.Stores.GeneratedStore.html
+  commentId: T:IPA.Config.Stores.GeneratedStore
+  fullName: IPA.Config.Stores.GeneratedStore
+  nameWithType: GeneratedStore
+- uid: IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget
   name: AssemblyVisibilityTarget
-  href: api/IPA.Config.Stores.GeneratedExtension.html#IPA_Config_Stores_GeneratedExtension_AssemblyVisibilityTarget
-  commentId: F:IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget
-  fullName: IPA.Config.Stores.GeneratedExtension.AssemblyVisibilityTarget
-  nameWithType: GeneratedExtension.AssemblyVisibilityTarget
-- uid: IPA.Config.Stores.GeneratedExtension.Generated*
-  name: Generated
-  href: api/IPA.Config.Stores.GeneratedExtension.html#IPA_Config_Stores_GeneratedExtension_Generated_
-  commentId: Overload:IPA.Config.Stores.GeneratedExtension.Generated
+  href: api/IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_AssemblyVisibilityTarget
+  commentId: F:IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget
+  fullName: IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget
+  nameWithType: GeneratedStore.AssemblyVisibilityTarget
+- uid: IPA.Config.Stores.GeneratedStore.Create*
+  name: Create
+  href: api/IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Create_
+  commentId: Overload:IPA.Config.Stores.GeneratedStore.Create
   isSpec: "True"
-  fullName: IPA.Config.Stores.GeneratedExtension.Generated
-  nameWithType: GeneratedExtension.Generated
-- uid: IPA.Config.Stores.GeneratedExtension.Generated``1(IPA.Config.Config,System.Boolean)
+  fullName: IPA.Config.Stores.GeneratedStore.Create
+  nameWithType: GeneratedStore.Create
+- uid: IPA.Config.Stores.GeneratedStore.Create``1
+  name: Create<T>()
+  href: api/IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Create__1
+  commentId: M:IPA.Config.Stores.GeneratedStore.Create``1
+  name.vb: Create(Of T)()
+  fullName: IPA.Config.Stores.GeneratedStore.Create<T>()
+  fullName.vb: IPA.Config.Stores.GeneratedStore.Create(Of T)()
+  nameWithType: GeneratedStore.Create<T>()
+  nameWithType.vb: GeneratedStore.Create(Of T)()
+- uid: IPA.Config.Stores.GeneratedStore.Generated*
+  name: Generated
+  href: api/IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Generated_
+  commentId: Overload:IPA.Config.Stores.GeneratedStore.Generated
+  isSpec: "True"
+  fullName: IPA.Config.Stores.GeneratedStore.Generated
+  nameWithType: GeneratedStore.Generated
+- uid: IPA.Config.Stores.GeneratedStore.Generated``1(IPA.Config.Config,System.Boolean)
   name: Generated<T>(Config, Boolean)
-  href: api/IPA.Config.Stores.GeneratedExtension.html#IPA_Config_Stores_GeneratedExtension_Generated__1_IPA_Config_Config_System_Boolean_
-  commentId: M:IPA.Config.Stores.GeneratedExtension.Generated``1(IPA.Config.Config,System.Boolean)
+  href: api/IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Generated__1_IPA_Config_Config_System_Boolean_
+  commentId: M:IPA.Config.Stores.GeneratedStore.Generated``1(IPA.Config.Config,System.Boolean)
   name.vb: Generated(Of T)(Config, Boolean)
-  fullName: IPA.Config.Stores.GeneratedExtension.Generated<T>(IPA.Config.Config, System.Boolean)
-  fullName.vb: IPA.Config.Stores.GeneratedExtension.Generated(Of T)(IPA.Config.Config, System.Boolean)
-  nameWithType: GeneratedExtension.Generated<T>(Config, Boolean)
-  nameWithType.vb: GeneratedExtension.Generated(Of T)(Config, Boolean)
+  fullName: IPA.Config.Stores.GeneratedStore.Generated<T>(IPA.Config.Config, System.Boolean)
+  fullName.vb: IPA.Config.Stores.GeneratedStore.Generated(Of T)(IPA.Config.Config, System.Boolean)
+  nameWithType: GeneratedStore.Generated<T>(Config, Boolean)
+  nameWithType.vb: GeneratedStore.Generated(Of T)(Config, Boolean)
 - uid: IPA.Config.Stores.IValueConverter
   name: IValueConverter
   href: api/IPA.Config.Stores.IValueConverter.html
