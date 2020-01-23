@@ -15,6 +15,7 @@ using System.IO;
 using Boolean = IPA.Config.Data.Boolean;
 using System.Collections;
 using IPA.Utilities;
+using System.ComponentModel;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -84,6 +85,11 @@ namespace IPA.Config.Stores
         /// <see cref="IDisposable.Dispose"/> called <i>after</i> <c>Changed()</c> is called, but <i>before</i> the write lock is released.
         /// Unless you have a very good reason to use the nested <see cref="IDisposable"/>, avoid it.
         /// </para>
+        /// <para>
+        /// If <typeparamref name="T"/> is marked with <see cref="NotifyPropertyChangesAttribute"/>, the resulting object will implement
+        /// <see cref="INotifyPropertyChanged"/>. Similarly, if <typeparamref name="T"/> implements <see cref="INotifyPropertyChanged"/>,
+        /// the resulting object will implement it and notify it too.
+        /// </para>
         /// </remarks>
         /// <typeparam name="T">the type to wrap</typeparam>
         /// <param name="cfg">the <see cref="Config"/> to register to</param>
@@ -120,6 +126,10 @@ namespace IPA.Config.Stores
         internal interface IGeneratedStore<T> : IGeneratedStore where T : class
         {
             void CopyFrom(T source, bool useLock);
+        }
+        internal interface IGeneratedPropertyChanged : INotifyPropertyChanged
+        { 
+            PropertyChangedEventHandler PropertyChangedEvent { get; }
         }
 
         internal class Impl : IConfigStore
@@ -175,7 +185,7 @@ namespace IPA.Config.Stores
             internal static MethodInfo ImplChangeTransactionMethod = typeof(Impl).GetMethod(nameof(ImplChangeTransaction));
             public static IDisposable ImplChangeTransaction(IGeneratedStore s, IDisposable nest) => FindImpl(s).ChangeTransaction(nest);
             // TODO: improve trasactionals so they don't always save in every case
-            public IDisposable ChangeTransaction(IDisposable nest, bool takeWrite = true) 
+            public IDisposable ChangeTransaction(IDisposable nest, bool takeWrite = true)
                 => GetFreeTransaction().InitWith(this, !inChangeTransaction, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
 
             private ChangeTransactionObj GetFreeTransaction()
@@ -374,6 +384,7 @@ namespace IPA.Config.Stores
 
             #region Parse base object structure
             const BindingFlags overrideMemberFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
             var baseChanged = type.GetMethod("Changed", overrideMemberFlags, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
             if (baseChanged != null && IsMethodInvalid(baseChanged, typeof(void))) baseChanged = null;
 
@@ -385,6 +396,9 @@ namespace IPA.Config.Stores
 
             var baseChangeTransaction = type.GetMethod("ChangeTransaction", overrideMemberFlags, null, Type.EmptyTypes, Array.Empty<ParameterModifier>());
             if (baseChangeTransaction != null && IsMethodInvalid(baseChangeTransaction, typeof(IDisposable))) baseChangeTransaction = null;
+
+            var isINotifyPropertyChanged = type.FindInterfaces((i, t) => i == (Type)t, typeof(INotifyPropertyChanged)).Length != 0;
+            var hasNotifyAttribute = type.GetCustomAttribute<NotifyPropertyChangesAttribute>() != null;
 
             var structure = new List<SerializedMemberInfo>();
 
@@ -598,6 +612,135 @@ namespace IPA.Config.Stores
             const MethodAttributes virtualPropertyMethodAttr = propertyMethodAttr | MethodAttributes.Virtual | MethodAttributes.Final;
             const MethodAttributes virtualMemberMethod = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.Final;
 
+            #region INotifyPropertyChanged
+            MethodBuilder notifyChanged = null;
+            if (isINotifyPropertyChanged || hasNotifyAttribute)
+            {
+                var INotifyPropertyChanged_t = typeof(INotifyPropertyChanged);
+                typeBuilder.AddInterfaceImplementation(INotifyPropertyChanged_t);
+
+                var INotifyPropertyChanged_PropertyChanged =
+                    INotifyPropertyChanged_t.GetEvent(nameof(INotifyPropertyChanged.PropertyChanged));
+
+                var PropertyChangedEventHandler_t = typeof(PropertyChangedEventHandler);
+                var PropertyChangedEventHander_Invoke = PropertyChangedEventHandler_t.GetMethod(nameof(PropertyChangedEventHandler.Invoke));
+
+                var PropertyChangedEventArgs_t = typeof(PropertyChangedEventArgs);
+                var PropertyChangedEventArgs_ctor = PropertyChangedEventArgs_t.GetConstructor(new[] { typeof(string) });
+
+                var Delegate_t = typeof(Delegate);
+                var Delegate_Combine = Delegate_t.GetMethod(nameof(Delegate.Combine), BindingFlags.Static | BindingFlags.Public, null,
+                                                            new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());
+                var Delegate_Remove = Delegate_t.GetMethod(nameof(Delegate.Remove), BindingFlags.Static | BindingFlags.Public, null,
+                                                            new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());
+
+                var CompareExchange = typeof(Interlocked).GetMethods()
+                    .Where(m => m.Name == nameof(Interlocked.CompareExchange))
+                    .Where(m => m.ContainsGenericParameters)
+                    .Where(m => m.GetParameters().Length == 3).First()
+                        .MakeGenericMethod(PropertyChangedEventHandler_t);
+
+                var PropertyChanged_backing = typeBuilder.DefineField("<event>PropertyChanged", PropertyChangedEventHandler_t, FieldAttributes.Private);
+
+                var add_PropertyChanged = typeBuilder.DefineMethod("<add>PropertyChanged",
+                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual, 
+                    null, new[] { PropertyChangedEventHandler_t });
+                typeBuilder.DefineMethodOverride(add_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetAddMethod());
+
+                {
+                    var il = add_PropertyChanged.GetILGenerator();
+
+                    var loopLabel = il.DefineLabel();
+                    var delTemp = il.DeclareLocal(PropertyChangedEventHandler_t);
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
+
+                    il.MarkLabel(loopLabel);
+                    il.Emit(OpCodes.Stloc, delTemp);
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldflda, PropertyChanged_backing);
+
+                    il.Emit(OpCodes.Ldloc, delTemp);
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Call, Delegate_Combine);
+                    il.Emit(OpCodes.Castclass, PropertyChangedEventHandler_t);
+
+                    il.Emit(OpCodes.Ldloc, delTemp);
+                    il.Emit(OpCodes.Call, CompareExchange);
+
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Ldloc, delTemp);
+                    il.Emit(OpCodes.Bne_Un_S, loopLabel);
+
+                    il.Emit(OpCodes.Ret);
+                }
+
+                var remove_PropertyChanged = typeBuilder.DefineMethod("<remove>PropertyChanged",
+                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual, 
+                    null, new[] { PropertyChangedEventHandler_t });
+                typeBuilder.DefineMethodOverride(remove_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetRemoveMethod());
+
+                {
+                    var il = remove_PropertyChanged.GetILGenerator();
+
+                    var loopLabel = il.DefineLabel();
+                    var delTemp = il.DeclareLocal(PropertyChangedEventHandler_t);
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
+
+                    il.MarkLabel(loopLabel);
+                    il.Emit(OpCodes.Stloc, delTemp);
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldflda, PropertyChanged_backing);
+
+                    il.Emit(OpCodes.Ldloc, delTemp);
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Call, Delegate_Remove);
+                    il.Emit(OpCodes.Castclass, PropertyChangedEventHandler_t);
+
+                    il.Emit(OpCodes.Ldloc, delTemp);
+                    il.Emit(OpCodes.Call, CompareExchange);
+
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Ldloc, delTemp);
+                    il.Emit(OpCodes.Bne_Un_S, loopLabel);
+
+                    il.Emit(OpCodes.Ret);
+                }
+
+                var PropertyChanged_event = typeBuilder.DefineEvent(nameof(INotifyPropertyChanged.PropertyChanged), EventAttributes.None, PropertyChangedEventHandler_t);
+                PropertyChanged_event.SetAddOnMethod(add_PropertyChanged);
+                PropertyChanged_event.SetRemoveOnMethod(remove_PropertyChanged);
+
+                notifyChanged = typeBuilder.DefineMethod("<>NotifyChanged",
+                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final, null, new[] { typeof(string) });
+
+                {
+                    var il = notifyChanged.GetILGenerator();
+
+                    var invokeNonNull = il.DefineLabel();
+
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Brtrue, invokeNonNull);
+                    il.Emit(OpCodes.Pop);
+                    il.Emit(OpCodes.Ret);
+
+                    il.MarkLabel(invokeNonNull);
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Newobj, PropertyChangedEventArgs_ctor);
+                    il.Emit(OpCodes.Call, PropertyChangedEventHander_Invoke);
+                    il.Emit(OpCodes.Ret);
+                }
+            }
+            #endregion
+
             #region IGeneratedStore
             typeBuilder.AddInterfaceImplementation(typeof(IGeneratedStore));
 
@@ -766,7 +909,17 @@ namespace IPA.Config.Stores
                 }
 
                 il.MarkLabel(nextLabel);
-                
+
+                if (notifyChanged != null)
+                {
+                    foreach (var member in structure)
+                    {
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldstr, member.Name);
+                        il.Emit(OpCodes.Call, notifyChanged);
+                    }
+                }
+
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -935,6 +1088,16 @@ namespace IPA.Config.Stores
                     il.EndExceptionBlock();
                 }
 
+                if (notifyChanged != null)
+                {
+                    foreach (var member in structure)
+                    {
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldstr, member.Name);
+                        il.Emit(OpCodes.Call, notifyChanged);
+                    }
+                }
+
                 var endLock = il.DefineLabel();
                 il.Emit(OpCodes.Ldarg_2);
                 il.Emit(OpCodes.Brfalse, endLock);
@@ -1042,6 +1205,12 @@ namespace IPA.Config.Stores
 
                     il.EndExceptionBlock();
 
+                    if (notifyChanged != null)
+                    {
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldstr, member.Name);
+                        il.Emit(OpCodes.Call, notifyChanged);
+                    }
                     il.Emit(OpCodes.Ret);
                 }
 
@@ -1058,26 +1227,7 @@ namespace IPA.Config.Stores
             return (creatorDel, genType);
         }
 
-        private delegate LocalBuilder GetLocal(Type type, int idx = 0);
-
-        private static GetLocal MakeGetLocal(ILGenerator il)
-        { // TODO: improve this shit a bit so that i can release a hold of a variable and do more auto managing
-            var locals = new List<LocalBuilder>();
-
-            LocalBuilder GetLocal(Type ty, int i = 0)
-            {
-                var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
-                if (builder == null)
-                {
-                    builder = il.DeclareLocal(ty);
-                    locals.Add(builder);
-                }
-                return builder;
-            }
-
-            return GetLocal;
-        }
-
+        #region Logs
         private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStore).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogError(Type expected, Type found, string message)
         {
@@ -1093,8 +1243,9 @@ namespace IPA.Config.Stores
         {
             Logger.config.Warn(exception);
         }
+        #endregion
 
-
+        #region Correction
         private static bool NeedsCorrection(SerializedMemberInfo member)
         {
             var expectType = GetExpectedValueTypeForType(member.IsNullable ? member.NullableWrappedType : member.Type);
@@ -1156,8 +1307,30 @@ namespace IPA.Config.Stores
 
             il.MarkLabel(endLabel);
         }
+        #endregion
 
         #region Utility
+
+        private delegate LocalBuilder GetLocal(Type type, int idx = 0);
+
+        private static GetLocal MakeGetLocal(ILGenerator il)
+        { // TODO: improve this shit a bit so that i can release a hold of a variable and do more auto managing
+            var locals = new List<LocalBuilder>();
+
+            LocalBuilder GetLocal(Type ty, int i = 0)
+            {
+                var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
+                if (builder == null)
+                {
+                    builder = il.DeclareLocal(ty);
+                    locals.Add(builder);
+                }
+                return builder;
+            }
+
+            return GetLocal;
+        }
+
         private static void EmitLoad(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> thisarg = null)
         {
             if (thisarg == null)
