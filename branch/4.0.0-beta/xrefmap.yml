@@ -5327,6 +5327,32 @@ references:
   fullName.vb: IPA.Utilities.FieldAccessor(Of T, U).Set
   nameWithType: FieldAccessor<T, U>.Set
   nameWithType.vb: FieldAccessor(Of T, U).Set
+- uid: IPA.Utilities.MethodAccessor`2
+  name: MethodAccessor<T, TDelegate>
+  href: api/IPA.Utilities.MethodAccessor-2.html
+  commentId: T:IPA.Utilities.MethodAccessor`2
+  name.vb: MethodAccessor(Of T, TDelegate)
+  fullName: IPA.Utilities.MethodAccessor<T, TDelegate>
+  fullName.vb: IPA.Utilities.MethodAccessor(Of T, TDelegate)
+  nameWithType: MethodAccessor<T, TDelegate>
+  nameWithType.vb: MethodAccessor(Of T, TDelegate)
+- uid: IPA.Utilities.MethodAccessor`2.GetDelegate(System.String)
+  name: GetDelegate(String)
+  href: api/IPA.Utilities.MethodAccessor-2.html#IPA_Utilities_MethodAccessor_2_GetDelegate_System_String_
+  commentId: M:IPA.Utilities.MethodAccessor`2.GetDelegate(System.String)
+  fullName: IPA.Utilities.MethodAccessor<T, TDelegate>.GetDelegate(System.String)
+  fullName.vb: IPA.Utilities.MethodAccessor(Of T, TDelegate).GetDelegate(System.String)
+  nameWithType: MethodAccessor<T, TDelegate>.GetDelegate(String)
+  nameWithType.vb: MethodAccessor(Of T, TDelegate).GetDelegate(String)
+- uid: IPA.Utilities.MethodAccessor`2.GetDelegate*
+  name: GetDelegate
+  href: api/IPA.Utilities.MethodAccessor-2.html#IPA_Utilities_MethodAccessor_2_GetDelegate_
+  commentId: Overload:IPA.Utilities.MethodAccessor`2.GetDelegate
+  isSpec: "True"
+  fullName: IPA.Utilities.MethodAccessor<T, TDelegate>.GetDelegate
+  fullName.vb: IPA.Utilities.MethodAccessor(Of T, TDelegate).GetDelegate
+  nameWithType: MethodAccessor<T, TDelegate>.GetDelegate
+  nameWithType.vb: MethodAccessor(Of T, TDelegate).GetDelegate
 - uid: IPA.Utilities.PropertyAccessor`2
   name: PropertyAccessor<T, U>
   href: api/IPA.Utilities.PropertyAccessor-2.html
