@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -28,6 +29,8 @@ namespace IPA.Utilities
             var field = typeof(T).GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             if (field == null)
                 throw new MissingFieldException(typeof(T).Name, fieldName);
+            if (field.FieldType != typeof(U))
+                throw new ArgumentException($"Field '{fieldName}' not of type {typeof(U)}");
 
             var dynMethodName = $"<>_accessor__{fieldName}";
             // unfortunately DynamicMethod doesn't like having a ByRef return type, so reflection it
@@ -149,6 +152,8 @@ namespace IPA.Utilities
             var prop = typeof(T).GetProperty(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             if (prop == null)
                 throw new MissingMemberException(typeof(T).Name, propName);
+            if (prop.PropertyType != typeof(U))
+                throw new ArgumentException($"Property '{propName}' on {typeof(T)} is not of type {typeof(U)}");
 
             var getM = prop.GetGetMethod(true);
             var setM = prop.GetSetMethod(true);
@@ -204,14 +209,14 @@ namespace IPA.Utilities
         /// </summary>
         /// <param name="name">the name of the property</param>
         /// <returns>a <see cref="Getter"/> that can access that property</returns>
-        /// <exception cref="MissingMemberException">when the property does not exist</exception>
+        /// <exception cref="MissingMemberException">if the property does not exist</exception>
         public static Getter GetGetter(string name) => GetAccessors(name).get;
         /// <summary>
         /// Gets a <see cref="Setter"/> for the property identified by <paramref name="name"/>.
         /// </summary>
         /// <param name="name">the name of the property</param>
         /// <returns>a <see cref="Setter"/> that can access that property</returns>
-        /// <exception cref="MissingMemberException">when the property does not exist</exception>
+        /// <exception cref="MissingMemberException">if the property does not exist</exception>
         public static Setter GetSetter(string name) => GetAccessors(name).set;
 
         /// <summary>
@@ -224,7 +229,7 @@ namespace IPA.Utilities
         /// <param name="obj">the instance to access</param>
         /// <param name="name">the name of the property</param>
         /// <returns>the value of the property</returns>
-        /// <exception cref="MissingMemberException">when the property does not exist</exception>
+        /// <exception cref="MissingMemberException">if the property does not exist</exception>
         /// <seealso cref="Get(T, string)"/>
         /// <seealso cref="GetGetter(string)"/>
         public static U Get(ref T obj, string name) => GetGetter(name)(ref obj);
@@ -234,7 +239,7 @@ namespace IPA.Utilities
         /// <param name="obj">the instance to access</param>
         /// <param name="name">the name of the property</param>
         /// <returns>the value of the property</returns>
-        /// <exception cref="MissingMemberException">when the property does not exist</exception>
+        /// <exception cref="MissingMemberException">if the property does not exist</exception>
         /// <seealso cref="Get(ref T, string)"/>
         /// <seealso cref="GetGetter(string)"/>
         public static U Get(T obj, string name) => GetGetter(name)(ref obj);
@@ -247,7 +252,7 @@ namespace IPA.Utilities
         /// <param name="obj">the instance to access</param>
         /// <param name="name">the name of the property</param>
         /// <param name="val">the new value of the property</param>
-        /// <exception cref="MissingMemberException">when the property does not exist</exception>
+        /// <exception cref="MissingMemberException">if the property does not exist</exception>
         /// <seealso cref="Set(T, string, U)"/>
         /// <seealso cref="GetSetter(string)"/>
         public static void Set(ref T obj, string name, U val) => GetSetter(name)(ref obj, val);
@@ -260,9 +265,75 @@ namespace IPA.Utilities
         /// <param name="obj">the instance to access</param>
         /// <param name="name">the name of the property</param>
         /// <param name="val">the new value of the property</param>
-        /// <exception cref="MissingMemberException">when the property does not exist</exception>
+        /// <exception cref="MissingMemberException">if the property does not exist</exception>
         /// <seealso cref="Set(ref T, string, U)"/>
         /// <seealso cref="GetSetter(string)"/>
         public static void Set(T obj, string name, U val) => GetSetter(name)(ref obj, val);
     }
+
+    internal class AccessorDelegateInfo<TDelegate> where TDelegate : Delegate
+    {
+        public static readonly Type Type = typeof(TDelegate);
+        public static readonly MethodInfo Invoke = Type.GetMethod("Invoke");
+        public static readonly ParameterInfo[] Parameters = Invoke.GetParameters();
+    }
+
+    /// <summary>
+    /// A type containing utilities for calling non-public methods on an object.
+    /// </summary>
+    /// <typeparam name="T">the type to find the methods on</typeparam>
+    /// <typeparam name="TDelegate">the delegate type to create, and to use as a signature to search for</typeparam>
+    public static class MethodAccessor<T, TDelegate> where TDelegate : Delegate
+    {
+        private static readonly Dictionary<string, TDelegate> methods = new Dictionary<string, TDelegate>();
+
+        static MethodAccessor()
+        {
+            // ensure that first argument of delegate type is valid
+            var firstArg = AccessorDelegateInfo<TDelegate>.Parameters.First();
+            var firstType = firstArg.ParameterType;
+
+            if (typeof(T).IsValueType)
+            {
+                if (!firstType.IsByRef)
+                    throw new InvalidOperationException("First parameter of a method accessor to a value type is not byref");
+                else
+                    firstType = firstType.GetElementType(); // get the non-byref type to check compatability
+            }
+
+            if (!typeof(T).IsAssignableFrom(firstType))
+                throw new InvalidOperationException("First parameter of a method accessor is not assignable to the method owning type");
+        }
+
+        private static TDelegate MakeDelegate(string name)
+        {
+            var delParams = AccessorDelegateInfo<TDelegate>.Parameters;
+            var method = typeof(T).GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly,
+                null, delParams.Skip(1).Select(p => p.ParameterType).ToArray(), Array.Empty<ParameterModifier>());
+
+            if (method == null)
+                throw new MissingMethodException(typeof(T).FullName, name);
+
+            var retType = AccessorDelegateInfo<TDelegate>.Invoke.ReturnType;
+            if (!retType.IsAssignableFrom(method.ReturnType))
+                throw new ArgumentException($"The method found returns a type incompatable with the return type of {typeof(TDelegate)}");
+
+            return (TDelegate)Delegate.CreateDelegate(AccessorDelegateInfo<TDelegate>.Type, method, true);
+        }
+
+        /// <summary>
+        /// Gets a delegate to the named method with the signature specified by <typeparamref name="TDelegate"/>.
+        /// </summary>
+        /// <param name="name">the name of the method to get</param>
+        /// <returns>a delegate that can call the specified method</returns>
+        /// <exception cref="MissingMethodException">if <paramref name="name"/> does not represent the name of a method with the given signature</exception>
+        /// <exception cref="ArgumentException">if the method found returns a type incompatable with the return type of <typeparamref name="TDelegate"/></exception>
+        public static TDelegate GetDelegate(string name)
+        {
+            if (!methods.TryGetValue(name, out var del))
+                methods.Add(name, del = MakeDelegate(name));
+            return del;
+        }
+    }
+
 }
