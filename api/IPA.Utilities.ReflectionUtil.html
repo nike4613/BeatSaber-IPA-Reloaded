@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -125,248 +126,14 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_String_System_String_System_String_System_Type___System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CallNonStaticMethod(System.String%2CSystem.String%2CSystem.String%2CSystem.Type%5B%5D%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component%2CSystem.Type%2CUnityEngine.GameObject%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L145">View Source</a>
-  </span>
-  <a id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod_" data-uid="IPA.Utilities.ReflectionUtil.CallNonStaticMethod*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_String_System_String_System_String_System_Type___System_Object___" data-uid="IPA.Utilities.ReflectionUtil.CallNonStaticMethod(System.String,System.String,System.String,System.Type[],System.Object[])">CallNonStaticMethod(String, String, String, Type[], Object[])</h4>
-  <div class="markdown level1 summary"><p>Calls an instance method on a type specified by <code data-dev-comment-type="paramref" class="paramref">functionClass</code> and <code data-dev-comment-type="paramref" class="paramref">dependency</code>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static object CallNonStaticMethod(string functionClass, string dependency, string function, Type[] methodSig, params object[] parameters)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">functionClass</span></td>
-        <td><p>the type name</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">dependency</span></td>
-        <td><p>the assembly the type is in</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">function</span></td>
-        <td><p>the name of the method to call</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a>[]</td>
-        <td><span class="parametername">methodSig</span></td>
-        <td><p>the type signature of the method</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
-        <td><span class="parametername">parameters</span></td>
-        <td><p>the method parameters</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><p>the result of the call</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_String_System_String_System_String_System_Type___System_Object____seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_Type_System_String_System_Type___System_Object___">CallNonStaticMethod(Type, String, Type[], Object[])</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_Type_System_String_System_Type___System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CallNonStaticMethod(System.Type%2CSystem.String%2CSystem.Type%5B%5D%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L158">View Source</a>
-  </span>
-  <a id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod_" data-uid="IPA.Utilities.ReflectionUtil.CallNonStaticMethod*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_Type_System_String_System_Type___System_Object___" data-uid="IPA.Utilities.ReflectionUtil.CallNonStaticMethod(System.Type,System.String,System.Type[],System.Object[])">CallNonStaticMethod(Type, String, Type[], Object[])</h4>
-  <div class="markdown level1 summary"><p>Calls an instance method on a new object.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static object CallNonStaticMethod(this Type type, string function, Type[] methodSig, params object[] parameters)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
-        <td><span class="parametername">type</span></td>
-        <td><p>the object type</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">function</span></td>
-        <td><p>the name of the method to call</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a>[]</td>
-        <td><span class="parametername">methodSig</span></td>
-        <td><p>the type signature</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
-        <td><span class="parametername">parameters</span></td>
-        <td><p>the parameters</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><p>the result of the call</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CallNonStaticMethod__1_System_Type_System_String_System_Type___System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CallNonStaticMethod%60%601(System.Type%2CSystem.String%2CSystem.Type%5B%5D%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L189">View Source</a>
-  </span>
-  <a id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod_" data-uid="IPA.Utilities.ReflectionUtil.CallNonStaticMethod*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod__1_System_Type_System_String_System_Type___System_Object___" data-uid="IPA.Utilities.ReflectionUtil.CallNonStaticMethod``1(System.Type,System.String,System.Type[],System.Object[])">CallNonStaticMethod&lt;T&gt;(Type, String, Type[], Object[])</h4>
-  <div class="markdown level1 summary"><p>Calls an instance method on a new object.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static T CallNonStaticMethod&lt;T&gt;(this Type type, string function, Type[] methodSig, params object[] parameters)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
-        <td><span class="parametername">type</span></td>
-        <td><p>the object type</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">function</span></td>
-        <td><p>the name of the method to call</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a>[]</td>
-        <td><span class="parametername">methodSig</span></td>
-        <td><p>the type signature</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
-        <td><span class="parametername">parameters</span></td>
-        <td><p>the parameters</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><p>the result of the call</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>the return type</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="IPA_Utilities_ReflectionUtil_CallNonStaticMethod__1_System_Type_System_String_System_Type___System_Object____seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CallNonStaticMethod_System_Type_System_String_System_Type___System_Object___">CallNonStaticMethod(Type, String, Type[], Object[])</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent_Component_System_Type_GameObject_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent(Component%2CSystem.Type%2CGameObject%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L85">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L93">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_CopyComponent_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent_Component_System_Type_GameObject_System_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent(Component,System.Type,GameObject,System.Type)">CopyComponent(Component, Type, GameObject, Type)</h4>
-  <div class="markdown level1 summary"><p>Copies a component <code data-dev-comment-type="paramref" class="paramref">original</code> to a component of <code data-dev-comment-type="paramref" class="paramref">overridingType</code> on the destination <see cref="!:GameObject"></see>.</p>
+  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component,System.Type,UnityEngine.GameObject,System.Type)">CopyComponent(Component, Type, GameObject, Type)</h4>
+  <div class="markdown level1 summary"><p>Copies a component <code data-dev-comment-type="paramref" class="paramref">original</code> to a component of <code data-dev-comment-type="paramref" class="paramref">overridingType</code> on the destination <span class="xref">UnityEngine.GameObject</span>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -384,7 +151,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Component</span></td>
+        <td><span class="xref">UnityEngine.Component</span></td>
         <td><span class="parametername">original</span></td>
         <td><p>the original component</p>
 </td>
@@ -396,7 +163,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">GameObject</span></td>
+        <td><span class="xref">UnityEngine.GameObject</span></td>
         <td><span class="parametername">destination</span></td>
         <td><p>the destination GameObject</p>
 </td>
@@ -419,7 +186,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Component</span></td>
+        <td><span class="xref">UnityEngine.Component</span></td>
         <td><p>the copied component</p>
 </td>
       </tr>
@@ -427,14 +194,14 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent%60%601(Component%2CGameObject%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent%60%601(UnityEngine.Component%2CUnityEngine.GameObject%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L109">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L117">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_CopyComponent_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_System_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent``1(Component,GameObject,System.Type)">CopyComponent&lt;T&gt;(Component, GameObject, Type)</h4>
-  <div class="markdown level1 summary"><p>A generic version of <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_Component_System_Type_GameObject_System_Type_">CopyComponent(Component, Type, GameObject, Type)</a>. </p>
+  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent``1(UnityEngine.Component,UnityEngine.GameObject,System.Type)">CopyComponent&lt;T&gt;(Component, GameObject, Type)</h4>
+  <div class="markdown level1 summary"><p>A generic version of <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_">CopyComponent(Component, Type, GameObject, Type)</a>. </p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -453,13 +220,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Component</span></td>
+        <td><span class="xref">UnityEngine.Component</span></td>
         <td><span class="parametername">original</span></td>
         <td><p>the original component</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">GameObject</span></td>
+        <td><span class="xref">UnityEngine.GameObject</span></td>
         <td><span class="parametername">destination</span></td>
         <td><p>the destination game object</p>
 </td>
@@ -504,25 +271,25 @@
       </tr>
     </tbody>
   </table>
-  <h5 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_System_Type__seealso">See Also</h5>
+  <h5 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_Component_System_Type_GameObject_System_Type_">CopyComponent(Component, Type, GameObject, Type)</a></div>
+      <div><a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_">CopyComponent(Component, Type, GameObject, Type)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_GetPrivateField__1_System_Object_System_String_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.GetPrivateField%60%601(System.Object%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.GetField%60%602(%60%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L31">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L39">View Source</a>
   </span>
-  <a id="IPA_Utilities_ReflectionUtil_GetPrivateField_" data-uid="IPA.Utilities.ReflectionUtil.GetPrivateField*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_GetPrivateField__1_System_Object_System_String_" data-uid="IPA.Utilities.ReflectionUtil.GetPrivateField``1(System.Object,System.String)">GetPrivateField&lt;T&gt;(Object, String)</h4>
-  <div class="markdown level1 summary"><p>Gets the value of a (potentially) private field.</p>
+  <a id="IPA_Utilities_ReflectionUtil_GetField_" data-uid="IPA.Utilities.ReflectionUtil.GetField*"></a>
+  <h4 id="IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_" data-uid="IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)">GetField&lt;U, T&gt;(T, String)</h4>
+  <div class="markdown level1 summary"><p>Gets the value of a field.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static T GetPrivateField&lt;T&gt;(this object obj, string fieldName)</code></pre>
+    <pre><code class="lang-csharp hljs">public static U GetField&lt;U, T&gt;(this T obj, string fieldName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -535,7 +302,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="xref">T</span></td>
         <td><span class="parametername">obj</span></td>
         <td><p>the object instance to pull from</p>
 </td>
@@ -558,7 +325,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">T</span></td>
+        <td><span class="xref">U</span></td>
         <td><p>the value of the field</p>
 </td>
       </tr>
@@ -574,27 +341,52 @@
     </thead>
     <tbody>
       <tr>
+        <td><span class="parametername">U</span></td>
+        <td><p>the type of the field (result casted)</p>
+</td>
+      </tr>
+      <tr>
         <td><span class="parametername">T</span></td>
-        <td><p>the type of te field (result casted)</p>
+        <td><p>the type to get the field from</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingfieldexception">MissingFieldException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">fieldName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_ReflectionUtil_GetField__2___1_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Get__0__System_String_">Get(ref T, String)</a></div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_InvokePrivateMethod_System_Object_System_String_System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.InvokePrivateMethod(System.Object%2CSystem.String%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.GetProperty%60%602(%60%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L58">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L65">View Source</a>
   </span>
-  <a id="IPA_Utilities_ReflectionUtil_InvokePrivateMethod_" data-uid="IPA.Utilities.ReflectionUtil.InvokePrivateMethod*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_InvokePrivateMethod_System_Object_System_String_System_Object___" data-uid="IPA.Utilities.ReflectionUtil.InvokePrivateMethod(System.Object,System.String,System.Object[])">InvokePrivateMethod(Object, String, Object[])</h4>
-  <div class="markdown level1 summary"><p>Invokes a (potentially) private method.</p>
+  <a id="IPA_Utilities_ReflectionUtil_GetProperty_" data-uid="IPA.Utilities.ReflectionUtil.GetProperty*"></a>
+  <h4 id="IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_" data-uid="IPA.Utilities.ReflectionUtil.GetProperty``2(``1,System.String)">GetProperty&lt;U, T&gt;(T, String)</h4>
+  <div class="markdown level1 summary"><p>Gets a property on the target object, as gotten from <code data-dev-comment-type="typeparamref" class="typeparamref">T</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static object InvokePrivateMethod(this object obj, string methodName, params object[] methodParams)</code></pre>
+    <pre><code class="lang-csharp hljs">public static U GetProperty&lt;U, T&gt;(this T obj, string propertyName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -602,103 +394,138 @@
       <tr>
         <th>Type</th>
         <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><span class="parametername">obj</span></td>
-        <td><p>the object to call from</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">methodName</span></td>
-        <td><p>the method name</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
-        <td><span class="parametername">methodParams</span></td>
-        <td><p>the method parameters</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><p>the return value</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_InvokePrivateMethod__1_System_Object_System_String_System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.InvokePrivateMethod%60%601(System.Object%2CSystem.String%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L72">View Source</a>
-  </span>
-  <a id="IPA_Utilities_ReflectionUtil_InvokePrivateMethod_" data-uid="IPA.Utilities.ReflectionUtil.InvokePrivateMethod*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_InvokePrivateMethod__1_System_Object_System_String_System_Object___" data-uid="IPA.Utilities.ReflectionUtil.InvokePrivateMethod``1(System.Object,System.String,System.Object[])">InvokePrivateMethod&lt;T&gt;(Object, String, Object[])</h4>
-  <div class="markdown level1 summary"><p>Invokes a (potentially) private method.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static T InvokePrivateMethod&lt;T&gt;(this object obj, string methodName, params object[] methodParams)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
-        <td><span class="parametername">obj</span></td>
-        <td><p>the object to call from</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">methodName</span></td>
-        <td><p>the method name to call</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
-        <td><span class="parametername">methodParams</span></td>
-        <td><p>the method&apos;s parameters</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><span class="xref">T</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>the object instance</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">propertyName</span></td>
+        <td><p>the property to get</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">U</span></td>
+        <td><p>the value of the property</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">U</span></td>
+        <td><p>the type of the property to get</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>the type to get the property from</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingmemberexception">MissingMemberException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">propertyName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Get__0__System_String_">Get(ref T, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.InvokeMethod%60%602(%60%601%2CSystem.String%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L78">View Source</a>
+  </span>
+  <a id="IPA_Utilities_ReflectionUtil_InvokeMethod_" data-uid="IPA.Utilities.ReflectionUtil.InvokeMethod*"></a>
+  <h4 id="IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___" data-uid="IPA.Utilities.ReflectionUtil.InvokeMethod``2(``1,System.String,System.Object[])">InvokeMethod&lt;U, T&gt;(T, String, Object[])</h4>
+  <div class="markdown level1 summary"><p>Invokes a method from <code data-dev-comment-type="typeparamref" class="typeparamref">T</code> on an object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static U InvokeMethod&lt;U, T&gt;(this T obj, string methodName, params object[] args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>the object instance</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">methodName</span></td>
+        <td><p>the method&apos;s name</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
+        <td><span class="parametername">args</span></td>
+        <td><p>the method arguments</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">U</span></td>
         <td><p>the return value</p>
 </td>
       </tr>
@@ -714,27 +541,48 @@
     </thead>
     <tbody>
       <tr>
+        <td><span class="parametername">U</span></td>
+        <td><p>the type of the property to get</p>
+</td>
+      </tr>
+      <tr>
         <td><span class="parametername">T</span></td>
-        <td><p>the return type</p>
+        <td><p>the type to search for the method on</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingmethodexception">MissingMethodException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">methodName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
 </td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_SetPrivateField_System_Object_System_String_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.SetPrivateField(System.Object%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.SetField%60%602(%60%600%2CSystem.String%2C%60%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L18">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L26">View Source</a>
   </span>
-  <a id="IPA_Utilities_ReflectionUtil_SetPrivateField_" data-uid="IPA.Utilities.ReflectionUtil.SetPrivateField*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_SetPrivateField_System_Object_System_String_System_Object_" data-uid="IPA.Utilities.ReflectionUtil.SetPrivateField(System.Object,System.String,System.Object)">SetPrivateField(Object, String, Object)</h4>
-  <div class="markdown level1 summary"><p>Sets a (potentially) private field on the target object.</p>
+  <a id="IPA_Utilities_ReflectionUtil_SetField_" data-uid="IPA.Utilities.ReflectionUtil.SetField*"></a>
+  <h4 id="IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_" data-uid="IPA.Utilities.ReflectionUtil.SetField``2(``0,System.String,``1)">SetField&lt;T, U&gt;(T, String, U)</h4>
+  <div class="markdown level1 summary"><p>Sets a field on the target object, as gotten from <code data-dev-comment-type="typeparamref" class="typeparamref">T</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetPrivateField(this object obj, string fieldName, object value)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetField&lt;T, U&gt;(this T obj, string fieldName, U value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -747,7 +595,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="xref">T</span></td>
         <td><span class="parametername">obj</span></td>
         <td><p>the object instance</p>
 </td>
@@ -759,28 +607,69 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="xref">U</span></td>
         <td><span class="parametername">value</span></td>
         <td><p>the value to set it to</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>the type to get the field from</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">U</span></td>
+        <td><p>the type of the field to set</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingfieldexception">MissingFieldException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">fieldName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Set__0__System_String__1_">Set(ref T, String, U)</a></div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_SetPrivateProperty_System_Object_System_String_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.SetPrivateProperty(System.Object%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.SetProperty%60%602(%60%600%2CSystem.String%2C%60%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L44">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L52">View Source</a>
   </span>
-  <a id="IPA_Utilities_ReflectionUtil_SetPrivateProperty_" data-uid="IPA.Utilities.ReflectionUtil.SetPrivateProperty*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_SetPrivateProperty_System_Object_System_String_System_Object_" data-uid="IPA.Utilities.ReflectionUtil.SetPrivateProperty(System.Object,System.String,System.Object)">SetPrivateProperty(Object, String, Object)</h4>
-  <div class="markdown level1 summary"><p>Sets a (potentially) private property on the target object.</p>
+  <a id="IPA_Utilities_ReflectionUtil_SetProperty_" data-uid="IPA.Utilities.ReflectionUtil.SetProperty*"></a>
+  <h4 id="IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_" data-uid="IPA.Utilities.ReflectionUtil.SetProperty``2(``0,System.String,``1)">SetProperty&lt;T, U&gt;(T, String, U)</h4>
+  <div class="markdown level1 summary"><p>Sets a property on the target object, as gotten from <code data-dev-comment-type="typeparamref" class="typeparamref">T</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void SetPrivateProperty(this object obj, string propertyName, object value)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void SetProperty&lt;T, U&gt;(this T obj, string propertyName, U value)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -793,25 +682,66 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="xref">T</span></td>
         <td><span class="parametername">obj</span></td>
-        <td><p>the target object instance</p>
+        <td><p>the object instance</p>
 </td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">propertyName</span></td>
-        <td><p>the name of the property</p>
+        <td><p>the property to set</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="xref">U</span></td>
         <td><span class="parametername">value</span></td>
         <td><p>the value to set it to</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>the type to get the property from</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">U</span></td>
+        <td><p>the type of the property to set</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingmemberexception">MissingMemberException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">propertyName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Set__0__System_String__1_">Set(ref T, String, U)</a></div>
+  </div>
 </article>
           </div>
           
@@ -823,7 +753,7 @@
                     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Utilities/ReflectionUtil.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/ReflectionUtil.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

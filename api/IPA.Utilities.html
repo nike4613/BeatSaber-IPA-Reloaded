@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -88,14 +89,26 @@
       <section><p>A type that wraps <span class="xref">SemVer.Version</span> so that the string of the version is stored when the string is 
 not a valid <span class="xref">SemVer.Version</span>.</p>
 </section>
-      <h4><a class="xref" href="IPA.Utilities.BeatSaber.html">BeatSaber</a></h4>
-      <section><p>Provides some basic utility methods and properties of Beat Saber</p>
+      <h4><a class="xref" href="IPA.Utilities.AlmostVersionConverter.html">AlmostVersionConverter</a></h4>
+      <section><p>A <a class="xref" href="IPA.Config.Stores.ValueConverter-1.html">ValueConverter&lt;T&gt;</a> for <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a>s.</p>
 </section>
       <h4><a class="xref" href="IPA.Utilities.CriticalSection.html">CriticalSection</a></h4>
       <section><p>Provides utilities for managing various critical sections.</p>
 </section>
+      <h4><a class="xref" href="IPA.Utilities.EnumerableExtensions.html">EnumerableExtensions</a></h4>
+      <section><p>Extensions for <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> that don&apos;t currently exist in <code>System.Linq</code>.</p>
+</section>
       <h4><a class="xref" href="IPA.Utilities.Extensions.html">Extensions</a></h4>
       <section><p>A class providing various extension methods.</p>
+</section>
+      <h4><a class="xref" href="IPA.Utilities.FieldAccessor-2.html">FieldAccessor&lt;T, U&gt;</a></h4>
+      <section><p>A type containing utilities for accessing non-public fields of objects.</p>
+</section>
+      <h4><a class="xref" href="IPA.Utilities.MethodAccessor-2.html">MethodAccessor&lt;T, TDelegate&gt;</a></h4>
+      <section><p>A type containing utilities for calling non-public methods on an object.</p>
+</section>
+      <h4><a class="xref" href="IPA.Utilities.PropertyAccessor-2.html">PropertyAccessor&lt;T, U&gt;</a></h4>
+      <section><p>A type containing utilities for accessing non-public properties of an object.</p>
 </section>
       <h4><a class="xref" href="IPA.Utilities.Ref.html">Ref</a></h4>
       <section><p>Utilities to create <a class="xref" href="IPA.Utilities.Ref-1.html">Ref&lt;T&gt;</a> using type inference.</p>
@@ -106,16 +119,38 @@ not a valid <span class="xref">SemVer.Version</span>.</p>
       <h4><a class="xref" href="IPA.Utilities.ReflectionUtil.html">ReflectionUtil</a></h4>
       <section><p>A utility class providing reflection helper methods.</p>
 </section>
+      <h4><a class="xref" href="IPA.Utilities.UnityGame.html">UnityGame</a></h4>
+      <section><p>Provides some basic utility methods and properties of Beat Saber</p>
+</section>
       <h4><a class="xref" href="IPA.Utilities.Utils.html">Utils</a></h4>
       <section><p>A class providing static utility functions that in any other language would just <em>exist</em>.</p>
+</section>
+    <h3 id="structs">Structs
+  </h3>
+      <h4><a class="xref" href="IPA.Utilities.CriticalSection.AutoExecuteSection.html">CriticalSection.AutoExecuteSection</a></h4>
+      <section><p>A struct that allows <code>using</code> blocks to manage an execute section.</p>
+</section>
+      <h4><a class="xref" href="IPA.Utilities.Utils.ScopeGuardObject.html">Utils.ScopeGuardObject</a></h4>
+      <section><p>An object used to manage scope guards.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
       <h4><a class="xref" href="IPA.Utilities.AlmostVersion.StoredAs.html">AlmostVersion.StoredAs</a></h4>
       <section><p>Represents a storage type of either parsed <span class="xref">SemVer.Version</span> object or raw <a class="xref" href="IPA.Utilities.AlmostVersion.StoredAs.html#IPA_Utilities_AlmostVersion_StoredAs_String">String</a>.</p>
 </section>
-      <h4><a class="xref" href="IPA.Utilities.BeatSaber.Release.html">BeatSaber.Release</a></h4>
+      <h4><a class="xref" href="IPA.Utilities.UnityGame.Release.html">UnityGame.Release</a></h4>
       <section><p>The different types of releases of the game.</p>
+</section>
+    <h3 id="delegates">Delegates
+  </h3>
+      <h4><a class="xref" href="IPA.Utilities.FieldAccessor-2.Accessor.html">FieldAccessor&lt;T, U&gt;.Accessor</a></h4>
+      <section><p>A delegate for a field accessor taking a <code data-dev-comment-type="typeparamref" class="typeparamref">T</code> ref and returning a <code data-dev-comment-type="typeparamref" class="typeparamref">U</code> ref.</p>
+</section>
+      <h4><a class="xref" href="IPA.Utilities.PropertyAccessor-2.Getter.html">PropertyAccessor&lt;T, U&gt;.Getter</a></h4>
+      <section><p>A getter for a property.</p>
+</section>
+      <h4><a class="xref" href="IPA.Utilities.PropertyAccessor-2.Setter.html">PropertyAccessor&lt;T, U&gt;.Setter</a></h4>
+      <section><p>A setter for a property.</p>
 </section>
 </article>
           </div>

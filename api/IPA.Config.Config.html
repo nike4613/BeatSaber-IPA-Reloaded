@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -83,7 +84,8 @@
   
   <h1 id="IPA_Config_Config" data-uid="IPA.Config.Config" class="text-break">Class Config
   </h1>
-  <div class="markdown level0 summary"><p>A class to handle updating ConfigProviders automatically</p>
+  <div class="markdown level0 summary"><p>An abstraction of a config file on disk, which handles synchronizing between a memory representation and the
+disk representation.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -119,25 +121,89 @@
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Config_Config_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class Config</code></pre>
+    <pre><code class="lang-csharp hljs">public class Config</code></pre>
   </div>
-  <h3 id="methods">Methods
+  <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_GetProviderFor_System_String_System_String___.md&amp;value=---%0Auid%3A%20IPA.Config.Config.GetProviderFor(System.String%2CSystem.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_Name.md&amp;value=---%0Auid%3A%20IPA.Config.Config.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Config/Config.cs/#L133">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L135">View Source</a>
   </span>
-  <a id="IPA_Config_Config_GetProviderFor_" data-uid="IPA.Config.Config.GetProviderFor*"></a>
-  <h4 id="IPA_Config_Config_GetProviderFor_System_String_System_String___" data-uid="IPA.Config.Config.GetProviderFor(System.String,System.String[])">GetProviderFor(String, String[])</h4>
-  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> using the specified list of preferred config types.</p>
+  <a id="IPA_Config_Config_Name_" data-uid="IPA.Config.Config.Name*"></a>
+  <h4 id="IPA_Config_Config_Name" data-uid="IPA.Config.Config.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets the name associated with this <a class="xref" href="IPA.Config.Config.html">Config</a> object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IConfigProvider GetProviderFor(string configName, params string[] extensions)</code></pre>
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_Provider.md&amp;value=---%0Auid%3A%20IPA.Config.Config.Provider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L139">View Source</a>
+  </span>
+  <a id="IPA_Config_Config_Provider_" data-uid="IPA.Config.Config.Provider*"></a>
+  <h4 id="IPA_Config_Config_Provider" data-uid="IPA.Config.Config.Provider">Provider</h4>
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> associated with this <a class="xref" href="IPA.Config.Config.html">Config</a> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IConfigProvider Provider { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_GetConfigFor_System_String_System_String___.md&amp;value=---%0Auid%3A%20IPA.Config.Config.GetConfigFor(System.String%2CSystem.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L108">View Source</a>
+  </span>
+  <a id="IPA_Config_Config_GetConfigFor_" data-uid="IPA.Config.Config.GetConfigFor*"></a>
+  <h4 id="IPA_Config_Config_GetConfigFor_System_String_System_String___" data-uid="IPA.Config.Config.GetConfigFor(System.String,System.String[])">GetConfigFor(String, String[])</h4>
+  <div class="markdown level1 summary"><p>Gets a <a class="xref" href="IPA.Config.Config.html">Config</a> object using the specified list of preferred config types.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Config GetConfigFor(string configName, params string[] extensions)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -173,52 +239,28 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a></td>
-        <td><p>an <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> of the requested type, or of type JSON.</p>
+        <td><a class="xref" href="IPA.Config.Config.html">Config</a></td>
+        <td><p>a <a class="xref" href="IPA.Config.Config.html">Config</a> using the requested format, or of type JSON.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_MakeLink__1_IPA_Config_IConfigProvider_System_Action_IPA_Config_IConfigProvider_IPA_Utilities_Ref___0___.md&amp;value=---%0Auid%3A%20IPA.Config.Config.MakeLink%60%601(IPA.Config.IConfigProvider%2CSystem.Action%7BIPA.Config.IConfigProvider%2CIPA.Utilities.Ref%7B%60%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_LoadAsync.md&amp;value=---%0Auid%3A%20IPA.Config.Config.LoadAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Config/Config.cs/#L168">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L167">View Source</a>
   </span>
-  <a id="IPA_Config_Config_MakeLink_" data-uid="IPA.Config.Config.MakeLink*"></a>
-  <h4 id="IPA_Config_Config_MakeLink__1_IPA_Config_IConfigProvider_System_Action_IPA_Config_IConfigProvider_IPA_Utilities_Ref___0___" data-uid="IPA.Config.Config.MakeLink``1(IPA.Config.IConfigProvider,System.Action{IPA.Config.IConfigProvider,IPA.Utilities.Ref{``0}})">MakeLink&lt;T&gt;(IConfigProvider, Action&lt;IConfigProvider, Ref&lt;T&gt;&gt;)</h4>
-  <div class="markdown level1 summary"><p>Creates a linked <a class="xref" href="IPA.Utilities.Ref-1.html">Ref&lt;T&gt;</a> for the config provider. This <a class="xref" href="IPA.Utilities.Ref-1.html">Ref&lt;T&gt;</a> will be automatically updated whenever the file on-disk changes.</p>
+  <a id="IPA_Config_Config_LoadAsync_" data-uid="IPA.Config.Config.LoadAsync*"></a>
+  <h4 id="IPA_Config_Config_LoadAsync" data-uid="IPA.Config.Config.LoadAsync">LoadAsync()</h4>
+  <div class="markdown level1 summary"><p>Forces an asynchronous load from disk.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Ref&lt;T&gt; MakeLink&lt;T&gt;(this IConfigProvider config, Action&lt;IConfigProvider, Ref&lt;T&gt;&gt; onChange = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task LoadAsync()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a></td>
-        <td><span class="parametername">config</span></td>
-        <td><p>the <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> to create a link to</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action-2">Action</a>&lt;<a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a>, <a class="xref" href="IPA.Utilities.Ref-1.html">Ref</a>&lt;T&gt;&gt;</td>
-        <td><span class="parametername">onChange</span></td>
-        <td><p>an action to perform on value change</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -229,34 +271,33 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="IPA.Utilities.Ref-1.html">Ref</a>&lt;T&gt;</td>
-        <td><p>a <a class="xref" href="IPA.Utilities.Ref-1.html">Ref&lt;T&gt;</a> to an ever-changing value, mirroring whatever the file contains.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td><p>the type of the parsed value</p>
-</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_LoadSync.md&amp;value=---%0Auid%3A%20IPA.Config.Config.LoadSync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L162">View Source</a>
+  </span>
+  <a id="IPA_Config_Config_LoadSync_" data-uid="IPA.Config.Config.LoadSync*"></a>
+  <h4 id="IPA_Config_Config_LoadSync" data-uid="IPA.Config.Config.LoadSync">LoadSync()</h4>
+  <div class="markdown level1 summary"><p>Forces a synchronous load from disk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void LoadSync()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_Register_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Config.Config.Register(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Config/Config.cs/#L111">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L90">View Source</a>
   </span>
   <a id="IPA_Config_Config_Register_" data-uid="IPA.Config.Config.Register*"></a>
   <h4 id="IPA_Config_Config_Register_System_Type_" data-uid="IPA.Config.Config.Register(System.Type)">Register(Type)</h4>
@@ -290,7 +331,7 @@
     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_Register__1.md&amp;value=---%0Auid%3A%20IPA.Config.Config.Register%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Config/Config.cs/#L105">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L84">View Source</a>
   </span>
   <a id="IPA_Config_Config_Register_" data-uid="IPA.Config.Config.Register*"></a>
   <h4 id="IPA_Config_Config_Register__1" data-uid="IPA.Config.Config.Register``1">Register&lt;T&gt;()</h4>
@@ -320,19 +361,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_RemoveLinks_IPA_Config_IConfigProvider_.md&amp;value=---%0Auid%3A%20IPA.Config.Config.RemoveLinks(IPA.Config.IConfigProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config_SetStore_IPA_Config_IConfigStore_.md&amp;value=---%0Auid%3A%20IPA.Config.Config.SetStore(IPA.Config.IConfigStore)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Config/Config.cs/#L191">View Source</a>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L151">View Source</a>
   </span>
-  <a id="IPA_Config_Config_RemoveLinks_" data-uid="IPA.Config.Config.RemoveLinks*"></a>
-  <h4 id="IPA_Config_Config_RemoveLinks_IPA_Config_IConfigProvider_" data-uid="IPA.Config.Config.RemoveLinks(IPA.Config.IConfigProvider)">RemoveLinks(IConfigProvider)</h4>
-  <div class="markdown level1 summary"><p>Removes all linked <a class="xref" href="IPA.Utilities.Ref-1.html">Ref&lt;T&gt;</a> such that they are no longer updated.</p>
+  <a id="IPA_Config_Config_SetStore_" data-uid="IPA.Config.Config.SetStore*"></a>
+  <h4 id="IPA_Config_Config_SetStore_IPA_Config_IConfigStore_" data-uid="IPA.Config.Config.SetStore(IPA.Config.IConfigStore)">SetStore(IConfigStore)</h4>
+  <div class="markdown level1 summary"><p>Sets this object&apos;s <a class="xref" href="IPA.Config.IConfigStore.html">IConfigStore</a>. Can only be called once.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void RemoveLinks(this IConfigProvider config)</code></pre>
+    <pre><code class="lang-csharp hljs">public void SetStore(IConfigStore store)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -345,13 +386,48 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a></td>
-        <td><span class="parametername">config</span></td>
-        <td><p>the <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> to unlink</p>
+        <td><a class="xref" href="IPA.Config.IConfigStore.html">IConfigStore</a></td>
+        <td><span class="parametername">store</span></td>
+        <td><p>the <a class="xref" href="IPA.Config.IConfigStore.html">IConfigStore</a> to add to this instance</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><p>If this was called before.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Generated__1_IPA_Config_Config_System_Boolean_">GeneratedStore.Generated&lt;T&gt;(Config, Boolean)</a>
+  </div>
 </article>
           </div>
           
@@ -363,7 +439,7 @@
                     <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Config.md&amp;value=---%0Auid%3A%20IPA.Config.Config%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/Config/Config.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Config/Config.cs/#L22" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

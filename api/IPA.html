@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -82,20 +83,30 @@
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
-    <h3 id="interfaces">Interfaces
+    <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="IPA.IBeatSaberPlugin.html">IBeatSaberPlugin</a></h4>
-      <section><p>Interface for Beat Saber plugins. Every class that implements this will be loaded if the DLL is placed at
-data/Managed/Plugins.</p>
+      <h4><a class="xref" href="IPA.InitAttribute.html">InitAttribute</a></h4>
+      <section><p>Marks a method or a constructor as an inialization method.</p>
 </section>
-      <h4><a class="xref" href="IPA.IDisablablePlugin.html">IDisablablePlugin</a></h4>
-      <section><p>Provides methods to allow runtime enabling and disabling of a plugin.</p>
+      <h4><a class="xref" href="IPA.OnDisableAttribute.html">OnDisableAttribute</a></h4>
+      <section><p>Indicates that the target method should be called when the plugin is disabled.</p>
 </section>
-      <h4><a class="xref" href="IPA.IEnhancedBeatSaberPlugin.html">IEnhancedBeatSaberPlugin</a></h4>
-      <section><p>An enhanced version of a standard BeatSaber plugin.</p>
+      <h4><a class="xref" href="IPA.OnEnableAttribute.html">OnEnableAttribute</a></h4>
+      <section><p>Indicates that the target method should be called when the plugin is enabled.</p>
 </section>
-      <h4><a class="xref" href="IPA.IGenericEnhancedPlugin.html">IGenericEnhancedPlugin</a></h4>
-      <section><p>A generic interface for the modification for enhanced plugins.</p>
+      <h4><a class="xref" href="IPA.OnExitAttribute.html">OnExitAttribute</a></h4>
+      <section><p>Indicates that the target method should be called when the game exits.</p>
+</section>
+      <h4><a class="xref" href="IPA.OnStartAttribute.html">OnStartAttribute</a></h4>
+      <section><p>Indicates that the target method should be called when the game starts.</p>
+</section>
+      <h4><a class="xref" href="IPA.PluginAttribute.html">PluginAttribute</a></h4>
+      <section><p>Marks a class as being a BSIPA plugin.</p>
+</section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="IPA.RuntimeOptions.html">RuntimeOptions</a></h4>
+      <section><p>Options that a plugin must specify to describe how it expects to be run.</p>
 </section>
 </article>
           </div>

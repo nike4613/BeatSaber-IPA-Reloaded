@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -76,14 +77,24 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
+            <article class="content wrap" id="_content" data-uid="articles.start.user">
 <h1 id="installing-bsipa">Installing BSIPA</h1>
 
 <div class="NOTE"><h5>Note</h5><p>This guide assumes that you are starting completely fresh.</p>
 </div>
 <ol>
 <li><p>Grab a release from the GitHub <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases">Releases page</a>.
-Make sure to download <code>BSIPA.zip</code>, as <code>ModList.zip</code> contains the Beat Saber mod for showing your mods in-game, not the loader itself.</p>
+Make sure to download one of the <code>BSIPA-*.zip</code>s, as <code>ModList.zip</code> contains the Beat Saber mod for showing your mods in-game, not the loader itself.</p>
+<div class="NOTE"><h5>Note</h5><p>The specific ZIP you need to download varies on the game you will be patching. For example, if you are patching Beat Saber, you will need the file
+<code>BSIPA-x64-Net4.zip</code>. This is because Beat Saber is a 64 bit game running .NET 4. If you are patching Muse Dash, however, you nee the file
+<code>BSIPA-x86-Net3.zip</code>.</p>
+</div>
+<div class="TIP"><h5>Tip</h5><p>There are a few tricks for figuring out which file you need. If the game has a folder called <code>MonoBleedingEdge</code> in the install directory, then you
+need one of the <code>Net4</code> builds. To determine <em>which</em> build to use, right click on the game executable, go to the <code>Compatability</code> tab, check the
+<code>Run this program in compatability mode for</code> checkbox, and look and see if the dropdown has any Windows XP emulation options. If it does, the
+application is 32 bit, and you need to get one of the x86 builds. Otherwise, get one of the x64 builds.</p>
+<p>Make sure to uncheck that checkbox before leaving the menu.</p>
+</div>
 </li>
 <li><p>Extract the zip into your game installation directory. There should now be a folder named <code>IPA</code> and a file named <code>IPA.exe</code> in
 the same folder as the game executable.</p>
@@ -114,14 +125,34 @@ and set both of the following to <code>false</code>:</p>
   ...
 }
 </code></pre></div>
+<div class="TIP"><h5>Tip</h5><p>Depending on the game, you may have to set the config member <code>GameAssemblies</code> to the names of the assemblies
+that the game uses for BSIPA to virtualize them properly.</p>
+<p>For Beat Saber distrobutions, this will be set according to the version that it was built for by default.
+Otherwise, it will contain just <code>Assembly-CSharp.dll</code> since most games use that default.</p>
+</div>
 </li>
 <li><p>From here, just place all of your plugins in the <code>Plugins</code> folder, and you&#39;re all set!</p>
 <p>Many plugins will come in a zip such that the root of the zip represents the game install directory, so all you may have to
 do is extract the plugin into the game installation folder.</p>
 </li>
 </ol>
+<div class="NOTE"><h5>Note</h5><p>For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection.
+To make the injection work with Wine, <code>winhttp</code> has to have a DLL override set to <code>native,builtin</code>. This can be set either through
+Protontricks, or with the following <code>.reg</code> file.</p>
+<pre><code class="lang-reg">REGEDIT4
+[HKEY_CURRENT_USER\Software\Wine\DllOverrides]
+&quot;winhttp&quot;=&quot;native,builtin&quot;
+</code></pre><p>For Steam there&#39;s a per-game Wine prefix under <code>compatdata</code>. In this case <code>SteamLibrary/steamapps/compatdata/620980/pfx/user.reg</code>.
+Changes to this file will likely be ovewritten when the game updates or if local files are validated through Steam.</p>
+</div>
 <p>Thats really all you have to do! The installation should persist across game updates for as long as <code>winhttp.dll</code> is present in
 the game directory, though your plugins will be moved to a different folder when it does update so things don&#39;t break horribly.</p>
+<h2 id="uninstalling">Uninstalling</h2>
+<p>Uninstalling is fairly simple, and can be done one of two ways:</p>
+<ol>
+<li>Drag the game executable over <code>IPA.exe</code> while holding <kbd>Alt</kbd>.</li>
+<li>Open a command prompt or Powershell terminal and run <code>.\IPA.exe -rn</code>. (see <a class="xref" href="command-line.html">The Command Line</a> for what those options mean)</li>
+</ol>
 </article>
           </div>
           
@@ -130,7 +161,7 @@ the game directory, though your plugins will be moved to a different folder when
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/docs/articles/start-user.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/docs/articles/start-user.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

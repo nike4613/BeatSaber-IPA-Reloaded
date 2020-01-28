@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -85,16 +86,18 @@
     <h3 id="classes">Classes
   </h3>
       <h4><a class="xref" href="IPA.Config.Config.html">Config</a></h4>
-      <section><p>A class to handle updating ConfigProviders automatically</p>
+      <section><p>An abstraction of a config file on disk, which handles synchronizing between a memory representation and the
+disk representation.</p>
 </section>
       <h4><a class="xref" href="IPA.Config.Config.NameAttribute.html">Config.NameAttribute</a></h4>
       <section><p>Specifies a preferred config name, instead of using the plugin&apos;s name.</p>
 </section>
       <h4><a class="xref" href="IPA.Config.Config.PreferAttribute.html">Config.PreferAttribute</a></h4>
-      <section><p>Specifies that a particular parameter is preferred to be a specific type of <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a>. If it is not available, also specifies backups. If none are available, the default is used.</p>
+      <section><p>Specifies that a particular parameter is preferred to use a particular <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a>. 
+If it is not available, also specifies backups. If none are available, the default is used.</p>
 </section>
-      <h4><a class="xref" href="IPA.Config.Config.TypeAttribute.html">Config.TypeAttribute</a></h4>
-      <section><p>Defines the type of the <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a></p>
+      <h4><a class="xref" href="IPA.Config.ConfigProvider.html">ConfigProvider</a></h4>
+      <section><p>A wrapper for an <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> and the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a> to use with it.</p>
 </section>
       <h4><a class="xref" href="IPA.Config.ModPrefs.html">ModPrefs</a></h4>
       <section><p>Allows to get and set preferences for your mod. </p>
@@ -103,6 +106,9 @@
   </h3>
       <h4><a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a></h4>
       <section><p>An interface for configuration providers.</p>
+</section>
+      <h4><a class="xref" href="IPA.Config.IConfigStore.html">IConfigStore</a></h4>
+      <section><p>A storage for a config structure.</p>
 </section>
       <h4><a class="xref" href="IPA.Config.IModPrefs.html">IModPrefs</a></h4>
       <section><p>Allows to get and set preferences for your mod. </p>

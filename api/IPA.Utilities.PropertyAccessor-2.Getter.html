@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IEnhancedBeatSaberPlugin
+    <title>Delegate PropertyAccessor&lt;T, U&gt;.Getter
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IEnhancedBeatSaberPlugin
+    <meta name="title" content="Delegate PropertyAccessor&lt;T, U&gt;.Getter
    ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
@@ -78,65 +79,69 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="IPA.IEnhancedBeatSaberPlugin">
+            <article class="content wrap" id="_content" data-uid="IPA.Utilities.PropertyAccessor`2.Getter">
   
   
-  <h1 id="IPA_IEnhancedBeatSaberPlugin" data-uid="IPA.IEnhancedBeatSaberPlugin" class="text-break">Interface IEnhancedBeatSaberPlugin
+  <h1 id="IPA_Utilities_PropertyAccessor_2_Getter" data-uid="IPA.Utilities.PropertyAccessor`2.Getter" class="text-break">Delegate PropertyAccessor&lt;T, U&gt;.Getter
   </h1>
-  <div class="markdown level0 summary"><p>An enhanced version of a standard BeatSaber plugin.</p>
+  <div class="markdown level0 summary"><p>A getter for a property.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnApplicationStart">IBeatSaberPlugin.OnApplicationStart()</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnApplicationQuit">IBeatSaberPlugin.OnApplicationQuit()</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnUpdate">IBeatSaberPlugin.OnUpdate()</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnFixedUpdate">IBeatSaberPlugin.OnFixedUpdate()</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnSceneLoaded_Scene_LoadSceneMode_">IBeatSaberPlugin.OnSceneLoaded(Scene, LoadSceneMode)</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnSceneUnloaded_Scene_">IBeatSaberPlugin.OnSceneUnloaded(Scene)</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IBeatSaberPlugin.html#IPA_IBeatSaberPlugin_OnActiveSceneChanged_Scene_Scene_">IBeatSaberPlugin.OnActiveSceneChanged(Scene, Scene)</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IGenericEnhancedPlugin.html#IPA_IGenericEnhancedPlugin_Filter">IGenericEnhancedPlugin.Filter</a>
-    </div>
-    <div>
-      <a class="xref" href="IPA.IGenericEnhancedPlugin.html#IPA_IGenericEnhancedPlugin_OnLateUpdate">IGenericEnhancedPlugin.OnLateUpdate()</a>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.html">IPA</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
-  <h5 id="IPA_IEnhancedBeatSaberPlugin_syntax">Syntax</h5>
+  <h5 id="IPA_Utilities_PropertyAccessor_2_Getter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IEnhancedBeatSaberPlugin : IBeatSaberPlugin, IGenericEnhancedPlugin</code></pre>
+    <pre><code class="lang-csharp hljs">public delegate U Getter(ref T obj);</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>the object it is a member of</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">U</span></td>
+        <td><p>the value of the property</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetPrivateField_System_Object_System_String_System_Object_">ReflectionUtil.SetPrivateField(Object, String, Object)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetPrivateField__1_System_Object_System_String_">ReflectionUtil.GetPrivateField&lt;T&gt;(Object, String)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetPrivateProperty_System_Object_System_String_System_Object_">ReflectionUtil.SetPrivateProperty(Object, String, Object)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokePrivateMethod_System_Object_System_String_System_Object___">ReflectionUtil.InvokePrivateMethod(Object, String, Object[])</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokePrivateMethod__1_System_Object_System_String_System_Object___">ReflectionUtil.InvokePrivateMethod&lt;T&gt;(Object, String, Object[])</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
   </div>
 </article>
           </div>
@@ -146,10 +151,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_IEnhancedBeatSaberPlugin.md&amp;value=---%0Auid%3A%20IPA.IEnhancedBeatSaberPlugin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_PropertyAccessor_2_Getter.md&amp;value=---%0Auid%3A%20IPA.Utilities.PropertyAccessor%602.Getter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/681860c90103925ac6ef06d1bfc7010beb11418a/IPA.Loader/PluginInterfaces/BeatSaber/IEnhancedBeatSaberPlugin.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b1994188983f643a487808fb3f8044ea91bf574d/IPA.Loader/Utilities/Accessor.cs/#L140" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
