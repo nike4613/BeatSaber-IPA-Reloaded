@@ -215,7 +215,7 @@ namespace IPA.Utilities
         /// <summary>
         /// Creates a scope guard for a given <see cref="Action"/>.
         /// </summary>
-        /// <param name="action">teh <see cref="Action"/> to run on dispose</param>
+        /// <param name="action">the <see cref="Action"/> to run on dispose</param>
         /// <returns>a <see cref="ScopeGuardObject"/> that will run <paramref name="action"/> on disposal</returns>
         /// <example>
         /// <code>
