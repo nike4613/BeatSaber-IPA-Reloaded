@@ -19,13 +19,16 @@ namespace Net3_Proxy
             => (T)GetCustomAttribute(element, typeof(T));
         public static T GetCustomAttribute<T>(this ConstructorInfo element) where T : Attribute
             => (T)GetCustomAttribute(element, typeof(T));
+        public static T GetCustomAttribute<T>(this Type element) where T : Attribute
+            => (T)GetCustomAttribute(element, typeof(T));
 
         public static Attribute GetCustomAttribute(this MemberInfo element, Type attributeType)
             => Attribute.GetCustomAttribute(element, attributeType);
         public static Attribute GetCustomAttribute(this ConstructorInfo element, Type attributeType)
             => Attribute.GetCustomAttribute(element, attributeType);
-
         public static Attribute GetCustomAttribute(this ParameterInfo element, Type attributeType) 
+            => Attribute.GetCustomAttribute(element, attributeType);
+        public static Attribute GetCustomAttribute(this Type element, Type attributeType)
             => Attribute.GetCustomAttribute(element, attributeType);
 
         public static StringBuilder Clear(this StringBuilder sb)
