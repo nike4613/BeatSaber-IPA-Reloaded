@@ -190,6 +190,40 @@ namespace IPA.Utilities
             return cmpVal;
         }
 
+        /// <summary>
+        /// An object used to manage scope guards.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// using var _ = new Utils.ScopeGuardObject(() => RunOnScopeExit(value));
+        /// </code>
+        /// </example>
+        /// <seealso cref="ScopeGuard(Action)"/>
+        public struct ScopeGuardObject : IDisposable
+        {
+            private readonly Action action;
+            /// <summary>
+            /// Creates a new scope guard that will invoke <paramref name="action"/> when disposed.
+            /// </summary>
+            /// <param name="action">the action to run on dispose</param>
+            public ScopeGuardObject(Action action)
+                => this.action = action;
+            void IDisposable.Dispose()
+                => action?.Invoke();
+        }
+
+        /// <summary>
+        /// Creates a scope guard for a given <see cref="Action"/>.
+        /// </summary>
+        /// <param name="action">teh <see cref="Action"/> to run on dispose</param>
+        /// <returns>a <see cref="ScopeGuardObject"/> that will run <paramref name="action"/> on disposal</returns>
+        /// <example>
+        /// <code>
+        /// using var _ = Utils.ScopeGuard(() => RunOnScopeExit(value));
+        /// </code>
+        /// </example>
+        public static ScopeGuardObject ScopeGuard(Action action)
+            => new ScopeGuardObject(action);
 
         internal static bool HasInterface(this TypeDefinition type, string interfaceFullName)
         {
