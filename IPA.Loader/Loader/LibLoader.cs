@@ -30,16 +30,17 @@ namespace IPA.Loader
             if (name.Name == CurrentAssemblyName)
                 return AssemblyDefinition.ReadAssembly(CurrentAssemblyPath, parameters);
 
-            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out var path))
+            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out var path))
             {
                 if (File.Exists(path))
                     return AssemblyDefinition.ReadAssembly(path, parameters);
             }
-            else if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out path))
+            else if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out path))
             {
                 if (File.Exists(path))
                     return AssemblyDefinition.ReadAssembly(path, parameters);
             }
+
 
             return base.Resolve(name, parameters);
         }
@@ -120,9 +121,9 @@ namespace IPA.Loader
             SetupAssemblyFilenames();
 
             var testFile = $"{asmName.Name}.{asmName.Version}.dll";
-            Log(Logger.Level.Debug, $"Looking for file {testFile}");
+            Log(Logger.Level.Debug, $"Looking for file {asmName.Name}.dll");
 
-            if (FilenameLocations.TryGetValue(testFile, out var path))
+            if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.dll", out var path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 if (File.Exists(path))
@@ -130,9 +131,10 @@ namespace IPA.Loader
 
                 Log(Logger.Level.Critical, $"but {path} no longer exists!");
             }
-            else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.dll", out path))
+            else if (FilenameLocations.TryGetValue(testFile, out path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
+                Log(Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
                 if (File.Exists(path))
                     return Assembly.LoadFrom(path);
 
