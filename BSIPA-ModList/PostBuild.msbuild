@@ -12,6 +12,6 @@
     <ItemGroup>
       <ToRename Include="$(OPath)Libs\**\*.dll" />
     </ItemGroup>
-    <AssemblyRename Assemblies="@(ToRename)" />
+    <!--<AssemblyRename Assemblies="@(ToRename)" />-->
   </Target>
 </Project>
