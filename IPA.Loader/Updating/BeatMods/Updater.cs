@@ -14,6 +14,7 @@ using IPA.Config;
 using IPA.Loader;
 using IPA.Loader.Features;
 using IPA.Utilities;
+using IPA.Utilities.Async;
 using Newtonsoft.Json;
 using SemVer;
 using UnityEngine;
@@ -527,8 +528,7 @@ namespace IPA.Updating.BeatMods
                         ExtractPluginAsync(stream, item, platformFile);
                     }, taskTokenSource.Token);
 
-                    while (!(downloadTask.IsCompleted || downloadTask.IsCanceled || downloadTask.IsFaulted))
-                        yield return null; // pause co-routine until task is done
+                    yield return Coroutines.WaitForTask(downloadTask);
 
                     if (downloadTask.IsFaulted)
                     {
