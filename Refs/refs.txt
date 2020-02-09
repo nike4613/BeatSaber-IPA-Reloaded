@@ -1,7 +1,6 @@
 ::from ./bsinstalldir.txt
 "Beat Saber_Data/
 ""Managed/
-"""Unity.TextMeshPro.dll
 """UnityEngine.
 """"dll?alias=UnityEngine.Net4.dll
 """"xml?alias=UnityEngine.Net4.xml?optional
@@ -11,6 +10,15 @@
 """"CoreModule.
 """""dll?alias=UnityEngine.CoreModule.Net4.dll
 """""xml?alias=UnityEngine.CoreModule.Net4.xml?optional
+
+::startopt
+::from ./bsinstalldir.txt
+"Beat Saber_Data/
+""Managed/
+"""Assembly-CSharp.dll?virt
+"""MainAssembly.dll?virt
+"""Unity.TextMeshPro.dll
+"""UnityEngine.
 """"TextRenderingModule.
 """""dll
 """""xml?optional
@@ -25,13 +33,6 @@
 "Plugins/
 ""BeatSaberCustomUI.
 """dll
-
-::startopt
-::from ./bsinstalldir.txt
-"Beat Saber_Data/
-""Managed/
-"""Assembly-CSharp.dll?virt
-"""MainAssembly.dll?virt
 ::endopt
 
 ::startopt
