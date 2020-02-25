@@ -124,7 +124,7 @@ applying attributes to the <xref:IPA.Config.Config> parameter, namely <xref:IPA.
 <xref:IPA.Config.Config.PreferAttribute> to control the type. If the type preferences aren't registered though, it will just fall back to JSON.
 
 The config's behaviour can be found either later here, or in the remarks section of
-<xref:IPA.Config.Stores.GeneratedExtension.Generated``1(IPA.Config.Config,System.Boolean)>.
+<xref:IPA.Config.Stores.GeneratedStore.Generated``1(IPA.Config.Config,System.Boolean)>.
 
 At this point, your main plugin file should look something like this:
 
