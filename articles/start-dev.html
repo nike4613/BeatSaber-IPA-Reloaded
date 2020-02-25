@@ -244,7 +244,7 @@ that the file that will be loaded from will be <code>UserData/Demo Plugin.json</
 applying attributes to the &lt;xref:IPA.Config.Config&gt; parameter, namely &lt;xref:IPA.Config.Config.NameAttribute&gt; to control the name, and
 &lt;xref:IPA.Config.Config.PreferAttribute&gt; to control the type. If the type preferences aren&#39;t registered though, it will just fall back to JSON.</p>
 <p>The config&#39;s behaviour can be found either later here, or in the remarks section of
-&lt;xref:IPA.Config.Stores.GeneratedExtension.Generated``1(IPA.Config.Config,System.Boolean)&gt;.</p>
+&lt;xref:IPA.Config.Stores.GeneratedStore.Generated``1(IPA.Config.Config,System.Boolean)&gt;.</p>
 <p>At this point, your main plugin file should look something like this:</p>
 <pre><code class="lang-cs" name="Plugin.cs">using System;
 using IPA;
@@ -459,7 +459,7 @@ namespace Demo
 </code></pre><p>But to make it actually work, we add this outside the namespace declaration:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#internals-visible">using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo(GeneratedExtension.AssemblyVisibilityTarget)]
+[assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 </code></pre><p>And now our full file looks like this:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -467,7 +467,7 @@ using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
 
-[assembly: InternalsVisibleTo(GeneratedExtension.AssemblyVisibilityTarget)]
+[assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 
 namespace Demo
 {
@@ -517,7 +517,7 @@ namespace Demo
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b4c06fef082b8a10458bc874bfa67789ed9d2fb4/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/7e229ce16d5d0b4bccc87ff99f7648866797ca78/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
