@@ -4,7 +4,7 @@ using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
 
-[assembly: InternalsVisibleTo(GeneratedExtension.AssemblyVisibilityTarget)]
+[assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 
 namespace Demo
 {
