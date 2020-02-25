@@ -8,7 +8,7 @@
     <title>Making your own mod </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Making your own mod ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.49.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -119,15 +119,15 @@ namespace Demo
 }
 </code></pre><p>There are basically 4 major concepts here:</p>
 <ol>
-<li><a class="xref" href="../api/IPA.Logging.Logger.html">Logger</a>, the logging system.</li>
-<li><a class="xref" href="../api/IPA.PluginAttribute.html">PluginAttribute</a>, which declares that this class is a plugin and how it should behave.</li>
-<li><a class="xref" href="../api/IPA.InitAttribute.html">InitAttribute</a>, which declares the constructor (and optionally other methods) as being
+<li>&lt;xref:IPA.Logging.Logger&gt;, the logging system.</li>
+<li>&lt;xref:IPA.PluginAttribute&gt;, which declares that this class is a plugin and how it should behave.</li>
+<li>&lt;xref:IPA.InitAttribute&gt;, which declares the constructor (and optionally other methods) as being
 used for initialization.</li>
-<li>The lifecycle event attributes <a class="xref" href="../api/IPA.OnStartAttribute.html">OnStartAttribute</a> and <a class="xref" href="../api/IPA.OnExitAttribute.html">OnExitAttribute</a>.</li>
+<li>The lifecycle event attributes &lt;xref:IPA.OnStartAttribute&gt; and &lt;xref:IPA.OnExitAttribute&gt;.</li>
 </ol>
 <p>I reccommend you read the docs for each of those to get an idea for what they do.</p>
 <p>It is worth noting that this example is of a mod that <em>cannot</em> be enabled and disabled at runtime, as marked by
-<a class="xref" href="../api/IPA.RuntimeOptions.html#IPA_RuntimeOptions_SingleStartInit">RuntimeOptions.SingleStartInit</a>.</p>
+<a href="xref:IPA.RuntimeOptions.SingleStartInit">RuntimeOptions.SingleStartInit</a>.</p>
 <h3 id="what-can-be-changed">What can be changed</h3>
 <p>Before we go adding more functionality, its worth mentioning that that is not the <em>only</em> way to have a plugin set up.</p>
 <p>For starters, we can add another <em>method</em> marked <code>[Init]</code>, and it will be called after the constructor, with the same
@@ -241,8 +241,8 @@ it from anywhere by simply accessing <code>PluginConfig.Instance</code>. Make su
 your only interaction with the user&#39;s preferences.</p>
 <p>By default, it will be named the same as is in your plugin&#39;s manifest&#39;s <code>name</code> field, and will use the built-in <code>json</code> provider. This means
 that the file that will be loaded from will be <code>UserData/Demo Plugin.json</code> for our demo plugin. You can, however, control both of those by
-applying attributes to the <a class="xref" href="../api/IPA.Config.Config.html">Config</a> parameter, namely <a class="xref" href="../api/IPA.Config.Config.NameAttribute.html">Config.NameAttribute</a> to control the name, and
-<a class="xref" href="../api/IPA.Config.Config.PreferAttribute.html">Config.PreferAttribute</a> to control the type. If the type preferences aren&#39;t registered though, it will just fall back to JSON.</p>
+applying attributes to the &lt;xref:IPA.Config.Config&gt; parameter, namely &lt;xref:IPA.Config.Config.NameAttribute&gt; to control the name, and
+&lt;xref:IPA.Config.Config.PreferAttribute&gt; to control the type. If the type preferences aren&#39;t registered though, it will just fall back to JSON.</p>
 <p>The config&#39;s behaviour can be found either later here, or in the remarks section of
 &lt;xref:IPA.Config.Stores.GeneratedExtension.Generated``1(IPA.Config.Config,System.Boolean)&gt;.</p>
 <p>At this point, your main plugin file should look something like this:</p>
@@ -295,7 +295,7 @@ public SubThingsObject SubThings { get; set; } = new SubThingsObject();
 <p>But there is one caveat to this: because <code>SubThingsObject</code> is a reference type, <em><code>SubThings</code> can be null</em>.</p>
 <p>This is often undesireable. The obvious solution may be to simply change it to a <code>struct</code>, but that is both not supported <em>and</em> potentially
 undesirable for other reasons we&#39;ll get to later.</p>
-<p>Instead, you can use <a class="xref" href="../api/IPA.Config.Stores.Attributes.NonNullableAttribute.html">NonNullableAttribute</a>. Change the definition of <code>SubThings</code> to this:</p>
+<p>Instead, you can use &lt;xref:IPA.Config.Stores.Attributes.NonNullableAttribute&gt;. Change the definition of <code>SubThings</code> to this:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#sub-basic-nonnull">[NonNullable]
 public SubThingsObject SubThings { get; set; } = new SubThingsObject();
 </code></pre><p>And add this to the <code>using</code>s:</p>
@@ -306,8 +306,8 @@ ensure that it never becomes null in code, as that will break the serializer.</p
 <p>What about collection types?</p>
 <p>Well, you can use those too, but you have to use something new: a converter.</p>
 <p>You may be familiar with them if you have used something like the popular Newtonsoft.Json library before. In BSIPA, they lie in the
-<a class="xref" href="../api/IPA.Config.Stores.Converters.html">IPA.Config.Stores.Converters</a> namespace. All converters either implement <a class="xref" href="../api/IPA.Config.Stores.IValueConverter.html">IValueConverter</a> or derive from
-<a class="xref" href="../api/IPA.Config.Stores.ValueConverter-1.html">ValueConverter&lt;T&gt;</a>. You will mostly use them with an <a class="xref" href="../api/IPA.Config.Stores.Attributes.UseConverterAttribute.html">UseConverterAttribute</a>.</p>
+&lt;xref:IPA.Config.Stores.Converters&gt; namespace. All converters either implement &lt;xref:IPA.Config.Stores.IValueConverter&gt; or derive from
+&lt;xref:IPA.Config.Stores.ValueConverter`1&gt;. You will mostly use them with an &lt;xref:IPA.Config.Stores.Attributes.UseConverterAttribute&gt;.</p>
 <p>To use them, we&#39;ll want to import them:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#includes-attributes">using System.Collections.Generic;
 using IPA.Config.Stores;
@@ -321,10 +321,10 @@ an ordered array, which is then written to disk as a JSON array.</p>
 for such a member, then deciphering what exactly it means:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#set-basic">[UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
 public HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
-</code></pre><p>The converter we&#39;re using here is <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a>, a base type for converters of all kinds of
-collections. In fact, the <a class="xref" href="../api/IPA.Config.Stores.Converters.ListConverter-1.html">ListConverter&lt;T&gt;</a> is derived from this, and uses it for most of its implementation.
-If a type implements <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a>, <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a> can convert it.</p>
-<p>It, like most other BSIPA provided aggregate converters, provides a type argument overload <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-3.html">CollectionConverter&lt;T, TCollection, TConverter&gt;</a>
+</code></pre><p>The converter we&#39;re using here is &lt;xref:IPA.Config.Stores.Converters.CollectionConverter`2&gt;, a base type for converters of all kinds of
+collections. In fact, the &lt;xref:IPA.Config.Stores.Converters.ListConverter`1&gt; is derived from this, and uses it for most of its implementation.
+If a type implements <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a>, &lt;xref:IPA.Config.Stores.Converters.CollectionConverter`2&gt; can convert it.</p>
+<p>It, like most other BSIPA provided aggregate converters, provides a type argument overload &lt;xref:IPA.Config.Stores.Converters.CollectionConverter`3&gt;
 to compose other converters with it to handle unusual element types.</p>
 <p>Now after all that, your plugin class has not changed, and your config class should look something like this:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
@@ -517,7 +517,7 @@ namespace Demo
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/cdf2021608975e231005604c9e2ae874e57d5b60/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/b4c06fef082b8a10458bc874bfa67789ed9d2fb4/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
