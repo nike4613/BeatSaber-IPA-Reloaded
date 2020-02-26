@@ -33,7 +33,7 @@ jobs:
       - name: Install DocFX
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install docfx -y
+          args: install docfx --version 2.48 -y
       - name: Checkout current pages
         uses: actions/checkout@v2
         with:
