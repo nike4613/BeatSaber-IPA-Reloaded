@@ -120,10 +120,10 @@ namespace IPA.Loader
 
             SetupAssemblyFilenames();
 
-            var testFile = $"{asmName.Name}.{asmName.Version}.dll";
+            var testFile = $"{asmName.Name}.dll";
             Log(Logger.Level.Debug, $"Looking for file {asmName.Name}.dll");
 
-            if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.dll", out var path))
+            if (FilenameLocations.TryGetValue(testFile, out var path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 if (File.Exists(path))
@@ -131,7 +131,7 @@ namespace IPA.Loader
 
                 Log(Logger.Level.Critical, $"but {path} no longer exists!");
             }
-            else if (FilenameLocations.TryGetValue(testFile, out path))
+            else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 Log(Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
