@@ -9,8 +9,11 @@ namespace IPA.Injector
     {
         public event Action Destroyed = delegate {};
 
+        public void Awake()
+        {
+        }
+
         public void Start()
-        public void A
         {
             Destroy(gameObject);
         }
