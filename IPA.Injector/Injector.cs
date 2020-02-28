@@ -176,7 +176,7 @@ namespace IPA.Injector
 
                 if (application == null)
                 {
-                    injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Application!"
+                    injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Camera!"
                         + "Nothing to patch to get ourselves into the Unity run cycle!");
                     goto endPatchCoreModule;
                 }
