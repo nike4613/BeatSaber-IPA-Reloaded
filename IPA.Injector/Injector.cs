@@ -172,7 +172,7 @@ namespace IPA.Injector
                     }
                 }
 
-                var application = unityModDef.GetType("UnityEngine", "Application");
+                var application = unityModDef.GetType("UnityEngine", "Camera");
 
                 if (application == null)
                 {
