@@ -29,7 +29,7 @@ namespace IPA.Loader
             }
 
             var target = typeof(PatchProcessor).GetMethod("Patch");
-            var patch = typeof(HarmonyProtector).GetMethod(nameof(PatchProcessor_Patch_Prefix));
+            var patch = typeof(HarmonyProtector).GetMethod(nameof(PatchProcessor_Patch_Prefix), BindingFlags.NonPublic | BindingFlags.Static);
 
             inst.Patch(target, new HarmonyMethod(patch));
         }
