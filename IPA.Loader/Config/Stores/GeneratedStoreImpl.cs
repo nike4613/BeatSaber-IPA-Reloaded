@@ -1604,6 +1604,28 @@ namespace IPA.Config.Stores
 
                 // for now, we assume that its a generated type implementing IGeneratedStore
                 var IGeneratedStore_Serialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Serialize));
+                var IGeneratedStoreT_CopyFrom = typeof(IGeneratedStore<>).GetMethod(nameof(IGeneratedStore<int>.CopyFrom));
+
+                if (member.IsField)
+                {
+                    var noCreate = il.DefineLabel();
+                    var stlocal = GetLocal(member.Type);
+
+                    // first check to make sure that this is an IGeneratedStore, because we don't control assignments to it
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+                    il.Emit(OpCodes.Brtrue_S, noCreate);
+                    il.Emit(OpCodes.Stloc, stlocal);
+                    EmitCreateChildGenerated(il, member.Type);
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Ldloc, stlocal);
+                    il.Emit(OpCodes.Ldc_I4_0);
+                    il.Emit(OpCodes.Callvirt, IGeneratedStoreT_CopyFrom);
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Stloc, stlocal);
+                    EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, stlocal));
+                    il.MarkLabel(noCreate);
+                }
                 il.Emit(OpCodes.Callvirt, IGeneratedStore_Serialize);
             }
 
