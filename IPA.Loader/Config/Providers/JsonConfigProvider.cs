@@ -117,7 +117,7 @@ namespace IPA.Config.Providers
 
         public void Store(Value value, FileInfo file)
         {
-            if (file.Directory.Exists)
+            if (!file.Directory.Exists)
                 file.Directory.Create();
 
             try
