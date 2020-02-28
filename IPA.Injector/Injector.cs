@@ -334,10 +334,6 @@ namespace IPA.Injector
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
             PluginComponent.Create();
-
-#if DEBUG
-            Config.Stores.GeneratedStoreImpl.DebugSaveAssembly("GeneratedAssembly.dll");
-#endif
         }
     }
 }
