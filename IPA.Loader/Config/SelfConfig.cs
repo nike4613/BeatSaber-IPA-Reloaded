@@ -67,7 +67,7 @@ namespace IPA.Config
         }
 
         internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "3.99.99.6";
+        internal const string IPAVersion = "3.99.99.7";
 
         // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
         //      Debug.CondenseModLogs
