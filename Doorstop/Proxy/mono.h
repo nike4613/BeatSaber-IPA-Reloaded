@@ -64,6 +64,7 @@ void* (*mono_object_to_string)(void* obj, void** exc);
 void (*mono_dllmap_insert)(void* assemblyImage, const char* dll, const char* func, const char* tdll, const char* tfunc);
 
 char* (*mono_string_to_utf8)(void* str);
+wchar_t* (*mono_string_to_utf16)(void* str);
 void (*mono_free)(void*);
 
 /* Installs a function which is called when the runtime encounters an unhandled exception.
@@ -102,6 +103,7 @@ inline void loadMonoFunctions(HMODULE monoLib)
 	GET_MONO_PROC(mono_array_addr_with_size);
     GET_MONO_PROC(mono_object_to_string);
     GET_MONO_PROC(mono_string_to_utf8);
+	GET_MONO_PROC(mono_string_to_utf16);
     GET_MONO_PROC(mono_free);
     GET_MONO_PROC(mono_dllmap_insert);
     GET_MONO_PROC(mono_install_unhandled_exception_hook);
