@@ -151,7 +151,7 @@ namespace IPA.Injector
                 // this is a critical section because if you exit in here, CoreModule can die
                 using var critSec = CriticalSection.ExecuteSection();
 
-                var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
+                using var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
                 {
                     ReadWrite = false,
                     InMemory = true,
@@ -270,7 +270,7 @@ namespace IPA.Injector
                     {
                         injector.Debug("Applying anti-yeet patch");
 
-                        var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
+                        using var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
                         {
                             ReadWrite = false,
                             InMemory = true,
