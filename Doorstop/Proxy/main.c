@@ -62,13 +62,14 @@ void unhandledException(void* exc, void* data)
             DEBUG_BREAK;
             LOG("An error occurred stringifying uncaught error: %s\n", str);
 
-            size_t len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+            /*size_t len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
             wchar_t* wstr = memalloc(sizeof(wchar_t) * len);
-            MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);
+            MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);*/
+            wchar_t* wstr = mono_string_to_utf16(monostr);
 
-            ASSERT_F(FALSE, L"Uncaught exception; stringify failed: %s", wstr);
+            ASSERT_F(FALSE, L"Uncaught exception; stringify failed: %wS", wstr);
 
-            memfree(wstr);
+            mono_free(wstr);
             mono_free(str);
         }
 #else
@@ -80,17 +81,18 @@ void unhandledException(void* exc, void* data)
     DEBUG_BREAK;
     LOG("Uncaught exception: %s\n", str);
 
-    size_t len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+    /*size_t len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
     wchar_t* wstr = memalloc(sizeof(wchar_t) * len);
-    MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);
+    MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);*/
+    wchar_t* wstr = mono_string_to_utf16(mstr);
 
 #ifdef _VERBOSE
     ASSERT(FALSE, L"Uncaught exception; see doorstop.log for details");
 #else
-    ASSERT_F(FALSE, L"Uncaught exception: %s", wstr);
+    ASSERT_F(FALSE, L"Uncaught exception: %wS", wstr);
 #endif
 
-    memfree(wstr);
+    mono_free(wstr);
     mono_free(str);
 
     ReleaseMutex(unhandledMutex);
