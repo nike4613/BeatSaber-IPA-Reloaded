@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEngine;
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedMember.Global
+using Logger = IPA.Logging.Logger;
 
 namespace IPA.Injector
 {
