@@ -46,6 +46,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <OtherConfig>Debug</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
+    <NoWarn>CA1031</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,6 +60,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <OtherConfig>Release</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
+    <NoWarn>CA1031</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -79,11 +81,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <OtherConfig>Debug</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
+    <NoWarn>CA1031</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Verbose_Release|AnyCPU'">
     <OutputPath>bin\Verbose_Release\</OutputPath>
     <OtherConfig>Release</OtherConfig>
     <ProxyConfig>Verbose_Release</ProxyConfig>
+    <NoWarn>CA1031</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
