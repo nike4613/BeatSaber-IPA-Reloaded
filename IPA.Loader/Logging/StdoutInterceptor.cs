@@ -19,7 +19,7 @@ namespace IPA.Logging
         }
 
         private string lineBuffer = "";
-        private object bufferLock = new object();
+        private readonly object bufferLock = new object();
 
         public override void Write(string value)
         {

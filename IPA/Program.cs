@@ -13,7 +13,7 @@ using IPA.Patcher;
 namespace IPA
 {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    public class Program
+    public static class Program
     {
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Architecture
@@ -37,7 +37,7 @@ namespace IPA
         public static readonly ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l")      { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
 
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
             Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch, ArgNoRevert).Process();
 
@@ -177,13 +177,9 @@ namespace IPA
                     Console.WriteLine("Installing files... ");
 
                     CopyAll(new DirectoryInfo(context.DataPathSrc), new DirectoryInfo(context.DataPathDst), force,
-                        backup,
-                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                            architecture));
+                        backup);
                     CopyAll(new DirectoryInfo(context.LibsPathSrc), new DirectoryInfo(context.LibsPathDst), force,
-                        backup,
-                        (from, to) => NativePluginInterceptor(from, to, new DirectoryInfo(nativePluginFolder), isFlat,
-                            architecture));
+                        backup);
                     CopyAll(new DirectoryInfo(context.IPARoot), new DirectoryInfo(context.ProjectRoot), force,
                         backup,
                         null, false);
@@ -258,51 +254,6 @@ namespace IPA
                 {
                     Process.Start(context.Executable, Args(argList.ToArray()));
                 }
-            }
-        }
-
-        public static IEnumerable<FileInfo> NativePluginInterceptor(FileInfo from, FileInfo to,
-            DirectoryInfo nativePluginFolder, bool isFlat, Architecture preferredArchitecture)
-        {
-            if (to.FullName.StartsWith(nativePluginFolder.FullName))
-            {
-                var relevantBit = to.FullName.Substring(nativePluginFolder.FullName.Length + 1);
-                // Goes into the plugin folder!
-                bool isFileFlat = !relevantBit.StartsWith("x86");
-                if (isFlat && !isFileFlat)
-                {
-                    // Flatten structure
-                    bool is64Bit = relevantBit.StartsWith("x86_64");
-                    if (!is64Bit && preferredArchitecture == Architecture.x86)
-                    {
-                        // 32 bit
-                        yield return new FileInfo(Path.Combine(nativePluginFolder.FullName,
-                            relevantBit.Substring("x86".Length + 1)));
-                    }
-                    else if (is64Bit && (preferredArchitecture == Architecture.x64 ||
-                                         preferredArchitecture == Architecture.Unknown))
-                    {
-                        // 64 bit
-                        yield return new FileInfo(Path.Combine(nativePluginFolder.FullName,
-                            relevantBit.Substring("x86_64".Length + 1)));
-                    }
-                }
-                else if (!isFlat && isFileFlat)
-                {
-                    // Deepen structure
-                    yield return new FileInfo(Path.Combine(Path.Combine(nativePluginFolder.FullName, "x86"),
-                        relevantBit));
-                    yield return new FileInfo(Path.Combine(Path.Combine(nativePluginFolder.FullName, "x86_64"),
-                        relevantBit));
-                }
-                else
-                {
-                    yield return to;
-                }
-            }
-            else
-            {
-                yield return to;
             }
         }
 
@@ -445,7 +396,7 @@ namespace IPA
             }
         }
 
-        public abstract class Keyboard
+        internal static class Keyboard
         {
             [Flags]
             private enum KeyStates

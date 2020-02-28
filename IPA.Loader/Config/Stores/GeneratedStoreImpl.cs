@@ -148,7 +148,7 @@ namespace IPA.Config.Stores
         {
             private readonly IGeneratedStore generated;
             private bool inChangeTransaction = false;
-            private bool changedInTransaction = false;
+            //private bool changedInTransaction = false;
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
@@ -1405,16 +1405,16 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Call, Type_GetTypeFromHandle);
         }
 
-        private static Type IDisposable_t = typeof(IDisposable);
-        private static MethodInfo IDisposable_Dispose = IDisposable_t.GetMethod(nameof(IDisposable.Dispose));
+        private static readonly Type IDisposable_t = typeof(IDisposable);
+        private static readonly MethodInfo IDisposable_Dispose = IDisposable_t.GetMethod(nameof(IDisposable.Dispose));
 
-        private static Type Decimal_t = typeof(decimal);
-        private static ConstructorInfo Decimal_FromFloat = Decimal_t.GetConstructor(new[] { typeof(float) });
-        private static ConstructorInfo Decimal_FromDouble = Decimal_t.GetConstructor(new[] { typeof(double) });
-        private static ConstructorInfo Decimal_FromInt = Decimal_t.GetConstructor(new[] { typeof(int) });
-        private static ConstructorInfo Decimal_FromUInt = Decimal_t.GetConstructor(new[] { typeof(uint) });
-        private static ConstructorInfo Decimal_FromLong = Decimal_t.GetConstructor(new[] { typeof(long) });
-        private static ConstructorInfo Decimal_FromULong = Decimal_t.GetConstructor(new[] { typeof(ulong) });
+        private static readonly Type Decimal_t = typeof(decimal);
+        private static readonly ConstructorInfo Decimal_FromFloat = Decimal_t.GetConstructor(new[] { typeof(float) });
+        private static readonly ConstructorInfo Decimal_FromDouble = Decimal_t.GetConstructor(new[] { typeof(double) });
+        private static readonly ConstructorInfo Decimal_FromInt = Decimal_t.GetConstructor(new[] { typeof(int) });
+        private static readonly ConstructorInfo Decimal_FromUInt = Decimal_t.GetConstructor(new[] { typeof(uint) });
+        private static readonly ConstructorInfo Decimal_FromLong = Decimal_t.GetConstructor(new[] { typeof(long) });
+        private static readonly ConstructorInfo Decimal_FromULong = Decimal_t.GetConstructor(new[] { typeof(ulong) });
         private static void EmitNumberConvertTo(ILGenerator il, Type to, Type from)
         { // WARNING: THIS USES THE NO-OVERFLOW OPCODES
             if (to == from) return;

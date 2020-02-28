@@ -24,6 +24,7 @@ using Net3_Proxy;
 using Path = Net3_Proxy.Path;
 using File = Net3_Proxy.File;
 using Directory = Net3_Proxy.Directory;
+using Array = Net3_Proxy.Array;
 #endif
 
 namespace IPA.Loader
@@ -421,7 +422,7 @@ namespace IPA.Loader
             catch (ReflectionTypeLoadException e)
             {
                 Logger.loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
-                Logger.loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message).StrJP() ?? new string[0])}");
+                Logger.loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message).StrJP() ?? Array.Empty<string>())}");
             }
             catch (Exception e)
             {
