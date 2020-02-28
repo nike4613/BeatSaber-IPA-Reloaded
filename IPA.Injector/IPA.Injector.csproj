@@ -125,6 +125,27 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildProjectDirectory)\PostBuild.msbuild&quot; /property:OPath=$(OutputPath) /property:Configuration=$(Configuration) /property:SolDir=$(SolutionDir)" />
+    <Message Text="Relocating" Importance="normal" />
+    <ItemGroup>
+      <SystemFiles Include="$(OutputPath)IPA.Injector.*" />
+      <SystemFiles Include="$(OutputPath)IPA.Loader.*" />
+      <SystemFiles Include="$(OutputPath)AsyncBridge.*" />
+      <SystemFiles Include="$(OutputPath)System.*" />
+      <SystemFiles Include="$(OutputPath)Portable.System.*" />
+      <SystemFiles Include="$(OutputPath)Net3-Proxy.*" />
+      <SystemFiles Include="$(OutputPath)Libraries\Mono\**\*" />
+      <OldLibFiles Include="$(OutputPath)Libs\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
+    <RemoveDir Directories="$(OutputPath)Libraries\Mono" />
+    
+    <Delete Files="@(OldLibFiles)" />
+    <RemoveDir Directories="$(OutputPath)Libs" />
+    <ItemGroup>
+      <LibFiles Include="$(OutputPath)**\*" Exclude="$(OutputPath)Data\**\*;$(OutputPath)Libs\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(LibFiles)" DestinationFolder="$(OutputPath)Libs\" />
+    <RemoveDir Directories="$(OutputPath)Libraries\Included" />
+    <RemoveDir Directories="$(OutputPath)Libraries" />
   </Target>
 </Project>
