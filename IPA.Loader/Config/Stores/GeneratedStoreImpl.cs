@@ -1604,7 +1604,7 @@ namespace IPA.Config.Stores
 
                 // for now, we assume that its a generated type implementing IGeneratedStore
                 var IGeneratedStore_Serialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Serialize));
-                var IGeneratedStoreT_CopyFrom = typeof(IGeneratedStore<>).GetMethod(nameof(IGeneratedStore<int>.CopyFrom));
+                var IGeneratedStoreT_CopyFrom = typeof(IGeneratedStore<>).GetMethod(nameof(IGeneratedStore<object>.CopyFrom));
 
                 if (member.IsField)
                 {
