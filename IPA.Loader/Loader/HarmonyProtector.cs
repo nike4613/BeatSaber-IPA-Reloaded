@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -11,19 +11,19 @@ namespace IPA.Loader
 
     internal static class HarmonyProtector
     {
-        private static HarmonyInstance instance;
+        private static Harmony instance;
         private static Assembly selfAssem;
         private static Assembly harmonyAssem;
         
-        public static void Protect(HarmonyInstance inst = null)
+        public static void Protect(Harmony inst = null)
         {
             selfAssem = Assembly.GetExecutingAssembly();
-            harmonyAssem = typeof(HarmonyInstance).Assembly;
+            harmonyAssem = typeof(Harmony).Assembly;
 
             if (inst == null)
             {
                 if (instance == null)
-                    instance = HarmonyInstance.Create("BSIPA Safeguard");
+                    instance = new Harmony("BSIPA Safeguard");
 
                 inst = instance;
             }
@@ -34,16 +34,12 @@ namespace IPA.Loader
             inst.Patch(target, new HarmonyMethod(patch));
         }
 
-        private static void PatchProcessor_Patch_Prefix(ref List<MethodBase> ___originals)
+        private static bool PatchProcessor_Patch_Prefix(MethodBase ___original, out MethodInfo __result)
         {
-            for (int i = 0; i < ___originals.Count; i++)
-            {
-                var mi = ___originals[i];
-                var asm = mi.DeclaringType.Assembly;
+            var asm = ___original.DeclaringType.Assembly;
 
-                if (asm.Equals(selfAssem) || asm.Equals(harmonyAssem))
-                    ___originals.RemoveAt(i--);
-            }
+            __result = ___original as MethodInfo;
+            return !(asm.Equals(selfAssem) || asm.Equals(harmonyAssem));
         }
     }
 }

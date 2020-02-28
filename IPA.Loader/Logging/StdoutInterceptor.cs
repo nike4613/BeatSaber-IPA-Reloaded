@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -116,7 +116,7 @@ namespace IPA.Logging
 
         private static class ConsoleHarmonyPatches
         {
-            public static void Patch(HarmonyInstance harmony)
+            public static void Patch(Harmony harmony)
             {
                 var console = typeof(Console);
                 var resetColor = console.GetMethod("ResetColor");
@@ -169,7 +169,7 @@ namespace IPA.Logging
             }
         }
 
-        private static HarmonyInstance harmony;
+        private static Harmony harmony;
         private static bool usingInterceptor = false;
 
         public static void Intercept()
@@ -178,7 +178,7 @@ namespace IPA.Logging
             {
                 usingInterceptor = true;
                 if (harmony == null)
-                    harmony = HarmonyInstance.Create("BSIPA Console Redirector Patcher");
+                    harmony = new Harmony("BSIPA Console Redirector Patcher");
                 if (stdoutInterceptor == null)
                     stdoutInterceptor = new StdoutInterceptor();
                 if (stderrInterceptor == null)

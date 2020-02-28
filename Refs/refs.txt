@@ -15,8 +15,7 @@
 ::from ./bsinstalldir.txt
 "Beat Saber_Data/
 ""Managed/
-"""Assembly-CSharp.dll?virt
-"""MainAssembly.dll?virt
+"""Main.dll?virt
 """Unity.TextMeshPro.dll
 """UnityEngine.
 """"TextRenderingModule.
