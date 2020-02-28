@@ -54,6 +54,10 @@ namespace IPA.Loader
                     StartCoroutine(unitySched.Coroutine());
 
                 initialized = true;
+
+#if DEBUG
+                Config.Stores.GeneratedStoreImpl.DebugSaveAssembly("GeneratedAssembly.dll");
+#endif
             }
         }
 
