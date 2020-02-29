@@ -46,7 +46,7 @@ namespace IPA.Config.Stores
         /// <typeparamref name="T"/> must be a public non-<see langword="sealed"/> class.
         /// It can also be internal, but in that case, then your assembly must have the following attribute
         /// to allow the generated code to reference it.
-        /// <code>
+        /// <code lang="csharp">
         /// [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget)]
         /// </code>
         /// </para>
@@ -64,7 +64,7 @@ namespace IPA.Config.Stores
         /// method <c>Changed()</c>, then that method may be called to artificially signal to the runtime that the content of the object 
         /// has changed. That method will also be called after the write locks are released when a property is set anywhere in the owning
         /// tree. This will only be called on the outermost generated object of the config structure, even if the change being signaled
-        /// is somewhere deep into the tree. TODO: is this a good idea?
+        /// is somewhere deep into the tree.
         /// </para>
         /// <para>
         /// Similarly, <typeparamref name="T"/> can declare a public or protected, <see langword="virtual"/> 
@@ -418,8 +418,8 @@ namespace IPA.Config.Stores
             {
                 var attrs = member.Member.GetCustomAttributes(true);
                 var ignores = attrs.Select(o => o as IgnoreAttribute).NonNull();
-                if (ignores.Any()) // we ignore
-                {
+                if (ignores.Any() || typeof(Delegate).IsAssignableFrom(member.Type))
+                { // we ignore delegates completely because there fundamentally is not a good way to serialize them
                     return false;
                 }
 
@@ -652,12 +652,20 @@ namespace IPA.Config.Stores
                     .Where(m => m.GetParameters().Length == 3).First()
                         .MakeGenericMethod(PropertyChangedEventHandler_t);
 
+                var basePropChangedEvent = type.GetEvents()
+                    .Where(e => e.AddMethod.GetBaseDefinition().DeclaringType == INotifyPropertyChanged_t)
+                    .FirstOrDefault();
+                var basePropChangedAdd = basePropChangedEvent?.AddMethod;
+                var basePropChangedRemove = basePropChangedEvent?.RemoveMethod;
+
                 var PropertyChanged_backing = typeBuilder.DefineField("<event>PropertyChanged", PropertyChangedEventHandler_t, FieldAttributes.Private);
 
                 var add_PropertyChanged = typeBuilder.DefineMethod("<add>PropertyChanged",
-                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual, 
+                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual,
                     null, new[] { PropertyChangedEventHandler_t });
                 typeBuilder.DefineMethodOverride(add_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetAddMethod());
+                if (basePropChangedAdd != null)
+                    typeBuilder.DefineMethodOverride(add_PropertyChanged, basePropChangedAdd);
 
                 {
                     var il = add_PropertyChanged.GetILGenerator();
@@ -690,9 +698,11 @@ namespace IPA.Config.Stores
                 }
 
                 var remove_PropertyChanged = typeBuilder.DefineMethod("<remove>PropertyChanged",
-                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual, 
+                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual,
                     null, new[] { PropertyChangedEventHandler_t });
                 typeBuilder.DefineMethodOverride(remove_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetRemoveMethod());
+                if (basePropChangedRemove != null)
+                    typeBuilder.DefineMethodOverride(remove_PropertyChanged, basePropChangedRemove);
 
                 {
                     var il = remove_PropertyChanged.GetILGenerator();
