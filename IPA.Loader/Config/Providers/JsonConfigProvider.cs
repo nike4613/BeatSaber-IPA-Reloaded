@@ -26,15 +26,15 @@ namespace IPA.Config.Providers
         {
             if (!file.Exists) return Value.Null();
 
-            JToken jtok;
-            using (var sreader = new StreamReader(file.OpenRead()))
-            {
-                using var jreader = new JsonTextReader(sreader);
-                jtok = JToken.ReadFrom(jreader);
-            }
-
             try
             {
+                JToken jtok;
+                using (var sreader = new StreamReader(file.OpenRead()))
+                {
+                    using var jreader = new JsonTextReader(sreader);
+                    jtok = JToken.ReadFrom(jreader);
+                }
+
                 return VisitToValue(jtok);
             }
             catch (Exception e)
