@@ -20,8 +20,8 @@ namespace IPA.Loader
 {
     internal class CecilLibLoader : BaseAssemblyResolver
     {
-        private static string CurrentAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-        private static string CurrentAssemblyPath = Assembly.GetExecutingAssembly().Location;
+        private static readonly string CurrentAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        private static readonly string CurrentAssemblyPath = Assembly.GetExecutingAssembly().Location;
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
         {
@@ -80,7 +80,7 @@ namespace IPA.Loader
                     return;
                 }
 
-                void AddDir(string path)
+                static void AddDir(string path)
                 {
                     var retPtr = AddDllDirectory(path);
                     if (retPtr == IntPtr.Zero)
