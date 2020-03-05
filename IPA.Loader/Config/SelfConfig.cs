@@ -23,6 +23,7 @@ namespace IPA.Config
         {
             LoaderConfig = Config.GetConfigFor(IPAName, "json");
             Instance = LoaderConfig.Generated<SelfConfig>();
+            Instance.OnReload();
         }
 
         protected virtual void CopyFrom(SelfConfig cfg) { }
