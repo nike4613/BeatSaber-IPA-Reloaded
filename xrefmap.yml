@@ -1750,6 +1750,49 @@ references:
   commentId: N:IPA.Config.Stores.Converters
   fullName: IPA.Config.Stores.Converters
   nameWithType: IPA.Config.Stores.Converters
+- uid: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1
+  name: CaseInsensitiveEnumConverter<T>
+  href: api/IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1
+  name.vb: CaseInsensitiveEnumConverter(Of T)
+  fullName: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter<T>
+  fullName.vb: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter(Of T)
+  nameWithType: CaseInsensitiveEnumConverter<T>
+  nameWithType.vb: CaseInsensitiveEnumConverter(Of T)
+- uid: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter-1.html#IPA_Config_Stores_Converters_CaseInsensitiveEnumConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter<T>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter(Of T).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: CaseInsensitiveEnumConverter<T>.FromValue(Value, Object)
+  nameWithType.vb: CaseInsensitiveEnumConverter(Of T).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter-1.html#IPA_Config_Stores_Converters_CaseInsensitiveEnumConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter<T>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter(Of T).FromValue
+  nameWithType: CaseInsensitiveEnumConverter<T>.FromValue
+  nameWithType.vb: CaseInsensitiveEnumConverter(Of T).FromValue
+- uid: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.ToValue(`0,System.Object)
+  name: ToValue(T, Object)
+  href: api/IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter-1.html#IPA_Config_Stores_Converters_CaseInsensitiveEnumConverter_1_ToValue__0_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.ToValue(`0,System.Object)
+  fullName: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter<T>.ToValue(T, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter(Of T).ToValue(T, System.Object)
+  nameWithType: CaseInsensitiveEnumConverter<T>.ToValue(T, Object)
+  nameWithType.vb: CaseInsensitiveEnumConverter(Of T).ToValue(T, Object)
+- uid: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter-1.html#IPA_Config_Stores_Converters_CaseInsensitiveEnumConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter<T>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter(Of T).ToValue
+  nameWithType: CaseInsensitiveEnumConverter<T>.ToValue
+  nameWithType.vb: CaseInsensitiveEnumConverter(Of T).ToValue
 - uid: IPA.Config.Stores.Converters.CollectionConverter`2
   name: CollectionConverter<T, TCollection>
   href: api/IPA.Config.Stores.Converters.CollectionConverter-2.html
@@ -2031,6 +2074,49 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.CustomObjectConverter(Of T).ToValue
   nameWithType: CustomObjectConverter<T>.ToValue
   nameWithType.vb: CustomObjectConverter(Of T).ToValue
+- uid: IPA.Config.Stores.Converters.EnumConverter`1
+  name: EnumConverter<T>
+  href: api/IPA.Config.Stores.Converters.EnumConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.EnumConverter`1
+  name.vb: EnumConverter(Of T)
+  fullName: IPA.Config.Stores.Converters.EnumConverter<T>
+  fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T)
+  nameWithType: EnumConverter<T>
+  nameWithType.vb: EnumConverter(Of T)
+- uid: IPA.Config.Stores.Converters.EnumConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.EnumConverter-1.html#IPA_Config_Stores_Converters_EnumConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.EnumConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.EnumConverter<T>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: EnumConverter<T>.FromValue(Value, Object)
+  nameWithType.vb: EnumConverter(Of T).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.EnumConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.EnumConverter-1.html#IPA_Config_Stores_Converters_EnumConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.EnumConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.EnumConverter<T>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T).FromValue
+  nameWithType: EnumConverter<T>.FromValue
+  nameWithType.vb: EnumConverter(Of T).FromValue
+- uid: IPA.Config.Stores.Converters.EnumConverter`1.ToValue(`0,System.Object)
+  name: ToValue(T, Object)
+  href: api/IPA.Config.Stores.Converters.EnumConverter-1.html#IPA_Config_Stores_Converters_EnumConverter_1_ToValue__0_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.EnumConverter`1.ToValue(`0,System.Object)
+  fullName: IPA.Config.Stores.Converters.EnumConverter<T>.ToValue(T, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T).ToValue(T, System.Object)
+  nameWithType: EnumConverter<T>.ToValue(T, Object)
+  nameWithType.vb: EnumConverter(Of T).ToValue(T, Object)
+- uid: IPA.Config.Stores.Converters.EnumConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.EnumConverter-1.html#IPA_Config_Stores_Converters_EnumConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.EnumConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.EnumConverter<T>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T).ToValue
+  nameWithType: EnumConverter<T>.ToValue
+  nameWithType.vb: EnumConverter(Of T).ToValue
 - uid: IPA.Config.Stores.Converters.IListConverter`1
   name: IListConverter<T>
   href: api/IPA.Config.Stores.Converters.IListConverter-1.html
@@ -2361,6 +2447,49 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.NullableConverter(Of T, TConverter).NullableConverter
   nameWithType: NullableConverter<T, TConverter>.NullableConverter
   nameWithType.vb: NullableConverter(Of T, TConverter).NullableConverter
+- uid: IPA.Config.Stores.Converters.NumericEnumConverter`1
+  name: NumericEnumConverter<T>
+  href: api/IPA.Config.Stores.Converters.NumericEnumConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.NumericEnumConverter`1
+  name.vb: NumericEnumConverter(Of T)
+  fullName: IPA.Config.Stores.Converters.NumericEnumConverter<T>
+  fullName.vb: IPA.Config.Stores.Converters.NumericEnumConverter(Of T)
+  nameWithType: NumericEnumConverter<T>
+  nameWithType.vb: NumericEnumConverter(Of T)
+- uid: IPA.Config.Stores.Converters.NumericEnumConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.NumericEnumConverter-1.html#IPA_Config_Stores_Converters_NumericEnumConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.NumericEnumConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.NumericEnumConverter<T>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.NumericEnumConverter(Of T).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: NumericEnumConverter<T>.FromValue(Value, Object)
+  nameWithType.vb: NumericEnumConverter(Of T).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.NumericEnumConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.NumericEnumConverter-1.html#IPA_Config_Stores_Converters_NumericEnumConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.NumericEnumConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.NumericEnumConverter<T>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.NumericEnumConverter(Of T).FromValue
+  nameWithType: NumericEnumConverter<T>.FromValue
+  nameWithType.vb: NumericEnumConverter(Of T).FromValue
+- uid: IPA.Config.Stores.Converters.NumericEnumConverter`1.ToValue(`0,System.Object)
+  name: ToValue(T, Object)
+  href: api/IPA.Config.Stores.Converters.NumericEnumConverter-1.html#IPA_Config_Stores_Converters_NumericEnumConverter_1_ToValue__0_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.NumericEnumConverter`1.ToValue(`0,System.Object)
+  fullName: IPA.Config.Stores.Converters.NumericEnumConverter<T>.ToValue(T, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.NumericEnumConverter(Of T).ToValue(T, System.Object)
+  nameWithType: NumericEnumConverter<T>.ToValue(T, Object)
+  nameWithType.vb: NumericEnumConverter(Of T).ToValue(T, Object)
+- uid: IPA.Config.Stores.Converters.NumericEnumConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.NumericEnumConverter-1.html#IPA_Config_Stores_Converters_NumericEnumConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.NumericEnumConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.NumericEnumConverter<T>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.NumericEnumConverter(Of T).ToValue
+  nameWithType: NumericEnumConverter<T>.ToValue
+  nameWithType.vb: NumericEnumConverter(Of T).ToValue
 - uid: IPA.Config.Stores.GeneratedStore
   name: GeneratedStore
   href: api/IPA.Config.Stores.GeneratedStore.html

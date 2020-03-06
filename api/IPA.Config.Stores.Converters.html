@@ -85,6 +85,10 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="IPA.Config.Stores.Converters.CaseInsensitiveEnumConverter-1.html">CaseInsensitiveEnumConverter&lt;T&gt;</a></h4>
+      <section><p>A converter for an enum of type <code data-dev-comment-type="typeparamref" class="typeparamref">T</code>, that converts the enum to its string representation and back,
+ignoring the case of the serialized value for deseiralization.</p>
+</section>
       <h4><a class="xref" href="IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a></h4>
       <section><p>A base class for all <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a> type converters, providing most of the functionality.</p>
 </section>
@@ -99,6 +103,9 @@
 </section>
       <h4><a class="xref" href="IPA.Config.Stores.Converters.CustomObjectConverter-1.html">CustomObjectConverter&lt;T&gt;</a></h4>
       <section><p>A <a class="xref" href="IPA.Config.Stores.ValueConverter-1.html">ValueConverter&lt;T&gt;</a> for objects normally serialized to config via <a class="xref" href="IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Generated__1_IPA_Config_Config_System_Boolean_">Generated&lt;T&gt;(Config, Boolean)</a>.</p>
+</section>
+      <h4><a class="xref" href="IPA.Config.Stores.Converters.EnumConverter-1.html">EnumConverter&lt;T&gt;</a></h4>
+      <section><p>A converter for an enum of type <code data-dev-comment-type="typeparamref" class="typeparamref">T</code>, that converts the enum to its string representation and back.</p>
 </section>
       <h4><a class="xref" href="IPA.Config.Stores.Converters.IListConverter-1.html">IListConverter&lt;T&gt;</a></h4>
       <section><p>A <a class="xref" href="IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a> for an <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1">IList&lt;T&gt;</a>, creating a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List&lt;T&gt;</a> when deserializing.</p>
@@ -124,6 +131,9 @@
       <h4><a class="xref" href="IPA.Config.Stores.Converters.NullableConverter-2.html">NullableConverter&lt;T, TConverter&gt;</a></h4>
       <section><p>A converter for a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable&lt;T&gt;</a> that default-constructs a converter of type <code data-dev-comment-type="typeparamref" class="typeparamref">TConverter</code>
 to use as the underlying converter. Use this in the <a class="xref" href="IPA.Config.Stores.Attributes.UseConverterAttribute.html">UseConverterAttribute</a>.</p>
+</section>
+      <h4><a class="xref" href="IPA.Config.Stores.Converters.NumericEnumConverter-1.html">NumericEnumConverter&lt;T&gt;</a></h4>
+      <section><p>A converter for an enum of type <code data-dev-comment-type="typeparamref" class="typeparamref">T</code>, that converts the enum to its underlying value for serialization.</p>
 </section>
 </article>
           </div>
