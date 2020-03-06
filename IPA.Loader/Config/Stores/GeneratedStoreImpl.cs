@@ -1270,6 +1270,7 @@ namespace IPA.Config.Stores
         #region Correction
         private static bool NeedsCorrection(SerializedMemberInfo member)
         {
+            if (member.HasConverter) return false;
             var expectType = GetExpectedValueTypeForType(member.IsNullable ? member.NullableWrappedType : member.Type);
 
             if (expectType == typeof(Map)) // TODO: make this slightly saner
