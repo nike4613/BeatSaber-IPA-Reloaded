@@ -178,6 +178,93 @@ namespace IPA.Config.Stores.Converters
         public NullableConverter() : base(new TConverter()) { }
     }
 
+    /// <summary>
+    /// A converter for an enum of type <typeparamref name="T"/>, that converts the enum to its string representation and back.
+    /// </summary>
+    /// <typeparam name="T">the enum type</typeparam>
+    public sealed class EnumConverter<T> : ValueConverter<T>
+        where T : Enum
+    {
+        /// <summary>
+        /// Converts a <see cref="Value"/> that is a <see cref="Text"/> node to the corresponding enum value.
+        /// </summary>
+        /// <param name="value">the <see cref="Value"/> to convert</param>
+        /// <param name="parent">the object which will own the created object</param>
+        /// <returns>the deserialized enum value</returns>
+        /// <exception cref="ArgumentException">if <paramref name="value"/> is not a <see cref="Text"/> node</exception>
+        public override T FromValue(Value value, object parent)
+            => value is Text t
+                ? (T)Enum.Parse(typeof(T), t.Value)
+                : throw new ArgumentException("Value not a string", nameof(value));
+
+        /// <summary>
+        /// Converts an enum of type <typeparamref name="T"/> to a <see cref="Value"/> node corresponding to its value.
+        /// </summary>
+        /// <param name="obj">the value to serialize</param>
+        /// <param name="parent">the object which owns <paramref name="obj"/></param>
+        /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
+        public override Value ToValue(T obj, object parent)
+            => Value.Text(obj.ToString());
+    }
+
+    /// <summary>
+    /// A converter for an enum of type <typeparamref name="T"/>, that converts the enum to its string representation and back,
+    /// ignoring the case of the serialized value for deseiralization.
+    /// </summary>
+    /// <typeparam name="T">the enum type</typeparam>
+    public sealed class CaseInsensitiveEnumConverter<T> : ValueConverter<T>
+        where T : Enum
+    {
+        /// <summary>
+        /// Converts a <see cref="Value"/> that is a <see cref="Text"/> node to the corresponding enum value.
+        /// </summary>
+        /// <param name="value">the <see cref="Value"/> to convert</param>
+        /// <param name="parent">the object which will own the created object</param>
+        /// <returns>the deserialized enum value</returns>
+        /// <exception cref="ArgumentException">if <paramref name="value"/> is not a <see cref="Text"/> node</exception>
+        public override T FromValue(Value value, object parent)
+            => value is Text t
+                ? (T)Enum.Parse(typeof(T), t.Value, true)
+                : throw new ArgumentException("Value not a string", nameof(value));
+
+        /// <summary>
+        /// Converts an enum of type <typeparamref name="T"/> to a <see cref="Value"/> node corresponding to its value.
+        /// </summary>
+        /// <param name="obj">the value to serialize</param>
+        /// <param name="parent">the object which owns <paramref name="obj"/></param>
+        /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
+        public override Value ToValue(T obj, object parent)
+            => Value.Text(obj.ToString());
+    }
+
+    /// <summary>
+    /// A converter for an enum of type <typeparamref name="T"/>, that converts the enum to its underlying value for serialization.
+    /// </summary>
+    /// <typeparam name="T">the enum type</typeparam>
+    public sealed class NumericEnumConverter<T> : ValueConverter<T>
+        where T : Enum
+    {
+        /// <summary>
+        /// Converts a <see cref="Value"/> that is a numeric node to the corresponding enum value.
+        /// </summary>
+        /// <param name="value">the <see cref="Value"/> to convert</param>
+        /// <param name="parent">the object which will own the created object</param>
+        /// <returns>the deserialized enum value</returns>
+        /// <exception cref="ArgumentException">if <paramref name="value"/> is not a numeric node</exception>
+        public override T FromValue(Value value, object parent)
+            => (T)Enum.ToObject(typeof(T), Converter.IntValue(value) 
+                    ?? throw new ArgumentException("Value not a numeric node", nameof(value)));
+
+        /// <summary>
+        /// Converts an enum of type <typeparamref name="T"/> to a <see cref="Value"/> node corresponding to its value.
+        /// </summary>
+        /// <param name="obj">the value to serialize</param>
+        /// <param name="parent">the object which owns <paramref name="obj"/></param>
+        /// <returns>an <see cref="Integer"/> node representing <paramref name="obj"/></returns>
+        public override Value ToValue(T obj, object parent)
+            => Value.Integer(Convert.ToInt64(obj));
+    }
+
     internal class StringConverter : ValueConverter<string>
     {
         public override string FromValue(Value value, object parent)
@@ -190,7 +277,8 @@ namespace IPA.Config.Stores.Converters
     internal class CharConverter : ValueConverter<char>
     {
         public override char FromValue(Value value, object parent)
-            => (value as Text).Value[0]; // can throw nullptr
+            => (value as Text)?.Value[0] 
+                ?? throw new ArgumentException("Value not a text node", nameof(value)); // can throw nullptr
 
         public override Value ToValue(char obj, object parent)
             => Value.From(char.ToString(obj));
@@ -199,7 +287,8 @@ namespace IPA.Config.Stores.Converters
     internal class LongConverter : ValueConverter<long>
     {
         public override long FromValue(Value value, object parent)
-            => Converter.IntValue(value) ?? throw new ArgumentException("Value not a numeric value", nameof(value));
+            => Converter.IntValue(value) 
+                ?? throw new ArgumentException("Value not a numeric value", nameof(value));
 
         public override Value ToValue(long obj, object parent)
             => Value.From(obj);
@@ -208,7 +297,8 @@ namespace IPA.Config.Stores.Converters
     internal class ULongConverter : ValueConverter<ulong>
     {
         public override ulong FromValue(Value value, object parent)
-            => (ulong)(Converter.FloatValue(value) ?? throw new ArgumentException("Value not a numeric value", nameof(value)));
+            => (ulong)(Converter.FloatValue(value) 
+                ?? throw new ArgumentException("Value not a numeric value", nameof(value)));
 
         public override Value ToValue(ulong obj, object parent)
             => Value.From(obj);
@@ -307,7 +397,7 @@ namespace IPA.Config.Stores.Converters
     internal class BooleanConverter : ValueConverter<bool>
     {
         public override bool FromValue(Value value, object parent)
-            => (value as Boolean).Value;
+            => (value as Boolean)?.Value ?? throw new ArgumentException("Value not a Boolean", nameof(value));
         public override Value ToValue(bool obj, object parent)
             => Value.From(obj);
     }
