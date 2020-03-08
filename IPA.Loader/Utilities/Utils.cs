@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Mono.Cecil;
 using System.Runtime.CompilerServices;
+using System.Threading;
 #if NET3
 using File = Net3_Proxy.File;
 #endif
@@ -143,7 +144,7 @@ namespace IPA.Utilities
         /// <value><see langword="true"/> if you can use <see cref="DateTime.Now"/> safely, <see langword="false"/> otherwise</value>
         public static bool CanUseDateTimeNowSafely { get; private set; } = true;
         private static bool DateTimeSafetyUnknown = true;
-        private static ulong UnsafeAdvanceTicks = 1;
+        private static long UnsafeAdvanceTicks = 1;
 
         /// <summary>
         /// Gets the current <see cref="DateTime"/> if supported, otherwise, if Mono would throw a fit,
@@ -170,7 +171,7 @@ namespace IPA.Utilities
             else
             {
                 if (CanUseDateTimeNowSafely) return DateTime.Now;
-                else return DateTime.MinValue.AddTicks((long)UnsafeAdvanceTicks++); // return MinValue as a fallback
+                else return DateTime.MinValue.AddTicks(Interlocked.Increment(ref UnsafeAdvanceTicks)); // return MinValue as a fallback
             }
         }
 
