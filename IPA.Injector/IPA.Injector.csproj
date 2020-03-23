@@ -4,6 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Net4</Platform>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(Platform)' == 'Net4' ">true</BuildForBeatSaber>
     <ProjectGuid>{2A1AF16B-27F1-46E0-9A95-181516BC1CB7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -41,6 +42,9 @@
   <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);NET3</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(BuildForBeatSaber)' == 'true' ">
+    <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
