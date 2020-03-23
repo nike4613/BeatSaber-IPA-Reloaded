@@ -264,6 +264,7 @@ namespace IPA.Injector
                         injector.Error(e);
                 }
 
+#if BeatSaber
                 if (isFirst)
                 {
                     try
@@ -292,6 +293,7 @@ namespace IPA.Injector
                             injector.Warn(e);
                     }
                 }
+#endif
             }
             #endregion
         }
