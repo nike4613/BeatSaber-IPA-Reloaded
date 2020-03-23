@@ -653,10 +653,10 @@ namespace IPA.Config.Stores
                         .MakeGenericMethod(PropertyChangedEventHandler_t);
 
                 var basePropChangedEvent = type.GetEvents()
-                    .Where(e => e.AddMethod.GetBaseDefinition().DeclaringType == INotifyPropertyChanged_t)
+                    .Where(e => e.GetAddMethod().GetBaseDefinition().DeclaringType == INotifyPropertyChanged_t)
                     .FirstOrDefault();
-                var basePropChangedAdd = basePropChangedEvent?.AddMethod;
-                var basePropChangedRemove = basePropChangedEvent?.RemoveMethod;
+                var basePropChangedAdd = basePropChangedEvent? .GetAddMethod();
+                var basePropChangedRemove = basePropChangedEvent?.GetRemoveMethod();
 
                 var PropertyChanged_backing = typeBuilder.DefineField("<event>PropertyChanged", PropertyChangedEventHandler_t, FieldAttributes.Private);
 
