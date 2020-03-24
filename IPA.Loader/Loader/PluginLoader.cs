@@ -40,6 +40,7 @@ namespace IPA.Loader
             Resolve();
             ComputeLoadOrder();
             FilterDisabled();
+            FilterWithoutFiles();
 
             ResolveDependencies();
         });
@@ -232,6 +233,10 @@ namespace IPA.Loader
 
                     metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
 
+                    if (metadata.Manifest.Files.Length < 1)
+                        Logger.loader.Warn($"Bare manifest {Path.GetFileName(manifest)} does not declare any files. " +
+                            $"Dependency resolution and verification cannot be completed.");
+
                     Logger.loader.Debug($"Adding info for bare manifest {Path.GetFileName(manifest)}");
                     PluginsMetadata.Add(metadata);
                 }
@@ -286,7 +291,8 @@ namespace IPA.Loader
         internal enum Reason
         {
             Error, Duplicate, Conflict, Dependency,
-            Released, Feature, Unsupported
+            Released, Feature, Unsupported,
+            MissingFiles
         }
         internal struct IgnoreReason
         {
@@ -395,6 +401,35 @@ namespace IPA.Loader
                 if (disabled.Contains(meta.Id ?? meta.Name))
                     DisabledPlugins.Add(meta);
                 else
+                    enabled.Add(meta);
+            }
+
+            PluginsMetadata = enabled;
+        }
+
+        private static void FilterWithoutFiles()
+        {
+            var enabled = new List<PluginMetadata>(PluginsMetadata.Count);
+
+            foreach (var meta in PluginsMetadata)
+            {
+                var passed = true;
+                foreach (var file in meta.AssociatedFiles)
+                {
+                    if (!file.Exists)
+                    {
+                        passed = false;
+                        ignoredPlugins.Add(meta, new IgnoreReason(Reason.MissingFiles)
+                        {
+                            ReasonText = $"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)} (declared by {meta.Name}) does not exist"
+                        });
+                        Logger.loader.Warn($"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)}" +
+                            $" (declared by {meta.Name}) does not exist! Mod installation is incomplete, not loading it.");
+                        break;
+                    }
+                }
+
+                if (passed)
                     enabled.Add(meta);
             }
 
