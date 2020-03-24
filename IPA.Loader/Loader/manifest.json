@@ -22,5 +22,14 @@
     "project-home": "https://beat-saber-modding-group.github.io/BeatSaber-IPA-Reloaded/index.html",
     "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
     "donate": "https://ko-fi.com/danike"
-  }
+  },
+  "files": [
+    "IPA.exe",
+    "winhttp.dll",
+    "Libs/0Harmony.dll",
+    "Libs/Ionic.Zip.dll",
+    "Libs/Newtonsoft.Json.dll",
+    "Libs/Mono.Cecil.dll",
+    "Libs/SemVer.dll"
+  ]
 }
