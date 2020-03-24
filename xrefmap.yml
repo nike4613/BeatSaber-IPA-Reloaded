@@ -3058,6 +3058,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.Assembly
   nameWithType: PluginMetadata.Assembly
+- uid: IPA.Loader.PluginMetadata.AssociatedFiles
+  name: AssociatedFiles
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_AssociatedFiles
+  commentId: P:IPA.Loader.PluginMetadata.AssociatedFiles
+  fullName: IPA.Loader.PluginMetadata.AssociatedFiles
+  nameWithType: PluginMetadata.AssociatedFiles
+- uid: IPA.Loader.PluginMetadata.AssociatedFiles*
+  name: AssociatedFiles
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_AssociatedFiles_
+  commentId: Overload:IPA.Loader.PluginMetadata.AssociatedFiles
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.AssociatedFiles
+  nameWithType: PluginMetadata.AssociatedFiles
 - uid: IPA.Loader.PluginMetadata.Features
   name: Features
   href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Features
@@ -5261,6 +5274,15 @@ references:
   fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T, U)(System.Collections.Generic.IEnumerable(Of T), System.Func(Of T, U))
   nameWithType: EnumerableExtensions.NonNull<T, U>(IEnumerable<T>, Func<T, U>)
   nameWithType.vb: EnumerableExtensions.NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, U))
+- uid: IPA.Utilities.EnumerableExtensions.NonNull``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Nullable{``1}})
+  name: NonNull<T, U>(IEnumerable<T>, Func<T, Nullable<U>>)
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_System_Collections_Generic_IEnumerable___0__System_Func___0_System_Nullable___1___
+  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Nullable{``1}})
+  name.vb: NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, Nullable(Of U)))
+  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T, U>(System.Collections.Generic.IEnumerable<T>, System.Func<T, System.Nullable<U>>)
+  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T, U)(System.Collections.Generic.IEnumerable(Of T), System.Func(Of T, System.Nullable(Of U)))
+  nameWithType: EnumerableExtensions.NonNull<T, U>(IEnumerable<T>, Func<T, Nullable<U>>)
+  nameWithType.vb: EnumerableExtensions.NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, Nullable(Of U)))
 - uid: IPA.Utilities.EnumerableExtensions.Prepend*
   name: Prepend
   href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_Prepend_
