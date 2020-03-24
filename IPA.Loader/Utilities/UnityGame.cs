@@ -96,7 +96,7 @@ namespace IPA.Utilities
 
         private static string _installRoot;
         /// <summary>
-        /// Gets the path to the Beat Saber install directory.
+        /// Gets the path to the game's install directory.
         /// </summary>
         /// <value>the path of the game install directory</value>
         public static string InstallPath
