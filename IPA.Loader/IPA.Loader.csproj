@@ -103,8 +103,15 @@
     <Compile Include="Config\Stores\Converters.cs" />
     <Compile Include="Config\Stores\CustomObjectConverter.cs" />
     <Compile Include="Config\Stores\CollectionConverter.cs" />
-    <Compile Include="Config\Stores\GeneratedStoreImpl.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\Deserialization.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\GeneratedStoreImpl.cs" />
     <Compile Include="Config\Stores\GeneratedStoreCollections.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\IGeneratedStore.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\MakeCreator.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\ObjectStructure.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\Serialization.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\Utility.cs" />
+    <Compile Include="Config\Stores\GeneratedStorePublicInterface.cs" />
     <Compile Include="Config\Stores\ValueConverter.cs" />
     <Compile Include="JsonConverters\AlmostVersionConverter.cs" />
     <Compile Include="JsonConverters\MultilineStringConverter.cs" />
