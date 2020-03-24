@@ -8,6 +8,7 @@ using System.Reflection;
 using Version = SemVer.Version;
 #if NET3
 using Net3_Proxy;
+using Path = Net3_Proxy.Path;
 #endif
 
 namespace IPA.Loader
