@@ -68,7 +68,7 @@ namespace IPA.Utilities
         /// <summary>
         /// Invokes a method from <typeparamref name="T"/> on an object.
         /// </summary>
-        /// <typeparam name="U">the type of the property to get</typeparam>
+        /// <typeparam name="U">the type that the method returns</typeparam>
         /// <typeparam name="T">the type to search for the method on</typeparam>
         /// <param name="obj">the object instance</param>
         /// <param name="methodName">the method's name</param>
