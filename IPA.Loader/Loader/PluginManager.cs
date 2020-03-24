@@ -292,16 +292,15 @@ namespace IPA.Loader
             else
             {
                 foreach (string plugin in Directory.GetFiles(cacheDir, "*"))
-                {
                     File.Delete(plugin);
-                }
             }
 
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
 
             var metadataPaths = PluginLoader.PluginsMetadata.Select(m => m.File.FullName).ToList();
-            var ignoredPaths = PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName).ToList();
+            var ignoredPaths = PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName)
+                .Concat(PluginLoader.ignoredPlugins.SelectMany(m => m.Key.AssociatedFiles.Select(f => f.FullName))).ToList();
             var disabledPaths = DisabledPlugins.Select(m => m.File.FullName).ToList();
 
             //Copy plugins to .cache
@@ -328,8 +327,6 @@ namespace IPA.Loader
                 { // fix type references
                     if (@ref.FullName == "IllusionPlugin.IPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
                     if (@ref.FullName == "IllusionPlugin.IEnhancedPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.IBeatSaberPlugin") { @ref.Namespace = "IPA"; @ref.Name = nameof(IPlugin); }
-                    if (@ref.FullName == "IllusionPlugin.IEnhancedBeatSaberPlugin") { @ref.Namespace = "IPA"; @ref.Name = nameof(IEnhancedPlugin); }
                     if (@ref.FullName == "IllusionPlugin.IniFile") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
                     if (@ref.FullName == "IllusionPlugin.IModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
                     if (@ref.FullName == "IllusionPlugin.ModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";

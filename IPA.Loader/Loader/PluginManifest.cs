@@ -51,6 +51,9 @@ namespace IPA.Loader
         [JsonProperty("icon", Required = Required.DisallowNull)]
         public string IconPath = null;
 
+        [JsonProperty("files", Required = Required.DisallowNull)]
+        public string[] Files = Array.Empty<string>();
+
         [Serializable]
         public class LinksObject
         {

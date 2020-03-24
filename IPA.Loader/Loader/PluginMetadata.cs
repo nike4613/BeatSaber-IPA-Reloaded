@@ -3,6 +3,7 @@ using IPA.Utilities;
 using Mono.Cecil;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Version = SemVer.Version;
 #if NET3
@@ -61,6 +62,12 @@ namespace IPA.Loader
 
         internal readonly List<Feature> InternalFeatures = new List<Feature>();
 
+        /// <summary>
+        /// A list of files (that aren't <see cref="File"/>) that are associated with this plugin.
+        /// </summary>
+        /// <value>a list of associated files</value>
+        public IReadOnlyList<FileInfo> AssociatedFiles { get; private set; }
+
         internal bool IsSelf;
 
         /// <summary>
@@ -82,6 +89,9 @@ namespace IPA.Loader
                 Name = value.Name;
                 Version = value.Version;
                 Id = value.Id;
+                AssociatedFiles = value.Files
+                    .Select(f => Path.Combine(UnityGame.InstallPath, f))
+                    .Select(p => new FileInfo(p)).ToList();
             }
         }
 
