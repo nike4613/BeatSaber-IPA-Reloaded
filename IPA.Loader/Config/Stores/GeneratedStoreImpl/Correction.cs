@@ -27,7 +27,13 @@ namespace IPA.Config.Stores
             var expectType = GetExpectedValueTypeForType(memberType);
 
             if (expectType == typeof(Map)) // TODO: make this slightly saner
+            {
+                if (expectType.IsValueType)
+                { // custom value type
+                    return ReadObjectMembers(memberType).Any(NeedsCorrection);
+                }
                 return true;
+            }
             return false;
         }
 
@@ -86,6 +92,17 @@ namespace IPA.Config.Stores
                 var valueLocal = GetLocal(convType);
                 il.Emit(OpCodes.Stloc, valueLocal);
 
+                void LdlocaValueLocal(ILGenerator il)
+                    => il.Emit(OpCodes.Ldloca, valueLocal);
+
+                foreach (var mem in structure)
+                {
+                    if (NeedsCorrection(mem))
+                        EmitLoadCorrectStore(il, mem, shouldLock, alwaysNew, GetLocal,
+                            LdlocaValueLocal, LdlocaValueLocal, parentobj);
+                }
+
+                il.Emit(OpCodes.Ldloc, valueLocal);
             }
 
             if (member.IsNullable)
