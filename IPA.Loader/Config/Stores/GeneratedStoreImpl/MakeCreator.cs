@@ -1,5 +1,6 @@
 ﻿using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
+using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace IPA.Config.Stores
     {
 
         internal delegate IConfigStore GeneratedStoreCreator(IGeneratedStore parent);
+        private static void GetMethodThis(ILGenerator il) => il.Emit(OpCodes.Ldarg_0);
 
         private static (GeneratedStoreCreator ctor, Type type) MakeCreator(Type type)
         { // note that this does not and should not use converters by default for everything
@@ -44,7 +46,9 @@ namespace IPA.Config.Stores
             var isINotifyPropertyChanged = type.FindInterfaces((i, t) => i == (Type)t, typeof(INotifyPropertyChanged)).Length != 0;
             var hasNotifyAttribute = type.GetCustomAttribute<NotifyPropertyChangesAttribute>() != null;
 
-            var structure = ReadObjectMembers(type, throwOnPrivateProperty: false, throwOnPrivateField: false);
+            var structure = ReadObjectMembers(type);
+            if (!structure.Any())
+                Logger.config.Warn($"Custom type {type.FullName} has no accessible members");
             #endregion
 
             var typeBuilder = Module.DefineType($"{type.FullName}<Generated>",
@@ -118,9 +122,9 @@ namespace IPA.Config.Stores
                 {
                     EmitStore(il, member, il =>
                     {
-                        EmitLoad(il, member); // load the member
-                        EmitCorrectMember(il, member, false, true, GetLocal); // correct it
-                    });
+                        EmitLoad(il, member, GetMethodThis); // load the member
+                        EmitCorrectMember(il, member, false, true, GetLocal, GetMethodThis, GetMethodThis); // correct it
+                    }, GetMethodThis);
                 }
 
                 il.Emit(OpCodes.Pop);
@@ -437,7 +441,7 @@ namespace IPA.Config.Stores
                     il.MarkLabel(endErrorLabel);
 
                     il.Emit(OpCodes.Ldloc_S, valueLocal);
-                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal);
+                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal, GetMethodThis, GetMethodThis);
                 }
 
                 il.MarkLabel(nextLabel);
@@ -610,8 +614,8 @@ namespace IPA.Config.Stores
                     EmitStore(il, member, il =>
                     {
                         EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
-                        EmitCorrectMember(il, member, false, false, GetLocal);
-                    });
+                        EmitCorrectMember(il, member, false, false, GetLocal, GetMethodThis, GetMethodThis);
+                    }, GetMethodThis);
 
                     il.BeginCatchBlock(typeof(Exception));
 
@@ -713,7 +717,7 @@ namespace IPA.Config.Stores
                 propBuilder.SetSetMethod(propSet);
                 typeBuilder.DefineMethodOverride(propSet, set);
 
-                { // TODO: decide if i want to correct the value before or after i take the write lock
+                {
                     var il = propSet.GetILGenerator();
 
                     var transactionLocal = il.DeclareLocal(IDisposable_t);
@@ -727,7 +731,7 @@ namespace IPA.Config.Stores
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
-                    EmitCorrectMember(il, member, false, false, GetLocal);
+                    EmitCorrectMember(il, member, false, false, GetLocal, GetMethodThis, GetMethodThis);
                     il.Emit(OpCodes.Call, set);
 
                     il.BeginFinallyBlock();
@@ -773,7 +777,8 @@ namespace IPA.Config.Stores
         }
 
         // expects start value on stack, exits with final value on stack
-        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, GetLocal GetLocal)
+        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, GetLocal GetLocal,
+            Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
             if (!NeedsCorrection(member)) return;
             // this will never be called for a custom value type
@@ -804,13 +809,13 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Stloc, valLocal);
             if (!alwaysNew)
             {
-                EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_0));
+                EmitLoad(il, member, thisobj);
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
                 il.Emit(OpCodes.Brtrue_S, noCreate);
                 il.Emit(OpCodes.Pop);
             }
-            EmitCreateChildGenerated(il, member.Type);
+            EmitCreateChildGenerated(il, member.Type, parentobj);
             il.MarkLabel(noCreate);
 
             il.Emit(OpCodes.Dup);

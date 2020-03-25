@@ -49,10 +49,9 @@ namespace IPA.Config.Stores
             return GetLocal;
         }
 
-        private static void EmitLoad(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> thisarg = null)
+        private static void EmitLoad(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> thisarg)
         {
-            if (thisarg == null)
-                thisarg = il => il.Emit(OpCodes.Ldarg_0);
+            thisarg ??= il => il.Emit(OpCodes.Ldarg_0);
 
             thisarg(il); // load this
 
@@ -68,9 +67,9 @@ namespace IPA.Config.Stores
             }
         }
 
-        private static void EmitStore(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> value)
+        private static void EmitStore(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> value, Action<ILGenerator> thisobj)
         {
-            il.Emit(OpCodes.Ldarg_0); // load this
+            thisobj(il);
             value(il);
 
             if (member.IsField)
@@ -196,10 +195,10 @@ namespace IPA.Config.Stores
             }
         }
 
-        private static void EmitCreateChildGenerated(ILGenerator il, Type childType)
+        private static void EmitCreateChildGenerated(ILGenerator il, Type childType, Action<ILGenerator> parentobj)
         {
             var method = CreateGParent.MakeGenericMethod(childType);
-            il.Emit(OpCodes.Ldarg_0);
+            parentobj(il);
             il.Emit(OpCodes.Call, method);
         }
     }

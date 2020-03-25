@@ -1,4 +1,5 @@
 ﻿using IPA.Config.Data;
+using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace IPA.Config.Stores
     internal static partial class GeneratedStoreImpl
     {
         // emit takes no args, leaves Value at top of stack
-        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal)
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal, Action<ILGenerator> thisarg = null)
         {
-            EmitLoad(il, member);
+            EmitLoad(il, member, thisarg);
 
             var endSerialize = il.DefineLabel();
 
@@ -131,21 +132,46 @@ namespace IPA.Config.Stores
                         il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
                         il.Emit(OpCodes.Brtrue_S, noCreate);
                         il.Emit(OpCodes.Stloc, stlocal);
-                        EmitCreateChildGenerated(il, member.Type);
+                        EmitCreateChildGenerated(il, member.Type, GetMethodThis);
                         il.Emit(OpCodes.Dup);
                         il.Emit(OpCodes.Ldloc, stlocal);
                         il.Emit(OpCodes.Ldc_I4_0);
                         il.Emit(OpCodes.Callvirt, IGeneratedStoreT_CopyFrom);
                         il.Emit(OpCodes.Dup);
                         il.Emit(OpCodes.Stloc, stlocal);
-                        EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, stlocal));
+                        EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, stlocal), thisarg);
                         il.MarkLabel(noCreate);
                     }
                     il.Emit(OpCodes.Callvirt, IGeneratedStore_Serialize);
                 }
                 else
                 { // generate serialization for value types
+                    var MapCreate = typeof(Value).GetMethod(nameof(Value.Map));
+                    var MapAdd = typeof(Map).GetMethod(nameof(Map.Add));
 
+                    var valueLocal = GetLocal(memberConversionType);
+
+                    var structure = ReadObjectMembers(memberConversionType);
+                    if (!structure.Any())
+                    {
+                        Logger.config.Warn($"Custom value type {memberConversionType.FullName} (when compiling serialization of" +
+                            $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
+                        il.Emit(OpCodes.Pop);
+                    }
+                    else
+                    {
+                        il.Emit(OpCodes.Stloc, valueLocal);
+                    }
+
+                    il.Emit(OpCodes.Call, MapCreate);
+
+                    foreach (var mem in structure)
+                    {
+                        il.Emit(OpCodes.Dup);
+                        il.Emit(OpCodes.Ldstr, mem.Name);
+                        EmitSerializeMember(il, mem, GetLocal, il => il.Emit(OpCodes.Ldloca, valueLocal));
+                        il.Emit(OpCodes.Call, MapAdd);
+                    }
                 }
             }
 
