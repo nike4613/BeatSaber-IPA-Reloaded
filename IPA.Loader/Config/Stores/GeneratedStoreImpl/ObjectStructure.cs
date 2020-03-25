@@ -119,7 +119,16 @@ namespace IPA.Config.Stores
             return true;
         }
 
-        private static IEnumerable<SerializedMemberInfo> ReadObjectMembers(Type type, bool throwOnPrivateField = false, bool throwOnPrivateProperty = false)
+        private static readonly Dictionary<Type, SerializedMemberInfo[]> objectStructureCache = new Dictionary<Type, SerializedMemberInfo[]>();
+
+        private static IEnumerable<SerializedMemberInfo> ReadObjectMembers(Type type)
+        {
+            if (!objectStructureCache.TryGetValue(type, out var structure))
+                objectStructureCache.Add(type, structure = ReadObjectMembersInternal(type).ToArray());
+            return structure;
+        }
+
+        private static IEnumerable<SerializedMemberInfo> ReadObjectMembersInternal(Type type)
         {
             var structure = new List<SerializedMemberInfo>();
 
@@ -132,12 +141,7 @@ namespace IPA.Config.Stores
                 }
                 if (prop.GetGetMethod(true)?.IsPrivate ?? true)
                 { // we enter this block if the getter is inacessible or doesn't exist
-                    //continue; // ignore props without getter
-                    // TODO: is this what I want to do for private properties?
-                    if (throwOnPrivateProperty)
-                        throw new InvalidOperationException($"Cannot compile serializer for type {type} with private property {prop.Name}");
-                    else
-                        continue;
+                        continue; // ignore props without getter
                 }
 
                 var smi = new SerializedMemberInfo
@@ -158,12 +162,7 @@ namespace IPA.Config.Stores
             foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (field.IsPrivate)
-                {
-                    if (throwOnPrivateField && !field.Name.Contains(">k__BackingField")) // don't throw for private fields that are just backing fields
-                        throw new InvalidOperationException($"Cannot compile serializer for type {type} with private field {field.Name}");
-                    else
-                        continue;
-                }
+                    continue;
 
                 var smi = new SerializedMemberInfo
                 {

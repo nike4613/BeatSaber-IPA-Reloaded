@@ -1,4 +1,5 @@
 ﻿using IPA.Config.Data;
+using IPA.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,7 +41,8 @@ namespace IPA.Config.Stores
             return typeof(Map); // default for various objects
         }
 
-        private static void EmitDeserializeGeneratedValue(ILGenerator il, SerializedMemberInfo member, Type srcType, GetLocal GetLocal)
+        private static void EmitDeserializeGeneratedValue(ILGenerator il, SerializedMemberInfo member, Type srcType, GetLocal GetLocal,
+            Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             var IGeneratedStore_Deserialize = typeof(IGeneratedStore).GetMethod(nameof(IGeneratedStore.Deserialize));
 
@@ -48,12 +50,12 @@ namespace IPA.Config.Stores
             var noCreate = il.DefineLabel();
 
             il.Emit(OpCodes.Stloc, valuel);
-            EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_0));
+            EmitLoad(il, member, thisarg);
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
             il.Emit(OpCodes.Brtrue_S, noCreate);
             il.Emit(OpCodes.Pop);
-            EmitCreateChildGenerated(il, member.Type);
+            EmitCreateChildGenerated(il, member.Type, parentobj);
             il.MarkLabel(noCreate);
 
             il.Emit(OpCodes.Dup);
@@ -61,15 +63,19 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Callvirt, IGeneratedStore_Deserialize);
         }
 
-        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, GetLocal GetLocal)
+        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, GetLocal GetLocal, 
+            Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
-            EmitDeserializeValue(il, member, member.NullableWrappedType, expected, GetLocal);
+            thisarg ??= il => il.Emit(OpCodes.Ldarg_0);
+            parentobj ??= thisarg;
+            EmitDeserializeValue(il, member, member.NullableWrappedType, expected, GetLocal, thisarg, parentobj);
             il.Emit(OpCodes.Newobj, member.Nullable_Construct);
         }
 
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
-        private static void EmitDeserializeValue(ILGenerator il, SerializedMemberInfo member, Type targetType, Type expected, GetLocal GetLocal)
+        private static void EmitDeserializeValue(ILGenerator il, SerializedMemberInfo member, Type targetType, Type expected, GetLocal GetLocal, 
+            Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
 
@@ -103,7 +109,66 @@ namespace IPA.Config.Stores
             } // TODO: implement stuff for lists and maps of various types (probably call out somewhere else to figure out what to do)
             else if (expected == typeof(Map))
             {
-                EmitDeserializeGeneratedValue(il, member, expected, GetLocal);
+                if (!targetType.IsValueType)
+                {
+                    EmitDeserializeGeneratedValue(il, member, expected, GetLocal, thisarg, parentobj);
+                }
+                else
+                {
+                    var Map_TryGetValue = typeof(Map).GetMethod(nameof(Map.TryGetValue));
+
+                    var mapLocal = GetLocal(typeof(Map));
+                    var resultLocal = GetLocal(targetType, 1);
+                    var valueLocal = GetLocal(typeof(Value));
+
+                    var structure = ReadObjectMembers(targetType);
+                    if (!structure.Any())
+                    {
+                        Logger.config.Warn($"Custom value type {targetType.FullName} (when compiling serialization of" +
+                            $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
+                        il.Emit(OpCodes.Pop);
+                        il.Emit(OpCodes.Ldloca, resultLocal);
+                        il.Emit(OpCodes.Initobj, targetType);
+                    }
+                    else
+                    {
+                        il.Emit(OpCodes.Stloc, mapLocal);
+
+                        EmitLoad(il, member, thisarg);
+                        il.Emit(OpCodes.Stloc, resultLocal);
+
+                        // TODO: pull this and the MakeCreator version out into another function
+                        var nextLabel = il.DefineLabel();
+
+                        // head of stack is Map instance
+                        foreach (var mem in structure)
+                        {
+                            il.MarkLabel(nextLabel);
+                            nextLabel = il.DefineLabel();
+                            var endErrorLabel = il.DefineLabel();
+
+                            il.Emit(OpCodes.Ldloc, mapLocal);
+                            il.Emit(OpCodes.Ldstr, mem.Name);
+                            il.Emit(OpCodes.Ldloca_S, valueLocal);
+                            il.Emit(OpCodes.Call, Map_TryGetValue);
+                            il.Emit(OpCodes.Brtrue_S, endErrorLabel);
+
+                            EmitLogError(il, $"Missing key {mem.Name}", tailcall: false);
+                            il.Emit(OpCodes.Br, nextLabel);
+
+                            il.MarkLabel(endErrorLabel);
+
+                            il.Emit(OpCodes.Ldloc_S, valueLocal);
+                            EmitDeserializeMember(il, mem, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal, il => il.Emit(OpCodes.Ldloca, resultLocal), parentobj);
+                        }
+
+                        il.MarkLabel(nextLabel);
+                    }
+
+                    il.Emit(OpCodes.Ldloc, resultLocal);
+                    /*il.Emit(OpCodes.Ldloca, resultLocal);
+                    il.Emit(OpCodes.Ldobj, targetType);*/
+                }
             }
             else
             {
@@ -112,7 +177,8 @@ namespace IPA.Config.Stores
             }
         }
 
-        private static void EmitDeserializeConverter(ILGenerator il, SerializedMemberInfo member, Label nextLabel, GetLocal GetLocal)
+        private static void EmitDeserializeConverter(ILGenerator il, SerializedMemberInfo member, Label nextLabel, GetLocal GetLocal,
+            Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
             var stlocal = GetLocal(typeof(Value));
             var valLocal = GetLocal(member.Type);
@@ -121,7 +187,7 @@ namespace IPA.Config.Stores
             il.BeginExceptionBlock();
             il.Emit(OpCodes.Ldsfld, member.ConverterField);
             il.Emit(OpCodes.Ldloc, stlocal);
-            il.Emit(OpCodes.Ldarg_0);
+            parentobj(il);
 
             if (member.IsGenericConverter)
             {
@@ -151,13 +217,14 @@ namespace IPA.Config.Stores
         }
 
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
-        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, GetLocal GetLocal)
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, GetLocal GetLocal, 
+            Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
             var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));
 
             var implLabel = il.DefineLabel();
             var passedTypeCheck = il.DefineLabel();
-            var expectType = GetExpectedValueTypeForType(member.IsNullable ? member.NullableWrappedType : member.Type);
+            var expectType = GetExpectedValueTypeForType(member.ConversionType);
 
             il.Emit(OpCodes.Dup);
             il.Emit(OpCodes.Brtrue_S, implLabel); // null check
@@ -175,13 +242,13 @@ namespace IPA.Config.Stores
                 var valTLocal = GetLocal(member.Type, 0);
                 il.Emit(OpCodes.Ldloca, valTLocal);
                 il.Emit(OpCodes.Initobj, member.Type);
-                EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, valTLocal));
+                EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, valTLocal), thisobj);
                 il.Emit(OpCodes.Br, nextLabel);
             }
             else
             {
                 il.Emit(OpCodes.Pop);
-                EmitStore(il, member, il => il.Emit(OpCodes.Ldnull));
+                EmitStore(il, member, il => il.Emit(OpCodes.Ldnull), thisobj);
                 il.Emit(OpCodes.Br, nextLabel);
             }
 
@@ -244,11 +311,11 @@ namespace IPA.Config.Stores
             il.MarkLabel(passedTypeCheck);
 
             var local = GetLocal(member.Type, 0);
-            if (member.HasConverter) EmitDeserializeConverter(il, member, nextLabel, GetLocal);
-            else if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal);
-            else EmitDeserializeValue(il, member, member.Type, expectType, GetLocal);
+            if (member.HasConverter) EmitDeserializeConverter(il, member, nextLabel, GetLocal, thisobj, parentobj);
+            else if (member.IsNullable) EmitDeserializeNullable(il, member, expectType, GetLocal, thisobj, parentobj);
+            else EmitDeserializeValue(il, member, member.Type, expectType, GetLocal, thisobj, parentobj);
             il.Emit(OpCodes.Stloc, local);
-            EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local));
+            EmitStore(il, member, il => il.Emit(OpCodes.Ldloc, local), thisobj);
         }
     }
 }
