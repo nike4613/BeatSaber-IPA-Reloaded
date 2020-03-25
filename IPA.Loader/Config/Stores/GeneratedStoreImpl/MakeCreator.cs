@@ -124,7 +124,8 @@ namespace IPA.Config.Stores
 
                 foreach (var member in structure)
                 {
-                    EmitLoadCorrectStore(il, member, false, true, GetLocal, GetMethodThis, GetMethodThis, GetMethodThis);
+                    if (NeedsCorrection(member))
+                        EmitLoadCorrectStore(il, member, false, true, GetLocal, GetMethodThis, GetMethodThis, GetMethodThis);
                 }
 
                 il.Emit(OpCodes.Pop);
