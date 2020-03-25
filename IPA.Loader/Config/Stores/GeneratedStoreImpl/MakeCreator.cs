@@ -124,11 +124,7 @@ namespace IPA.Config.Stores
 
                 foreach (var member in structure)
                 {
-                    EmitStore(il, member, il =>
-                    {
-                        EmitLoad(il, member, GetMethodThis); // load the member
-                        EmitCorrectMember(il, member, false, true, GetLocal, GetMethodThis, GetMethodThis); // correct it
-                    }, GetMethodThis);
+                    EmitLoadCorrectStore(il, member, false, true, GetLocal, GetMethodThis, GetMethodThis, GetMethodThis);
                 }
 
                 il.Emit(OpCodes.Pop);
@@ -594,11 +590,7 @@ namespace IPA.Config.Stores
                 {
                     il.BeginExceptionBlock();
 
-                    EmitStore(il, member, il =>
-                    {
-                        EmitLoad(il, member, il => il.Emit(OpCodes.Ldarg_1));
-                        EmitCorrectMember(il, member, false, false, GetLocal, GetMethodThis, GetMethodThis);
-                    }, GetMethodThis);
+                    EmitLoadCorrectStore(il, member, false, false, GetLocal, il => il.Emit(OpCodes.Ldarg_1), GetMethodThis, GetMethodThis);
 
                     il.BeginCatchBlock(typeof(Exception));
 
