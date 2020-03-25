@@ -47,12 +47,13 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
             }
 
-            if (!member.ConversionType.IsValueType)
+            var convType = member.ConversionType;
+            if (!convType.IsValueType)
             {
                 // currently the only thing for this is where expect == Map, so do generate shit
-                var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(member.ConversionType).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
+                var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(convType).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
                 var noCreate = il.DefineLabel();
-                var valLocal = GetLocal(member.Type);
+                var valLocal = GetLocal(convType);
 
                 if (!alwaysNew)
                 {
@@ -69,7 +70,7 @@ namespace IPA.Config.Stores
                     il.Emit(OpCodes.Brtrue_S, noCreate);
                     il.Emit(OpCodes.Pop);
                 }
-                EmitCreateChildGenerated(il, member.Type, parentobj);
+                EmitCreateChildGenerated(il, convType, parentobj);
                 il.MarkLabel(noCreate);
 
                 il.Emit(OpCodes.Dup);
@@ -79,13 +80,28 @@ namespace IPA.Config.Stores
             }
             else
             {
-                // TODO: impl the rest of this
+                // for special value types, we'll go ahead and correct each of their members
+                var structure = ReadObjectMembers(convType);
+
+                var valueLocal = GetLocal(convType);
+                il.Emit(OpCodes.Stloc, valueLocal);
+
             }
 
             if (member.IsNullable)
                 il.Emit(OpCodes.Newobj, member.Nullable_Construct);
 
             il.MarkLabel(endLabel);
+        }
+
+        private static void EmitLoadCorrectStore(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, GetLocal GetLocal,
+            Action<ILGenerator> loadFrom, Action<ILGenerator> storeTo, Action<ILGenerator> parentobj)
+        {
+            EmitStore(il, member, il =>
+            {
+                EmitLoad(il, member, loadFrom); // load the member
+                EmitCorrectMember(il, member, shouldLock, alwaysNew, GetLocal, storeTo, parentobj); // correct it
+            }, storeTo);
         }
     }
 }
