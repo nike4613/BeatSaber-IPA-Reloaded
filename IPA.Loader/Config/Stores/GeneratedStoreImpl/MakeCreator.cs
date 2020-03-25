@@ -11,6 +11,10 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET3
+using Net3_Proxy;
+using Array = Net3_Proxy.Array;
+#endif
 
 namespace IPA.Config.Stores
 {
