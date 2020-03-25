@@ -119,7 +119,6 @@ namespace IPA.Config.Stores
                 }
                 else
                 {
-                    var Map_TryGetValue = typeof(Map).GetMethod(nameof(Map.TryGetValue));
 
                     var mapLocal = GetLocal(typeof(Map));
                     var resultLocal = GetLocal(targetType, 1);
@@ -141,43 +140,47 @@ namespace IPA.Config.Stores
                         EmitLoad(il, member, thisarg);
                         il.Emit(OpCodes.Stloc, resultLocal);
 
-                        // TODO: pull this and the MakeCreator version out into another function
-                        var nextLabel = il.DefineLabel();
-
-                        // head of stack is Map instance
-                        foreach (var mem in structure)
-                        {
-                            il.MarkLabel(nextLabel);
-                            nextLabel = il.DefineLabel();
-                            var endErrorLabel = il.DefineLabel();
-
-                            il.Emit(OpCodes.Ldloc, mapLocal);
-                            il.Emit(OpCodes.Ldstr, mem.Name);
-                            il.Emit(OpCodes.Ldloca_S, valueLocal);
-                            il.Emit(OpCodes.Call, Map_TryGetValue);
-                            il.Emit(OpCodes.Brtrue_S, endErrorLabel);
-
-                            EmitLogError(il, $"Missing key {mem.Name}", tailcall: false);
-                            il.Emit(OpCodes.Br, nextLabel);
-
-                            il.MarkLabel(endErrorLabel);
-
-                            il.Emit(OpCodes.Ldloc_S, valueLocal);
-                            EmitDeserializeMember(il, mem, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal, il => il.Emit(OpCodes.Ldloca, resultLocal), parentobj);
-                        }
-
-                        il.MarkLabel(nextLabel);
+                        EmitDeserializeStructure(il, structure, mapLocal, valueLocal, GetLocal, il => il.Emit(OpCodes.Ldloca, resultLocal), parentobj);
                     }
 
                     il.Emit(OpCodes.Ldloc, resultLocal);
-                    /*il.Emit(OpCodes.Ldloca, resultLocal);
-                    il.Emit(OpCodes.Ldobj, targetType);*/
                 }
             }
             else
             {
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
+            }
+        }
+
+        private static void EmitDeserializeStructure(ILGenerator il, IEnumerable<SerializedMemberInfo> structure, 
+            LocalBuilder mapLocal, LocalBuilder valueLocal,
+            GetLocal GetLocal, Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
+        {
+            var Map_TryGetValue = typeof(Map).GetMethod(nameof(Map.TryGetValue));
+
+            // head of stack is Map instance
+            foreach (var mem in structure)
+            {
+                var nextLabel = il.DefineLabel();
+
+                var endErrorLabel = il.DefineLabel();
+
+                il.Emit(OpCodes.Ldloc, mapLocal);
+                il.Emit(OpCodes.Ldstr, mem.Name);
+                il.Emit(OpCodes.Ldloca_S, valueLocal);
+                il.Emit(OpCodes.Call, Map_TryGetValue);
+                il.Emit(OpCodes.Brtrue_S, endErrorLabel);
+
+                EmitLogError(il, $"Missing key {mem.Name}", tailcall: false);
+                il.Emit(OpCodes.Br, nextLabel);
+
+                il.MarkLabel(endErrorLabel);
+
+                il.Emit(OpCodes.Ldloc_S, valueLocal);
+                EmitDeserializeMember(il, mem, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal, thisobj, parentobj);
+
+                il.MarkLabel(nextLabel);
             }
         }
 

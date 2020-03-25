@@ -422,33 +422,12 @@ namespace IPA.Config.Stores
                     });
                 il.Emit(OpCodes.Ret);
 
-                var nextLabel = notMapError;
+                il.MarkLabel(notMapError);
 
                 var GetLocal = MakeGetLocal(il);
 
                 // head of stack is Map instance
-                foreach (var member in structure)
-                {
-                    il.MarkLabel(nextLabel);
-                    nextLabel = il.DefineLabel();
-                    var endErrorLabel = il.DefineLabel();
-
-                    il.Emit(OpCodes.Ldloc, mapLocal);
-                    il.Emit(OpCodes.Ldstr, member.Name);
-                    il.Emit(OpCodes.Ldloca_S, valueLocal);
-                    il.Emit(OpCodes.Call, Map_TryGetValue);
-                    il.Emit(OpCodes.Brtrue_S, endErrorLabel);
-
-                    EmitLogError(il, $"Missing key {member.Name}", tailcall: false);
-                    il.Emit(OpCodes.Br, nextLabel);
-
-                    il.MarkLabel(endErrorLabel);
-
-                    il.Emit(OpCodes.Ldloc_S, valueLocal);
-                    EmitDeserializeMember(il, member, nextLabel, il => il.Emit(OpCodes.Ldloc_S, valueLocal), GetLocal, GetMethodThis, GetMethodThis);
-                }
-
-                il.MarkLabel(nextLabel);
+                EmitDeserializeStructure(il, structure, mapLocal, valueLocal, GetLocal, GetMethodThis, GetMethodThis);
 
                 if (notifyChanged != null)
                 {
@@ -774,8 +753,7 @@ namespace IPA.Config.Stores
             var memberType = member.ConversionType;
             var expectType = GetExpectedValueTypeForType(memberType);
 
-            // if we expect a map, and the type is *not* a value type, it can be converted
-            if (expectType == typeof(Map) && !memberType.IsValueType) // TODO: make this slightly saner
+            if (expectType == typeof(Map)) // TODO: make this slightly saner
                 return true;
             return false;
         }
@@ -785,7 +763,6 @@ namespace IPA.Config.Stores
             Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
             if (!NeedsCorrection(member)) return;
-            // this will never be called for a custom value type
 
             var endLabel = il.DefineLabel();
 
@@ -797,37 +774,40 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
             }
 
-            // TODO: impl the rest of this
-
-            // currently the only thing for this is where expect == Map, so do generate shit
-            var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(member.Type).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
-            var noCreate = il.DefineLabel();
-            var valLocal = GetLocal(member.Type);
-
-            if (!alwaysNew)
+            if (!member.ConversionType.IsValueType)
             {
+                // currently the only thing for this is where expect == Map, so do generate shit
+                var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(member.ConversionType).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
+                var noCreate = il.DefineLabel();
+                var valLocal = GetLocal(member.Type);
+
+                if (!alwaysNew)
+                {
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+                    il.Emit(OpCodes.Brtrue_S, endLabel); // our input is already something we like
+                }
+                il.Emit(OpCodes.Stloc, valLocal);
+                if (!alwaysNew)
+                {
+                    EmitLoad(il, member, thisobj);
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
+                    il.Emit(OpCodes.Brtrue_S, noCreate);
+                    il.Emit(OpCodes.Pop);
+                }
+                EmitCreateChildGenerated(il, member.Type, parentobj);
+                il.MarkLabel(noCreate);
+
                 il.Emit(OpCodes.Dup);
-                il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
-                il.Emit(OpCodes.Brtrue_S, endLabel); // our input is already something we like
+                il.Emit(OpCodes.Ldloc, valLocal);
+                il.Emit(shouldLock ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+                il.Emit(OpCodes.Callvirt, copyFrom);
             }
-            il.Emit(OpCodes.Stloc, valLocal);
-            if (!alwaysNew)
+            else
             {
-                EmitLoad(il, member, thisobj);
-                il.Emit(OpCodes.Dup);
-                il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
-                il.Emit(OpCodes.Brtrue_S, noCreate);
-                il.Emit(OpCodes.Pop);
+                // TODO: impl the rest of this
             }
-            EmitCreateChildGenerated(il, member.Type, parentobj);
-            il.MarkLabel(noCreate);
-
-            il.Emit(OpCodes.Dup);
-            il.Emit(OpCodes.Ldloc, valLocal);
-            il.Emit(shouldLock ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
-            il.Emit(OpCodes.Callvirt, copyFrom);
-
-            // TODO: impl the rest of this
 
             if (member.IsNullable)
                 il.Emit(OpCodes.Newobj, member.Nullable_Construct);
