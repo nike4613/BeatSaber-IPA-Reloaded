@@ -198,13 +198,20 @@ namespace IPA.Logging
 
             // make sure that the queue isn't being cleared
             logWaitEvent.Wait();
-            logQueue.Add(new LogMessage
+            try
             {
-                Level = level,
-                Message = message,
-                Logger = this,
-                Time = Utils.CurrentTime()
-            });
+                logQueue.Add(new LogMessage
+                {
+                    Level = level,
+                    Message = message,
+                    Logger = this,
+                    Time = Utils.CurrentTime()
+                });
+            }
+            catch (InvalidOperationException)
+            {
+                // the queue has been closed, so we leave it
+            }
         }
 
         /// <inheritdoc />
