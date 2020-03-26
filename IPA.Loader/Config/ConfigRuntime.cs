@@ -64,17 +64,23 @@ namespace IPA.Config
             => ShutdownRuntime();
         internal static void ShutdownRuntime()
         {
-            watcherTrackConfigs.Clear();
-            var watchList = watchers.ToArray();
-            watchers.Clear();
+            try
+            {
+                watcherTrackConfigs.Clear();
+                var watchList = watchers.ToArray();
+                watchers.Clear();
 
-            foreach (var pair in watchList)
-                pair.Value.EnableRaisingEvents = false;
+                foreach (var pair in watchList)
+                    pair.Value.EnableRaisingEvents = false;
 
-            loadScheduler.Join(); // we can wait for the loads to finish
-            saveThread.Abort(); // eww, but i don't like any of the other potential solutions
+                loadScheduler.Join(); // we can wait for the loads to finish
+                saveThread.Abort(); // eww, but i don't like any of the other potential solutions
 
-            SaveAll();
+                SaveAll();
+            }
+            catch 
+            {
+            }
         }
 
         public static void RegisterConfig(Config cfg)

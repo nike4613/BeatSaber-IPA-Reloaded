@@ -52,3 +52,4 @@ EXPORTS
     WinHttpWriteData @50
     SetGetMessageHook @51
     SetPeekMessageHook @52
+    SetIgnoreUnhandledExceptions @53

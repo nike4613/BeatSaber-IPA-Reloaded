@@ -35,6 +35,14 @@ namespace IPA.Utilities
             Win32.SetConsoleCtrlHandler(registeredHandler, false);
             Win32.SetConsoleCtrlHandler(registeredHandler, true);
             WinHttp.SetPeekMessageHook(PeekMessageHook);
+
+            AppDomain.CurrentDomain.ProcessExit -= OnProcessExit;
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+        }
+
+        private static void OnProcessExit(object sender, EventArgs args)
+        {
+            WinHttp.SetIgnoreUnhandledExceptions(true);
         }
 
         private static class WinHttp
@@ -53,6 +61,10 @@ namespace IPA.Utilities
             public static extern void SetPeekMessageHook(
                 [MarshalAs(UnmanagedType.FunctionPtr)]
                 PeekMessageHook hook);
+
+            [DllImport("bsipa-doorstop")]
+            public static extern void SetIgnoreUnhandledExceptions(
+                [MarshalAs(UnmanagedType.Bool)] bool ignore);
         }
 
         private static Win32.ConsoleCtrlDelegate _handler = null;
