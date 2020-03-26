@@ -368,7 +368,7 @@ namespace IPA.Config.Stores
 
                 foreach (var member in structure)
                 {
-                    EmitSerializeMember(il, member, GetLocal);
+                    EmitSerializeMember(il, member, GetLocal, GetMethodThis);
                     il.Emit(OpCodes.Stloc, valLocal);
                     il.Emit(OpCodes.Ldloc, mapLocal);
                     il.Emit(OpCodes.Ldstr, member.Name);
