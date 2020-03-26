@@ -144,12 +144,9 @@ namespace IPA.Utilities
         /// <value><see langword="true"/> if you can use <see cref="DateTime.Now"/> safely, <see langword="false"/> otherwise</value>
         public static bool CanUseDateTimeNowSafely { get; private set; } = true;
         private static bool DateTimeSafetyUnknown = true;
-        private static long UnsafeAdvanceTicks = 1;
 
         /// <summary>
-        /// Gets the current <see cref="DateTime"/> if supported, otherwise, if Mono would throw a fit,
-        /// returns <see cref="DateTime.MinValue"/> plus some value, such that each time it is called
-        /// the value will be greater than the previous result. Not suitable for timing.
+        /// Returns <see cref="DateTime.Now"/> if supported, otherwise <see cref="DateTime.UtcNow"/>.
         /// </summary>
         /// <returns>the current <see cref="DateTime"/> if supported, otherwise some indeterminant increasing value.</returns>
         public static DateTime CurrentTime()
@@ -171,7 +168,7 @@ namespace IPA.Utilities
             else
             {
                 if (CanUseDateTimeNowSafely) return DateTime.Now;
-                else return DateTime.MinValue.AddTicks(Interlocked.Increment(ref UnsafeAdvanceTicks)); // return MinValue as a fallback
+                else return DateTime.UtcNow; // return MinValue as a fallback
             }
         }
 
