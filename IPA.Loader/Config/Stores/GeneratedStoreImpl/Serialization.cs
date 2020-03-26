@@ -18,7 +18,7 @@ namespace IPA.Config.Stores
     internal static partial class GeneratedStoreImpl
     {
         // emit takes no args, leaves Value at top of stack
-        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal, Action<ILGenerator> thisarg = null)
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal, Action<ILGenerator> thisarg)
         {
             EmitLoad(il, member, thisarg);
 
