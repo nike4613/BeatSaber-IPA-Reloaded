@@ -8,7 +8,7 @@
   "gameVersion": "1.8.0b2",
   "id": "BSIPA",
   "name": "Beat Saber IPA",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "icon": "IPA.icon_white.png",
   "features": [
     "define-feature(print, IPA.Loader.Features.PrintFeature)",
