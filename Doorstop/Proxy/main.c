@@ -38,8 +38,14 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase; // This is provided by MSVC with the info
 HANDLE unhandledMutex;
 void ownMonoJitParseOptions(int argc, char * argv[]);
 BOOL setOptions = FALSE;
+BOOL shouldBreakOnUnhandledException = TRUE;
 
-void unhandledException(void* exc, void* data) 
+__declspec(dllexport) void SetIgnoreUnhandledExceptions(BOOL ignore)
+{
+    shouldBreakOnUnhandledException = ignore;
+}
+
+void unhandledException(void* exc, void* data)
 {
     WaitForSingleObject(unhandledMutex, INFINITE);
 
@@ -86,11 +92,14 @@ void unhandledException(void* exc, void* data)
     MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);*/
     wchar_t* wstr = mono_string_to_utf16(mstr);
 
+    if (shouldBreakOnUnhandledException)
+    {
 #ifdef _VERBOSE
-    ASSERT(FALSE, L"Uncaught exception; see doorstop.log for details");
+        ASSERT(FALSE, L"Uncaught exception; see doorstop.log for details");
 #else
-    ASSERT_F(FALSE, L"Uncaught exception: %wS", wstr);
+        ASSERT_F(FALSE, L"Uncaught exception: %wS", wstr);
 #endif
+    }
 
     mono_free(wstr);
     mono_free(str);

@@ -59,7 +59,18 @@ namespace IPA.Config.Stores
 
             internal static MethodInfo ImplSignalChangedMethod = typeof(Impl).GetMethod(nameof(ImplSignalChanged));
             public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s).SignalChanged();
-            public void SignalChanged() => resetEvent.Set();
+            public void SignalChanged()
+            {
+                try
+                {
+                    resetEvent.Set();
+                }
+                catch (ObjectDisposedException e)
+                {
+                    Logger.config.Error($"ObjectDisposedException while signalling a change for generated store {generated?.GetType()}");
+                    Logger.config.Error(e);
+                }
+            }
 
             internal static MethodInfo ImplInvokeChangedMethod = typeof(Impl).GetMethod(nameof(ImplInvokeChanged));
             public static void ImplInvokeChanged(IGeneratedStore s) => FindImpl(s).InvokeChanged();
@@ -138,11 +149,16 @@ namespace IPA.Config.Stores
                         data.impl.InvokeChanged();
                     }
                     data.nested?.Dispose();
-                    if (data.ownsWrite)
-                        data.impl.ReleaseWrite();
-
+                    try
+                    {
+                        if (data.ownsWrite)
+                            data.impl.ReleaseWrite();
+                    }
+                    catch
+                    {
+                    }
                     if (addToStore)
-                        freeTransactionObjs.Push(this);
+                            freeTransactionObjs.Push(this);
                 }
 
                 ~ChangeTransactionObj() => Dispose(false);
