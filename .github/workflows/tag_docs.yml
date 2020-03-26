@@ -53,28 +53,19 @@ jobs:
         working-directory: ./docs
         run: |
           $ErrorActionPreference = "Continue"
-
           $tagName = (git rev-parse --abbrev-ref=loose $env:GITHUB_REF) -join ""
-
           cd $env:ORIGIN_SITE
-          
           if (-Not (Test-Path $env:TAGS_DIR)) {
             New-Item -ItemType directory -Path $env:TAGS_DIR
           }
-
           $tagPath = "$env:TAGS_DIR/$tagName"
           if (Test-Path $tagPath) {
             # force remove it
             Get-ChildItem -Path $tagPath -Recurse | Remove-Item -Force -Recurse
             Remove-Item $tagPath -Force
           }
-              
           # move generated into place
           Move-Item ../_site $tagPath
-
           git add -A 2>&1
-
           git commit -q -a -m "Saved tag $tagName"
-          
           git push -q origin gh-pages 
-    
