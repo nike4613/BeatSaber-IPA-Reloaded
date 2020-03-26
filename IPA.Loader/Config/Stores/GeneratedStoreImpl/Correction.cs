@@ -61,6 +61,11 @@ namespace IPA.Config.Stores
                 var noCreate = il.DefineLabel();
                 var valLocal = GetLocal(convType);
 
+                if (member.AllowNull)
+                {
+                    il.Emit(OpCodes.Dup);
+                    il.Emit(OpCodes.Brfalse_S, endLabel); // thing is null, just bypass it all
+                }
                 if (!alwaysNew)
                 {
                     il.Emit(OpCodes.Dup);
