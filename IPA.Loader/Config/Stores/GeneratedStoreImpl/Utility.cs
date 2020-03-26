@@ -1,11 +1,14 @@
-﻿using IPA.Logging;
+﻿using IPA.Config.Data;
+using IPA.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Boolean = IPA.Config.Data.Boolean;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -55,8 +58,6 @@ namespace IPA.Config.Stores
 
         private static void EmitLoad(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> thisarg)
         {
-            thisarg ??= il => il.Emit(OpCodes.Ldarg_0);
-
             thisarg(il); // load this
 
             if (member.IsField)
@@ -204,6 +205,33 @@ namespace IPA.Config.Stores
             var method = CreateGParent.MakeGenericMethod(childType);
             parentobj(il);
             il.Emit(OpCodes.Call, method);
+        }
+
+        private static Type GetExpectedValueTypeForType(Type valT)
+        {
+            if (typeof(Value).IsAssignableFrom(valT)) // this is a Value subtype
+                return valT;
+            if (valT == typeof(string)
+             || valT == typeof(char)) return typeof(Text);
+            if (valT == typeof(bool)) return typeof(Boolean);
+            if (valT == typeof(byte)
+             || valT == typeof(sbyte)
+             || valT == typeof(short)
+             || valT == typeof(ushort)
+             || valT == typeof(int)
+             || valT == typeof(uint)
+             || valT == typeof(long)
+             || valT == typeof(IntPtr)) return typeof(Integer);
+            if (valT == typeof(float)
+             || valT == typeof(double)
+             || valT == typeof(decimal)
+             || valT == typeof(ulong) // ulong gets put into this, because decimal can hold it
+             || valT == typeof(UIntPtr)) return typeof(FloatingPoint);
+            if (typeof(IEnumerable).IsAssignableFrom(valT)) return typeof(List);
+
+            // TODO: fill this out the rest of the way
+
+            return typeof(Map); // default for various objects
         }
     }
 }

@@ -113,6 +113,7 @@ namespace IPA.Config.Stores
             else if (targetType == typeof(List))
             {
                 // TODO: impl this (enumerables)
+                Logger.config.Warn($"Implicit conversions to {targetType} are not currently implemented");
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }

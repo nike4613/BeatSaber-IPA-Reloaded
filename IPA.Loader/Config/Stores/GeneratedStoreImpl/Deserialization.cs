@@ -18,33 +18,6 @@ namespace IPA.Config.Stores
 {
     internal static partial class GeneratedStoreImpl
     {
-        private static Type GetExpectedValueTypeForType(Type valT)
-        {
-            if (typeof(Value).IsAssignableFrom(valT)) // this is a Value subtype
-                return valT;
-            if (valT == typeof(string)
-             || valT == typeof(char)) return typeof(Text);
-            if (valT == typeof(bool)) return typeof(Boolean);
-            if (valT == typeof(byte)
-             || valT == typeof(sbyte)
-             || valT == typeof(short)
-             || valT == typeof(ushort)
-             || valT == typeof(int)
-             || valT == typeof(uint)
-             || valT == typeof(long)
-             || valT == typeof(IntPtr)) return typeof(Integer);
-            if (valT == typeof(float)
-             || valT == typeof(double)
-             || valT == typeof(decimal)
-             || valT == typeof(ulong) // ulong gets put into this, because decimal can hold it
-             || valT == typeof(UIntPtr)) return typeof(FloatingPoint);
-            if (typeof(IEnumerable).IsAssignableFrom(valT)) return typeof(List);
-
-            // TODO: fill this out the rest of the way
-
-            return typeof(Map); // default for various objects
-        }
-
         private static void EmitDeserializeGeneratedValue(ILGenerator il, SerializedMemberInfo member, Type srcType, GetLocal GetLocal,
             Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
@@ -148,6 +121,7 @@ namespace IPA.Config.Stores
             }
             else
             {
+                Logger.config.Warn($"Implicit conversions to {expected} are not currently implemented");
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }
