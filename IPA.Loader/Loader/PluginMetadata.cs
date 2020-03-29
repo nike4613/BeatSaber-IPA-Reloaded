@@ -67,7 +67,7 @@ namespace IPA.Loader
         /// A list of files (that aren't <see cref="File"/>) that are associated with this plugin.
         /// </summary>
         /// <value>a list of associated files</value>
-        public IReadOnlyList<FileInfo> AssociatedFiles { get; private set; }
+        public IReadOnlyList<FileInfo> AssociatedFiles { get; private set; } = new List<FileInfo>();
 
         internal bool IsSelf;
 
