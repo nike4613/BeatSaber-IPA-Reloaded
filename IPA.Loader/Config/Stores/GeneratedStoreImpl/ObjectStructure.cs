@@ -33,13 +33,13 @@ namespace IPA.Config.Stores
             public Type ConverterTarget;
             public FieldInfo ConverterField;
 
-            // invalid for objects with IsNullabe false
+            // invalid for objects with IsNullable false
             public Type NullableWrappedType => Nullable.GetUnderlyingType(Type);
-            // invalid for objects with IsNullabe false
+            // invalid for objects with IsNullable false
             public PropertyInfo Nullable_HasValue => Type.GetProperty(nameof(Nullable<int>.HasValue));
-            // invalid for objects with IsNullabe false
+            // invalid for objects with IsNullable false
             public PropertyInfo Nullable_Value => Type.GetProperty(nameof(Nullable<int>.Value));
-            // invalid for objects with IsNullabe false
+            // invalid for objects with IsNullable false
             public ConstructorInfo Nullable_Construct => Type.GetConstructor(new[] { NullableWrappedType });
 
             public Type ConversionType => IsNullable ? NullableWrappedType : Type;
