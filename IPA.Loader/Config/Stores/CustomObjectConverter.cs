@@ -42,7 +42,7 @@ namespace IPA.Config.Stores.Converters
         }
 
         private static readonly IImpl impl = (IImpl)Activator.CreateInstance(
-            typeof(Impl<>).MakeGenericType(GeneratedStoreImpl.GetGeneratedType(typeof(T))));
+            typeof(Impl<>).MakeGenericType(typeof(T), GeneratedStoreImpl.GetGeneratedType(typeof(T))));
 
         /// <summary>
         /// Deserializes <paramref name="value"/> into a <typeparamref name="T"/> with the given <paramref name="parent"/>.

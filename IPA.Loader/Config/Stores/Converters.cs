@@ -84,15 +84,8 @@ namespace IPA.Config.Stores.Converters
         /// <summary>
         /// Gets the default <see cref="ValueConverter{T}"/> for the current type.
         /// </summary>
-        public static ValueConverter<T> Default 
-        {
-            get
-            {
-                if (defaultConverter == null) 
-                    defaultConverter = MakeDefault();
-                return defaultConverter;
-            }
-        }
+        public static ValueConverter<T> Default
+            => defaultConverter ??= MakeDefault();
 
         private static ValueConverter<T> MakeDefault()
         {
