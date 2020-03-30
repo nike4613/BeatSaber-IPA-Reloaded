@@ -54,7 +54,9 @@ namespace IPA.Config.Stores
                 Local = builder;
             }
 
+#if NET4
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
             public static implicit operator LocalBuilder(AllocatedLocal loc) => loc.Local;
 
             public void Dealloc() => allocator.Deallocate(this);
