@@ -268,6 +268,10 @@ namespace IPA.Logging
 
         [ThreadStatic]
         private static bool? isOnLoggerThread = null;
+        /// <summary>
+        /// Whether or not the calling thread is the logger thread.
+        /// </summary>
+        /// <value><see langword="true"/> if the current thread is the logger thread, <see langword="false"/> otherwise</value>
         public static bool IsOnLoggerThread => isOnLoggerThread ??= Thread.CurrentThread.ManagedThreadId == logThread.ManagedThreadId;
 
         private static readonly ManualResetEventSlim logWaitEvent = new ManualResetEventSlim(true);
