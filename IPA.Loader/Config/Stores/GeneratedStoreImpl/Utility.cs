@@ -3,9 +3,11 @@ using IPA.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Boolean = IPA.Config.Data.Boolean;
@@ -36,24 +38,56 @@ namespace IPA.Config.Stores
         }
         #endregion
 
-        private delegate LocalBuilder GetLocal(Type type, int idx = 0);
+        //private delegate LocalBuilder LocalAllocator(Type type, int idx = 0);
 
-        private static GetLocal MakeGetLocal(ILGenerator il)
-        { // TODO: improve this shit a bit so that i can release a hold of a variable and do more auto managing
-            var locals = new List<LocalBuilder>();
+        private static LocalAllocator MakeLocalAllocator(ILGenerator il)
+            => new LocalAllocator(il);
 
-            LocalBuilder GetLocal(Type ty, int i = 0)
+        private struct AllocatedLocal : IDisposable
+        {
+            internal readonly LocalAllocator allocator;
+            public LocalBuilder Local { get; }
+
+            public AllocatedLocal(LocalAllocator alloc, LocalBuilder builder)
             {
-                var builder = locals.Where(b => b.LocalType == ty).Skip(i).FirstOrDefault();
-                if (builder == null)
-                {
-                    builder = il.DeclareLocal(ty);
-                    locals.Add(builder);
-                }
-                return builder;
+                allocator = alloc;
+                Local = builder;
             }
 
-            return GetLocal;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator LocalBuilder(AllocatedLocal loc) => loc.Local;
+
+            public void Dealloc() => allocator.Deallocate(this);
+            public void Dispose() => Dealloc();
+        }
+
+        private sealed class LocalAllocator
+        {
+            private readonly ILGenerator ilSource;
+            private readonly Dictionary<Type, Stack<LocalBuilder>> unallocatedLocals = new Dictionary<Type, Stack<LocalBuilder>>();
+            public LocalAllocator(ILGenerator il)
+                => ilSource = il;
+
+            private Stack<LocalBuilder> GetLocalListForType(Type type)
+            {
+                if (!unallocatedLocals.TryGetValue(type, out var list))
+                    unallocatedLocals.Add(type, list = new Stack<LocalBuilder>());
+                return list;
+            }
+
+            public AllocatedLocal Allocate(Type type)
+            {
+                var list = GetLocalListForType(type);
+                if (list.Count < 1) list.Push(ilSource.DeclareLocal(type));
+                return new AllocatedLocal(this, list.Pop());
+            }
+
+            public void Deallocate(AllocatedLocal loc)
+            {
+                Debug.Assert(loc.allocator == this);
+                var list = GetLocalListForType(loc.Local.LocalType);
+                list.Push(loc.Local);
+            }
         }
 
         private static void EmitLoad(ILGenerator il, SerializedMemberInfo member, Action<ILGenerator> thisarg)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IPA.Config.Data;
+using IPA.Logging;
 
 namespace IPA.Config.Stores.Converters
 {
@@ -53,6 +54,7 @@ namespace IPA.Config.Stores.Converters
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
         protected void PopulateFromValue(TCollection col, List list, object parent)
         {
+            //Logger.log.Debug($"CollectionConverter<{typeof(T)}, {typeof(TCollection)}>({BaseConverter.GetType()}).PopulateFromValue([object], {list}, {parent.GetType()})");
             foreach (var it in list)
                 col.Add(BaseConverter.FromValue(it, parent));
         }

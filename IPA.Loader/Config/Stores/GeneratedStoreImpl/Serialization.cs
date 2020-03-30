@@ -18,7 +18,7 @@ namespace IPA.Config.Stores
     internal static partial class GeneratedStoreImpl
     {
         // emit takes no args, leaves Value at top of stack
-        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, GetLocal GetLocal, Action<ILGenerator> thisarg)
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, LocalAllocator GetLocal, Action<ILGenerator> thisarg)
         {
             EmitLoad(il, member, thisarg);
 
@@ -47,8 +47,8 @@ namespace IPA.Config.Stores
             var targetType = GetExpectedValueTypeForType(memberConversionType);
             if (member.HasConverter)
             {
-                var stlocal = GetLocal(member.Type);
-                var valLocal = GetLocal(typeof(Value));
+                using var stlocal = GetLocal.Allocate(member.Type);
+                using var valLocal = GetLocal.Allocate(typeof(Value));
 
                 il.Emit(OpCodes.Stloc, stlocal);
                 il.BeginExceptionBlock();
@@ -130,7 +130,7 @@ namespace IPA.Config.Stores
                     if (!member.IsVirtual)
                     {
                         var noCreate = il.DefineLabel();
-                        var stlocal = GetLocal(member.Type);
+                        using var stlocal = GetLocal.Allocate(member.Type);
 
                         // first check to make sure that this is an IGeneratedStore, because we don't control assignments to it
                         il.Emit(OpCodes.Dup);
@@ -151,10 +151,7 @@ namespace IPA.Config.Stores
                 }
                 else
                 { // generate serialization for value types
-                    var MapCreate = typeof(Value).GetMethod(nameof(Value.Map));
-                    var MapAdd = typeof(Map).GetMethod(nameof(Map.Add));
-
-                    var valueLocal = GetLocal(memberConversionType);
+                    using var valueLocal = GetLocal.Allocate(memberConversionType);
 
                     var structure = ReadObjectMembers(memberConversionType);
                     if (!structure.Any())
@@ -168,19 +165,35 @@ namespace IPA.Config.Stores
                         il.Emit(OpCodes.Stloc, valueLocal);
                     }
 
-                    il.Emit(OpCodes.Call, MapCreate);
-
-                    foreach (var mem in structure)
-                    {
-                        il.Emit(OpCodes.Dup);
-                        il.Emit(OpCodes.Ldstr, mem.Name);
-                        EmitSerializeMember(il, mem, GetLocal, il => il.Emit(OpCodes.Ldloca, valueLocal));
-                        il.Emit(OpCodes.Call, MapAdd);
-                    }
+                    EmitSerializeStructure(il, structure, GetLocal, il => il.Emit(OpCodes.Ldloca, valueLocal));
                 }
             }
 
             il.MarkLabel(endSerialize);
+        }
+
+        private static void EmitSerializeStructure(ILGenerator il, IEnumerable<SerializedMemberInfo> structure, LocalAllocator GetLocal, Action<ILGenerator> thisarg)
+        {
+            var MapCreate = typeof(Value).GetMethod(nameof(Value.Map));
+            var MapAdd = typeof(Map).GetMethod(nameof(Map.Add));
+
+            using var mapLocal = GetLocal.Allocate(typeof(Map));
+            using var valueLocal = GetLocal.Allocate(typeof(Value));
+
+            il.Emit(OpCodes.Call, MapCreate);
+            il.Emit(OpCodes.Stloc, mapLocal);
+
+            foreach (var mem in structure)
+            {
+                EmitSerializeMember(il, mem, GetLocal, thisarg);
+                il.Emit(OpCodes.Stloc, valueLocal);
+                il.Emit(OpCodes.Ldloc, mapLocal);
+                il.Emit(OpCodes.Ldstr, mem.Name);
+                il.Emit(OpCodes.Ldloc, valueLocal);
+                il.Emit(OpCodes.Call, MapAdd);
+            }
+
+            il.Emit(OpCodes.Ldloc, mapLocal);
         }
     }
 }
