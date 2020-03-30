@@ -2074,6 +2074,83 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.CustomObjectConverter(Of T).ToValue
   nameWithType: CustomObjectConverter<T>.ToValue
   nameWithType.vb: CustomObjectConverter(Of T).ToValue
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1
+  name: CustomValueTypeConverter<T>
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.CustomValueTypeConverter`1
+  name.vb: CustomValueTypeConverter(Of T)
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T)
+  nameWithType: CustomValueTypeConverter<T>
+  nameWithType.vb: CustomValueTypeConverter(Of T)
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Deserialize(IPA.Config.Data.Value,System.Object)
+  name: Deserialize(Value, Object)
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_Deserialize_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Deserialize(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.Deserialize(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).Deserialize(IPA.Config.Data.Value, System.Object)
+  nameWithType: CustomValueTypeConverter<T>.Deserialize(Value, Object)
+  nameWithType.vb: CustomValueTypeConverter(Of T).Deserialize(Value, Object)
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Deserialize*
+  name: Deserialize
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_Deserialize_
+  commentId: Overload:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Deserialize
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.Deserialize
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).Deserialize
+  nameWithType: CustomValueTypeConverter<T>.Deserialize
+  nameWithType.vb: CustomValueTypeConverter(Of T).Deserialize
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: CustomValueTypeConverter<T>.FromValue(Value, Object)
+  nameWithType.vb: CustomValueTypeConverter(Of T).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).FromValue
+  nameWithType: CustomValueTypeConverter<T>.FromValue
+  nameWithType.vb: CustomValueTypeConverter(Of T).FromValue
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Serialize(`0)
+  name: Serialize(T)
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_Serialize__0_
+  commentId: M:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Serialize(`0)
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.Serialize(T)
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).Serialize(T)
+  nameWithType: CustomValueTypeConverter<T>.Serialize(T)
+  nameWithType.vb: CustomValueTypeConverter(Of T).Serialize(T)
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Serialize*
+  name: Serialize
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_Serialize_
+  commentId: Overload:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.Serialize
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.Serialize
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).Serialize
+  nameWithType: CustomValueTypeConverter<T>.Serialize
+  nameWithType.vb: CustomValueTypeConverter(Of T).Serialize
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.ToValue(`0,System.Object)
+  name: ToValue(T, Object)
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_ToValue__0_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.ToValue(`0,System.Object)
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.ToValue(T, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).ToValue(T, System.Object)
+  nameWithType: CustomValueTypeConverter<T>.ToValue(T, Object)
+  nameWithType.vb: CustomValueTypeConverter(Of T).ToValue(T, Object)
+- uid: IPA.Config.Stores.Converters.CustomValueTypeConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.CustomValueTypeConverter-1.html#IPA_Config_Stores_Converters_CustomValueTypeConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.CustomValueTypeConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.CustomValueTypeConverter<T>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).ToValue
+  nameWithType: CustomValueTypeConverter<T>.ToValue
+  nameWithType.vb: CustomValueTypeConverter(Of T).ToValue
 - uid: IPA.Config.Stores.Converters.EnumConverter`1
   name: EnumConverter<T>
   href: api/IPA.Config.Stores.Converters.EnumConverter-1.html
@@ -4092,6 +4169,19 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.StandardLogger.Debug
   nameWithType: StandardLogger.Debug
+- uid: IPA.Logging.StandardLogger.IsOnLoggerThread
+  name: IsOnLoggerThread
+  href: api/IPA.Logging.StandardLogger.html#IPA_Logging_StandardLogger_IsOnLoggerThread
+  commentId: P:IPA.Logging.StandardLogger.IsOnLoggerThread
+  fullName: IPA.Logging.StandardLogger.IsOnLoggerThread
+  nameWithType: StandardLogger.IsOnLoggerThread
+- uid: IPA.Logging.StandardLogger.IsOnLoggerThread*
+  name: IsOnLoggerThread
+  href: api/IPA.Logging.StandardLogger.html#IPA_Logging_StandardLogger_IsOnLoggerThread_
+  commentId: Overload:IPA.Logging.StandardLogger.IsOnLoggerThread
+  isSpec: "True"
+  fullName: IPA.Logging.StandardLogger.IsOnLoggerThread
+  nameWithType: StandardLogger.IsOnLoggerThread
 - uid: IPA.Logging.StandardLogger.Log(IPA.Logging.Logger.Level,System.String)
   name: Log(Logger.Level, String)
   href: api/IPA.Logging.StandardLogger.html#IPA_Logging_StandardLogger_Log_IPA_Logging_Logger_Level_System_String_
