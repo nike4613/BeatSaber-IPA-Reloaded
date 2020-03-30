@@ -129,6 +129,9 @@ namespace IPA.Config
             // LINE: ignore 2
             public static bool ShowTrace_ => (Instance?.Debug?.ShowTrace ?? false)
                                           ||   CommandLineValues.Debug.ShowTrace;
+            public virtual bool SyncLogging { get; set; } = false;
+            // LINE: ignore
+            public static bool SyncLogging_ => Instance?.Debug?.SyncLogging ?? false;
         }
 
         // LINE: ignore

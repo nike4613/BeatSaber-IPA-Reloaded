@@ -106,6 +106,7 @@ namespace IPA.Logging
         /// <value>the global filter level</value>
         public static LogLevel PrintFilter { get; internal set; } = LogLevel.All;
         private static bool showTrace = false;
+        private static volatile bool syncLogging = false;
 
         private readonly List<LogPrinter> printers = new List<LogPrinter>();
         private readonly StandardLogger parent;
@@ -120,6 +121,7 @@ namespace IPA.Logging
             showSourceClass = SelfConfig.Debug_.ShowCallSource_;
             PrintFilter = SelfConfig.Debug_.ShowDebug_ ? LogLevel.All : LogLevel.InfoUp;
             showTrace = SelfConfig.Debug_.ShowTrace_;
+            syncLogging = SelfConfig.Debug_.SyncLogging_;
         }
 
         private StandardLogger(StandardLogger parent, string subName)
@@ -200,19 +202,32 @@ namespace IPA.Logging
             logWaitEvent.Wait();
             try
             {
+                var sync = syncLogging && !IsOnLoggerThread;
+                if (sync)
+                {
+                    threadSync ??= new ManualResetEventSlim();
+                    threadSync.Reset();
+                }
+
                 logQueue.Add(new LogMessage
                 {
                     Level = level,
                     Message = message,
                     Logger = this,
-                    Time = Utils.CurrentTime()
+                    Time = Utils.CurrentTime(),
+                    Sync = threadSync
                 });
+
+                if (sync) threadSync.Wait();
             }
             catch (InvalidOperationException)
             {
                 // the queue has been closed, so we leave it
             }
         }
+
+        [ThreadStatic]
+        private static ManualResetEventSlim threadSync;
 
         /// <inheritdoc />
         /// <summary>
@@ -248,9 +263,14 @@ namespace IPA.Logging
             public StandardLogger Logger;
             public string Message;
             public DateTime Time;
+            public ManualResetEventSlim Sync;
         }
 
-        private static ManualResetEventSlim logWaitEvent = new ManualResetEventSlim(true);
+        [ThreadStatic]
+        private static bool? isOnLoggerThread = null;
+        public static bool IsOnLoggerThread => isOnLoggerThread ??= Thread.CurrentThread.ManagedThreadId == logThread.ManagedThreadId;
+
+        private static readonly ManualResetEventSlim logWaitEvent = new ManualResetEventSlim(true);
         private static readonly BlockingCollection<LogMessage> logQueue = new BlockingCollection<LogMessage>();
         private static Thread logThread;
 
@@ -314,6 +334,8 @@ namespace IPA.Logging
                             }
                         }
 
+                        msg.Sync?.Set();
+
                         var debugConfig = SelfConfig.Instance?.Debug;
 
                         if (debugConfig != null && debugConfig.HideMessagesForPerformance
@@ -337,6 +359,8 @@ namespace IPA.Logging
                                         foreach (var print in messageLogger.printers)
                                             prints.Add(print);
                                 } while (messageLogger != null);
+
+                                message.Sync?.Set();
                             }
 
                             // print using logging subsystem to all logger printers
