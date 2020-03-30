@@ -38,7 +38,7 @@ namespace IPA.Config.Stores
         }
 
         // expects start value on stack, exits with final value on stack
-        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, GetLocal GetLocal,
+        private static void EmitCorrectMember(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, LocalAllocator GetLocal,
             Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
             if (!NeedsCorrection(member)) return;
@@ -59,7 +59,7 @@ namespace IPA.Config.Stores
                 // currently the only thing for this is where expect == Map, so do generate shit
                 var copyFrom = typeof(IGeneratedStore<>).MakeGenericType(convType).GetMethod(nameof(IGeneratedStore<Config>.CopyFrom));
                 var noCreate = il.DefineLabel();
-                var valLocal = GetLocal(convType);
+                using var valLocal = GetLocal.Allocate(convType);
 
                 if (member.AllowNull)
                 {
@@ -94,7 +94,7 @@ namespace IPA.Config.Stores
                 // for special value types, we'll go ahead and correct each of their members
                 var structure = ReadObjectMembers(convType);
 
-                var valueLocal = GetLocal(convType);
+                using var valueLocal = GetLocal.Allocate(convType);
                 il.Emit(OpCodes.Stloc, valueLocal);
 
                 void LdlocaValueLocal(ILGenerator il)
@@ -116,7 +116,7 @@ namespace IPA.Config.Stores
             il.MarkLabel(endLabel);
         }
 
-        private static void EmitLoadCorrectStore(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, GetLocal GetLocal,
+        private static void EmitLoadCorrectStore(ILGenerator il, SerializedMemberInfo member, bool shouldLock, bool alwaysNew, LocalAllocator GetLocal,
             Action<ILGenerator> loadFrom, Action<ILGenerator> storeTo, Action<ILGenerator> parentobj)
         {
             EmitStore(il, member, il =>

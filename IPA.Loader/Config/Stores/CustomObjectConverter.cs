@@ -85,4 +85,18 @@ namespace IPA.Config.Stores.Converters
             => impl.ToValue(obj, parent);
     }
 
+    public class CustomValueTypeConverter<T> : ValueConverter<T> where T : struct
+    {
+        private static readonly GeneratedStoreImpl.SerializeObject<T> serialize
+            = GeneratedStoreImpl.GetSerializerDelegate<T>();
+        private static readonly GeneratedStoreImpl.DeserializeObject<T> deserialize
+            = GeneratedStoreImpl.GetDeserializerDelegate<T>();
+
+        public override T FromValue(Value value, object parent)
+            => deserialize(value, parent);
+
+        public override Value ToValue(T obj, object parent)
+            => serialize(obj);
+    }
+
 }

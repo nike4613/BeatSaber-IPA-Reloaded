@@ -181,6 +181,7 @@ namespace IPA.Config.Stores
                 structure.Add(smi);
             }
 
+            CreateAndInitializeConvertersFor(type, structure);
             return structure;
         }
     }

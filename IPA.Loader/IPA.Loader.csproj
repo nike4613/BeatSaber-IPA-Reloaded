@@ -103,6 +103,7 @@
     <Compile Include="Config\Stores\Converters.cs" />
     <Compile Include="Config\Stores\CustomObjectConverter.cs" />
     <Compile Include="Config\Stores\CollectionConverter.cs" />
+    <Compile Include="Config\Stores\GeneratedStoreImpl\ConversionDelegates.cs" />
     <Compile Include="Config\Stores\GeneratedStoreImpl\Correction.cs" />
     <Compile Include="Config\Stores\GeneratedStoreImpl\Deserialization.cs" />
     <Compile Include="Config\Stores\GeneratedStoreImpl\GeneratedStoreImpl.cs" />

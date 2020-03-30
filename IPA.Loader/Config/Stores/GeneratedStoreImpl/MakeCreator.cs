@@ -62,7 +62,7 @@ namespace IPA.Config.Stores
             var implField = typeBuilder.DefineField("<>_impl", typeof(Impl), FieldAttributes.Private | FieldAttributes.InitOnly);
             var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
 
-            #region Converter fields
+            /*#region Converter fields
             var uniqueConverterTypes = structure.Where(m => m.HasConverter).Select(m => m.Converter).Distinct().ToArray();
             var converterFields = new Dictionary<Type, FieldInfo>(uniqueConverterTypes.Length);
 
@@ -91,7 +91,9 @@ namespace IPA.Config.Stores
 
                 il.Emit(OpCodes.Ret);
             }
-            #endregion
+            #endregion*/
+
+            //CreateAndInitializeConvertersFor(type, structure);
 
             #region Constructor
             var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(IGeneratedStore) });
@@ -120,7 +122,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Stfld, implField);
                 il.MarkLabel(noImplLabel);
 
-                var GetLocal = MakeGetLocal(il);
+                var GetLocal = MakeLocalAllocator(il);
 
                 foreach (var member in structure)
                 {
@@ -357,26 +359,10 @@ namespace IPA.Config.Stores
             { // this is non-locking because the only code that will call this will already own the correct lock
                 var il = serializeGen.GetILGenerator();
 
-                var Map_Add = typeof(Map).GetMethod(nameof(Map.Add));
-                var mapLocal = il.DeclareLocal(typeof(Map));
+                var GetLocal = MakeLocalAllocator(il);
 
-                var GetLocal = MakeGetLocal(il);
-                var valLocal = GetLocal(typeof(Value));
+                EmitSerializeStructure(il, structure, GetLocal, GetMethodThis);
 
-                il.Emit(OpCodes.Call, typeof(Value).GetMethod(nameof(Value.Map)));
-                il.Emit(OpCodes.Stloc, mapLocal);
-
-                foreach (var member in structure)
-                {
-                    EmitSerializeMember(il, member, GetLocal, GetMethodThis);
-                    il.Emit(OpCodes.Stloc, valLocal);
-                    il.Emit(OpCodes.Ldloc, mapLocal);
-                    il.Emit(OpCodes.Ldstr, member.Name);
-                    il.Emit(OpCodes.Ldloc, valLocal);
-                    il.Emit(OpCodes.Call, Map_Add);
-                }
-
-                il.Emit(OpCodes.Ldloc, mapLocal);
                 il.Emit(OpCodes.Ret);
             }
             #endregion
@@ -421,7 +407,7 @@ namespace IPA.Config.Stores
 
                 il.MarkLabel(notMapError);
 
-                var GetLocal = MakeGetLocal(il);
+                var GetLocal = MakeLocalAllocator(il);
 
                 // head of stack is Map instance
                 EmitDeserializeStructure(il, structure, mapLocal, valueLocal, GetLocal, GetMethodThis, GetMethodThis);
@@ -585,7 +571,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Stloc, transactionLocal);
                 il.MarkLabel(startLock);
 
-                var GetLocal = MakeGetLocal(il);
+                var GetLocal = MakeLocalAllocator(il);
 
                 foreach (var member in structure)
                 {
@@ -697,7 +683,7 @@ namespace IPA.Config.Stores
                     var il = propSet.GetILGenerator();
 
                     var transactionLocal = il.DeclareLocal(IDisposable_t);
-                    var GetLocal = MakeGetLocal(il);
+                    var GetLocal = MakeLocalAllocator(il);
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Call, coreChangeTransaction); // take the write lock

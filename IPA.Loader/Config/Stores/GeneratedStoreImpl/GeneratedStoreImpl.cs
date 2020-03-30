@@ -98,5 +98,46 @@ namespace IPA.Config.Stores
                 return module;
             }
         }
+
+        private static readonly Dictionary<Type, Dictionary<Type, FieldInfo>> TypeRequiredConverters = new Dictionary<Type, Dictionary<Type, FieldInfo>>();
+        private static void CreateAndInitializeConvertersFor(Type type, IEnumerable<SerializedMemberInfo> structure)
+        {
+            if (!TypeRequiredConverters.TryGetValue(type, out var converters))
+            {
+                var converterFieldType = Module.DefineType($"{type.FullName}<Converters>",
+                    TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Abstract | TypeAttributes.AnsiClass); // a static class
+
+                var uniqueConverterTypes = structure.Where(m => m.HasConverter).Select(m => m.Converter).Distinct().ToArray();
+                converters = new Dictionary<Type, FieldInfo>(uniqueConverterTypes.Length);
+
+                foreach (var convType in uniqueConverterTypes)
+                {
+                    var field = converterFieldType.DefineField($"<converter>_{convType}", convType,
+                        FieldAttributes.FamORAssem | FieldAttributes.InitOnly | FieldAttributes.Static);
+                    converters.Add(convType, field);
+                }
+
+                var cctor = converterFieldType.DefineConstructor(MethodAttributes.Static, CallingConventions.Standard, Type.EmptyTypes);
+                {
+                    var il = cctor.GetILGenerator();
+
+                    foreach (var kvp in converters)
+                    {
+                        var typeCtor = kvp.Key.GetConstructor(Type.EmptyTypes);
+                        il.Emit(OpCodes.Newobj, typeCtor);
+                        il.Emit(OpCodes.Stsfld, kvp.Value);
+                    }
+
+                    il.Emit(OpCodes.Ret);
+                }
+
+                TypeRequiredConverters.Add(type, converters);
+
+                converterFieldType.CreateType();
+            }
+
+            foreach (var member in structure.Where(m => m.HasConverter))
+                member.ConverterField = converters[member.Converter];
+        }
     }
 }

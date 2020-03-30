@@ -1,5 +1,6 @@
 ﻿using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
+using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace IPA.Config.Stores.Converters
             private static readonly IValConv<T> Impl = ValConvImpls.Impl as IValConv<T> ?? new ValConv<T>();
             public ValueConverter<T> Get() => Impl.Get();
             ValueConverter<T> IValConv<T>.Get()
-                => null; // default to null
+                => new CustomValueTypeConverter<T>();
         }
         private class ValConvImpls : IValConv<char>,
             IValConv<IntPtr>, IValConv<UIntPtr>,
@@ -90,23 +91,28 @@ namespace IPA.Config.Stores.Converters
         private static ValueConverter<T> MakeDefault()
         {
             var t = typeof(T);
+            //Logger.log.Debug($"Converter<{t}>.MakeDefault()");
 
             if (t.IsValueType)
             { // we have to do this garbo to make it accept the thing that we know is a value type at instantiation time
                 if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
                 { // this is a Nullable
+                    //Logger.log.Debug($"gives NullableConverter<{Nullable.GetUnderlyingType(t)}>");
                     return Activator.CreateInstance(typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t))) as ValueConverter<T>;
                 }
 
+                //Logger.log.Debug($"gives converter for value type {t}");
                 var valConv = Activator.CreateInstance(typeof(Converter.ValConv<>).MakeGenericType(t)) as Converter.IValConv<T>;
                 return valConv.Get();
             }
             else if (t == typeof(string))
             {
+                //Logger.log.Debug($"gives StringConverter");
                 return new StringConverter() as ValueConverter<T>;
             }
             else
             {
+                //Logger.log.Debug($"gives CustomObjectConverter<{t}>");
                 return Activator.CreateInstance(typeof(CustomObjectConverter<>).MakeGenericType(t)) as ValueConverter<T>;
             }
         }
