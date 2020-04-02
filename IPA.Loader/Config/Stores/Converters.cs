@@ -264,6 +264,184 @@ namespace IPA.Config.Stores.Converters
             => Value.Integer(Convert.ToInt64(obj));
     }
 
+    /// <summary>
+    /// A converter for instances of <see cref="IDictionary{TKey, TValue}"/>.
+    /// </summary>
+    /// <typeparam name="TValue">the value type of the dictionary</typeparam>
+    public class IDictionaryConverter<TValue> : ValueConverter<IDictionary<string, TValue>>
+    {
+        /// <summary>
+        /// Gets the converter for the dictionary's value type.
+        /// </summary>
+        protected ValueConverter<TValue> BaseConverter { get; }
+
+        /// <summary>
+        /// Constructs an <see cref="IDictionaryConverter{TValue}"/> using the default converter for the value type.
+        /// </summary>
+        public IDictionaryConverter() : this(Converter<TValue>.Default) { }
+        /// <summary>
+        /// Constructs an <see cref="IDictionaryConverter{TValue}"/> using the specified converter for the value.
+        /// </summary>
+        /// <param name="converter">the converter for the value</param>
+        public IDictionaryConverter(ValueConverter<TValue> converter)
+            => BaseConverter = converter;
+
+        /// <summary>
+        /// Converts a <see cref="Map"/> to an <see cref="IDictionary{TKey, TValue}"/> that is represented by it.
+        /// </summary>
+        /// <param name="value">the <see cref="Map"/> to convert</param>
+        /// <param name="parent">the parent that will own the resulting object</param>
+        /// <returns>the deserialized dictionary</returns>
+        public override IDictionary<string, TValue> FromValue(Value value, object parent)
+            => (value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
+                    ?.ToDictionary(p => p.Key, p => p.val)
+                ?? throw new ArgumentException("Value not a map", nameof(value));
+
+        /// <summary>
+        /// Serializes an <see cref="IDictionary{TKey, TValue}"/> into a <see cref="Map"/> containing its values.
+        /// </summary>
+        /// <param name="obj">the dictionary to serialize</param>
+        /// <param name="parent">the object that owns the dictionary</param>
+        /// <returns>the dictionary serialized as a <see cref="Map"/></returns>
+        public override Value ToValue(IDictionary<string, TValue> obj, object parent)
+            => Value.From(obj.Select(p => new KeyValuePair<string, Value>(p.Key, BaseConverter.ToValue(p.Value, parent))));
+    }
+
+    /// <summary>
+    /// A converter for instances of <see cref="IDictionary{TKey, TValue}"/>, specifying a value converter as a type parameter.
+    /// </summary>
+    /// <typeparam name="TValue">the value type of the dictionary</typeparam>
+    /// <typeparam name="TConverter">the converter type for values</typeparam>
+    public sealed class IDictionaryConverter<TValue, TConverter> : IDictionaryConverter<TValue>
+        where TConverter : ValueConverter<TValue>, new()
+    {
+        /// <summary>
+        /// Constructs a new <see cref="IDictionaryConverter{TValue, TConverter}"/> with a new instance of 
+        /// <typeparamref name="TConverter"/> as the value converter.
+        /// </summary>
+        public IDictionaryConverter() : base(new TConverter()) { }
+    }
+
+
+    /// <summary>
+    /// A converter for instances of <see cref="Dictionary{TKey, TValue}"/>.
+    /// </summary>
+    /// <typeparam name="TValue">the value type of the dictionary</typeparam>
+    public class DictionaryConverter<TValue> : ValueConverter<Dictionary<string, TValue>>
+    {
+        /// <summary>
+        /// Gets the converter for the dictionary's value type.
+        /// </summary>
+        protected ValueConverter<TValue> BaseConverter { get; }
+
+        /// <summary>
+        /// Constructs an <see cref="IDictionaryConverter{TValue}"/> using the default converter for the value type.
+        /// </summary>
+        public DictionaryConverter() : this(Converter<TValue>.Default) { }
+        /// <summary>
+        /// Constructs an <see cref="IDictionaryConverter{TValue}"/> using the specified converter for the value.
+        /// </summary>
+        /// <param name="converter">the converter for the value</param>
+        public DictionaryConverter(ValueConverter<TValue> converter)
+            => BaseConverter = converter;
+
+        /// <summary>
+        /// Converts a <see cref="Map"/> to a <see cref="Dictionary{TKey, TValue}"/> that is represented by it.
+        /// </summary>
+        /// <param name="value">the <see cref="Map"/> to convert</param>
+        /// <param name="parent">the parent that will own the resulting object</param>
+        /// <returns>the deserialized dictionary</returns>
+        public override Dictionary<string, TValue> FromValue(Value value, object parent)
+            => (value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
+                    ?.ToDictionary(p => p.Key, p => p.val)
+                ?? throw new ArgumentException("Value not a map", nameof(value));
+
+        /// <summary>
+        /// Serializes a <see cref="Dictionary{TKey, TValue}"/> into a <see cref="Map"/> containing its values.
+        /// </summary>
+        /// <param name="obj">the dictionary to serialize</param>
+        /// <param name="parent">the object that owns the dictionary</param>
+        /// <returns>the dictionary serialized as a <see cref="Map"/></returns>
+        public override Value ToValue(Dictionary<string, TValue> obj, object parent)
+            => Value.From(obj.Select(p => new KeyValuePair<string, Value>(p.Key, BaseConverter.ToValue(p.Value, parent))));
+    }
+
+    /// <summary>
+    /// A converter for instances of <see cref="Dictionary{TKey, TValue}"/>, specifying a value converter as a type parameter.
+    /// </summary>
+    /// <typeparam name="TValue">the value type of the dictionary</typeparam>
+    /// <typeparam name="TConverter">the converter type for values</typeparam>
+    public sealed class DictionaryConverter<TValue, TConverter> : DictionaryConverter<TValue>
+        where TConverter : ValueConverter<TValue>, new()
+    {
+        /// <summary>
+        /// Constructs a new <see cref="IDictionaryConverter{TValue, TConverter}"/> with a new instance of 
+        /// <typeparamref name="TConverter"/> as the value converter.
+        /// </summary>
+        public DictionaryConverter() : base(new TConverter()) { }
+    }
+
+#if NET4
+
+    /// <summary>
+    /// A converter for instances of <see cref="IReadOnlyDictionary{TKey, TValue}"/>.
+    /// </summary>
+    /// <typeparam name="TValue">the value type of the dictionary</typeparam>
+    public class IReadOnlyDictionaryConverter<TValue> : ValueConverter<IReadOnlyDictionary<string, TValue>>
+    {
+        /// <summary>
+        /// Gets the converter for the dictionary's value type.
+        /// </summary>
+        protected ValueConverter<TValue> BaseConverter { get; }
+
+        /// <summary>
+        /// Constructs an <see cref="IReadOnlyDictionaryConverter{TValue}"/> using the default converter for the value type.
+        /// </summary>
+        public IReadOnlyDictionaryConverter() : this(Converter<TValue>.Default) { }
+        /// <summary>
+        /// Constructs an <see cref="IReadOnlyDictionaryConverter{TValue}"/> using the specified converter for the value.
+        /// </summary>
+        /// <param name="converter">the converter for the value</param>
+        public IReadOnlyDictionaryConverter(ValueConverter<TValue> converter)
+            => BaseConverter = converter;
+
+        /// <summary>
+        /// Converts a <see cref="Map"/> to an <see cref="IDictionary{TKey, TValue}"/> that is represented by it.
+        /// </summary>
+        /// <param name="value">the <see cref="Map"/> to convert</param>
+        /// <param name="parent">the parent that will own the resulting object</param>
+        /// <returns>the deserialized dictionary</returns>
+        public override IReadOnlyDictionary<string, TValue> FromValue(Value value, object parent)
+            => (value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
+                    ?.ToDictionary(p => p.Key, p => p.val)
+                ?? throw new ArgumentException("Value not a map", nameof(value));
+
+        /// <summary>
+        /// Serializes an <see cref="IDictionary{TKey, TValue}"/> into a <see cref="Map"/> containing its values.
+        /// </summary>
+        /// <param name="obj">the dictionary to serialize</param>
+        /// <param name="parent">the object that owns the dictionary</param>
+        /// <returns>the dictionary serialized as a <see cref="Map"/></returns>
+        public override Value ToValue(IReadOnlyDictionary<string, TValue> obj, object parent)
+            => Value.From(obj.Select(p => new KeyValuePair<string, Value>(p.Key, BaseConverter.ToValue(p.Value, parent))));
+    }
+
+    /// <summary>
+    /// A converter for instances of <see cref="IReadOnlyDictionary{TKey, TValue}"/>, specifying a value converter as a type parameter.
+    /// </summary>
+    /// <typeparam name="TValue">the value type of the dictionary</typeparam>
+    /// <typeparam name="TConverter">the converter type for values</typeparam>
+    public sealed class IReadOnlyDictionaryConverter<TValue, TConverter> : IReadOnlyDictionaryConverter<TValue>
+        where TConverter : ValueConverter<TValue>, new()
+    {
+        /// <summary>
+        /// Constructs a new <see cref="IReadOnlyDictionaryConverter{TValue, TConverter}"/> with a new instance of 
+        /// <typeparamref name="TConverter"/> as the value converter.
+        /// </summary>
+        public IReadOnlyDictionaryConverter() : base(new TConverter()) { }
+    }
+#endif
+
     internal class StringConverter : ValueConverter<string>
     {
         public override string FromValue(Value value, object parent)
