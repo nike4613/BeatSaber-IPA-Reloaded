@@ -2151,6 +2151,119 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.CustomValueTypeConverter(Of T).ToValue
   nameWithType: CustomValueTypeConverter<T>.ToValue
   nameWithType.vb: CustomValueTypeConverter(Of T).ToValue
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1
+  name: DictionaryConverter<TValue>
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.DictionaryConverter`1
+  name.vb: DictionaryConverter(Of TValue)
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue)
+  nameWithType: DictionaryConverter<TValue>
+  nameWithType.vb: DictionaryConverter(Of TValue)
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.#ctor
+  name: DictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1__ctor
+  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`1.#ctor
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.DictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).DictionaryConverter()
+  nameWithType: DictionaryConverter<TValue>.DictionaryConverter()
+  nameWithType.vb: DictionaryConverter(Of TValue).DictionaryConverter()
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name: DictionaryConverter(ValueConverter<TValue>)
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1__ctor_IPA_Config_Stores_ValueConverter__0__
+  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name.vb: DictionaryConverter(ValueConverter(Of TValue))
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.DictionaryConverter(IPA.Config.Stores.ValueConverter<TValue>)
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).DictionaryConverter(IPA.Config.Stores.ValueConverter(Of TValue))
+  nameWithType: DictionaryConverter<TValue>.DictionaryConverter(ValueConverter<TValue>)
+  nameWithType.vb: DictionaryConverter(Of TValue).DictionaryConverter(ValueConverter(Of TValue))
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.#ctor*
+  name: DictionaryConverter
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.DictionaryConverter`1.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.DictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).DictionaryConverter
+  nameWithType: DictionaryConverter<TValue>.DictionaryConverter
+  nameWithType.vb: DictionaryConverter(Of TValue).DictionaryConverter
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.BaseConverter
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_BaseConverter
+  commentId: P:IPA.Config.Stores.Converters.DictionaryConverter`1.BaseConverter
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).BaseConverter
+  nameWithType: DictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: DictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.BaseConverter*
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_BaseConverter_
+  commentId: Overload:IPA.Config.Stores.Converters.DictionaryConverter`1.BaseConverter
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).BaseConverter
+  nameWithType: DictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: DictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: DictionaryConverter<TValue>.FromValue(Value, Object)
+  nameWithType.vb: DictionaryConverter(Of TValue).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.DictionaryConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).FromValue
+  nameWithType: DictionaryConverter<TValue>.FromValue
+  nameWithType.vb: DictionaryConverter(Of TValue).FromValue
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue(System.Collections.Generic.Dictionary{System.String,`0},System.Object)
+  name: ToValue(Dictionary<String, TValue>, Object)
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_ToValue_System_Collections_Generic_Dictionary_System_String__0__System_Object_
+  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue(System.Collections.Generic.Dictionary{System.String,`0},System.Object)
+  name.vb: ToValue(Dictionary(Of String, TValue), Object)
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.ToValue(System.Collections.Generic.Dictionary<System.String, TValue>, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).ToValue(System.Collections.Generic.Dictionary(Of System.String, TValue), System.Object)
+  nameWithType: DictionaryConverter<TValue>.ToValue(Dictionary<String, TValue>, Object)
+  nameWithType.vb: DictionaryConverter(Of TValue).ToValue(Dictionary(Of String, TValue), Object)
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).ToValue
+  nameWithType: DictionaryConverter<TValue>.ToValue
+  nameWithType.vb: DictionaryConverter(Of TValue).ToValue
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`2
+  name: DictionaryConverter<TValue, TConverter>
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-2.html
+  commentId: T:IPA.Config.Stores.Converters.DictionaryConverter`2
+  name.vb: DictionaryConverter(Of TValue, TConverter)
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue, TConverter>
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue, TConverter)
+  nameWithType: DictionaryConverter<TValue, TConverter>
+  nameWithType.vb: DictionaryConverter(Of TValue, TConverter)
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`2.#ctor
+  name: DictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-2.html#IPA_Config_Stores_Converters_DictionaryConverter_2__ctor
+  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`2.#ctor
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue, TConverter>.DictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue, TConverter).DictionaryConverter()
+  nameWithType: DictionaryConverter<TValue, TConverter>.DictionaryConverter()
+  nameWithType.vb: DictionaryConverter(Of TValue, TConverter).DictionaryConverter()
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`2.#ctor*
+  name: DictionaryConverter
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-2.html#IPA_Config_Stores_Converters_DictionaryConverter_2__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.DictionaryConverter`2.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue, TConverter>.DictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue, TConverter).DictionaryConverter
+  nameWithType: DictionaryConverter<TValue, TConverter>.DictionaryConverter
+  nameWithType.vb: DictionaryConverter(Of TValue, TConverter).DictionaryConverter
 - uid: IPA.Config.Stores.Converters.EnumConverter`1
   name: EnumConverter<T>
   href: api/IPA.Config.Stores.Converters.EnumConverter-1.html
@@ -2194,6 +2307,119 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T).ToValue
   nameWithType: EnumConverter<T>.ToValue
   nameWithType.vb: EnumConverter(Of T).ToValue
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1
+  name: IDictionaryConverter<TValue>
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.IDictionaryConverter`1
+  name.vb: IDictionaryConverter(Of TValue)
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue)
+  nameWithType: IDictionaryConverter<TValue>
+  nameWithType.vb: IDictionaryConverter(Of TValue)
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.#ctor
+  name: IDictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1__ctor
+  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`1.#ctor
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.IDictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).IDictionaryConverter()
+  nameWithType: IDictionaryConverter<TValue>.IDictionaryConverter()
+  nameWithType.vb: IDictionaryConverter(Of TValue).IDictionaryConverter()
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name: IDictionaryConverter(ValueConverter<TValue>)
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1__ctor_IPA_Config_Stores_ValueConverter__0__
+  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name.vb: IDictionaryConverter(ValueConverter(Of TValue))
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.IDictionaryConverter(IPA.Config.Stores.ValueConverter<TValue>)
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).IDictionaryConverter(IPA.Config.Stores.ValueConverter(Of TValue))
+  nameWithType: IDictionaryConverter<TValue>.IDictionaryConverter(ValueConverter<TValue>)
+  nameWithType.vb: IDictionaryConverter(Of TValue).IDictionaryConverter(ValueConverter(Of TValue))
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.#ctor*
+  name: IDictionaryConverter
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.IDictionaryConverter`1.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.IDictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).IDictionaryConverter
+  nameWithType: IDictionaryConverter<TValue>.IDictionaryConverter
+  nameWithType.vb: IDictionaryConverter(Of TValue).IDictionaryConverter
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.BaseConverter
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_BaseConverter
+  commentId: P:IPA.Config.Stores.Converters.IDictionaryConverter`1.BaseConverter
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).BaseConverter
+  nameWithType: IDictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: IDictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.BaseConverter*
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_BaseConverter_
+  commentId: Overload:IPA.Config.Stores.Converters.IDictionaryConverter`1.BaseConverter
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).BaseConverter
+  nameWithType: IDictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: IDictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: IDictionaryConverter<TValue>.FromValue(Value, Object)
+  nameWithType.vb: IDictionaryConverter(Of TValue).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.IDictionaryConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).FromValue
+  nameWithType: IDictionaryConverter<TValue>.FromValue
+  nameWithType.vb: IDictionaryConverter(Of TValue).FromValue
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue(System.Collections.Generic.IDictionary{System.String,`0},System.Object)
+  name: ToValue(IDictionary<String, TValue>, Object)
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_ToValue_System_Collections_Generic_IDictionary_System_String__0__System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue(System.Collections.Generic.IDictionary{System.String,`0},System.Object)
+  name.vb: ToValue(IDictionary(Of String, TValue), Object)
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.ToValue(System.Collections.Generic.IDictionary<System.String, TValue>, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).ToValue(System.Collections.Generic.IDictionary(Of System.String, TValue), System.Object)
+  nameWithType: IDictionaryConverter<TValue>.ToValue(IDictionary<String, TValue>, Object)
+  nameWithType.vb: IDictionaryConverter(Of TValue).ToValue(IDictionary(Of String, TValue), Object)
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).ToValue
+  nameWithType: IDictionaryConverter<TValue>.ToValue
+  nameWithType.vb: IDictionaryConverter(Of TValue).ToValue
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`2
+  name: IDictionaryConverter<TValue, TConverter>
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-2.html
+  commentId: T:IPA.Config.Stores.Converters.IDictionaryConverter`2
+  name.vb: IDictionaryConverter(Of TValue, TConverter)
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue, TConverter>
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue, TConverter)
+  nameWithType: IDictionaryConverter<TValue, TConverter>
+  nameWithType.vb: IDictionaryConverter(Of TValue, TConverter)
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`2.#ctor
+  name: IDictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-2.html#IPA_Config_Stores_Converters_IDictionaryConverter_2__ctor
+  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`2.#ctor
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue, TConverter>.IDictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue, TConverter).IDictionaryConverter()
+  nameWithType: IDictionaryConverter<TValue, TConverter>.IDictionaryConverter()
+  nameWithType.vb: IDictionaryConverter(Of TValue, TConverter).IDictionaryConverter()
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`2.#ctor*
+  name: IDictionaryConverter
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-2.html#IPA_Config_Stores_Converters_IDictionaryConverter_2__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.IDictionaryConverter`2.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue, TConverter>.IDictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue, TConverter).IDictionaryConverter
+  nameWithType: IDictionaryConverter<TValue, TConverter>.IDictionaryConverter
+  nameWithType.vb: IDictionaryConverter(Of TValue, TConverter).IDictionaryConverter
 - uid: IPA.Config.Stores.Converters.IListConverter`1
   name: IListConverter<T>
   href: api/IPA.Config.Stores.Converters.IListConverter-1.html
@@ -2272,6 +2498,119 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.IListConverter(Of T, TConverter).IListConverter
   nameWithType: IListConverter<T, TConverter>.IListConverter
   nameWithType.vb: IListConverter(Of T, TConverter).IListConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1
+  name: IReadOnlyDictionaryConverter<TValue>
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1
+  name.vb: IReadOnlyDictionaryConverter(Of TValue)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue)
+  nameWithType: IReadOnlyDictionaryConverter<TValue>
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor
+  name: IReadOnlyDictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1__ctor
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter()
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter()
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter()
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name: IReadOnlyDictionaryConverter(ValueConverter<TValue>)
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1__ctor_IPA_Config_Stores_ValueConverter__0__
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name.vb: IReadOnlyDictionaryConverter(ValueConverter(Of TValue))
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter(IPA.Config.Stores.ValueConverter<TValue>)
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter(IPA.Config.Stores.ValueConverter(Of TValue))
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter(ValueConverter<TValue>)
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter(ValueConverter(Of TValue))
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor*
+  name: IReadOnlyDictionaryConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_BaseConverter
+  commentId: P:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter*
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_BaseConverter_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.FromValue(Value, Object)
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).FromValue
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.FromValue
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).FromValue
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue(System.Collections.Generic.IReadOnlyDictionary{System.String,`0},System.Object)
+  name: ToValue(IReadOnlyDictionary<String, TValue>, Object)
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_ToValue_System_Collections_Generic_IReadOnlyDictionary_System_String__0__System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue(System.Collections.Generic.IReadOnlyDictionary{System.String,`0},System.Object)
+  name.vb: ToValue(IReadOnlyDictionary(Of String, TValue), Object)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.ToValue(System.Collections.Generic.IReadOnlyDictionary<System.String, TValue>, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).ToValue(System.Collections.Generic.IReadOnlyDictionary(Of System.String, TValue), System.Object)
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.ToValue(IReadOnlyDictionary<String, TValue>, Object)
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).ToValue(IReadOnlyDictionary(Of String, TValue), Object)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).ToValue
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.ToValue
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).ToValue
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2
+  name: IReadOnlyDictionaryConverter<TValue, TConverter>
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-2.html
+  commentId: T:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2
+  name.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue, TConverter>
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue, TConverter)
+  nameWithType: IReadOnlyDictionaryConverter<TValue, TConverter>
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor
+  name: IReadOnlyDictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-2.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_2__ctor
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter()
+  nameWithType: IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter()
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter()
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor*
+  name: IReadOnlyDictionaryConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-2.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_2__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter
 - uid: IPA.Config.Stores.Converters.ISetConverter`1
   name: ISetConverter<T>
   href: api/IPA.Config.Stores.Converters.ISetConverter-1.html
