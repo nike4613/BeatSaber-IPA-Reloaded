@@ -49,8 +49,6 @@ namespace IPA.Config.Stores
 
                 var GetLocal = MakeLocalAllocator(il);
 
-                EmitLogError(il, $"Entered SerializeType delegate for type {type}");
-
                 if (!type.IsValueType)
                 {
                     var notIGeneratedStore = il.DefineLabel();
@@ -69,7 +67,6 @@ namespace IPA.Config.Stores
                     il.MarkLabel(notIGeneratedStore);
                 }
 
-                EmitLogError(il, $"Serializing structure of {type}");
                 EmitSerializeStructure(il, structure, GetLocal, loadObject, loadParent);
 
                 il.Emit(OpCodes.Ret);
@@ -116,11 +113,8 @@ namespace IPA.Config.Stores
                     il.Emit(OpCodes.Isinst, IGeneratedStore_t);
                 }
 
-                EmitLogError(il, $"Entered DeserializeType delegate for type {type}");
-
                 if (!type.IsValueType)
                 {
-                    EmitLogError(il, $"Forwarding to created type serialization");
                     EmitCreateChildGenerated(il, type, ParentObj);
                     il.Emit(OpCodes.Dup);
                     il.Emit(OpCodes.Castclass, IGeneratedStore_t);
@@ -139,8 +133,6 @@ namespace IPA.Config.Stores
                     var resultLocal = il.DeclareLocal(type);
 
                     var nonNull = il.DefineLabel();
-
-                    EmitLogError(il, $"Deserializing structure of {type}");
 
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Brtrue, nonNull);
