@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IPA.Config.Stores.Converters;
+using System;
 using System.ComponentModel;
 using System.Linq;
 
@@ -34,6 +35,11 @@ namespace IPA.Config.Stores.Attributes
     public sealed class UseConverterAttribute : Attribute
     {
         /// <summary>
+        /// Gets whether or not to use the default converter for the member type instead of the specified type.
+        /// </summary>
+        public bool UseDefaultConverterForType { get; }
+
+        /// <summary>
         /// Gets the type of the converter to use.
         /// </summary>
         public Type ConverterType { get; }
@@ -50,11 +56,18 @@ namespace IPA.Config.Stores.Attributes
         public bool IsGenericConverter => ConverterTargetType != null;
 
         /// <summary>
+        /// Creates a new <see cref="UseConverterAttribute"/> specifying to use the default converter type for the target member.
+        /// </summary>
+        public UseConverterAttribute()
+            => UseDefaultConverterForType = true;
+
+        /// <summary>
         /// Creates a new <see cref="UseConverterAttribute"/> with a  given <see cref="ConverterType"/>.
         /// </summary>
         /// <param name="converterType">the type to assign to <see cref="ConverterType"/></param>
         public UseConverterAttribute(Type converterType)
         {
+            UseDefaultConverterForType = false;
             ConverterType = converterType;
 
             var baseT = ConverterType.BaseType;

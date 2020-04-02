@@ -1,4 +1,5 @@
 ﻿using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
 using IPA.Logging;
 using IPA.Utilities;
 using System;
@@ -69,6 +70,9 @@ namespace IPA.Config.Stores
             var converterAttr = attrs.Select(o => o as UseConverterAttribute).NonNull().FirstOrDefault();
             if (converterAttr != null)
             {
+                if (converterAttr.UseDefaultConverterForType)
+                    converterAttr = new UseConverterAttribute(Converter.GetDefaultConverterType(member.Type));
+
                 member.Converter = converterAttr.ConverterType;
                 member.IsGenericConverter = converterAttr.IsGenericConverter;
 
