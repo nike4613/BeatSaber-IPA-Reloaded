@@ -88,33 +88,65 @@ namespace IPA.Config.Stores.Converters
         public static ValueConverter<T> Default
             => defaultConverter ??= MakeDefault();
 
-        private static ValueConverter<T> MakeDefault()
+        internal static ValueConverter<T> MakeDefault(bool allowValuesAndCustoms = true)
         {
             var t = typeof(T);
             //Logger.log.Debug($"Converter<{t}>.MakeDefault()");
 
+            static ValueConverter<T> MakeInstOf(Type ty)
+                => Activator.CreateInstance(ty) as ValueConverter<T>;
+
+            if (t.IsEnum)
+            {
+                return MakeInstOf(typeof(CaseInsensitiveEnumConverter<>).MakeGenericType(t));
+            }
+            if (t == typeof(string))
+            {
+                //Logger.log.Debug($"gives StringConverter");
+                return new StringConverter() as ValueConverter<T>;
+            }
+            if (t.IsGenericType)
+            {
+                var generic = t.GetGenericTypeDefinition();
+                var args = t.GetGenericArguments();
+                if (generic == typeof(List<>))
+                    return MakeInstOf(typeof(ListConverter<>).MakeGenericType(args));
+                else if (generic == typeof(IList<>))
+                    return MakeInstOf(typeof(IListConverter<>).MakeGenericType(args));
+                else if (generic == typeof(Dictionary<,>) && args[0] == typeof(string))
+                    return MakeInstOf(typeof(DictionaryConverter<>).MakeGenericType(args[1]));
+                else if (generic == typeof(IDictionary<,>) && args[0] == typeof(string))
+                    return MakeInstOf(typeof(IDictionaryConverter<>).MakeGenericType(args[1]));
+#if NET4
+                else if (generic == typeof(ISet<>))
+                    return MakeInstOf(typeof(ISetConverter<>).MakeGenericType(args));
+                else if (generic == typeof(IReadOnlyDictionary<,>) && args[0] == typeof(string))
+                    return MakeInstOf(typeof(IReadOnlyDictionaryConverter<>).MakeGenericType(args[1]));
+#endif
+            }
+            var iCollBase = t.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>));
+            if (iCollBase != null && t.GetConstructor(Type.EmptyTypes) != null)
+            { // if it implements ICollection and has a default constructor
+                var valueType = iCollBase.GetGenericArguments().First();
+                return MakeInstOf(typeof(CollectionConverter<,>).MakeGenericType(valueType, t));
+            }
+            if (!allowValuesAndCustoms) return null;
             if (t.IsValueType)
             { // we have to do this garbo to make it accept the thing that we know is a value type at instantiation time
                 if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
                 { // this is a Nullable
                     //Logger.log.Debug($"gives NullableConverter<{Nullable.GetUnderlyingType(t)}>");
-                    return Activator.CreateInstance(typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t))) as ValueConverter<T>;
+                    return MakeInstOf(typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t)));
                 }
 
                 //Logger.log.Debug($"gives converter for value type {t}");
                 var valConv = Activator.CreateInstance(typeof(Converter.ValConv<>).MakeGenericType(t)) as Converter.IValConv<T>;
                 return valConv.Get();
             }
-            else if (t == typeof(string))
-            {
-                //Logger.log.Debug($"gives StringConverter");
-                return new StringConverter() as ValueConverter<T>;
-            }
-            else
-            {
-                //Logger.log.Debug($"gives CustomObjectConverter<{t}>");
-                return Activator.CreateInstance(typeof(CustomObjectConverter<>).MakeGenericType(t)) as ValueConverter<T>;
-            }
+
+            //Logger.log.Debug($"gives CustomObjectConverter<{t}>");
+            return MakeInstOf(typeof(CustomObjectConverter<>).MakeGenericType(t));
         }
     }
 
