@@ -36,16 +36,75 @@ namespace IPA.Config.Stores.Converters
                val is Integer inte ? inte.AsFloat()?.Value :
                null;
 
+        internal static Type GetDefaultConverterType(Type t, bool returnSimpleConverters = true)
+        {
+            if (t.IsEnum)
+            {
+                return typeof(CaseInsensitiveEnumConverter<>).MakeGenericType(t);
+            }
+            if (t.IsGenericType)
+            {
+                var generic = t.GetGenericTypeDefinition();
+                var args = t.GetGenericArguments();
+                if (generic == typeof(List<>))
+                    return (typeof(ListConverter<>).MakeGenericType(args));
+                else if (generic == typeof(IList<>))
+                    return (typeof(IListConverter<>).MakeGenericType(args));
+                else if (generic == typeof(Dictionary<,>) && args[0] == typeof(string))
+                    return (typeof(DictionaryConverter<>).MakeGenericType(args[1]));
+                else if (generic == typeof(IDictionary<,>) && args[0] == typeof(string))
+                    return (typeof(IDictionaryConverter<>).MakeGenericType(args[1]));
+#if NET4
+                else if (generic == typeof(ISet<>))
+                    return (typeof(ISetConverter<>).MakeGenericType(args));
+                else if (generic == typeof(IReadOnlyDictionary<,>) && args[0] == typeof(string))
+                    return (typeof(IReadOnlyDictionaryConverter<>).MakeGenericType(args[1]));
+#endif
+            }
+            var iCollBase = t.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>));
+            if (iCollBase != null && t.GetConstructor(Type.EmptyTypes) != null)
+            { // if it implements ICollection and has a default constructor
+                var valueType = iCollBase.GetGenericArguments().First();
+                return (typeof(CollectionConverter<,>).MakeGenericType(valueType, t));
+            }
+            if (!returnSimpleConverters) return null;
+            if (t == typeof(string))
+            {
+                //Logger.log.Debug($"gives StringConverter");
+                return typeof(StringConverter);
+            }
+            if (t.IsValueType)
+            { // we have to do this garbo to make it accept the thing that we know is a value type at instantiation time
+                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+                { // this is a Nullable
+                    //Logger.log.Debug($"gives NullableConverter<{Nullable.GetUnderlyingType(t)}>");
+                    return (typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t)));
+                }
+
+                //Logger.log.Debug($"gives converter for value type {t}");
+                var valConv = Activator.CreateInstance(typeof(ValConv<>).MakeGenericType(t)) as IValConv;
+                return valConv.Get();
+            }
+
+            //Logger.log.Debug($"gives CustomObjectConverter<{t}>");
+            return (typeof(CustomObjectConverter<>).MakeGenericType(t));
+        }
+
+        internal interface IValConv
+        {
+            Type Get();
+        }
         internal interface IValConv<T>
         {
-            ValueConverter<T> Get();
+            Type Get();
         }
-        internal class ValConv<T> : IValConv<T> where T : struct
+        internal class ValConv<T> : IValConv, IValConv<T> where T : struct
         {
             private static readonly IValConv<T> Impl = ValConvImpls.Impl as IValConv<T> ?? new ValConv<T>();
-            public ValueConverter<T> Get() => Impl.Get();
-            ValueConverter<T> IValConv<T>.Get()
-                => new CustomValueTypeConverter<T>();
+            public Type Get() => Impl.Get();
+            Type IValConv<T>.Get()
+                => typeof(CustomValueTypeConverter<T>);
         }
         private class ValConvImpls : IValConv<char>,
             IValConv<IntPtr>, IValConv<UIntPtr>,
@@ -57,21 +116,21 @@ namespace IPA.Config.Stores.Converters
             IValConv<decimal>, IValConv<bool>
         {
             internal static readonly ValConvImpls Impl = new ValConvImpls();
-            ValueConverter<char> IValConv<char>.Get() => new CharConverter();
-            ValueConverter<long> IValConv<long>.Get() => new LongConverter();
-            ValueConverter<ulong> IValConv<ulong>.Get() => new ULongConverter();
-            ValueConverter<IntPtr> IValConv<IntPtr>.Get() => new IntPtrConverter();
-            ValueConverter<UIntPtr> IValConv<UIntPtr>.Get() => new UIntPtrConverter();
-            ValueConverter<int> IValConv<int>.Get() => new IntConverter();
-            ValueConverter<uint> IValConv<uint>.Get() => new UIntConverter();
-            ValueConverter<short> IValConv<short>.Get() => new ShortConverter();
-            ValueConverter<ushort> IValConv<ushort>.Get() => new UShortConverter();
-            ValueConverter<byte> IValConv<byte>.Get() => new ByteConverter();
-            ValueConverter<sbyte> IValConv<sbyte>.Get() => new SByteConverter();
-            ValueConverter<float> IValConv<float>.Get() => new FloatConverter();
-            ValueConverter<double> IValConv<double>.Get() => new DoubleConverter();
-            ValueConverter<decimal> IValConv<decimal>.Get() => new DecimalConverter();
-            ValueConverter<bool> IValConv<bool>.Get() => new BooleanConverter();
+            Type IValConv<char>.Get() => typeof(CharConverter);
+            Type IValConv<long>.Get() => typeof(LongConverter);
+            Type IValConv<ulong>.Get() => typeof(ULongConverter);
+            Type IValConv<IntPtr>.Get() => typeof(IntPtrConverter);
+            Type IValConv<UIntPtr>.Get() => typeof(UIntPtrConverter);
+            Type IValConv<int>.Get() => typeof(IntConverter);
+            Type IValConv<uint>.Get() => typeof(UIntConverter);
+            Type IValConv<short>.Get() => typeof(ShortConverter);
+            Type IValConv<ushort>.Get() => typeof(UShortConverter);
+            Type IValConv<byte>.Get() => typeof(ByteConverter);
+            Type IValConv<sbyte>.Get() => typeof(SByteConverter);
+            Type IValConv<float>.Get() => typeof(FloatConverter);
+            Type IValConv<double>.Get() => typeof(DoubleConverter);
+            Type IValConv<decimal>.Get() => typeof(DecimalConverter);
+            Type IValConv<bool>.Get() => typeof(BooleanConverter);
         }
     }
 
@@ -88,7 +147,7 @@ namespace IPA.Config.Stores.Converters
         public static ValueConverter<T> Default
             => defaultConverter ??= MakeDefault();
 
-        internal static ValueConverter<T> MakeDefault(bool allowValuesAndCustoms = true)
+        internal static ValueConverter<T> MakeDefault(bool returnSimpleConverters = true)
         {
             var t = typeof(T);
             //Logger.log.Debug($"Converter<{t}>.MakeDefault()");
@@ -96,57 +155,7 @@ namespace IPA.Config.Stores.Converters
             static ValueConverter<T> MakeInstOf(Type ty)
                 => Activator.CreateInstance(ty) as ValueConverter<T>;
 
-            if (t.IsEnum)
-            {
-                return MakeInstOf(typeof(CaseInsensitiveEnumConverter<>).MakeGenericType(t));
-            }
-            if (t == typeof(string))
-            {
-                //Logger.log.Debug($"gives StringConverter");
-                return new StringConverter() as ValueConverter<T>;
-            }
-            if (t.IsGenericType)
-            {
-                var generic = t.GetGenericTypeDefinition();
-                var args = t.GetGenericArguments();
-                if (generic == typeof(List<>))
-                    return MakeInstOf(typeof(ListConverter<>).MakeGenericType(args));
-                else if (generic == typeof(IList<>))
-                    return MakeInstOf(typeof(IListConverter<>).MakeGenericType(args));
-                else if (generic == typeof(Dictionary<,>) && args[0] == typeof(string))
-                    return MakeInstOf(typeof(DictionaryConverter<>).MakeGenericType(args[1]));
-                else if (generic == typeof(IDictionary<,>) && args[0] == typeof(string))
-                    return MakeInstOf(typeof(IDictionaryConverter<>).MakeGenericType(args[1]));
-#if NET4
-                else if (generic == typeof(ISet<>))
-                    return MakeInstOf(typeof(ISetConverter<>).MakeGenericType(args));
-                else if (generic == typeof(IReadOnlyDictionary<,>) && args[0] == typeof(string))
-                    return MakeInstOf(typeof(IReadOnlyDictionaryConverter<>).MakeGenericType(args[1]));
-#endif
-            }
-            var iCollBase = t.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>));
-            if (iCollBase != null && t.GetConstructor(Type.EmptyTypes) != null)
-            { // if it implements ICollection and has a default constructor
-                var valueType = iCollBase.GetGenericArguments().First();
-                return MakeInstOf(typeof(CollectionConverter<,>).MakeGenericType(valueType, t));
-            }
-            if (!allowValuesAndCustoms) return null;
-            if (t.IsValueType)
-            { // we have to do this garbo to make it accept the thing that we know is a value type at instantiation time
-                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
-                { // this is a Nullable
-                    //Logger.log.Debug($"gives NullableConverter<{Nullable.GetUnderlyingType(t)}>");
-                    return MakeInstOf(typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t)));
-                }
-
-                //Logger.log.Debug($"gives converter for value type {t}");
-                var valConv = Activator.CreateInstance(typeof(Converter.ValConv<>).MakeGenericType(t)) as Converter.IValConv<T>;
-                return valConv.Get();
-            }
-
-            //Logger.log.Debug($"gives CustomObjectConverter<{t}>");
-            return MakeInstOf(typeof(CustomObjectConverter<>).MakeGenericType(t));
+            return MakeInstOf(Converter.GetDefaultConverterType(t, returnSimpleConverters));
         }
     }
 

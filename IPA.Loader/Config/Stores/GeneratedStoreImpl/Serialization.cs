@@ -18,7 +18,7 @@ namespace IPA.Config.Stores
     internal static partial class GeneratedStoreImpl
     {
         // emit takes no args, leaves Value at top of stack
-        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, LocalAllocator GetLocal, Action<ILGenerator> thisarg)
+        private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, LocalAllocator GetLocal, Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             EmitLoad(il, member, thisarg);
 
@@ -137,7 +137,7 @@ namespace IPA.Config.Stores
                         il.Emit(OpCodes.Isinst, typeof(IGeneratedStore));
                         il.Emit(OpCodes.Brtrue_S, noCreate);
                         il.Emit(OpCodes.Stloc, stlocal);
-                        EmitCreateChildGenerated(il, member.Type, GetMethodThis);
+                        EmitCreateChildGenerated(il, member.Type, parentobj);
                         il.Emit(OpCodes.Dup);
                         il.Emit(OpCodes.Ldloc, stlocal);
                         il.Emit(OpCodes.Ldc_I4_0);
@@ -165,14 +165,14 @@ namespace IPA.Config.Stores
                         il.Emit(OpCodes.Stloc, valueLocal);
                     }
 
-                    EmitSerializeStructure(il, structure, GetLocal, il => il.Emit(OpCodes.Ldloca, valueLocal));
+                    EmitSerializeStructure(il, structure, GetLocal, il => il.Emit(OpCodes.Ldloca, valueLocal), parentobj);
                 }
             }
 
             il.MarkLabel(endSerialize);
         }
 
-        private static void EmitSerializeStructure(ILGenerator il, IEnumerable<SerializedMemberInfo> structure, LocalAllocator GetLocal, Action<ILGenerator> thisarg)
+        private static void EmitSerializeStructure(ILGenerator il, IEnumerable<SerializedMemberInfo> structure, LocalAllocator GetLocal, Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             var MapCreate = typeof(Value).GetMethod(nameof(Value.Map));
             var MapAdd = typeof(Map).GetMethod(nameof(Map.Add));
@@ -185,7 +185,7 @@ namespace IPA.Config.Stores
 
             foreach (var mem in structure)
             {
-                EmitSerializeMember(il, mem, GetLocal, thisarg);
+                EmitSerializeMember(il, mem, GetLocal, thisarg, parentobj);
                 il.Emit(OpCodes.Stloc, valueLocal);
                 il.Emit(OpCodes.Ldloc, mapLocal);
                 il.Emit(OpCodes.Ldstr, mem.Name);
