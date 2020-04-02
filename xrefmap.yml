@@ -1692,6 +1692,12 @@ references:
   commentId: T:IPA.Config.Stores.Attributes.UseConverterAttribute
   fullName: IPA.Config.Stores.Attributes.UseConverterAttribute
   nameWithType: UseConverterAttribute
+- uid: IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor
+  name: UseConverterAttribute()
+  href: api/IPA.Config.Stores.Attributes.UseConverterAttribute.html#IPA_Config_Stores_Attributes_UseConverterAttribute__ctor
+  commentId: M:IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor
+  fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.UseConverterAttribute()
+  nameWithType: UseConverterAttribute.UseConverterAttribute()
 - uid: IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor(System.Type)
   name: UseConverterAttribute(Type)
   href: api/IPA.Config.Stores.Attributes.UseConverterAttribute.html#IPA_Config_Stores_Attributes_UseConverterAttribute__ctor_System_Type_
@@ -1744,6 +1750,19 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.IsGenericConverter
   nameWithType: UseConverterAttribute.IsGenericConverter
+- uid: IPA.Config.Stores.Attributes.UseConverterAttribute.UseDefaultConverterForType
+  name: UseDefaultConverterForType
+  href: api/IPA.Config.Stores.Attributes.UseConverterAttribute.html#IPA_Config_Stores_Attributes_UseConverterAttribute_UseDefaultConverterForType
+  commentId: P:IPA.Config.Stores.Attributes.UseConverterAttribute.UseDefaultConverterForType
+  fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.UseDefaultConverterForType
+  nameWithType: UseConverterAttribute.UseDefaultConverterForType
+- uid: IPA.Config.Stores.Attributes.UseConverterAttribute.UseDefaultConverterForType*
+  name: UseDefaultConverterForType
+  href: api/IPA.Config.Stores.Attributes.UseConverterAttribute.html#IPA_Config_Stores_Attributes_UseConverterAttribute_UseDefaultConverterForType_
+  commentId: Overload:IPA.Config.Stores.Attributes.UseConverterAttribute.UseDefaultConverterForType
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.UseDefaultConverterForType
+  nameWithType: UseConverterAttribute.UseDefaultConverterForType
 - uid: IPA.Config.Stores.Converters
   name: IPA.Config.Stores.Converters
   href: api/IPA.Config.Stores.Converters.html
