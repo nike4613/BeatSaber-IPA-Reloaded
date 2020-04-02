@@ -361,7 +361,7 @@ namespace IPA.Config.Stores
 
                 var GetLocal = MakeLocalAllocator(il);
 
-                EmitSerializeStructure(il, structure, GetLocal, GetMethodThis);
+                EmitSerializeStructure(il, structure, GetLocal, GetMethodThis, GetMethodThis);
 
                 il.Emit(OpCodes.Ret);
             }

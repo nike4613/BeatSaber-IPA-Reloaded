@@ -41,6 +41,9 @@ namespace IPA.Config.Stores
             var loadObject = type.IsValueType
                 ? (Action<ILGenerator>)(il => il.Emit(OpCodes.Ldarga_S, 0))
                 : il => il.Emit(OpCodes.Ldarg_0);
+            var loadParent = type.IsValueType
+                ? (Action<ILGenerator>)(il => il.Emit(OpCodes.Ldnull))
+                : loadObject;
             {
                 var il = dynMethod.GetILGenerator();
 
@@ -67,7 +70,7 @@ namespace IPA.Config.Stores
                 }
 
                 EmitLogError(il, $"Serializing structure of {type}");
-                EmitSerializeStructure(il, structure, GetLocal, loadObject);
+                EmitSerializeStructure(il, structure, GetLocal, loadObject, loadParent);
 
                 il.Emit(OpCodes.Ret);
             }
