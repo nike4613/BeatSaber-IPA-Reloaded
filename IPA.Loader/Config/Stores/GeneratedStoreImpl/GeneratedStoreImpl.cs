@@ -16,6 +16,7 @@ using Boolean = IPA.Config.Data.Boolean;
 using System.Collections;
 using IPA.Utilities;
 using System.ComponentModel;
+using System.Collections.Concurrent;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -27,8 +28,6 @@ namespace IPA.Config.Stores
 {
     internal static partial class GeneratedStoreImpl
     {
-        private static readonly Dictionary<Type, (GeneratedStoreCreator ctor, Type type)> generatedCreators = new Dictionary<Type, (GeneratedStoreCreator ctor, Type type)>();
-
         public static T Create<T>() where T : class => (T)Create(typeof(T));
 
         public static IConfigStore Create(Type type) => Create(type, null);
@@ -41,29 +40,42 @@ namespace IPA.Config.Stores
         private static IConfigStore Create(Type type, IGeneratedStore parent)
             => GetCreator(type)(parent);
 
-        internal static GeneratedStoreCreator GetCreator(Type t)
+        private static readonly ConcurrentDictionary<Type, (ManualResetEventSlim wh, GeneratedStoreCreator ctor, Type type)> generatedCreators 
+            = new ConcurrentDictionary<Type, (ManualResetEventSlim wh, GeneratedStoreCreator ctor, Type type)>();
+
+        private static (GeneratedStoreCreator ctor, Type type) GetCreatorAndGeneratedType(Type t)
         {
+            retry:
             if (generatedCreators.TryGetValue(t, out var gen))
-                return gen.ctor;
+            {
+                if (gen.wh != null)
+                {
+                    gen.wh.Wait();
+                    goto retry; // this isn't really a good candidate for a loop
+                    // the loop condition will never be hit, and this should only
+                    //   jump back to the beginning in exceptional situations
+                }
+                return (gen.ctor, gen.type);
+            }
             else
             {
-                gen = MakeCreator(t);
-                generatedCreators.Add(t, gen);
-                return gen.ctor;
+                var wh = new ManualResetEventSlim(false);
+                var cmp = (wh, (GeneratedStoreCreator)null, (Type)null);
+                if (!generatedCreators.TryAdd(t, cmp))
+                    goto retry; // someone else beat us to the punch, retry getting their value and wait for them
+                var (ctor, type) = MakeCreator(t);
+                while (!generatedCreators.TryUpdate(t, (null, ctor, type), cmp))
+                    throw new InvalidOperationException("Somehow, multiple MakeCreators started running for the same target type!");
+                wh.Set();
+                return (ctor, type);
             }
         }
 
+        internal static GeneratedStoreCreator GetCreator(Type t)
+            => GetCreatorAndGeneratedType(t).ctor;
+
         internal static Type GetGeneratedType(Type t)
-        {
-            if (generatedCreators.TryGetValue(t, out var gen))
-                return gen.type;
-            else
-            {
-                gen = MakeCreator(t);
-                generatedCreators.Add(t, gen);
-                return gen.type;
-            }
-        }
+            => GetCreatorAndGeneratedType(t).type;
 
         internal const string GeneratedAssemblyName = "IPA.Config.Generated";
 
