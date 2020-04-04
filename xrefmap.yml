@@ -5057,6 +5057,180 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.Coroutines.WaitForTask
   nameWithType: Coroutines.WaitForTask
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2
+  name: SingleCreationValueCache<TKey, TValue>
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html
+  commentId: T:IPA.Utilities.Async.SingleCreationValueCache`2
+  name.vb: SingleCreationValueCache(Of TKey, TValue)
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue)
+  nameWithType: SingleCreationValueCache<TKey, TValue>
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue)
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor
+  name: SingleCreationValueCache()
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache()
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache()
+  nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache()
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache()
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})
+  name: SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>)
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})
+  name.vb: SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)))
+  nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>)
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)))
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEqualityComparer{`0})
+  name: SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>, IEqualityComparer<TKey>)
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___System_Collections_Generic_IEqualityComparer__0__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEqualityComparer{`0})
+  name.vb: SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEqualityComparer(Of TKey))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEqualityComparer<TKey>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)), System.Collections.Generic.IEqualityComparer(Of TKey))
+  nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>, IEqualityComparer<TKey>)
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEqualityComparer(Of TKey))
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})
+  name: SingleCreationValueCache(IEqualityComparer<TKey>)
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEqualityComparer__0__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})
+  name.vb: SingleCreationValueCache(IEqualityComparer(Of TKey))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(System.Collections.Generic.IEqualityComparer<TKey>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(System.Collections.Generic.IEqualityComparer(Of TKey))
+  nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEqualityComparer<TKey>)
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEqualityComparer(Of TKey))
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor*
+  name: SingleCreationValueCache
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache
+  nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.Clear
+  name: Clear()
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_Clear
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.Clear
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.Clear()
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).Clear()
+  nameWithType: SingleCreationValueCache<TKey, TValue>.Clear()
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).Clear()
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.Clear*
+  name: Clear
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_Clear_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.Clear
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.Clear
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).Clear
+  nameWithType: SingleCreationValueCache<TKey, TValue>.Clear
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).Clear
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.ContainsKey(`0)
+  name: ContainsKey(TKey)
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_ContainsKey__0_
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.ContainsKey(`0)
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.ContainsKey(TKey)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).ContainsKey(TKey)
+  nameWithType: SingleCreationValueCache<TKey, TValue>.ContainsKey(TKey)
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).ContainsKey(TKey)
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.ContainsKey*
+  name: ContainsKey
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_ContainsKey_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.ContainsKey
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.ContainsKey
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).ContainsKey
+  nameWithType: SingleCreationValueCache<TKey, TValue>.ContainsKey
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).ContainsKey
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.Count
+  name: Count
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_Count
+  commentId: P:IPA.Utilities.Async.SingleCreationValueCache`2.Count
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.Count
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).Count
+  nameWithType: SingleCreationValueCache<TKey, TValue>.Count
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).Count
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.Count*
+  name: Count
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_Count_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.Count
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.Count
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).Count
+  nameWithType: SingleCreationValueCache<TKey, TValue>.Count
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).Count
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,System.Func{`0,`1})
+  name: GetOrAdd(TKey, Func<TKey, TValue>)
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd__0_System_Func__0__1__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,System.Func{`0,`1})
+  name.vb: GetOrAdd(TKey, Func(Of TKey, TValue))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.GetOrAdd(TKey, System.Func<TKey, TValue>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).GetOrAdd(TKey, System.Func(Of TKey, TValue))
+  nameWithType: SingleCreationValueCache<TKey, TValue>.GetOrAdd(TKey, Func<TKey, TValue>)
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).GetOrAdd(TKey, Func(Of TKey, TValue))
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd*
+  name: GetOrAdd
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.GetOrAdd
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).GetOrAdd
+  nameWithType: SingleCreationValueCache<TKey, TValue>.GetOrAdd
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).GetOrAdd
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.IsEmpty
+  name: IsEmpty
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_IsEmpty
+  commentId: P:IPA.Utilities.Async.SingleCreationValueCache`2.IsEmpty
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.IsEmpty
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).IsEmpty
+  nameWithType: SingleCreationValueCache<TKey, TValue>.IsEmpty
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).IsEmpty
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.IsEmpty*
+  name: IsEmpty
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_IsEmpty_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.IsEmpty
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.IsEmpty
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).IsEmpty
+  nameWithType: SingleCreationValueCache<TKey, TValue>.IsEmpty
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).IsEmpty
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.ToArray
+  name: ToArray()
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_ToArray
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.ToArray
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.ToArray()
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).ToArray()
+  nameWithType: SingleCreationValueCache<TKey, TValue>.ToArray()
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).ToArray()
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.ToArray*
+  name: ToArray
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_ToArray_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.ToArray
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.ToArray
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).ToArray
+  nameWithType: SingleCreationValueCache<TKey, TValue>.ToArray
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).ToArray
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.TryGetValue(`0,`1@)
+  name: TryGetValue(TKey, out TValue)
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_TryGetValue__0__1__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.TryGetValue(`0,`1@)
+  name.vb: TryGetValue(TKey, ByRef TValue)
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.TryGetValue(TKey, out TValue)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).TryGetValue(TKey, ByRef TValue)
+  nameWithType: SingleCreationValueCache<TKey, TValue>.TryGetValue(TKey, out TValue)
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).TryGetValue(TKey, ByRef TValue)
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.TryGetValue*
+  name: TryGetValue
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_TryGetValue_
+  commentId: Overload:IPA.Utilities.Async.SingleCreationValueCache`2.TryGetValue
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.TryGetValue
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).TryGetValue
+  nameWithType: SingleCreationValueCache<TKey, TValue>.TryGetValue
+  nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).TryGetValue
 - uid: IPA.Utilities.Async.SingleThreadTaskScheduler
   name: SingleThreadTaskScheduler
   href: api/IPA.Utilities.Async.SingleThreadTaskScheduler.html
