@@ -88,6 +88,8 @@ namespace IPA.Loader.Features
         /// <value><see langword="true"/> if this <see cref="Feature"/> will be stored on the plugin metadata, <see langword="false"/> otherwise</value>
         protected internal virtual bool StoreOnPlugin => true;
 
+        // TODO: rework features to take arguments as JSON objects
+
         static Feature()
         {
             Reset();

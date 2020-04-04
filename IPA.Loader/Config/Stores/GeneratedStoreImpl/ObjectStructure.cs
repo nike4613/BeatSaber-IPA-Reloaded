@@ -2,6 +2,7 @@
 using IPA.Config.Stores.Converters;
 using IPA.Logging;
 using IPA.Utilities;
+using IPA.Utilities.Async;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,14 +128,11 @@ namespace IPA.Config.Stores
             return true;
         }
 
-        private static readonly Dictionary<Type, SerializedMemberInfo[]> objectStructureCache = new Dictionary<Type, SerializedMemberInfo[]>();
+        private static readonly SingleCreationValueCache<Type, SerializedMemberInfo[]> objectStructureCache 
+            = new SingleCreationValueCache<Type, SerializedMemberInfo[]>();
 
         private static IEnumerable<SerializedMemberInfo> ReadObjectMembers(Type type)
-        {
-            if (!objectStructureCache.TryGetValue(type, out var structure))
-                objectStructureCache.Add(type, structure = ReadObjectMembersInternal(type).ToArray());
-            return structure;
-        }
+            => objectStructureCache.GetOrAdd(type, t => ReadObjectMembersInternal(type).ToArray());
 
         private static IEnumerable<SerializedMemberInfo> ReadObjectMembersInternal(Type type)
         {
