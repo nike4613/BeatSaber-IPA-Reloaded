@@ -29,7 +29,8 @@ namespace IPA.Loader
     /// <summary>
     /// A type to manage the loading of plugins.
     /// </summary>
-    internal class PluginLoader
+
+    internal partial class PluginLoader
     {
         internal static Task LoadTask() =>
             TaskEx.Run(() =>
@@ -112,9 +113,9 @@ namespace IPA.Loader
                 {
                     var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
                     {
-                       ReadingMode = ReadingMode.Immediate,
-                       ReadWrite = false,
-                       AssemblyResolver = new CecilLibLoader() 
+                        ReadingMode = ReadingMode.Immediate,
+                        ReadWrite = false,
+                        AssemblyResolver = new CecilLibLoader()
                     }).MainModule;
 
                     string pluginNs = "";
@@ -287,29 +288,151 @@ namespace IPA.Loader
                 }
             }
         }
+    }
 
-        internal enum Reason
+    /// <summary>
+    /// An enum that represents several categories of ignore reasons that the loader may encounter.
+    /// </summary>
+    /// <seealso cref="IgnoreReason"/>
+    public enum Reason
+    {
+        /// <summary>
+        /// An error was thrown either loading plugin information fomr disk, or when initializing the plugin.
+        /// </summary>
+        /// <remarks>
+        /// When this is the set <see cref="Reason"/> in an <see cref="IgnoreReason"/> structure, the member
+        /// <see cref="IgnoreReason.Error"/> will contain the thrown exception.
+        /// </remarks>
+        Error, 
+        /// <summary>
+        /// The plugin this reason is associated with has the same ID as another plugin whose information was
+        /// already loaded.
+        /// </summary>
+        /// <remarks>
+        /// When this is the set <see cref="Reason"/> in an <see cref="IgnoreReason"/> structure, the member
+        /// <see cref="IgnoreReason.RelatedTo"/> will contain the metadata of the already loaded plugin.
+        /// </remarks>
+        Duplicate,
+        /// <summary>
+        /// The plugin this reason is associated with conflicts with another already loaded plugin.
+        /// </summary>
+        /// <remarks>
+        /// When this is the set <see cref="Reason"/> in an <see cref="IgnoreReason"/> structure, the member
+        /// <see cref="IgnoreReason.RelatedTo"/> will contain the metadata of the plugin it conflicts with.
+        /// </remarks>
+        Conflict,
+        /// <summary>
+        /// The plugin this reason is assiciated with is missing a dependency.
+        /// </summary>
+        /// <remarks>
+        /// Since this is only given when a dependency is missing, <see cref="IgnoreReason.RelatedTo"/> will
+        /// not be set.
+        /// </remarks>
+        Dependency,
+        /// <summary>
+        /// The plugin this reason is associated with was released for a game update, but is still considered
+        /// present for the purposes of updating.
+        /// </summary>
+        Released, 
+        /// <summary>
+        /// The plugin this reason is associated with was denied from loading by a <see cref="Features.Feature"/>
+        /// that it marks.
+        /// </summary>
+        Feature, 
+        /// <summary>
+        /// The plugin this reason is assoicated with is unsupported.
+        /// </summary>
+        /// <remarks>
+        /// Currently, there is no path in the loader that emits this <see cref="Reason"/>, however there may
+        /// be in the future.
+        /// </remarks>
+        Unsupported,
+        /// <summary>
+        /// One of the files that a plugin declared in its manifest is missing.
+        /// </summary>
+        MissingFiles
+    }
+    /// <summary>
+    /// A structure describing the reason that a plugin was ignored.
+    /// </summary>
+    public struct IgnoreReason
+    {
+        /// <summary>
+        /// Gets the ignore reason, as represented by the <see cref="Loader.Reason"/> enum.
+        /// </summary>
+        public Reason Reason { get; }
+        /// <summary>
+        /// Gets the textual description of the particular ignore reason. This will typically
+        /// include details about why the plugin was ignored, if it is present.
+        /// </summary>
+        public string ReasonText { get; internal set; }
+        /// <summary>
+        /// Gets the <see cref="Exception"/> that caused this plugin to be ignored, if any.
+        /// </summary>
+        public Exception Error { get; internal set; }
+        /// <summary>
+        /// Gets the metadata of the plugin that this ignore was related to, if any.
+        /// </summary>
+        public PluginMetadata RelatedTo { get; internal set; }
+        /// <summary>
+        /// Initializes an <see cref="IgnoreReason"/> with the provided data.
+        /// </summary>
+        /// <param name="reason">the <see cref="Loader.Reason"/> enum value that describes this reason</param>
+        /// <param name="reasonText">the textual description of this ignore reason, if any</param>
+        /// <param name="error">the <see cref="Exception"/> that caused this <see cref="IgnoreReason"/>, if any</param>
+        /// <param name="relatedTo">the <see cref="PluginMetadata"/> this reason is related to, if any</param>
+        public IgnoreReason(Reason reason, string reasonText = null, Exception error = null, PluginMetadata relatedTo = null)
         {
-            Error, Duplicate, Conflict, Dependency,
-            Released, Feature, Unsupported,
-            MissingFiles
+            Reason = reason;
+            ReasonText = reasonText;
+            Error = error;
+            RelatedTo = relatedTo;
         }
-        internal struct IgnoreReason
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+            => obj is IgnoreReason ir && Equals(ir);
+        /// <summary>
+        /// Compares this <see cref="IgnoreReason"/> with <paramref name="other"/> for equality.
+        /// </summary>
+        /// <param name="other">the reason to compare to</param>
+        /// <returns><see langword="true"/> if the two reasons compare equal, <see langword="false"/> otherwise</returns>
+        public bool Equals(IgnoreReason other)
+            => Reason == other.Reason && ReasonText == other.ReasonText
+            && Error == other.Error && RelatedTo == other.RelatedTo;
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
         {
-
-            public Reason Reason { get; }
-            public string ReasonText { get; set; }
-            public Exception Error { get; set; }
-            public PluginMetadata RelatedTo { get; set; }
-            public IgnoreReason(Reason reason)
-            {
-                Reason = reason;
-                ReasonText = null;
-                Error = null;
-                RelatedTo = null;
-            }
+            int hashCode = 778404373;
+            hashCode = hashCode * -1521134295 + Reason.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ReasonText);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Exception>.Default.GetHashCode(Error);
+            hashCode = hashCode * -1521134295 + EqualityComparer<PluginMetadata>.Default.GetHashCode(RelatedTo);
+            return hashCode;
         }
 
+        /// <summary>
+        /// Checks if two <see cref="IgnoreReason"/>s are equal.
+        /// </summary>
+        /// <param name="left">the first <see cref="IgnoreReason"/> to compare</param>
+        /// <param name="right">the second <see cref="IgnoreReason"/> to compare</param>
+        /// <returns><see langword="true"/> if the two reasons compare equal, <see langword="false"/> otherwise</returns>
+        public static bool operator ==(IgnoreReason left, IgnoreReason right)
+            => left.Equals(right);
+
+        /// <summary>
+        /// Checks if two <see cref="IgnoreReason"/>s are not equal.
+        /// </summary>
+        /// <param name="left">the first <see cref="IgnoreReason"/> to compare</param>
+        /// <param name="right">the second <see cref="IgnoreReason"/> to compare</param>
+        /// <returns><see langword="true"/> if the two reasons are not equal, <see langword="false"/> otherwise</returns>
+        public static bool operator !=(IgnoreReason left, IgnoreReason right)
+            => !(left == right);
+    }
+
+    internal partial class PluginLoader 
+    { 
         // keep track of these for the updater; it should still be able to update mods not loaded
         // the thing -> the reason
         internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
