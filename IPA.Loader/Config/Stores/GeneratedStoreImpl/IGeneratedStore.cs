@@ -177,7 +177,7 @@ namespace IPA.Config.Stores
             {
                 Logger.config.Debug($"Generated impl ReadFrom {generated.GetType()}");
                 var values = provider.Load();
-                Logger.config.Debug($"Read {values}");
+                //Logger.config.Debug($"Read {values}");
                 generated.Deserialize(values);
 
                 using var transaction = generated.ChangeTransaction();
@@ -190,7 +190,7 @@ namespace IPA.Config.Stores
             {
                 Logger.config.Debug($"Generated impl WriteTo {generated.GetType()}");
                 var values = generated.Serialize();
-                Logger.config.Debug($"Serialized {values}");
+                //Logger.config.Debug($"Serialized {values}");
                 provider.Store(values);
             }
         }
