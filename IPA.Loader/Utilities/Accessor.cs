@@ -1,8 +1,11 @@
-﻿using System;
+﻿using IPA.Utilities.Async;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -24,9 +27,6 @@ namespace IPA.Utilities
         /// <param name="obj">the object to access the field of</param>
         /// <returns>a reference to the field's value</returns>
         public delegate ref U Accessor(ref T obj);
-
-        // field name -> accessor
-        private static readonly Dictionary<string, Accessor> accessors = new Dictionary<string, Accessor>();
 
         private static Accessor MakeAccessor(string fieldName)
         {
@@ -51,6 +51,9 @@ namespace IPA.Utilities
             return (Accessor)dyn.CreateDelegate(typeof(Accessor));
         }
 
+        // field name -> accessor
+        private static readonly SingleCreationValueCache<string, Accessor> accessors = new SingleCreationValueCache<string, Accessor>();
+
         /// <summary>
         /// Gets an <see cref="Accessor"/> for the field named <paramref name="name"/> on <typeparamref name="T"/>.
         /// </summary>
@@ -58,11 +61,7 @@ namespace IPA.Utilities
         /// <returns>an accessor for the field</returns>
         /// <exception cref="MissingFieldException">if the field does not exist on <typeparamref name="T"/></exception>
         public static Accessor GetAccessor(string name)
-        {
-            if (!accessors.TryGetValue(name, out var accessor))
-                accessors.Add(name, accessor = MakeAccessor(name));
-            return accessor;
-        }
+            => accessors.GetOrAdd(name, MakeAccessor);
 
         /// <summary>
         /// Accesses a field for an object by name.
@@ -149,8 +148,6 @@ namespace IPA.Utilities
         /// <param name="val">the new property value</param>
         public delegate void Setter(ref T obj, U val);
 
-        private static readonly Dictionary<string, (Getter get, Setter set)> props = new Dictionary<string, (Getter get, Setter set)>();
-
         private static (Getter, Setter) MakeAccessors(string propName)
         {
             var prop = typeof(T).GetProperty(propName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
@@ -201,12 +198,11 @@ namespace IPA.Utilities
             return (getter, setter);
         }
 
+        private static readonly SingleCreationValueCache<string, (Getter get, Setter set)> props 
+            = new SingleCreationValueCache<string, (Getter get, Setter set)>();
+
         private static (Getter get, Setter set) GetAccessors(string propName)
-        {
-            if (!props.TryGetValue(propName, out var access))
-                props.Add(propName, access = MakeAccessors(propName));
-            return access;
-        }
+            => props.GetOrAdd(propName, MakeAccessors);
 
         /// <summary>
         /// Gets a <see cref="Getter"/> for the property identified by <paramref name="name"/>.
@@ -289,8 +285,6 @@ namespace IPA.Utilities
     /// <typeparam name="TDelegate">the delegate type to create, and to use as a signature to search for</typeparam>
     public static class MethodAccessor<T, TDelegate> where TDelegate : Delegate
     {
-        private static readonly Dictionary<string, TDelegate> methods = new Dictionary<string, TDelegate>();
-
         static MethodAccessor()
         {
             // ensure that first argument of delegate type is valid
@@ -325,6 +319,8 @@ namespace IPA.Utilities
             return (TDelegate)Delegate.CreateDelegate(AccessorDelegateInfo<TDelegate>.Type, method, true);
         }
 
+        private static readonly SingleCreationValueCache<string, TDelegate> methods = new SingleCreationValueCache<string, TDelegate>();
+
         /// <summary>
         /// Gets a delegate to the named method with the signature specified by <typeparamref name="TDelegate"/>.
         /// </summary>
@@ -333,11 +329,7 @@ namespace IPA.Utilities
         /// <exception cref="MissingMethodException">if <paramref name="name"/> does not represent the name of a method with the given signature</exception>
         /// <exception cref="ArgumentException">if the method found returns a type incompatable with the return type of <typeparamref name="TDelegate"/></exception>
         public static TDelegate GetDelegate(string name)
-        {
-            if (!methods.TryGetValue(name, out var del))
-                methods.Add(name, del = MakeDelegate(name));
-            return del;
-        }
+            => methods.GetOrAdd(name, MakeDelegate);
     }
 
 }
