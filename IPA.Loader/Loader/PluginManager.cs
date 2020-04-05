@@ -82,6 +82,8 @@ namespace IPA.Loader
 
         internal static Task CommitTransaction(StateTransitionTransaction transaction)
         {
+            if (!transaction.HasStateChanged) return TaskEx.WhenAll();
+
             if (!UnityGame.OnMainThread)
                 return UnityMainThreadTaskScheduler.Factory.StartNew(() => CommitTransaction(transaction)).Unwrap();
 
