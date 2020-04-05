@@ -1,7 +1,7 @@
 version: 'BSIPA-{branch}-{build}'
 
 environment:
-  bsipa_version: '4.0.4'
+  bsipa_version: '4.0.5'
   gh_token:
     secure: E42gl/yepETuoLSwbJZ1GmEIPK6cCJu6zkd59NA21XiICtEV6COOLW7aehi1tcVU
 
