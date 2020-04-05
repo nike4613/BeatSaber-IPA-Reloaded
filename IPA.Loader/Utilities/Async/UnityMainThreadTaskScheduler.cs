@@ -180,7 +180,7 @@ namespace IPA.Utilities.Async
         }
 
         /// <summary>
-        /// Queues a given <see cref="Task"/> to this scheduler. The <see cref="Task"/> <i>must></i> be
+        /// Queues a given <see cref="Task"/> to this scheduler. The <see cref="Task"/> <i>must</i> be
         /// scheduled for this <see cref="TaskScheduler"/> by the runtime.
         /// </summary>
         /// <param name="task">the <see cref="Task"/> to queue</param>
@@ -195,12 +195,8 @@ namespace IPA.Utilities.Async
         }
 
         /// <summary>
-        /// Rejects any attempts to execute a task inline.
+        /// Runs the task inline if the current thread is the Unity main thread.
         /// </summary>
-        /// <remarks>
-        /// This task scheduler <i>always</i> runs its tasks on the thread that it manages, therefore it doesn't
-        /// make sense to run it inline.
-        /// </remarks>
         /// <param name="task">the task to attempt to execute</param>
         /// <param name="taskWasPreviouslyQueued">whether the task was previously queued to this scheduler</param>
         /// <returns><see langword="false"/></returns>

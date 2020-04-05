@@ -208,8 +208,12 @@ namespace IPA.Loader
 
                     var disabled = new Dictionary<PluginExecutor, Task>();
                     result = TaskEx.WhenAll(disableStructure.Select(d => Disable(d, disabled)));
-                    OnPluginsStateChanged?.Invoke(result);
                 }
+
+                OnAnyPluginsStateChanged?.Invoke(result, toEnable, toDisable);
+                // if there are any that are capable of enabling/disabling at runtime, run event handler
+                if (toEnable.Concat(toDisable).Any(m => m.RuntimeOptions == RuntimeOptions.DynamicInit))
+                    OnPluginsStateChanged?.Invoke(result);
 
                 //DisabledConfig.Instance.Changed();
                 // changed is handled by transaction
@@ -250,23 +254,38 @@ namespace IPA.Loader
         /// <param name="plugin">the plugin that was disabled</param>
         /// <param name="needsRestart">whether it needs a restart to take effect</param>
         public delegate void PluginDisableDelegate(PluginMetadata plugin, bool needsRestart);
+        /// <summary>
+        /// A delegate representing a state change event for any plugin.
+        /// </summary>
+        /// <param name="changeTask">the <see cref="Task"/> representing the change</param>
+        /// <param name="enabled">the plugins that were enabled in the change</param>
+        /// <param name="disabled">the plugins that were disabled in the change</param>
+        public delegate void OnAnyPluginsStateChangedDelegate(Task changeTask, IEnumerable<PluginMetadata> enabled, IEnumerable<PluginMetadata> disabled);
 
         /// <summary>
-        /// Called whenever a plugin is enabled.
+        /// Called whenever a plugin is enabled, before the plugin in question is enabled.
         /// </summary>
         public static event PluginEnableDelegate PluginEnabled;
         /// <summary>
-        /// Called whenever a plugin is disabled.
+        /// Called whenever a plugin is disabled, before the plugin in question is enabled.
         /// </summary>
         public static event PluginDisableDelegate PluginDisabled;
         /// <summary>
-        /// Called whenever any plugins have their state changed with the <see cref="Task"/> representing that state change.
+        /// Called whenever any plugins have their state changed at runtime with the <see cref="Task"/> representing that state change.
         /// </summary>
         /// <remarks>
         /// Note that this is called on the Unity main thread, and cannot therefore block, as the <see cref="Task"/>
         /// provided represents operations that also run on the Unity main thread.
         /// </remarks>
         public static event Action<Task> OnPluginsStateChanged;
+        /// <summary>
+        /// Called whenever any plugins, regardless of whether or not their change occurs during runtime, have their state changed.
+        /// </summary>
+        /// <remarks>
+        /// Note that this is called on the Unity main thread, and cannot therefore block, as the <see cref="Task"/>
+        /// provided represents operations that also run on the Unity main thread.
+        /// </remarks>
+        public static event OnAnyPluginsStateChangedDelegate OnAnyPluginsStateChanged;
 
         /// <summary>
         /// Gets a list of all enabled BSIPA plugins. Use <see cref="EnabledPlugins"/> instead of this.
