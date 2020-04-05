@@ -1,0 +1,375 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PluginSubLogPrinter
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PluginSubLogPrinter
+   ">
+    <meta name="generator" content="docfx 2.48.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IPA.Logging.Printers.PluginSubLogPrinter">
+  
+  
+  <h1 id="IPA_Logging_Printers_PluginSubLogPrinter" data-uid="IPA.Logging.Printers.PluginSubLogPrinter" class="text-break">Class PluginSubLogPrinter
+  </h1>
+  <div class="markdown level0 summary"><p>Prints log messages to the file specified by the name.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="IPA.Logging.LogPrinter.html">LogPrinter</a></div>
+    <div class="level2"><a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html">GZFilePrinter</a></div>
+    <div class="level3"><span class="xref">PluginSubLogPrinter</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html#IPA_Logging_Printers_GZFilePrinter_FileWriter">GZFilePrinter.FileWriter</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html#IPA_Logging_Printers_GZFilePrinter_StartPrint">GZFilePrinter.StartPrint()</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html#IPA_Logging_Printers_GZFilePrinter_EndPrint">GZFilePrinter.EndPrint()</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html#IPA_Logging_Printers_GZFilePrinter_Dispose">GZFilePrinter.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html#IPA_Logging_Printers_GZFilePrinter_Dispose_System_Boolean_">GZFilePrinter.Dispose(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Logging.Printers.html">IPA.Logging.Printers</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Logging_Printers_PluginSubLogPrinter_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class PluginSubLogPrinter : GZFilePrinter, IDisposable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/docs/override/new?filename=IPA_Logging_Printers_PluginSubLogPrinter__ctor_System_String_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.PluginSubLogPrinter.%23ctor(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/IPA.Loader/Logging/Printers/PluginSubLogPrinter.cs/#L41">View Source</a>
+  </span>
+  <a id="IPA_Logging_Printers_PluginSubLogPrinter__ctor_" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.#ctor*"></a>
+  <h4 id="IPA_Logging_Printers_PluginSubLogPrinter__ctor_System_String_System_String_" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.#ctor(System.String,System.String)">PluginSubLogPrinter(String, String)</h4>
+  <div class="markdown level1 summary"><p>Creates a new printer with the given name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PluginSubLogPrinter(string mainname, string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">mainname</span></td>
+        <td><p>the name of the main logger</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>the name of the logger</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/docs/override/new?filename=IPA_Logging_Printers_PluginSubLogPrinter_Filter.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.PluginSubLogPrinter.Filter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/IPA.Loader/Logging/Printers/PluginSubLogPrinter.cs/#L19">View Source</a>
+  </span>
+  <a id="IPA_Logging_Printers_PluginSubLogPrinter_Filter_" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.Filter*"></a>
+  <h4 id="IPA_Logging_Printers_PluginSubLogPrinter_Filter" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.Filter">Filter</h4>
+  <div class="markdown level1 summary"><p>Provides a filter for this specific printer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Logger.LogLevel Filter { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.Logger.LogLevel.html">Logger.LogLevel</a></td>
+        <td><p>the filter for this printer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Filter">LogPrinter.Filter</a></div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/docs/override/new?filename=IPA_Logging_Printers_PluginSubLogPrinter_GetFileInfo.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.PluginSubLogPrinter.GetFileInfo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/IPA.Loader/Logging/Printers/PluginSubLogPrinter.cs/#L28">View Source</a>
+  </span>
+  <a id="IPA_Logging_Printers_PluginSubLogPrinter_GetFileInfo_" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.GetFileInfo*"></a>
+  <h4 id="IPA_Logging_Printers_PluginSubLogPrinter_GetFileInfo" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.GetFileInfo">GetFileInfo()</h4>
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a> for the target file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override FileInfo GetFileInfo()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a></td>
+        <td><p>the file to write to</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="IPA.Logging.Printers.GZFilePrinter.html#IPA_Logging_Printers_GZFilePrinter_GetFileInfo">GZFilePrinter.GetFileInfo()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/docs/override/new?filename=IPA_Logging_Printers_PluginSubLogPrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level%2CSystem.DateTime%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/IPA.Loader/Logging/Printers/PluginSubLogPrinter.cs/#L54">View Source</a>
+  </span>
+  <a id="IPA_Logging_Printers_PluginSubLogPrinter_Print_" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.Print*"></a>
+  <h4 id="IPA_Logging_Printers_PluginSubLogPrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_" data-uid="IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)">Print(Logger.Level, DateTime, String, String)</h4>
+  <div class="markdown level1 summary"><p>Prints an entry to the associated file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Print(Logger.Level level, DateTime time, string logName, string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.Logger.Level.html">Logger.Level</a></td>
+        <td><span class="parametername">level</span></td>
+        <td><p>the <a class="xref" href="IPA.Logging.Logger.Level.html">Logger.Level</a> of the message</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetime">DateTime</a></td>
+        <td><span class="parametername">time</span></td>
+        <td><p>the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetime">DateTime</a> the message was recorded at</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">logName</span></td>
+        <td><p>the name of the log that sent the message</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to print</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_">LogPrinter.Print(Logger.Level, DateTime, String, String)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/docs/override/new?filename=IPA_Logging_Printers_PluginSubLogPrinter.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.PluginSubLogPrinter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/d8c4f8b1e9c696eefe99d38ed6e8b03ad9098914/IPA.Loader/Logging/Printers/PluginSubLogPrinter.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
