@@ -85,7 +85,11 @@ namespace IPA.Loader
             if (!transaction.HasStateChanged) return TaskEx.WhenAll();
 
             if (!UnityGame.OnMainThread)
-                return UnityMainThreadTaskScheduler.Factory.StartNew(() => CommitTransaction(transaction)).Unwrap();
+            {
+                var transactionCopy = transaction.Clone();
+                transaction.Dispose();
+                return UnityMainThreadTaskScheduler.Factory.StartNew(() => CommitTransaction(transactionCopy)).Unwrap();
+            }
 
             lock (commitTransactionLockObject)
             {
@@ -94,6 +98,7 @@ namespace IPA.Loader
                  || transaction.CurrentlyDisabled.Except(DisabledPlugins)
                                .Concat(DisabledPlugins.Except(transaction.CurrentlyDisabled)).Any())
                 { // ensure that the transaction's base state reflects the current state, otherwise throw
+                    transaction.Dispose();
                     throw new InvalidOperationException("Transaction no longer resembles the current state of plugins");
                 }
 
