@@ -51,6 +51,8 @@ namespace IPA.Loader
                 Reset = false;
             }
 
+            if (!PluginLoader.IsFirstLoadComplete) return; // if the first load isn't complete, skip all of this
+
             var referToState = unchecked(++updateState);
             var copy = DisabledModIds.ToArray();
             if (disableUpdateTask == null || disableUpdateTask.IsCompleted)
@@ -83,6 +85,8 @@ namespace IPA.Loader
 
                 try
                 {
+                    if (transaction.WillNeedRestart)
+                        Logger.loader.Warn("Runtime disabled config reload will need game restart to apply");
                     return transaction.Commit().ContinueWith(t =>
                     {
                         if (t.IsFaulted)
