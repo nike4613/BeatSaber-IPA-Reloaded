@@ -159,7 +159,6 @@ namespace IPA.Loader
                 }
 
                 var result = TaskEx.WhenAll();
-                if (toDisable.Any())
                 {
                     // then disable the mods that need to be
                     static DisableExecutor MakeDisableExec(PluginExecutor e)
@@ -209,7 +208,7 @@ namespace IPA.Loader
 
                     var disabled = new Dictionary<PluginExecutor, Task>();
                     result = TaskEx.WhenAll(disableStructure.Select(d => Disable(d, disabled)));
-                    OnPluginsDisabled?.Invoke(result);
+                    OnPluginsStateChanged?.Invoke(result);
                 }
 
                 //DisabledConfig.Instance.Changed();
@@ -261,13 +260,13 @@ namespace IPA.Loader
         /// </summary>
         public static event PluginDisableDelegate PluginDisabled;
         /// <summary>
-        /// Called whenever any plugins are disabled with the <see cref="Task"/> representing them being disabled.
+        /// Called whenever any plugins have their state changed with the <see cref="Task"/> representing that state change.
         /// </summary>
         /// <remarks>
         /// Note that this is called on the Unity main thread, and cannot therefore block, as the <see cref="Task"/>
         /// provided represents operations that also run on the Unity main thread.
         /// </remarks>
-        public static event Action<Task> OnPluginsDisabled;
+        public static event Action<Task> OnPluginsStateChanged;
 
         /// <summary>
         /// Gets a list of all enabled BSIPA plugins. Use <see cref="EnabledPlugins"/> instead of this.
