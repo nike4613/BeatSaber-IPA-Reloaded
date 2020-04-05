@@ -76,7 +76,7 @@ namespace IPA.Loader
         /// </summary>
         /// <returns>a new <see cref="StateTransitionTransaction"/> that captures the current state of loaded mods</returns>
         public static StateTransitionTransaction PluginStateTransaction()
-            => new StateTransitionTransaction(AllPlugins, DisabledPlugins);
+            => new StateTransitionTransaction(EnabledPlugins, DisabledPlugins);
 
         private static readonly object commitTransactionLockObject = new object();
 
@@ -87,8 +87,8 @@ namespace IPA.Loader
 
             lock (commitTransactionLockObject)
             {
-                if (transaction.CurrentlyEnabled.Except(AllPlugins)
-                               .Concat(AllPlugins.Except(transaction.CurrentlyEnabled)).Any()
+                if (transaction.CurrentlyEnabled.Except(EnabledPlugins)
+                               .Concat(EnabledPlugins.Except(transaction.CurrentlyEnabled)).Any()
                  || transaction.CurrentlyDisabled.Except(DisabledPlugins)
                                .Concat(DisabledPlugins.Except(transaction.CurrentlyDisabled)).Any())
                 { // ensure that the transaction's base state reflects the current state, otherwise throw
@@ -123,7 +123,7 @@ namespace IPA.Loader
                             if (executor != null)
                                 runtimeDisabledPlugins.Remove(executor);
                             else
-                                executor = PluginLoader.InitPlugin(meta, AllPlugins);
+                                executor = PluginLoader.InitPlugin(meta, EnabledPlugins);
 
                             if (executor == null) continue; // couldn't initialize, skip to next
                         }
@@ -226,12 +226,6 @@ namespace IPA.Loader
         /// <returns><see langword="true"/> if the plugin is enabled, <see langword="false"/> otherwise.</returns>
         public static bool IsEnabled(PluginMetadata meta) => BSMetas.Any(p => p.Metadata == meta);
 
-        /// <summary>
-        /// Gets a list of disabled BSIPA plugins.
-        /// </summary>
-        /// <value>a collection of all disabled plugins as <see cref="PluginMetadata"/></value>
-        public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins;
-        private static readonly HashSet<PluginExecutor> runtimeDisabledPlugins = new HashSet<PluginExecutor>();
 
         /// <summary>
         /// An invoker for the <see cref="PluginEnabled"/> event.
@@ -256,16 +250,28 @@ namespace IPA.Loader
         public static event PluginDisableDelegate PluginDisabled;
 
         /// <summary>
-        /// Gets a list of all enabled BSIPA plugins.
+        /// Gets a list of all enabled BSIPA plugins. Use <see cref="EnabledPlugins"/> instead of this.
         /// </summary>
         /// <value>a collection of all enabled plugins as <see cref="PluginMetadata"/>s</value>
-        public static IEnumerable<PluginMetadata> AllPlugins => BSMetas.Select(p => p.Metadata);
+        [Obsolete("This is an old name that no longer accurately represents its value. Use EnabledPlugins instead.")]
+        public static IEnumerable<PluginMetadata> AllPlugins => EnabledPlugins;
+        /// <summary>
+        /// Gets a collection of all enabled plugins, as represented by <see cref="PluginMetadata"/>.
+        /// </summary>
+        /// <value>a collection of all enabled plugins</value>
+        public static IEnumerable<PluginMetadata> EnabledPlugins => BSMetas.Select(p => p.Metadata);
+        /// <summary>
+        /// Gets a list of disabled BSIPA plugins.
+        /// </summary>
+        /// <value>a collection of all disabled plugins as <see cref="PluginMetadata"/></value>
+        public static IEnumerable<PluginMetadata> DisabledPlugins => PluginLoader.DisabledPlugins;
+        private static readonly HashSet<PluginExecutor> runtimeDisabledPlugins = new HashSet<PluginExecutor>();
 
         /// <summary>
         /// An <see cref="IEnumerable{T}"/> of old IPA plugins.
         /// </summary>
         /// <value>all legacy plugin instances</value>
-        [Obsolete("I mean, IPlugin shouldn't be used, so why should this? Not renaming to extend support for old plugins.")]
+        [Obsolete("This exists only to provide support for legacy IPA plugins based on the IPlugin interface.")]
         public static IEnumerable<Old.IPlugin> Plugins => _ipaPlugins;
         private static List<Old.IPlugin> _ipaPlugins;
 

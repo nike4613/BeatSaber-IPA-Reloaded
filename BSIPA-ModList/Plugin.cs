@@ -77,7 +77,7 @@ namespace BSIPA_ModList
 
         private static IEnumerator LoadPluginIcons()
         {
-            foreach (var p in PluginManager.AllPlugins)
+            foreach (var p in PluginManager.EnabledPlugins)
             {
                 yield return null;
                 Logger.log.Debug($"Loading icon for {p.Metadata.Name}");
