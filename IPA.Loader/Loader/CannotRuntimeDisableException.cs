@@ -22,6 +22,13 @@ namespace IPA.Loader
         /// <param name="plugin">the plugin that cannot be disabled</param>
         public CannotRuntimeDisableException(PluginMetadata plugin) : base($"Cannot runtime disable plugin \"{plugin.Name}\" ({plugin.Id})")
             => Plugin = plugin;
+        /// <summary>
+        /// Creats an exception with the given plugin metadata and message information.
+        /// </summary>
+        /// <param name="plugin">the plugin that cannot be disabled</param>
+        /// <param name="message">the message to associate with it</param>
+        public CannotRuntimeDisableException(PluginMetadata plugin, string message) : base($"{message} \"{plugin.Name}\" ({plugin.Id})")
+            => Plugin = plugin;
 
         /// <summary>
         /// Creates an exception from a serialization context. Not currently implemented.
