@@ -3572,6 +3572,18 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.IsEnabled
   nameWithType: PluginManager.IsEnabled
+- uid: IPA.Loader.PluginManager.OnAnyPluginsStateChanged
+  name: OnAnyPluginsStateChanged
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_OnAnyPluginsStateChanged
+  commentId: E:IPA.Loader.PluginManager.OnAnyPluginsStateChanged
+  fullName: IPA.Loader.PluginManager.OnAnyPluginsStateChanged
+  nameWithType: PluginManager.OnAnyPluginsStateChanged
+- uid: IPA.Loader.PluginManager.OnAnyPluginsStateChangedDelegate
+  name: PluginManager.OnAnyPluginsStateChangedDelegate
+  href: api/IPA.Loader.PluginManager.OnAnyPluginsStateChangedDelegate.html
+  commentId: T:IPA.Loader.PluginManager.OnAnyPluginsStateChangedDelegate
+  fullName: IPA.Loader.PluginManager.OnAnyPluginsStateChangedDelegate
+  nameWithType: PluginManager.OnAnyPluginsStateChangedDelegate
 - uid: IPA.Loader.PluginManager.OnPluginsStateChanged
   name: OnPluginsStateChanged
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_OnPluginsStateChanged
