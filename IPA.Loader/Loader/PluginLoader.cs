@@ -865,6 +865,8 @@ namespace IPA.Loader
             return exec;
         }
 
+        internal static bool IsFirstLoadComplete { get; private set; } = false;
+
         internal static List<PluginExecutor> LoadPlugins()
         {
             InitFeatures();
@@ -881,6 +883,9 @@ namespace IPA.Loader
                     loaded.Add(meta);
                 }
             }
+
+            // TODO: should this be somewhere else?
+            IsFirstLoadComplete = true;
 
             return list;
         }
