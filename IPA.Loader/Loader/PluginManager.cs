@@ -190,8 +190,11 @@ namespace IPA.Loader
                                 return TaskEx6.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
 
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
-                                 .ContinueWith(t => TaskEx.WhenAll(t, exec.Executor.Disable()), UnityMainThreadTaskScheduler.Default).Unwrap();
-                            // The WhenAll above allows us to wait for the executor to disable, but still propagate errors
+                                 .ContinueWith(t => t.IsFaulted 
+                                    ? TaskEx.WhenAll(t, TaskEx6.FromException(
+                                        new CannotRuntimeDisableException(exec.Executor.Metadata, "Dependents cannot be disabled for plugin"))) 
+                                    : exec.Executor.Disable(), UnityMainThreadTaskScheduler.Default).Unwrap();
+                            // We do not want to call the disable method if a dependent couldn't be disabled
                             // By scheduling on a UnityMainThreadScheduler, we ensure that Disable() is always called on the Unity main thread
                             alreadyDisabled.Add(exec.Executor, res);
                             return res;
