@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Delegate FieldAccessor&lt;T, U&gt;.Accessor
+    <title>Enum Reason
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Delegate FieldAccessor&lt;T, U&gt;.Accessor
+    <meta name="title" content="Enum Reason
    ">
     <meta name="generator" content="docfx 2.48.0.0">
     
@@ -79,69 +79,94 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="IPA.Utilities.FieldAccessor`2.Accessor">
+            <article class="content wrap" id="_content" data-uid="IPA.Loader.Reason">
   
   
-  <h1 id="IPA_Utilities_FieldAccessor_2_Accessor" data-uid="IPA.Utilities.FieldAccessor`2.Accessor" class="text-break">Delegate FieldAccessor&lt;T, U&gt;.Accessor
+  <h1 id="IPA_Loader_Reason" data-uid="IPA.Loader.Reason" class="text-break">Enum Reason
   </h1>
-  <div class="markdown level0 summary"><p>A delegate for a field accessor taking a <code data-dev-comment-type="typeparamref" class="typeparamref">T</code> ref and returning a <code data-dev-comment-type="typeparamref" class="typeparamref">U</code> ref.</p>
+  <div class="markdown level0 summary"><p>An enum that represents several categories of ignore reasons that the loader may encounter.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Loader.html">IPA.Loader</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
-  <h5 id="IPA_Utilities_FieldAccessor_2_Accessor_syntax">Syntax</h5>
+  <h5 id="IPA_Loader_Reason_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate U Accessor(ref T obj);</code></pre>
+    <pre><code class="lang-csharp hljs">public enum Reason</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h3 id="fields">Fields
+  </h3>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
-        <th>Type</th>
         <th>Name</th>
         <th>Description</th>
       </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">obj</span></td>
-        <td><p>the object to access the field of</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
     <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
     <tbody>
       <tr>
-        <td><span class="xref">U</span></td>
-        <td><p>a reference to the field&apos;s value</p>
+        <td id="IPA_Loader_Reason_Conflict">Conflict</td>
+        <td><p>The plugin this reason is associated with conflicts with another already loaded plugin.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_Dependency">Dependency</td>
+        <td><p>The plugin this reason is assiciated with is missing a dependency.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_Duplicate">Duplicate</td>
+        <td><p>The plugin this reason is associated with has the same ID as another plugin whose information was
+already loaded.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_Error">Error</td>
+        <td><p>An error was thrown either loading plugin information fomr disk, or when initializing the plugin.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_Feature">Feature</td>
+        <td><p>The plugin this reason is associated with was denied from loading by a <a class="xref" href="IPA.Loader.Features.Feature.html">Feature</a>
+that it marks.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_MissingFiles">MissingFiles</td>
+        <td><p>One of the files that a plugin declared in its manifest is missing.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_Released">Released</td>
+        <td><p>The plugin this reason is associated with was released for a game update, but is still considered
+present for the purposes of updating.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="IPA_Loader_Reason_Unsupported">Unsupported</td>
+        <td><p>The plugin this reason is assoicated with is unsupported.</p>
 </td>
       </tr>
     </tbody>
-  </table>
+  </thead></thead></table>
+  <h5 id="IPA_Loader_Reason_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Loader.IgnoreReason.html">IgnoreReason</a></div>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;Reason, U&gt;(String, U)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, Reason&gt;(String)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;Reason, U&gt;(String, U)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, Reason&gt;(String)</a>
   </div>
   <div>
-      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, Reason&gt;(String, Object[])</a>
   </div>
 </article>
           </div>
@@ -151,10 +176,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_FieldAccessor_2_Accessor.md&amp;value=---%0Auid%3A%20IPA.Utilities.FieldAccessor%602.Accessor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Reason.md&amp;value=---%0Auid%3A%20IPA.Loader.Reason%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/428aade59ef6a074b709d874e1ee3f054837d0ee/IPA.Loader/Utilities/Accessor.cs/#L29" class="contribution-link">View Source</a>
+                    <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/blob/428aade59ef6a074b709d874e1ee3f054837d0ee/IPA.Loader/Loader/PluginLoader.cs/#L297" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -3138,6 +3138,12 @@ references:
   commentId: M:IPA.Loader.CannotRuntimeDisableException.#ctor(IPA.Loader.PluginMetadata)
   fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException(IPA.Loader.PluginMetadata)
   nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(PluginMetadata)
+- uid: IPA.Loader.CannotRuntimeDisableException.#ctor(IPA.Loader.PluginMetadata,System.String)
+  name: CannotRuntimeDisableException(PluginMetadata, String)
+  href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_IPA_Loader_PluginMetadata_System_String_
+  commentId: M:IPA.Loader.CannotRuntimeDisableException.#ctor(IPA.Loader.PluginMetadata,System.String)
+  fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException(IPA.Loader.PluginMetadata, System.String)
+  nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(PluginMetadata, String)
 - uid: IPA.Loader.CannotRuntimeDisableException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
   name: CannotRuntimeDisableException(SerializationInfo, StreamingContext)
   href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_
@@ -3289,6 +3295,135 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.Features.Feature.StoreOnPlugin
   nameWithType: Feature.StoreOnPlugin
+- uid: IPA.Loader.IgnoreReason
+  name: IgnoreReason
+  href: api/IPA.Loader.IgnoreReason.html
+  commentId: T:IPA.Loader.IgnoreReason
+  fullName: IPA.Loader.IgnoreReason
+  nameWithType: IgnoreReason
+- uid: IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.String,System.Exception,IPA.Loader.PluginMetadata)
+  name: IgnoreReason(Reason, String, Exception, PluginMetadata)
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason__ctor_IPA_Loader_Reason_System_String_System_Exception_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.String,System.Exception,IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.IgnoreReason.IgnoreReason(IPA.Loader.Reason, System.String, System.Exception, IPA.Loader.PluginMetadata)
+  nameWithType: IgnoreReason.IgnoreReason(Reason, String, Exception, PluginMetadata)
+- uid: IPA.Loader.IgnoreReason.#ctor*
+  name: IgnoreReason
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason__ctor_
+  commentId: Overload:IPA.Loader.IgnoreReason.#ctor
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.IgnoreReason
+  nameWithType: IgnoreReason.IgnoreReason
+- uid: IPA.Loader.IgnoreReason.Equals(IPA.Loader.IgnoreReason)
+  name: Equals(IgnoreReason)
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Equals_IPA_Loader_IgnoreReason_
+  commentId: M:IPA.Loader.IgnoreReason.Equals(IPA.Loader.IgnoreReason)
+  fullName: IPA.Loader.IgnoreReason.Equals(IPA.Loader.IgnoreReason)
+  nameWithType: IgnoreReason.Equals(IgnoreReason)
+- uid: IPA.Loader.IgnoreReason.Equals(System.Object)
+  name: Equals(Object)
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Equals_System_Object_
+  commentId: M:IPA.Loader.IgnoreReason.Equals(System.Object)
+  fullName: IPA.Loader.IgnoreReason.Equals(System.Object)
+  nameWithType: IgnoreReason.Equals(Object)
+- uid: IPA.Loader.IgnoreReason.Equals*
+  name: Equals
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Equals_
+  commentId: Overload:IPA.Loader.IgnoreReason.Equals
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.Equals
+  nameWithType: IgnoreReason.Equals
+- uid: IPA.Loader.IgnoreReason.Error
+  name: Error
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Error
+  commentId: P:IPA.Loader.IgnoreReason.Error
+  fullName: IPA.Loader.IgnoreReason.Error
+  nameWithType: IgnoreReason.Error
+- uid: IPA.Loader.IgnoreReason.Error*
+  name: Error
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Error_
+  commentId: Overload:IPA.Loader.IgnoreReason.Error
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.Error
+  nameWithType: IgnoreReason.Error
+- uid: IPA.Loader.IgnoreReason.GetHashCode
+  name: GetHashCode()
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_GetHashCode
+  commentId: M:IPA.Loader.IgnoreReason.GetHashCode
+  fullName: IPA.Loader.IgnoreReason.GetHashCode()
+  nameWithType: IgnoreReason.GetHashCode()
+- uid: IPA.Loader.IgnoreReason.GetHashCode*
+  name: GetHashCode
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_GetHashCode_
+  commentId: Overload:IPA.Loader.IgnoreReason.GetHashCode
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.GetHashCode
+  nameWithType: IgnoreReason.GetHashCode
+- uid: IPA.Loader.IgnoreReason.op_Equality(IPA.Loader.IgnoreReason,IPA.Loader.IgnoreReason)
+  name: Equality(IgnoreReason, IgnoreReason)
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_op_Equality_IPA_Loader_IgnoreReason_IPA_Loader_IgnoreReason_
+  commentId: M:IPA.Loader.IgnoreReason.op_Equality(IPA.Loader.IgnoreReason,IPA.Loader.IgnoreReason)
+  fullName: IPA.Loader.IgnoreReason.Equality(IPA.Loader.IgnoreReason, IPA.Loader.IgnoreReason)
+  nameWithType: IgnoreReason.Equality(IgnoreReason, IgnoreReason)
+- uid: IPA.Loader.IgnoreReason.op_Equality*
+  name: Equality
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_op_Equality_
+  commentId: Overload:IPA.Loader.IgnoreReason.op_Equality
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.Equality
+  nameWithType: IgnoreReason.Equality
+- uid: IPA.Loader.IgnoreReason.op_Inequality(IPA.Loader.IgnoreReason,IPA.Loader.IgnoreReason)
+  name: Inequality(IgnoreReason, IgnoreReason)
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_op_Inequality_IPA_Loader_IgnoreReason_IPA_Loader_IgnoreReason_
+  commentId: M:IPA.Loader.IgnoreReason.op_Inequality(IPA.Loader.IgnoreReason,IPA.Loader.IgnoreReason)
+  fullName: IPA.Loader.IgnoreReason.Inequality(IPA.Loader.IgnoreReason, IPA.Loader.IgnoreReason)
+  nameWithType: IgnoreReason.Inequality(IgnoreReason, IgnoreReason)
+- uid: IPA.Loader.IgnoreReason.op_Inequality*
+  name: Inequality
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_op_Inequality_
+  commentId: Overload:IPA.Loader.IgnoreReason.op_Inequality
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.Inequality
+  nameWithType: IgnoreReason.Inequality
+- uid: IPA.Loader.IgnoreReason.Reason
+  name: Reason
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Reason
+  commentId: P:IPA.Loader.IgnoreReason.Reason
+  fullName: IPA.Loader.IgnoreReason.Reason
+  nameWithType: IgnoreReason.Reason
+- uid: IPA.Loader.IgnoreReason.Reason*
+  name: Reason
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_Reason_
+  commentId: Overload:IPA.Loader.IgnoreReason.Reason
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.Reason
+  nameWithType: IgnoreReason.Reason
+- uid: IPA.Loader.IgnoreReason.ReasonText
+  name: ReasonText
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_ReasonText
+  commentId: P:IPA.Loader.IgnoreReason.ReasonText
+  fullName: IPA.Loader.IgnoreReason.ReasonText
+  nameWithType: IgnoreReason.ReasonText
+- uid: IPA.Loader.IgnoreReason.ReasonText*
+  name: ReasonText
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_ReasonText_
+  commentId: Overload:IPA.Loader.IgnoreReason.ReasonText
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.ReasonText
+  nameWithType: IgnoreReason.ReasonText
+- uid: IPA.Loader.IgnoreReason.RelatedTo
+  name: RelatedTo
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_RelatedTo
+  commentId: P:IPA.Loader.IgnoreReason.RelatedTo
+  fullName: IPA.Loader.IgnoreReason.RelatedTo
+  nameWithType: IgnoreReason.RelatedTo
+- uid: IPA.Loader.IgnoreReason.RelatedTo*
+  name: RelatedTo
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason_RelatedTo_
+  commentId: Overload:IPA.Loader.IgnoreReason.RelatedTo
+  isSpec: "True"
+  fullName: IPA.Loader.IgnoreReason.RelatedTo
+  nameWithType: IgnoreReason.RelatedTo
 - uid: IPA.Loader.PluginInitInjector
   name: PluginInitInjector
   href: api/IPA.Loader.PluginInitInjector.html
@@ -3346,6 +3481,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.DisabledPlugins
   nameWithType: PluginManager.DisabledPlugins
+- uid: IPA.Loader.PluginManager.EnabledPlugins
+  name: EnabledPlugins
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnabledPlugins
+  commentId: P:IPA.Loader.PluginManager.EnabledPlugins
+  fullName: IPA.Loader.PluginManager.EnabledPlugins
+  nameWithType: PluginManager.EnabledPlugins
+- uid: IPA.Loader.PluginManager.EnabledPlugins*
+  name: EnabledPlugins
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_EnabledPlugins_
+  commentId: Overload:IPA.Loader.PluginManager.EnabledPlugins
+  isSpec: "True"
+  fullName: IPA.Loader.PluginManager.EnabledPlugins
+  nameWithType: PluginManager.EnabledPlugins
 - uid: IPA.Loader.PluginManager.GetDisabledPlugin(System.String)
   name: GetDisabledPlugin(String)
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_GetDisabledPlugin_System_String_
@@ -3623,12 +3771,79 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.Version
   nameWithType: PluginMetadata.Version
+- uid: IPA.Loader.Reason
+  name: Reason
+  href: api/IPA.Loader.Reason.html
+  commentId: T:IPA.Loader.Reason
+  fullName: IPA.Loader.Reason
+  nameWithType: Reason
+- uid: IPA.Loader.Reason.Conflict
+  name: Conflict
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Conflict
+  commentId: F:IPA.Loader.Reason.Conflict
+  fullName: IPA.Loader.Reason.Conflict
+  nameWithType: Reason.Conflict
+- uid: IPA.Loader.Reason.Dependency
+  name: Dependency
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Dependency
+  commentId: F:IPA.Loader.Reason.Dependency
+  fullName: IPA.Loader.Reason.Dependency
+  nameWithType: Reason.Dependency
+- uid: IPA.Loader.Reason.Duplicate
+  name: Duplicate
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Duplicate
+  commentId: F:IPA.Loader.Reason.Duplicate
+  fullName: IPA.Loader.Reason.Duplicate
+  nameWithType: Reason.Duplicate
+- uid: IPA.Loader.Reason.Error
+  name: Error
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Error
+  commentId: F:IPA.Loader.Reason.Error
+  fullName: IPA.Loader.Reason.Error
+  nameWithType: Reason.Error
+- uid: IPA.Loader.Reason.Feature
+  name: Feature
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Feature
+  commentId: F:IPA.Loader.Reason.Feature
+  fullName: IPA.Loader.Reason.Feature
+  nameWithType: Reason.Feature
+- uid: IPA.Loader.Reason.MissingFiles
+  name: MissingFiles
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_MissingFiles
+  commentId: F:IPA.Loader.Reason.MissingFiles
+  fullName: IPA.Loader.Reason.MissingFiles
+  nameWithType: Reason.MissingFiles
+- uid: IPA.Loader.Reason.Released
+  name: Released
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Released
+  commentId: F:IPA.Loader.Reason.Released
+  fullName: IPA.Loader.Reason.Released
+  nameWithType: Reason.Released
+- uid: IPA.Loader.Reason.Unsupported
+  name: Unsupported
+  href: api/IPA.Loader.Reason.html#IPA_Loader_Reason_Unsupported
+  commentId: F:IPA.Loader.Reason.Unsupported
+  fullName: IPA.Loader.Reason.Unsupported
+  nameWithType: Reason.Unsupported
 - uid: IPA.Loader.StateTransitionTransaction
   name: StateTransitionTransaction
   href: api/IPA.Loader.StateTransitionTransaction.html
   commentId: T:IPA.Loader.StateTransitionTransaction
   fullName: IPA.Loader.StateTransitionTransaction
   nameWithType: StateTransitionTransaction
+- uid: IPA.Loader.StateTransitionTransaction.Clone
+  name: Clone()
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Clone
+  commentId: M:IPA.Loader.StateTransitionTransaction.Clone
+  fullName: IPA.Loader.StateTransitionTransaction.Clone()
+  nameWithType: StateTransitionTransaction.Clone()
+- uid: IPA.Loader.StateTransitionTransaction.Clone*
+  name: Clone
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Clone_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.Clone
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.Clone
+  nameWithType: StateTransitionTransaction.Clone
 - uid: IPA.Loader.StateTransitionTransaction.Commit
   name: Commit()
   href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Commit
@@ -3725,6 +3940,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.StateTransitionTransaction.EnabledPlugins
   nameWithType: StateTransitionTransaction.EnabledPlugins
+- uid: IPA.Loader.StateTransitionTransaction.HasStateChanged
+  name: HasStateChanged
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_HasStateChanged
+  commentId: P:IPA.Loader.StateTransitionTransaction.HasStateChanged
+  fullName: IPA.Loader.StateTransitionTransaction.HasStateChanged
+  nameWithType: StateTransitionTransaction.HasStateChanged
+- uid: IPA.Loader.StateTransitionTransaction.HasStateChanged*
+  name: HasStateChanged
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_HasStateChanged_
+  commentId: Overload:IPA.Loader.StateTransitionTransaction.HasStateChanged
+  isSpec: "True"
+  fullName: IPA.Loader.StateTransitionTransaction.HasStateChanged
+  nameWithType: StateTransitionTransaction.HasStateChanged
 - uid: IPA.Loader.StateTransitionTransaction.IsDisabled(IPA.Loader.PluginMetadata)
   name: IsDisabled(PluginMetadata)
   href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_IsDisabled_IPA_Loader_PluginMetadata_
