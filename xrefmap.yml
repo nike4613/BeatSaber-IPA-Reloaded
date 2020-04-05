@@ -3572,12 +3572,12 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.IsEnabled
   nameWithType: PluginManager.IsEnabled
-- uid: IPA.Loader.PluginManager.OnPluginsDisabled
-  name: OnPluginsDisabled
-  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_OnPluginsDisabled
-  commentId: E:IPA.Loader.PluginManager.OnPluginsDisabled
-  fullName: IPA.Loader.PluginManager.OnPluginsDisabled
-  nameWithType: PluginManager.OnPluginsDisabled
+- uid: IPA.Loader.PluginManager.OnPluginsStateChanged
+  name: OnPluginsStateChanged
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_OnPluginsStateChanged
+  commentId: E:IPA.Loader.PluginManager.OnPluginsStateChanged
+  fullName: IPA.Loader.PluginManager.OnPluginsStateChanged
+  nameWithType: PluginManager.OnPluginsStateChanged
 - uid: IPA.Loader.PluginManager.PluginDisabled
   name: PluginDisabled
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_PluginDisabled
