@@ -237,6 +237,23 @@ namespace IPA.Loader
         /// <exception cref="InvalidOperationException">if the plugins' state no longer matches this transaction's original state</exception>
         public Task Commit() => ThrowIfDisposed<Task>() ?? PluginManager.CommitTransaction(this);
 
+        /// <summary>
+        /// Clones this transaction to be identical, but with unrelated underlying sets.
+        /// </summary>
+        /// <returns>the new <see cref="StateTransitionTransaction"/></returns>
+        /// <exception cref="ObjectDisposedException">if this object has been disposed</exception>
+        public StateTransitionTransaction Clone()
+        {
+            ThrowIfDisposed();
+            var copy = new StateTransitionTransaction(CurrentlyEnabled, CurrentlyDisabled);
+            foreach (var toEnable in ToEnable)
+                copy.toEnable.Add(toEnable);
+            foreach (var toDisable in ToDisable)
+                copy.toDisable.Add(toDisable);
+            copy.stateChanged = stateChanged;
+            return copy;
+        }
+
         private void ThrowIfDisposed() => ThrowIfDisposed<byte>();
         private T ThrowIfDisposed<T>()
         {
