@@ -45,7 +45,7 @@
     <Compile Include="ExpressionEx.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="File.cs" />
-    <Compile Include="IReadOnlyList.cs" />
+    <Compile Include="ReadOnlyCollections.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskEx6.cs" />
