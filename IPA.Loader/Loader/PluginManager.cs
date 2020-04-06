@@ -306,6 +306,12 @@ namespace IPA.Loader
         private static readonly HashSet<PluginExecutor> runtimeDisabledPlugins = new HashSet<PluginExecutor>();
 
         /// <summary>
+        /// Gets a read-only dictionary of an ignored plugin to the reason it was ignored, as an <see cref="IgnoreReason"/>.
+        /// </summary>
+        /// <value>a dictionary of <see cref="PluginMetadata"/> to <see cref="IgnoreReason"/> of ignored plugins</value>
+        public static IReadOnlyDictionary<PluginMetadata, IgnoreReason> IgnoredPlugins => PluginLoader.ignoredPlugins;
+
+        /// <summary>
         /// An <see cref="IEnumerable{T}"/> of old IPA plugins.
         /// </summary>
         /// <value>all legacy plugin instances</value>
