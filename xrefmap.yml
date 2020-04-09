@@ -3546,6 +3546,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginManager.GetPluginFromId
   nameWithType: PluginManager.GetPluginFromId
+- uid: IPA.Loader.PluginManager.IgnoredPlugins
+  name: IgnoredPlugins
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IgnoredPlugins
+  commentId: P:IPA.Loader.PluginManager.IgnoredPlugins
+  fullName: IPA.Loader.PluginManager.IgnoredPlugins
+  nameWithType: PluginManager.IgnoredPlugins
+- uid: IPA.Loader.PluginManager.IgnoredPlugins*
+  name: IgnoredPlugins
+  href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IgnoredPlugins_
+  commentId: Overload:IPA.Loader.PluginManager.IgnoredPlugins
+  isSpec: "True"
+  fullName: IPA.Loader.PluginManager.IgnoredPlugins
+  nameWithType: PluginManager.IgnoredPlugins
 - uid: IPA.Loader.PluginManager.IsDisabled(IPA.Loader.PluginMetadata)
   name: IsDisabled(PluginMetadata)
   href: api/IPA.Loader.PluginManager.html#IPA_Loader_PluginManager_IsDisabled_IPA_Loader_PluginMetadata_
@@ -3672,6 +3685,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.AssociatedFiles
   nameWithType: PluginMetadata.AssociatedFiles
+- uid: IPA.Loader.PluginMetadata.Author
+  name: Author
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Author
+  commentId: P:IPA.Loader.PluginMetadata.Author
+  fullName: IPA.Loader.PluginMetadata.Author
+  nameWithType: PluginMetadata.Author
+- uid: IPA.Loader.PluginMetadata.Author*
+  name: Author
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Author_
+  commentId: Overload:IPA.Loader.PluginMetadata.Author
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Author
+  nameWithType: PluginMetadata.Author
 - uid: IPA.Loader.PluginMetadata.Features
   name: Features
   href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Features
