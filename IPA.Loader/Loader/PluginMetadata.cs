@@ -1,6 +1,7 @@
 ﻿using IPA.Loader.Features;
 using IPA.Utilities;
 using Mono.Cecil;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace IPA.Loader
         /// The name of the author that wrote this plugin.
         /// </summary>
         /// <value>the name of the plugin's author</value>
-        public string Author { get; internal set; }
+        public string Author { get; private set; }
 
         /// <summary>
         /// The version of the plugin.
@@ -75,6 +76,29 @@ namespace IPA.Loader
         /// <value>a list of associated files</value>
         public IReadOnlyList<FileInfo> AssociatedFiles { get; private set; } = new List<FileInfo>();
 
+        /// <summary>
+        /// The name of the resource in the plugin assembly containing the plugin's icon.
+        /// </summary>
+        /// <value>the name of the plugin's icon</value>
+        public string IconName { get; private set; }
+
+        /// <summary>
+        /// A link to this plugin's home page, if any.
+        /// </summary>
+        /// <value>the <see cref="Uri"/> of the plugin's home page</value>
+        public Uri PluginHomeLink { get; private set; }
+
+        /// <summary>
+        /// A link to this plugin's source code, if avaliable.
+        /// </summary>
+        /// <value>the <see cref="Uri"/> of the plugin's source code</value>
+        public Uri PluginSourceLink { get; private set; }
+        /// <summary>
+        /// A link to a donate page for the author of this plugin, if avaliable.
+        /// </summary>
+        /// <value>the <see cref="Uri"/> of the author's donate page</value>
+        public Uri DonateLink { get; private set; }
+
         internal bool IsSelf;
 
         /// <summary>
@@ -97,6 +121,10 @@ namespace IPA.Loader
                 Version = value.Version;
                 Id = value.Id;
                 Author = value.Author;
+                IconName = value.IconPath;
+                PluginHomeLink = value.Links.ProjectHome;
+                PluginSourceLink = value.Links.ProjectSource;
+                DonateLink = value.Links.Donate;
                 AssociatedFiles = value.Files
                     .Select(f => Path.Combine(UnityGame.InstallPath, f))
                     .Select(p => new FileInfo(p)).ToList();
