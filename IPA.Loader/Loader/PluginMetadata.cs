@@ -50,6 +50,12 @@ namespace IPA.Loader
         public string Author { get; private set; }
 
         /// <summary>
+        /// The description of this plugin.
+        /// </summary>
+        /// <value>the description of the plugin</value>
+        public string Description { get; private set; }
+
+        /// <summary>
         /// The version of the plugin.
         /// </summary>
         /// <value>the version of the plugin</value>
@@ -120,6 +126,7 @@ namespace IPA.Loader
                 Name = value.Name;
                 Version = value.Version;
                 Id = value.Id;
+                Description = value.Description;
                 Author = value.Author;
                 IconName = value.IconPath;
                 PluginHomeLink = value.Links.ProjectHome;
