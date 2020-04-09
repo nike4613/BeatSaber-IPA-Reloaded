@@ -129,9 +129,9 @@ namespace IPA.Loader
                 Description = value.Description;
                 Author = value.Author;
                 IconName = value.IconPath;
-                PluginHomeLink = value.Links.ProjectHome;
-                PluginSourceLink = value.Links.ProjectSource;
-                DonateLink = value.Links.Donate;
+                PluginHomeLink = value.Links?.ProjectHome;
+                PluginSourceLink = value.Links?.ProjectSource;
+                DonateLink = value.Links?.Donate;
                 AssociatedFiles = value.Files
                     .Select(f => Path.Combine(UnityGame.InstallPath, f))
                     .Select(p => new FileInfo(p)).ToList();
