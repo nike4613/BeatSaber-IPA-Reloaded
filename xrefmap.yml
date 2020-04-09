@@ -3698,6 +3698,32 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.Author
   nameWithType: PluginMetadata.Author
+- uid: IPA.Loader.PluginMetadata.Description
+  name: Description
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Description
+  commentId: P:IPA.Loader.PluginMetadata.Description
+  fullName: IPA.Loader.PluginMetadata.Description
+  nameWithType: PluginMetadata.Description
+- uid: IPA.Loader.PluginMetadata.Description*
+  name: Description
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Description_
+  commentId: Overload:IPA.Loader.PluginMetadata.Description
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.Description
+  nameWithType: PluginMetadata.Description
+- uid: IPA.Loader.PluginMetadata.DonateLink
+  name: DonateLink
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_DonateLink
+  commentId: P:IPA.Loader.PluginMetadata.DonateLink
+  fullName: IPA.Loader.PluginMetadata.DonateLink
+  nameWithType: PluginMetadata.DonateLink
+- uid: IPA.Loader.PluginMetadata.DonateLink*
+  name: DonateLink
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_DonateLink_
+  commentId: Overload:IPA.Loader.PluginMetadata.DonateLink
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.DonateLink
+  nameWithType: PluginMetadata.DonateLink
 - uid: IPA.Loader.PluginMetadata.Features
   name: Features
   href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Features
@@ -3724,6 +3750,19 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.File
   nameWithType: PluginMetadata.File
+- uid: IPA.Loader.PluginMetadata.IconName
+  name: IconName
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IconName
+  commentId: P:IPA.Loader.PluginMetadata.IconName
+  fullName: IPA.Loader.PluginMetadata.IconName
+  nameWithType: PluginMetadata.IconName
+- uid: IPA.Loader.PluginMetadata.IconName*
+  name: IconName
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_IconName_
+  commentId: Overload:IPA.Loader.PluginMetadata.IconName
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.IconName
+  nameWithType: PluginMetadata.IconName
 - uid: IPA.Loader.PluginMetadata.Id
   name: Id
   href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_Id
@@ -3763,6 +3802,32 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginMetadata.Name
   nameWithType: PluginMetadata.Name
+- uid: IPA.Loader.PluginMetadata.PluginHomeLink
+  name: PluginHomeLink
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginHomeLink
+  commentId: P:IPA.Loader.PluginMetadata.PluginHomeLink
+  fullName: IPA.Loader.PluginMetadata.PluginHomeLink
+  nameWithType: PluginMetadata.PluginHomeLink
+- uid: IPA.Loader.PluginMetadata.PluginHomeLink*
+  name: PluginHomeLink
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginHomeLink_
+  commentId: Overload:IPA.Loader.PluginMetadata.PluginHomeLink
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.PluginHomeLink
+  nameWithType: PluginMetadata.PluginHomeLink
+- uid: IPA.Loader.PluginMetadata.PluginSourceLink
+  name: PluginSourceLink
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginSourceLink
+  commentId: P:IPA.Loader.PluginMetadata.PluginSourceLink
+  fullName: IPA.Loader.PluginMetadata.PluginSourceLink
+  nameWithType: PluginMetadata.PluginSourceLink
+- uid: IPA.Loader.PluginMetadata.PluginSourceLink*
+  name: PluginSourceLink
+  href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginSourceLink_
+  commentId: Overload:IPA.Loader.PluginMetadata.PluginSourceLink
+  isSpec: "True"
+  fullName: IPA.Loader.PluginMetadata.PluginSourceLink
+  nameWithType: PluginMetadata.PluginSourceLink
 - uid: IPA.Loader.PluginMetadata.PluginType
   name: PluginType
   href: api/IPA.Loader.PluginMetadata.html#IPA_Loader_PluginMetadata_PluginType
