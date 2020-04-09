@@ -43,6 +43,12 @@ namespace IPA.Loader
         public string Id { get; internal set; }
 
         /// <summary>
+        /// The name of the author that wrote this plugin.
+        /// </summary>
+        /// <value>the name of the plugin's author</value>
+        public string Author { get; internal set; }
+
+        /// <summary>
         /// The version of the plugin.
         /// </summary>
         /// <value>the version of the plugin</value>
@@ -90,6 +96,7 @@ namespace IPA.Loader
                 Name = value.Name;
                 Version = value.Version;
                 Id = value.Id;
+                Author = value.Author;
                 AssociatedFiles = value.Files
                     .Select(f => Path.Combine(UnityGame.InstallPath, f))
                     .Select(p => new FileInfo(p)).ToList();
