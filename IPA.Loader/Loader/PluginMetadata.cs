@@ -116,6 +116,7 @@ namespace IPA.Loader
         private PluginManifest manifest;
 
         internal HashSet<PluginMetadata> Dependencies { get; } = new HashSet<PluginMetadata>();
+        internal HashSet<PluginMetadata> LoadsAfter { get; } = new HashSet<PluginMetadata>();
 
         internal PluginManifest Manifest
         {

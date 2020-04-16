@@ -573,11 +573,15 @@ namespace IPA.Loader
                     inserted = inserted || InsertInto(sr.Dependencies, meta);
 
                     if (meta.Id != null)
-                        if (sr.Manifest.Dependencies.ContainsKey(meta.Id) || sr.Manifest.LoadAfter.Contains(meta.Id))
+                    {
+                        if (sr.Manifest.Dependencies.ContainsKey(meta.Id))
                             inserted = inserted || sr.Dependencies.Add(meta);
+                        else if (sr.Manifest.LoadAfter.Contains(meta.Id))
+                            inserted = inserted || sr.LoadsAfter.Add(meta);
+                    }
                     if (sr.Id != null)
                         if (meta.Manifest.LoadBefore.Contains(sr.Id))
-                            inserted = inserted || sr.Dependencies.Add(meta);
+                            inserted = inserted || sr.LoadsAfter.Add(meta);
                 }
 
                 if (isRoot)
@@ -587,11 +591,15 @@ namespace IPA.Loader
                         InsertInto(meta.Dependencies, sr);
 
                         if (sr.Id != null)
-                            if (meta.Manifest.Dependencies.ContainsKey(sr.Id) || meta.Manifest.LoadAfter.Contains(sr.Id))
+                        {
+                            if (meta.Manifest.Dependencies.ContainsKey(sr.Id))
                                 meta.Dependencies.Add(sr);
+                            else if (meta.Manifest.LoadAfter.Contains(sr.Id))
+                                meta.LoadsAfter.Add(sr);
+                        }
                         if (meta.Id != null)
                             if (sr.Manifest.LoadBefore.Contains(meta.Id))
-                                meta.Dependencies.Add(sr);
+                                meta.LoadsAfter.Add(sr);
                     }
 
                     root.Add(meta);
@@ -610,6 +618,7 @@ namespace IPA.Loader
                     if (!into.Contains(st))
                     {
                         DeTree(into, st.Dependencies);
+                        DeTree(into, st.LoadsAfter);
                         into.Add(st);
                     }
             }
