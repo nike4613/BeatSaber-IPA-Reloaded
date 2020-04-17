@@ -35,31 +35,31 @@ namespace IPA.Loader
         /// The human readable name of the plugin.
         /// </summary>
         /// <value>the name of the plugin</value>
-        public string Name { get; internal set; }
+        public string Name => manifest.Name;
 
         /// <summary>
         /// The BeatMods ID of the plugin, or null if it doesn't have one.
         /// </summary>
         /// <value>the updater ID of the plugin</value>
-        public string Id { get; internal set; }
+        public string Id => manifest.Id;
 
         /// <summary>
         /// The name of the author that wrote this plugin.
         /// </summary>
         /// <value>the name of the plugin's author</value>
-        public string Author { get; private set; }
+        public string Author => manifest.Author;
 
         /// <summary>
         /// The description of this plugin.
         /// </summary>
         /// <value>the description of the plugin</value>
-        public string Description { get; private set; }
+        public string Description => manifest.Description;
 
         /// <summary>
         /// The version of the plugin.
         /// </summary>
         /// <value>the version of the plugin</value>
-        public Version Version { get; internal set; }
+        public Version Version => manifest.Version;
 
         /// <summary>
         /// The file the plugin was loaded from.
@@ -86,24 +86,24 @@ namespace IPA.Loader
         /// The name of the resource in the plugin assembly containing the plugin's icon.
         /// </summary>
         /// <value>the name of the plugin's icon</value>
-        public string IconName { get; private set; }
+        public string IconName => manifest.IconPath;
 
         /// <summary>
         /// A link to this plugin's home page, if any.
         /// </summary>
         /// <value>the <see cref="Uri"/> of the plugin's home page</value>
-        public Uri PluginHomeLink { get; private set; }
+        public Uri PluginHomeLink => manifest.Links?.ProjectHome;
 
         /// <summary>
         /// A link to this plugin's source code, if avaliable.
         /// </summary>
         /// <value>the <see cref="Uri"/> of the plugin's source code</value>
-        public Uri PluginSourceLink { get; private set; }
+        public Uri PluginSourceLink => manifest.Links?.ProjectSource;
         /// <summary>
         /// A link to a donate page for the author of this plugin, if avaliable.
         /// </summary>
         /// <value>the <see cref="Uri"/> of the author's donate page</value>
-        public Uri DonateLink { get; private set; }
+        public Uri DonateLink => manifest.Links?.Donate;
 
         internal bool IsSelf;
 
@@ -124,15 +124,6 @@ namespace IPA.Loader
             set
             {
                 manifest = value;
-                Name = value.Name;
-                Version = value.Version;
-                Id = value.Id;
-                Description = value.Description;
-                Author = value.Author;
-                IconName = value.IconPath;
-                PluginHomeLink = value.Links?.ProjectHome;
-                PluginSourceLink = value.Links?.ProjectSource;
-                DonateLink = value.Links?.Donate;
                 AssociatedFiles = value.Files
                     .Select(f => Path.Combine(UnityGame.InstallPath, f))
                     .Select(p => new FileInfo(p)).ToList();
