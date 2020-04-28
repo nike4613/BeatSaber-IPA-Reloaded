@@ -32,20 +32,27 @@ namespace IPA.Utilities.Async
 
         private class QueueItem : IEquatable<Task>, IEquatable<QueueItem>
         {
-            public bool HasTask;
-            private readonly WeakReference<Task> weakTask = null;
-            public Task Task => weakTask.TryGetTarget(out var task) ? task : null;
+            private bool hasTask;
+            public bool HasTask
+            {
+                get => hasTask;
+                set
+                {
+                    hasTask = value;
+                    if (!hasTask) Task = null;
+                }
+            }
+
+            public Task Task { get; private set; } = null;
 
             public QueueItem(Task task)
             {
                 HasTask = true;
-                weakTask = new WeakReference<Task>(task);
+                Task = task;
             }
 
-            private bool Equals(WeakReference<Task> task)
-                => weakTask.TryGetTarget(out var t1) && task.TryGetTarget(out var t2) && t1.Equals(t2);
-            public bool Equals(Task other) => HasTask && weakTask.TryGetTarget(out var task) && other.Equals(task);
-            public bool Equals(QueueItem other) => other.HasTask == HasTask && Equals(other.weakTask);
+            public bool Equals(Task other) => HasTask && other.Equals(Task);
+            public bool Equals(QueueItem other) => other.HasTask == HasTask && Equals(other.Task);
         }
 
         /// <summary>
@@ -174,10 +181,7 @@ namespace IPA.Utilities.Async
         /// <returns>nothing</returns>
         /// <exception cref="NotSupportedException">Always.</exception>
         protected override IEnumerable<Task> GetScheduledTasks()
-        {
-            // this is only for debuggers which we can't use sooooo
-            throw new NotSupportedException();
-        }
+            => tasks.ToArray().Where(q => q.HasTask).Select(q => q.Task).ToArray();
 
         /// <summary>
         /// Queues a given <see cref="Task"/> to this scheduler. The <see cref="Task"/> <i>must</i> be
@@ -199,7 +203,7 @@ namespace IPA.Utilities.Async
         /// </summary>
         /// <param name="task">the task to attempt to execute</param>
         /// <param name="taskWasPreviouslyQueued">whether the task was previously queued to this scheduler</param>
-        /// <returns><see langword="false"/></returns>
+        /// <returns><see langword="false"/> if the task could not be run, <see langword="true"/> if it was</returns>
         /// <exception cref="ObjectDisposedException">Thrown if this object has already been disposed.</exception>
         protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
