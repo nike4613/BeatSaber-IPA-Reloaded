@@ -105,7 +105,7 @@ namespace IPA.Utilities.Async
         /// <returns><see langword="true"/> if the value was found, <see langword="false"/> otherwise</returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
-            if (dict.TryGetValue(key, out var pair) && pair.wh != null)
+            if (dict.TryGetValue(key, out var pair) && pair.wh == null)
             {
                 value = pair.val;
                 return true;
