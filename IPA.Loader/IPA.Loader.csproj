@@ -153,6 +153,7 @@
     <Compile Include="Utilities\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Utilities\Accessor.cs" />
     <Compile Include="Utilities\Async\UnityMainThreadTaskScheduler.cs" />
+    <Compile Include="Utilities\ModSingleton.cs" />
     <Compile Include="Utilities\UnityGame.cs" />
     <Compile Include="Utilities\AlmostVersion.cs" />
     <Compile Include="Utilities\CriticalSection.cs" />
