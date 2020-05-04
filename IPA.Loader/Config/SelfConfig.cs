@@ -161,5 +161,7 @@ namespace IPA.Config
         public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore
         public static string LastGameVersion_ => Instance?.LastGameVersion;
+
+        public virtual bool RecursivePluginLoading { get; set; } = false;
     }
 }

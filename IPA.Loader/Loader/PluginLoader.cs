@@ -70,9 +70,24 @@ namespace IPA.Loader
 
         private static readonly Regex embeddedTextDescriptionPattern = new Regex(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
+        internal static List<string> FindPluginsRecursively(string directory)
+        {
+            List<string> dirs = new List<string>();
+            foreach (var dir in Directory.GetDirectories(directory))
+            {
+                dirs.AddRange(FindPluginsRecursively(dir));
+            }
+            foreach (var file in Directory.GetFiles(directory, "*.dll"))
+            {
+                dirs.Add(file);
+            }
+            return dirs;
+        }
+
         internal static void LoadMetadata()
         {
-            string[] plugins = Directory.GetFiles(UnityGame.PluginsPath, "*.dll");
+
+            string[] plugins = !SelfConfig.Instance.RecursivePluginLoading ? Directory.GetFiles(UnityGame.PluginsPath, "*.dll") : FindPluginsRecursively(UnityGame.PluginsPath).ToArray();
 
             try
             {
