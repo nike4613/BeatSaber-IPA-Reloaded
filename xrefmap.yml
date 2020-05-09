@@ -5381,12 +5381,31 @@ references:
   commentId: T:IPA.Utilities.Async.Coroutines
   fullName: IPA.Utilities.Async.Coroutines
   nameWithType: Coroutines
+- uid: IPA.Utilities.Async.Coroutines.AsTask(System.Collections.IEnumerator)
+  name: AsTask(IEnumerator)
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_AsTask_System_Collections_IEnumerator_
+  commentId: M:IPA.Utilities.Async.Coroutines.AsTask(System.Collections.IEnumerator)
+  fullName: IPA.Utilities.Async.Coroutines.AsTask(System.Collections.IEnumerator)
+  nameWithType: Coroutines.AsTask(IEnumerator)
+- uid: IPA.Utilities.Async.Coroutines.AsTask*
+  name: AsTask
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_AsTask_
+  commentId: Overload:IPA.Utilities.Async.Coroutines.AsTask
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.Coroutines.AsTask
+  nameWithType: Coroutines.AsTask
 - uid: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
   name: WaitForTask(Task)
   href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_System_Threading_Tasks_Task_
   commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
   fullName: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
   nameWithType: Coroutines.WaitForTask(Task)
+- uid: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task,System.Boolean)
+  name: WaitForTask(Task, Boolean)
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_System_Threading_Tasks_Task_System_Boolean_
+  commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task,System.Boolean)
+  fullName: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task, System.Boolean)
+  nameWithType: Coroutines.WaitForTask(Task, Boolean)
 - uid: IPA.Utilities.Async.Coroutines.WaitForTask*
   name: WaitForTask
   href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_
