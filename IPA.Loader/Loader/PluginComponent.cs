@@ -15,14 +15,15 @@ namespace IPA.Loader
         private CompositeBSPlugin bsPlugins;
         private CompositeIPAPlugin ipaPlugins;
         private bool quitting;
+        public static PluginComponent Instance;
         private static bool initialized = false;
 
         internal static PluginComponent Create()
         {
-            return new GameObject("IPA_PluginManager").AddComponent<PluginComponent>();
+            return Instance = new GameObject("IPA_PluginManager").AddComponent<PluginComponent>();
         }
 
-        void Awake()
+        internal void Awake()
         {
             DontDestroyOnLoad(gameObject);
 
@@ -38,7 +39,7 @@ namespace IPA.Loader
                 ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
-#if BeatSaber
+#if BeatSaber // TODO: remove this
                 gameObject.AddComponent<Updating.BeatMods.Updater>();
 #endif
 
@@ -61,7 +62,7 @@ namespace IPA.Loader
             }
         }
 
-        void Update()
+        internal void Update()
         {
             bsPlugins.OnUpdate();
             ipaPlugins.OnUpdate();
@@ -71,27 +72,27 @@ namespace IPA.Loader
                 StartCoroutine(unitySched.Coroutine());
         }
 
-        void LateUpdate()
+        internal void LateUpdate()
         {
             bsPlugins.OnLateUpdate();
             ipaPlugins.OnLateUpdate();
         }
 
-        void FixedUpdate()
+        internal void FixedUpdate()
         {
             bsPlugins.OnFixedUpdate();
             ipaPlugins.OnFixedUpdate();
         }
 
-        void OnDestroy()
+        internal void OnDestroy()
         {
             if (!quitting)
             {
                 Create();
             }
         }
-        
-        void OnApplicationQuit()
+
+        internal void OnApplicationQuit()
         {
             SceneManager.activeSceneChanged -= OnActiveSceneChanged;
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -105,17 +106,17 @@ namespace IPA.Loader
             quitting = true;
         }
 
-        void OnLevelWasLoaded(int level)
+        internal void OnLevelWasLoaded(int level)
         {
             ipaPlugins.OnLevelWasLoaded(level);
         }
 
-        void OnLevelWasInitialized(int level)
+        internal void OnLevelWasInitialized(int level)
         {
             ipaPlugins.OnLevelWasInitialized(level);
         }
 
-        void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
+        private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
         {
             bsPlugins.OnSceneLoaded(scene, sceneMode);
         }
