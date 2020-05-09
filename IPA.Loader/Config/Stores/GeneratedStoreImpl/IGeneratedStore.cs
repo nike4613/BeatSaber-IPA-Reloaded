@@ -158,7 +158,7 @@ namespace IPA.Config.Stores
                     {
                     }
                     if (addToStore)
-                            freeTransactionObjs.Push(this);
+                        freeTransactionObjs.Push(this);
                 }
 
                 ~ChangeTransactionObj() => Dispose(false);

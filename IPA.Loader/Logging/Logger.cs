@@ -58,7 +58,7 @@ namespace IPA.Logging
             None = 0,
 
             /// <summary>
-            /// A trace message. These are ignored *incredibly* early.
+            /// A trace message. These are ignored <i>incredibly</i> early.
             /// </summary>
             Trace = 64,
 
@@ -191,7 +191,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends a trace message.
-        /// Equivalent to `Log(Level.Trace, message);`
+        /// Equivalent to <c>Log(Level.Trace, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -199,7 +199,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as a trace message.
-        /// Equivalent to `Log(Level.Trace, e);`
+        /// Equivalent to <c>Log(Level.Trace, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
@@ -207,7 +207,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends a debug message.
-        /// Equivalent to `Log(Level.Debug, message);`
+        /// Equivalent to <c>Log(Level.Debug, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -215,7 +215,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as a debug message.
-        /// Equivalent to `Log(Level.Debug, e);`
+        /// Equivalent to <c>Log(Level.Debug, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
@@ -223,7 +223,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an info message.
-        /// Equivalent to `Log(Level.Info, message);`
+        /// Equivalent to <c>Log(Level.Info, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -231,7 +231,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as an info message.
-        /// Equivalent to `Log(Level.Info, e);`
+        /// Equivalent to <c>Log(Level.Info, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
@@ -239,7 +239,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends a notice message.
-        /// Equivalent to `Log(Level.Notice, message);`
+        /// Equivalent to <c>Log(Level.Notice, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -247,7 +247,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as a notice message.
-        /// Equivalent to `Log(Level.Notice, e);`
+        /// Equivalent to <c>Log(Level.Notice, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
@@ -255,7 +255,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends a warning message.
-        /// Equivalent to `Log(Level.Warning, message);`
+        /// Equivalent to <c>Log(Level.Warning, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -263,7 +263,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as a warning message.
-        /// Equivalent to `Log(Level.Warning, e);`
+        /// Equivalent to <c>Log(Level.Warning, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
@@ -271,7 +271,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an error message.
-        /// Equivalent to `Log(Level.Error, message);`
+        /// Equivalent to <c>Log(Level.Error, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -279,7 +279,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as an error message.
-        /// Equivalent to `Log(Level.Error, e);`
+        /// Equivalent to <c>Log(Level.Error, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
@@ -287,7 +287,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends a critical message.
-        /// Equivalent to `Log(Level.Critical, message);`
+        /// Equivalent to <c>Log(Level.Critical, message);</c>
         /// </summary>
         /// <seealso cref="Log(Level, string)"/>
         /// <param name="message">the message to log</param>
@@ -295,7 +295,7 @@ namespace IPA.Logging
 
         /// <summary>
         /// Sends an exception as a critical message.
-        /// Equivalent to `Log(Level.Critical, e);`
+        /// Equivalent to <c>Log(Level.Critical, e);</c>
         /// </summary>
         /// <seealso cref="Log(Level, Exception)"/>
         /// <param name="e">the exception to log</param>
