@@ -12,29 +12,6 @@
 """""xml?alias=UnityEngine.CoreModule.Net4.xml?optional
 
 ::startopt
-::from ./bsinstalldir.txt
-"Beat Saber_Data/
-""Managed/
-"""Main.dll?virt
-"""Unity.TextMeshPro.dll
-"""UnityEngine.
-""""TextRenderingModule.
-"""""dll
-"""""xml?optional
-""""AssetBundleModule.
-"""""dll
-"""""xml?optional
-""""UI
-""""".dll
-"""""Module.
-""""""dll
-""""""xml?optional
-"Plugins/
-""BeatSaberCustomUI.
-"""dll
-::endopt
-
-::startopt
 ::from ./mdinstalldir.txt
 "MuseDash_Data/
 ""Managed/

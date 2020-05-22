@@ -9,12 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA", "IPA\IPA.csproj", "{1
 		{2A1AF16B-27F1-46E0-9A95-181516BC1CB7} = {2A1AF16B-27F1-46E0-9A95-181516BC1CB7}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA.Loader", "IPA.Loader\IPA.Loader.csproj", "{5AD344F0-01A0-4CA8-92E5-9D095737744D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPA.Loader", "IPA.Loader\IPA.Loader.csproj", "{5AD344F0-01A0-4CA8-92E5-9D095737744D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F} = {5F33B310-DC8D-4C0D-877E-BAC3908DE10F}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPA.Injector", "IPA.Injector\IPA.Injector.csproj", "{2A1AF16B-27F1-46E0-9A95-181516BC1CB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPA.Injector", "IPA.Injector\IPA.Injector.csproj", "{2A1AF16B-27F1-46E0-9A95-181516BC1CB7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F} = {5F33B310-DC8D-4C0D-877E-BAC3908DE10F}
 	EndProjectSection
@@ -35,11 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectDependencies", "BuildTools\CollectDependencies\CollectDependencies.csproj", "{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSIPA-ModList", "BSIPA-ModList\BSIPA-ModList.csproj", "{23AB2621-A05C-4377-8418-85E6012C0BBE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F} = {5F33B310-DC8D-4C0D-877E-BAC3908DE10F}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSIPA-Meta", "BSIPA-Meta\BSIPA-Meta.csproj", "{880A3560-82CD-4836-996B-11BEFE6B44DB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -222,25 +217,6 @@ Global
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x86-Net3.Build.0 = Debug|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x86-Net4.ActiveCfg = Debug|Any CPU
 		{5F33B310-DC8D-4C0D-877E-BAC3908DE10F}.Verbose|x86-Net4.Build.0 = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x64-Net3.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x64-Net4.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x64-Net4.Build.0 = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x86-Net3.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Debug|x86-Net4.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x64-Net3.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x64-Net4.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x86-Net3.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Release|x86-Net4.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x64-Net3.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x64-Net4.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x64-Net4.Build.0 = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x86-Net3.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose_Release|x86-Net4.ActiveCfg = Release|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x64-Net3.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x64-Net4.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x64-Net4.Build.0 = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x86-Net3.ActiveCfg = Debug|Any CPU
-		{23AB2621-A05C-4377-8418-85E6012C0BBE}.Verbose|x86-Net4.ActiveCfg = Debug|Any CPU
 		{880A3560-82CD-4836-996B-11BEFE6B44DB}.Debug|x64-Net3.ActiveCfg = Debug|x64-Net3
 		{880A3560-82CD-4836-996B-11BEFE6B44DB}.Debug|x64-Net3.Build.0 = Debug|x64-Net3
 		{880A3560-82CD-4836-996B-11BEFE6B44DB}.Debug|x64-Net4.ActiveCfg = Debug|x64-Net4
