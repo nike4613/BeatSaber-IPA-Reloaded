@@ -100,7 +100,9 @@ namespace IPA.Loader
                 Logger.loader.Critical("Error loading own manifest");
                 Logger.loader.Critical(e);
             }
-
+            var resolver = new CecilLibLoader();
+            resolver.AddSearchDirectory(UnityGame.LibraryPath);
+            resolver.AddSearchDirectory(UnityGame.PluginsPath);
             foreach (var plugin in plugins)
             {
                 var metadata = new PluginMetadata
@@ -115,7 +117,7 @@ namespace IPA.Loader
                     {
                         ReadingMode = ReadingMode.Immediate,
                         ReadWrite = false,
-                        AssemblyResolver = new CecilLibLoader()
+                        AssemblyResolver = resolver
                     }).MainModule;
 
                     string pluginNs = "";
@@ -303,7 +305,7 @@ namespace IPA.Loader
         /// When this is the set <see cref="Reason"/> in an <see cref="IgnoreReason"/> structure, the member
         /// <see cref="IgnoreReason.Error"/> will contain the thrown exception.
         /// </remarks>
-        Error, 
+        Error,
         /// <summary>
         /// The plugin this reason is associated with has the same ID as another plugin whose information was
         /// already loaded.
@@ -333,12 +335,12 @@ namespace IPA.Loader
         /// The plugin this reason is associated with was released for a game update, but is still considered
         /// present for the purposes of updating.
         /// </summary>
-        Released, 
+        Released,
         /// <summary>
         /// The plugin this reason is associated with was denied from loading by a <see cref="Features.Feature"/>
         /// that it marks.
         /// </summary>
-        Feature, 
+        Feature,
         /// <summary>
         /// The plugin this reason is assoicated with is unsupported.
         /// </summary>
@@ -431,8 +433,8 @@ namespace IPA.Loader
             => !(left == right);
     }
 
-    internal partial class PluginLoader 
-    { 
+    internal partial class PluginLoader
+    {
         // keep track of these for the updater; it should still be able to update mods not loaded
         // the thing -> the reason
         internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
@@ -440,7 +442,7 @@ namespace IPA.Loader
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => b.Version.CompareTo(a.Version));
-            
+
             var ids = new HashSet<string>();
             var ignore = new Dictionary<PluginMetadata, IgnoreReason>();
             var resolved = new List<PluginMetadata>(PluginsMetadata.Count);
@@ -687,7 +689,7 @@ namespace IPA.Loader
         {
             var parsedFeatures = PluginsMetadata.Select(m =>
                     (metadata: m,
-                     features: m.Manifest.Features.Select(feature => 
+                     features: m.Manifest.Features.Select(feature =>
                             (feature, parsed: Ref.Create<Feature.FeatureParse?>(null))
                         ).ToList()
                     )
@@ -844,7 +846,7 @@ namespace IPA.Loader
                     return null;
                 }
             }
-                
+
             try
             {
                 exec.Create();
