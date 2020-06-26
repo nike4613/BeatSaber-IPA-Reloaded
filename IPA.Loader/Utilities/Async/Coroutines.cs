@@ -55,8 +55,11 @@ namespace IPA.Utilities.Async
         {
             if (!UnityGame.OnMainThread)
                 return UnityMainThreadTaskScheduler.Factory.StartNew(() => AsTask(coroutine)).Unwrap();
-
+#if NET3
+            var tcs = new TaskCompletionSource<VoidStruct>(coroutine);
+#else
             var tcs = new TaskCompletionSource<VoidStruct>(coroutine, TaskCreationOptions.RunContinuationsAsynchronously);
+#endif
             PluginComponent.Instance.StartCoroutine(new AsTaskCoroutineExecutor(coroutine, tcs));
             return tcs.Task;
         }
@@ -64,8 +67,8 @@ namespace IPA.Utilities.Async
         private struct VoidStruct { }
         private class ExceptionLocation : Exception
         {
-            public ExceptionLocation(IEnumerable<string> locations) 
-                : base(string.Join("\n", locations.Select(s => "in " + s)))
+            public ExceptionLocation(IEnumerable<string> locations)
+                : base(string.Join("\n", locations.Select(s => "in " + s).ToArray()))
             {
             }
         }

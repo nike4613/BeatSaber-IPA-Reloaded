@@ -2,8 +2,8 @@
 <Project DefaultTargets="Assemble" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x64-Net4</Platform>
+    <Configuration Condition=" '$(Configuration)' == '' ">Net4-Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProjectGuid>{880A3560-82CD-4836-996B-11BEFE6B44DB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>BSIPA_Meta</RootNamespace>
@@ -14,21 +14,24 @@
     <Deterministic>true</Deterministic>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <TargetFrameworkProfile />
+	<IsRelease>false</IsRelease>
+	<Verbose_Release>false</Verbose_Release>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x86-Net4' Or '$(Platform)' == 'x86-Net3' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <ProxyPlatform>Win32</ProxyPlatform>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x64-Net4' Or '$(Platform)' == 'x64-Net3' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
     <ProxyPlatform>x64</ProxyPlatform>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x86-Net4' Or '$(Platform)' == 'x64-Net4' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Net4-Debug' Or '$(Configuration)' == 'Net4-Release' ">
     <NetPlatform>Net4</NetPlatform>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'x86-Net3' Or '$(Platform)' == 'x64-Net3' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Net3-Debug' Or '$(Configuration)' == 'Net3-Release' ">
     <NetPlatform>Net3</NetPlatform>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Net3-Debug' Or '$(Configuration)' == 'Net4-Debug' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
+	<IsRelease>false</IsRelease>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -39,8 +42,9 @@
     <OtherConfig>Debug</OtherConfig>
     <ProxyConfig>Release</ProxyConfig>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Net3-Release' Or '$(Configuration)' == 'Net4-Release' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
+	<IsRelease>true</IsRelease>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
@@ -101,8 +105,8 @@
     <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
-      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
-      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(IsRelease)'=='true' "/>
+      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(IsRelease)'=='true'" />
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
     <RemoveDir Directories="$(OutputPath)Libraries\" />

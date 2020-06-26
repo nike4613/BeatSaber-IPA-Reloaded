@@ -12,8 +12,8 @@ using Expression = System.Linq.Expressions.Expression;
 using ExpressionEx = System.Linq.Expressions.Expression;
 #endif
 #if NET3
-using System.Threading.Tasks;
 using Net3_Proxy;
+using System.Threading.Tasks;
 using Path = Net3_Proxy.Path;
 using File = Net3_Proxy.File;
 using Directory = Net3_Proxy.Directory;

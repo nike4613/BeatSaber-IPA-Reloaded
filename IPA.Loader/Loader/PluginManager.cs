@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,6 +13,7 @@ using Mono.Cecil;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using System.Threading.Tasks;
+using System.Threading;
 using IPA.Utilities.Async;
 #if NET4
 using TaskEx = System.Threading.Tasks.Task;
@@ -193,7 +194,6 @@ namespace IPA.Loader
                         {
                             if (exec.Executor.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit)
                                 return TaskEx6.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
-
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
                                  .ContinueWith(t => t.IsFaulted 
                                     ? TaskEx.WhenAll(t, TaskEx6.FromException(

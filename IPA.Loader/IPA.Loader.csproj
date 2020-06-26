@@ -2,67 +2,63 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">Net4</Platform>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(Platform)' == 'Net4' ">true</BuildForBeatSaber>
-    <ProjectGuid>{5AD344F0-01A0-4CA8-92E5-9D095737744D}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Net4-Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{14AC8224-C7D7-43AF-9E8F-675A7DDBA56F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IPA</RootNamespace>
+    <RootNamespace>IPA.Loader</RootNamespace>
     <AssemblyName>IPA.Loader</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
-    <ShowTargetFrameworks>false</ShowTargetFrameworks>
-    <ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
-    <TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>CA1031</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\$(Platform)\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\$(Platform)\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>false</RegisterForComInterop>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'Net4' ">
+  <PropertyGroup Condition="'$(Configuration)' == 'Net4-Debug'">
+    <FrameworkFlag>Net4</FrameworkFlag>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <DefineConstants>$(DefineConstants);NET4</DefineConstants>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Net4\Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
+  <PropertyGroup Condition="'$(Configuration)' == 'Net3-Debug'">
+    <FrameworkFlag>Net3</FrameworkFlag>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <DefineConstants>$(DefineConstants);NET3</DefineConstants>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Net3\Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(BuildForBeatSaber)' == 'true' ">
-    <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
+  <PropertyGroup Condition="'$(Configuration)' == 'Net4-Release'">
+    <FrameworkFlag>Net4</FrameworkFlag>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <OutputPath>bin\Net4\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Net3-Release'">
+    <FrameworkFlag>Net3</FrameworkFlag>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <OutputPath>bin\Net3\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants Condition="'$(FrameworkFlag)' == 'Net4'">$(DefineConstants);NET4</DefineConstants>
+    <DefineConstants Condition="'$(FrameworkFlag)' == 'Net3'">$(DefineConstants);NET3</DefineConstants>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' != 'false' And '$(FrameworkFlag)' == 'Net4' ">true</BuildForBeatSaber>
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>$(OutputPath)IPA.Loader.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" Condition=" '$(Platform)' == 'Net4' " />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" Condition=" '$(Platform)' == 'Net4' " />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'Net4' ">
+  <PropertyGroup Condition=" '$(BuildForBeatSaber)' == 'true' ">
+    <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(FrameworkFlag)' == 'Net4' ">
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
       <Private>False</Private>
@@ -72,7 +68,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'Net3' ">
+  <ItemGroup Condition=" '$(FrameworkFlag)' == 'Net3' ">
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Refs\UnityEngine.CoreModule.Net3.dll</HintPath>
       <Private>False</Private>
@@ -83,10 +79,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(Platform)' == 'Net3' ">
+    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(FrameworkFlag)' == 'Net3' ">
       <Project>{642F52DA-90F9-40E3-8784-6964F36752FB}</Project>
       <Name>Net3-Proxy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(FrameworkFlag)' == 'Net4'">
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Config.cs" />
@@ -195,6 +203,8 @@
     <PackageReference Include="SemanticVersioning">
       <Version>1.2.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AsyncBridge">
       <Version>0.3.1</Version>
     </PackageReference>
@@ -207,6 +217,5 @@
   <ItemGroup>
     <None Include="icon_black.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
