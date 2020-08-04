@@ -14,9 +14,6 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=C:\</PathMap>
     <DebugType>portable</DebugType>
-    <ShowTargetFrameworks>false</ShowTargetFrameworks>
-    <ShowTargetFrameworks Condition=" '$(BuildingInsideVisualStudio)' != 'true' Or '$(CI)' == 'True' ">true</ShowTargetFrameworks>
-    <TargetFrameworks Condition=" '$(ShowTargetFrameworks)' == 'true' ">net461;net35</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
