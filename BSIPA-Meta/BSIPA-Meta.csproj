@@ -31,24 +31,26 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\IPA\IPA.csproj" AdditionalProperties="TargetFramework=net461" />
-    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" />
-    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" />
-    <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj" />
+    <ProjectReference Include="..\IPA\IPA.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj">
+      <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
+      <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+    <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj" ReferenceOutputAssembly="false">
+      <SetConfiguration>Configuration=$(ProxyConfig)</SetConfiguration>
+      <SetPlatform>Platform=$(ProxyPlatform)</SetPlatform>
+    </ProjectReference>
   </ItemGroup>
   
-  <Target Name="Restore" />
   <Target Name="Clean">
     <ItemGroup>
       <Files Include="$(OutputPath)**\*" />
     </ItemGroup>
     <Delete Files="@(Files)" />
-  </Target>
-  <Target Name="Rebuild">
-    <CallTarget Targets="Assemble" />
-  </Target>
-  <Target Name="Build">
-    <CallTarget Targets="Assemble" />
   </Target>
   <Target Name="CoreCompile">
     <CallTarget Targets="Assemble" />
