@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Net4</Platform>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(Platform)' == 'Net4' ">true</BuildForBeatSaber>
+    <ProjectGuid>{2A1AF16B-27F1-46E0-9A95-181516BC1CB7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IPA.Injector</RootNamespace>
+    <AssemblyName>IPA.Injector</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <PathMap>$(SolutionDir)=C:\</PathMap>
+    <DebugType>portable</DebugType>
+    <LangVersion>8.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\$(Platform)\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\$(Platform)\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'Net4' ">
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);NET4</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'Net3' ">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);NET3</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(BuildForBeatSaber)' == 'true' ">
+    <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.CoreModule" Condition=" '$(Platform)' == 'Net4' ">
+      <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" Condition=" '$(Platform)' == 'Net3' ">
+      <HintPath>..\Refs\UnityEngine.CoreModule.Net3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AntiPiracy.cs" />
+    <Compile Include="Backups\BackupManager.cs" />
+    <Compile Include="Backups\BackupUnit.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="GameVersionEarly.cs" />
+    <Compile Include="Injector.cs" />
+    <Compile Include="PermissionFix.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Updates.cs" />
+    <Compile Include="Virtualizer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
+      <Project>{5ad344f0-01a0-4ca8-92e5-9d095737744d}</Project>
+      <Name>IPA.Loader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(Platform)' == 'Net3' ">
+      <Project>{642F52DA-90F9-40E3-8784-6964F36752FB}</Project>
+      <Name>Net3-Proxy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'Net4' ">
+    <Content Include="..\Libs\I18N.Net4.dll">
+      <Link>Libraries\Mono\I18N.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\I18N.West.Net4.dll">
+      <Link>Libraries\Mono\I18N.West.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\Microsoft.CSharp.dll">
+      <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\System.Runtime.Serialization.Net4.dll">
+      <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'Net3' ">
+    <Content Include="..\Libs\I18N.Net3.dll">
+      <Link>Libraries\Mono\I18N.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\I18N.West.Net3.dll">
+      <Link>Libraries\Mono\I18N.West.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Libs\System.Runtime.Serialization.Net3.dll">
+      <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil">
+      <Version>0.10.4</Version>
+    </PackageReference>
+    <PackageReference Include="SemanticVersioning">
+      <Version>1.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="AsyncBridge">
+      <Version>0.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Message Text="Relocating" Importance="normal" />
+    <ItemGroup>
+      <SystemFiles Include="$(OutputPath)IPA.Injector.*" />
+      <SystemFiles Include="$(OutputPath)IPA.Loader.*" />
+      <SystemFiles Include="$(OutputPath)AsyncBridge.*" />
+      <SystemFiles Include="$(OutputPath)System.*" />
+      <SystemFiles Include="$(OutputPath)Portable.System.*" />
+      <SystemFiles Include="$(OutputPath)Net3-Proxy.*" />
+      <SystemFiles Include="$(OutputPath)Libraries\Mono\**\*" />
+      <OldLibFiles Include="$(OutputPath)Libs\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
+    <RemoveDir Directories="$(OutputPath)Libraries\Mono" />
+    
+    <Delete Files="@(OldLibFiles)" />
+    <RemoveDir Directories="$(OutputPath)Libs" />
+    <ItemGroup>
+      <LibFiles Include="$(OutputPath)**\*" Exclude="$(OutputPath)Data\**\*;$(OutputPath)Libs\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(LibFiles)" DestinationFolder="$(OutputPath)Libs\" />
+    <RemoveDir Directories="$(OutputPath)Libraries\Included" />
+    <RemoveDir Directories="$(OutputPath)Libraries" />
+  </Target>
+</Project>

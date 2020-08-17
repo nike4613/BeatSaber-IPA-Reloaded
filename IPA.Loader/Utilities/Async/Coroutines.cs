@@ -56,16 +56,22 @@ namespace IPA.Utilities.Async
             if (!UnityGame.OnMainThread)
                 return UnityMainThreadTaskScheduler.Factory.StartNew(() => AsTask(coroutine)).Unwrap();
 
-            var tcs = new TaskCompletionSource<VoidStruct>(coroutine, TaskCreationOptions.RunContinuationsAsynchronously);
+            var tcs = new TaskCompletionSource<VoidStruct>(coroutine, AsTaskSourceOptions);
             PluginComponent.Instance.StartCoroutine(new AsTaskCoroutineExecutor(coroutine, tcs));
             return tcs.Task;
         }
+
+#if NET4
+        private static readonly TaskCreationOptions AsTaskSourceOptions = TaskCreationOptions.RunContinuationsAsynchronously;
+#else
+        private static readonly TaskCreationOptions AsTaskSourceOptions = TaskCreationOptions.None;
+#endif
 
         private struct VoidStruct { }
         private class ExceptionLocation : Exception
         {
             public ExceptionLocation(IEnumerable<string> locations) 
-                : base(string.Join("\n", locations.Select(s => "in " + s)))
+                : base(string.Join("\n", Utils.StrJP(locations.Select(s => "in " + s))))
             {
             }
         }
