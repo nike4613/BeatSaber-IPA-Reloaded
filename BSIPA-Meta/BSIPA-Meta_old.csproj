@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Assemble" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64-Net4</Platform>
+    <ProjectGuid>{880A3560-82CD-4836-996B-11BEFE6B44DB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BSIPA_Meta</RootNamespace>
+    <AssemblyName>Meta Project</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86-Net4' Or '$(Platform)' == 'x86-Net3' ">
+    <ProxyPlatform>Win32</ProxyPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x64-Net4' Or '$(Platform)' == 'x64-Net3' ">
+    <ProxyPlatform>x64</ProxyPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86-Net4' Or '$(Platform)' == 'x64-Net4' ">
+    <NetPlatform>Net4</NetPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86-Net3' Or '$(Platform)' == 'x64-Net3' ">
+    <NetPlatform>Net3</NetPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Debug</NoVerboseConfig>
+    <OtherConfig>Debug</OtherConfig>
+    <ProxyConfig>Release</ProxyConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Release</NoVerboseConfig>
+    <OtherConfig>Release</OtherConfig>
+    <ProxyConfig>Release</ProxyConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Verbose' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Debug</NoVerboseConfig>
+    <OtherConfig>Verbose</OtherConfig>
+    <ProxyConfig>Verbose_Release</ProxyConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Verbose_Release' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoVerboseConfig>Release</NoVerboseConfig>
+    <OtherConfig>Verbose_Release</OtherConfig>
+    <ProxyConfig>Verbose_Release</ProxyConfig>
+  </PropertyGroup>
+  <Target Name="Restore" />
+  <Target Name="Clean">
+    <ItemGroup>
+      <Files Include="$(OutputPath)**\*" />
+    </ItemGroup>
+    <Delete Files="@(Files)" />
+  </Target>
+  <Target Name="Rebuild">
+    <CallTarget Targets="Assemble" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="Assemble" />
+  </Target>
+  <Target Name="Assemble" Returns="$(OutputPath)">
+    <Message Text="Packing..." Importance="High" />
+    <Message Text="Results will be put in $(OutputPath)" Importance="High" />
+    <ItemGroup>
+      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(NoVerboseConfig)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NetPlatform)\$(NoVerboseConfig)\Libraries\**\*" />
+      <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
+      <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
+      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(OtherConfig)\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
+    <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
+    <Move Condition="Exists('$(OutputPath)IPA\proxy.pdb')" SourceFiles="$(OutputPath)IPA\proxy.pdb" DestinationFiles="$(OutputPath)IPA\winhttp.pdb" />
+    <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
+    <ItemGroup>
+      <BadFiles Include="$(OutputPath)*.dll" />
+      <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
+    </ItemGroup>
+    <Delete Files="@(BadFiles)" />
+    <RemoveDir Directories="$(OutputPath)Libraries\" />
+  </Target>
+</Project>
