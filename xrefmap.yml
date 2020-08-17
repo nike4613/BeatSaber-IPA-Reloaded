@@ -5081,11 +5081,11 @@ references:
   fullName: IPA.Utilities.AlmostVersion
   nameWithType: AlmostVersion
 - uid: IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)
-  name: AlmostVersion(SemVer.Version)
+  name: AlmostVersion(Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_SemVer_Version_
   commentId: M:IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)
   fullName: IPA.Utilities.AlmostVersion.AlmostVersion(SemVer.Version)
-  nameWithType: AlmostVersion.AlmostVersion(SemVer.Version)
+  nameWithType: AlmostVersion.AlmostVersion(Version)
 - uid: IPA.Utilities.AlmostVersion.#ctor(System.String)
   name: AlmostVersion(String)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_System_String_
@@ -5118,11 +5118,11 @@ references:
   fullName: IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)
   nameWithType: AlmostVersion.CompareTo(AlmostVersion)
 - uid: IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)
-  name: CompareTo(SemVer.Version)
+  name: CompareTo(Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version_
   commentId: M:IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)
   fullName: IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)
-  nameWithType: AlmostVersion.CompareTo(SemVer.Version)
+  nameWithType: AlmostVersion.CompareTo(Version)
 - uid: IPA.Utilities.AlmostVersion.CompareTo*
   name: CompareTo
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_
@@ -5170,23 +5170,23 @@ references:
   fullName: IPA.Utilities.AlmostVersion.Equality
   nameWithType: AlmostVersion.Equality
 - uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version
-  name: Implicit(AlmostVersion to SemVer.Version)
+  name: Implicit(AlmostVersion to Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version
   commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version
-  name.vb: Widening(AlmostVersion to SemVer.Version)
+  name.vb: Widening(AlmostVersion to Version)
   fullName: IPA.Utilities.AlmostVersion.Implicit(IPA.Utilities.AlmostVersion to SemVer.Version)
   fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to SemVer.Version)
-  nameWithType: AlmostVersion.Implicit(AlmostVersion to SemVer.Version)
-  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to SemVer.Version)
+  nameWithType: AlmostVersion.Implicit(AlmostVersion to Version)
+  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Version)
 - uid: IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion
-  name: Implicit(SemVer.Version to AlmostVersion)
+  name: Implicit(Version to AlmostVersion)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion
   commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion
-  name.vb: Widening(SemVer.Version to AlmostVersion)
+  name.vb: Widening(Version to AlmostVersion)
   fullName: IPA.Utilities.AlmostVersion.Implicit(SemVer.Version to IPA.Utilities.AlmostVersion)
   fullName.vb: IPA.Utilities.AlmostVersion.Widening(SemVer.Version to IPA.Utilities.AlmostVersion)
-  nameWithType: AlmostVersion.Implicit(SemVer.Version to AlmostVersion)
-  nameWithType.vb: AlmostVersion.Widening(SemVer.Version to AlmostVersion)
+  nameWithType: AlmostVersion.Implicit(Version to AlmostVersion)
+  nameWithType.vb: AlmostVersion.Widening(Version to AlmostVersion)
 - uid: IPA.Utilities.AlmostVersion.op_Implicit*
   name: Implicit
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_
@@ -7083,11 +7083,11 @@ references:
   fullName: IPA.Utilities.Utils.UnsafeCompare
   nameWithType: Utils.UnsafeCompare
 - uid: IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version,SemVer.Version)
-  name: VersionCompareNoPrerelease(SemVer.Version, SemVer.Version)
+  name: VersionCompareNoPrerelease(Version, Version)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_SemVer_Version_SemVer_Version_
   commentId: M:IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version,SemVer.Version)
   fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version, SemVer.Version)
-  nameWithType: Utils.VersionCompareNoPrerelease(SemVer.Version, SemVer.Version)
+  nameWithType: Utils.VersionCompareNoPrerelease(Version, Version)
 - uid: IPA.Utilities.Utils.VersionCompareNoPrerelease*
   name: VersionCompareNoPrerelease
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_
