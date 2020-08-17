@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
 
   <PropertyGroup>
     <TargetFrameworks>net35;net461</TargetFrameworks>
@@ -7,10 +7,14 @@
     
     <RootNamespace>BSIPA_Meta</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    
+    <PackageAction>Assemble</PackageAction>
+    <InnerTargets>Assemble</InnerTargets>
   </PropertyGroup>
   
   <PropertyGroup>
-    <OutputPath>bin\$(Platform)\$(Configuration)\$(TargetFramework)</OutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     
     <IsVerbose>false</IsVerbose>
     <IsVerbose Condition="'$(Configuration)' == 'Verbose' Or '$(Configuration)' == 'Verbose_Release'">true</IsVerbose>
@@ -26,6 +30,13 @@
     <ProxyPlatform Condition="'$(Platform)' == 'x64'">x64</ProxyPlatform>
   </PropertyGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\IPA\IPA.csproj" AdditionalProperties="TargetFramework=net461" />
+    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" />
+    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" />
+    <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj" />
+  </ItemGroup>
+  
   <Target Name="Restore" />
   <Target Name="Clean">
     <ItemGroup>
@@ -39,12 +50,14 @@
   <Target Name="Build">
     <CallTarget Targets="Assemble" />
   </Target>
+  <Target Name="CoreCompile">
+    <CallTarget Targets="Assemble" />
+  </Target>
   <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     <ItemGroup>
-      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\**\*" 
-                 Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\Libraries\**\*" />
+      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\**\*" />
