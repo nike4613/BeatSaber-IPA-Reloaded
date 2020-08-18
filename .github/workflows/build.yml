@@ -32,16 +32,16 @@ jobs:
       - name: Locate MSBuild
         uses: warrenbuckley/Setup-MSBuild@v1
       - name: Restore
-        run: msbuild -t:Restore
+        run: msbuild -t:Restore -m
       - name: Build
-        run: msbuild -t:Build
+        run: msbuild -t:Build -m
       - name: Upload net461
         uses: actions/upload-artifact@v2
         with:
-          name: BSIPA-net461
+          name: BSIPA-net461-${{ env.Platform }}
           path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net461/
       - name: Upload net35
         uses: actions/upload-artifact@v2
         with:
-          name: BSIPA-net35
+          name: BSIPA-net35-${{ env.Platform }}
           path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net35/
