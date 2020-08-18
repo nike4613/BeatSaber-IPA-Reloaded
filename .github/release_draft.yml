@@ -1,0 +1,19 @@
+name-template: 'BSIPA $RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
+categories:
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+template: |
+    [*All Changes*](https://github.com/bsmg/BeatSaber-IPA-Reloaded/compare/$PREVIOUS_TAG...$RESOLVED_VERSION)
+    [*Documentation Permalink*](https://bsmg.github.io/BeatSaber-IPA-Reloaded/tags/$RESOLVED_VERSION/index.html)
