@@ -42,11 +42,3 @@ jobs:
         with:
           name: BSIPA-net35-${{ env.Platform }}
           path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net35/
-      - name: Create Release Draft
-        id: create_release
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release_draft.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # TODO: make it auto-upload assets
