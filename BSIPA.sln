@@ -18,7 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C79C2C3A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D6639A2-BD39-4F9B-AF7F-8E5F3B88243D}"
 	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\docs.yml = .github\workflows\docs.yml
 		README.md = README.md
