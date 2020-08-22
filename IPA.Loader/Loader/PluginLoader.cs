@@ -39,6 +39,7 @@ namespace IPA.Loader
 
             LoadMetadata();
             Resolve();
+            InitFeatures();
             ComputeLoadOrder();
             FilterDisabled();
             FilterWithoutFiles();
@@ -687,57 +688,47 @@ namespace IPA.Loader
 
         internal static void InitFeatures()
         {
-            var parsedFeatures = PluginsMetadata.Select(m =>
-                    (metadata: m,
-                     features: m.Manifest.Features.Select(feature =>
-                            (feature, parsed: Ref.Create<Feature.FeatureParse?>(null))
-                        ).ToList()
-                    )
-                ).ToList();
-
-            while (DefineFeature.NewFeature)
+            foreach (var meta in PluginsMetadata)
             {
-                DefineFeature.NewFeature = false;
-
-                foreach (var (metadata, features) in parsedFeatures)
-                    for (var i = 0; i < features.Count; i++)
-                    {
-                        var feature = features[i];
-
-                        var success = Feature.TryParseFeature(feature.feature, metadata, out var featureObj,
-                            out var exception, out var valid, out var parsed, feature.parsed.Value);
-
-                        if (!success && !valid && featureObj == null && exception == null) // no feature of type found
-                            feature.parsed.Value = parsed;
-                        else if (success)
+                foreach (var feature in meta.Manifest.Features.Select(f => new Feature.Instance(meta, f.Key, f.Value)))
+                {
+                    if (feature.TryGetDefiningPlugin(out var plugin) && plugin == null)
+                    { // this is a DefineFeature, so we want to initialize it early
+                        if (!feature.TryCreate(out var inst))
                         {
-                            if (valid && featureObj.StoreOnPlugin)
-                                metadata.InternalFeatures.Add(featureObj);
-                            else if (!valid)
-                                Logger.features.Warn(
-                                    $"Feature not valid on {metadata.Name}: {featureObj.InvalidMessage}");
-                            features.RemoveAt(i--);
+                            Logger.features.Error($"Error evaluating {feature.Name}: {inst.InvalidMessage}");
                         }
                         else
                         {
-                            Logger.features.Error($"Error parsing feature definition on {metadata.Name}");
-                            Logger.features.Error(exception);
-                            features.RemoveAt(i--);
+                            meta.InternalFeatures.Add(inst);
                         }
                     }
-
-                foreach (var plugin in PluginsMetadata)
-                    foreach (var feature in plugin.Features)
-                        feature.Evaluate();
+                    else
+                    { // this is literally any other feature, so we want to delay its initialization
+                        meta.UnloadedFeatures.Add(feature);
+                    }
+                }
             }
 
-            foreach (var plugin in parsedFeatures)
+            // at this point we have pre-initialized all features, so we can go ahead and use them to add stuff to the dep resolver
+            foreach (var meta in PluginsMetadata)
             {
-                if (plugin.features.Count <= 0) continue;
+                foreach (var feature in meta.UnloadedFeatures)
+                {
+                    if (feature.TryGetDefiningPlugin(out var plugin))
+                    {
+                        if (plugin != meta)
+                        { // if the feature is not applied to the defining feature
+                            meta.LoadsAfter.Add(plugin);
+                        }
 
-                Logger.features.Warn($"On plugin {plugin.metadata.Name}:");
-                foreach (var feature in plugin.features)
-                    Logger.features.Warn($"    Feature not found with name {feature.feature}");
+                        plugin.CreateFeaturesWhenLoaded.Add(feature);
+                    }
+                    else
+                    {
+                        Logger.features.Warn($"No such feature {feature.Name}");
+                    }
+                }
             }
         }
 
@@ -807,20 +798,6 @@ namespace IPA.Loader
 
             Load(meta);
 
-            foreach (var feature in meta.Features)
-            {
-                if (!feature.BeforeLoad(meta))
-                {
-                    Logger.loader.Warn(
-                        $"Feature {feature?.GetType()} denied plugin {meta.Name} from loading! {feature?.InvalidMessage}");
-                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
-                    {
-                        ReasonText = $"Denied in {nameof(Feature.BeforeLoad)} of feature {feature?.GetType()}:\n\t{feature?.InvalidMessage}"
-                    });
-                    return null;
-                }
-            }
-
             PluginExecutor exec;
             try
             {
@@ -838,10 +815,10 @@ namespace IPA.Loader
                 if (!feature.BeforeInit(meta))
                 {
                     Logger.loader.Warn(
-                        $"Feature {feature?.GetType()} denied plugin {meta.Name} from initializing! {feature?.InvalidMessage}");
+                        $"Feature {feature?.FeatureName} denied plugin {meta.Name} from initializing! {feature?.InvalidMessage}");
                     ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
                     {
-                        ReasonText = $"Denied in {nameof(Feature.BeforeInit)} of feature {feature?.GetType()}:\n\t{feature?.InvalidMessage}"
+                        ReasonText = $"Denied in {nameof(Feature.BeforeInit)} of feature {feature?.FeatureName}:\n\t{feature?.InvalidMessage}"
                     });
                     return null;
                 }
@@ -863,6 +840,21 @@ namespace IPA.Loader
                 return null;
             }
 
+            // TODO: make this new features system behave better wrt DynamicInit plugins
+            foreach (var feature in meta.CreateFeaturesWhenLoaded)
+            {
+                if (!feature.TryCreate(out var inst))
+                {
+                    Logger.features.Warn($"Could not create instance of feature {feature.Name}: {inst.InvalidMessage}");
+                }
+                else
+                {
+                    feature.AppliedTo.InternalFeatures.Add(inst);
+                    feature.AppliedTo.UnloadedFeatures.Remove(feature);
+                }
+            }
+            meta.CreateFeaturesWhenLoaded.Clear(); // if a plugin is loaded twice, for the moment, we don't want to create the feature twice
+
             foreach (var feature in meta.Features)
                 try
                 {
@@ -880,7 +872,6 @@ namespace IPA.Loader
 
         internal static List<PluginExecutor> LoadPlugins()
         {
-            InitFeatures();
             DisabledPlugins.ForEach(Load); // make sure they get loaded into memory so their metadata and stuff can be read more easily
 
             var list = new List<PluginExecutor>();

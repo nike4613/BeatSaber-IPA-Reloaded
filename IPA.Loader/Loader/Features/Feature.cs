@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Mono.Cecil;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 #if NET3
 using Net3_Proxy;
@@ -16,45 +19,23 @@ namespace IPA.Loader.Features
     public abstract class Feature
     {
         /// <summary>
-        /// Initializes the feature with the parameters provided in the definition.
-        ///
-        /// Note: When no parenthesis are provided, <paramref name="parameters"/> is an empty array.
+        /// Initializes the feature with the data provided in the definition.
         /// </summary>
         /// <remarks>
-        /// This gets called BEFORE *your* `Init` method.
-        /// 
-        /// Returning <see langword="false" /> does *not* prevent the plugin from being loaded. It simply prevents the feature from being used.
+        /// <para>This gets called AFTER your <c>Init</c> method, but BEFORE the target's <c>Init</c> method. If it is applied to the defining plugin, <c>BeforeInit</c> is not called.</para>
+        /// <para>Returning <see langword="false" /> does <i>not</i> prevent the plugin from being loaded. It simply prevents the feature from being used.</para>
         /// </remarks>
         /// <param name="meta">the metadata of the plugin that is being prepared</param>
-        /// <param name="parameters">the parameters passed to the feature definition, or null</param>
+        /// <param name="featureData">the data provided with the feature</param>
         /// <returns><see langword="true"/> if the feature is valid for the plugin, <see langword="false"/> otherwise</returns>
-        public abstract bool Initialize(PluginMetadata meta, string[] parameters);
-
-        /// <summary>
-        /// Evaluates the Feature for use in conditional meta-Features. This should be re-calculated on every call, unless it can be proven to not change.
-        ///
-        /// This will be called on every feature that returns <see langword="true" /> from <see cref="Initialize"/>
-        /// </summary>
-        /// <returns>the truthiness of the Feature.</returns>
-        public virtual bool Evaluate() => true;
+        protected abstract bool Initialize(PluginMetadata meta, JObject featureData);
 
         /// <summary>
         /// The message to be logged when the feature is not valid for a plugin.
-        /// This should also be set whenever either <see cref="BeforeLoad"/> or <see cref="BeforeInit"/> returns false.
+        /// This should also be set whenever either <see cref="BeforeInit"/> returns false.
         /// </summary>
         /// <value>the message to show when the feature is marked invalid</value>
         public virtual string InvalidMessage { get; protected set; }
-
-        /// <summary>
-        /// Called before a plugin is loaded. This should never throw an exception. An exception will abort the loading of the plugin with an error.
-        /// </summary>
-        /// <remarks>
-        /// The assembly will still be loaded, but the plugin will not be constructed if this returns <see langword="false" />.
-        /// Any features it defines, for example, will still be loaded.
-        /// </remarks>
-        /// <param name="plugin">the plugin about to be loaded</param>
-        /// <returns>whether or not the plugin should be loaded</returns>
-        public virtual bool BeforeLoad(PluginMetadata plugin) => true;
 
         /// <summary>
         /// Called before a plugin's `Init` method is called. This will not be called if there is no `Init` method. This should never throw an exception. An exception will abort the loading of the plugin with an error.
@@ -77,16 +58,10 @@ namespace IPA.Loader.Features
         public virtual void AfterInit(PluginMetadata plugin) { }
 
         /// <summary>
-        /// Ensures a plugin's assembly is loaded. Do not use unless you need to.
+        /// Called after a plugin with this feature appplied is disabled.
         /// </summary>
-        /// <param name="plugin">the plugin to ensure is loaded.</param>
-        protected void RequireLoaded(PluginMetadata plugin) => PluginLoader.Load(plugin);
-
-        /// <summary>
-        /// Defines whether or not this feature will be accessible from the plugin metadata once loaded.
-        /// </summary>
-        /// <value><see langword="true"/> if this <see cref="Feature"/> will be stored on the plugin metadata, <see langword="false"/> otherwise</value>
-        protected internal virtual bool StoreOnPlugin => true;
+        /// <param name="plugin">the plugin that was disabled</param>
+        public virtual void AfterDisable(PluginMetadata plugin) { }
 
         // TODO: rework features to take arguments as JSON objects
 
@@ -99,39 +74,105 @@ namespace IPA.Loader.Features
         {
             featureTypes = new Dictionary<string, Type>
             {
-                { "define-feature", typeof(DefineFeature) }
+                { "IPA.DefineFeature", typeof(DefineFeature) }
+            };
+            featureDelcarers = new Dictionary<string, PluginMetadata>
+            {
+                { "IPA.DefineFeature", null }
             };
         }
 
         private static Dictionary<string, Type> featureTypes;
+        private static Dictionary<string, PluginMetadata> featureDelcarers;
 
         internal static bool HasFeature(string name) => featureTypes.ContainsKey(name);
 
-        internal static bool RegisterFeature(string name, Type type)
+        internal static bool PreregisterFeature(PluginMetadata defining, string name)
+        {
+            if (featureDelcarers.ContainsKey(name)) return false;
+            featureDelcarers.Add(name, defining);
+            return true;
+        }
+
+        internal static bool RegisterFeature(PluginMetadata definingPlugin, string name, Type type)
         {
             if (!typeof(Feature).IsAssignableFrom(type))
                 throw new ArgumentException($"Feature type not subclass of {nameof(Feature)}", nameof(type));
+
             if (featureTypes.ContainsKey(name)) return false;
+
+            if (featureDelcarers.TryGetValue(name, out var declarer))
+            {
+                if (definingPlugin != declarer)
+                    return false;
+            }
+
             featureTypes.Add(name, type);
             return true;
         }
 
-        internal struct FeatureParse
+        private class EmptyFeature : Feature
         {
-            public readonly string Name;
-            public readonly string[] Parameters;
-
-            public FeatureParse(string name, string[] parameters)
+            protected override bool Initialize(PluginMetadata meta, JObject featureData)
             {
-                Name = name;
-                Parameters = parameters;
+                throw new NotImplementedException();
             }
         }
 
+        internal string FeatureName;
+
+        internal class Instance
+        {
+            public readonly PluginMetadata AppliedTo;
+            public readonly string Name;
+            public readonly JObject Data;
+
+            public Instance(PluginMetadata appliedTo, string name, JObject data)
+            {
+                AppliedTo = appliedTo;
+                Name = name;
+                Data = data;
+                type = null;
+            }
+
+            private Type type;
+            public bool TryGetDefiningPlugin(out PluginMetadata plugin)
+            {
+                return featureDelcarers.TryGetValue(Name, out plugin);
+            }
+
+            // returns whether or not Initialize returned true, feature is always set when the thing exists
+            public bool TryCreate(out Feature feature)
+            {
+                feature = null;
+                if (type == null)
+                {
+                    if (!featureTypes.TryGetValue(Name, out type))
+                        return false;
+                }
+
+                bool result;
+                try
+                {
+                    feature = (Feature)Activator.CreateInstance(type);
+                    feature.FeatureName = Name;
+
+                    result = feature.Initialize(AppliedTo, Data);
+                }
+                catch (Exception e)
+                {
+                    result = false;
+                    feature = new EmptyFeature() { InvalidMessage = e.ToString() };
+                }
+                return result;
+            }
+        }
+
+        /*
         // returns false with both outs null for no such feature
         internal static bool TryParseFeature(string featureString, PluginMetadata plugin,
-            out Feature feature, out Exception failException, out bool featureValid, out FeatureParse parsed,
-            FeatureParse? preParsed = null)
+            out Feature feature, out Exception failException, out bool featureValid, out Instance parsed,
+            Instance? preParsed = null)
         {
             failException = null;
             feature = null;
@@ -190,7 +231,7 @@ namespace IPA.Loader.Features
                 if (name == null)
                     name = builder.ToString();
 
-                parsed = new FeatureParse(name, parameters.ToArray());
+                parsed = new Instance(name, parameters.ToArray());
 
                 if (parens != 0)
                 {
@@ -212,7 +253,7 @@ namespace IPA.Loader.Features
                     return false;
                 }
 
-                featureValid = aFeature.Initialize(plugin, parsed.Parameters);
+                featureValid = aFeature.Initialize(plugin, TODO);
                 feature = aFeature;
                 return true;
             }
@@ -221,6 +262,6 @@ namespace IPA.Loader.Features
                 failException = e;
                 return false;
             }
-        }
+        }*/
     }
 }

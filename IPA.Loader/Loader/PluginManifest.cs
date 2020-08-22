@@ -1,6 +1,7 @@
 ﻿using IPA.JsonConverters;
 using IPA.Utilities;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SemVer;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace IPA.Loader
         public Dictionary<string, Range> Conflicts = new Dictionary<string, Range>();
 
         [JsonProperty("features", Required = Required.DisallowNull)]
-        public string[] Features = Array.Empty<string>();
+        public Dictionary<string, JObject> Features = new Dictionary<string, JObject>();
 
         [JsonProperty("loadBefore", Required = Required.DisallowNull)]
         public string[] LoadBefore = Array.Empty<string>();

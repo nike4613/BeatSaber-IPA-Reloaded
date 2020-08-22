@@ -76,6 +76,10 @@ namespace IPA.Loader
 
         internal readonly List<Feature> InternalFeatures = new List<Feature>();
 
+        internal readonly HashSet<Feature.Instance> UnloadedFeatures = new HashSet<Feature.Instance>();
+
+        internal readonly List<Feature.Instance> CreateFeaturesWhenLoaded = new List<Feature.Instance>();
+
         /// <summary>
         /// A list of files (that aren't <see cref="File"/>) that are associated with this plugin.
         /// </summary>
