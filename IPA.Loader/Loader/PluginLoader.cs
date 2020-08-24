@@ -812,15 +812,14 @@ namespace IPA.Loader
 
             foreach (var feature in meta.Features)
             {
-                if (!feature.BeforeInit(meta))
+                try
                 {
-                    Logger.loader.Warn(
-                        $"Feature {feature?.FeatureName} denied plugin {meta.Name} from initializing! {feature?.InvalidMessage}");
-                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Feature)
-                    {
-                        ReasonText = $"Denied in {nameof(Feature.BeforeInit)} of feature {feature?.FeatureName}:\n\t{feature?.InvalidMessage}"
-                    });
-                    return null;
+                    feature.BeforeInit(meta);
+                }
+                catch (Exception e)
+                {
+                    Logger.loader.Critical($"Feature errored in {nameof(Feature.BeforeInit)}:");
+                    Logger.loader.Critical(e);
                 }
             }
 
@@ -862,7 +861,8 @@ namespace IPA.Loader
                 }
                 catch (Exception e)
                 {
-                    Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}: {e}");
+                    Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}:");
+                    Logger.loader.Critical(e);
                 }
 
             return exec;

@@ -13,7 +13,7 @@ namespace IPA.Loader.Features
         private class DataModel
         {
             [JsonProperty("type", Required = Required.Always)]
-            public string TypeName;
+            public string TypeName = "";
             [JsonProperty("name", Required = Required.DisallowNull)]
             public string ActualName = null;
 
@@ -40,7 +40,7 @@ namespace IPA.Loader.Features
             return PreregisterFeature(meta, data.Name);
         }
 
-        public override void AfterInit(PluginMetadata meta, object pluginInstance)
+        public override void BeforeInit(PluginMetadata meta)
         {
             Logger.features.Debug("Executing DefineFeature AfterInit");
 

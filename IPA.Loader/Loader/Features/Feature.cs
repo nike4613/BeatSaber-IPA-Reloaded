@@ -42,7 +42,7 @@ namespace IPA.Loader.Features
         /// </summary>
         /// <param name="plugin">the plugin to be initialized</param>
         /// <returns>whether or not to call the Init method</returns>
-        public virtual bool BeforeInit(PluginMetadata plugin) => true;
+        public virtual void BeforeInit(PluginMetadata plugin) { }
 
         /// <summary>
         /// Called after a plugin has been fully initialized, whether or not there is an `Init` method. This should never throw an exception.

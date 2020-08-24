@@ -10,7 +10,7 @@ namespace IPA.Loader.Features
         private class DataModel
         {
             [JsonProperty("type", Required = Required.Always)]
-            public string TypeName;
+            public string TypeName = "";
         }
 
         protected override bool Initialize(PluginMetadata meta, JObject featureData)
