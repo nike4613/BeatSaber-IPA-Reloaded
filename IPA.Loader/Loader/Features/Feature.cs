@@ -106,6 +106,10 @@ namespace IPA.Loader.Features
                 if (definingPlugin != declarer)
                     return false;
             }
+            else
+            {
+                featureDelcarers.Add(name, definingPlugin);
+            }
 
             featureTypes.Add(name, type);
             return true;
@@ -144,11 +148,13 @@ namespace IPA.Loader.Features
             // returns whether or not Initialize returned true, feature is always set when the thing exists
             public bool TryCreate(out Feature feature)
             {
-                feature = null;
                 if (type == null)
                 {
                     if (!featureTypes.TryGetValue(Name, out type))
+                    {
+                        feature = new EmptyFeature() { InvalidMessage = "No such feature type found", FeatureName = Name };
                         return false;
+                    }
                 }
 
                 bool result;
@@ -162,7 +168,7 @@ namespace IPA.Loader.Features
                 catch (Exception e)
                 {
                     result = false;
-                    feature = new EmptyFeature() { InvalidMessage = e.ToString() };
+                    feature = new EmptyFeature() { InvalidMessage = e.ToString(), FeatureName = Name };
                 }
                 return result;
             }

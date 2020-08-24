@@ -878,11 +878,19 @@ namespace IPA.Loader
             var loaded = new HashSet<PluginMetadata>();
             foreach (var meta in PluginsMetadata)
             {
-                var exec = InitPlugin(meta, loaded);
-                if (exec != null)
+                try
                 {
-                    list.Add(exec);
-                    loaded.Add(meta);
+                    var exec = InitPlugin(meta, loaded);
+                    if (exec != null)
+                    {
+                        list.Add(exec);
+                        loaded.Add(meta);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.log.Critical($"Uncaught exception while loading pluign {meta.Name}:");
+                    Logger.log.Critical(e);
                 }
             }
 
