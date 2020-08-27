@@ -112,7 +112,8 @@ namespace IPA.Config.Stores.Converters
             IValConv<short>, IValConv<ushort>,
             IValConv<sbyte>, IValConv<byte>,
             IValConv<float>, IValConv<double>,
-            IValConv<decimal>, IValConv<bool>
+            IValConv<decimal>, IValConv<bool>,
+            IValConv<DateTime>
         {
             internal static readonly ValConvImpls Impl = new ValConvImpls();
             Type IValConv<char>.Get() => typeof(CharConverter);
@@ -130,6 +131,7 @@ namespace IPA.Config.Stores.Converters
             Type IValConv<double>.Get() => typeof(DoubleConverter);
             Type IValConv<decimal>.Get() => typeof(DecimalConverter);
             Type IValConv<bool>.Get() => typeof(BooleanConverter);
+            Type IValConv<DateTime>.Get() => typeof(DateTimeConverter);
         }
     }
 
@@ -617,5 +619,25 @@ namespace IPA.Config.Stores.Converters
             => (value as Boolean)?.Value ?? throw new ArgumentException("Value not a Boolean", nameof(value));
         public override Value ToValue(bool obj, object parent)
             => Value.From(obj);
+    }
+    
+    internal class DateTimeConverter : ValueConverter<DateTime>
+    {
+        public override DateTime FromValue(Value value, object parent)
+        {
+            if (!(value is Text text))
+            {
+                throw new ArgumentException("Value is not of type Text", nameof(value));
+            }
+
+            if (DateTime.TryParse(text.Value, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            throw new ArgumentException($"Parsing failed, {text.Value}");
+        }
+
+        public override Value ToValue(DateTime obj, object parent) => Value.Text(obj.ToString("O"));
     }
 }
