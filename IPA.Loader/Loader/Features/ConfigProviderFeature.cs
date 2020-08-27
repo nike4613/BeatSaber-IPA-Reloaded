@@ -1,28 +1,39 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 
 namespace IPA.Loader.Features
 {
     internal class ConfigProviderFeature : Feature
     {
-        public override bool Initialize(PluginMetadata meta, string[] parameters)
-        {// parameters should be (fully qualified name of provider type)
-            if (parameters.Length != 1)
+        private class DataModel
+        {
+            [JsonProperty("type", Required = Required.Always)]
+            public string TypeName = "";
+        }
+
+        protected override bool Initialize(PluginMetadata meta, JObject featureData)
+        {
+            DataModel data;
+            try
             {
-                InvalidMessage = "Incorrect number of parameters";
+                data = featureData.ToObject<DataModel>();
+            }
+            catch (Exception e)
+            {
+                InvalidMessage = $"Invalid data: {e}";
                 return false;
             }
-
-            RequireLoaded(meta);
 
             Type getType;
             try
             {
-                getType = meta.Assembly.GetType(parameters[0]);
+                getType = meta.Assembly.GetType(data.TypeName);
             }
             catch (ArgumentException)
             {
-                InvalidMessage = $"Invalid type name {parameters[0]}";
+                InvalidMessage = $"Invalid type name {data.TypeName}";
                 return false;
             }
             catch (Exception e) when (e is FileNotFoundException || e is FileLoadException || e is BadImageFormatException)

@@ -5,22 +5,20 @@
     "#![IPA.Loader.description.md]",
     "A mod loader specifically for Beat Saber."
   ],
-  "gameVersion": "1.8.0",
+  "gameVersion": "1.11.0",
   "id": "BSIPA",
   "name": "Beat Saber IPA",
-  "version": "4.0.6",
+  "version": "4.1.0",
   "icon": "IPA.icon_white.png",
-  "features": [
-    "define-feature(print, IPA.Loader.Features.PrintFeature)",
-    "define-feature(debug, IPA.Loader.Features.DebugFeature)",
-    "define-feature(warn, IPA.Loader.Features.WarnFeature)",
-    "define-feature(no-update, IPA.Loader.Features.NoUpdateFeature)",
-    "define-feature(init-injector, IPA.Loader.Features.InitInjectorFeature)",
-    "define-feature(config-provider, IPA.Loader.Features.ConfigProviderFeature)"
-  ],
+  "features": {
+    "IPA.DefineFeature": {
+      "type": "IPA.Loader.Features.ConfigProviderFeature",
+      "name": "IPA.ConfigProvider"
+    }
+  },
   "links": {
-    "project-home": "https://beat-saber-modding-group.github.io/BeatSaber-IPA-Reloaded/index.html",
-    "project-source": "https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded",
+    "project-home": "https://bsmg.github.io/BeatSaber-IPA-Reloaded/index.html",
+    "project-source": "https://github.com/bsmg/BeatSaber-IPA-Reloaded",
     "donate": "https://ko-fi.com/danike"
   },
   "files": [

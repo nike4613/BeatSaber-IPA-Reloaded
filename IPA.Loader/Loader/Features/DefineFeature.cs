@@ -1,4 +1,7 @@
-﻿using System;
+﻿using IPA.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 
 namespace IPA.Loader.Features
@@ -7,27 +10,49 @@ namespace IPA.Loader.Features
     {
         public static bool NewFeature = true;
 
-        protected internal override bool StoreOnPlugin => false;
+        private class DataModel
+        {
+            [JsonProperty("type", Required = Required.Always)]
+            public string TypeName = "";
+            [JsonProperty("name", Required = Required.DisallowNull)]
+            public string ActualName = null;
 
-        public override bool Initialize(PluginMetadata meta, string[] parameters)
-        { // parameters should be (name, fully qualified type)
-            if (parameters.Length != 2)
+            public string Name => ActualName ?? TypeName;
+        }
+
+        private DataModel data;
+
+        protected override bool Initialize(PluginMetadata meta, JObject featureData)
+        {
+            Logger.features.Debug("Executing DefineFeature Init");
+
+            try
             {
-                InvalidMessage = "Incorrect number of parameters";
+                data = featureData.ToObject<DataModel>();
+            }
+            catch (Exception e)
+            {
+                InvalidMessage = $"Invalid data: {e}";
                 return false;
             }
-            
-            RequireLoaded(meta);
+
+            InvalidMessage = $"Feature {data.Name} already exists";
+            return PreregisterFeature(meta, data.Name);
+        }
+
+        public override void BeforeInit(PluginMetadata meta)
+        {
+            Logger.features.Debug("Executing DefineFeature AfterInit");
 
             Type type;
             try
             {
-                type = meta.Assembly.GetType(parameters[1]);
+                type = meta.Assembly.GetType(data.TypeName);
             }
             catch (ArgumentException)
             {
-                InvalidMessage = $"Invalid type name {parameters[1]}";
-                return false;
+                Logger.features.Error($"Invalid type name {data.TypeName}");
+                return;
             }
             catch (Exception e) when (e is FileNotFoundException || e is FileLoadException || e is BadImageFormatException)
             {
@@ -46,28 +71,31 @@ namespace IPA.Loader.Features
                         break;
                 }
 
-                InvalidMessage = $"Could not find {filename} while loading type";
-                return false;
+                Logger.features.Error($"Could not find {filename} while loading type");
+                return;
             }
 
             if (type == null)
             {
-                InvalidMessage = $"Invalid type name {parameters[1]}";
-                return false;
+                Logger.features.Error($"Invalid type name {data.TypeName}");
+                return;
             }
 
             try
             {
-                if (RegisterFeature(parameters[0], type)) return NewFeature = true;
+                if (RegisterFeature(meta, data.Name, type))
+                {
+                    NewFeature = true;
+                    return;
+                }
 
-                InvalidMessage = $"Feature with name {parameters[0]} already exists";
-                return false;
-
+                Logger.features.Error($"Feature with name {data.Name} already exists");
+                return;
             }
             catch (ArgumentException)
             {
-                InvalidMessage = $"{type.FullName} not a subclass of {nameof(Feature)}";
-                return false;
+                Logger.features.Error($"{type.FullName} not a subclass of {nameof(Feature)}");
+                return;
             }
         }
     }

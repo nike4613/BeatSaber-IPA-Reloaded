@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform: ["x86", "x64"]
+    env:
+      Configuration: Release
+      Platform: ${{ matrix.platform }}
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Locate MSBuild
+        uses: warrenbuckley/Setup-MSBuild@v1
+      - name: Restore
+        run: msbuild -t:Restore -m
+      - name: Build
+        run: msbuild -t:Build -m
+      - name: Upload net461
+        uses: actions/upload-artifact@v2
+        with:
+          name: BSIPA-net461-${{ env.Platform }}
+          path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net461/
+      - name: Upload net35
+        uses: actions/upload-artifact@v2
+        with:
+          name: BSIPA-net35-${{ env.Platform }}
+          path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net35/

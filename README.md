@@ -1,3 +1,3 @@
-# ![BSIPA](docs/images/banner_dark.svg) [![Build status](https://ci.appveyor.com/api/projects/status/1ruhnnfeudrrd097?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb)
+# ![BSIPA](docs/images/banner_dark.svg) [![Build](https://github.com/bsmg/BeatSaber-IPA-Reloaded/workflows/Build/badge.svg)](https://github.com/bsmg/BeatSaber-IPA-Reloaded)
 
-[ALL DOCUMENTATION HAS MOVED HERE](https://beat-saber-modding-group.github.io/BeatSaber-IPA-Reloaded/)
+[ALL DOCUMENTATION HAS MOVED HERE](https://bsmg.github.io/BeatSaber-IPA-Reloaded/)

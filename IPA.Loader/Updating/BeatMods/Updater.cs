@@ -204,11 +204,6 @@ namespace IPA.Updating.BeatMods
                         LocalPluginMeta = msinfo
                     };
 
-                    if (msinfo.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
-                    { // disable updating, by only matching self, so that dependencies can still be resolved
-                        dep.Requirement = new Range(msinfo.Version.ToString());
-                    }
-
                     depList.Value.Add(dep);
                 }
             }
@@ -225,11 +220,6 @@ namespace IPA.Updating.BeatMods
                         LocalPluginMeta = meta
                     };
 
-                    if (meta.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
-                    { // disable updating, by only matching self
-                        dep.Requirement = new Range(meta.Version.ToString());
-                    }
-
                     depList.Value.Add(dep);
                 }
             }
@@ -245,11 +235,6 @@ namespace IPA.Updating.BeatMods
                         Requirement = new Range($">={meta.Version}"),
                         LocalPluginMeta = meta
                     };
-
-                    if (meta.Features.FirstOrDefault(f => f is NoUpdateFeature) != null)
-                    { // disable updating, by only matching self
-                        dep.Requirement = new Range(meta.Version.ToString());
-                    }
 
                     depList.Value.Add(dep);
                 }

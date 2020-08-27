@@ -14,6 +14,7 @@ using UnityEngine;
 using Logger = IPA.Logging.Logger;
 using System.Threading.Tasks;
 using IPA.Utilities.Async;
+using IPA.Loader.Features;
 #if NET4
 using TaskEx = System.Threading.Tasks.Task;
 using TaskEx6 = System.Threading.Tasks.Task;
@@ -189,16 +190,33 @@ namespace IPA.Loader
                     {
                         if (alreadyDisabled.TryGetValue(exec.Executor, out var task))
                             return task;
-                        else 
+                        else
                         {
                             if (exec.Executor.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit)
                                 return TaskEx6.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
 
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
-                                 .ContinueWith(t => t.IsFaulted 
-                                    ? TaskEx.WhenAll(t, TaskEx6.FromException(
-                                        new CannotRuntimeDisableException(exec.Executor.Metadata, "Dependents cannot be disabled for plugin"))) 
-                                    : exec.Executor.Disable(), UnityMainThreadTaskScheduler.Default).Unwrap();
+                                 .ContinueWith(t => 
+                                 {
+                                     if (t.IsFaulted) {
+                                         return TaskEx.WhenAll(t, TaskEx6.FromException(
+                                             new CannotRuntimeDisableException(exec.Executor.Metadata, "Dependents cannot be disabled for plugin")));
+                                     }
+                                     return exec.Executor.Disable()
+                                        .ContinueWith(t =>
+                                        {
+                                            foreach (var feature in exec.Executor.Metadata.Features)
+                                            {
+                                                try { 
+                                                    feature.AfterDisable(exec.Executor.Metadata);
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterDisable)}: {e}");
+                                                }
+                                            }
+                                        }, UnityMainThreadTaskScheduler.Default);
+                                 }, UnityMainThreadTaskScheduler.Default).Unwrap();
                             // We do not want to call the disable method if a dependent couldn't be disabled
                             // By scheduling on a UnityMainThreadScheduler, we ensure that Disable() is always called on the Unity main thread
                             alreadyDisabled.Add(exec.Executor, res);
