@@ -114,7 +114,7 @@ namespace IPA.Config.Stores.Converters
             IValConv<sbyte>, IValConv<byte>,
             IValConv<float>, IValConv<double>,
             IValConv<decimal>, IValConv<bool>,
-            IValConv<DateTime>
+            IValConv<DateTime>, IValConv<DateTimeOffset>
         {
             internal static readonly ValConvImpls Impl = new ValConvImpls();
             Type IValConv<char>.Get() => typeof(CharConverter);
@@ -133,6 +133,7 @@ namespace IPA.Config.Stores.Converters
             Type IValConv<decimal>.Get() => typeof(DecimalConverter);
             Type IValConv<bool>.Get() => typeof(BooleanConverter);
             Type IValConv<DateTime>.Get() => typeof(DateTimeConverter);
+            Type IValConv<DateTimeOffset>.Get() => typeof(DateTimeOffsetConverter);
         }
     }
 
@@ -657,7 +658,7 @@ namespace IPA.Config.Stores.Converters
         public override Value ToValue(bool obj, object parent)
             => Value.From(obj);
     }
-    
+
     internal class DateTimeConverter : ValueConverter<DateTime>
     {
         public override DateTime FromValue(Value value, object parent)
@@ -676,5 +677,25 @@ namespace IPA.Config.Stores.Converters
         }
 
         public override Value ToValue(DateTime obj, object parent) => Value.Text(obj.ToString("O"));
+    }
+
+    internal class DateTimeOffsetConverter : ValueConverter<DateTimeOffset>
+    {
+        public override DateTimeOffset FromValue(Value value, object parent)
+        {
+            if (!(value is Text text))
+            {
+                throw new ArgumentException("Value is not of type Text", nameof(value));
+            }
+
+            if (DateTimeOffset.TryParse(text.Value, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            throw new ArgumentException($"Parsing failed, {text.Value}");
+        }
+
+        public override Value ToValue(DateTimeOffset obj, object parent) => Value.Text(obj.ToString("O"));
     }
 }
