@@ -2269,6 +2269,38 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.EnumConverter(Of T).ToValue
   nameWithType: EnumConverter<T>.ToValue
   nameWithType.vb: EnumConverter(Of T).ToValue
+- uid: IPA.Config.Stores.Converters.HexColorConverter
+  name: HexColorConverter
+  href: api/IPA.Config.Stores.Converters.HexColorConverter.html
+  commentId: T:IPA.Config.Stores.Converters.HexColorConverter
+  fullName: IPA.Config.Stores.Converters.HexColorConverter
+  nameWithType: HexColorConverter
+- uid: IPA.Config.Stores.Converters.HexColorConverter.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.HexColorConverter.html#IPA_Config_Stores_Converters_HexColorConverter_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.HexColorConverter.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.HexColorConverter.FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: HexColorConverter.FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.HexColorConverter.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.HexColorConverter.html#IPA_Config_Stores_Converters_HexColorConverter_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.HexColorConverter.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.HexColorConverter.FromValue
+  nameWithType: HexColorConverter.FromValue
+- uid: IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color,System.Object)
+  name: ToValue(Color, Object)
+  href: api/IPA.Config.Stores.Converters.HexColorConverter.html#IPA_Config_Stores_Converters_HexColorConverter_ToValue_UnityEngine_Color_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color,System.Object)
+  fullName: IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color, System.Object)
+  nameWithType: HexColorConverter.ToValue(Color, Object)
+- uid: IPA.Config.Stores.Converters.HexColorConverter.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.HexColorConverter.html#IPA_Config_Stores_Converters_HexColorConverter_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.HexColorConverter.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.HexColorConverter.ToValue
+  nameWithType: HexColorConverter.ToValue
 - uid: IPA.Config.Stores.Converters.IDictionaryConverter`1
   name: IDictionaryConverter<TValue>
   href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html

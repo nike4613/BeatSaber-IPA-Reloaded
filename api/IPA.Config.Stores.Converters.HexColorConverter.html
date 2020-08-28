@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class ConfigProvider
+    <title>Class HexColorConverter
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class ConfigProvider
+    <meta name="title" content="Class HexColorConverter
    ">
     <meta name="generator" content="docfx 2.56.2.0">
     
@@ -79,21 +79,35 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="IPA.Config.ConfigProvider">
+            <article class="content wrap" id="_content" data-uid="IPA.Config.Stores.Converters.HexColorConverter">
   
   
-  <h1 id="IPA_Config_ConfigProvider" data-uid="IPA.Config.ConfigProvider" class="text-break">Class ConfigProvider
+  <h1 id="IPA_Config_Stores_Converters_HexColorConverter" data-uid="IPA.Config.Stores.Converters.HexColorConverter" class="text-break">Class HexColorConverter
   </h1>
-  <div class="markdown level0 summary"><p>A wrapper for an <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a> and the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a> to use with it.</p>
+  <div class="markdown level0 summary"><p>A converter for <span class="xref">UnityEngine.Color</span> objects.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
-    <div class="level1"><span class="xref">ConfigProvider</span></div>
+    <div class="level1"><a class="xref" href="IPA.Config.Stores.ValueConverter-1.html">ValueConverter</a>&lt;<span class="xref">UnityEngine.Color</span>&gt;</div>
+    <div class="level2"><span class="xref">HexColorConverter</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="IPA.Config.Stores.IValueConverter.html">IValueConverter</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="IPA.Config.Stores.ValueConverter-1.html#IPA_Config_Stores_ValueConverter_1_IPA_Config_Stores_IValueConverter_ToValue_System_Object_System_Object_">ValueConverter&lt;Color&gt;.IValueConverter.ToValue(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Config.Stores.ValueConverter-1.html#IPA_Config_Stores_ValueConverter_1_IPA_Config_Stores_IValueConverter_FromValue_IPA_Config_Data_Value_System_Object_">ValueConverter&lt;Color&gt;.IValueConverter.FromValue(Value, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Config.Stores.ValueConverter-1.html#IPA_Config_Stores_ValueConverter_1_IPA_Config_Stores_IValueConverter_Type">ValueConverter&lt;Color&gt;.IValueConverter.Type</a>
+    </div>
     <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
     </div>
@@ -116,62 +130,29 @@
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Config.html">IPA.Config</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Config.Stores.Converters.html">IPA.Config.Stores.Converters</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
-  <h5 id="IPA_Config_ConfigProvider_syntax">Syntax</h5>
+  <h5 id="IPA_Config_Stores_Converters_HexColorConverter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ConfigProvider</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class HexColorConverter : ValueConverter&lt;Color&gt;, IValueConverter</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_ConfigProvider_Load.md&amp;value=---%0Auid%3A%20IPA.Config.ConfigProvider.Load%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Stores_Converters_HexColorConverter_FromValue_IPA_Config_Data_Value_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Converters.HexColorConverter.FromValue(IPA.Config.Data.Value%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/5209ca9a3c0d84ebafa53be95d0f807c6bc97f3b/IPA.Loader/Config/IConfigProvider.cs/#L74">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/5209ca9a3c0d84ebafa53be95d0f807c6bc97f3b/IPA.Loader/Config/Stores/Converters.cs/#L500">View Source</a>
   </span>
-  <a id="IPA_Config_ConfigProvider_Load_" data-uid="IPA.Config.ConfigProvider.Load*"></a>
-  <h4 id="IPA_Config_ConfigProvider_Load" data-uid="IPA.Config.ConfigProvider.Load">Load()</h4>
-  <div class="markdown level1 summary"><p>Loads a <a class="xref" href="IPA.Config.Data.Value.html">Value</a> from disk in whatever format this provider provides
-and returns it.</p>
+  <a id="IPA_Config_Stores_Converters_HexColorConverter_FromValue_" data-uid="IPA.Config.Stores.Converters.HexColorConverter.FromValue*"></a>
+  <h4 id="IPA_Config_Stores_Converters_HexColorConverter_FromValue_IPA_Config_Data_Value_System_Object_" data-uid="IPA.Config.Stores.Converters.HexColorConverter.FromValue(IPA.Config.Data.Value,System.Object)">FromValue(Value, Object)</h4>
+  <div class="markdown level1 summary"><p>Converts a <a class="xref" href="IPA.Config.Data.Value.html">Value</a> that is a <a class="xref" href="IPA.Config.Data.Text.html">Text</a> node to the corresponding <span class="xref">UnityEngine.Color</span> object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Value Load()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="IPA.Config.Data.Value.html">Value</a></td>
-        <td><p>the <a class="xref" href="IPA.Config.Data.Value.html">Value</a> loaded</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_ConfigProvider_Store_IPA_Config_Data_Value_.md&amp;value=---%0Auid%3A%20IPA.Config.ConfigProvider.Store(IPA.Config.Data.Value)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/5209ca9a3c0d84ebafa53be95d0f807c6bc97f3b/IPA.Loader/Config/IConfigProvider.cs/#L68">View Source</a>
-  </span>
-  <a id="IPA_Config_ConfigProvider_Store_" data-uid="IPA.Config.ConfigProvider.Store*"></a>
-  <h4 id="IPA_Config_ConfigProvider_Store_IPA_Config_Data_Value_" data-uid="IPA.Config.ConfigProvider.Store(IPA.Config.Data.Value)">Store(Value)</h4>
-  <div class="markdown level1 summary"><p>Stores the <a class="xref" href="IPA.Config.Data.Value.html">Value</a> given to disk in the format specified.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Store(Value value)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Color FromValue(Value value, object parent)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -186,11 +167,113 @@ and returns it.</p>
       <tr>
         <td><a class="xref" href="IPA.Config.Data.Value.html">Value</a></td>
         <td><span class="parametername">value</span></td>
-        <td><p>the <a class="xref" href="IPA.Config.Data.Value.html">Value</a> to store</p>
+        <td><p>the <a class="xref" href="IPA.Config.Data.Value.html">Value</a> to convert</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>the object which will own the created object</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnityEngine.Color</span></td>
+        <td><p>the deserialized Color object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">IPA.Config.Stores.ValueConverter&lt;UnityEngine.Color&gt;.FromValue(IPA.Config.Data.Value, System.Object)</span></div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">value</code> is not a <a class="xref" href="IPA.Config.Data.Text.html">Text</a> node or couldn&apos;t be parsed into a Color object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Stores_Converters_HexColorConverter_ToValue_UnityEngine_Color_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/5209ca9a3c0d84ebafa53be95d0f807c6bc97f3b/IPA.Loader/Config/Stores/Converters.cs/#L521">View Source</a>
+  </span>
+  <a id="IPA_Config_Stores_Converters_HexColorConverter_ToValue_" data-uid="IPA.Config.Stores.Converters.HexColorConverter.ToValue*"></a>
+  <h4 id="IPA_Config_Stores_Converters_HexColorConverter_ToValue_UnityEngine_Color_System_Object_" data-uid="IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color,System.Object)">ToValue(Color, Object)</h4>
+  <div class="markdown level1 summary"><p>Converts color of type <span class="xref">UnityEngine.Color</span> to a <a class="xref" href="IPA.Config.Data.Value.html">Value</a> node.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Value ToValue(Color obj, object parent)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">UnityEngine.Color</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>the object to serialize</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>the object which owns <code data-dev-comment-type="paramref" class="paramref">obj</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Config.Data.Value.html">Value</a></td>
+        <td><p>a <a class="xref" href="IPA.Config.Data.Text.html">Text</a> node representing <code data-dev-comment-type="paramref" class="paramref">obj</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">IPA.Config.Stores.ValueConverter&lt;UnityEngine.Color&gt;.ToValue(UnityEngine.Color, System.Object)</span></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="IPA.Config.Stores.IValueConverter.html">IValueConverter</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
@@ -215,10 +298,10 @@ and returns it.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_ConfigProvider.md&amp;value=---%0Auid%3A%20IPA.Config.ConfigProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Stores_Converters_HexColorConverter.md&amp;value=---%0Auid%3A%20IPA.Config.Stores.Converters.HexColorConverter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/5209ca9a3c0d84ebafa53be95d0f807c6bc97f3b/IPA.Loader/Config/IConfigProvider.cs/#L54" class="contribution-link">View Source</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/5209ca9a3c0d84ebafa53be95d0f807c6bc97f3b/IPA.Loader/Config/Stores/Converters.cs/#L491" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
