@@ -114,7 +114,8 @@ namespace IPA.Config.Stores.Converters
             IValConv<sbyte>, IValConv<byte>,
             IValConv<float>, IValConv<double>,
             IValConv<decimal>, IValConv<bool>,
-            IValConv<DateTime>, IValConv<DateTimeOffset>
+            IValConv<DateTime>, IValConv<DateTimeOffset>,
+            IValConv<TimeSpan>
         {
             internal static readonly ValConvImpls Impl = new ValConvImpls();
             Type IValConv<char>.Get() => typeof(CharConverter);
@@ -134,6 +135,7 @@ namespace IPA.Config.Stores.Converters
             Type IValConv<bool>.Get() => typeof(BooleanConverter);
             Type IValConv<DateTime>.Get() => typeof(DateTimeConverter);
             Type IValConv<DateTimeOffset>.Get() => typeof(DateTimeOffsetConverter);
+            Type IValConv<TimeSpan>.Get() => typeof(TimeSpanConverter);
         }
     }
 
@@ -697,5 +699,25 @@ namespace IPA.Config.Stores.Converters
         }
 
         public override Value ToValue(DateTimeOffset obj, object parent) => Value.Text(obj.ToString("O"));
+    }
+
+    internal class TimeSpanConverter : ValueConverter<TimeSpan>
+    {
+        public override TimeSpan FromValue(Value value, object parent)
+        {
+            if (!(value is Text text))
+            {
+                throw new ArgumentException("Value is not of type Text", nameof(value));
+            }
+
+            if (TimeSpan.TryParse(text.Value, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            throw new ArgumentException($"Parsing failed, {text.Value}");
+        }
+
+        public override Value ToValue(TimeSpan obj, object parent) => Value.Text(obj.ToString());
     }
 }
