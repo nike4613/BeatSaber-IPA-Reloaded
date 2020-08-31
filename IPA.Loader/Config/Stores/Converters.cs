@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using Boolean = IPA.Config.Data.Boolean;
 
 namespace IPA.Config.Stores.Converters
@@ -112,7 +113,9 @@ namespace IPA.Config.Stores.Converters
             IValConv<short>, IValConv<ushort>,
             IValConv<sbyte>, IValConv<byte>,
             IValConv<float>, IValConv<double>,
-            IValConv<decimal>, IValConv<bool>
+            IValConv<decimal>, IValConv<bool>,
+            IValConv<DateTime>, IValConv<DateTimeOffset>,
+            IValConv<TimeSpan>
         {
             internal static readonly ValConvImpls Impl = new ValConvImpls();
             Type IValConv<char>.Get() => typeof(CharConverter);
@@ -130,6 +133,9 @@ namespace IPA.Config.Stores.Converters
             Type IValConv<double>.Get() => typeof(DoubleConverter);
             Type IValConv<decimal>.Get() => typeof(DecimalConverter);
             Type IValConv<bool>.Get() => typeof(BooleanConverter);
+            Type IValConv<DateTime>.Get() => typeof(DateTimeConverter);
+            Type IValConv<DateTimeOffset>.Get() => typeof(DateTimeOffsetConverter);
+            Type IValConv<TimeSpan>.Get() => typeof(TimeSpanConverter);
         }
     }
 
@@ -481,6 +487,42 @@ namespace IPA.Config.Stores.Converters
         public IReadOnlyDictionaryConverter() : base(new TConverter()) { }
     }
 #endif
+    
+    /// <summary>
+    /// A converter for <see cref="Color"/> objects.
+    /// </summary>
+    public sealed class HexColorConverter : ValueConverter<Color>
+    {
+        /// <summary>
+        /// Converts a <see cref="Value"/> that is a <see cref="Text"/> node to the corresponding <see cref="Color" /> object.
+        /// </summary>
+        /// <param name="value">the <see cref="Value"/> to convert</param>
+        /// <param name="parent">the object which will own the created object</param>
+        /// <returns>the deserialized Color object</returns>
+        /// <exception cref="ArgumentException">if <paramref name="value"/> is not a <see cref="Text"/> node or couldn't be parsed into a Color object</exception>
+        public override Color FromValue(Value value, object parent)
+        {
+            if (value is Text t)
+            {
+                if (ColorUtility.TryParseHtmlString(t.Value, out Color color))
+                {
+                    return color;
+                }
+
+                throw new ArgumentException("Value cannot be parsed into a Color.", nameof(value));
+            }
+
+            throw new ArgumentException("Value not a string", nameof(value));
+        }
+
+        /// <summary>
+        /// Converts color of type <see cref="Color"/> to a <see cref="Value"/> node.
+        /// </summary>
+        /// <param name="obj">the object to serialize</param>
+        /// <param name="parent">the object which owns <paramref name="obj"/></param>
+        /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
+        public override Value ToValue(Color obj, object parent) => Value.Text($"#{ColorUtility.ToHtmlStringRGB(obj)}");
+    }
 
     internal class StringConverter : ValueConverter<string>
     {
@@ -617,5 +659,65 @@ namespace IPA.Config.Stores.Converters
             => (value as Boolean)?.Value ?? throw new ArgumentException("Value not a Boolean", nameof(value));
         public override Value ToValue(bool obj, object parent)
             => Value.From(obj);
+    }
+
+    internal class DateTimeConverter : ValueConverter<DateTime>
+    {
+        public override DateTime FromValue(Value value, object parent)
+        {
+            if (!(value is Text text))
+            {
+                throw new ArgumentException("Value is not of type Text", nameof(value));
+            }
+
+            if (DateTime.TryParse(text.Value, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            throw new ArgumentException($"Parsing failed, {text.Value}");
+        }
+
+        public override Value ToValue(DateTime obj, object parent) => Value.Text(obj.ToString("O"));
+    }
+
+    internal class DateTimeOffsetConverter : ValueConverter<DateTimeOffset>
+    {
+        public override DateTimeOffset FromValue(Value value, object parent)
+        {
+            if (!(value is Text text))
+            {
+                throw new ArgumentException("Value is not of type Text", nameof(value));
+            }
+
+            if (DateTimeOffset.TryParse(text.Value, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            throw new ArgumentException($"Parsing failed, {text.Value}");
+        }
+
+        public override Value ToValue(DateTimeOffset obj, object parent) => Value.Text(obj.ToString("O"));
+    }
+
+    internal class TimeSpanConverter : ValueConverter<TimeSpan>
+    {
+        public override TimeSpan FromValue(Value value, object parent)
+        {
+            if (!(value is Text text))
+            {
+                throw new ArgumentException("Value is not of type Text", nameof(value));
+            }
+
+            if (TimeSpan.TryParse(text.Value, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            throw new ArgumentException($"Parsing failed, {text.Value}");
+        }
+
+        public override Value ToValue(TimeSpan obj, object parent) => Value.Text(obj.ToString());
     }
 }
