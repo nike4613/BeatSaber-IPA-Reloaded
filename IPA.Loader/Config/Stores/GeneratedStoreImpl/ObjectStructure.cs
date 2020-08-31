@@ -147,7 +147,7 @@ namespace IPA.Config.Stores
                 }
                 if (prop.GetGetMethod(true)?.IsPrivate ?? true)
                 { // we enter this block if the getter is inacessible or doesn't exist
-                        continue; // ignore props without getter
+                    continue; // ignore props without getter
                 }
 
                 var smi = new SerializedMemberInfo

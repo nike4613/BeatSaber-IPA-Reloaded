@@ -5,7 +5,7 @@ uid: home
 
 # ![BSIPA](images/banner_dark.svg)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1ruhnnfeudrrd097?svg=true)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb)
+[![Build](https://github.com/bsmg/BeatSaber-IPA-Reloaded/workflows/Build/badge.svg)](https://ci.appveyor.com/project/nike4613/beatsaber-ipa-reloaded-9smsb)
 
 BSIPA - The Unity mod injector for the new age (pending confirmation).
 
