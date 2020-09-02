@@ -32,6 +32,8 @@ namespace IPA.Loader
 
     internal partial class PluginLoader
     {
+        internal static PluginMetadata SelfMeta;
+
         internal static Task LoadTask() =>
             TaskEx.Run(() =>
         {
@@ -95,6 +97,7 @@ namespace IPA.Loader
                 selfMeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
 
                 PluginsMetadata.Add(selfMeta);
+                SelfMeta = selfMeta;
             }
             catch (Exception e)
             {
@@ -225,7 +228,7 @@ namespace IPA.Loader
             IEnumerable<string> bareManifests = Directory.GetFiles(UnityGame.PluginsPath, "*.json");
             bareManifests = bareManifests.Concat(Directory.GetFiles(UnityGame.PluginsPath, "*.manifest"));
             foreach (var manifest in bareManifests)
-            { // TODO: maybe find a way to allow a bare manifest to specify an associated file
+            {
                 try
                 {
                     var metadata = new PluginMetadata
@@ -641,12 +644,16 @@ namespace IPA.Loader
             var disabledLookup = DisabledPlugins.NonNull(m => m.Id).ToDictionary(m => m.Id, m => m.Version);
             foreach (var meta in PluginsMetadata)
             {
+                bool ignoreBcNoLoader = true;
                 var missingDeps = new List<(string id, Range version, bool disabled)>();
                 foreach (var dep in meta.Manifest.Dependencies)
                 {
 #if DEBUG
                     Logger.loader.Debug($"Looking for dependency {dep.Key} with version range {dep.Value.Intersect(new SemVer.Range("*.*.*"))}");
 #endif
+                    if (dep.Key == SelfMeta.Id)
+                        ignoreBcNoLoader = false;
+
                     if (pluginsToLoad.ContainsKey(dep.Key) && dep.Value.IsSatisfied(pluginsToLoad[dep.Key]))
                         continue;
 
@@ -660,6 +667,19 @@ namespace IPA.Loader
                         Logger.loader.Warn($"{meta.Name} is missing dependency {dep.Key}@{dep.Value}");
                         missingDeps.Add((dep.Key, dep.Value, false));
                     }
+                }
+
+                if (meta.PluginType != null && !meta.IsSelf && !meta.IsBare && ignoreBcNoLoader)
+                {
+                    ignoredPlugins.Add(meta, new IgnoreReason(Reason.Dependency)
+                    {
+                        ReasonText = "BSIPA Plugin does not reference BSIPA!"
+                    });
+                    for (int i = 0; i < 20; i++)
+                    {
+                        Logger.loader.Warn($"HEY {meta.Id} YOU DEPEND ON BSIPA SO DEPEND ON BSIPA");
+                    }
+                    continue;
                 }
 
                 if (missingDeps.Count == 0)
