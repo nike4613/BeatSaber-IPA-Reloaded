@@ -1,0 +1,924 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class AlmostVersion
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class AlmostVersion
+   ">
+    <meta name="generator" content="docfx 2.48.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IPA.Utilities.AlmostVersion">
+  
+  
+  <h1 id="IPA_Utilities_AlmostVersion" data-uid="IPA.Utilities.AlmostVersion" class="text-break">Class AlmostVersion
+  </h1>
+  <div class="markdown level0 summary"><p>A type that wraps <span class="xref">SemVer.Version</span> so that the string of the version is stored when the string is 
+not a valid <span class="xref">SemVer.Version</span>.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">AlmostVersion</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<span class="xref">SemVer.Version</span>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Utilities_AlmostVersion_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class AlmostVersion : IComparable&lt;AlmostVersion&gt;, IComparable&lt;Version&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion__ctor_SemVer_Version_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.%23ctor(SemVer.Version)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L45">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion__ctor_" data-uid="IPA.Utilities.AlmostVersion.#ctor*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion__ctor_SemVer_Version_" data-uid="IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)">AlmostVersion(Version)</h4>
+  <div class="markdown level1 summary"><p>Creates an <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> from the <span class="xref">SemVer.Version</span> provided in <code data-dev-comment-type="paramref" class="paramref">ver</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AlmostVersion(Version ver)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">SemVer.Version</span></td>
+        <td><span class="parametername">ver</span></td>
+        <td><p>the <span class="xref">SemVer.Version</span> to store</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion__ctor_System_String_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L35">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion__ctor_" data-uid="IPA.Utilities.AlmostVersion.#ctor*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion__ctor_System_String_" data-uid="IPA.Utilities.AlmostVersion.#ctor(System.String)">AlmostVersion(String)</h4>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> with the version string provided in <code data-dev-comment-type="paramref" class="paramref">vertext</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AlmostVersion(string vertext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">vertext</span></td>
+        <td><p>the version string to store</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion__ctor_System_String_IPA_Utilities_AlmostVersion_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.%23ctor(System.String%2CIPA.Utilities.AlmostVersion)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L69">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion__ctor_" data-uid="IPA.Utilities.AlmostVersion.#ctor*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion__ctor_System_String_IPA_Utilities_AlmostVersion_" data-uid="IPA.Utilities.AlmostVersion.#ctor(System.String,IPA.Utilities.AlmostVersion)">AlmostVersion(String, AlmostVersion)</h4>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> from the version string in <code data-dev-comment-type="paramref" class="paramref">vertext</code> stored the
+same way as the <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> passed in <code data-dev-comment-type="paramref" class="paramref">copyMode</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AlmostVersion(string vertext, AlmostVersion copyMode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">vertext</span></td>
+        <td><p>the text to parse as an <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">copyMode</span></td>
+        <td><p>an <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> to copy the storage mode of</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion__ctor_System_String_IPA_Utilities_AlmostVersion_StoredAs_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.%23ctor(System.String%2CIPA.Utilities.AlmostVersion.StoredAs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L57">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion__ctor_" data-uid="IPA.Utilities.AlmostVersion.#ctor*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion__ctor_System_String_IPA_Utilities_AlmostVersion_StoredAs_" data-uid="IPA.Utilities.AlmostVersion.#ctor(System.String,IPA.Utilities.AlmostVersion.StoredAs)">AlmostVersion(String, AlmostVersion.StoredAs)</h4>
+  <div class="markdown level1 summary"><p>Creates an <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> from the version string in <code data-dev-comment-type="paramref" class="paramref">vertext</code> stored using 
+the storage mode specified in <code data-dev-comment-type="paramref" class="paramref">mode</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AlmostVersion(string vertext, AlmostVersion.StoredAs mode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">vertext</span></td>
+        <td><p>the text to parse as an <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.StoredAs.html">AlmostVersion.StoredAs</a></td>
+        <td><span class="parametername">mode</span></td>
+        <td><p>the storage mode to store the version in</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_SemverValue.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.SemverValue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L109">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_SemverValue_" data-uid="IPA.Utilities.AlmostVersion.SemverValue*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_SemverValue" data-uid="IPA.Utilities.AlmostVersion.SemverValue">SemverValue</h4>
+  <div class="markdown level1 summary"><p>The value of the <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> if it was stored as a <span class="xref">SemVer.Version</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Version SemverValue { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">SemVer.Version</span></td>
+        <td><p>the stored value as a <span class="xref">SemVer.Version</span>, or <span class="xref">null</span> if not stored as a version.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_StorageMode.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.StorageMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L115">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_StorageMode_" data-uid="IPA.Utilities.AlmostVersion.StorageMode*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_StorageMode" data-uid="IPA.Utilities.AlmostVersion.StorageMode">StorageMode</h4>
+  <div class="markdown level1 summary"><p>The way the value is stored, whether it be as a <span class="xref">SemVer.Version</span> or a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AlmostVersion.StoredAs StorageMode { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.StoredAs.html">AlmostVersion.StoredAs</a></td>
+        <td><p>the storage mode used to store this value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_StringValue.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.StringValue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L103">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_StringValue_" data-uid="IPA.Utilities.AlmostVersion.StringValue*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_StringValue" data-uid="IPA.Utilities.AlmostVersion.StringValue">StringValue</h4>
+  <div class="markdown level1 summary"><p>The value of the <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> if it was stored as a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string StringValue { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>the stored value as a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>, or <span class="xref">null</span> if not stored as a string.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L137">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_CompareTo_" data-uid="IPA.Utilities.AlmostVersion.CompareTo*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion_" data-uid="IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)">CompareTo(AlmostVersion)</h4>
+  <div class="markdown level1 summary"><p>Compares <span class="xref">langword_csharp_this</span> to the <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> in <code data-dev-comment-type="paramref" class="paramref">other</code> using <span class="xref">SemVer.Version.CompareTo(SemVer.Version)</span>
+or <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string.compareto#System_String_CompareTo_System_String_">CompareTo(String)</a>, depending on the current store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CompareTo(AlmostVersion other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>the <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> to compare to</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>less than 0 if <code data-dev-comment-type="paramref" class="paramref">other</code> is considered bigger than <span class="xref">langword_csharp_this</span>, 0 if equal, and greater than zero if smaller</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The storage methods of the two objects must be the same, or this will throw an <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a>.</p>
+</div>
+  <h5 id="IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version_">CompareTo(Version)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L159">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_CompareTo_" data-uid="IPA.Utilities.AlmostVersion.CompareTo*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version_" data-uid="IPA.Utilities.AlmostVersion.CompareTo(SemVer.Version)">CompareTo(Version)</h4>
+  <div class="markdown level1 summary"><p>Compares <span class="xref">langword_csharp_this</span> to the <span class="xref">SemVer.Version</span> in <code data-dev-comment-type="paramref" class="paramref">other</code> using <span class="xref">SemVer.Version.CompareTo(SemVer.Version)</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CompareTo(Version other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">SemVer.Version</span></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>the <span class="xref">SemVer.Version</span> to compare to</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>less than 0 if <code data-dev-comment-type="paramref" class="paramref">other</code> is considered bigger than <span class="xref">langword_csharp_this</span>, 0 if equal, and greater than zero if smaller</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The storage method of <span class="xref">langword_csharp_this</span> must be <a class="xref" href="IPA.Utilities.AlmostVersion.StoredAs.html#IPA_Utilities_AlmostVersion_StoredAs_SemVer">SemVer</a>, else an <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a> will
+be thrown.</p>
+</div>
+  <h5 id="IPA_Utilities_AlmostVersion_CompareTo_SemVer_Version__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion_">CompareTo(AlmostVersion)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_Equals_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L176">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_Equals_" data-uid="IPA.Utilities.AlmostVersion.Equals*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_Equals_System_Object_" data-uid="IPA.Utilities.AlmostVersion.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Performs a strict equality check between <span class="xref">langword_csharp_this</span> and <code data-dev-comment-type="paramref" class="paramref">obj</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>the object to compare to</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><span class="xref">true</span> if they are equal, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a></div>
+  <h5 id="IPA_Utilities_AlmostVersion_Equals_System_Object__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This may return <span class="xref">false</span> where <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_">Equality(AlmostVersion, AlmostVersion)</a> returns <span class="xref">true</span></p>
+</div>
+  <h5 id="IPA_Utilities_AlmostVersion_Equals_System_Object__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Equals</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>)</div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_GetHashCode.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L189">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_GetHashCode_" data-uid="IPA.Utilities.AlmostVersion.GetHashCode*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_GetHashCode" data-uid="IPA.Utilities.AlmostVersion.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Default generated hash code function generated by VS.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>a value unique to each object, except those that are considered equal by <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_Equals_System_Object_">Equals(Object)</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a></div>
+  <h5 id="IPA_Utilities_AlmostVersion_GetHashCode_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">GetHashCode</a>()</div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_ToString.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L124">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_ToString_" data-uid="IPA.Utilities.AlmostVersion.ToString*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_ToString" data-uid="IPA.Utilities.AlmostVersion.ToString">ToString()</h4>
+  <div class="markdown level1 summary"><p>Gets a string representation of the current version. If the value is stored as a string, this returns it. If it is
+stored as a <span class="xref">SemVer.Version</span>, it is equivalent to calling <span class="xref">SemVer.Version.ToString</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>a string representation of the current version</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a></div>
+  <h5 id="IPA_Utilities_AlmostVersion_ToString_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">ToString</a>()</div>
+  </div>
+  <h3 id="operators">Operators
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.op_Equality(IPA.Utilities.AlmostVersion%2CIPA.Utilities.AlmostVersion)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L210">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_op_Equality_" data-uid="IPA.Utilities.AlmostVersion.op_Equality*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_" data-uid="IPA.Utilities.AlmostVersion.op_Equality(IPA.Utilities.AlmostVersion,IPA.Utilities.AlmostVersion)">Equality(AlmostVersion, AlmostVersion)</h4>
+  <div class="markdown level1 summary"><p>Compares two versions, only taking into account the numeric part of the version if they are stored as <span class="xref">SemVer.Version</span>s,
+or strict equality if they are stored as <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>s.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(AlmostVersion l, AlmostVersion r)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">l</span></td>
+        <td><p>the first value to compare</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">r</span></td>
+        <td><p>the second value to compare</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><span class="xref">true</span> if they are mostly equal, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a looser equality than <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_Equals_System_Object_">Equals(Object)</a>, meaning that this may return <span class="xref">true</span> where <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_Equals_System_Object_">Equals(Object)</a>
+does not.</p>
+</div>
+  <h5 id="IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_Equals_System_Object_">Equals(Object)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L245">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_op_Implicit_" data-uid="IPA.Utilities.AlmostVersion.op_Implicit*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version" data-uid="IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version">Implicit(AlmostVersion to Version)</h4>
+  <div class="markdown level1 summary"><p>Implicitly converts an <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> to <span class="xref">SemVer.Version</span>, if applicable, using <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_SemverValue">SemverValue</a>.
+If not applicable, returns <span class="xref">null</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Version(AlmostVersion av)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">av</span></td>
+        <td><p>the <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> to convert to a <span class="xref">SemVer.Version</span></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">SemVer.Version</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_SemverValue">SemverValue</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L236">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_op_Implicit_" data-uid="IPA.Utilities.AlmostVersion.op_Implicit*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion" data-uid="IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion">Implicit(Version to AlmostVersion)</h4>
+  <div class="markdown level1 summary"><p>Implicitly converts a <span class="xref">SemVer.Version</span> to <a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a> using <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_SemVer_Version_">AlmostVersion(Version)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator AlmostVersion(Version ver)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">SemVer.Version</span></td>
+        <td><span class="parametername">ver</span></td>
+        <td><p>the <span class="xref">SemVer.Version</span> to convert</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_SemVer_Version_">AlmostVersion(Version)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion_op_Inequality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion.op_Inequality(IPA.Utilities.AlmostVersion%2CIPA.Utilities.AlmostVersion)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L228">View Source</a>
+  </span>
+  <a id="IPA_Utilities_AlmostVersion_op_Inequality_" data-uid="IPA.Utilities.AlmostVersion.op_Inequality*"></a>
+  <h4 id="IPA_Utilities_AlmostVersion_op_Inequality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_" data-uid="IPA.Utilities.AlmostVersion.op_Inequality(IPA.Utilities.AlmostVersion,IPA.Utilities.AlmostVersion)">Inequality(AlmostVersion, AlmostVersion)</h4>
+  <div class="markdown level1 summary"><p>The opposite of <a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_">Equality(AlmostVersion, AlmostVersion)</a>. Equivalent to <code>!(l == r)</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(AlmostVersion l, AlmostVersion r)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">l</span></td>
+        <td><p>the first value to compare</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="IPA.Utilities.AlmostVersion.html">AlmostVersion</a></td>
+        <td><span class="parametername">r</span></td>
+        <td><p>the second value to compare</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><span class="xref">true</span> if they are not mostly equal, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_AlmostVersion_op_Inequality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Equality_IPA_Utilities_AlmostVersion_IPA_Utilities_AlmostVersion_">Equality(AlmostVersion, AlmostVersion)</a></div>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">System.IComparable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">System.IComparable&lt;T&gt;</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/158cc75caa1cd9536a5bade49b3eca99feb0076a/docs/override/new?filename=IPA_Utilities_AlmostVersion.md&amp;value=---%0Auid%3A%20IPA.Utilities.AlmostVersion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/158cc75caa1cd9536a5bade49b3eca99feb0076a/IPA.Loader/Utilities/AlmostVersion.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
