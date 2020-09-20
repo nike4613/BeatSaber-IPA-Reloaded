@@ -104,6 +104,7 @@ namespace IPA.Loader
                 Logger.loader.Critical("Error loading own manifest");
                 Logger.loader.Critical(e);
             }
+
             var resolver = new CecilLibLoader();
             resolver.AddSearchDirectory(UnityGame.LibraryPath);
             resolver.AddSearchDirectory(UnityGame.PluginsPath);

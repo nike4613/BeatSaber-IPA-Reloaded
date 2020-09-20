@@ -23,11 +23,12 @@ namespace IPA
             Unknown
         }
 
-        public const string FileVersion = "4.1.2.0";
+        public const string FileVersion = "4.1.3.0";
 
         public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
         public static readonly ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h")          { DocString = "prints this message" };
+        public static readonly ArgumentFlag ArgVersion = new ArgumentFlag("--version", "-v")    { DocString = "prints the version that will be installed and is currently installed" };
         public static readonly ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w")    { DocString = "waits for the specified PID to exit", ValueString = "PID" };
         public static readonly ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f")        { DocString = "forces the operation to go through" };
         public static readonly ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r")      { DocString = "reverts the IPA installation" };
@@ -39,7 +40,7 @@ namespace IPA
         [STAThread]
         public static void Main()
         {
-            Arguments.CmdLine.Flags(ArgHelp, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch, ArgNoRevert).Process();
+            Arguments.CmdLine.Flags(ArgHelp, ArgVersion, ArgWaitFor, ArgForce, ArgRevert, ArgNoWait, ArgStart, ArgLaunch, ArgNoRevert).Process();
 
             if (ArgHelp)
             {
@@ -47,9 +48,14 @@ namespace IPA
                 return;
             }
 
+            if (ArgVersion)
+            {
+                Console.WriteLine($"BSIPA Installer version {Version}");
+            }
+
             try
             {
-                if (ArgWaitFor.HasValue)
+                if (ArgWaitFor.HasValue && !ArgVersion)
                 { // wait for process if necessary
                     var pid = int.Parse(ArgWaitFor.Value);
 
@@ -77,7 +83,7 @@ namespace IPA
                     // ReSharper enable AccessToModifiedClosure
 
                     var asmName = new AssemblyName(e.Name);
-                    var testFile = Path.Combine(libsDir, $"{asmName.Name}.{asmName.Version}.dll");
+                    var testFile = Path.Combine(libsDir, $"{asmName.Name}.dll");
 
                     if (File.Exists(testFile))
                         return Assembly.LoadFile(testFile);
@@ -96,6 +102,17 @@ namespace IPA
                 else
                     context = PatchContext.Create(argExeName);
 
+                if (ArgVersion)
+                {
+                    var installed = GetInstalledVersion(context);
+                    if (installed == null)
+                        Console.WriteLine("No currently installed version");
+                    else
+                        Console.WriteLine($"Installed version: {installed}");
+
+                    return;
+                }
+
                 // Sanitizing
                 Validate(context);
 
@@ -109,6 +126,11 @@ namespace IPA
             }
             catch (Exception e)
             {
+                if (ArgVersion)
+                {
+                    Console.WriteLine("No currently installed version");
+                    return;
+                }
                 Fail(e.Message);
             }
 
@@ -136,24 +158,34 @@ namespace IPA
             }
         }
 
+        private static Version GetInstalledVersion(PatchContext context)
+        {
+            // first, check currently installed version, if any
+            if (File.Exists(Path.Combine(context.ProjectRoot, "winhttp.dll")))
+            { // installed, so check version of installed assembly
+                string injectorPath = Path.Combine(context.ManagedPath, "IPA.Injector.dll");
+                if (File.Exists(injectorPath))
+                {
+                    var verInfo = FileVersionInfo.GetVersionInfo(injectorPath);
+                    var fileVersion = new Version(verInfo.FileVersion);
+
+                    return fileVersion;
+                }
+            }
+
+            return null;
+        }
+
         private static void Install(PatchContext context)
         {
             try
             {
                 bool installFiles = true;
-                // first, check currently installed version, if any
-                if (File.Exists(Path.Combine(context.ProjectRoot, "winhttp.dll")))
-                { // installed, so check version of installed assembly
-                    string injectorPath = Path.Combine(context.ManagedPath, "IPA.Injector.dll");
-                    if (File.Exists(injectorPath))
-                    {
-                        var verInfo = FileVersionInfo.GetVersionInfo(injectorPath);
-                        var fileVersion = new Version(verInfo.FileVersion);
 
-                        if (fileVersion > Version)
-                            installFiles = false;
-                    }
-                }
+                var fileVersion = GetInstalledVersion(context);
+
+                if (fileVersion != null && fileVersion > Version)
+                    installFiles = false;
 
                 if (installFiles || ArgForce)
                 {
