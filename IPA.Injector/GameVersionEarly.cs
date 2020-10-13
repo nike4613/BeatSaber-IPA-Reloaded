@@ -40,12 +40,25 @@ namespace IPA.Injector
                 if (stream.Position == stream.Length) // we went through the entire stream without finding the key
                     throw new KeyNotFoundException("Could not find key '" + key + "' in " + mgr);
 
-                // otherwise pos == key.Length, which means we found it
-                int offset = 136 - key.Length - sizeof(int);
-                stream.Seek(offset, SeekOrigin.Current); // advance past junk to beginning of string
+                long startPos = 0;
+                long length = 0;
+                while (stream.Position < stream.Length)
+                {
+                    char current = reader.ReadChar();
+                    if (startPos == 0 && current >= '0' && current <= '9')
+                        startPos = stream.Position - 1;
+                    else if (startPos > 0 && IllegalCharacters.Contains(current))
+                    {
+                        length = stream.Position - startPos - 1;
+                        break;
+                    }
+                }
 
-                int strlen = reader.ReadInt32(); // assumes LE
-                var strbytes = reader.ReadBytes(strlen);
+                if (startPos <= 0 || length <= 0)
+                    throw new KeyNotFoundException("Could not parse version from " + mgr);
+                stream.Seek(startPos, SeekOrigin.Begin);
+
+                var strbytes = reader.ReadBytes((int)length);
 
                 return Encoding.UTF8.GetString(strbytes);
             }
@@ -66,5 +79,14 @@ namespace IPA.Injector
 
             _Load();
         }
+
+        internal static readonly char[] IllegalCharacters = new char[]
+            {
+                '<', '>', ':', '/', '\\', '|', '?', '*', '"',
+                '\u0000', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
+                '\u0008', '\u0009', '\u000a', '\u000b', '\u000c', '\u000d', '\u000e', '\u000d',
+                '\u000f', '\u0010', '\u0011', '\u0012', '\u0013', '\u0014', '\u0015', '\u0016',
+                '\u0017', '\u0018', '\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001f',
+            };
     }
 }
