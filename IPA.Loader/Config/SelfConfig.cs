@@ -149,7 +149,8 @@ namespace IPA.Config
             {
             // LINE: ignore 5
 #if BeatSaber // provide these defaults only for Beat Saber builds
-                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll"
+                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll", 
+                "BeatmapCore.dll", "GameplayCore.dll","HMLibAttributes.dll", 
 #else // otherwise specify Assembly-CSharp.dll
                 "Assembly-CSharp.dll"
 #endif

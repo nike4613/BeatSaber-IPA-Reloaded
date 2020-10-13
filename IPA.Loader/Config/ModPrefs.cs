@@ -11,7 +11,7 @@ namespace IPA.Config
     /// <summary>
     /// Allows to get and set preferences for your mod. 
     /// </summary>
-    [Obsolete("Uses IniFile, which uses 16 bit system calls. Use BS Utils INI system for now.")]
+    [Obsolete("Uses IniFile, which uses 16 bit system calls. Use the new object based config system.")]
     public interface IModPrefs
     {
         /// <summary>
