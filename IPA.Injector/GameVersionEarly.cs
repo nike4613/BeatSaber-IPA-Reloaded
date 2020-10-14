@@ -40,25 +40,18 @@ namespace IPA.Injector
                 if (stream.Position == stream.Length) // we went through the entire stream without finding the key
                     throw new KeyNotFoundException("Could not find key '" + key + "' in " + mgr);
 
-                long startPos = 0;
-                long length = 0;
                 while (stream.Position < stream.Length)
                 {
-                    char current = reader.ReadChar();
-                    if (startPos == 0 && current >= '0' && current <= '9')
-                        startPos = stream.Position - 1;
-                    else if (startPos > 0 && IllegalCharacters.Contains(current))
-                    {
-                        length = stream.Position - startPos - 1;
+                    var current = (char)reader.ReadByte();
+                    if (char.IsDigit(current))
                         break;
-                    }
                 }
 
-                if (startPos <= 0 || length <= 0)
-                    throw new KeyNotFoundException("Could not parse version from " + mgr);
-                stream.Seek(startPos, SeekOrigin.Begin);
+                var rewind = -sizeof(int) - sizeof(byte);
+                stream.Seek(rewind, SeekOrigin.Current); // rewind to the string length
 
-                var strbytes = reader.ReadBytes((int)length);
+                var strlen = reader.ReadInt32();
+                var strbytes = reader.ReadBytes(strlen);
 
                 return Encoding.UTF8.GetString(strbytes);
             }
