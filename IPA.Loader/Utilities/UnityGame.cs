@@ -21,7 +21,7 @@ namespace IPA.Utilities
         /// Provides the current game version.
         /// </summary>
         /// <value>the SemVer version of the game</value>
-        public static AlmostVersion GameVersion => _gameVersion ?? (_gameVersion = new AlmostVersion(ApplicationVersionProxy));
+        public static AlmostVersion GameVersion => _gameVersion;// ?? (_gameVersion = new AlmostVersion(ApplicationVersionProxy));
 
         internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
