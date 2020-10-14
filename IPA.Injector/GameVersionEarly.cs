@@ -57,7 +57,7 @@ namespace IPA.Injector
             }
         }
 
-        internal static SemVer.Version SafeParseVersion() => new SemVer.Version(GetGameVersion(), true);
+        internal static AlmostVersion SafeParseVersion() => new AlmostVersion(GetGameVersion());
 
         private static void _Load() 
         {
