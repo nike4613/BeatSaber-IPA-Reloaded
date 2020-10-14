@@ -1,5 +1,6 @@
 ﻿using IPA.Config;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -44,6 +45,9 @@ namespace IPA.Utilities
                 Logging.Logger.log.Error("Application.version was not found! Cannot check early parsed version");
                 if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
                     Logging.Logger.log.Error(e);
+
+                var st = new StackTrace();
+                Logging.Logger.log.Notice($"{st}");
             }
         }
 
