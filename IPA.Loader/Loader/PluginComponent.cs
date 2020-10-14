@@ -30,8 +30,7 @@ namespace IPA.Loader
             if (!initialized)
             {
                 UnityGame.SetMainThread();
-                // TODO: figure out when I can call this without breaking Application.version
-                //UnityGame.EnsureRuntimeGameVersion();
+                UnityGame.EnsureRuntimeGameVersion();
 
                 PluginManager.Load();
 

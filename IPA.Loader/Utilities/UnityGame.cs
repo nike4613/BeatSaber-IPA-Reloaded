@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 #if NET3
@@ -21,7 +22,7 @@ namespace IPA.Utilities
         /// Provides the current game version.
         /// </summary>
         /// <value>the SemVer version of the game</value>
-        public static AlmostVersion GameVersion => _gameVersion;// ?? (_gameVersion = new AlmostVersion(ApplicationVersionProxy));
+        public static AlmostVersion GameVersion => _gameVersion ?? (_gameVersion = new AlmostVersion(ApplicationVersionProxy));
 
         internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
@@ -30,6 +31,7 @@ namespace IPA.Utilities
         }
         private static string ApplicationVersionProxy
         {
+            [MethodImpl(MethodImplOptions.NoInlining)]
             get
             {
                 try
@@ -39,12 +41,14 @@ namespace IPA.Utilities
                 catch(MissingMemberException ex)
                 {
                     Logging.Logger.log.Error($"Tried to grab 'Application.version' too early, it's probably broken now.");
-                    Logging.Logger.log.Debug(ex);
+                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                        Logging.Logger.log.Error(ex);
                 }
                 catch (Exception ex)
                 {
                     Logging.Logger.log.Error($"Error getting Application.version: {ex.Message}");
-                    Logging.Logger.log.Debug(ex);
+                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                        Logging.Logger.log.Error(ex);
                 }
                 return string.Empty;
             }
