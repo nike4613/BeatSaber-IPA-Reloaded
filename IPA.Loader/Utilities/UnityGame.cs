@@ -27,7 +27,27 @@ namespace IPA.Utilities
             _gameVersion = ver;
             Logging.Logger.log.Debug($"GameVersion set early to {ver}");
         }
-        private static string ApplicationVersionProxy => Application.version;
+        private static string ApplicationVersionProxy
+        {
+            get
+            {
+                try
+                {
+                    return Application.version;
+                }
+                catch(MissingMemberException ex)
+                {
+                    Logging.Logger.log.Error($"Tried to grab 'Application.version' too early, it's probably broken now.");
+                    Logging.Logger.log.Debug(ex);
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logger.log.Error($"Error getting Application.version: {ex.Message}");
+                    Logging.Logger.log.Debug(ex);
+                }
+                return string.Empty;
+            }
+        }
         internal static void EnsureRuntimeGameVersion()
         {
             try
@@ -67,7 +87,7 @@ namespace IPA.Utilities
         /// <value><see langword="true"/> if the curent thread is the Unity main thread, <see langword="false"/> otherwise</value>
         public static bool OnMainThread => Thread.CurrentThread.ManagedThreadId == mainThread?.ManagedThreadId;
 
-        internal static void SetMainThread() 
+        internal static void SetMainThread()
             => mainThread = Thread.CurrentThread;
 
         /// <summary>
