@@ -211,6 +211,7 @@ namespace IPA.Config.Stores
                     il.Emit(OpCodes.Ldloc, delTemp);
                     il.Emit(OpCodes.Bne_Un_S, loopLabel);
 
+                    il.Emit(OpCodes.Pop);
                     il.Emit(OpCodes.Ret);
                 }
 
@@ -248,6 +249,7 @@ namespace IPA.Config.Stores
                     il.Emit(OpCodes.Ldloc, delTemp);
                     il.Emit(OpCodes.Bne_Un_S, loopLabel);
 
+                    il.Emit(OpCodes.Pop);
                     il.Emit(OpCodes.Ret);
                 }
 
