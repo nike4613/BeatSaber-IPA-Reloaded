@@ -145,137 +145,164 @@ namespace IPA.Config.Stores
             MethodBuilder notifyChanged = null;
             if (isINotifyPropertyChanged || hasNotifyAttribute)
             {
-                var INotifyPropertyChanged_t = typeof(INotifyPropertyChanged);
-                typeBuilder.AddInterfaceImplementation(INotifyPropertyChanged_t);
-
-                var INotifyPropertyChanged_PropertyChanged =
-                    INotifyPropertyChanged_t.GetEvent(nameof(INotifyPropertyChanged.PropertyChanged));
-
-                var PropertyChangedEventHandler_t = typeof(PropertyChangedEventHandler);
-                var PropertyChangedEventHander_Invoke = PropertyChangedEventHandler_t.GetMethod(nameof(PropertyChangedEventHandler.Invoke));
-
-                var PropertyChangedEventArgs_t = typeof(PropertyChangedEventArgs);
-                var PropertyChangedEventArgs_ctor = PropertyChangedEventArgs_t.GetConstructor(new[] { typeof(string) });
-
-                var Delegate_t = typeof(Delegate);
-                var Delegate_Combine = Delegate_t.GetMethod(nameof(Delegate.Combine), BindingFlags.Static | BindingFlags.Public, null,
-                                                            new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());
-                var Delegate_Remove = Delegate_t.GetMethod(nameof(Delegate.Remove), BindingFlags.Static | BindingFlags.Public, null,
-                                                            new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());
-
-                var CompareExchange = typeof(Interlocked).GetMethods()
-                    .Where(m => m.Name == nameof(Interlocked.CompareExchange))
-                    .Where(m => m.ContainsGenericParameters)
-                    .Where(m => m.GetParameters().Length == 3).First()
-                        .MakeGenericMethod(PropertyChangedEventHandler_t);
-
-                var basePropChangedEvent = type.GetEvents()
-                    .Where(e => e.GetAddMethod().GetBaseDefinition().DeclaringType == INotifyPropertyChanged_t)
-                    .FirstOrDefault();
-                var basePropChangedAdd = basePropChangedEvent?.GetAddMethod();
-                var basePropChangedRemove = basePropChangedEvent?.GetRemoveMethod();
-
-                var PropertyChanged_backing = typeBuilder.DefineField("<event>PropertyChanged", PropertyChangedEventHandler_t, FieldAttributes.Private);
-
-                var add_PropertyChanged = typeBuilder.DefineMethod("<add>PropertyChanged",
-                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual,
-                    null, new[] { PropertyChangedEventHandler_t });
-                typeBuilder.DefineMethodOverride(add_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetAddMethod());
-                if (basePropChangedAdd != null)
-                    typeBuilder.DefineMethodOverride(add_PropertyChanged, basePropChangedAdd);
-
+                if (isINotifyPropertyChanged)
                 {
-                    var il = add_PropertyChanged.GetILGenerator();
+                    var ExistingRaisePropertyChanged = type.GetMethod("RaisePropertyChanged", (BindingFlags)int.MaxValue, null, new Type[] { typeof(string) }, Array.Empty<ParameterModifier>());
+                    if (ExistingRaisePropertyChanged != null)
+                    {
+                        notifyChanged = typeBuilder.DefineMethod("<>NotifyChanged",
+                            MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final, null, new[] { typeof(string) });
 
-                    var loopLabel = il.DefineLabel();
-                    var delTemp = il.DeclareLocal(PropertyChangedEventHandler_t);
+                        {
+                            var il = notifyChanged.GetILGenerator();
 
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
-
-                    il.MarkLabel(loopLabel);
-                    il.Emit(OpCodes.Stloc, delTemp);
-
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldflda, PropertyChanged_backing);
-
-                    il.Emit(OpCodes.Ldloc, delTemp);
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Call, Delegate_Combine);
-                    il.Emit(OpCodes.Castclass, PropertyChangedEventHandler_t);
-
-                    il.Emit(OpCodes.Ldloc, delTemp);
-                    il.Emit(OpCodes.Call, CompareExchange);
-
-                    il.Emit(OpCodes.Dup);
-                    il.Emit(OpCodes.Ldloc, delTemp);
-                    il.Emit(OpCodes.Bne_Un_S, loopLabel);
-
-                    il.Emit(OpCodes.Ret);
+                            il.Emit(OpCodes.Ldarg_0);
+                            il.Emit(OpCodes.Ldarg_1);
+                            il.Emit(OpCodes.Call, ExistingRaisePropertyChanged);
+                            il.Emit(OpCodes.Ret);
+                        }
+                    }
+                    else
+                    {
+                        Logger.log.Critical($"Type '{type.FullName}' implements INotifyPropertyChanged but does not have a 'RaisePropertyChanged(string)' method, automatic raising of PropertyChanged event is disabled.");
+                    }
                 }
-
-                var remove_PropertyChanged = typeBuilder.DefineMethod("<remove>PropertyChanged",
-                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual,
-                    null, new[] { PropertyChangedEventHandler_t });
-                typeBuilder.DefineMethodOverride(remove_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetRemoveMethod());
-                if (basePropChangedRemove != null)
-                    typeBuilder.DefineMethodOverride(remove_PropertyChanged, basePropChangedRemove);
-
+                else
                 {
-                    var il = remove_PropertyChanged.GetILGenerator();
+                    var INotifyPropertyChanged_t = typeof(INotifyPropertyChanged);
+                    typeBuilder.AddInterfaceImplementation(INotifyPropertyChanged_t);
 
-                    var loopLabel = il.DefineLabel();
-                    var delTemp = il.DeclareLocal(PropertyChangedEventHandler_t);
+                    var INotifyPropertyChanged_PropertyChanged =
+                        INotifyPropertyChanged_t.GetEvent(nameof(INotifyPropertyChanged.PropertyChanged));
 
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
+                    var PropertyChangedEventHandler_t = typeof(PropertyChangedEventHandler);
+                    var PropertyChangedEventHander_Invoke = PropertyChangedEventHandler_t.GetMethod(nameof(PropertyChangedEventHandler.Invoke));
 
-                    il.MarkLabel(loopLabel);
-                    il.Emit(OpCodes.Stloc, delTemp);
+                    var PropertyChangedEventArgs_t = typeof(PropertyChangedEventArgs);
+                    var PropertyChangedEventArgs_ctor = PropertyChangedEventArgs_t.GetConstructor(new[] { typeof(string) });
+                    
+                    var Delegate_t = typeof(Delegate);
+                    var Delegate_Combine = Delegate_t.GetMethod(nameof(Delegate.Combine), BindingFlags.Static | BindingFlags.Public, null,
+                                                                new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());
+                    var Delegate_Remove = Delegate_t.GetMethod(nameof(Delegate.Remove), BindingFlags.Static | BindingFlags.Public, null,
+                                                                new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());
 
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldflda, PropertyChanged_backing);
+                    var CompareExchange = typeof(Interlocked).GetMethods()
+                        .Where(m => m.Name == nameof(Interlocked.CompareExchange))
+                        .Where(m => m.ContainsGenericParameters)
+                        .Where(m => m.GetParameters().Length == 3).First()
+                            .MakeGenericMethod(PropertyChangedEventHandler_t);
 
-                    il.Emit(OpCodes.Ldloc, delTemp);
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Call, Delegate_Remove);
-                    il.Emit(OpCodes.Castclass, PropertyChangedEventHandler_t);
+                    var basePropChangedEvent = type.GetEvents()
+                        .Where(e => e.GetAddMethod().GetBaseDefinition().DeclaringType == INotifyPropertyChanged_t)
+                        .FirstOrDefault();
+                    var basePropChangedAdd = basePropChangedEvent?.GetAddMethod();
+                    var basePropChangedRemove = basePropChangedEvent?.GetRemoveMethod();
 
-                    il.Emit(OpCodes.Ldloc, delTemp);
-                    il.Emit(OpCodes.Call, CompareExchange);
+                    var PropertyChanged_backing = typeBuilder.DefineField("<event>PropertyChanged", PropertyChangedEventHandler_t, FieldAttributes.Private);
 
-                    il.Emit(OpCodes.Dup);
-                    il.Emit(OpCodes.Ldloc, delTemp);
-                    il.Emit(OpCodes.Bne_Un_S, loopLabel);
+                    var add_PropertyChanged = typeBuilder.DefineMethod("<add>PropertyChanged",
+                        MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual,
+                        null, new[] { PropertyChangedEventHandler_t });
+                    typeBuilder.DefineMethodOverride(add_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetAddMethod());
+                    if (basePropChangedAdd != null)
+                        typeBuilder.DefineMethodOverride(add_PropertyChanged, basePropChangedAdd);
 
-                    il.Emit(OpCodes.Ret);
-                }
+                    {
+                        var il = add_PropertyChanged.GetILGenerator();
 
-                var PropertyChanged_event = typeBuilder.DefineEvent(nameof(INotifyPropertyChanged.PropertyChanged), EventAttributes.None, PropertyChangedEventHandler_t);
-                PropertyChanged_event.SetAddOnMethod(add_PropertyChanged);
-                PropertyChanged_event.SetRemoveOnMethod(remove_PropertyChanged);
+                        var loopLabel = il.DefineLabel();
+                        var delTemp = il.DeclareLocal(PropertyChangedEventHandler_t);
 
-                notifyChanged = typeBuilder.DefineMethod("<>NotifyChanged",
-                    MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final, null, new[] { typeof(string) });
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
 
-                {
-                    var il = notifyChanged.GetILGenerator();
+                        il.MarkLabel(loopLabel);
+                        il.Emit(OpCodes.Stloc, delTemp);
 
-                    var invokeNonNull = il.DefineLabel();
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldflda, PropertyChanged_backing);
 
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
-                    il.Emit(OpCodes.Dup);
-                    il.Emit(OpCodes.Brtrue, invokeNonNull);
-                    il.Emit(OpCodes.Pop);
-                    il.Emit(OpCodes.Ret);
+                        il.Emit(OpCodes.Ldloc, delTemp);
+                        il.Emit(OpCodes.Ldarg_1);
+                        il.Emit(OpCodes.Call, Delegate_Combine);
+                        il.Emit(OpCodes.Castclass, PropertyChangedEventHandler_t);
 
-                    il.MarkLabel(invokeNonNull);
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Newobj, PropertyChangedEventArgs_ctor);
-                    il.Emit(OpCodes.Call, PropertyChangedEventHander_Invoke);
-                    il.Emit(OpCodes.Ret);
+                        il.Emit(OpCodes.Ldloc, delTemp);
+                        il.Emit(OpCodes.Call, CompareExchange);
+
+                        il.Emit(OpCodes.Dup);
+                        il.Emit(OpCodes.Ldloc, delTemp);
+                        il.Emit(OpCodes.Bne_Un_S, loopLabel);
+
+                        il.Emit(OpCodes.Pop);
+                        il.Emit(OpCodes.Ret);
+                    }
+
+                    var remove_PropertyChanged = typeBuilder.DefineMethod("<remove>PropertyChanged",
+                        MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final | MethodAttributes.Virtual,
+                        null, new[] { PropertyChangedEventHandler_t });
+                    typeBuilder.DefineMethodOverride(remove_PropertyChanged, INotifyPropertyChanged_PropertyChanged.GetRemoveMethod());
+                    if (basePropChangedRemove != null)
+                        typeBuilder.DefineMethodOverride(remove_PropertyChanged, basePropChangedRemove);
+
+                    {
+                        var il = remove_PropertyChanged.GetILGenerator();
+
+                        var loopLabel = il.DefineLabel();
+                        var delTemp = il.DeclareLocal(PropertyChangedEventHandler_t);
+
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
+
+                        il.MarkLabel(loopLabel);
+                        il.Emit(OpCodes.Stloc, delTemp);
+
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldflda, PropertyChanged_backing);
+
+                        il.Emit(OpCodes.Ldloc, delTemp);
+                        il.Emit(OpCodes.Ldarg_1);
+                        il.Emit(OpCodes.Call, Delegate_Remove);
+                        il.Emit(OpCodes.Castclass, PropertyChangedEventHandler_t);
+
+                        il.Emit(OpCodes.Ldloc, delTemp);
+                        il.Emit(OpCodes.Call, CompareExchange);
+
+                        il.Emit(OpCodes.Dup);
+                        il.Emit(OpCodes.Ldloc, delTemp);
+                        il.Emit(OpCodes.Bne_Un_S, loopLabel);
+
+                        il.Emit(OpCodes.Pop);
+                        il.Emit(OpCodes.Ret);
+                    }
+
+                    var PropertyChanged_event = typeBuilder.DefineEvent(nameof(INotifyPropertyChanged.PropertyChanged), EventAttributes.None, PropertyChangedEventHandler_t);
+                    PropertyChanged_event.SetAddOnMethod(add_PropertyChanged);
+                    PropertyChanged_event.SetRemoveOnMethod(remove_PropertyChanged);
+
+                    notifyChanged = typeBuilder.DefineMethod("<>NotifyChanged",
+                        MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final, null, new[] { typeof(string) });
+
+                    {
+                        var il = notifyChanged.GetILGenerator();
+
+                        var invokeNonNull = il.DefineLabel();
+
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldfld, PropertyChanged_backing);
+                        il.Emit(OpCodes.Dup);
+                        il.Emit(OpCodes.Brtrue, invokeNonNull);
+                        il.Emit(OpCodes.Pop);
+                        il.Emit(OpCodes.Ret);
+
+                        il.MarkLabel(invokeNonNull);
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldarg_1);
+                        il.Emit(OpCodes.Newobj, PropertyChangedEventArgs_ctor);
+                        il.Emit(OpCodes.Call, PropertyChangedEventHander_Invoke);
+                        il.Emit(OpCodes.Ret);
+                    }
                 }
             }
             #endregion
