@@ -351,17 +351,6 @@ namespace IPA.Loader
 
             if (!Directory.Exists(pluginDirectory)) return;
 
-            string cacheDir = Path.Combine(pluginDirectory, ".cache");
-
-            if (!Directory.Exists(cacheDir))
-            {
-                Directory.CreateDirectory(cacheDir);
-            }
-            else
-            {
-                foreach (string plugin in Directory.GetFiles(cacheDir, "*"))
-                    File.Delete(plugin);
-            }
 
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
@@ -373,11 +362,28 @@ namespace IPA.Loader
 
             //Copy plugins to .cache
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
+
+            string cacheDir = Path.Combine(pluginDirectory, ".cache");
+            bool exists = Directory.Exists(cacheDir);
+
+            if (exists)
+            {
+                foreach (string plugin in Directory.GetFiles(cacheDir, "*"))
+                    File.Delete(plugin);
+            }
+
             foreach (string s in originalPlugins)
             {
                 if (metadataPaths.Contains(s)) continue;
                 if (ignoredPaths.Contains(s)) continue;
                 if (disabledPaths.Contains(s)) continue;
+
+                if (!exists)
+                {
+                    Directory.CreateDirectory(cacheDir);
+                    exists = true;
+                }
+
                 string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
 
                 #region Fix assemblies for refactor
@@ -418,12 +424,16 @@ namespace IPA.Loader
             }
 
             //Load copied plugins
-            string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
-            foreach (string s in copiedPlugins)
+
+            if (exists)
             {
-                var result = LoadPluginsFromFile(s);
-                if (result == null) continue;
-                _ipaPlugins.AddRange(result.NonNull());
+                string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
+                foreach (string s in copiedPlugins)
+                {
+                    var result = LoadPluginsFromFile(s);
+                    if (result == null) continue;
+                    _ipaPlugins.AddRange(result.NonNull());
+                }
             }
 
             Logger.log.Info(exeName);
