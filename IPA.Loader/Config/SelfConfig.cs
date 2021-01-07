@@ -153,6 +153,7 @@ namespace IPA.Config
                 "BeatmapCore.dll", "GameplayCore.dll","HMLibAttributes.dll", 
 #else // otherwise specify Assembly-CSharp.dll
                 "Assembly-CSharp.dll"
+            // LINE: ignore
 #endif
             };
         // LINE: ignore

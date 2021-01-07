@@ -90,7 +90,7 @@ class RoslynCompilerSettings : Microsoft.CodeDom.Providers.DotNetCompilerPlatfor
     $schema.ToString() | Out-File "other_api/config/_schema.json"
 }
 
-$ipaExe = "$ipaRoot/bin/Release/IPA.exe"
+$ipaExe = "$ipaRoot/bin/Release/net461/IPA.exe"
 # generate IPA.exe args file
 if (-not (Test-Path $ipaExe -PathType Leaf)) {
     msbuild -p:Configuration=Release -p:Platform=AnyCPU -p:SolutionDir=.. "$ipaRoot/IPA.csproj"

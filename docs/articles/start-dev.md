@@ -47,7 +47,7 @@ If you are starting from scratch, you will need one other thing to get your plug
 
 A basic manifest for that might look a little like this:
 
-[!code-json[manifest.json](./dev-resources/manifest.json?range=1,3,4,6-12,14-19,23-)]
+[!code-json[manifest.json](./dev-resources/manifest.json?range=1,3,4,6-12,14-16,20-)]
 
 There is a lot going on there, but most of it should be decently obvious. Among the things that *aren't* immediately obvious,
 are
@@ -72,7 +72,7 @@ At this point, if the main plugin source file and the manifest are in the same s
 project's default namespace, the plugin will load just fine. However, this is somewhat difficult both to explain and verify, so I
 recommend you use the the `misc.plugin-hint` field in your manifest. It can be used like so:
 
-[!code-json[manifest.json#misc.plugin-hint](./dev-resources/manifest.json?range=20-22)]
+[!code-json[manifest.json#misc.plugin-hint](./dev-resources/manifest.json?range=17-19)]
 
 With this, you can set `plugin-hint` to the full typename of your plugin type, and it will correctly load. This is a hint though,
 and will also try it as a namespace if it fails to find the plugin type. If that fails, it will then fall back to using the manifest's

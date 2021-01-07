@@ -9,9 +9,6 @@
   "id": null,
   "name": "Demo Plugin",
   "version": "0.0.1",
-  "features": [
-
-  ],
   "links": {
     "project-home": "https://example.com/demo-plugin",
     "project-source": "https://github.com/exampleman/demo-plugin/",
