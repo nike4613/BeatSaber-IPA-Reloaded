@@ -31,18 +31,25 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\IPA\IPA.csproj" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj">
+    <ProjectReference Include="..\IPA\IPA.csproj" ReferenceOutputAssembly="false">
       <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
       <SetPlatform>Platform=AnyCPU</SetPlatform>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj">
+    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" ReferenceOutputAssembly="false">
       <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
       <SetPlatform>Platform=AnyCPU</SetPlatform>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj" ReferenceOutputAssembly="false">
+      <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
     <ProjectReference Include="..\Doorstop\Proxy\Proxy.vcxproj" ReferenceOutputAssembly="false">
       <SetConfiguration>Configuration=$(ProxyConfig)</SetConfiguration>
       <SetPlatform>Platform=$(ProxyPlatform)</SetPlatform>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
   
@@ -62,7 +69,8 @@
       <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
-      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\**\*" />
+      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\net461\**\*" Exclude="$(SolutionDir)IPA\bin\$(Configuration)\net461\*.runtimeconfig.*" />
+      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\netcoreapp3.1\IPA.runtimeconfig.json" />
     </ItemGroup>
     <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Move SourceFiles="$(OutputPath)IPA\proxy.dll" DestinationFiles="$(OutputPath)IPA\winhttp.dll" />
@@ -70,6 +78,7 @@
     <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
     <ItemGroup>
       <BadFiles Include="$(OutputPath)*.dll" />
+      <BadFiles Remove="$(OutputPath)IPA.dll" />
       <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
       <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
     </ItemGroup>

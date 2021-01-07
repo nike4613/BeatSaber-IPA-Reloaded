@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using IPA.Patcher;
 
 namespace IPA
@@ -116,7 +116,7 @@ namespace IPA
                 // Sanitizing
                 Validate(context);
 
-                if (ArgRevert || Keyboard.IsKeyDown(Keys.LMenu))
+                if (ArgRevert /*|| Keyboard.IsKeyDown(Keys.LMenu)*/)
                     Revert(context);
                 else
                 {
@@ -428,7 +428,7 @@ namespace IPA
             }
         }
 
-        internal static class Keyboard
+        /*internal static class Keyboard
         {
             [Flags]
             private enum KeyStates
@@ -468,6 +468,6 @@ namespace IPA
             {
                 return KeyStates.Toggled == (KeyState(key) & KeyStates.Toggled);
             }
-        }
+        }*/
     }
 }
