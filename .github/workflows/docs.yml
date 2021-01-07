@@ -25,7 +25,7 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Locate MSBuild
-        uses: warrenbuckley/Setup-MSBuild@v1
+        uses: microsoft/setup-msbuild@v1.0.2
       - name: Setup Nuget
         uses: warrenbuckley/Setup-Nuget@v1
       - name: Nuget Restore
