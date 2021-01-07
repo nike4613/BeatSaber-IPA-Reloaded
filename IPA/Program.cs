@@ -95,10 +95,13 @@ namespace IPA
                 AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
 
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
+                argExeName ??= new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
+                            .FirstOrDefault(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly().Location)
+                            ?.FullName;
                 if (argExeName == null)
-                    context = PatchContext.Create(new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
-                            .First(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly().Location)
-                            .FullName);
+                {
+                    Fail("Could not locate game executable");
+                }
                 else
                     context = PatchContext.Create(argExeName);
 
@@ -341,7 +344,7 @@ namespace IPA
             }
         }
 
-
+        [DoesNotReturn]
         private static void Fail(string message)
         {
             Console.Error.WriteLine("ERROR: " + message);
