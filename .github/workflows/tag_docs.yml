@@ -24,11 +24,14 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Locate MSBuild
-        uses: warrenbuckley/Setup-MSBuild@v1
-      - name: Setup Nuget
-        uses: warrenbuckley/Setup-Nuget@v1
+        uses: microsoft/setup-msbuild@v1.0.2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
+          dotnet-version: "3.1.404" # since we now use this
       - name: Nuget Restore
-        run: nuget restore
+        run: msbuild -t:Restore -m
       - name: Install DocFX
         uses: crazy-max/ghaction-chocolatey@v1
         with:
