@@ -136,13 +136,14 @@ namespace IPA.Loader
                             if (executor == null) continue; // couldn't initialize, skip to next
                         }
 
-                        PluginLoader.DisabledPlugins.Remove(meta);
                         DisabledConfig.Instance.DisabledModIds.Remove(meta.Id ?? meta.Name);
 
                         PluginEnabled?.Invoke(meta, meta.RuntimeOptions != RuntimeOptions.DynamicInit);
 
                         if (meta.RuntimeOptions == RuntimeOptions.DynamicInit)
                         {
+                            // it should only be marked as not disabled if it actually was
+                            PluginLoader.DisabledPlugins.Remove(meta);
                             _bsPlugins.Add(executor);
 
                             try
@@ -173,10 +174,11 @@ namespace IPA.Loader
 
                     foreach (var exec in disableExecs)
                     {
-                        PluginLoader.DisabledPlugins.Add(exec.Metadata);
                         DisabledConfig.Instance.DisabledModIds.Add(exec.Metadata.Id ?? exec.Metadata.Name);
                         if (exec.Metadata.RuntimeOptions == RuntimeOptions.DynamicInit)
                         {
+                            // it should only be marked as disabled if it was actually fully disabled
+                            PluginLoader.DisabledPlugins.Add(exec.Metadata);
                             runtimeDisabledPlugins.Add(exec);
                             _bsPlugins.Remove(exec);
                         }
