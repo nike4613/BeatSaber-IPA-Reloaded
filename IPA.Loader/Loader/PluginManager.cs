@@ -449,11 +449,14 @@ namespace IPA.Loader
                 Logger.log.Info($"{plugin.Metadata.Name} ({plugin.Metadata.Id}): {plugin.Metadata.Version}");
             }
             Logger.log.Info("-----------------------------");
-            foreach (var plugin in _ipaPlugins)
+            if (_ipaPlugins.Count > 0)
             {
-                Logger.log.Info($"{plugin.Name}: {plugin.Version}");
+                foreach (var plugin in _ipaPlugins)
+                {
+                    Logger.log.Info($"{plugin.Name}: {plugin.Version}");
+                }
+                Logger.log.Info("-----------------------------");
             }
-            Logger.log.Info("-----------------------------");
         }
 
         private static IEnumerable<Old.IPlugin> LoadPluginsFromFile(string file)
