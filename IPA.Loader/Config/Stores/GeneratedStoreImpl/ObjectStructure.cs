@@ -141,6 +141,9 @@ namespace IPA.Config.Stores
             // only looks at public/protected properties
             foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
+                if (prop.GetIndexParameters().Length > 0)
+                    continue; // we skip anything with index parameters
+
                 if (prop.GetSetMethod(true)?.IsPrivate ?? true)
                 { // we enter this block if the setter is inacessible or doesn't exist
                     continue; // ignore props without setter
