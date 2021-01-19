@@ -42,8 +42,7 @@ namespace IPA.Config.Stores
         internal class Impl : IConfigStore
         {
             private readonly IGeneratedStore generated;
-            private bool inChangeTransaction = false;
-            //private bool changedInTransaction = false;
+            private long enteredTransactions = 0;
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
@@ -104,7 +103,7 @@ namespace IPA.Config.Stores
             public static IDisposable ImplChangeTransaction(IGeneratedStore s, IDisposable nest) => FindImpl(s).ChangeTransaction(nest);
             // TODO: improve trasactionals so they don't always save in every case
             public IDisposable ChangeTransaction(IDisposable nest, bool takeWrite = true)
-                => GetFreeTransaction().InitWith(this, !inChangeTransaction, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
+                => GetFreeTransaction().InitWith(this, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
 
             private ChangeTransactionObj GetFreeTransaction()
                 => freeTransactionObjs.Count > 0 ? freeTransactionObjs.Pop()
@@ -117,23 +116,21 @@ namespace IPA.Config.Stores
                 private struct Data
                 {
                     public readonly Impl impl;
-                    public readonly bool owns;
                     public readonly bool ownsWrite;
                     public readonly IDisposable nested;
 
-                    public Data(Impl impl, bool owning, bool takeWrite, IDisposable nest)
+                    public Data(Impl impl, bool takeWrite, IDisposable nest)
                     {
-                        this.impl = impl; owns = owning; ownsWrite = takeWrite; nested = nest;
+                        this.impl = impl; ownsWrite = takeWrite; nested = nest;
                     }
                 }
                 private Data data;
 
-                public ChangeTransactionObj InitWith(Impl impl, bool owning, IDisposable nest, bool takeWrite)
+                public ChangeTransactionObj InitWith(Impl impl, IDisposable nest, bool takeWrite)
                 {
-                    data = new Data(impl, owning, takeWrite, nest);
+                    data = new Data(impl, takeWrite, nest);
 
-                    if (data.owns)
-                        impl.inChangeTransaction = true;
+                    _ = Interlocked.Increment(ref impl.enteredTransactions);
                     if (data.ownsWrite)
                         impl.TakeWrite();
 
@@ -143,9 +140,8 @@ namespace IPA.Config.Stores
                 public void Dispose() => Dispose(true);
                 private void Dispose(bool addToStore)
                 {
-                    if (data.owns)
+                    if (data.impl != null && Interlocked.Decrement(ref data.impl.enteredTransactions) == 0)
                     {
-                        data.impl.inChangeTransaction = false;
                         data.impl.InvokeChanged();
                     }
                     data.nested?.Dispose();
@@ -157,6 +153,9 @@ namespace IPA.Config.Stores
                     catch
                     {
                     }
+
+                    data = default;
+
                     if (addToStore)
                         freeTransactionObjs.Push(this);
                 }
@@ -169,7 +168,6 @@ namespace IPA.Config.Stores
                 while (store?.Parent != null) store = store.Parent; // walk to the top of the tree
                 return store?.Impl;
             }
-
 
             internal static MethodInfo ImplReadFromMethod = typeof(Impl).GetMethod(nameof(ImplReadFrom));
             public static void ImplReadFrom(IGeneratedStore s, ConfigProvider provider) => FindImpl(s).ReadFrom(provider);

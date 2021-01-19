@@ -62,39 +62,6 @@ namespace IPA.Config.Stores
             var implField = typeBuilder.DefineField("<>_impl", typeof(Impl), FieldAttributes.Private | FieldAttributes.InitOnly);
             var parentField = typeBuilder.DefineField("<>_parent", typeof(IGeneratedStore), FieldAttributes.Private | FieldAttributes.InitOnly);
 
-            /*#region Converter fields
-            var uniqueConverterTypes = structure.Where(m => m.HasConverter).Select(m => m.Converter).Distinct().ToArray();
-            var converterFields = new Dictionary<Type, FieldInfo>(uniqueConverterTypes.Length);
-
-            foreach (var convType in uniqueConverterTypes)
-            {
-                var field = typeBuilder.DefineField($"<converter>_{convType}", convType,
-                    FieldAttributes.Private | FieldAttributes.InitOnly | FieldAttributes.Static);
-                converterFields.Add(convType, field);
-
-                foreach (var member in structure.Where(m => m.HasConverter && m.Converter == convType))
-                    member.ConverterField = field;
-            }
-            #endregion
-
-            #region Static constructor
-            var cctor = typeBuilder.DefineConstructor(MethodAttributes.Static, CallingConventions.Standard, Type.EmptyTypes);
-            {
-                var il = cctor.GetILGenerator();
-
-                foreach (var kvp in converterFields)
-                {
-                    var typeCtor = kvp.Key.GetConstructor(Type.EmptyTypes);
-                    il.Emit(OpCodes.Newobj, typeCtor);
-                    il.Emit(OpCodes.Stsfld, kvp.Value);
-                }
-
-                il.Emit(OpCodes.Ret);
-            }
-            #endregion*/
-
-            //CreateAndInitializeConvertersFor(type, structure);
-
             #region Constructor
             var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new[] { typeof(IGeneratedStore) });
             {
@@ -145,10 +112,13 @@ namespace IPA.Config.Stores
             MethodBuilder notifyChanged = null;
             if (isINotifyPropertyChanged || hasNotifyAttribute)
             {
+                // we don't actually want to notify if the base class implements it
                 if (isINotifyPropertyChanged)
                 {
-                    var ExistingRaisePropertyChanged = type.GetMethod("RaisePropertyChanged", (BindingFlags)int.MaxValue, null, new Type[] { typeof(string) }, Array.Empty<ParameterModifier>());
-                    if (ExistingRaisePropertyChanged != null)
+                    var ExistingRaisePropertyChanged = type.GetMethod("RaisePropertyChanged", 
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy,
+                        null, new Type[] { typeof(string) }, Array.Empty<ParameterModifier>());
+                    if (ExistingRaisePropertyChanged != null && !ExistingRaisePropertyChanged.IsPrivate)
                     {
                         notifyChanged = typeBuilder.DefineMethod("<>NotifyChanged",
                             MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Final, null, new[] { typeof(string) });
@@ -164,7 +134,8 @@ namespace IPA.Config.Stores
                     }
                     else
                     {
-                        Logger.log.Critical($"Type '{type.FullName}' implements INotifyPropertyChanged but does not have a 'RaisePropertyChanged(string)' method, automatic raising of PropertyChanged event is disabled.");
+                        Logger.log.Critical($"Type '{type.FullName}' implements INotifyPropertyChanged but does not have an accessible " +
+                            "'RaisePropertyChanged(string)' method, automatic raising of PropertyChanged event is disabled.");
                     }
                 }
                 else
