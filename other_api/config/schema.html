@@ -80,8 +80,96 @@
             <article class="content wrap" id="_content" data-uid="other.config.schema">
 <h1 id="configuration-file-schema">Configuration File Schema</h1>
 
-<!-- Can not find reference _schema.json -->
-</article>
+<pre><code name="Schema File">{
+  &quot;definitions&quot;: {
+    &quot;Debug_&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;ShowCallSource&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;ShowDebug&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;CondenseModLogs&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;ShowHandledErrorStackTraces&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;HideMessagesForPerformance&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;HideLogThreshold&quot;: {
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;ShowTrace&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;SyncLogging&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;ShowCallSource&quot;,
+        &quot;ShowDebug&quot;,
+        &quot;CondenseModLogs&quot;,
+        &quot;ShowHandledErrorStackTraces&quot;,
+        &quot;HideMessagesForPerformance&quot;,
+        &quot;HideLogThreshold&quot;,
+        &quot;ShowTrace&quot;,
+        &quot;SyncLogging&quot;
+      ]
+    },
+    &quot;Updates_&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;AutoUpdate&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;AutoCheckUpdates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;AutoUpdate&quot;,
+        &quot;AutoCheckUpdates&quot;
+      ]
+    }
+  },
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;Regenerate&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;Updates&quot;: {
+      &quot;$ref&quot;: &quot;#/definitions/Updates_&quot;
+    },
+    &quot;Debug&quot;: {
+      &quot;$ref&quot;: &quot;#/definitions/Debug_&quot;
+    },
+    &quot;YeetMods&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;GameAssemblies&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      }
+    },
+    &quot;LastGameVersion&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;Regenerate&quot;,
+    &quot;Updates&quot;,
+    &quot;Debug&quot;,
+    &quot;YeetMods&quot;,
+    &quot;GameAssemblies&quot;
+  ]
+}
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -89,7 +177,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/f0a33cc85e12f99d46b4131348f52adc47685286/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/0759f007a1530e62d8037f0ac224f249efba580f/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
