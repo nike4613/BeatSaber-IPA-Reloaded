@@ -44,8 +44,8 @@
     </Reference>
   </ItemGroup>
   
-  <ItemGroup>
-    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(TargetFramework)' == 'net35' " />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" />
   </ItemGroup>
   
   <ItemGroup>
