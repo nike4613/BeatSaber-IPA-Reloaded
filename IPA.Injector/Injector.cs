@@ -86,7 +86,7 @@ namespace IPA.Injector
                 CriticalSection.Configure();
 
                 injector.Debug("Prepping bootstrapper");
-                
+
                 // updates backup
                 InstallBootstrapPatch();
 

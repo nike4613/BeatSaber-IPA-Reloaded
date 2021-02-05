@@ -124,12 +124,21 @@ namespace IPA.Logging
                 var setFg = foregroundProperty?.GetSetMethod();
                 var getFg = foregroundProperty?.GetGetMethod();
 
-                if (resetColor != null)
-                    harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchResetColor)));
-                if (foregroundProperty != null)
+                try
                 {
-                    harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchSetForegroundColor)));
-                    harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchGetForegroundColor)));
+                    if (resetColor != null)
+                        harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchResetColor)));
+                    if (foregroundProperty != null)
+                    {
+                        harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchSetForegroundColor)));
+                        harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchGetForegroundColor)));
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Harmony might be fucked because of wierdness in Guid.NewGuid, don't let that kill us
+                    Logger.log.Error("Error installing harmony patches to intercept Console color properties:");
+                    Logger.log.Error(e);
                 }
             }
 
