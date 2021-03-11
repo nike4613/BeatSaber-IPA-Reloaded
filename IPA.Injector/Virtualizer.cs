@@ -103,7 +103,7 @@ namespace IPA.Injector
                 if (method.IsManaged
                     && method.IsIL
                     && !method.IsStatic
-                    && !method.IsVirtual
+                    && (!method.IsVirtual || method.IsFinal)
                     && !method.IsAbstract
                     && !method.IsAddOn
                     && !method.IsConstructor
@@ -128,6 +128,7 @@ namespace IPA.Injector
                     }
 
                     method.IsVirtual = true;
+                    method.IsFinal = false;
                     method.IsPublic = true;
                     method.IsPrivate = false;
                     method.IsNewSlot = true;
