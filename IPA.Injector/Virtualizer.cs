@@ -80,6 +80,12 @@ namespace IPA.Injector
                 type.IsSealed = false;
             }
 
+            if (type.IsNestedPrivate)
+            {
+                type.IsNestedPrivate = false;
+                type.IsNestedPublic = true;
+            }
+
             if (type.IsInterface) return;
             if (type.IsAbstract) return;
 
