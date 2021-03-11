@@ -1,5 +1,7 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Rocks;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -67,6 +69,9 @@ namespace IPA.Injector
             }
         }
 
+        private TypeReference inModreqRef;
+        private TypeReference outModreqRef;
+
         private void VirtualizeType(TypeDefinition type)
         {
             if(type.IsSealed)
@@ -100,6 +105,21 @@ namespace IPA.Injector
                     && !method.IsGenericInstance
                     && !method.HasOverrides)
                 {
+                    // fix In and Out parameters to have the modreqs required by the compiler
+                    foreach (var param in method.Parameters)
+                    {
+                        if (param.IsIn)
+                        {
+                            inModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.InAttribute));
+                            param.ParameterType = AddModreqIfNotExist(param.ParameterType, inModreqRef);
+                        }
+                        if (param.IsOut)
+                        {
+                            outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
+                            param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
+                        }
+                    }
+
                     method.IsVirtual = true;
                     method.IsPublic = true;
                     method.IsPrivate = false;
@@ -112,6 +132,49 @@ namespace IPA.Injector
             {
                 if (field.IsPrivate) field.IsFamily = true;
             }
+        }
+
+        private TypeReference AddModreqIfNotExist(TypeReference type, TypeReference mod)
+        {
+            var (element, opt, req) = GetDecomposedModifiers(type);
+            if (!req.Contains(mod))
+            {
+                req.Add(mod);
+            }
+            return BuildModifiedType(element, opt, req);
+        }
+
+        private (TypeReference Element, List<TypeReference> ModOpt, List<TypeReference> ModReq) GetDecomposedModifiers(TypeReference type)
+        {
+            var opt = new List<TypeReference>();
+            var req = new List<TypeReference>();
+
+            while (type is IModifierType modif)
+            {
+                if (type.IsOptionalModifier)
+                    opt.Add(modif.ModifierType);
+                if (type.IsRequiredModifier)
+                    req.Add(modif.ModifierType);
+
+                type = modif.ElementType;
+            }
+
+            return (type, opt, req);
+        }
+
+        private TypeReference BuildModifiedType(TypeReference type, IEnumerable<TypeReference> opt, IEnumerable<TypeReference> req)
+        {
+            foreach (var mod in req)
+            {
+                type = type.MakeRequiredModifierType(mod);
+            }
+
+            foreach (var mod in opt)
+            {
+                type = type.MakeOptionalModifierType(mod);
+            }
+
+            return type;
         }
 
         #region IDisposable Support
