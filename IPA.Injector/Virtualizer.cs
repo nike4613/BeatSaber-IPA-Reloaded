@@ -70,7 +70,7 @@ namespace IPA.Injector
         }
 
         private TypeReference inModreqRef;
-        private TypeReference outModreqRef;
+        // private TypeReference outModreqRef;
 
         private void VirtualizeType(TypeDefinition type)
         {
@@ -119,11 +119,12 @@ namespace IPA.Injector
                             inModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.InAttribute));
                             param.ParameterType = AddModreqIfNotExist(param.ParameterType, inModreqRef);
                         }
-                        if (param.IsOut)
-                        {
-                            outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
-                            param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
-                        }
+                        // Breaks override methods if modreq is applied to `out` parameters
+                        //if (param.IsOut)
+                        //{
+                        //    outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
+                        //    param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
+                        //}
                     }
 
                     method.IsVirtual = true;
