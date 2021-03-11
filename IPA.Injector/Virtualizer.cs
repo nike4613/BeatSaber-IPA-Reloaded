@@ -111,7 +111,7 @@ namespace IPA.Injector
                     && !method.IsGenericInstance
                     && !method.HasOverrides)
                 {
-                    // fix In and Out parameters to have the modreqs required by the compiler
+                    // fix In parameters to have the modreqs required by the compiler
                     foreach (var param in method.Parameters)
                     {
                         if (param.IsIn)
