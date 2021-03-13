@@ -70,7 +70,7 @@ namespace IPA.Injector
         }
 
         private TypeReference inModreqRef;
-        private TypeReference outModreqRef;
+        // private TypeReference outModreqRef;
 
         private void VirtualizeType(TypeDefinition type)
         {
@@ -103,7 +103,7 @@ namespace IPA.Injector
                 if (method.IsManaged
                     && method.IsIL
                     && !method.IsStatic
-                    && !method.IsVirtual
+                    && (!method.IsVirtual || method.IsFinal)
                     && !method.IsAbstract
                     && !method.IsAddOn
                     && !method.IsConstructor
@@ -111,7 +111,7 @@ namespace IPA.Injector
                     && !method.IsGenericInstance
                     && !method.HasOverrides)
                 {
-                    // fix In and Out parameters to have the modreqs required by the compiler
+                    // fix In parameters to have the modreqs required by the compiler
                     foreach (var param in method.Parameters)
                     {
                         if (param.IsIn)
@@ -119,14 +119,16 @@ namespace IPA.Injector
                             inModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.InAttribute));
                             param.ParameterType = AddModreqIfNotExist(param.ParameterType, inModreqRef);
                         }
-                        if (param.IsOut)
-                        {
-                            outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
-                            param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
-                        }
+                        // Breaks override methods if modreq is applied to `out` parameters
+                        //if (param.IsOut)
+                        //{
+                        //    outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
+                        //    param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
+                        //}
                     }
 
                     method.IsVirtual = true;
+                    method.IsFinal = false;
                     method.IsPublic = true;
                     method.IsPrivate = false;
                     method.IsNewSlot = true;
