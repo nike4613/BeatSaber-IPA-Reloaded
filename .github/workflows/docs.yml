@@ -31,6 +31,8 @@ jobs:
         with:
           # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
           dotnet-version: "3.1.404" # since we now use this
+      - name: Clear Nuget Cache
+        run: dotnet nuget locals all --clear
       - name: Nuget Restore
         run: msbuild -t:Restore -m
       - name: Install DocFX
