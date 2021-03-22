@@ -22,7 +22,7 @@ namespace IPA.Logging
 
         internal static bool IsInitialized;
 
-        public static void Initialize(bool alwaysCreateNewConsole = true)
+        public static void Initialize(bool alwaysCreateNewConsole = false)
         {
             bool consoleAttached = true;
             if (alwaysCreateNewConsole

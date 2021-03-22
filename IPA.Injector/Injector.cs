@@ -245,7 +245,7 @@ namespace IPA.Injector
 
             #region Virtualize game assemblies
             bool isFirst = true;
-            foreach(var name in SelfConfig.GameAssemblies_)
+            foreach (var name in SelfConfig.GameAssemblies_)
             {
                 var ascPath = Path.Combine(managedPath, name);
 
