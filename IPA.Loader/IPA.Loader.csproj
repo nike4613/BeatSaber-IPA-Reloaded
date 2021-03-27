@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\Common.props"/>
+  <Import Project="..\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net461;net35</TargetFrameworks>
@@ -62,7 +62,13 @@
     <EmbeddedResource Include="icon_white.png" />
     <EmbeddedResource Include="Loader\description.md" />
   </ItemGroup>
+  
+  <!-- disable the updater -->
+  <ItemGroup>
+    <Compile Remove="Updating\BeatMods\*.cs" />
+    <None Include="Updating\BeatMods\*.cs" />
+  </ItemGroup>
 
-  <Import Project="..\Common.targets"/>
+  <Import Project="..\Common.targets" />
 
 </Project>

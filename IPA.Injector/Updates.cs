@@ -11,13 +11,14 @@ using Net3_Proxy;
 using Path = Net3_Proxy.Path;
 using File = Net3_Proxy.File;
 using Directory = Net3_Proxy.Directory;
+using Array = Net3_Proxy.Array;
 #endif
 
 namespace IPA.Injector
 {
     internal static class Updates
     {
-        private const string DeleteFileName = Updating.BeatMods.Updater.SpecialDeletionsFile;
+        private const string DeleteFileName = "$$delete";
 
         public static void InstallPendingUpdates()
         {
@@ -35,7 +36,7 @@ namespace IPA.Injector
 
             if (ipaVersion > selfVersion)
             {
-                Process.Start(new ProcessStartInfo
+                _ = Process.Start(new ProcessStartInfo
                 {
                     FileName = path,
                     Arguments = $"\"-nw={Process.GetCurrentProcess().Id},s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1).StrJP()).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
@@ -55,7 +56,7 @@ namespace IPA.Injector
             // there are pending updates, install
             updater.Info("Installing pending updates");
 
-            var toDelete = new string[0];
+            var toDelete = Array.Empty<string>();
             var delFn = Path.Combine(pendingDir, DeleteFileName);
             if (File.Exists(delFn))
             {

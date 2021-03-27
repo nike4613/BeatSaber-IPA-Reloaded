@@ -39,9 +39,11 @@ namespace IPA.Loader
                 ipaPlugins = new CompositeIPAPlugin(PluginManager.Plugins);
 #pragma warning restore 618
 
+                /*
 #if BeatSaber // TODO: remove this
                 gameObject.AddComponent<Updating.BeatMods.Updater>();
 #endif
+                */
 
                 bsPlugins.OnEnable();
                 ipaPlugins.OnApplicationStart();
