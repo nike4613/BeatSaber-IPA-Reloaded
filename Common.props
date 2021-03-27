@@ -5,7 +5,7 @@
     <!--<PathMap>$(SolutionDir)=C:\</PathMap>-->
     <DebugType>portable</DebugType>
     <LangVersion>9</LangVersion>
-    <NoWarn>CA1031</NoWarn>
+    <NoWarn>CA1031;CA1305</NoWarn>
     <Nullable>disable</Nullable>
     <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>

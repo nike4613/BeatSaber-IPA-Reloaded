@@ -8,14 +8,14 @@ namespace IPA
 {
     public class Arguments
     {
-        public static readonly Arguments CmdLine = new Arguments(Environment.GetCommandLineArgs());
+        public static readonly Arguments CmdLine = new(Environment.GetCommandLineArgs());
 
-        private readonly List<string> positional = new List<string>();
-        private readonly Dictionary<string, string> longFlags = new Dictionary<string, string>();
-        private readonly Dictionary<char, string> flags = new Dictionary<char, string>();
-        private readonly List<ArgumentFlag> flagObjects = new List<ArgumentFlag>();
+        private readonly List<string> positional = new();
+        private readonly Dictionary<string, string?> longFlags = new();
+        private readonly Dictionary<char, string?> flags = new();
+        private readonly List<ArgumentFlag> flagObjects = new();
 
-        private string[] toParse;
+        private string[]? toParse;
 
         private Arguments(string[] args)
         {
@@ -36,12 +36,14 @@ namespace IPA
 
         public void Process()
         {
+            if (toParse == null) throw new InvalidOperationException();
+
             foreach (var arg in toParse)
             {
                 if (arg.StartsWith("--"))
                 { // parse as a long flag
                     var name = arg.Substring(2); // cut off first two chars
-                    string value = null;
+                    string? value = null;
 
                     if (name.Contains('='))
                     {
@@ -92,15 +94,13 @@ namespace IPA
                                 }
                             }
 
-                            subBuildState.Append(chr);
+                            _ = subBuildState.Append(chr);
                         }
                     }
 
                     if (parsingValue)
                     {
-                        parsingValue = false;
                         flags[mainChar] = subBuildState.ToString();
-                        subBuildState = new StringBuilder();
                     }
                 }
                 else
@@ -143,12 +143,12 @@ namespace IPA
             return flags.ContainsKey(flag);
         }
 
-        public string GetLongFlagValue(string flag)
+        public string? GetLongFlagValue(string flag)
         {
             return longFlags[flag];
         }
 
-        public string GetFlagValue(char flag)
+        public string? GetFlagValue(char flag)
         {
             return flags[flag];
         }
@@ -165,10 +165,11 @@ flags:
             var flagsBuilder = new StringBuilder();
             foreach (var flag in flagObjects)
             {
-                flagsBuilder.AppendFormat("{2}{0}{3}{1}", 
-                    string.Join(", ", flag.ShortFlags.Select(s => $"-{s}").Concat( flag.LongFlags.Select(s => $"--{s}")) ), 
-                    Environment.NewLine, indent, flag.ValueString != null ? "=" + flag.ValueString : "");
-                flagsBuilder.AppendFormat("{2}{2}{0}{1}", flag.DocString, Environment.NewLine, indent);
+                _ = flagsBuilder
+                    .AppendFormat("{2}{0}{3}{1}", 
+                        string.Join(", ", flag.ShortFlags.Select(s => $"-{s}").Concat( flag.LongFlags.Select(s => $"--{s}")) ), 
+                        Environment.NewLine, indent, flag.ValueString != null ? "=" + flag.ValueString : "")
+                    .AppendFormat("{2}{2}{0}{1}", flag.DocString, Environment.NewLine, indent);
             }
 
             Console.Write(format, filename, flagsBuilder, indent);
@@ -179,10 +180,10 @@ flags:
 
     public class ArgumentFlag
     {
-        internal readonly List<char> ShortFlags = new List<char>();
-        internal readonly List<string> LongFlags = new List<string>();
+        internal readonly List<char> ShortFlags = new();
+        internal readonly List<string> LongFlags = new();
 
-        internal string value_;
+        internal string? value_;
         internal bool exists_;
 
         public ArgumentFlag(params string[] flags)
@@ -200,16 +201,13 @@ flags:
         }
 
         public bool Exists => exists_;
-        public string Value => value_;
+        public string? Value => value_;
 
         public bool HasValue => Exists && Value != null;
 
         public string DocString { get; set; } = "";
-        public string ValueString { get; set; }
+        public string? ValueString { get; set; }
 
-        public static implicit operator bool(ArgumentFlag f)
-        {
-            return f.Exists;
-        }
+        public static implicit operator bool(ArgumentFlag f) => f.Exists;
     }
 }

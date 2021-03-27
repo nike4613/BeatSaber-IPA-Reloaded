@@ -13,9 +13,9 @@ namespace IPA.Patcher
         
         private readonly DirectoryInfo _backupPath;
         private readonly PatchContext _context;
-        private readonly List<string> _files = new List<string>();
+        private readonly List<string> _files = new();
         private readonly FileInfo _manifestFile;
-        private static string _ManifestFileName = "$manifest$.txt";
+        private static readonly string _ManifestFileName = "$manifest$.txt";
         
         public BackupUnit(PatchContext context) : this(context, DateTime.Now.ToString("yyyy-MM-dd_h-mm-ss"))
         {
@@ -88,7 +88,7 @@ namespace IPA.Patcher
             backupPath.Directory?.Create();
             if (file.Exists)
             {
-                file.CopyTo(backupPath.FullName);
+                _ = file.CopyTo(backupPath.FullName);
             }
             else
             {
@@ -123,7 +123,7 @@ namespace IPA.Patcher
                 {
                     Console.WriteLine("  {0} => {1}", backupFile.FullName, target.FullName);
                     target.Directory?.Create();
-                    backupFile.CopyTo(target.FullName, true);
+                    _ = backupFile.CopyTo(target.FullName, true);
                 }
                 else
                 {

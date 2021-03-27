@@ -26,7 +26,10 @@ namespace IPA
         public string IPA { get; private set; }
         public string BackupPath { get; private set; }
 
+        // This is only created by us; and all are assigned
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private PatchContext() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public static PatchContext Create(string exe)
         {
@@ -34,8 +37,8 @@ namespace IPA
             {
                 Executable = exe
             };
-            context.ProjectRoot = new FileInfo(context.Executable).Directory?.FullName;
-            context.IPARoot = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? throw new InvalidOperationException(), "IPA");
+            context.ProjectRoot = new FileInfo(context.Executable).Directory?.FullName ?? throw new Exception();
+            context.IPARoot = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location) ?? throw new InvalidOperationException(), "IPA");
             context.IPA = Assembly.GetExecutingAssembly().Location;
             context.DataPathSrc = Path.Combine(context.IPARoot, "Data");
             context.LibsPathSrc = Path.Combine(context.IPARoot, "Libs");
@@ -50,7 +53,7 @@ namespace IPA
             string shortcutName = $"{context.ProjectName} (Patch & Launch)";
             context.ShortcutPath = Path.Combine(context.ProjectRoot, shortcutName) + ".lnk";
 
-            Directory.CreateDirectory(context.BackupPath);
+            _ = Directory.CreateDirectory(context.BackupPath);
 
             return context;
         }

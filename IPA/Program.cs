@@ -12,10 +12,8 @@ using IPA.Patcher;
 
 namespace IPA
 {
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public static class Program
     {
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Architecture
         {
             x86,
@@ -25,17 +23,17 @@ namespace IPA
 
         public const string FileVersion = "4.1.6.0";
 
-        public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
+        public static Version Version => Assembly.GetEntryAssembly()!.GetName().Version!;
 
-        public static readonly ArgumentFlag ArgHelp = new ArgumentFlag("--help", "-h")          { DocString = "prints this message" };
-        public static readonly ArgumentFlag ArgVersion = new ArgumentFlag("--version", "-v")    { DocString = "prints the version that will be installed and is currently installed" };
-        public static readonly ArgumentFlag ArgWaitFor = new ArgumentFlag("--waitfor", "-w")    { DocString = "waits for the specified PID to exit", ValueString = "PID" };
-        public static readonly ArgumentFlag ArgForce = new ArgumentFlag("--force", "-f")        { DocString = "forces the operation to go through" };
-        public static readonly ArgumentFlag ArgRevert = new ArgumentFlag("--revert", "-r")      { DocString = "reverts the IPA installation" };
-        public static readonly ArgumentFlag ArgNoRevert = new ArgumentFlag("--no-revert", "-R") { DocString = "prevents a normal installation from first reverting" };
-        public static readonly ArgumentFlag ArgNoWait = new ArgumentFlag("--nowait", "-n")      { DocString = "doesn't wait for user input after the operation" };
-        public static readonly ArgumentFlag ArgStart = new ArgumentFlag("--start", "-s")        { DocString = "uses the specified arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
-        public static readonly ArgumentFlag ArgLaunch = new ArgumentFlag("--launch", "-l")      { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
+        public static readonly ArgumentFlag ArgHelp = new("--help", "-h")          { DocString = "prints this message" };
+        public static readonly ArgumentFlag ArgVersion = new("--version", "-v")    { DocString = "prints the version that will be installed and is currently installed" };
+        public static readonly ArgumentFlag ArgWaitFor = new("--waitfor", "-w")    { DocString = "waits for the specified PID to exit", ValueString = "PID" };
+        public static readonly ArgumentFlag ArgForce = new("--force", "-f")        { DocString = "forces the operation to go through" };
+        public static readonly ArgumentFlag ArgRevert = new("--revert", "-r")      { DocString = "reverts the IPA installation" };
+        public static readonly ArgumentFlag ArgNoRevert = new("--no-revert", "-R") { DocString = "prevents a normal installation from first reverting" };
+        public static readonly ArgumentFlag ArgNoWait = new("--nowait", "-n")      { DocString = "doesn't wait for user input after the operation" };
+        public static readonly ArgumentFlag ArgStart = new("--start", "-s")        { DocString = "uses the specified arguments to start the game after the patch/unpatch", ValueString = "ARGUMENTS" };
+        public static readonly ArgumentFlag ArgLaunch = new("--launch", "-l")      { DocString = "uses positional parameters as arguments to start the game after patch/unpatch" };
 
         [STAThread]
         public static void Main()
@@ -57,7 +55,7 @@ namespace IPA
             {
                 if (ArgWaitFor.HasValue && !ArgVersion)
                 { // wait for process if necessary
-                    var pid = int.Parse(ArgWaitFor.Value);
+                    var pid = int.Parse(ArgWaitFor.Value!);
 
                     try
                     { // wait for beat saber to exit (ensures we can modify the file)
@@ -73,12 +71,12 @@ namespace IPA
                     }
                 }
 
-                PatchContext context = null;
+                PatchContext? context = null;
                 
-                Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
+                Assembly? AssemblyLibLoader(object? source, ResolveEventArgs e)
                 {
                     // ReSharper disable AccessToModifiedClosure
-                    if (context == null) return null;
+                    if (context == null || e.Name == null) return null;
                     var libsDir = context.LibsPathSrc;
                     // ReSharper enable AccessToModifiedClosure
 
@@ -96,14 +94,16 @@ namespace IPA
 
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
                 argExeName ??= new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
-                            .FirstOrDefault(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly().Location)
+                            .FirstOrDefault(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly()!.Location)
                             ?.FullName;
                 if (argExeName == null)
                 {
                     Fail("Could not locate game executable");
                 }
                 else
+                {
                     context = PatchContext.Create(argExeName);
+                }
 
                 if (ArgVersion)
                 {
@@ -120,7 +120,9 @@ namespace IPA
                 Validate(context);
 
                 if (ArgRevert /*|| Keyboard.IsKeyDown(Keys.LMenu)*/)
+                {
                     Revert(context);
+                }
                 else
                 {
                     Install(context);
@@ -147,7 +149,7 @@ namespace IPA
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("[Press any key to continue]");
                 Console.ResetColor();
-                Console.ReadKey();
+                _ = Console.ReadKey();
             }
         }
 
@@ -161,7 +163,7 @@ namespace IPA
             }
         }
 
-        private static Version GetInstalledVersion(PatchContext context)
+        private static Version? GetInstalledVersion(PatchContext context)
         {
             // first, check currently installed version, if any
             if (File.Exists(Path.Combine(context.ProjectRoot, "winhttp.dll")))
@@ -199,7 +201,7 @@ namespace IPA
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("Restoring old version... ");
                         if (BackupManager.HasBackup(context))
-                            BackupManager.Restore(context);
+                            _ = BackupManager.Restore(context);
                     }
 
                     var nativePluginFolder = Path.Combine(context.DataPathDst, "Plugins");
@@ -231,7 +233,7 @@ namespace IPA
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("Creating plugins folder... ");
-                    Directory.CreateDirectory(context.PluginsFolder);
+                    _ = Directory.CreateDirectory(context.PluginsFolder);
                     Console.ResetColor();
                 }
 
@@ -277,17 +279,17 @@ namespace IPA
         {
             if (ArgStart.HasValue)
             {
-                Process.Start(context.Executable, ArgStart.Value);
+                _ = Process.Start(context.Executable, ArgStart.Value);
             }
             else
             {
                 var argList = Arguments.CmdLine.PositionalArgs.ToList();
 
-                argList.Remove(context.Executable);
+                _ = argList.Remove(context.Executable);
 
                 if (ArgLaunch)
                 {
-                    Process.Start(context.Executable, Args(argList.ToArray()));
+                    _ = Process.Start(context.Executable, Args(argList.ToArray()));
                 }
             }
         }
@@ -309,7 +311,7 @@ namespace IPA
         }
 
         public static void CopyAll(DirectoryInfo source, DirectoryInfo target, bool aggressive, BackupUnit backup,
-            Func<FileInfo, FileInfo, IEnumerable<FileInfo>> interceptor = null, bool recurse = true)
+            Func<FileInfo, FileInfo, IEnumerable<FileInfo>>? interceptor = null, bool recurse = true)
         {
             if (interceptor == null)
             {
@@ -331,7 +333,7 @@ namespace IPA
                     ClearLine();
                     Console.WriteLine(@"Copying {0}", targetFile.FullName);
                     backup.Add(targetFile);
-                    fi.CopyTo(targetFile.FullName, true);
+                    _ = fi.CopyTo(targetFile.FullName, true);
                 }
             }
 
@@ -351,13 +353,14 @@ namespace IPA
 
             WaitForEnd();
 
+            // This is needed because in Framework, this is not marked DoesNotReturn
+#pragma warning disable CS8763 // A method marked [DoesNotReturn] should not return.
             Environment.Exit(1);
         }
+#pragma warning restore CS8763 // A method marked [DoesNotReturn] should not return.
 
         public static string Args(params string[] args)
-        {
-            return string.Join(" ", args.Select(EncodeParameterArgument).ToArray());
-        }
+            => string.Join(" ", args.Select(EncodeParameterArgument).ToArray());
 
         /// <summary>
         /// Encodes an argument for passing into a program
@@ -381,19 +384,28 @@ namespace IPA
                 var header = reader.ReadUInt16();
                 if (header == 0x5a4d)
                 {
-                    reader.BaseStream.Seek(60, SeekOrigin.Begin); // this location contains the offset for the PE header
+                    _ = reader.BaseStream.Seek(60, SeekOrigin.Begin); // this location contains the offset for the PE header
                     var peOffset = reader.ReadUInt32();
 
-                    reader.BaseStream.Seek(peOffset + 4, SeekOrigin.Begin);
+                    _ = reader.BaseStream.Seek(peOffset + 4, SeekOrigin.Begin);
                     var machine = reader.ReadUInt16();
 
                     if (machine == 0x8664) // IMAGE_FILE_MACHINE_AMD64
+                    {
                         return Architecture.x64;
-                    if (machine == 0x014c) // IMAGE_FILE_MACHINE_I386
+                    }
+                    else if (machine == 0x014c) // IMAGE_FILE_MACHINE_I386
+                    {
                         return Architecture.x86;
-                    if (machine == 0x0200) // IMAGE_FILE_MACHINE_IA64
+                    }
+                    else if (machine == 0x0200) // IMAGE_FILE_MACHINE_IA64
+                    {
                         return Architecture.x64;
-                    return Architecture.Unknown;
+                    }
+                    else
+                    {
+                        return Architecture.Unknown;
+                    }
                 }
 
                 // Not a supported binary
