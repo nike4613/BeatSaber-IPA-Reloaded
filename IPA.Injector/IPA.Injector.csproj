@@ -1,13 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="..\Common.props"/>
 
   <PropertyGroup>
     <TargetFrameworks>net461;net35</TargetFrameworks>
     <RootNamespace>IPA.Injector</RootNamespace>
-    <!--<PathMap>$(SolutionDir)=C:\</PathMap>-->
-    <DebugType>portable</DebugType>
-    <LangVersion>8.0</LangVersion>
+    
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>CA1031</NoWarn>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net461' ">true</BuildForBeatSaber>
@@ -102,5 +101,7 @@
     <RemoveDir Directories="$(OutputPath)Libraries\Included" />
     <RemoveDir Directories="$(OutputPath)Libraries" />
   </Target>
+
+  <Import Project="..\Common.targets"/>
 
 </Project>

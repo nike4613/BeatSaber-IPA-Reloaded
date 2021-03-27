@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <!--<PathMap>$(SolutionDir)=C:\</PathMap>-->
+    <DebugType>portable</DebugType>
+    <LangVersion>9</LangVersion>
+    <NoWarn>CA1031</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+</Project>
