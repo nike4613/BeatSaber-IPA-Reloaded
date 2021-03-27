@@ -39,10 +39,10 @@ namespace IPA.Loader
         public string Name => manifest.Name;
 
         /// <summary>
-        /// The BeatMods ID of the plugin, or null if it doesn't have one.
+        /// The ID of the plugin.
         /// </summary>
-        /// <value>the updater ID of the plugin</value>
-        public string Id => manifest.Id;
+        /// <value>the ID of the plugin</value>
+        public string Id => manifest.Id!; // by the time that this is publicly visible, it's always non-null
 
         /// <summary>
         /// The name of the author that wrote this plugin.
@@ -91,7 +91,7 @@ namespace IPA.Loader
         /// The name of the resource in the plugin assembly containing the plugin's icon.
         /// </summary>
         /// <value>the name of the plugin's icon</value>
-        public string IconName => manifest.IconPath;
+        public string? IconName => manifest.IconPath;
 
         /// <summary>
         /// A link to this plugin's home page, if any.

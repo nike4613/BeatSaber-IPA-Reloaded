@@ -1,4 +1,5 @@
-﻿using IPA.JsonConverters;
+﻿#nullable enable
+using IPA.JsonConverters;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,31 +18,31 @@ namespace IPA.Loader
     internal class PluginManifest
     {
         [JsonProperty("name", Required = Required.Always)]
-        public string Name;
+        public string Name = null!;
 
-        [JsonProperty("id", Required = Required.AllowNull)]
-        public string Id;
+        [JsonProperty("id", Required = Required.AllowNull)] // TODO: on major version bump, make this always
+        public string? Id;
 
         [JsonProperty("description", Required = Required.Always), JsonConverter(typeof(MultilineStringConverter))]
-        public string Description;
+        public string Description = null!;
 
         [JsonProperty("version", Required = Required.Always), JsonConverter(typeof(SemverVersionConverter))]
-        public Version Version;
+        public Version Version = null!;
 
         [JsonProperty("gameVersion", Required = Required.Always), JsonConverter(typeof(AlmostVersionConverter))]
-        public AlmostVersion GameVersion;
+        public AlmostVersion GameVersion = null!;
 
         [JsonProperty("author", Required = Required.Always)]
-        public string Author;
+        public string Author = null!;
 
         [JsonProperty("dependsOn", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
-        public Dictionary<string, Range> Dependencies = new Dictionary<string, Range>();
+        public Dictionary<string, Range> Dependencies = new();
 
         [JsonProperty("conflictsWith", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
-        public Dictionary<string, Range> Conflicts = new Dictionary<string, Range>();
+        public Dictionary<string, Range> Conflicts = new();
 
         [JsonProperty("features", Required = Required.DisallowNull), JsonConverter(typeof(FeaturesFieldConverter))]
-        public Dictionary<string, JObject> Features = new Dictionary<string, JObject>();
+        public Dictionary<string, JObject> Features = new();
 
         [JsonProperty("loadBefore", Required = Required.DisallowNull)]
         public string[] LoadBefore = Array.Empty<string>();
@@ -50,7 +51,7 @@ namespace IPA.Loader
         public string[] LoadAfter = Array.Empty<string>();
 
         [JsonProperty("icon", Required = Required.DisallowNull)]
-        public string IconPath = null;
+        public string? IconPath = null;
 
         [JsonProperty("files", Required = Required.DisallowNull)]
         public string[] Files = Array.Empty<string>();
@@ -59,26 +60,26 @@ namespace IPA.Loader
         public class LinksObject
         {
             [JsonProperty("project-home", Required = Required.DisallowNull)]
-            public Uri ProjectHome = null;
+            public Uri? ProjectHome = null;
 
             [JsonProperty("project-source", Required = Required.DisallowNull)]
-            public Uri ProjectSource = null;
+            public Uri? ProjectSource = null;
 
             [JsonProperty("donate", Required = Required.DisallowNull)]
-            public Uri Donate = null;
+            public Uri? Donate = null;
         }
 
         [JsonProperty("links", Required = Required.DisallowNull)]
-        public LinksObject Links = null;
+        public LinksObject? Links = null;
 
         [Serializable]
         public class MiscObject
         {
             [JsonProperty("plugin-hint", Required = Required.DisallowNull)]
-            public string PluginMainHint = null;
+            public string? PluginMainHint = null;
         }
 
         [JsonProperty("misc", Required = Required.DisallowNull)]
-        public MiscObject Misc = null;
+        public MiscObject? Misc = null;
     }
 }

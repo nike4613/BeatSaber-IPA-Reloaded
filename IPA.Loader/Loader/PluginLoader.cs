@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
 using SemVer;
+using System.Diagnostics.CodeAnalysis;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -52,6 +53,11 @@ namespace IPA.Loader
 
             ResolveDependencies();
 #endif
+
+            // Features contribute to load order considerations
+            InitFeatures();
+            DoOrderResolution();
+
         });
 
         internal static void YeetIfNeeded()
@@ -157,6 +163,12 @@ namespace IPA.Loader
                         Logger.loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
 #endif
                         continue;
+                    }
+
+                    if (pluginManifest.Id == null)
+                    {
+                        Logger.loader.Warn($"Plugin '{pluginManifest.Name}' does not have a listed ID, using name");
+                        pluginManifest.Id = pluginManifest.Name;
                     }
 
                     metadata.Manifest = pluginManifest;
@@ -720,6 +732,125 @@ namespace IPA.Loader
         }
 #endif
 
+        internal static void DoOrderResolution()
+        {
+            PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
+
+            var metadataCache = new Dictionary<string, (PluginMetadata Meta, bool Enabled)>(PluginsMetadata.Count);
+            var pluginsToProcess = new List<PluginMetadata>(PluginsMetadata.Count);
+
+            var disabledIds = DisabledConfig.Instance.DisabledModIds;
+            var disabledPlugins = new List<PluginMetadata>();
+
+            // build metadata cache
+            foreach (var meta in PluginsMetadata)
+            {
+                if (!metadataCache.TryGetValue(meta.Id, out var existing))
+                {
+                    if (disabledIds.Contains(meta.Id))
+                    {
+                        metadataCache.Add(meta.Id, (meta, false));
+                        disabledPlugins.Add(meta);
+                    }
+                    else
+                    {
+                        metadataCache.Add(meta.Id, (meta, true));
+                        pluginsToProcess.Add(meta);
+                    }
+                }
+                else
+                {
+                    Logger.loader.Warn($"Found duplicates of {meta.Id}, using newest");
+                    ignoredPlugins.Add(meta, new(Reason.Duplicate)
+                    {
+                        ReasonText = $"Duplicate entry of same ID ({meta.Id})",
+                        RelatedTo = existing.Meta
+                    });
+                }
+            }
+
+            var loadedPlugins = new Dictionary<string, (PluginMetadata Meta, bool Disabled, bool Ignored)>();
+            var outputOrder = new List<PluginMetadata>(PluginsMetadata.Count);
+
+            {
+                bool TryResolveId(string id, [MaybeNullWhen(false)] out PluginMetadata meta, out bool disabled, out bool ignored)
+                {
+                    meta = null;
+                    disabled = false;
+                    ignored = true;
+                    if (loadedPlugins.TryGetValue(id, out var foundMeta))
+                    {
+                        meta = foundMeta.Meta;
+                        disabled = foundMeta.Disabled;
+                        ignored = foundMeta.Ignored;
+                        return true;
+                    }
+                    if (metadataCache!.TryGetValue(id, out var plugin))
+                    {
+                        disabled = !plugin.Enabled;
+                        meta = plugin.Meta;
+                        if (!disabled)
+                        {
+                            Resolve(plugin.Meta, out disabled, out ignored);
+                        }
+                        loadedPlugins.Add(id, (plugin.Meta, disabled, ignored));
+                        return true;
+                    }
+                    return false;
+                }
+
+                void Resolve(PluginMetadata plugin, out bool disabled, out bool ignored)
+                {
+                    disabled = false;
+                    ignored = false;
+
+                    // first load dependencies
+                    foreach (var dep in plugin.Manifest.Dependencies)
+                    {
+                        if (!TryResolveId(dep.Key, out var depMeta, out var depDisabled, out var depIgnored))
+                        {
+                            Logger.loader.Warn($"Dependency '{dep.Key}@{dep.Value}' for '{plugin.Id}' does not exist; ignoring '{plugin.Id}'");
+                            ignoredPlugins.Add(plugin, new(Reason.Dependency)
+                            {
+                                ReasonText = $"Dependency '{dep.Key}@{dep.Value}' not found",
+                            });
+                            ignored = true;
+                            return;
+                        }
+                        // make a point to propagate ignored
+                        if (depIgnored)
+                        {
+                            Logger.loader.Warn($"Dependency '{dep.Key}' for '{plugin.Id}' previously ignored; ignoring '{plugin.Id}'");
+                            ignoredPlugins.Add(plugin, new(Reason.Dependency)
+                            {
+                                ReasonText = $"Dependency '{dep.Key}' ignored",
+                                RelatedTo = depMeta
+                            });
+                            ignored = true;
+                            return;
+                        }
+                        // make a point to propagate disabled
+                        if (depDisabled)
+                        {
+                            Logger.loader.Warn($"Dependency '{dep.Key}' for '{plugin.Id}' disabled; disabling");
+                            disabledPlugins!.Add(plugin);
+                            _ = disabledIds!.Add(plugin.Id);
+                            disabled = true;
+                        }
+
+                        // we found our dep, lets save the metadata and keep going
+                        _ = plugin.Dependencies.Add(depMeta);
+                    }
+
+
+                }
+            }
+
+            DisabledConfig.Instance.Changed();
+            DisabledPlugins = disabledPlugins;
+            PluginsMetadata = outputOrder;
+        }
+
         internal static void InitFeatures()
         {
             foreach (var meta in PluginsMetadata)
@@ -772,7 +903,9 @@ namespace IPA.Loader
         internal static void ReleaseAll(bool full = false)
         {
             if (full)
-                ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
+            {
+                ignoredPlugins = new();
+            }
             else
             {
                 foreach (var m in PluginsMetadata)
@@ -788,6 +921,7 @@ namespace IPA.Loader
             DisabledPlugins = new List<PluginMetadata>();
             Feature.Reset();
             GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         internal static void Load(PluginMetadata meta)
