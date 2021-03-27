@@ -56,6 +56,9 @@ namespace IPA.Config
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
                         break;
+                    case "--plugin-logs":
+                        CommandLineValues.Debug.CreateModLogs = true;
+                        break;
 #if false
                     case "--no-updates":
                         CommandLineValues.Updates.AutoCheckUpdates = false;
@@ -117,6 +120,12 @@ namespace IPA.Config
             public static bool CondenseModLogs_ => (Instance?.Debug?.CondenseModLogs ?? false)
                                                 ||   CommandLineValues.Debug.CondenseModLogs;
 
+            // This option only takes effect after a full game restart, unless new logs are created again
+            public virtual bool CreateModLogs { get; set; } = false;
+            // LINE: ignore 2
+            public static bool CreateModLogs_ => (Instance?.Debug?.CreateModLogs ?? false)
+                                              ||    CommandLineValues.Debug.CreateModLogs;
+
             public virtual bool ShowHandledErrorStackTraces { get; set; } = false;
             // LINE: ignore
             public static bool ShowHandledErrorStackTraces_ => Instance?.Debug?.ShowHandledErrorStackTraces ?? false;
@@ -164,9 +173,9 @@ namespace IPA.Config
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
 
-        [JsonProperty(Required = Required.DisallowNull)] // Used for documentation schema generation
         // LINE: ignore
-#if false
+#if false // Used for documentation schema generation
+        [JsonProperty(Required = Required.DisallowNull)]
         public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore 2
 #endif

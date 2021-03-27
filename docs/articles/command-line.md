@@ -83,15 +83,13 @@ Here's a quick list of what they are and what they do.
   > that behaviour, and restricts it to only create a global log and mod logs.
   >
   > Overrides the config setting `Debug.CondenseModLogs`.
-  >
-- `--no-updates`
 
-  > Disables automatic updating.
+- `--plugin-logs`
+  
+  > Causes each plugins' log messages to be written to files in their own folder for ease of debugging.
   >
-  > By default, BSIPA will check [BeatMods](http://beatmods.com) for all of the loaded mods to see if there is a new version
-  > avaliable. If there is, it will be downloaded and installed on the next run. This flag disables that behaviour.
+  > This was the default through 4.1.6, however is now disabled by default.
   >
-  > Overrides the config settings `Updates.AutoCheckUpdates` and `Updates.AutoUpdate`.
-  >
+  > Overrides the config setting `Debug.CreateModLogs`.
   
 ***

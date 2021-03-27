@@ -131,7 +131,7 @@ namespace IPA.Logging
             logName = $"{parent.logName}/{subName}";
             this.parent = parent;
             printers = new List<LogPrinter>();
-            if (!SelfConfig.Debug_.CondenseModLogs_)
+            if (SelfConfig.Debug_.CreateModLogs_ && !SelfConfig.Debug_.CondenseModLogs_)
                 printers.Add(new PluginSubLogPrinter(parent.logName, subName));
 
             if (logThread == null || !logThread.IsAlive)
@@ -153,7 +153,8 @@ namespace IPA.Logging
             }
 
             logName = name;
-            printers.Add(new PluginLogFilePrinter(name));
+            if (SelfConfig.Debug_.CreateModLogs_)
+                printers.Add(new PluginLogFilePrinter(name));
 
             if (logThread == null || !logThread.IsAlive)
             {
