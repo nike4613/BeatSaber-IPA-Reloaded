@@ -92,7 +92,7 @@ namespace IPA
                 }
                 AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
 
-                var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe"));
+                var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
                 argExeName ??= new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
                             .FirstOrDefault(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly()!.Location)
                             ?.FullName;
