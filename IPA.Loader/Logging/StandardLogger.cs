@@ -1,4 +1,6 @@
-﻿using IPA.Config;
+﻿#nullable enable
+
+using IPA.Config;
 using IPA.Logging.Printers;
 using IPA.Utilities;
 using System;
@@ -23,7 +25,7 @@ namespace IPA.Logging
     /// </remarks>
     public class StandardLogger : Logger
     {
-        private static readonly List<LogPrinter> defaultPrinters = new List<LogPrinter>()
+        private static readonly List<LogPrinter> defaultPrinters = new()
         {
             new GlobalLogFilePrinter()
         };
@@ -108,10 +110,10 @@ namespace IPA.Logging
         private static bool showTrace = false;
         private static volatile bool syncLogging = false;
 
-        private readonly List<LogPrinter> printers = new List<LogPrinter>();
-        private readonly StandardLogger parent;
+        private readonly List<LogPrinter> printers = new();
+        private readonly StandardLogger? parent;
 
-        private readonly Dictionary<string, StandardLogger> children = new Dictionary<string, StandardLogger>();
+        private readonly Dictionary<string, StandardLogger> children = new();
 
         /// <summary>
         /// Configures internal debug settings based on the config passed in.
@@ -218,7 +220,7 @@ namespace IPA.Logging
                     Sync = threadSync
                 });
 
-                if (sync) threadSync.Wait();
+                if (sync) threadSync!.Wait();
             }
             catch (InvalidOperationException)
             {
@@ -227,7 +229,7 @@ namespace IPA.Logging
         }
 
         [ThreadStatic]
-        private static ManualResetEventSlim threadSync;
+        private static ManualResetEventSlim? threadSync;
 
         /// <inheritdoc />
         /// <summary>
@@ -263,7 +265,7 @@ namespace IPA.Logging
             public StandardLogger Logger;
             public string Message;
             public DateTime Time;
-            public ManualResetEventSlim Sync;
+            public ManualResetEventSlim? Sync;
         }
 
         [ThreadStatic]
@@ -272,13 +274,13 @@ namespace IPA.Logging
         /// Whether or not the calling thread is the logger thread.
         /// </summary>
         /// <value><see langword="true"/> if the current thread is the logger thread, <see langword="false"/> otherwise</value>
-        public static bool IsOnLoggerThread => isOnLoggerThread ??= Thread.CurrentThread.ManagedThreadId == logThread.ManagedThreadId;
+        public static bool IsOnLoggerThread => isOnLoggerThread ??= Thread.CurrentThread.ManagedThreadId == logThread?.ManagedThreadId;
 
-        private static readonly ManualResetEventSlim logWaitEvent = new ManualResetEventSlim(true);
-        private static readonly BlockingCollection<LogMessage> logQueue = new BlockingCollection<LogMessage>();
-        private static Thread logThread;
+        private static readonly ManualResetEventSlim logWaitEvent = new(true);
+        private static readonly BlockingCollection<LogMessage> logQueue = new();
+        private static Thread? logThread;
 
-        private static StandardLogger loggerLogger;
+        private static StandardLogger? loggerLogger;
 
         private const int LogCloseTimeout = 250;
 
@@ -323,7 +325,7 @@ namespace IPA.Logging
                                     if (!started.Contains(printer))
                                     { // start printer if not started
                                         printer.StartPrint();
-                                        started.Add(printer);
+                                        _ = started.Add(printer);
                                     }
 
                                     // update last use time and print
@@ -355,13 +357,13 @@ namespace IPA.Logging
                             { // aggregate loggers in the process
                                 var messageLogger = message.Logger;
                                 foreach (var print in messageLogger.printers)
-                                    prints.Add(print);
+                                    _ = prints.Add(print);
                                 do
                                 {
                                     messageLogger = messageLogger.parent;
                                     if (messageLogger != null)
                                         foreach (var print in messageLogger.printers)
-                                            prints.Add(print);
+                                            _ = prints.Add(print);
                                 } while (messageLogger != null);
 
                                 message.Sync?.Set();
@@ -397,7 +399,7 @@ namespace IPA.Logging
                                     Console.WriteLine($"printer errored: {e}");
                                 }
 
-                                started.Remove(printer);
+                                _ = started.Remove(printer);
                             }
                         }
                     }
@@ -432,7 +434,7 @@ namespace IPA.Logging
         internal static void StopLogThread()
         {
             logQueue.CompleteAdding();
-            logThread.Join();
+            logThread!.Join();
         }
     }
 
@@ -448,11 +450,10 @@ namespace IPA.Logging
         /// <param name="name">the name of the child</param>
         /// <returns>the child logger</returns>
         public static Logger GetChildLogger(this Logger logger, string name)
-        {
-            if (logger is StandardLogger standardLogger)
-                return standardLogger.GetChild(name);
-
-            throw new InvalidOperationException();
-        }
+            => logger switch
+            {
+                StandardLogger l => l.GetChild(name),
+                _ => throw new InvalidOperationException()
+            };
     }
 }
