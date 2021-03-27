@@ -132,6 +132,7 @@ namespace IPA.Loader
 
                     string pluginNs = "";
 
+                    PluginManifest? pluginManifest = null;
                     foreach (var resource in pluginModule.Resources)
                     {
                         const string manifestSuffix = ".manifest.json";
@@ -144,11 +145,11 @@ namespace IPA.Loader
                         using (var manifestReader = new StreamReader(embedded.GetResourceStream()))
                             manifest = manifestReader.ReadToEnd();
 
-                        metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                        pluginManifest = JsonConvert.DeserializeObject<PluginManifest?>(manifest);
                         break;
                     }
 
-                    if (metadata.Manifest == null)
+                    if (pluginManifest == null)
                     {
 #if DIRE_LOADER_WARNINGS
                         Logger.loader.Error($"Could not find manifest.json for {Path.GetFileName(plugin)}");
@@ -157,6 +158,8 @@ namespace IPA.Loader
 #endif
                         continue;
                     }
+
+                    metadata.Manifest = pluginManifest;
 
                     void TryGetNamespacedPluginType(string ns, PluginMetadata meta)
                     {
@@ -277,7 +280,8 @@ namespace IPA.Loader
                     string description;
                     if (!meta.IsSelf)
                     {
-                        var resc = meta.PluginType.Module.Resources.Select(r => r as EmbeddedResource)
+                        // plugin type must be non-null for non-self plugins
+                        var resc = meta.PluginType!.Module.Resources.Select(r => r as EmbeddedResource)
                                                                    .NonNull()
                                                                    .FirstOrDefault(r => r.Name == name);
                         if (resc == null)
@@ -747,7 +751,7 @@ namespace IPA.Loader
                 {
                     if (feature.TryGetDefiningPlugin(out var plugin))
                     {
-                        if (plugin != meta)
+                        if (plugin != meta && plugin != null)
                         { // if the feature is not applied to the defining feature
                             _ = meta.LoadsAfter.Add(plugin);
                         }
@@ -777,7 +781,7 @@ namespace IPA.Loader
                 { // clean them up so we can still use the metadata for updates
                     m.InternalFeatures.Clear();
                     m.PluginType = null;
-                    m.Assembly = null;
+                    m.Assembly = null!;
                 }
             }
             PluginsMetadata = new List<PluginMetadata>();

@@ -1,4 +1,5 @@
-﻿using IPA.Loader.Features;
+﻿#nullable enable
+using IPA.Loader.Features;
 using IPA.Utilities;
 using Mono.Cecil;
 using System;
@@ -23,13 +24,13 @@ namespace IPA.Loader
         /// The assembly the plugin was loaded from.
         /// </summary>
         /// <value>the loaded Assembly that contains the plugin main type</value>
-        public Assembly Assembly { get; internal set; }
+        public Assembly Assembly { get; internal set; } = null!;
 
         /// <summary>
         /// The TypeDefinition for the main type of the plugin.
         /// </summary>
         /// <value>the Cecil definition for the plugin main type</value>
-        public TypeDefinition PluginType { get; internal set; }
+        public TypeDefinition? PluginType { get; internal set; }
 
         /// <summary>
         /// The human readable name of the plugin.
@@ -65,7 +66,7 @@ namespace IPA.Loader
         /// The file the plugin was loaded from.
         /// </summary>
         /// <value>the file the plugin was loaded from</value>
-        public FileInfo File { get; internal set; }
+        public FileInfo File { get; internal set; } = null!;
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         /// <summary>
@@ -74,11 +75,11 @@ namespace IPA.Loader
         /// <value>the list of features requested by the plugin</value>
         public IReadOnlyList<Feature> Features => InternalFeatures;
 
-        internal readonly List<Feature> InternalFeatures = new List<Feature>();
+        internal readonly List<Feature> InternalFeatures = new();
 
-        internal readonly HashSet<Feature.Instance> UnloadedFeatures = new HashSet<Feature.Instance>();
+        internal readonly HashSet<Feature.Instance> UnloadedFeatures = new();
 
-        internal readonly List<Feature.Instance> CreateFeaturesWhenLoaded = new List<Feature.Instance>();
+        internal readonly List<Feature.Instance> CreateFeaturesWhenLoaded = new();
 
         /// <summary>
         /// A list of files (that aren't <see cref="File"/>) that are associated with this plugin.
@@ -96,18 +97,18 @@ namespace IPA.Loader
         /// A link to this plugin's home page, if any.
         /// </summary>
         /// <value>the <see cref="Uri"/> of the plugin's home page</value>
-        public Uri PluginHomeLink => manifest.Links?.ProjectHome;
+        public Uri? PluginHomeLink => manifest.Links?.ProjectHome;
 
         /// <summary>
         /// A link to this plugin's source code, if avaliable.
         /// </summary>
         /// <value>the <see cref="Uri"/> of the plugin's source code</value>
-        public Uri PluginSourceLink => manifest.Links?.ProjectSource;
+        public Uri? PluginSourceLink => manifest.Links?.ProjectSource;
         /// <summary>
         /// A link to a donate page for the author of this plugin, if avaliable.
         /// </summary>
         /// <value>the <see cref="Uri"/> of the author's donate page</value>
-        public Uri DonateLink => manifest.Links?.Donate;
+        public Uri? DonateLink => manifest.Links?.Donate;
 
         internal bool IsSelf;
 
@@ -117,10 +118,10 @@ namespace IPA.Loader
         /// <value><see langword="true"/> if it is bare, <see langword="false"/> otherwise</value>
         public bool IsBare { get; internal set; }
 
-        private PluginManifest manifest;
+        private PluginManifest manifest = null!;
 
-        internal HashSet<PluginMetadata> Dependencies { get; } = new HashSet<PluginMetadata>();
-        internal HashSet<PluginMetadata> LoadsAfter { get; } = new HashSet<PluginMetadata>();
+        internal HashSet<PluginMetadata> Dependencies { get; } = new();
+        internal HashSet<PluginMetadata> LoadsAfter { get; } = new();
 
         internal PluginManifest Manifest
         {
