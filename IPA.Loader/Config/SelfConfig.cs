@@ -1,6 +1,6 @@
 ﻿// BEGIN: section ignore
+#nullable enable
 using IPA.Logging;
-using IPA.Utilities;
 using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
@@ -15,9 +15,9 @@ namespace IPA.Config
         // This is to allow the doc generation to parse this file and use Newtonsoft to generate a JSON schema
         // BEGIN: section ignore
 
-        public static Config LoaderConfig { get; set; }
+        public static Config LoaderConfig { get; set; } = null!; // this is set before used
 
-        public static SelfConfig Instance = new SelfConfig();
+        public static SelfConfig Instance = new();
 
         public static void Load()
         {
@@ -56,10 +56,12 @@ namespace IPA.Config
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
                         break;
+#if false
                     case "--no-updates":
                         CommandLineValues.Updates.AutoCheckUpdates = false;
                         CommandLineValues.Updates.AutoUpdate = false;
                         break;
+#endif
                     case "--trace":
                         CommandLineValues.Debug.ShowTrace = true;
                         break;
@@ -72,12 +74,13 @@ namespace IPA.Config
 
         // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
         //      Debug.CondenseModLogs
-        internal static SelfConfig CommandLineValues = new SelfConfig();
+        internal static SelfConfig CommandLineValues = new();
 
         // END: section ignore
 
         public virtual bool Regenerate { get; set; } = true;
 
+#if false
         public class Updates_
         {
             public virtual bool AutoUpdate { get; set; } = true;
@@ -94,6 +97,7 @@ namespace IPA.Config
         // LINE: ignore
         [NonNullable]
         public virtual Updates_ Updates { get; set; } = new Updates_();
+#endif
 
         public class Debug_
         {
@@ -156,12 +160,19 @@ namespace IPA.Config
             // LINE: ignore
 #endif
             };
+
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
 
         [JsonProperty(Required = Required.DisallowNull)] // Used for documentation schema generation
-        public virtual string LastGameVersion { get; set; } = null;
         // LINE: ignore
-        public static string LastGameVersion_ => Instance?.LastGameVersion;
+#if false
+        public virtual string LastGameVersion { get; set; } = null;
+        // LINE: ignore 2
+#endif
+        public virtual string? LastGameVersion { get; set; } = null;
+
+        // LINE: ignore
+        public static string? LastGameVersion_ => Instance?.LastGameVersion;
     }
 }
