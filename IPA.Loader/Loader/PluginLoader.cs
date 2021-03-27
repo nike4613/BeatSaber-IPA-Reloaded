@@ -1,4 +1,5 @@
-﻿using IPA.Config;
+﻿#nullable enable
+using IPA.Config;
 using IPA.Loader.Features;
 using IPA.Logging;
 using IPA.Utilities;
@@ -32,7 +33,7 @@ namespace IPA.Loader
 
     internal partial class PluginLoader
     {
-        internal static PluginMetadata SelfMeta;
+        internal static PluginMetadata SelfMeta = null!;
 
         internal static Task LoadTask() =>
             TaskEx.Run(() =>
@@ -40,6 +41,9 @@ namespace IPA.Loader
             YeetIfNeeded();
 
             LoadMetadata();
+
+            // old loader system
+#if false
             Resolve();
             InitFeatures();
             ComputeLoadOrder();
@@ -47,6 +51,7 @@ namespace IPA.Loader
             FilterWithoutFiles();
 
             ResolveDependencies();
+#endif
         });
 
         internal static void YeetIfNeeded()
@@ -68,10 +73,10 @@ namespace IPA.Loader
             }
         }
 
-        internal static List<PluginMetadata> PluginsMetadata = new List<PluginMetadata>();
-        internal static List<PluginMetadata> DisabledPlugins = new List<PluginMetadata>();
+        internal static List<PluginMetadata> PluginsMetadata = new();
+        internal static List<PluginMetadata> DisabledPlugins = new();
 
-        private static readonly Regex embeddedTextDescriptionPattern = new Regex(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex embeddedTextDescriptionPattern = new(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
         internal static void LoadMetadata()
         {
@@ -130,7 +135,7 @@ namespace IPA.Loader
                     foreach (var resource in pluginModule.Resources)
                     {
                         const string manifestSuffix = ".manifest.json";
-                        if (!(resource is EmbeddedResource embedded) ||
+                        if (resource is not EmbeddedResource embedded ||
                             !embedded.Name.EndsWith(manifestSuffix)) continue;
 
                         pluginNs = embedded.Name.Substring(0, embedded.Name.Length - manifestSuffix.Length);
@@ -297,6 +302,7 @@ namespace IPA.Loader
         }
     }
 
+    #region Ignore stuff
     /// <summary>
     /// An enum that represents several categories of ignore reasons that the loader may encounter.
     /// </summary>
@@ -372,15 +378,15 @@ namespace IPA.Loader
         /// Gets the textual description of the particular ignore reason. This will typically
         /// include details about why the plugin was ignored, if it is present.
         /// </summary>
-        public string ReasonText { get; internal set; }
+        public string? ReasonText { get; internal set; }
         /// <summary>
         /// Gets the <see cref="Exception"/> that caused this plugin to be ignored, if any.
         /// </summary>
-        public Exception Error { get; internal set; }
+        public Exception? Error { get; internal set; }
         /// <summary>
         /// Gets the metadata of the plugin that this ignore was related to, if any.
         /// </summary>
-        public PluginMetadata RelatedTo { get; internal set; }
+        public PluginMetadata? RelatedTo { get; internal set; }
         /// <summary>
         /// Initializes an <see cref="IgnoreReason"/> with the provided data.
         /// </summary>
@@ -388,7 +394,7 @@ namespace IPA.Loader
         /// <param name="reasonText">the textual description of this ignore reason, if any</param>
         /// <param name="error">the <see cref="Exception"/> that caused this <see cref="IgnoreReason"/>, if any</param>
         /// <param name="relatedTo">the <see cref="PluginMetadata"/> this reason is related to, if any</param>
-        public IgnoreReason(Reason reason, string reasonText = null, Exception error = null, PluginMetadata relatedTo = null)
+        public IgnoreReason(Reason reason, string? reasonText = null, Exception? error = null, PluginMetadata? relatedTo = null)
         {
             Reason = reason;
             ReasonText = reasonText;
@@ -412,10 +418,10 @@ namespace IPA.Loader
         public override int GetHashCode()
         {
             int hashCode = 778404373;
-            hashCode = hashCode * -1521134295 + Reason.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ReasonText);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Exception>.Default.GetHashCode(Error);
-            hashCode = hashCode * -1521134295 + EqualityComparer<PluginMetadata>.Default.GetHashCode(RelatedTo);
+            hashCode = (hashCode * -1521134295) + Reason.GetHashCode();
+            hashCode = (hashCode * -1521134295) + ReasonText?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + Error?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + RelatedTo?.GetHashCode() ?? 0;
             return hashCode;
         }
 
@@ -437,13 +443,15 @@ namespace IPA.Loader
         public static bool operator !=(IgnoreReason left, IgnoreReason right)
             => !(left == right);
     }
+    #endregion
 
     internal partial class PluginLoader
     {
         // keep track of these for the updater; it should still be able to update mods not loaded
         // the thing -> the reason
-        internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new Dictionary<PluginMetadata, IgnoreReason>();
+        internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new();
 
+#if false
         internal static void Resolve()
         { // resolves duplicates and conflicts, etc
             PluginsMetadata.Sort((a, b) => b.Version.CompareTo(a.Version));
@@ -706,6 +714,7 @@ namespace IPA.Loader
             DisabledConfig.Instance.Changed();
             PluginsMetadata = metadata;
         }
+#endif
 
         internal static void InitFeatures()
         {
@@ -726,7 +735,7 @@ namespace IPA.Loader
                     }
                     else
                     { // this is literally any other feature, so we want to delay its initialization
-                        meta.UnloadedFeatures.Add(feature);
+                        _ = meta.UnloadedFeatures.Add(feature);
                     }
                 }
             }
@@ -740,10 +749,13 @@ namespace IPA.Loader
                     {
                         if (plugin != meta)
                         { // if the feature is not applied to the defining feature
-                            meta.LoadsAfter.Add(plugin);
+                            _ = meta.LoadsAfter.Add(plugin);
                         }
 
-                        plugin.CreateFeaturesWhenLoaded.Add(feature);
+                        if (plugin != null)
+                        {
+                            plugin.CreateFeaturesWhenLoaded.Add(feature);
+                        }
                     }
                     else
                     {
@@ -776,11 +788,11 @@ namespace IPA.Loader
 
         internal static void Load(PluginMetadata meta)
         {
-            if (meta.Assembly == null && meta.PluginType != null)
+            if (meta is { Assembly: null, PluginType: not null })
                 meta.Assembly = Assembly.LoadFrom(meta.File.FullName);
         }
 
-        internal static PluginExecutor InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
+        internal static PluginExecutor? InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
             if (meta.Manifest.GameVersion != UnityGame.GameVersion)
                 Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
@@ -870,7 +882,7 @@ namespace IPA.Loader
                 else
                 {
                     feature.AppliedTo.InternalFeatures.Add(inst);
-                    feature.AppliedTo.UnloadedFeatures.Remove(feature);
+                    _ = feature.AppliedTo.UnloadedFeatures.Remove(feature);
                 }
             }
             meta.CreateFeaturesWhenLoaded.Clear(); // if a plugin is loaded twice, for the moment, we don't want to create the feature twice
@@ -905,7 +917,7 @@ namespace IPA.Loader
                     if (exec != null)
                     {
                         list.Add(exec);
-                        loaded.Add(meta);
+                        _ = loaded.Add(meta);
                     }
                 }
                 catch (Exception e)

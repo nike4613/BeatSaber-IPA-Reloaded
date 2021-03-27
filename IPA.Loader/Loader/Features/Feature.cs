@@ -1,9 +1,8 @@
-﻿using Mono.Cecil;
+﻿#nullable enable
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 #if NET3
 using Net3_Proxy;
 #endif
@@ -35,7 +34,7 @@ namespace IPA.Loader.Features
         /// This should also be set whenever either <see cref="BeforeInit"/> returns false.
         /// </summary>
         /// <value>the message to show when the feature is marked invalid</value>
-        public virtual string InvalidMessage { get; protected set; }
+        public virtual string? InvalidMessage { get; protected set; }
 
         /// <summary>
         /// Called before a plugin's `Init` method is called. This will not be called if there is no `Init` method. This should never throw an exception. An exception will abort the loading of the plugin with an error.
@@ -65,6 +64,7 @@ namespace IPA.Loader.Features
 
         // TODO: rework features to take arguments as JSON objects
 
+        [SuppressMessage("Nullability", "CS8618", Justification = "Reset sets those fields.")]
         static Feature()
         {
             Reset();
@@ -72,18 +72,18 @@ namespace IPA.Loader.Features
 
         internal static void Reset()
         {
-            featureTypes = new Dictionary<string, Type>
+            featureTypes = new()
             {
                 { "IPA.DefineFeature", typeof(DefineFeature) }
             };
-            featureDelcarers = new Dictionary<string, PluginMetadata>
+            featureDelcarers = new()
             {
                 { "IPA.DefineFeature", null }
             };
         }
 
         private static Dictionary<string, Type> featureTypes;
-        private static Dictionary<string, PluginMetadata> featureDelcarers;
+        private static Dictionary<string, PluginMetadata?> featureDelcarers;
 
         internal static bool HasFeature(string name) => featureTypes.ContainsKey(name);
 
@@ -123,7 +123,7 @@ namespace IPA.Loader.Features
             }
         }
 
-        internal string FeatureName;
+        internal string FeatureName = null!;
 
         internal class Instance
         {
@@ -139,8 +139,8 @@ namespace IPA.Loader.Features
                 type = null;
             }
 
-            private Type type;
-            public bool TryGetDefiningPlugin(out PluginMetadata plugin)
+            private Type? type;
+            public bool TryGetDefiningPlugin(out PluginMetadata? plugin)
             {
                 return featureDelcarers.TryGetValue(Name, out plugin);
             }
@@ -173,101 +173,5 @@ namespace IPA.Loader.Features
                 return result;
             }
         }
-
-        /*
-        // returns false with both outs null for no such feature
-        internal static bool TryParseFeature(string featureString, PluginMetadata plugin,
-            out Feature feature, out Exception failException, out bool featureValid, out Instance parsed,
-            Instance? preParsed = null)
-        {
-            failException = null;
-            feature = null;
-            featureValid = false;
-
-            if (preParsed == null)
-            {
-                var builder = new StringBuilder();
-                string name = null;
-                var parameters = new List<string>();
-
-                bool escape = false;
-                int parens = 0;
-                bool removeWhitespace = true;
-                foreach (var chr in featureString)
-                {
-                    if (escape)
-                    {
-                        builder.Append(chr);
-                        escape = false;
-                    }
-                    else
-                    {
-                        switch (chr)
-                        {
-                            case '\\':
-                                escape = true;
-                                break;
-                            case '(':
-                                parens++;
-                                if (parens != 1) goto default;
-                                removeWhitespace = true;
-                                name = builder.ToString();
-                                builder.Clear();
-                                break;
-                            case ')':
-                                parens--;
-                                if (parens != 0) goto default;
-                                goto case ',';
-                            case ',':
-                                if (parens > 1) goto default;
-                                parameters.Add(builder.ToString());
-                                builder.Clear();
-                                removeWhitespace = true;
-                                break;
-                            default:
-                                if (removeWhitespace && !char.IsWhiteSpace(chr))
-                                    removeWhitespace = false;
-                                if (!removeWhitespace)
-                                    builder.Append(chr);
-                                break;
-                        }
-                    }
-                }
-
-                if (name == null)
-                    name = builder.ToString();
-
-                parsed = new Instance(name, parameters.ToArray());
-
-                if (parens != 0)
-                {
-                    failException = new Exception("Malformed feature definition");
-                    return false;
-                }
-            }
-            else
-                parsed = preParsed.Value;
-
-            if (!featureTypes.TryGetValue(parsed.Name, out var featureType))
-                return false;
-
-            try
-            {
-                if (!(Activator.CreateInstance(featureType) is Feature aFeature))
-                {
-                    failException = new InvalidCastException("Feature type not a subtype of Feature");
-                    return false;
-                }
-
-                featureValid = aFeature.Initialize(plugin, TODO);
-                feature = aFeature;
-                return true;
-            }
-            catch (Exception e)
-            {
-                failException = e;
-                return false;
-            }
-        }*/
     }
 }

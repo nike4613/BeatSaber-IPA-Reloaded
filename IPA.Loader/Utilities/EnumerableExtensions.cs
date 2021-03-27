@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace IPA.Utilities
                 this.first = first;
             }
 
-            public PrependEnumerator GetEnumerator() => new PrependEnumerator(this);
+            public PrependEnumerator GetEnumerator() => new(this);
 
             public struct PrependEnumerator : IEnumerator<T>
             {
@@ -45,12 +46,12 @@ namespace IPA.Utilities
                     this.enumerable = enumerable;
                     restEnum = enumerable.rest.GetEnumerator();
                     state = 0;
-                    Current = default;
+                    Current = default!;
                 }
 
                 public T Current { get; private set; }
 
-                object IEnumerator.Current => Current;
+                object? IEnumerator.Current => Current;
 
                 public void Dispose() => restEnum.Dispose();
 
@@ -109,7 +110,7 @@ namespace IPA.Utilities
                 this.last = last;
             }
 
-            public AppendEnumerator GetEnumerator() => new AppendEnumerator(this);
+            public AppendEnumerator GetEnumerator() => new(this);
 
             public struct AppendEnumerator : IEnumerator<T>
             {
@@ -121,12 +122,12 @@ namespace IPA.Utilities
                     this.enumerable = enumerable;
                     restEnum = enumerable.rest.GetEnumerator();
                     state = 0;
-                    Current = default;
+                    Current = default!;
                 }
 
                 public T Current { get; private set; }
 
-                object IEnumerator.Current => Current;
+                object? IEnumerator.Current => Current;
 
                 public void Dispose() => restEnum.Dispose();
 
@@ -170,8 +171,8 @@ namespace IPA.Utilities
         /// <typeparam name="T">the type of the enumeration</typeparam>
         /// <param name="self">the enumeration to filter</param>
         /// <returns>a filtered enumerable</returns>
-        public static IEnumerable<T> NonNull<T>(this IEnumerable<T> self) where T : class
-            => self.Where(o => o != null);
+        public static IEnumerable<T> NonNull<T>(this IEnumerable<T?> self) where T : class
+            => self.Where(o => o != null)!;
 
         /// <summary>
         /// LINQ-style extension method that filters <see langword="null"/> elements out of an enumeration based on a converter.
@@ -181,7 +182,7 @@ namespace IPA.Utilities
         /// <param name="self">the enumeration to filter</param>
         /// <param name="pred">the predicate to select for filtering</param>
         /// <returns>a filtered enumerable</returns>
-        public static IEnumerable<T> NonNull<T, U>(this IEnumerable<T> self, Func<T, U> pred) where U : class
+        public static IEnumerable<T> NonNull<T, U>(this IEnumerable<T> self, Func<T, U?> pred) where U : class
             => self.Where(o => pred(o) != null);
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace IPA.Utilities
         /// <param name="self">the enumeration to filter</param>
         /// <returns>a filtered enumerable</returns>
         public static IEnumerable<T> NonNull<T>(this IEnumerable<T?> self) where T : struct
-            => self.Where(o => o != null).Select(o => o.Value);
+            => self.Where(o => o != null).Select(o => o!.Value);
 
         /// <summary>
         /// LINQ-style extension method that filters <see langword="null"/> elements out of an enumeration based on a converter to a nullable type.
