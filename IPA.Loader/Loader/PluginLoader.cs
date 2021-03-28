@@ -792,7 +792,7 @@ namespace IPA.Loader
                         meta = plugin.Meta;
                         if (!disabled)
                         {
-                            Resolve(plugin.Meta, out disabled, out ignored);
+                            Resolve(plugin.Meta, ref disabled, out ignored);
                         }
                         loadedPlugins.Add(id, (plugin.Meta, disabled, ignored));
                         return true;
@@ -800,11 +800,10 @@ namespace IPA.Loader
                     return false;
                 }
 
-                void Resolve(PluginMetadata plugin, out bool disabled, out bool ignored)
+                void Resolve(PluginMetadata plugin, ref bool disabled, out bool ignored)
                 {
                     // if this method is being called, this is the first and only time that it has been called for this plugin.
 
-                    disabled = false;
                     ignored = false;
 
                     // perform file existence check before attempting to load dependencies
@@ -876,6 +875,10 @@ namespace IPA.Loader
                         ignored = true;
                         return;
                     }
+
+                    // exit early if we've decided we need to be disabled
+                    if (disabled)
+                        return;
 
                     // handle LoadsAfter populated by Features processing
                     foreach (var loadAfter in plugin.LoadsAfter)
