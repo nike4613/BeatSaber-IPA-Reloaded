@@ -87,6 +87,10 @@
   <div class="markdown level0 summary"><p>A structure describing the reason that a plugin was ignored.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="IPA.Loader.IgnoreReason.html">IgnoreReason</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -106,7 +110,7 @@
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Loader_IgnoreReason_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct IgnoreReason</code></pre>
+    <pre><code class="lang-csharp hljs">public struct IgnoreReason : IEquatable&lt;IgnoreReason&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -115,7 +119,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason__ctor_IPA_Loader_Reason_System_String_System_Exception_IPA_Loader_PluginMetadata_.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.%23ctor(IPA.Loader.Reason%2CSystem.String%2CSystem.Exception%2CIPA.Loader.PluginMetadata)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L413">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L414">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason__ctor_" data-uid="IPA.Loader.IgnoreReason.#ctor*"></a>
   <h4 id="IPA_Loader_IgnoreReason__ctor_IPA_Loader_Reason_System_String_System_Exception_IPA_Loader_PluginMetadata_" data-uid="IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.String,System.Exception,IPA.Loader.PluginMetadata)">IgnoreReason(Reason, String, Exception, PluginMetadata)</h4>
@@ -169,7 +173,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_Error.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.Error%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L401">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L402">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_Error_" data-uid="IPA.Loader.IgnoreReason.Error*"></a>
   <h4 id="IPA_Loader_IgnoreReason_Error" data-uid="IPA.Loader.IgnoreReason.Error">Error</h4>
@@ -200,7 +204,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_Reason.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.Reason%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L392">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L393">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_Reason_" data-uid="IPA.Loader.IgnoreReason.Reason*"></a>
   <h4 id="IPA_Loader_IgnoreReason_Reason" data-uid="IPA.Loader.IgnoreReason.Reason">Reason</h4>
@@ -231,7 +235,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_ReasonText.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.ReasonText%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L397">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L398">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_ReasonText_" data-uid="IPA.Loader.IgnoreReason.ReasonText*"></a>
   <h4 id="IPA_Loader_IgnoreReason_ReasonText" data-uid="IPA.Loader.IgnoreReason.ReasonText">ReasonText</h4>
@@ -263,7 +267,7 @@ include details about why the plugin was ignored, if it is present.</p>
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_RelatedTo.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.RelatedTo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L405">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L406">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_RelatedTo_" data-uid="IPA.Loader.IgnoreReason.RelatedTo*"></a>
   <h4 id="IPA_Loader_IgnoreReason_RelatedTo" data-uid="IPA.Loader.IgnoreReason.RelatedTo">RelatedTo</h4>
@@ -296,7 +300,7 @@ include details about why the plugin was ignored, if it is present.</p>
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_Equals_IPA_Loader_IgnoreReason_.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.Equals(IPA.Loader.IgnoreReason)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L429">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L430">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_Equals_" data-uid="IPA.Loader.IgnoreReason.Equals*"></a>
   <h4 id="IPA_Loader_IgnoreReason_Equals_IPA_Loader_IgnoreReason_" data-uid="IPA.Loader.IgnoreReason.Equals(IPA.Loader.IgnoreReason)">Equals(IgnoreReason)</h4>
@@ -346,7 +350,7 @@ include details about why the plugin was ignored, if it is present.</p>
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_Equals_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L422">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L423">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_Equals_" data-uid="IPA.Loader.IgnoreReason.Equals*"></a>
   <h4 id="IPA_Loader_IgnoreReason_Equals_System_Object_" data-uid="IPA.Loader.IgnoreReason.Equals(System.Object)">Equals(Object)</h4>
@@ -395,7 +399,7 @@ include details about why the plugin was ignored, if it is present.</p>
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_GetHashCode.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L434">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L435">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_GetHashCode_" data-uid="IPA.Loader.IgnoreReason.GetHashCode*"></a>
   <h4 id="IPA_Loader_IgnoreReason_GetHashCode" data-uid="IPA.Loader.IgnoreReason.GetHashCode">GetHashCode()</h4>
@@ -429,7 +433,7 @@ include details about why the plugin was ignored, if it is present.</p>
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_op_Equality_IPA_Loader_IgnoreReason_IPA_Loader_IgnoreReason_.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.op_Equality(IPA.Loader.IgnoreReason%2CIPA.Loader.IgnoreReason)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L450">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L451">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_op_Equality_" data-uid="IPA.Loader.IgnoreReason.op_Equality*"></a>
   <h4 id="IPA_Loader_IgnoreReason_op_Equality_IPA_Loader_IgnoreReason_IPA_Loader_IgnoreReason_" data-uid="IPA.Loader.IgnoreReason.op_Equality(IPA.Loader.IgnoreReason,IPA.Loader.IgnoreReason)">Equality(IgnoreReason, IgnoreReason)</h4>
@@ -485,7 +489,7 @@ include details about why the plugin was ignored, if it is present.</p>
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason_op_Inequality_IPA_Loader_IgnoreReason_IPA_Loader_IgnoreReason_.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason.op_Inequality(IPA.Loader.IgnoreReason%2CIPA.Loader.IgnoreReason)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L459">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L460">View Source</a>
   </span>
   <a id="IPA_Loader_IgnoreReason_op_Inequality_" data-uid="IPA.Loader.IgnoreReason.op_Inequality*"></a>
   <h4 id="IPA_Loader_IgnoreReason_op_Inequality_IPA_Loader_IgnoreReason_IPA_Loader_IgnoreReason_" data-uid="IPA.Loader.IgnoreReason.op_Inequality(IPA.Loader.IgnoreReason,IPA.Loader.IgnoreReason)">Inequality(IgnoreReason, IgnoreReason)</h4>
@@ -536,6 +540,10 @@ include details about why the plugin was ignored, if it is present.</p>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">System.IEquatable&lt;T&gt;</a>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
@@ -563,7 +571,7 @@ include details about why the plugin was ignored, if it is present.</p>
                     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_IgnoreReason.md&amp;value=---%0Auid%3A%20IPA.Loader.IgnoreReason%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/cf0119038ce8b212b335da4c7822c7f3d8dda448/IPA.Loader/Loader/PluginLoader.cs/#L387" class="contribution-link">View Source</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/4e2d7feea4ce9070f690b73bdaac61308e93f398/IPA.Loader/Loader/PluginLoader.cs/#L388" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
