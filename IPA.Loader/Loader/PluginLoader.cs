@@ -897,6 +897,23 @@ namespace IPA.Loader
                         }
                     }
 
+                    // after we handle dependencies and loadafters, then check conflicts
+                    foreach (var conflict in plugin.Manifest.Conflicts)
+                    {
+                        if (TryResolveId(conflict.Key, out var meta, out var conflDisabled, out var conflIgnored) && !conflIgnored && !conflDisabled)
+                        {
+                            // the conflict is only *actually* a problem if it is both not ignored and not disabled
+                            Logger.loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.Version}; ignoring '{plugin.Id}'");
+                            ignoredPlugins.Add(plugin, new(Reason.Conflict)
+                            {
+                                ReasonText = $"Conflicts with {meta.Id}@{meta.Version}",
+                                RelatedTo = meta
+                            });
+                            ignored = true;
+                            return;
+                        }
+                    }
+
                     // we can now load the current plugin
                     outputOrder!.Add(plugin);
 
