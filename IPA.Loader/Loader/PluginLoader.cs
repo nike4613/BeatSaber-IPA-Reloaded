@@ -770,6 +770,20 @@ namespace IPA.Loader
                 }
             }
 
+            // preprocess LoadBefore into LoadAfter
+            foreach (var kvp in metadataCache)
+            { // we iterate the metadata cache because it contains both disabled and enabled plugins
+                var loadBefore = kvp.Value.Meta.Manifest.LoadBefore;
+                foreach (var id in loadBefore)
+                {
+                    if (metadataCache.TryGetValue(id, out var plugin))
+                    {
+                        // if the id exists in our metadata cache, make sure it knows to load after the plugin in kvp
+                        _ = plugin.Meta.LoadsAfter.Add(kvp.Value.Meta);
+                    }
+                }
+            }
+
             var loadedPlugins = new Dictionary<string, (PluginMetadata Meta, bool Disabled, bool Ignored)>();
             var outputOrder = new List<PluginMetadata>(PluginsMetadata.Count);
 
@@ -920,16 +934,7 @@ namespace IPA.Loader
                     // we can now load the current plugin
                     outputOrder!.Add(plugin);
 
-                    // then we can handle loadbefores
-                    foreach (var id in plugin.Manifest.LoadBefore)
-                    {
-                        if (TryResolveId(id, out var meta, out var depDisabled, out var depIgnored) && !depIgnored)
-                        {
-                            // same logic as with loadafters
-                            // both loadafter and loadbefore get condensed to just LoadsAfter in memory, for simplicity's sake
-                            _ = meta.LoadsAfter.Add(plugin);
-                        }
-                    }
+                    // loadbefores have already been preprocessed into loadafters
                 }
 
                 // run TryResolveId over every plugin, which recursively calculates load order
