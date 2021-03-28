@@ -896,6 +896,13 @@ namespace IPA.Loader
                         }
                     }
                 }
+
+                // run TryResolveId over every plugin, which recursively calculates load order
+                foreach (var plugin in pluginsToProcess)
+                {
+                    _ = TryResolveId(plugin.Id, out _, out _, out _);
+                }
+                // by this point, outputOrder contains the full load order
             }
 
             DisabledConfig.Instance.Changed();
