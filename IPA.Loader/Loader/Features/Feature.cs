@@ -64,7 +64,6 @@ namespace IPA.Loader.Features
 
         // TODO: rework features to take arguments as JSON objects
 
-        [SuppressMessage("Nullability", "CS8618", Justification = "Reset sets those fields.")]
         static Feature()
         {
             Reset();
@@ -82,8 +81,8 @@ namespace IPA.Loader.Features
             };
         }
 
-        private static Dictionary<string, Type> featureTypes;
-        private static Dictionary<string, PluginMetadata?> featureDelcarers;
+        private static Dictionary<string, Type> featureTypes = null!;
+        private static Dictionary<string, PluginMetadata?> featureDelcarers = null!;
 
         internal static bool HasFeature(string name) => featureTypes.ContainsKey(name);
 
