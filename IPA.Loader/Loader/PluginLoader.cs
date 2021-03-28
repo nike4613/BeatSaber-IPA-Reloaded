@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Version = SemVer.Version;
 using SemVer;
 using System.Diagnostics.CodeAnalysis;
+using HarmonyLib;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -801,9 +802,12 @@ namespace IPA.Loader
 
                 void Resolve(PluginMetadata plugin, out bool disabled, out bool ignored)
                 {
+                    // if this method is being called, this is the first and only time that it has been called for this plugin.
+
                     disabled = false;
                     ignored = false;
 
+                    // TODO: bsipa dependency check
                     // first load dependencies
                     foreach (var dep in plugin.Manifest.Dependencies)
                     {
@@ -842,7 +846,39 @@ namespace IPA.Loader
                         _ = plugin.Dependencies.Add(depMeta);
                     }
 
+                    // handle LoadsAfter populated by Features processing
+                    foreach (var loadAfter in plugin.LoadsAfter)
+                    {
+                        if (TryResolveId(loadAfter.Id, out _, out _, out _))
+                        {
+                            // do nothing, because the plugin is already in the LoadsAfter set
+                        }
+                    }
 
+                    // then handle loadafters
+                    foreach (var id in plugin.Manifest.LoadAfter)
+                    {
+                        if (TryResolveId(id, out var meta, out var depDisabled, out var depIgnored) && !depIgnored)
+                        {
+                            // we only want to make sure to loadafter if its not ignored
+                            // if its disabled, we still wanna track it where possible
+                            _ = plugin.LoadsAfter.Add(meta);
+                        }
+                    }
+
+                    // we can now load the current plugin
+                    outputOrder!.Add(plugin);
+
+                    // then we can handle loadbefores
+                    foreach (var id in plugin.Manifest.LoadBefore)
+                    {
+                        if (TryResolveId(id, out var meta, out var depDisabled, out var depIgnored) && !depIgnored)
+                        {
+                            // same logic as with loadafters
+                            // both loadafter and loadbefore get condensed to just LoadsAfter in memory, for simplicity's sake
+                            _ = meta.LoadsAfter.Add(plugin);
+                        }
+                    }
                 }
             }
 
