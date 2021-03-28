@@ -17,8 +17,8 @@ namespace Net3_Proxy
         public static bool Exists(string d) => OgDir.Exists(d);
         public static void Delete(string d) => OgDir.Delete(d);
         public static void Delete(string d, bool r) => OgDir.Delete(d, r);
-        public static void CreateDirectory(string d) => OgDir.CreateDirectory(d);
-        public static void CreateDirectory(string d, DirectorySecurity s) => OgDir.CreateDirectory(d, s);
+        public static DirectoryInfo CreateDirectory(string d) => OgDir.CreateDirectory(d);
+        public static DirectoryInfo CreateDirectory(string d, DirectorySecurity s) => OgDir.CreateDirectory(d, s);
         public static IEnumerable<string> EnumerateFiles(string d) => GetFiles(d);
         public static IEnumerable<string> EnumerateFiles(string d, string s) => GetFiles(d, s);
         public static IEnumerable<string> EnumerateFiles(string d, string s, SearchOption o) => GetFiles(d, s, o);

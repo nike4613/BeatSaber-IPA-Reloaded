@@ -76,7 +76,7 @@ namespace IPA.Loader
                 if (Directory.Exists(newPluginsName))
                     Directory.Move(newPluginsName, pluginDir);
                 else
-                    Directory.CreateDirectory(pluginDir);
+                    _ = Directory.CreateDirectory(pluginDir);
             }
         }
 
@@ -117,7 +117,7 @@ namespace IPA.Loader
                 Logger.loader.Critical(e);
             }
 
-            var resolver = new CecilLibLoader();
+            using var resolver = new CecilLibLoader();
             resolver.AddSearchDirectory(UnityGame.LibraryPath);
             resolver.AddSearchDirectory(UnityGame.PluginsPath);
             foreach (var plugin in plugins)
@@ -144,7 +144,7 @@ namespace IPA.Loader
                     {
                         const string manifestSuffix = ".manifest.json";
                         if (resource is not EmbeddedResource embedded ||
-                            !embedded.Name.EndsWith(manifestSuffix)) continue;
+                            !embedded.Name.EndsWith(manifestSuffix, StringComparison.Ordinal)) continue;
 
                         pluginNs = embedded.Name.Substring(0, embedded.Name.Length - manifestSuffix.Length);
 
@@ -385,7 +385,7 @@ namespace IPA.Loader
     /// <summary>
     /// A structure describing the reason that a plugin was ignored.
     /// </summary>
-    public struct IgnoreReason
+    public struct IgnoreReason : IEquatable<IgnoreReason>
     {
         /// <summary>
         /// Gets the ignore reason, as represented by the <see cref="Loader.Reason"/> enum.
@@ -1138,7 +1138,7 @@ namespace IPA.Loader
             return exec;
         }
 
-        internal static bool IsFirstLoadComplete { get; private set; } = false;
+        internal static bool IsFirstLoadComplete { get; private set; }
 
         internal static List<PluginExecutor> LoadPlugins()
         {
