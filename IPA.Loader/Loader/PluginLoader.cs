@@ -807,6 +807,22 @@ namespace IPA.Loader
                     disabled = false;
                     ignored = false;
 
+                    // perform file existence check before attempting to load dependencies
+                    foreach (var file in plugin.AssociatedFiles)
+                    {
+                        if (!file.Exists)
+                        {
+                            ignoredPlugins.Add(plugin, new IgnoreReason(Reason.MissingFiles)
+                            {
+                                ReasonText = $"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)} does not exist"
+                            });
+                            Logger.loader.Warn($"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)}" +
+                                $" (declared by {plugin.Name}) does not exist! Mod installation is incomplete, not loading it.");
+                            ignored = true;
+                            return;
+                        }
+                    }
+
                     // TODO: bsipa dependency check
                     // first load dependencies
                     foreach (var dep in plugin.Manifest.Dependencies)
