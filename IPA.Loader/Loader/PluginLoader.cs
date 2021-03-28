@@ -823,10 +823,12 @@ namespace IPA.Loader
                         }
                     }
 
-                    // TODO: bsipa dependency check
                     // first load dependencies
+                    var dependsOnSelf = false;
                     foreach (var dep in plugin.Manifest.Dependencies)
                     {
+                        if (dep.Key == SelfMeta.Id)
+                            dependsOnSelf = true;
                         if (!TryResolveId(dep.Key, out var depMeta, out var depDisabled, out var depIgnored))
                         {
                             Logger.loader.Warn($"Dependency '{dep.Key}@{dep.Value}' for '{plugin.Id}' does not exist; ignoring '{plugin.Id}'");
@@ -860,6 +862,19 @@ namespace IPA.Loader
 
                         // we found our dep, lets save the metadata and keep going
                         _ = plugin.Dependencies.Add(depMeta);
+                    }
+
+                    // make sure the plugin depends on the loader (assuming it actually needs to)
+                    if (!dependsOnSelf && !plugin.IsSelf && !plugin.IsBare)
+                    {
+                        Logger.loader.Warn($"Plugin '{plugin.Id}' does not depend on any particular loader version; assuming its incompatible");
+                        ignoredPlugins.Add(plugin, new(Reason.Dependency)
+                        {
+                            ReasonText = "Does not depend on any loader version, so it is assumed to be incompatible",
+                            RelatedTo = SelfMeta
+                        });
+                        ignored = true;
+                        return;
                     }
 
                     // handle LoadsAfter populated by Features processing
