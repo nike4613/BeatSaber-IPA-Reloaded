@@ -1,4 +1,7 @@
-﻿using System;
+﻿using IPA.Logging;
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -11,12 +14,15 @@ namespace IPA.Injector
 {
     internal static class PermissionFix
     {
+        [SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler",
+            Justification = "I very explicitly want the default scheduler")]
         public static Task FixPermissions(DirectoryInfo root)
         {
             if (!root.Exists) return new Task(() => { });
 
             return Task.Factory.StartNew(() =>
             {
+                var sw = Stopwatch.StartNew();
                 try
                 {
                     var acl = root.GetAccessControl();
@@ -56,9 +62,11 @@ namespace IPA.Injector
                 }
                 catch (Exception e)
                 {
-                    Logging.Logger.log.Warn("Error configuring permissions in the game install dir");
-                    Logging.Logger.log.Warn(e);
+                    Logger.log.Warn("Error configuring permissions in the game install dir");
+                    Logger.log.Warn(e);
                 }
+                sw.Stop();
+                Logger.log.Info($"Configuring permissions took {sw.Elapsed}");
             });
         }
     }

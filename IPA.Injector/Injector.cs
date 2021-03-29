@@ -6,6 +6,7 @@ using IPA.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -128,6 +129,8 @@ namespace IPA.Injector
 
         private static void InstallBootstrapPatch()
         {
+            var sw = Stopwatch.StartNew();
+
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
             var managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -296,6 +299,9 @@ namespace IPA.Injector
 #endif
             }
             #endregion
+
+            sw.Stop();
+            injector.Info($"Installing bootstrapper took {sw.Elapsed}");
         }
 
         private static bool bootstrapped;
