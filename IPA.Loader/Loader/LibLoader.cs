@@ -66,10 +66,11 @@ namespace IPA.Loader
                 FilenameLocations = new Dictionary<string, string>();
 
                 foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
+                {
                     if (FilenameLocations.ContainsKey(fn.Name))
                         Log(Logger.Level.Critical, $"Multiple instances of {fn.Name} exist in Libs! Ignoring {fn.FullName}");
                     else FilenameLocations.Add(fn.Name, fn.FullName);
-
+                }
 
                 if (!SetDefaultDllDirectories(LoadLibraryFlags.LOAD_LIBRARY_SEARCH_USER_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_SYSTEM32
                                             | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_APPLICATION_DIR))
@@ -94,7 +95,7 @@ namespace IPA.Loader
                 if (Directory.Exists(NativeLibraryPath))
                 {
                     AddDir(NativeLibraryPath);
-                    TraverseTree(NativeLibraryPath, dir =>
+                    _ = TraverseTree(NativeLibraryPath, dir =>
                     { // this is a terrible hack for iterating directories
                         AddDir(dir); return true;
                     }).All(f => true); // force it to iterate all
@@ -103,8 +104,12 @@ namespace IPA.Loader
                 //var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
                 //AddDir(Path.Combine(unityData, "Plugins"));
 
-                foreach (var dir in Environment.GetEnvironmentVariable("path").Split(Path.PathSeparator))
+                foreach (var dir in Environment.GetEnvironmentVariable("path")
+                    .Split(Path.PathSeparator)
+                    .Select(Environment.ExpandEnvironmentVariables))
+                {
                     AddDir(dir);
+                }
             }
         }
 
@@ -171,10 +176,10 @@ namespace IPA.Loader
         {
             if (dirValidator == null) dirValidator = s => true;
 
-            Stack<string> dirs = new Stack<string>(32);
+            var dirs = new Stack<string>(32);
 
             if (!Directory.Exists(root))
-                throw new ArgumentException();
+                throw new ArgumentException("Directory does not exist", nameof(root));
             dirs.Push(root);
 
             while (dirs.Count > 0)
@@ -219,11 +224,12 @@ namespace IPA.Loader
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+#if NET461
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#endif
         private static extern IntPtr AddDllDirectory(string lpPathName);
 
         [Flags]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private enum LoadLibraryFlags : uint
         {
             None = 0,
@@ -234,6 +240,9 @@ namespace IPA.Loader
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
+#if NET461
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#endif
         private static extern bool SetDefaultDllDirectories(LoadLibraryFlags dwFlags);
     }
 }
