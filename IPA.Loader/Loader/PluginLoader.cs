@@ -16,6 +16,7 @@ using Version = SemVer.Version;
 using SemVer;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
+using System.Diagnostics;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -42,7 +43,13 @@ namespace IPA.Loader
         {
             YeetIfNeeded();
 
+            var sw = Stopwatch.StartNew();
+
             LoadMetadata();
+
+            sw.Stop();
+            Logger.loader.Info($"Loading metadata took {sw.Elapsed}");
+            sw.Reset();
 
             // old loader system
 #if false
@@ -55,10 +62,14 @@ namespace IPA.Loader
             ResolveDependencies();
 #endif
 
+            sw.Start();
+
             // Features contribute to load order considerations
             InitFeatures();
             DoOrderResolution();
 
+            sw.Stop();
+            Logger.loader.Info($"Calculating load order took {sw.Elapsed}");
         });
 
         internal static void YeetIfNeeded()

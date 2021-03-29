@@ -15,6 +15,7 @@ using Logger = IPA.Logging.Logger;
 using System.Threading.Tasks;
 using IPA.Utilities.Async;
 using IPA.Loader.Features;
+using System.Diagnostics;
 #if NET4
 using TaskEx = System.Threading.Tasks.Task;
 using TaskEx6 = System.Threading.Tasks.Task;
@@ -353,14 +354,15 @@ namespace IPA.Loader
 
             if (!Directory.Exists(pluginDirectory)) return;
 
+            var sw = Stopwatch.StartNew();
 
             // initialize BSIPA plugins first
             _bsPlugins.AddRange(PluginLoader.LoadPlugins());
 
-            var metadataPaths = PluginLoader.PluginsMetadata.Select(m => m.File.FullName).ToList();
-            var ignoredPaths = PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName)
-                .Concat(PluginLoader.ignoredPlugins.SelectMany(m => m.Key.AssociatedFiles.Select(f => f.FullName))).ToList();
-            var disabledPaths = DisabledPlugins.Select(m => m.File.FullName).ToList();
+            var metadataPaths = new HashSet<string>(PluginLoader.PluginsMetadata.Select(m => m.File.FullName));
+            var ignoredPaths = new HashSet<string>(PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName)
+                .Concat(PluginLoader.ignoredPlugins.SelectMany(m => m.Key.AssociatedFiles.Select(f => f.FullName))));
+            var disabledPaths = new HashSet<string>(DisabledPlugins.Select(m => m.File.FullName).ToList());
 
             //Copy plugins to .cache
             string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
@@ -438,6 +440,8 @@ namespace IPA.Loader
                 }
             }
 
+            sw.Stop();
+
             Logger.log.Info(exeName);
             Logger.log.Info($"Running on Unity {Application.unityVersion}");
             Logger.log.Info($"Game version {UnityGame.GameVersion}");
@@ -457,6 +461,7 @@ namespace IPA.Loader
                 }
                 Logger.log.Info("-----------------------------");
             }
+            Logger.log.Info($"Initializing plugins took {sw.Elapsed}");
         }
 
         private static IEnumerable<Old.IPlugin> LoadPluginsFromFile(string file)
