@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,11 +22,11 @@ namespace IPA.Logging
 
         internal static bool IsInitialized;
 
-        public static void Initialize(bool alwaysCreateNewConsole = false)
+        public static void Initialize(uint pid, bool alwaysCreateNewConsole = false)
         {
             bool consoleAttached = true;
             if (alwaysCreateNewConsole
-                || (AttachConsole(AttachParent) == 0
+                || (AttachConsole(pid) == 0
                 && Marshal.GetLastWin32Error() != ErrorAccessDenied))
             {
                 consoleAttached = AllocConsole() != 0;
@@ -155,7 +155,7 @@ namespace IPA.Logging
         private const uint FileAttributeNormal = 0x80;
         private const uint ErrorAccessDenied = 5;
         
-        private const uint AttachParent = 0xFFFFFFFF;
+        public const uint AttachParent = 0xFFFFFFFF;
 
 #endregion
     }

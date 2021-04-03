@@ -43,8 +43,23 @@ namespace IPA.Injector
 
             try
             {
-                if (Environment.GetCommandLineArgs().Contains("--verbose"))
-                    WinConsole.Initialize();
+                var cmd = Environment.GetCommandLineArgs();
+
+                if (cmd.Contains("--verbose"))
+                {
+                    var arg = string.Empty;
+
+                    for (var i = 0; i < cmd.Length; i++)
+                    {
+                        if (cmd[i] == "-pid")
+                        {
+                            arg = cmd[i + 1];
+                            break;
+                        }
+                    }
+
+                    WinConsole.Initialize(uint.TryParse(arg, out uint pid) ? pid : WinConsole.AttachParent);
+                }
 
                 SetupLibraryLoading();
 
