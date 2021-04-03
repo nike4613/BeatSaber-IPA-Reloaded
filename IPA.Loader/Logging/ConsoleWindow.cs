@@ -26,10 +26,10 @@ namespace IPA.Logging
         {
             bool consoleAttached = true;
             if (alwaysCreateNewConsole
-                || (AttachConsole(pid) == 0
+                || (!AttachConsole(pid)
                 && Marshal.GetLastWin32Error() != ErrorAccessDenied))
             {
-                consoleAttached = AllocConsole() != 0;
+                consoleAttached = AllocConsole();
             }
 
             if (consoleAttached)
@@ -112,14 +112,14 @@ namespace IPA.Logging
             SetLastError = true,
             CharSet = CharSet.Auto,
             CallingConvention = CallingConvention.StdCall)]
-        private static extern int AllocConsole();
+        private static extern bool AllocConsole();
 
         [DllImport("kernel32.dll",
             EntryPoint = "AttachConsole",
             SetLastError = true,
             CharSet = CharSet.Auto,
             CallingConvention = CallingConvention.StdCall)]
-        private static extern uint AttachConsole(uint dwProcessId);
+        private static extern bool AttachConsole(uint dwProcessId);
 
         [DllImport("kernel32.dll",
             EntryPoint = "CreateFileW",
