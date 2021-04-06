@@ -69,6 +69,11 @@
     <None Include="Updating\BeatMods\*.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+    <Compile Remove="AntiMalware\**" />
+    <None Include="AntiMalware\**" />
+  </ItemGroup>
+
   <Import Project="..\Common.targets" />
 
 </Project>
