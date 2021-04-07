@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -9,6 +10,8 @@ using System.Linq;
 using IPA.Logging;
 using IPA.Utilities;
 using Mono.Cecil;
+using IPA.AntiMalware;
+using IPA.Config;
 #if NET3
 using Net3_Proxy;
 using Directory = Net3_Proxy.Directory;
@@ -50,7 +53,7 @@ namespace IPA.Loader
     {
         internal static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
         internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        internal static Dictionary<string, string> FilenameLocations;
+        internal static Dictionary<string, string> FilenameLocations = null!;
 
         internal static void Configure()
         {
@@ -113,13 +116,13 @@ namespace IPA.Loader
             }
         }
 
-        public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
+        public static Assembly? AssemblyLibLoader(object source, ResolveEventArgs e)
         {
             var asmName = new AssemblyName(e.Name);
             return LoadLibrary(asmName);
         }
 
-        internal static Assembly LoadLibrary(AssemblyName asmName)
+        internal static Assembly? LoadLibrary(AssemblyName asmName)
         {
             Log(Logger.Level.Debug, $"Resolving library {asmName}");
 
@@ -131,19 +134,13 @@ namespace IPA.Loader
             if (FilenameLocations.TryGetValue(testFile, out var path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
-                if (File.Exists(path))
-                    return Assembly.LoadFrom(path);
-
-                Log(Logger.Level.Critical, $"but {path} no longer exists!");
+                return LoadSafe(path);
             }
             else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 Log(Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
-                if (File.Exists(path))
-                    return Assembly.LoadFrom(path);
-
-                Log(Logger.Level.Critical, $"but {path} no longer exists!");
+                return LoadSafe(path);
             }
 
             Log(Logger.Level.Critical, $"No library {asmName} found");
@@ -151,7 +148,33 @@ namespace IPA.Loader
             return null;
         }
 
-        internal static void Log(Logger.Level lvl, string message)
+        private static Assembly? LoadSafe(string path)
+        {
+            if (!File.Exists(path))
+            {
+                Log(Logger.Level.Critical, $"{path} no longer exists!");
+                return null;
+            }
+
+            if (AntiMalwareEngine.IsInitialized)
+            {
+                var result = AntiMalwareEngine.Engine.ScanFile(new FileInfo(path));
+                if (result is ScanResult.Detected)
+                {
+                    Log(Logger.Level.Error, $"Scan of '{path}' found malware; not loading");
+                    return null;
+                }
+                if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && result is not ScanResult.KnownSafe and not ScanResult.NotDetected)
+                {
+                    Log(Logger.Level.Error, $"Scan of '{path}' found partial threat; not loading. To load this, enable AntiMalware.RunPartialThreatCode in the config.");
+                    return null;
+                }
+            }
+
+            return Assembly.LoadFrom(path);
+        }
+
+    internal static void Log(Logger.Level lvl, string message)
         { // multiple proxy methods to delay loading of assemblies until it's done
             if (Logger.LogCreated)
                 AssemblyLibLoaderCallLogger(lvl, message);
@@ -172,7 +195,7 @@ namespace IPA.Loader
         private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.libLoader.Log(lvl, message);
 
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
-        private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool> dirValidator = null)
+        private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool>? dirValidator = null)
         {
             if (dirValidator == null) dirValidator = s => true;
 

@@ -85,8 +85,7 @@ namespace IPA.Injector
 
                 GameVersionEarly.Load();
 
-                // load the anti-malware engine
-                _ = AntiMalwareEngine.Engine;
+                AntiMalwareEngine.Initialize();
 
                 Updates.InstallPendingUpdates();
 
