@@ -687,7 +687,7 @@
   "other_api/config/schema.html": {
     "href": "other_api/config/schema.html",
     "title": "Configuration File Schema",
-    "keywords": "Configuration File Schema { \"definitions\": { \"Debug_\": { \"type\": \"object\", \"properties\": { \"ShowCallSource\": { \"type\": \"boolean\" }, \"ShowDebug\": { \"type\": \"boolean\" }, \"CondenseModLogs\": { \"type\": \"boolean\" }, \"CreateModLogs\": { \"type\": \"boolean\" }, \"ShowHandledErrorStackTraces\": { \"type\": \"boolean\" }, \"HideMessagesForPerformance\": { \"type\": \"boolean\" }, \"HideLogThreshold\": { \"type\": \"integer\" }, \"ShowTrace\": { \"type\": \"boolean\" }, \"SyncLogging\": { \"type\": \"boolean\" } }, \"required\": [ \"ShowCallSource\", \"ShowDebug\", \"CondenseModLogs\", \"CreateModLogs\", \"ShowHandledErrorStackTraces\", \"HideMessagesForPerformance\", \"HideLogThreshold\", \"ShowTrace\", \"SyncLogging\" ] } }, \"type\": \"object\", \"properties\": { \"Regenerate\": { \"type\": \"boolean\" }, \"Debug\": { \"$ref\": \"#/definitions/Debug_\" }, \"YeetMods\": { \"type\": \"boolean\" }, \"GameAssemblies\": { \"type\": \"array\", \"items\": { \"type\": \"string\" } }, \"LastGameVersion\": { \"type\": \"string\" } }, \"required\": [ \"Regenerate\", \"Debug\", \"YeetMods\", \"GameAssemblies\" ] }"
+    "keywords": "Configuration File Schema <!-- Can not find reference _schema.json -->"
   },
   "other_api/index.html": {
     "href": "other_api/index.html",
