@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using IPA.Config;
 using IPA.Logging;
 using IPA.Utilities;
 using System.Linq.Expressions;
+using IPA.AntiMalware;
 #if NET4
 using Expression = System.Linq.Expressions.Expression;
 using ExpressionEx = System.Linq.Expressions.Expression;
@@ -57,7 +59,7 @@ namespace IPA.Loader
         /// <param name="param">the <see cref="ParameterInfo"/> of the parameter being injected.</param>
         /// <param name="meta">the <see cref="PluginMetadata"/> for the plugin being loaded.</param>
         /// <returns>the value to inject into that parameter.</returns>
-        public delegate object InjectParameter(object previous, ParameterInfo param, PluginMetadata meta);
+        public delegate object? InjectParameter(object? previous, ParameterInfo param, PluginMetadata meta);
 
         /// <summary>
         /// Adds an injector to be used when calling future plugins' Init methods.
@@ -77,7 +79,7 @@ namespace IPA.Loader
             public TypedInjector(Type t, InjectParameter i)
             { Type = t; Injector = i; }
 
-            public object Inject(object prev, ParameterInfo info, PluginMetadata meta)
+            public object? Inject(object? prev, ParameterInfo info, PluginMetadata meta)
                 => Injector(prev, info, meta);
 
             public bool Equals(TypedInjector other)
@@ -94,15 +96,12 @@ namespace IPA.Loader
             public static bool operator !=(TypedInjector a, TypedInjector b) => !a.Equals(b);
         }
 
-        private static readonly List<TypedInjector> injectors = new List<TypedInjector>
+        private static readonly List<TypedInjector> injectors = new()
         {
             new TypedInjector(typeof(Logger), (prev, param, meta) => prev ?? new StandardLogger(meta.Name)),
             new TypedInjector(typeof(PluginMetadata), (prev, param, meta) => prev ?? meta),
-            new TypedInjector(typeof(Config.Config), (prev, param, meta) =>
-            {
-                if (prev != null) return prev;
-                return Config.Config.GetConfigFor(meta.Name, param);
-            })
+            new TypedInjector(typeof(Config.Config), (prev, param, meta) => prev ?? Config.Config.GetConfigFor(meta.Name, param)),
+            new TypedInjector(typeof(IAntiMalware), (prev, param, meta) => prev ?? AntiMalwareEngine.Engine)
         };
 
         private static int? MatchPriority(Type target, Type source)
@@ -139,14 +138,14 @@ namespace IPA.Loader
                                 Expression.ArrayIndex(arr, Expression.Constant(i)), t))));
         }
 
-        internal static object[] Inject(ParameterInfo[] initParams, PluginMetadata meta, ref object persist)
+        internal static object?[] Inject(ParameterInfo[] initParams, PluginMetadata meta, ref object? persist)
         {
-            var initArgs = new List<object>();
+            var initArgs = new List<object?>();
 
-            var previousValues = persist as Dictionary<TypedInjector, object>;
+            var previousValues = persist as Dictionary<TypedInjector, object?>;
             if (previousValues == null)
             {
-                previousValues = new Dictionary<TypedInjector, object>(injectors.Count);
+                previousValues = new(injectors.Count);
                 persist = previousValues;
             }
 
@@ -157,15 +156,15 @@ namespace IPA.Loader
                 var value = paramType.GetDefault();
 
                 var toUse = injectors.Select(i => (inject: i, priority: MatchPriority(paramType, i.Type)))  // check match priority, combine it
-                                     .Where(t => t.priority != null)                                        // filter null priorities
-                                     .Select(t => (t.inject, priority: t.priority.Value))                   // remove nullable
+                                     .NonNull(t => t.priority)                                              // filter null priorities
+                                     .Select(t => (t.inject, priority: t.priority!.Value))                   // remove nullable
                                      .OrderByDescending(t => t.priority)                                    // sort by value
                                      .Select(t => t.inject);                                                // remove priority value
 
                 // this tries injectors in order of closest match by type provided 
                 foreach (var pair in toUse)
                 {
-                    object prev = null;
+                    object? prev = null;
                     if (previousValues.ContainsKey(pair))
                         prev = previousValues[pair];
 
