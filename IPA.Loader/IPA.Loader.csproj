@@ -70,8 +70,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
-    <Compile Remove="AntiMalware\**" />
-    <None Include="AntiMalware\**" />
+    <Compile Remove="AntiMalware\_HideInNet3\**" />
+    <None Include="AntiMalware\_HideInNet3\**" />
   </ItemGroup>
 
   <Import Project="..\Common.targets" />

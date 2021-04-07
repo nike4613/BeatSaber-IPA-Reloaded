@@ -33,6 +33,7 @@ namespace IPA.Logging
             }
         }
 
+        internal static Logger AntiMalware => log.GetChildLogger("AntiMalware");
         internal static Logger updater => log.GetChildLogger("Updater");
         internal static Logger libLoader => log.GetChildLogger("LibraryLoader");
         internal static Logger injector => log.GetChildLogger("Injector");
