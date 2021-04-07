@@ -25,6 +25,96 @@ references:
   commentId: N:IPA
   fullName: IPA
   nameWithType: IPA
+- uid: IPA.AntiMalware
+  name: IPA.AntiMalware
+  href: api/IPA.AntiMalware.html
+  commentId: N:IPA.AntiMalware
+  fullName: IPA.AntiMalware
+  nameWithType: IPA.AntiMalware
+- uid: IPA.AntiMalware.AntiMalwareEngine
+  name: AntiMalwareEngine
+  href: api/IPA.AntiMalware.AntiMalwareEngine.html
+  commentId: T:IPA.AntiMalware.AntiMalwareEngine
+  fullName: IPA.AntiMalware.AntiMalwareEngine
+  nameWithType: AntiMalwareEngine
+- uid: IPA.AntiMalware.AntiMalwareEngine.Engine
+  name: Engine
+  href: api/IPA.AntiMalware.AntiMalwareEngine.html#IPA_AntiMalware_AntiMalwareEngine_Engine
+  commentId: P:IPA.AntiMalware.AntiMalwareEngine.Engine
+  fullName: IPA.AntiMalware.AntiMalwareEngine.Engine
+  nameWithType: AntiMalwareEngine.Engine
+- uid: IPA.AntiMalware.AntiMalwareEngine.Engine*
+  name: Engine
+  href: api/IPA.AntiMalware.AntiMalwareEngine.html#IPA_AntiMalware_AntiMalwareEngine_Engine_
+  commentId: Overload:IPA.AntiMalware.AntiMalwareEngine.Engine
+  isSpec: "True"
+  fullName: IPA.AntiMalware.AntiMalwareEngine.Engine
+  nameWithType: AntiMalwareEngine.Engine
+- uid: IPA.AntiMalware.IAntiMalware
+  name: IAntiMalware
+  href: api/IPA.AntiMalware.IAntiMalware.html
+  commentId: T:IPA.AntiMalware.IAntiMalware
+  fullName: IPA.AntiMalware.IAntiMalware
+  nameWithType: IAntiMalware
+- uid: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[],System.String)
+  name: ScanData(Byte[], String)
+  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanData_System_Byte___System_String_
+  commentId: M:IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[],System.String)
+  name.vb: ScanData(Byte(), String)
+  fullName: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[], System.String)
+  fullName.vb: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte(), System.String)
+  nameWithType: IAntiMalware.ScanData(Byte[], String)
+  nameWithType.vb: IAntiMalware.ScanData(Byte(), String)
+- uid: IPA.AntiMalware.IAntiMalware.ScanData*
+  name: ScanData
+  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanData_
+  commentId: Overload:IPA.AntiMalware.IAntiMalware.ScanData
+  isSpec: "True"
+  fullName: IPA.AntiMalware.IAntiMalware.ScanData
+  nameWithType: IAntiMalware.ScanData
+- uid: IPA.AntiMalware.IAntiMalware.ScanFile(System.IO.FileInfo)
+  name: ScanFile(FileInfo)
+  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanFile_System_IO_FileInfo_
+  commentId: M:IPA.AntiMalware.IAntiMalware.ScanFile(System.IO.FileInfo)
+  fullName: IPA.AntiMalware.IAntiMalware.ScanFile(System.IO.FileInfo)
+  nameWithType: IAntiMalware.ScanFile(FileInfo)
+- uid: IPA.AntiMalware.IAntiMalware.ScanFile*
+  name: ScanFile
+  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanFile_
+  commentId: Overload:IPA.AntiMalware.IAntiMalware.ScanFile
+  isSpec: "True"
+  fullName: IPA.AntiMalware.IAntiMalware.ScanFile
+  nameWithType: IAntiMalware.ScanFile
+- uid: IPA.AntiMalware.ScanResult
+  name: ScanResult
+  href: api/IPA.AntiMalware.ScanResult.html
+  commentId: T:IPA.AntiMalware.ScanResult
+  fullName: IPA.AntiMalware.ScanResult
+  nameWithType: ScanResult
+- uid: IPA.AntiMalware.ScanResult.Detected
+  name: Detected
+  href: api/IPA.AntiMalware.ScanResult.html#IPA_AntiMalware_ScanResult_Detected
+  commentId: F:IPA.AntiMalware.ScanResult.Detected
+  fullName: IPA.AntiMalware.ScanResult.Detected
+  nameWithType: ScanResult.Detected
+- uid: IPA.AntiMalware.ScanResult.KnownSafe
+  name: KnownSafe
+  href: api/IPA.AntiMalware.ScanResult.html#IPA_AntiMalware_ScanResult_KnownSafe
+  commentId: F:IPA.AntiMalware.ScanResult.KnownSafe
+  fullName: IPA.AntiMalware.ScanResult.KnownSafe
+  nameWithType: ScanResult.KnownSafe
+- uid: IPA.AntiMalware.ScanResult.MaybeMalware
+  name: MaybeMalware
+  href: api/IPA.AntiMalware.ScanResult.html#IPA_AntiMalware_ScanResult_MaybeMalware
+  commentId: F:IPA.AntiMalware.ScanResult.MaybeMalware
+  fullName: IPA.AntiMalware.ScanResult.MaybeMalware
+  nameWithType: ScanResult.MaybeMalware
+- uid: IPA.AntiMalware.ScanResult.NotDetected
+  name: NotDetected
+  href: api/IPA.AntiMalware.ScanResult.html#IPA_AntiMalware_ScanResult_NotDetected
+  commentId: F:IPA.AntiMalware.ScanResult.NotDetected
+  fullName: IPA.AntiMalware.ScanResult.NotDetected
+  nameWithType: ScanResult.NotDetected
 - uid: IPA.Config
   name: IPA.Config
   href: api/IPA.Config.html

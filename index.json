@@ -4,6 +4,26 @@
     "title": "BSIPA API Documentation",
     "keywords": "BSIPA API Documentation Welcome to the full class documentation! To see guides, head over to the Articles tab . Select a namespace and a class on the left to get started."
   },
+  "api/IPA.AntiMalware.AntiMalwareEngine.html": {
+    "href": "api/IPA.AntiMalware.AntiMalwareEngine.html",
+    "title": "Class AntiMalwareEngine",
+    "keywords": "Class AntiMalwareEngine Provides a way to access BSIPA's Anti-Malware engine. Inheritance Object AntiMalwareEngine Inherited Members Object.ToString() Object.Equals(Object) Object.Equals(Object, Object) Object.ReferenceEquals(Object, Object) Object.GetHashCode() Object.GetType() Object.MemberwiseClone() Namespace : IPA.AntiMalware Assembly : IPA.Loader.dll Syntax public static class AntiMalwareEngine Properties | Improve this Doc View Source Engine Gets the current Anti-Malware engine. Declaration public static IAntiMalware Engine { get; } Property Value Type Description IAntiMalware"
+  },
+  "api/IPA.AntiMalware.html": {
+    "href": "api/IPA.AntiMalware.html",
+    "title": "",
+    "keywords": "Classes AntiMalwareEngine Provides a way to access BSIPA's Anti-Malware engine. Interfaces IAntiMalware An Anti-Malware engine that can be used to scan and detect potentially harmful files. Enums ScanResult The result of an Anti-Malware scan."
+  },
+  "api/IPA.AntiMalware.IAntiMalware.html": {
+    "href": "api/IPA.AntiMalware.IAntiMalware.html",
+    "title": "Interface IAntiMalware",
+    "keywords": "Interface IAntiMalware An Anti-Malware engine that can be used to scan and detect potentially harmful files. Namespace : IPA.AntiMalware Assembly : IPA.Loader.dll Syntax public interface IAntiMalware Methods | Improve this Doc View Source ScanData(Byte[], String) Scans a particular in-memory blob for malware. Declaration ScanResult ScanData(byte[] data, string contentName = null) Parameters Type Name Description Byte [] data The binary blob to scan. String contentName The name of the content. If this is left null , one will be automatically generated. Returns Type Description ScanResult A ScanResult indicating whether the file is safe or not. | Improve this Doc View Source ScanFile(FileInfo) Scans a particular file for malware. Declaration ScanResult ScanFile(FileInfo file) Parameters Type Name Description FileInfo file The file to scan. Returns Type Description ScanResult A ScanResult indicating whether the file is safe or not. Extension Methods ReflectionUtil.SetField<T, U>(T, String, U) ReflectionUtil.GetField<U, T>(T, String) ReflectionUtil.SetProperty<T, U>(T, String, U) ReflectionUtil.GetProperty<U, T>(T, String) ReflectionUtil.InvokeMethod<U, T>(T, String, Object[])"
+  },
+  "api/IPA.AntiMalware.ScanResult.html": {
+    "href": "api/IPA.AntiMalware.ScanResult.html",
+    "title": "Enum ScanResult",
+    "keywords": "Enum ScanResult The result of an Anti-Malware scan. Namespace : IPA.AntiMalware Assembly : IPA.Loader.dll Syntax public enum ScanResult Fields Name Description Detected Malware was detected, and the content should not be executed. KnownSafe The object is known to be safe. MaybeMalware The malware engine returned a threat level less than the max, so this object may be dangerous. Proceed with caution. NotDetected No malware was detected, but it is not known to be safe. Extension Methods ReflectionUtil.SetField<ScanResult, U>(String, U) ReflectionUtil.GetField<U, ScanResult>(String) ReflectionUtil.SetProperty<ScanResult, U>(String, U) ReflectionUtil.GetProperty<U, ScanResult>(String) ReflectionUtil.InvokeMethod<U, ScanResult>(String, Object[])"
+  },
   "api/IPA.Config.Config.html": {
     "href": "api/IPA.Config.Config.html",
     "title": "Class Config",
