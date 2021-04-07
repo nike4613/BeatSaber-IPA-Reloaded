@@ -17,6 +17,7 @@ using SemVer;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using System.Diagnostics;
+using IPA.AntiMalware;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -141,6 +142,9 @@ namespace IPA.Loader
 
                 try
                 {
+                    Logger.loader.Debug($"Scanning {plugin}");
+                    AntiMalwareEngine.Engine.ScanFile(new FileInfo(plugin));
+
                     var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
                     {
                         ReadingMode = ReadingMode.Immediate,
