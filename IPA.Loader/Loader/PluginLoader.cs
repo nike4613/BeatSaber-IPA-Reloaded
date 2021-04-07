@@ -142,10 +142,19 @@ namespace IPA.Loader
 
                 try
                 {
-                    Logger.loader.Debug($"Scanning {plugin}");
-                    AntiMalwareEngine.Engine.ScanFile(new FileInfo(plugin));
+                    var scanResult = AntiMalwareEngine.Engine.ScanFile(metadata.File);
+                    if (scanResult is ScanResult.Detected)
+                    {
+                        Logger.loader.Warn($"Scan of {plugin} found malware; not loading");
+                        continue;
+                    }
+                    if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && scanResult is not ScanResult.KnownSafe and not ScanResult.NotDetected)
+                    {
+                        Logger.loader.Warn($"Scan of {plugin} found partial threat; not loading. To load this, set AntiMalware.RunPartialThreatCode in the config.");
+                        continue;
+                    }
 
-                    var pluginModule = AssemblyDefinition.ReadAssembly(plugin, new ReaderParameters
+                    var pluginModule = AssemblyDefinition.ReadAssembly(metadata.File.FullName, new ReaderParameters
                     {
                         ReadingMode = ReadingMode.Immediate,
                         ReadWrite = false,

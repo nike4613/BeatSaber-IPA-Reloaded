@@ -1,4 +1,7 @@
-﻿using IPA.Utilities;
+﻿#nullable enable
+using IPA.AntiMalware;
+using IPA.Config;
+using IPA.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,6 +33,18 @@ namespace IPA.Injector
         {
             var path = Path.Combine(UnityGame.InstallPath, "IPA.exe");
             if (!File.Exists(path)) return;
+
+            var scanResult = AntiMalwareEngine.Engine.ScanFile(new FileInfo(path));
+            if (scanResult == ScanResult.Detected)
+            {
+                updater.Error("Scan of BSIPA installer found malware; not updating");
+                return;
+            }
+            if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && scanResult is not ScanResult.KnownSafe and not ScanResult.NotDetected)
+            {
+                updater.Error("Scan of BSIPA installer returned partial threat; not updating. To allow this, enable AntiMalware.RunPartialThreatCode in the config.");
+                return;
+            }
 
             var ipaVersion = new Version(FileVersionInfo.GetVersionInfo(path).FileVersion);
             var selfVersion = Assembly.GetExecutingAssembly().GetName().Version;

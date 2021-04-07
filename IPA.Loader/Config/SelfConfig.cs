@@ -160,9 +160,9 @@ namespace IPA.Config
             // LINE: ignore
             public static bool UseIfAvailable_ => Instance?.AntiMalware?.UseIfAvailable ?? true;
 
-            public virtual bool LoadPartialThreatPlugins { get; set; } = false;
+            public virtual bool RunPartialThreatCode { get; set; } = false;
             // LINE: ignore
-            public static bool LoadPartialThreatPlugins_ => Instance?.AntiMalware?.LoadPartialThreatPlugins ?? true;
+            public static bool RunPartialThreatCode_ => Instance?.AntiMalware?.RunPartialThreatCode ?? true;
         }
 
         // LINE: ignore
