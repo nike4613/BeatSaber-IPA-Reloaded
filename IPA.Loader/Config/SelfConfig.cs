@@ -79,6 +79,9 @@ namespace IPA.Config
         //      Debug.CondenseModLogs
         internal static SelfConfig CommandLineValues = new();
 
+        // For readability's sake, I want the default values to be visible in source.
+#pragma warning disable CA1805 // Do not initialize unnecessarily
+
         // END: section ignore
 
         public virtual bool Regenerate { get; set; } = true;
@@ -149,7 +152,22 @@ namespace IPA.Config
 
         // LINE: ignore
         [NonNullable]
-        public virtual Debug_ Debug { get; set; } = new Debug_();
+        public virtual Debug_ Debug { get; set; } = new();
+
+        public class AntiMalware_
+        {
+            public virtual bool UseIfAvailable { get; set; } = true;
+            // LINE: ignore
+            public static bool UseIfAvailable_ => Instance?.AntiMalware?.UseIfAvailable ?? true;
+
+            public virtual bool LoadPartialThreatPlugins { get; set; } = false;
+            // LINE: ignore
+            public static bool LoadPartialThreatPlugins_ => Instance?.AntiMalware?.LoadPartialThreatPlugins ?? true;
+        }
+
+        // LINE: ignore
+        [NonNullable]
+        public virtual AntiMalware_ AntiMalware { get; set; } = new();
 
         public virtual bool YeetMods { get; set; } = true;
         // LINE: ignore 2

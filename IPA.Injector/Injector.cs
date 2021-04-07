@@ -1,4 +1,6 @@
-﻿using IPA.Config;
+﻿#nullable enable
+using IPA.AntiMalware;
+using IPA.Config;
 using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
@@ -29,8 +31,8 @@ namespace IPA.Injector
     // ReSharper disable once UnusedMember.Global
     internal static class Injector
     {
-        private static Task pluginAsyncLoadTask;
-        private static Task permissionFixTask;
+        private static Task? pluginAsyncLoadTask;
+        private static Task? permissionFixTask;
         //private static string otherNewtonsoftJson = null;
 
         // ReSharper disable once UnusedParameter.Global
@@ -40,23 +42,13 @@ namespace IPA.Injector
           // and since this class doesn't have any static fields that
           // aren't defined in mscorlib, we can control exactly what
           // gets loaded.
-
+            _ = args;
             try
             {
                 if (Environment.GetCommandLineArgs().Contains("--verbose"))
                     WinConsole.Initialize();
 
                 SetupLibraryLoading();
-
-                /*var otherNewtonsoft = Path.Combine(
-                    Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First(),
-                    "Managed",
-                    "Newtonsoft.Json.dll");
-                if (File.Exists(otherNewtonsoft))
-                { // this game ships its own Newtonsoft; force load ours and flag loading theirs
-                    LibLoader.LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"));
-                    otherNewtonsoftJson = otherNewtonsoft;
-                }*/
 
                 EnsureDirectories();
 
@@ -93,6 +85,9 @@ namespace IPA.Injector
 
                 GameVersionEarly.Load();
 
+                // load the anti-malware engine
+                _ = AntiMalwareEngine.Engine;
+
                 Updates.InstallPendingUpdates();
 
                 LibLoader.SetupAssemblyFilenames(true);
@@ -110,9 +105,9 @@ namespace IPA.Injector
         {
             string path;
             if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "UserData")))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
             if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "Plugins")))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
         }
 
         private static void SetupLibraryLoading()
@@ -184,7 +179,7 @@ namespace IPA.Injector
                     goto endPatchCoreModule;
                 }
 
-                MethodDefinition cctor = null;
+                MethodDefinition? cctor = null;
                 foreach (var m in application.Methods)
                     if (m.IsRuntimeSpecialName && m.Name == ".cctor")
                         cctor = m;
@@ -311,9 +306,6 @@ namespace IPA.Injector
             if (bootstrapped) return;
             bootstrapped = true;
 
-            /*if (otherNewtonsoftJson != null)
-                Assembly.LoadFrom(otherNewtonsoftJson);*/
-
 
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
@@ -336,12 +328,12 @@ namespace IPA.Injector
         private static void Bootstrapper_Destroyed()
         {
             // wait for plugins to finish loading
-            pluginAsyncLoadTask.Wait();
-            permissionFixTask.Wait();
+            pluginAsyncLoadTask?.Wait();
+            permissionFixTask?.Wait();
 
             log.Debug("Plugins loaded");
             log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
-            PluginComponent.Create();
+            _ = PluginComponent.Create();
         }
     }
 }
