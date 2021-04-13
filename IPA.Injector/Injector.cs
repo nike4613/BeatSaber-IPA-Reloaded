@@ -51,7 +51,7 @@ namespace IPA.Injector
 
                     for (var i = 0; i < cmd.Length; i++)
                     {
-                        if (cmd[i] == "-pid")
+                        if (cmd[i] == "-pid" && cmd.Length > i + 1)
                         {
                             arg = cmd[i + 1];
                             break;
@@ -79,7 +79,7 @@ namespace IPA.Injector
                 // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
                 var unused = StandardLogger.PrintFilter;
                 #region // Above hack explaination
-                /* 
+                /*
                  * Due to an unknown bug in the version of Mono that Unity uses, if the first access to StandardLogger
                  * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
                  * the above static property (or maybe any, but I don't really know) it behaves as expected and works fine.
@@ -275,7 +275,7 @@ namespace IPA.Injector
                     using var ascModule = VirtualizedModule.Load(ascPath);
                     ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
                 }
-                catch (Exception e) 
+                catch (Exception e)
                 {
                     injector.Error($"Could not virtualize {ascPath}");
                     if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
