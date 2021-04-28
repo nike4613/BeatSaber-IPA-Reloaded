@@ -816,6 +816,7 @@ namespace IPA.Loader
 
             var loadedPlugins = new Dictionary<string, (PluginMetadata Meta, bool Disabled, bool Ignored)>();
             var outputOrder = new List<PluginMetadata>(PluginsMetadata.Count);
+            var isProcessing = new HashSet<PluginMetadata>();
 
             {
                 bool TryResolveId(string id, [MaybeNullWhen(false)] out PluginMetadata meta, out bool disabled, out bool ignored)
@@ -846,6 +847,18 @@ namespace IPA.Loader
 
                 void Resolve(PluginMetadata plugin, ref bool disabled, out bool ignored)
                 {
+                    // first we need to check for loops in the resolution graph to prevent stack overflows
+                    if (isProcessing.Contains(plugin))
+                    {
+                        Logger.loader.Error($"Loop detected while processing {plugin.Name}; flagging as ignored");
+                        // we can't safely add it to ignoredPlugins, because then when the ignore propagates up the stack,
+                        //   we may end up ignoring outselves again
+                        ignored = true;
+                        return;
+                    }
+
+                    using var _removeProcessing = Utils.ScopeGuard(() => isProcessing.Remove(plugin));
+
                     // if this method is being called, this is the first and only time that it has been called for this plugin.
 
                     ignored = false;
