@@ -198,43 +198,49 @@ namespace IPA.Loader
 
                     metadata.Manifest = pluginManifest;
 
+                    bool TryPopulatePluginType(TypeDefinition type, PluginMetadata meta)
+                    {
+                        if (!type.HasCustomAttributes)
+                            return false;
+
+                        var attr = type.CustomAttributes.FirstOrDefault(a => a.Constructor.DeclaringType.FullName == typeof(PluginAttribute).FullName);
+                        if (attr is null)
+                            return false;
+
+                        if (!attr.HasConstructorArguments)
+                        {
+                            Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has no arguments");
+                            return false;
+                        }
+
+                        var args = attr.ConstructorArguments;
+                        if (args.Count != 1)
+                        {
+                            Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has unexpected number of arguments");
+                            return false;
+                        }
+                        var rtOptionsArg = args[0];
+                        if (rtOptionsArg.Type.FullName != typeof(RuntimeOptions).FullName)
+                        {
+                            Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but first argument is of unexpected type {rtOptionsArg.Type.FullName}");
+                            return false;
+                        }
+
+                        var rtOptionsValInt = (int)rtOptionsArg.Value; // `int` is the underlying type of RuntimeOptions
+
+                        meta.RuntimeOptions = (RuntimeOptions)rtOptionsValInt;
+                        meta.PluginType = type;
+                        return true;
+                    }
+
                     void TryGetNamespacedPluginType(string ns, PluginMetadata meta)
                     {
                         foreach (var type in pluginModule.Types)
                         {
                             if (type.Namespace != ns) continue;
 
-                            if (type.HasCustomAttributes)
-                            {
-                                var attr = type.CustomAttributes.FirstOrDefault(a => a.Constructor.DeclaringType.FullName == typeof(PluginAttribute).FullName);
-                                if (attr != null)
-                                {
-                                    if (!attr.HasConstructorArguments)
-                                    {
-                                        Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has no arguments");
-                                        return;
-                                    }
-
-                                    var args = attr.ConstructorArguments;
-                                    if (args.Count != 1)
-                                    {
-                                        Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has unexpected number of arguments");
-                                        return;
-                                    }
-                                    var rtOptionsArg = args[0];
-                                    if (rtOptionsArg.Type.FullName != typeof(RuntimeOptions).FullName)
-                                    {
-                                        Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but first argument is of unexpected type {rtOptionsArg.Type.FullName}");
-                                        return;
-                                    }
-
-                                    var rtOptionsValInt = (int)rtOptionsArg.Value; // `int` is the underlying type of RuntimeOptions
-
-                                    meta.RuntimeOptions = (RuntimeOptions)rtOptionsValInt;
-                                    meta.PluginType = type;
-                                    return;
-                                }
-                            }
+                            if (TryPopulatePluginType(type, meta))
+                                return;
                         }
                     }
 
@@ -243,7 +249,7 @@ namespace IPA.Loader
                     if (hint != null)
                     {
                         var type = pluginModule.GetType(hint);
-                        if (type != null)
+                        if (type == null || !TryPopulatePluginType(type, metadata))
                             TryGetNamespacedPluginType(hint, metadata);
                     }
 
