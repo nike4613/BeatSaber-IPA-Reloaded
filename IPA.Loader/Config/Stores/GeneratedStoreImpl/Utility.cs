@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Logging;
 using System;
 using System.Collections;
@@ -22,7 +23,7 @@ namespace IPA.Config.Stores
     {
         #region Logs
         private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
-        internal static void LogError(Type expected, Type found, string message)
+        internal static void LogError(Type? expected, Type? found, string message)
         {
             Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
         }
@@ -41,7 +42,7 @@ namespace IPA.Config.Stores
         //private delegate LocalBuilder LocalAllocator(Type type, int idx = 0);
 
         private static LocalAllocator MakeLocalAllocator(ILGenerator il)
-            => new LocalAllocator(il);
+            => new(il);
 
         private struct AllocatedLocal : IDisposable
         {
@@ -66,7 +67,7 @@ namespace IPA.Config.Stores
         private sealed class LocalAllocator
         {
             private readonly ILGenerator ilSource;
-            private readonly Dictionary<Type, Stack<LocalBuilder>> unallocatedLocals = new Dictionary<Type, Stack<LocalBuilder>>();
+            private readonly Dictionary<Type, Stack<LocalBuilder>> unallocatedLocals = new();
             public LocalAllocator(ILGenerator il)
                 => ilSource = il;
 
@@ -81,7 +82,7 @@ namespace IPA.Config.Stores
             {
                 var list = GetLocalListForType(type);
                 if (list.Count < 1) list.Push(ilSource.DeclareLocal(type));
-                return new AllocatedLocal(this, list.Pop());
+                return new(this, list.Pop());
             }
 
             public void Deallocate(AllocatedLocal loc)
@@ -97,12 +98,13 @@ namespace IPA.Config.Stores
             thisarg(il); // load this
 
             if (member.IsField)
-                il.Emit(OpCodes.Ldfld, member.Member as FieldInfo);
+                il.Emit(OpCodes.Ldfld, (FieldInfo)member.Member);
             else
             { // member is a property
-                var prop = member.Member as PropertyInfo;
-                var getter = prop.GetGetMethod();
-                if (getter == null) throw new InvalidOperationException($"Property {member.Name} does not have a getter and is not ignored");
+                var prop = (PropertyInfo)member.Member;
+                var getter = prop.GetGetMethod(true);
+                if (getter is null || getter.IsPrivate)
+                    throw new InvalidOperationException($"Property {member.Name} does not have a getter and is not ignored");
 
                 il.Emit(OpCodes.Call, getter);
             }
@@ -114,12 +116,13 @@ namespace IPA.Config.Stores
             value(il);
 
             if (member.IsField)
-                il.Emit(OpCodes.Stfld, member.Member as FieldInfo);
+                il.Emit(OpCodes.Stfld, (FieldInfo)member.Member);
             else
             { // member is a property
-                var prop = member.Member as PropertyInfo;
-                var setter = prop.GetSetMethod();
-                if (setter == null) throw new InvalidOperationException($"Property {member.Name} does not have a setter and is not ignored");
+                var prop = (PropertyInfo)member.Member;
+                var setter = prop.GetSetMethod(true);
+                if (setter is null || setter.IsPrivate)
+                    throw new InvalidOperationException($"Property {member.Name} does not have a setter and is not ignored");
 
                 il.Emit(OpCodes.Call, setter);
             }
@@ -132,7 +135,7 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Call, LogWarningExceptionMethod);
         }
 
-        private static void EmitLogError(ILGenerator il, string message, bool tailcall = false, Action<ILGenerator> expected = null, Action<ILGenerator> found = null)
+        private static void EmitLogError(ILGenerator il, string message, bool tailcall = false, Action<ILGenerator>? expected = null, Action<ILGenerator>? found = null)
         {
             if (expected == null) expected = il => il.Emit(OpCodes.Ldnull);
             if (found == null) found = il => il.Emit(OpCodes.Ldnull);
