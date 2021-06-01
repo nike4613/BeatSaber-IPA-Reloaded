@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
-          dotnet-version: "3.1.404" # since we now use this
+          dotnet-version: "3.1.409" # since we now use this
       - name: Clear Nuget Cache
         run: dotnet nuget locals all --clear
       - name: Restore
