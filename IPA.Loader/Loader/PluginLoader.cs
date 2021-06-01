@@ -955,16 +955,17 @@ namespace IPA.Loader
 
                     // first load dependencies
                     var dependsOnSelf = false;
-                    foreach (var dep in plugin.Manifest.Dependencies)
+                    foreach (var (id, range) in plugin.Manifest.Dependencies)
                     {
-                        if (dep.Key == SelfMeta.Id)
+                        if (id == SelfMeta.Id)
                             dependsOnSelf = true;
-                        if (!TryResolveId(dep.Key, out var depMeta, out var depDisabled, out var depIgnored))
+                        if (!TryResolveId(id, out var depMeta, out var depDisabled, out var depIgnored)
+                            || !range.IsSatisfied(depMeta.Version))
                         {
-                            Logger.loader.Warn($"Dependency '{dep.Key}@{dep.Value}' for '{plugin.Id}' does not exist; ignoring '{plugin.Id}'");
+                            Logger.loader.Warn($"Dependency '{id}@{range}' for '{plugin.Id}' does not exist; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Dependency)
                             {
-                                ReasonText = $"Dependency '{dep.Key}@{dep.Value}' not found",
+                                ReasonText = $"Dependency '{id}@{range}' not found",
                             });
                             ignored = true;
                             return;
@@ -972,10 +973,10 @@ namespace IPA.Loader
                         // make a point to propagate ignored
                         if (depIgnored)
                         {
-                            Logger.loader.Warn($"Dependency '{dep.Key}' for '{plugin.Id}' previously ignored; ignoring '{plugin.Id}'");
+                            Logger.loader.Warn($"Dependency '{id}' for '{plugin.Id}' previously ignored; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Dependency)
                             {
-                                ReasonText = $"Dependency '{dep.Key}' ignored",
+                                ReasonText = $"Dependency '{id}' ignored",
                                 RelatedTo = depMeta
                             });
                             ignored = true;
@@ -984,7 +985,7 @@ namespace IPA.Loader
                         // make a point to propagate disabled
                         if (depDisabled)
                         {
-                            Logger.loader.Warn($"Dependency '{dep.Key}' for '{plugin.Id}' disabled; disabling");
+                            Logger.loader.Warn($"Dependency '{id}' for '{plugin.Id}' disabled; disabling");
                             disabledPlugins!.Add(plugin);
                             _ = disabledIds!.Add(plugin.Id);
                             disabled = true;
