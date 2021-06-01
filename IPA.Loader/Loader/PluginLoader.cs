@@ -991,7 +991,7 @@ namespace IPA.Loader
                     // then handle loadafters
                     foreach (var id in plugin.Manifest.LoadAfter)
                     {
-                        if (TryResolveId(id, out var meta, out var depDisabled, out var depIgnored) && !depIgnored)
+                        if (TryResolveId(id, out var meta, out var depDisabled, out var depIgnored))
                         {
                             // we only want to make sure to loadafter if its not ignored
                             // if its disabled, we still wanna track it where possible
