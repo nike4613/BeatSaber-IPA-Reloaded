@@ -144,6 +144,6 @@ namespace IPA.Loader
         /// Gets all of the metadata as a readable string.
         /// </summary>
         /// <returns>the readable printable metadata string</returns>
-        public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName, UnityGame.InstallPath)}'";
+        public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName ?? "", UnityGame.InstallPath)}'";
     }
 }

@@ -811,15 +811,41 @@ namespace IPA.Loader
             }
 
             // preprocess LoadBefore into LoadAfter
-            foreach (var kvp in metadataCache)
+            foreach (var (_, (meta, _)) in metadataCache)
             { // we iterate the metadata cache because it contains both disabled and enabled plugins
-                var loadBefore = kvp.Value.Meta.Manifest.LoadBefore;
+                var loadBefore = meta.Manifest.LoadBefore;
                 foreach (var id in loadBefore)
                 {
                     if (metadataCache.TryGetValue(id, out var plugin))
                     {
                         // if the id exists in our metadata cache, make sure it knows to load after the plugin in kvp
-                        _ = plugin.Meta.LoadsAfter.Add(kvp.Value.Meta);
+                        _ = plugin.Meta.LoadsAfter.Add(meta);
+                    }
+                }
+            }
+
+            // preprocess conflicts to be mutual
+            foreach (var (_, (meta, _)) in metadataCache)
+            {
+                foreach (var (id, range) in meta.Manifest.Conflicts)
+                {
+                    if (metadataCache.TryGetValue(id, out var plugin)
+                        && range.IsSatisfied(plugin.Meta.Version))
+                    {
+                        // make sure that there's a mutual dependency
+                        var targetRange = new Range($"={meta.Version}", true);
+                        var targetConflicts = plugin.Meta.Manifest.Conflicts;
+                        if (!targetConflicts.TryGetValue(meta.Id, out var realRange))
+                        {
+                            // there's not already a listed conflict
+                            targetConflicts.Add(meta.Id, targetRange);
+                        }
+                        else if (!realRange.IsSatisfied(meta.Version))
+                        {
+                            // there is already a listed conflict that isn't mutual
+                            targetRange = new Range($"{realRange} || {targetRange}", true);
+                            targetConflicts[meta.Id] = targetRange;
+                        }
                     }
                 }
             }
@@ -829,12 +855,12 @@ namespace IPA.Loader
             var isProcessing = new HashSet<PluginMetadata>();
 
             {
-                bool TryResolveId(string id, [MaybeNullWhen(false)] out PluginMetadata meta, out bool disabled, out bool ignored)
+                bool TryResolveId(string id, [MaybeNullWhen(false)] out PluginMetadata meta, out bool disabled, out bool ignored, bool partial = false)
                 {
                     meta = null;
                     disabled = false;
                     ignored = true;
-                    Logger.loader.Trace($"Trying to resolve plugin '{id}'");
+                    Logger.loader.Trace($"Trying to resolve plugin '{id}' partial:{partial}");
                     if (loadedPlugins.TryGetValue(id, out var foundMeta))
                     {
                         meta = foundMeta.Meta;
@@ -846,6 +872,12 @@ namespace IPA.Loader
                     if (metadataCache!.TryGetValue(id, out var plugin))
                     {
                         Logger.loader.Trace($"- In metadata cache");
+                        if (partial)
+                        {
+                            Logger.loader.Trace($"  - but requested in a partial lookup");
+                            return false;
+                        }
+
                         disabled = !plugin.Enabled;
                         meta = plugin.Meta;
                         if (!disabled)
@@ -1003,7 +1035,8 @@ namespace IPA.Loader
                     foreach (var conflict in plugin.Manifest.Conflicts)
                     {
                         Logger.loader.Trace($">- Checking conflict '{conflict.Key}' {conflict.Value}");
-                        if (TryResolveId(conflict.Key, out var meta, out var conflDisabled, out var conflIgnored)
+                        // this lookup must be partial to prevent loadBefore/conflictsWith from creating a recursion loop
+                        if (TryResolveId(conflict.Key, out var meta, out var conflDisabled, out var conflIgnored, partial: true)
                             && conflict.Value.IsSatisfied(meta.Version)
                             && !conflIgnored && !conflDisabled) // the conflict is only *actually* a problem if it is both not ignored and not disabled
                         {
