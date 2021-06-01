@@ -357,7 +357,7 @@ namespace IPA.Loader
     public enum Reason
     {
         /// <summary>
-        /// An error was thrown either loading plugin information fomr disk, or when initializing the plugin.
+        /// An error was thrown either loading plugin information from disk, or when initializing the plugin.
         /// </summary>
         /// <remarks>
         /// When this is the set <see cref="Reason"/> in an <see cref="IgnoreReason"/> structure, the member
@@ -850,10 +850,37 @@ namespace IPA.Loader
                         meta = plugin.Meta;
                         if (!disabled)
                         {
-                            Resolve(plugin.Meta, ref disabled, out ignored);
+                            try
+                            {
+                                ignored = false;
+                                Resolve(plugin.Meta, ref disabled, out ignored);
+                            }
+                            catch (Exception e)
+                            {
+                                if (e is not DependencyResolutionLoopException)
+                                {
+                                    Logger.loader.Error($"While performing load order resolution for {id}:");
+                                    Logger.loader.Error(e);
+                                }
+
+                                if (!ignored)
+                                {
+                                    ignoredPlugins.Add(plugin.Meta, new(Reason.Error)
+                                    {
+                                        Error = e
+                                    });
+                                }
+
+                                ignored = true;
+                            }
                         }
-                        Logger.loader.Trace($"- '{id}' resolved as ignored:{ignored},disabled:{disabled}");
-                        loadedPlugins.Add(id, (plugin.Meta, disabled, ignored));
+
+                        if (!loadedPlugins.ContainsKey(id))
+                        {
+                            // this condition is specifically for when we fail resolution because of a graph loop
+                            Logger.loader.Trace($"- '{id}' resolved as ignored:{ignored},disabled:{disabled}");
+                            loadedPlugins.Add(id, (plugin.Meta, disabled, ignored));
+                        }
                         return true;
                     }
                     Logger.loader.Trace($"- Not found");
@@ -868,12 +895,10 @@ namespace IPA.Loader
                     if (isProcessing.Contains(plugin))
                     {
                         Logger.loader.Error($"Loop detected while processing '{plugin.Name}'; flagging as ignored");
-                        // we can't safely add it to ignoredPlugins, because then when the ignore propagates up the stack,
-                        //   we may end up ignoring outselves again
-                        ignored = true;
-                        return;
+                        throw new DependencyResolutionLoopException();
                     }
 
+                    isProcessing.Add(plugin);
                     using var _removeProcessing = Utils.ScopeGuard(() => isProcessing.Remove(plugin));
 
                     // if this method is being called, this is the first and only time that it has been called for this plugin.
@@ -994,8 +1019,14 @@ namespace IPA.Loader
                         }
                     }
 
-                    // we can now load the current plugin
-                    outputOrder!.Add(plugin);
+                    // specifically check if some strange stuff happened (like graph loops) causing this to be ignored
+                    // from some other invocation
+                    if (!ignoredPlugins.ContainsKey(plugin))
+                    {
+                        // we can now load the current plugin
+                        Logger.loader.Trace($"->'{plugin.Name}' loads here");
+                        outputOrder!.Add(plugin);
+                    }
 
                     // loadbefores have already been preprocessed into loadafters
 
