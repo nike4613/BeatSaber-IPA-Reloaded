@@ -765,7 +765,17 @@ namespace IPA.Loader
 
         internal static void DoOrderResolution()
         {
-            PluginsMetadata.Sort((a, b) => a.Version.CompareTo(b.Version));
+#if DEBUG
+            // print starting order
+            Logger.loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
+#endif
+
+            PluginsMetadata.Sort((a, b) => b.Version.CompareTo(a.Version));
+
+#if DEBUG
+            // print base resolution order
+            Logger.loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
+#endif
 
             var metadataCache = new Dictionary<string, (PluginMetadata Meta, bool Enabled)>(PluginsMetadata.Count);
             var pluginsToProcess = new List<PluginMetadata>(PluginsMetadata.Count);
@@ -824,33 +834,40 @@ namespace IPA.Loader
                     meta = null;
                     disabled = false;
                     ignored = true;
+                    Logger.loader.Trace($"Trying to resolve plugin '{id}'");
                     if (loadedPlugins.TryGetValue(id, out var foundMeta))
                     {
                         meta = foundMeta.Meta;
                         disabled = foundMeta.Disabled;
                         ignored = foundMeta.Ignored;
+                        Logger.loader.Trace($"- Found already processed");
                         return true;
                     }
                     if (metadataCache!.TryGetValue(id, out var plugin))
                     {
+                        Logger.loader.Trace($"- In metadata cache");
                         disabled = !plugin.Enabled;
                         meta = plugin.Meta;
                         if (!disabled)
                         {
                             Resolve(plugin.Meta, ref disabled, out ignored);
                         }
+                        Logger.loader.Trace($"- '{id}' resolved as ignored:{ignored},disabled:{disabled}");
                         loadedPlugins.Add(id, (plugin.Meta, disabled, ignored));
                         return true;
                     }
+                    Logger.loader.Trace($"- Not found");
                     return false;
                 }
 
                 void Resolve(PluginMetadata plugin, ref bool disabled, out bool ignored)
                 {
+                    Logger.loader.Trace($">Resolving '{plugin.Name}'");
+
                     // first we need to check for loops in the resolution graph to prevent stack overflows
                     if (isProcessing.Contains(plugin))
                     {
-                        Logger.loader.Error($"Loop detected while processing {plugin.Name}; flagging as ignored");
+                        Logger.loader.Error($"Loop detected while processing '{plugin.Name}'; flagging as ignored");
                         // we can't safely add it to ignoredPlugins, because then when the ignore propagates up the stack,
                         //   we may end up ignoring outselves again
                         ignored = true;
@@ -873,7 +890,7 @@ namespace IPA.Loader
                                 ReasonText = $"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)} does not exist"
                             });
                             Logger.loader.Warn($"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)}" +
-                                $" (declared by {plugin.Name}) does not exist! Mod installation is incomplete, not loading it.");
+                                $" (declared by '{plugin.Name}') does not exist! Mod installation is incomplete, not loading it.");
                             ignored = true;
                             return;
                         }
@@ -960,6 +977,7 @@ namespace IPA.Loader
                     // after we handle dependencies and loadafters, then check conflicts
                     foreach (var conflict in plugin.Manifest.Conflicts)
                     {
+                        Logger.loader.Trace($">- Checking conflict '{conflict.Key}' {conflict.Value}");
                         if (TryResolveId(conflict.Key, out var meta, out var conflDisabled, out var conflIgnored) && !conflIgnored && !conflDisabled)
                         {
                             // the conflict is only *actually* a problem if it is both not ignored and not disabled
@@ -978,6 +996,8 @@ namespace IPA.Loader
                     outputOrder!.Add(plugin);
 
                     // loadbefores have already been preprocessed into loadafters
+
+                    Logger.loader.Trace($">Processed '{plugin.Name}'");
                 }
 
                 // run TryResolveId over every plugin, which recursively calculates load order
