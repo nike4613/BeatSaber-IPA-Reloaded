@@ -459,7 +459,7 @@
             </summary>
             <param name="a">The first argument.</param>
             <param name="b">The second argument.</param>
-            <returns>The logical disjunction of <paramref name="a"/> and <paramref name="b"/>.</returns>
+            <returns>The logical conjunction of <paramref name="a"/> and <paramref name="b"/>.</returns>
             <seealso cref="M:Hive.Versioning.VersionRange.Conjunction(Hive.Versioning.VersionRange)"/>
         </member>
         <member name="M:Hive.Versioning.VersionRange.Invert">

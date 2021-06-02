@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\Common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Hive.Versioning" Version="0.1.0">
+      <HintPath>$(MSBuildThisFileDirectory)..\Libs\thirdparty\Hive.Versioning.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -81,8 +81,12 @@
   
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.10.4" />
-    <PackageReference Include="SemanticVersioning" Version="1.2.2" />
     <PackageReference Include="AsyncBridge" Version="0.3.1" />
+    
+    <ProjectReference Include="..\SemVer\SemVer.csproj" />
+    <Reference Include="Hive.Versioning" Version="0.1.0">
+      <HintPath>$(MSBuildThisFileDirectory)..\Libs\thirdparty\Hive.Versioning.dll</HintPath>
+    </Reference>
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
