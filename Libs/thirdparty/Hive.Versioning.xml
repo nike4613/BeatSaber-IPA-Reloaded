@@ -577,7 +577,13 @@
             to <c>&gt;=0.4.2 &lt;0.5.0</c>.
           </description>
         </item>
-      </list>
+      </list><para>
+        A bounded region may also be specified using star syntax. This takes the form of either a single <c>*</c> alone, matching any version,
+        or a version with some numbers substituted with an asterisk. Once an element has been substituted, however, any following elements must
+        either not be present or be a star themselves. Prereleases and build ids cannot be specified when using star syntax. For example,
+        <c>*</c> is valid, <c>*.3</c> is not. <c>1.*</c> and <c>1.*.*</c> are valid (and equivalent), but <c>1.*.2</c> is not. <c>1.2.*</c> is
+        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>.
+      </para>
             </remarks>
             <param name="text">The stirng to parse.</param>
             <returns>The parsed <see cref="T:Hive.Versioning.VersionRange" />.</returns>
@@ -625,7 +631,13 @@
             to <c>&gt;=0.4.2 &lt;0.5.0</c>.
           </description>
         </item>
-      </list>
+      </list><para>
+        A bounded region may also be specified using star syntax. This takes the form of either a single <c>*</c> alone, matching any version,
+        or a version with some numbers substituted with an asterisk. Once an element has been substituted, however, any following elements must
+        either not be present or be a star themselves. Prereleases and build ids cannot be specified when using star syntax. For example,
+        <c>*</c> is valid, <c>*.3</c> is not. <c>1.*</c> and <c>1.*.*</c> are valid (and equivalent), but <c>1.*.2</c> is not. <c>1.2.*</c> is
+        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>.
+      </para>
             </remarks>
             <param name="text">The string to try to parse.</param>
             <param name="range">The parsed <see cref="T:Hive.Versioning.VersionRange" />, if any.</param>
@@ -675,7 +687,13 @@
             to <c>&gt;=0.4.2 &lt;0.5.0</c>.
           </description>
         </item>
-      </list>
+      </list><para>
+        A bounded region may also be specified using star syntax. This takes the form of either a single <c>*</c> alone, matching any version,
+        or a version with some numbers substituted with an asterisk. Once an element has been substituted, however, any following elements must
+        either not be present or be a star themselves. Prereleases and build ids cannot be specified when using star syntax. For example,
+        <c>*</c> is valid, <c>*.3</c> is not. <c>1.*</c> and <c>1.*.*</c> are valid (and equivalent), but <c>1.*.2</c> is not. <c>1.2.*</c> is
+        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>.
+      </para>
             </remarks>
             <param name="text">The string to try to parse.</param>
             <param name="range">The parsed <see cref="T:Hive.Versioning.VersionRange" />, if any.</param>
