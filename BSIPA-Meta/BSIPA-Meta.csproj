@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net461</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
     <Platforms>x86;x64</Platforms>
     <Configurations>Debug;Release;Verbose;Verbose_Release</Configurations>
     
@@ -59,9 +59,11 @@
     </ItemGroup>
     <Delete Files="@(Files)" />
   </Target>
+  
   <Target Name="CoreCompile">
     <CallTarget Targets="Assemble" />
   </Target>
+  
   <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
@@ -87,3 +89,4 @@
   </Target>
   
 </Project>
+

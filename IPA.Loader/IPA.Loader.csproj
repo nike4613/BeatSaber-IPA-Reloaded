@@ -3,7 +3,7 @@
   <Import Project="..\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net35</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
     <RootNamespace>IPA</RootNamespace>
     
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
