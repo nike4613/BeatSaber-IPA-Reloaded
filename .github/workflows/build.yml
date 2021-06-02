@@ -45,8 +45,3 @@ jobs:
         with:
           name: BSIPA-net472-${{ env.Platform }}
           path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net472/
-      #- name: Upload net35
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: BSIPA-net35-${{ env.Platform }}
-      #    path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net35/
