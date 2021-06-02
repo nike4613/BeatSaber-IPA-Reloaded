@@ -247,7 +247,7 @@ namespace IPA.Loader
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-#if NET461
+#if NET4
         [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 #endif
         private static extern IntPtr AddDllDirectory(string lpPathName);
@@ -263,7 +263,7 @@ namespace IPA.Loader
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
-#if NET461
+#if NET4
         [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 #endif
         private static extern bool SetDefaultDllDirectories(LoadLibraryFlags dwFlags);

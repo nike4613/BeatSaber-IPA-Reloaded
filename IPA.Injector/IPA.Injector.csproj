@@ -3,16 +3,16 @@
   <Import Project="..\Common.props"/>
 
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <RootNamespace>IPA.Injector</RootNamespace>
     
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net461' ">true</BuildForBeatSaber>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net472' ">true</BuildForBeatSaber>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
     <DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
@@ -28,7 +28,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="UnityEngine.CoreModule" Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="UnityEngine.CoreModule" Condition=" '$(TargetFramework)' == 'net472' ">
       <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -38,7 +38,7 @@
     </Reference>
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Content Include="..\Libs\I18N.Net4.dll">
       <Link>Libraries\Mono\I18N.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

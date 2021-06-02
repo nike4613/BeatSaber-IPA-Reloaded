@@ -3,16 +3,16 @@
   <Import Project="..\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <RootNamespace>IPA</RootNamespace>
     
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net461' ">true</BuildForBeatSaber>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net472' ">true</BuildForBeatSaber>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
     <DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
@@ -22,7 +22,7 @@
     <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
       <Private>False</Private>
@@ -53,7 +53,9 @@
     <PackageReference Include="Mono.Cecil" Version="0.10.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="AsyncBridge" Version="0.3.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <!--<PackageReference Include="System.ValueTuple" Version="4.5.0">
+      <ExcludeAssets>buildtransitive</ExcludeAssets>
+    </PackageReference>-->
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
     <Reference Include="Hive.Versioning" Version="0.1.0">

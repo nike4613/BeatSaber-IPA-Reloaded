@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
 
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <Platforms>x86;x64</Platforms>
     <Configurations>Debug;Release;Verbose;Verbose_Release</Configurations>
     
@@ -71,7 +71,7 @@
       <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
-      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\net461\**\*" Exclude="$(SolutionDir)IPA\bin\$(Configuration)\net461\*.runtimeconfig.*" />
+      <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\net472\**\*" Exclude="$(SolutionDir)IPA\bin\$(Configuration)\net472\*.runtimeconfig.*" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\netcoreapp3.1\IPA.runtimeconfig.json" />
     </ItemGroup>
     <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />

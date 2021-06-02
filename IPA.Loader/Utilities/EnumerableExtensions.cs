@@ -13,6 +13,7 @@ namespace IPA.Utilities
     /// </summary>
     public static class EnumerableExtensions
     {
+        /*
         /// <summary>
         /// Adds a value to the beginning of the sequence.
         /// </summary>
@@ -164,6 +165,7 @@ namespace IPA.Utilities
             IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
+        */
 
         /// <summary>
         /// LINQ-style extension method that filters <see langword="null"/> elements out of an enumeration.

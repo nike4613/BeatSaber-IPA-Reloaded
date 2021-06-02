@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿#if NET472
 namespace System.Diagnostics.CodeAnalysis
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
