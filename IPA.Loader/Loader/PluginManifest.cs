@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using Hive.Versioning;
 using IPA.JsonConverters;
 using IPA.Utilities;
 using Newtonsoft.Json;
@@ -7,7 +8,7 @@ using SemVer;
 using System;
 using System.Collections.Generic;
 using AlmostVersionConverter = IPA.JsonConverters.AlmostVersionConverter;
-using Version = SemVer.Version;
+using Version = Hive.Versioning.Version;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -36,10 +37,10 @@ namespace IPA.Loader
         public string Author = null!;
 
         [JsonProperty("dependsOn", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
-        public Dictionary<string, Range> Dependencies = new();
+        public Dictionary<string, VersionRange> Dependencies = new();
 
         [JsonProperty("conflictsWith", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
-        public Dictionary<string, Range> Conflicts = new();
+        public Dictionary<string, VersionRange> Conflicts = new();
 
         [JsonProperty("features", Required = Required.DisallowNull), JsonConverter(typeof(FeaturesFieldConverter))]
         public Dictionary<string, JObject> Features = new();

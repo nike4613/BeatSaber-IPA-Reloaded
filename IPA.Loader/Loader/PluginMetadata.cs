@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Version = SemVer.Version;
+using SVersion = SemVer.Version;
+using Version = Hive.Versioning.Version;
 #if NET3
 using Net3_Proxy;
 using Path = Net3_Proxy.Path;
@@ -60,7 +61,14 @@ namespace IPA.Loader
         /// The version of the plugin.
         /// </summary>
         /// <value>the version of the plugin</value>
-        public Version Version => manifest.Version;
+        [Obsolete("Use HVersion instead.")]
+        public SVersion Version => SVersion.ForHiveVersion(manifest.Version);
+
+        /// <summary>
+        /// The version of the plugin.
+        /// </summary>
+        /// <value>the version of the plugin</value>
+        public Version HVersion => manifest.Version;
 
         /// <summary>
         /// The file the plugin was loaded from.
@@ -144,6 +152,6 @@ namespace IPA.Loader
         /// Gets all of the metadata as a readable string.
         /// </summary>
         /// <returns>the readable printable metadata string</returns>
-        public override string ToString() => $"{Name}({Id}@{Version})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName ?? "", UnityGame.InstallPath)}'";
+        public override string ToString() => $"{Name}({Id}@{HVersion})({PluginType?.FullName}) from '{Utils.GetRelativePath(File?.FullName ?? "", UnityGame.InstallPath)}'";
     }
 }

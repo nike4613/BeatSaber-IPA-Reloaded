@@ -8,6 +8,7 @@ using Mono.Cecil;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Diagnostics.CodeAnalysis;
+using Version = Hive.Versioning.Version;
 #if NET3
 using File = Net3_Proxy.File;
 #endif
@@ -193,16 +194,26 @@ namespace IPA.Utilities
         /// <param name="l">the left value</param>
         /// <param name="r">the right value</param>
         /// <returns>&lt; 0 if l is less than r, 0 if they are equal in the numeric portion, or &gt; 0 if l is greater than r</returns>
+        [Obsolete("Use Hive.Versioning.Version overload instead.")]
         public static int VersionCompareNoPrerelease(SemVer.Version l, SemVer.Version r)
+            => VersionCompareNoPrerelease(l?.UnderlyingVersion!, r?.UnderlyingVersion!);
+
+        /// <summary>
+        /// Compares a pair of <see cref="Version"/>s ignoring both the prerelease and build fields.
+        /// </summary>
+        /// <param name="l">the left value</param>
+        /// <param name="r">the right value</param>
+        /// <returns>&lt; 0 if l is less than r, 0 if they are equal in the numeric portion, or &gt; 0 if l is greater than r</returns>
+        public static int VersionCompareNoPrerelease(Version l, Version r)
         {
             if (l is null) throw new ArgumentNullException(nameof(l));
             if (r is null) throw new ArgumentNullException(nameof(r));
 
-            var cmpVal = l.Major - r.Major;
+            var cmpVal = l.Major.CompareTo(r.Major);
             if (cmpVal != 0) return cmpVal;
-            cmpVal = l.Minor - r.Minor;
+            cmpVal = l.Minor.CompareTo(r.Minor);
             if (cmpVal != 0) return cmpVal;
-            cmpVal = l.Patch - r.Patch;
+            cmpVal = l.Patch.CompareTo(r.Patch);
             return cmpVal;
         }
 
