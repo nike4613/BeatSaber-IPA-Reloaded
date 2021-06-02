@@ -28,6 +28,7 @@
     "Libs/Ionic.Zip.dll",
     "Libs/Newtonsoft.Json.dll",
     "Libs/Mono.Cecil.dll",
-    "Libs/SemVer.dll"
+    "Libs/SemVer.dll",
+    "Libs/Hive.Versioning.dll"
   ]
 }
