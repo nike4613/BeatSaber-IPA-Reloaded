@@ -18,19 +18,22 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "5DxRrnsvGf6ku1GDuO0VHATPoyui/OWiW2Qzs16xG64="
+          "hash": "zWsV31rjafH1tC0MNJW6p+WuEE5BHfe51Bq5gHtY4Ss="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
+      "log_codes": [
+        "InvalidCodeSnippet"
+      ],
       "type": "Conceptual",
       "source_relative_path": "articles/command-line.md",
       "output": {
         ".html": {
           "relative_path": "articles/command-line.html",
-          "hash": "5kIkSUhxpZKYsHs0KhKW+zri4go55VmOOsvxS0ZWUec="
+          "hash": "6RLTg31JUFi0OpkUCHnlPLyfGF0Btau+Bg1Kg2JoPuA="
         }
       },
       "is_incremental": false,
@@ -42,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/contributing.html",
-          "hash": "kfVCzjjqPVXciDzMenCSBL/uUZXV50cvr4RL4iXlcNE="
+          "hash": "UBUyUkIRwkk4UOMT6RLOxo/xnBivphxGeOUSe0Zl0/M="
         }
       },
       "is_incremental": false,
@@ -54,7 +57,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/dev-resources/description.html",
-          "hash": "V2trQ4WTzzK3B2Tg/rsJgKHs7S9lHch112A6rcv9AKo="
+          "hash": "R+iN1l2QsnHJM9Mlc2WUPCKLpY3zH3ki9wQFiUDG3YU="
         }
       },
       "is_incremental": false,
@@ -66,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/index.html",
-          "hash": "iQhCwhOugG/FNT2bK1ALaFgMHNBkTFjaYOi5LiBfIa8="
+          "hash": "B77d6M8ErvUz7j0Ta52G0ws6VtaXNlG+a9CEC/QLb04="
         }
       },
       "is_incremental": false,
@@ -81,7 +84,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/start-dev.html",
-          "hash": "xW3gxqHynZvS+Wo1g3iqDke4emNsUKJqLWxVTt/VgjY="
+          "hash": "TJYzh++N+nwZo8QACKjQEFu4RumTmQQZYgx4JkJmTvc="
         }
       },
       "is_incremental": false,
@@ -93,7 +96,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/start-user.html",
-          "hash": "RoJIUZPEJcSzQLIygqZwuKr6Y+bUY2Qn2nzFdN3jDbE="
+          "hash": "mZpwPYSwDT+tVzq534CEh1jYVVoyHyH9fK98lEFPpsQ="
         }
       },
       "is_incremental": false,
@@ -183,7 +186,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "Ci2o2Wid2r3UI/QblR25nrpTuzUEB7UmQW9G1ASwU/Y="
+          "hash": "ySa08ivg/pedSUKGMNxO8GwSMmyomNBqlIo/Ev7m9Uk="
         }
       },
       "is_incremental": false,
@@ -198,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "other_api/config/schema.html",
-          "hash": "qKYLQH2XVrM0oyn5KZ/SfinUTwXq8pJ5sAwFK/JB3g0="
+          "hash": "q4cKOCcrE9Ld/008uvSC8AeBAaEL+1IoB/ncy5qApa8="
         }
       },
       "is_incremental": false,
@@ -210,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "other_api/index.html",
-          "hash": "eKbhxPAUR+Tq8jSBlb1MTRsW4dGh9ROTlIF2zzPBa4w="
+          "hash": "He1QNkoTNG3Ow9U2TSc/Ue5Q0fVB+lBhEyET5xPyrnE="
         }
       },
       "is_incremental": false,
