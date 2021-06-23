@@ -550,23 +550,33 @@
       </para><list type="table">
         <item>
           <term><c>&gt;=</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than or equal to its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than or equal to its specified<see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&lt;=</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than or equal to its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than or equal to its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&gt;</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&lt;</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>=</c></term>
-          <description>The range matches only the <see cref="T:Hive.Versioning.Version" /> that it is specified with.</description>
+          <description>
+            The range matches only the <see cref="T:Hive.Versioning.Version" /> that it is specified with.
+          </description>
         </item>
       </list><para>Note that unbounded ranges using the <c>=</c> comparison operator cannot be part of a bounded region.</para><para>Additionally, there are the following shorthand comparison operators that expand to bounded regions:</para><list type="table">
         <item>
@@ -577,15 +587,38 @@
             to <c>&gt;=0.4.2 &lt;0.5.0</c>.
           </description>
         </item>
+      </list><para>There are also a few special ranges:</para><list type="table">
+        <item>
+          <term><c>*</c></term>
+          <description>
+            The <see cref="P:Hive.Versioning.VersionRange.Everything" /> range. This range matches every possible version.
+          </description>
+        </item>
+        <item>
+          <term><c>z</c> or <c>Z</c></term>
+          <description>
+            The <see cref="P:Hive.Versioning.VersionRange.Nothing" /> range. This range matches nothing.
+          </description>
+        </item>
       </list><para>
         A bounded region may also be specified using star syntax. This takes the form of either a single <c>*</c> alone, matching any version,
         or a version with some numbers substituted with an asterisk. Once an element has been substituted, however, any following elements must
         either not be present or be a star themselves. Prereleases and build ids cannot be specified when using star syntax. For example,
         <c>*</c> is valid, <c>*.3</c> is not. <c>1.*</c> and <c>1.*.*</c> are valid (and equivalent), but <c>1.*.2</c> is not. <c>1.2.*</c> is
-        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>.
+        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>. In all cases
+        except the singular <c>*</c>, any <c>*</c> may also be an <c>x</c> or <c>X</c>.
+      </para><para>
+        A bounded regioon may also be specified using hyphen syntax, though it is generally not recommended, as it is not always clear to a reader
+        what exactly is meant, and is remarkably easy to mess up. The syntax for this is <c>1.2.3 - 4.5.6</c>, of course substituting <c>1.2.3</c>
+        and <c>4.5.6</c> with any valid version. The space before is <b>required</b>. This is important. the space <i>after the first version,
+        before the hyphen, is</i> <b>required</b>. This is because <c>1.2.3-4.5.6</c> is a valid, and <i>complete</i>, version, causing the parser
+        to try to read the first version in the hyphen range, then hit the end of input instead of a hyphen and back out, eventually rejecting the
+        range altogether, because <b>a version by itself is not a valid version range</b>. <c>1.2.3- 4.5.6</c> is also not valid, because it
+        is an <i>incomplete</i> version followed by a complete, simple version. Since incomplete versions are rejected, it means that this attempts
+        to parse a first version, fails, and tries other forms a range can take before eventually failing out.
       </para>
             </remarks>
-            <param name="text">The stirng to parse.</param>
+            <param name="text">The string to parse.</param>
             <returns>The parsed <see cref="T:Hive.Versioning.VersionRange" />.</returns>
             <seealso cref="M:Hive.Versioning.VersionRange.TryParse(Hive.Utilities.StringView,Hive.Versioning.VersionRange@)" />
             <exception cref="T:System.ArgumentException">Thrown when <paramref name="text" /> is not a valid <see cref="T:Hive.Versioning.VersionRange" />.</exception>
@@ -604,23 +637,33 @@
       </para><list type="table">
         <item>
           <term><c>&gt;=</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than or equal to its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than or equal to its specified<see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&lt;=</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than or equal to its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than or equal to its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&gt;</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&lt;</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>=</c></term>
-          <description>The range matches only the <see cref="T:Hive.Versioning.Version" /> that it is specified with.</description>
+          <description>
+            The range matches only the <see cref="T:Hive.Versioning.Version" /> that it is specified with.
+          </description>
         </item>
       </list><para>Note that unbounded ranges using the <c>=</c> comparison operator cannot be part of a bounded region.</para><para>Additionally, there are the following shorthand comparison operators that expand to bounded regions:</para><list type="table">
         <item>
@@ -631,12 +674,35 @@
             to <c>&gt;=0.4.2 &lt;0.5.0</c>.
           </description>
         </item>
+      </list><para>There are also a few special ranges:</para><list type="table">
+        <item>
+          <term><c>*</c></term>
+          <description>
+            The <see cref="P:Hive.Versioning.VersionRange.Everything" /> range. This range matches every possible version.
+          </description>
+        </item>
+        <item>
+          <term><c>z</c> or <c>Z</c></term>
+          <description>
+            The <see cref="P:Hive.Versioning.VersionRange.Nothing" /> range. This range matches nothing.
+          </description>
+        </item>
       </list><para>
         A bounded region may also be specified using star syntax. This takes the form of either a single <c>*</c> alone, matching any version,
         or a version with some numbers substituted with an asterisk. Once an element has been substituted, however, any following elements must
         either not be present or be a star themselves. Prereleases and build ids cannot be specified when using star syntax. For example,
         <c>*</c> is valid, <c>*.3</c> is not. <c>1.*</c> and <c>1.*.*</c> are valid (and equivalent), but <c>1.*.2</c> is not. <c>1.2.*</c> is
-        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>.
+        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>. In all cases
+        except the singular <c>*</c>, any <c>*</c> may also be an <c>x</c> or <c>X</c>.
+      </para><para>
+        A bounded regioon may also be specified using hyphen syntax, though it is generally not recommended, as it is not always clear to a reader
+        what exactly is meant, and is remarkably easy to mess up. The syntax for this is <c>1.2.3 - 4.5.6</c>, of course substituting <c>1.2.3</c>
+        and <c>4.5.6</c> with any valid version. The space before is <b>required</b>. This is important. the space <i>after the first version,
+        before the hyphen, is</i> <b>required</b>. This is because <c>1.2.3-4.5.6</c> is a valid, and <i>complete</i>, version, causing the parser
+        to try to read the first version in the hyphen range, then hit the end of input instead of a hyphen and back out, eventually rejecting the
+        range altogether, because <b>a version by itself is not a valid version range</b>. <c>1.2.3- 4.5.6</c> is also not valid, because it
+        is an <i>incomplete</i> version followed by a complete, simple version. Since incomplete versions are rejected, it means that this attempts
+        to parse a first version, fails, and tries other forms a range can take before eventually failing out.
       </para>
             </remarks>
             <param name="text">The string to try to parse.</param>
@@ -660,23 +726,33 @@
       </para><list type="table">
         <item>
           <term><c>&gt;=</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than or equal to its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than or equal to its specified<see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&lt;=</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than or equal to its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than or equal to its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&gt;</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> greater than its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>&lt;</c></term>
-          <description>The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than its specified <see cref="T:Hive.Versioning.Version" />.</description>
+          <description>
+            The unbounded range matches any <see cref="T:Hive.Versioning.Version" /> less than its specified <see cref="T:Hive.Versioning.Version" />.
+          </description>
         </item>
         <item>
           <term><c>=</c></term>
-          <description>The range matches only the <see cref="T:Hive.Versioning.Version" /> that it is specified with.</description>
+          <description>
+            The range matches only the <see cref="T:Hive.Versioning.Version" /> that it is specified with.
+          </description>
         </item>
       </list><para>Note that unbounded ranges using the <c>=</c> comparison operator cannot be part of a bounded region.</para><para>Additionally, there are the following shorthand comparison operators that expand to bounded regions:</para><list type="table">
         <item>
@@ -687,12 +763,35 @@
             to <c>&gt;=0.4.2 &lt;0.5.0</c>.
           </description>
         </item>
+      </list><para>There are also a few special ranges:</para><list type="table">
+        <item>
+          <term><c>*</c></term>
+          <description>
+            The <see cref="P:Hive.Versioning.VersionRange.Everything" /> range. This range matches every possible version.
+          </description>
+        </item>
+        <item>
+          <term><c>z</c> or <c>Z</c></term>
+          <description>
+            The <see cref="P:Hive.Versioning.VersionRange.Nothing" /> range. This range matches nothing.
+          </description>
+        </item>
       </list><para>
         A bounded region may also be specified using star syntax. This takes the form of either a single <c>*</c> alone, matching any version,
         or a version with some numbers substituted with an asterisk. Once an element has been substituted, however, any following elements must
         either not be present or be a star themselves. Prereleases and build ids cannot be specified when using star syntax. For example,
         <c>*</c> is valid, <c>*.3</c> is not. <c>1.*</c> and <c>1.*.*</c> are valid (and equivalent), but <c>1.*.2</c> is not. <c>1.2.*</c> is
-        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>.
+        valid, but <c>1.2.*-pre.1</c> is not. Importantly, <c>*.*.*</c> or anything similar is also not valid. Just use <c>*</c>. In all cases
+        except the singular <c>*</c>, any <c>*</c> may also be an <c>x</c> or <c>X</c>.
+      </para><para>
+        A bounded regioon may also be specified using hyphen syntax, though it is generally not recommended, as it is not always clear to a reader
+        what exactly is meant, and is remarkably easy to mess up. The syntax for this is <c>1.2.3 - 4.5.6</c>, of course substituting <c>1.2.3</c>
+        and <c>4.5.6</c> with any valid version. The space before is <b>required</b>. This is important. the space <i>after the first version,
+        before the hyphen, is</i> <b>required</b>. This is because <c>1.2.3-4.5.6</c> is a valid, and <i>complete</i>, version, causing the parser
+        to try to read the first version in the hyphen range, then hit the end of input instead of a hyphen and back out, eventually rejecting the
+        range altogether, because <b>a version by itself is not a valid version range</b>. <c>1.2.3- 4.5.6</c> is also not valid, because it
+        is an <i>incomplete</i> version followed by a complete, simple version. Since incomplete versions are rejected, it means that this attempts
+        to parse a first version, fails, and tries other forms a range can take before eventually failing out.
       </para>
             </remarks>
             <param name="text">The string to try to parse.</param>
