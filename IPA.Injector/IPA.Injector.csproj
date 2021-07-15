@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  <Import Project="..\Common.props"/>
+  <Import Project="..\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
@@ -80,7 +80,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.3" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="AsyncBridge" Version="0.3.1" />
     
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
@@ -114,6 +114,6 @@
     <RemoveDir Directories="$(OutputPath)Libraries" />
   </Target>
 
-  <Import Project="..\Common.targets"/>
+  <Import Project="..\Common.targets" />
 
 </Project>
