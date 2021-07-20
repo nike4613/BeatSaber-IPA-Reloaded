@@ -39,6 +39,9 @@
           "other_api/**.yml",
           "toc.yml",
           "*.md"
+        ],
+        "exclude": [
+          "articles/dev-resources/**.md"
         ]
       }
     ],

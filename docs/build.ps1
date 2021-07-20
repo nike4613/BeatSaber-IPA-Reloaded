@@ -1,21 +1,43 @@
+if ($PSEdition -eq "Core") {
+    Write-Error "Build must be run with Windows PowerShell due to the use of CodeDOM"
+    Write-Output "Running with Windows PowerShell"
+    powershell.exe "$(Get-Location)\build.ps1"
+    return
+}
+
 # read SelfConfig, remove wierd bits, load it, load Newtonsoft, and turn it into a schema
-$newtonsoftLoc = "$(Get-Location)/nuget/Newtonsoft.Json.12.0.2/lib/netstandard2.0/Newtonsoft.Json.dll"
-$newtonsoftSchemaLoc = "$(Get-Location)/nuget/Newtonsoft.Json.Schema.3.0.11/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
-$roslynCodeDomBase = "$(Get-Location)/nuget/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1"
+
+$newtonsoftVer = "12.0.2"
+$newtonsoftSchemaVer = "3.0.11"
+$codeDomProviderVer = "3.6.0"
+$roslynVer = "3.10.0"
+$nugetBase = "$(Get-Location)/nuget"
+$newtonsoftLoc = "$nugetBase/Newtonsoft.Json.$newtonsoftVer/lib/netstandard2.0/Newtonsoft.Json.dll"
+$newtonsoftSchemaLoc = "$nugetBase/Newtonsoft.Json.Schema.$newtonsoftSchemaVer/lib/netstandard2.0/Newtonsoft.Json.Schema.dll"
+$roslynCodeDomBase = "$nugetBase/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.$codeDomProviderVer"
 $roslynCodeDom = "$roslynCodeDomBase/lib/net45/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll"
+$roslynBase = "$nugetBase/Microsoft.Net.Compilers.Toolset.$roslynVer"
+$roslynInstall = "$roslynBase/tasks/net472/"
 $selfConfigLoc = "../IPA.Loader/Config/SelfConfig.cs"
 $ipaRoot = "../IPA"
 
 if (!(Test-Path "nuget" -PathType Container)) {
-    nuget install Newtonsoft.Json -Version 12.0.2 -source https://api.nuget.org/v3/index.json -o "$(Get-Location)/nuget"
-    nuget install Newtonsoft.Json.Schema -Version 3.0.11 -source https://api.nuget.org/v3/index.json -o "$(Get-Location)/nuget"
-    nuget install Microsoft.CodeDom.Providers.DotNetCompilerPlatform -Version 2.0.1 -source https://api.nuget.org/v3/index.json -o "$(Get-Location)/nuget"
+    $nugetExe = "nuget/nuget.exe"
+    mkdir "nuget"
+    Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -OutFile $nugetExe
+
+    &$nugetExe install Newtonsoft.Json -Version $newtonsoftVer -source https://api.nuget.org/v3/index.json -o $nugetBase
+    &$nugetExe install Newtonsoft.Json.Schema -Version $newtonsoftSchemaVer -source https://api.nuget.org/v3/index.json -o $nugetBase
+    &$nugetExe install Microsoft.CodeDom.Providers.DotNetCompilerPlatform -Version $codeDomProviderVer -source https://api.nuget.org/v3/index.json -o $nugetBase
+    &$nugetExe install Microsoft.Net.Compilers.Toolset -Version $roslynVer -source https://api.nuget.org/v3/index.json -o $nugetBase
 }
 
 & docfx metadata
 
-if ((Test-Path $newtonsoftLoc -PathType Leaf) -and (Test-Path $selfConfigLoc -PathType Leaf) -and (Test-Path $roslynCodeDom -PathType Leaf)) {
+if ((Test-Path $roslynCodeDom -PathType Leaf) -and (Test-Path $roslynInstall -PathType Container)) {
     # The files we need exist, lets do this!
+
+    Write-Output "Generating Schema JSON"
 
     # Add the Roslyn CodeDom
     Add-Type -Path $roslynCodeDom
@@ -68,7 +90,7 @@ class RoslynCompilerSettings : Microsoft.CodeDom.Providers.DotNetCompilerPlatfor
 {
     [string] get_CompilerFullPath()
     {
-        return "$roslynCodeDomBase\tools\RoslynLatest\csc.exe"
+        return "$roslynInstall\csc.exe"
     }
     [int] get_CompilerServerTimeToLive()
     {
@@ -88,11 +110,14 @@ class RoslynCompilerSettings : Microsoft.CodeDom.Providers.DotNetCompilerPlatfor
     $schema = $schemagen.Generate([IPA.Config.SelfConfig])
 
     $schema.ToString() | Out-File "other_api/config/_schema.json"
+} else {
+    Write-Output "Cannot generate schema JSON"
 }
 
-$ipaExe = "$ipaRoot/bin/Release/net461/IPA.exe"
+$ipaExe = "$ipaRoot/bin/Release/net472/IPA.exe"
 # generate IPA.exe args file
 if (-not (Test-Path $ipaExe -PathType Leaf)) {
+    msbuild -t:Restore -p:Configuration=Release -p:Platform=AnyCPU -p:SolutionDir=.. "$ipaRoot/IPA.csproj"
     msbuild -p:Configuration=Release -p:Platform=AnyCPU -p:SolutionDir=.. "$ipaRoot/IPA.csproj"
 }
 
