@@ -80,8 +80,100 @@
             <article class="content wrap" id="_content" data-uid="other.config.schema">
 <h1 id="configuration-file-schema">Configuration File Schema</h1>
 
-<!-- Can not find reference _schema.json -->
-</article>
+<pre><code name="Schema File">{
+  &quot;definitions&quot;: {
+    &quot;AntiMalware_&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;UseIfAvailable&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;RunPartialThreatCode&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;UseIfAvailable&quot;,
+        &quot;RunPartialThreatCode&quot;
+      ]
+    },
+    &quot;Debug_&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;ShowCallSource&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;ShowDebug&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;CondenseModLogs&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;CreateModLogs&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;ShowHandledErrorStackTraces&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;HideMessagesForPerformance&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;HideLogThreshold&quot;: {
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;ShowTrace&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;SyncLogging&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;ShowCallSource&quot;,
+        &quot;ShowDebug&quot;,
+        &quot;CondenseModLogs&quot;,
+        &quot;CreateModLogs&quot;,
+        &quot;ShowHandledErrorStackTraces&quot;,
+        &quot;HideMessagesForPerformance&quot;,
+        &quot;HideLogThreshold&quot;,
+        &quot;ShowTrace&quot;,
+        &quot;SyncLogging&quot;
+      ]
+    }
+  },
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;Regenerate&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;Debug&quot;: {
+      &quot;$ref&quot;: &quot;#/definitions/Debug_&quot;
+    },
+    &quot;AntiMalware&quot;: {
+      &quot;$ref&quot;: &quot;#/definitions/AntiMalware_&quot;
+    },
+    &quot;YeetMods&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;GameAssemblies&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      }
+    },
+    &quot;LastGameVersion&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;Regenerate&quot;,
+    &quot;Debug&quot;,
+    &quot;AntiMalware&quot;,
+    &quot;YeetMods&quot;,
+    &quot;GameAssemblies&quot;
+  ]
+}
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -89,7 +181,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/7b6a755dcc8549f0e6f8e36b9ebdb2e7fc1647ff/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/f2df61aec157454756d91b525cbef850b6b26253/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
