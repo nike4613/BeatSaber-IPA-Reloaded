@@ -3,15 +3,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace IPA.JsonConverters
 {
-    internal class FeaturesFieldConverter : JsonConverter<Dictionary<string, JObject>>
+    internal class FeaturesFieldConverter : JsonConverter<Dictionary<string, List<JObject>>>
     {
-        public override Dictionary<string, JObject> ReadJson(JsonReader reader, Type objectType, Dictionary<string, JObject> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void Assert([DoesNotReturnIf(false)] bool condition)
+        {
+            if (!condition)
+                throw new InvalidOperationException();
+        }
+
+        public override Dictionary<string, List<JObject>> ReadJson(JsonReader reader, Type objectType, Dictionary<string, List<JObject>> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartArray)
             {
@@ -20,10 +29,24 @@ namespace IPA.JsonConverters
                 return existingValue;
             }
 
-            return serializer.Deserialize<Dictionary<string, JObject>>(reader);
+            var dict = new Dictionary<string, List<JObject>>();
+            Assert(reader.TokenType == JsonToken.StartObject && reader.Read());
+
+            while (reader.TokenType == JsonToken.PropertyName)
+            {
+                var name = reader.ReadAsString();
+                var list = reader.TokenType == JsonToken.StartObject
+                    ? (new() { serializer.Deserialize<JObject>(reader) })
+                    : serializer.Deserialize<List<JObject>>(reader);
+                dict.Add(name, list);
+            }
+
+            Assert(reader.TokenType == JsonToken.EndObject && reader.Read());
+
+            return dict;
         }
 
-        public override void WriteJson(JsonWriter writer, Dictionary<string, JObject> value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Dictionary<string, List<JObject>> value, JsonSerializer serializer)
         {
             serializer.Serialize(writer, value);
         }

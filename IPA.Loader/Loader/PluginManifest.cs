@@ -43,7 +43,7 @@ namespace IPA.Loader
         public Dictionary<string, VersionRange> Conflicts = new();
 
         [JsonProperty("features", Required = Required.DisallowNull), JsonConverter(typeof(FeaturesFieldConverter))]
-        public Dictionary<string, JObject> Features = new();
+        public Dictionary<string, List<JObject>> Features = new();
 
         [JsonProperty("loadBefore", Required = Required.DisallowNull)]
         public string[] LoadBefore = Array.Empty<string>();

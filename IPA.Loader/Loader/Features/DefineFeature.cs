@@ -1,4 +1,5 @@
-﻿using IPA.Logging;
+﻿#nullable enable
+using IPA.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,12 +16,12 @@ namespace IPA.Loader.Features
             [JsonProperty("type", Required = Required.Always)]
             public string TypeName = "";
             [JsonProperty("name", Required = Required.DisallowNull)]
-            public string ActualName = null;
+            public string? ActualName = null;
 
             public string Name => ActualName ?? TypeName;
         }
 
-        private DataModel data;
+        private DataModel data = null!;
 
         protected override bool Initialize(PluginMetadata meta, JObject featureData)
         {
@@ -28,7 +29,7 @@ namespace IPA.Loader.Features
 
             try
             {
-                data = featureData.ToObject<DataModel>();
+                data = featureData.ToObject<DataModel>() ?? throw new InvalidOperationException("Feature data is null");
             }
             catch (Exception e)
             {
@@ -54,7 +55,7 @@ namespace IPA.Loader.Features
                 Logger.features.Error($"Invalid type name {data.TypeName}");
                 return;
             }
-            catch (Exception e) when (e is FileNotFoundException || e is FileLoadException || e is BadImageFormatException)
+            catch (Exception e) when (e is FileNotFoundException or FileLoadException or BadImageFormatException)
             {
                 var filename = "";
 

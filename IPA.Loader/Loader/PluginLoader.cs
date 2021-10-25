@@ -809,7 +809,9 @@ namespace IPA.Loader
         {
             foreach (var meta in PluginsMetadata)
             {
-                foreach (var feature in meta.Manifest.Features.Select(f => new Feature.Instance(meta, f.Key, f.Value)))
+                foreach (var feature in meta.Manifest.Features
+                    .SelectMany(f => f.Value.Select(o => (f.Key, o)))
+                    .Select(t => new Feature.Instance(meta, t.Key, t.o)))
                 {
                     if (feature.TryGetDefiningPlugin(out var plugin) && plugin == null)
                     { // this is a DefineFeature, so we want to initialize it early
