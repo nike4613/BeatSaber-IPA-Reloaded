@@ -4782,6 +4782,12 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.StandardLogger.PrintFilter
   nameWithType: StandardLogger.PrintFilter
+- uid: IPA.NoEnableDisableAttribute
+  name: NoEnableDisableAttribute
+  href: api/IPA.NoEnableDisableAttribute.html
+  commentId: T:IPA.NoEnableDisableAttribute
+  fullName: IPA.NoEnableDisableAttribute
+  nameWithType: NoEnableDisableAttribute
 - uid: IPA.Old
   name: IPA.Old
   href: api/IPA.Old.html
