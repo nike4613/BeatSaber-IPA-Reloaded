@@ -122,6 +122,7 @@ namespace IPA.Loader
         // TODO: make enable and disable able to take a bool indicating which it is
         private static Action<object> MakeLifecycleEnableFunc(Type type, string name)
         {
+            var noEnableDisable = type.GetCustomAttribute<NoEnableDisableAttribute>() is not null;
             var enableMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                                     .Select(m => (m, attrs: m.GetCustomAttributes(typeof(IEdgeLifecycleAttribute), false)))
                                     .Select(t => (t.m, attrs: t.attrs.Cast<IEdgeLifecycleAttribute>()))
@@ -129,7 +130,8 @@ namespace IPA.Loader
                                     .Select(t => t.m).ToArray();
             if (enableMethods.Length == 0)
             {
-                Logger.loader.Notice($"Plugin {name} has no methods marked [OnStart] or [OnEnable]. Is this intentional?");
+                if (!noEnableDisable)
+                    Logger.loader.Notice($"Plugin {name} has no methods marked [OnStart] or [OnEnable]. Is this intentional?");
                 return o => { };
             }
 
@@ -153,6 +155,7 @@ namespace IPA.Loader
         }
         private static Func<object, Task> MakeLifecycleDisableFunc(Type type, string name)
         {
+            var noEnableDisable = type.GetCustomAttribute<NoEnableDisableAttribute>() is not null;
             var disableMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                                     .Select(m => (m, attrs: m.GetCustomAttributes(typeof(IEdgeLifecycleAttribute), false)))
                                     .Select(t => (t.m, attrs: t.attrs.Cast<IEdgeLifecycleAttribute>()))
@@ -160,7 +163,8 @@ namespace IPA.Loader
                                     .Select(t => t.m).ToArray();
             if (disableMethods.Length == 0)
             {
-                Logger.loader.Notice($"Plugin {name} has no methods marked [OnExit] or [OnDisable]. Is this intentional?");
+                if (!noEnableDisable)
+                    Logger.loader.Notice($"Plugin {name} has no methods marked [OnExit] or [OnDisable]. Is this intentional?");
                 return o => TaskEx.WhenAll();
             }
 

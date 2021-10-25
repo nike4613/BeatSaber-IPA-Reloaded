@@ -109,4 +109,20 @@ namespace IPA
     {
         EdgeLifecycleType IEdgeLifecycleAttribute.Type => EdgeLifecycleType.Disable;
     }
+
+    /// <summary>
+    /// Indicates that the applied plugin class does not need <see cref="OnEnableAttribute"/> or
+    /// <see cref="OnDisableAttribute"/> methods.
+    /// </summary>
+    /// <remarks>
+    /// This is typically only the ccase when some other utility mod handles their lifecycle for
+    /// them, such as with SiraUtil and Zenject.
+    /// </remarks>
+    /// <seealso cref="OnEnableAttribute"/>
+    /// <seealso cref="OnDisableAttribute"/>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class NoEnableDisableAttribute : Attribute
+    {
+
+    }
 }
