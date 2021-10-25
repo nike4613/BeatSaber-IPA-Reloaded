@@ -115,7 +115,7 @@ namespace IPA
     /// <see cref="OnDisableAttribute"/> methods.
     /// </summary>
     /// <remarks>
-    /// This is typically only the ccase when some other utility mod handles their lifecycle for
+    /// This is typically only the case when some other utility mod handles their lifecycle for
     /// them, such as with SiraUtil and Zenject.
     /// </remarks>
     /// <seealso cref="OnEnableAttribute"/>
