@@ -261,7 +261,7 @@ namespace IPA.Loader
                     Logger.loader.Error(e);
                     ignoredPlugins.Add(metadata, new IgnoreReason(Reason.Error)
                     {
-                        ReasonText = "An error ocurred loading the data",
+                        ReasonText = "An error occurred loading the data",
                         Error = e
                     });
                 }
@@ -372,7 +372,7 @@ namespace IPA.Loader
         /// </remarks>
         Conflict,
         /// <summary>
-        /// The plugin this reason is assiciated with is missing a dependency.
+        /// The plugin this reason is associated with is missing a dependency.
         /// </summary>
         /// <remarks>
         /// Since this is only given when a dependency is missing, <see cref="IgnoreReason.RelatedTo"/> will
@@ -390,7 +390,7 @@ namespace IPA.Loader
         /// </summary>
         Feature,
         /// <summary>
-        /// The plugin this reason is assoicated with is unsupported.
+        /// The plugin this reason is associated with is unsupported.
         /// </summary>
         /// <remarks>
         /// Currently, there is no path in the loader that emits this <see cref="Reason"/>, however there may
@@ -687,7 +687,7 @@ namespace IPA.Loader
                         if (!TryResolveId(id, out var depMeta, out var depDisabled, out var depIgnored)
                             || !range.Matches(depMeta.HVersion))
                         {
-                            Logger.loader.Warn($"'{plugin.Id}' is missing depencency '{id}@{range}'; ignoring");
+                            Logger.loader.Warn($"'{plugin.Id}' is missing dependency '{id}@{range}'; ignoring");
                             ignoredPlugins.Add(plugin, new(Reason.Dependency)
                             {
                                 ReasonText = $"Dependency '{id}@{range}' not found",
@@ -960,7 +960,7 @@ namespace IPA.Loader
                 Logger.loader.Error(e);
                 ignoredPlugins.Add(meta, new IgnoreReason(Reason.Error)
                 {
-                    ReasonText = "Error ocurred while initializing",
+                    ReasonText = "Error occurred while initializing",
                     Error = e
                 });
                 return null;
@@ -1016,7 +1016,7 @@ namespace IPA.Loader
                 }
                 catch (Exception e)
                 {
-                    Logger.log.Critical($"Uncaught exception while loading pluign {meta.Name}:");
+                    Logger.log.Critical($"Uncaught exception while loading plugin {meta.Name}:");
                     Logger.log.Critical(e);
                 }
             }
