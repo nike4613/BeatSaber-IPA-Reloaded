@@ -30,7 +30,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
-          dotnet-version: "3.1.409" # since we now use this
+          dotnet-version: "6.0.100" # since we now use this
+      - name: Log in to package source
+        shell: pwsh
+        run: |
+            dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} `
+            --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Atlas-Rhythm/index.json"
       - name: Clear Nuget Cache
         run: dotnet nuget locals all --clear
       - name: Nuget Restore
