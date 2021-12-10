@@ -59,11 +59,9 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="HarmonyX" Version="2.5.0" />
     <PackageReference Include="MonoMod.RuntimeDetour" Version="21.7.8.3" />
+    <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
-    <Reference Include="Hive.Versioning" Version="0.1.0">
-      <HintPath>$(MSBuildThisFileDirectory)..\Libs\thirdparty\Hive.Versioning.dll</HintPath>
-    </Reference>
   </ItemGroup>
   
   <ItemGroup>

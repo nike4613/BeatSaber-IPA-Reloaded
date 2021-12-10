@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\Common.props" />
 
@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Hive.Versioning" Version="0.1.0">
-      <HintPath>$(MSBuildThisFileDirectory)..\Libs\thirdparty\Hive.Versioning.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
   </ItemGroup>
 
 </Project>
