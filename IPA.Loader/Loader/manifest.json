@@ -11,10 +11,12 @@
   "version": "4.2.1",
   "icon": "IPA.icon_white.png",
   "features": {
-    "IPA.DefineFeature": {
-      "type": "IPA.Loader.Features.ConfigProviderFeature",
-      "name": "IPA.ConfigProvider"
-    }
+    "IPA.DefineFeature": [
+      {
+        "type": "IPA.Loader.Features.ConfigProviderFeature",
+        "name": "IPA.ConfigProvider"
+      }
+    ]
   },
   "links": {
     "project-home": "https://bsmg.github.io/BeatSaber-IPA-Reloaded/index.html",

@@ -4,10 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IPA.JsonConverters
 {
@@ -34,14 +31,16 @@ namespace IPA.JsonConverters
 
             while (reader.TokenType == JsonToken.PropertyName)
             {
-                var name = reader.ReadAsString();
+                var name = (string)reader.Value;
+                Assert(reader.Read());
+
                 var list = reader.TokenType == JsonToken.StartObject
                     ? (new() { serializer.Deserialize<JObject>(reader) })
                     : serializer.Deserialize<List<JObject>>(reader);
-                dict.Add(name, list);
-            }
 
-            Assert(reader.TokenType == JsonToken.EndObject && reader.Read());
+                dict.Add(name, list);
+                Assert(reader.Read());
+            }
 
             return dict;
         }
