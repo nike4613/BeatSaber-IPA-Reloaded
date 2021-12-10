@@ -5023,11 +5023,11 @@ references:
   fullName: IPA.Utilities.AlmostVersion
   nameWithType: AlmostVersion
 - uid: IPA.Utilities.AlmostVersion.#ctor(Hive.Versioning.Version)
-  name: AlmostVersion(Version)
+  name: AlmostVersion(Hive.Versioning.Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_Hive_Versioning_Version_
   commentId: M:IPA.Utilities.AlmostVersion.#ctor(Hive.Versioning.Version)
   fullName: IPA.Utilities.AlmostVersion.AlmostVersion(Hive.Versioning.Version)
-  nameWithType: AlmostVersion.AlmostVersion(Version)
+  nameWithType: AlmostVersion.AlmostVersion(Hive.Versioning.Version)
 - uid: IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)
   name: AlmostVersion(Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_SemVer_Version_
@@ -5060,11 +5060,11 @@ references:
   fullName: IPA.Utilities.AlmostVersion.AlmostVersion
   nameWithType: AlmostVersion.AlmostVersion
 - uid: IPA.Utilities.AlmostVersion.CompareTo(Hive.Versioning.Version)
-  name: CompareTo(Version)
+  name: CompareTo(Hive.Versioning.Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_Hive_Versioning_Version_
   commentId: M:IPA.Utilities.AlmostVersion.CompareTo(Hive.Versioning.Version)
   fullName: IPA.Utilities.AlmostVersion.CompareTo(Hive.Versioning.Version)
-  nameWithType: AlmostVersion.CompareTo(Version)
+  nameWithType: AlmostVersion.CompareTo(Hive.Versioning.Version)
 - uid: IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)
   name: CompareTo(AlmostVersion)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion_
@@ -5149,24 +5149,6 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.AlmostVersion.GreaterThanOrEqual
   nameWithType: AlmostVersion.GreaterThanOrEqual
-- uid: IPA.Utilities.AlmostVersion.op_Implicit(Hive.Versioning.Version)~IPA.Utilities.AlmostVersion
-  name: Implicit(Version to AlmostVersion)
-  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_Hive_Versioning_Version__IPA_Utilities_AlmostVersion
-  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(Hive.Versioning.Version)~IPA.Utilities.AlmostVersion
-  name.vb: Widening(Version to AlmostVersion)
-  fullName: IPA.Utilities.AlmostVersion.Implicit(Hive.Versioning.Version to IPA.Utilities.AlmostVersion)
-  fullName.vb: IPA.Utilities.AlmostVersion.Widening(Hive.Versioning.Version to IPA.Utilities.AlmostVersion)
-  nameWithType: AlmostVersion.Implicit(Version to AlmostVersion)
-  nameWithType.vb: AlmostVersion.Widening(Version to AlmostVersion)
-- uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~Hive.Versioning.Version
-  name: Implicit(AlmostVersion to Version)
-  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__Hive_Versioning_Version
-  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~Hive.Versioning.Version
-  name.vb: Widening(AlmostVersion to Version)
-  fullName: IPA.Utilities.AlmostVersion.Implicit(IPA.Utilities.AlmostVersion to Hive.Versioning.Version)
-  fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to Hive.Versioning.Version)
-  nameWithType: AlmostVersion.Implicit(AlmostVersion to Version)
-  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Version)
 - uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version
   name: Implicit(AlmostVersion to Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version
@@ -5176,6 +5158,15 @@ references:
   fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to SemVer.Version)
   nameWithType: AlmostVersion.Implicit(AlmostVersion to Version)
   nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Version)
+- uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~System.Nullable{Hive.Versioning.Version}
+  name: Implicit(AlmostVersion to Nullable<Hive.Versioning.Version>)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__System_Nullable_Hive_Versioning_Version_
+  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~System.Nullable{Hive.Versioning.Version}
+  name.vb: Widening(AlmostVersion to Nullable(Of Hive.Versioning.Version))
+  fullName: IPA.Utilities.AlmostVersion.Implicit(IPA.Utilities.AlmostVersion to System.Nullable<Hive.Versioning.Version>)
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to System.Nullable(Of Hive.Versioning.Version))
+  nameWithType: AlmostVersion.Implicit(AlmostVersion to Nullable<Hive.Versioning.Version>)
+  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Nullable(Of Hive.Versioning.Version))
 - uid: IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion
   name: Implicit(Version to AlmostVersion)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion
@@ -5185,6 +5176,15 @@ references:
   fullName.vb: IPA.Utilities.AlmostVersion.Widening(SemVer.Version to IPA.Utilities.AlmostVersion)
   nameWithType: AlmostVersion.Implicit(Version to AlmostVersion)
   nameWithType.vb: AlmostVersion.Widening(Version to AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.op_Implicit(System.Nullable{Hive.Versioning.Version})~IPA.Utilities.AlmostVersion
+  name: Implicit(Nullable<Hive.Versioning.Version> to AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_System_Nullable_Hive_Versioning_Version___IPA_Utilities_AlmostVersion
+  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(System.Nullable{Hive.Versioning.Version})~IPA.Utilities.AlmostVersion
+  name.vb: Widening(Nullable(Of Hive.Versioning.Version) to AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.Implicit(System.Nullable<Hive.Versioning.Version> to IPA.Utilities.AlmostVersion)
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening(System.Nullable(Of Hive.Versioning.Version) to IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.Implicit(Nullable<Hive.Versioning.Version> to AlmostVersion)
+  nameWithType.vb: AlmostVersion.Widening(Nullable(Of Hive.Versioning.Version) to AlmostVersion)
 - uid: IPA.Utilities.AlmostVersion.op_Implicit*
   name: Implicit
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_
@@ -7055,11 +7055,11 @@ references:
   fullName: IPA.Utilities.Utils.UnsafeCompare
   nameWithType: Utils.UnsafeCompare
 - uid: IPA.Utilities.Utils.VersionCompareNoPrerelease(Hive.Versioning.Version,Hive.Versioning.Version)
-  name: VersionCompareNoPrerelease(Version, Version)
+  name: VersionCompareNoPrerelease(Hive.Versioning.Version, Hive.Versioning.Version)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_Hive_Versioning_Version_Hive_Versioning_Version_
   commentId: M:IPA.Utilities.Utils.VersionCompareNoPrerelease(Hive.Versioning.Version,Hive.Versioning.Version)
   fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease(Hive.Versioning.Version, Hive.Versioning.Version)
-  nameWithType: Utils.VersionCompareNoPrerelease(Version, Version)
+  nameWithType: Utils.VersionCompareNoPrerelease(Hive.Versioning.Version, Hive.Versioning.Version)
 - uid: IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version,SemVer.Version)
   name: VersionCompareNoPrerelease(Version, Version)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_SemVer_Version_SemVer_Version_
