@@ -1,11 +1,9 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Linq;
 using IPA.Logging;
 using IPA.Utilities;
@@ -75,23 +73,12 @@ namespace IPA.Loader
                     else FilenameLocations.Add(fn.Name, fn.FullName);
                 }
 
-                if (!SetDefaultDllDirectories(LoadLibraryFlags.LOAD_LIBRARY_SEARCH_USER_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_SYSTEM32
-                                            | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_APPLICATION_DIR))
-                {
-                    var err = new Win32Exception();
-                    Log(Logger.Level.Critical, $"Error configuring DLL search path");
-                    Log(Logger.Level.Critical, err);
-                    return;
-                }
-
                 static void AddDir(string path)
                 {
-                    var retPtr = AddDllDirectory(path);
-                    if (retPtr == IntPtr.Zero)
+                    var pathEnvironmentVariable = Environment.GetEnvironmentVariable("Path");
+                    if (!pathEnvironmentVariable.Contains(path))
                     {
-                        var err = new Win32Exception();
-                        Log(Logger.Level.Warning, $"Could not add DLL directory {path}");
-                        Log(Logger.Level.Warning, err);
+                        Environment.SetEnvironmentVariable("Path", pathEnvironmentVariable + Path.PathSeparator + path);
                     }
                 }
 
@@ -106,13 +93,6 @@ namespace IPA.Loader
 
                 //var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
                 //AddDir(Path.Combine(unityData, "Plugins"));
-
-                foreach (var dir in Environment.GetEnvironmentVariable("path")
-                    .Split(Path.PathSeparator)
-                    .Select(Environment.ExpandEnvironmentVariables))
-                {
-                    AddDir(dir);
-                }
             }
         }
 
@@ -245,27 +225,5 @@ namespace IPA.Loader
                 }
             }
         }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-#if NET4
-        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-#endif
-        private static extern IntPtr AddDllDirectory(string lpPathName);
-
-        [Flags]
-        private enum LoadLibraryFlags : uint
-        {
-            None = 0,
-            LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
-            LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
-            LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
-            LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
-        }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-#if NET4
-        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-#endif
-        private static extern bool SetDefaultDllDirectories(LoadLibraryFlags dwFlags);
     }
 }
