@@ -1,7 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IPA.Loader
@@ -13,9 +13,9 @@ namespace IPA.Loader
     {
         private readonly HashSet<PluginMetadata> currentlyEnabled;
         private readonly HashSet<PluginMetadata> currentlyDisabled;
-        private readonly HashSet<PluginMetadata> toEnable = new HashSet<PluginMetadata>();
-        private readonly HashSet<PluginMetadata> toDisable = new HashSet<PluginMetadata>();
-        private bool stateChanged = false;
+        private readonly HashSet<PluginMetadata> toEnable = new ();
+        private readonly HashSet<PluginMetadata> toDisable = new ();
+        private bool stateChanged;
 
         internal StateTransitionTransaction(IEnumerable<PluginMetadata> enabled, IEnumerable<PluginMetadata> disabled)
         {
@@ -118,16 +118,17 @@ namespace IPA.Loader
         /// <returns><see langword="true"/> if the transaction's state was changed, <see langword="false"/> otherwise</returns>
         /// <exception cref="ObjectDisposedException">if this object has been disposed</exception>
         /// <exception cref="ArgumentException">if <paramref name="meta"/> is not loadable</exception>
-        public bool Enable(PluginMetadata meta, out IEnumerable<PluginMetadata> disabledDeps, bool autoDeps = false)
+        public bool Enable(PluginMetadata meta, out IEnumerable<PluginMetadata>? disabledDeps, bool autoDeps = false)
         { // returns whether or not state was changed
             ThrowIfDisposed();
+            if (meta is null) throw new ArgumentNullException(nameof(meta));
             if (!currentlyEnabled.Contains(meta) && !currentlyDisabled.Contains(meta))
-                throw new ArgumentException(nameof(meta), "Plugin metadata does not represent a loadable plugin");
+                throw new ArgumentException("Plugin metadata does not represent a loadable plugin", nameof(meta));
 
             disabledDeps = null;
             if (IsEnabledInternal(meta)) return false;
 
-            var needsEnabled = meta.Dependencies.Where(m => DisabledPluginsInternal.Contains(m));
+            var needsEnabled = meta.Dependencies.Where(m => DisabledPluginsInternal.Contains(m)).ToArray();
             if (autoDeps)
             {
                 foreach (var dep in needsEnabled)
@@ -138,15 +139,15 @@ namespace IPA.Loader
                     return res;
                 }
             }
-            else if (needsEnabled.Any())
+            else if (needsEnabled.Length > 0)
             {
                 // there are currently enabled plugins that depend on this
                 disabledDeps = needsEnabled;
                 return false;
             }
 
-            toDisable.Remove(meta);
-            toEnable.Add(meta);
+            _ = toDisable.Remove(meta);
+            _ = toEnable.Add(meta);
             stateChanged = true;
             return true;
         }
@@ -175,16 +176,17 @@ namespace IPA.Loader
         /// <returns><see langword="true"/> if the transaction's state was changed, <see langword="false"/> otherwise</returns>
         /// <exception cref="ObjectDisposedException">if this object has been disposed</exception>
         /// <exception cref="ArgumentException">if <paramref name="meta"/> is not loadable</exception>
-        public bool Disable(PluginMetadata meta, out IEnumerable<PluginMetadata> enabledDependents, bool autoDependents = false)
+        public bool Disable(PluginMetadata meta, out IEnumerable<PluginMetadata>? enabledDependents, bool autoDependents = false)
         { // returns whether or not state was changed
             ThrowIfDisposed();
+            if (meta is null) throw new ArgumentNullException(nameof(meta));
             if (!currentlyEnabled.Contains(meta) && !currentlyDisabled.Contains(meta))
-                throw new ArgumentException(nameof(meta), "Plugin metadata does not represent a loadable plugin");
+                throw new ArgumentException("Plugin metadata does not represent a loadable plugin", nameof(meta));
 
             enabledDependents = null;
             if (IsDisabledInternal(meta)) return false;
 
-            var needsDisabled = EnabledPluginsInternal.Where(m => m.Dependencies.Contains(meta));
+            var needsDisabled = EnabledPluginsInternal.Where(m => m.Dependencies.Contains(meta)).ToArray();
             if (autoDependents)
             {
                 foreach (var dep in needsDisabled)
@@ -195,15 +197,15 @@ namespace IPA.Loader
                     return res;
                 }
             }
-            else if (needsDisabled.Any())
+            else if (needsDisabled.Length > 0)
             {
                 // there are currently enabled plugins that depend on this
                 enabledDependents = needsDisabled;
                 return false;
             }
 
-            toDisable.Add(meta);
-            toEnable.Remove(meta);
+            _ = toDisable.Add(meta);
+            _ = toEnable.Remove(meta);
             stateChanged = true;
             return true;
         }
@@ -247,22 +249,20 @@ namespace IPA.Loader
             ThrowIfDisposed();
             var copy = new StateTransitionTransaction(CurrentlyEnabled, CurrentlyDisabled);
             foreach (var toEnable in ToEnable)
-                copy.toEnable.Add(toEnable);
+                _ = copy.toEnable.Add(toEnable);
             foreach (var toDisable in ToDisable)
-                copy.toDisable.Add(toDisable);
+                _ = copy.toDisable.Add(toDisable);
             copy.stateChanged = stateChanged;
             return copy;
         }
 
         private void ThrowIfDisposed() => ThrowIfDisposed<byte>();
-        private T ThrowIfDisposed<T>()
+        private T? ThrowIfDisposed<T>()
         {
-            if (disposed)
-                throw new ObjectDisposedException(nameof(StateTransitionTransaction));
-            return default;
+            return disposed ? throw new ObjectDisposedException(nameof(StateTransitionTransaction)) : default;
         }
 
-        private bool disposed = false;
+        private bool disposed;
         /// <summary>
         /// Disposes and discards this transaction without committing it.
         /// </summary>
