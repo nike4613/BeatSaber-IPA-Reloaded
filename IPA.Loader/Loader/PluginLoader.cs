@@ -888,8 +888,8 @@ namespace IPA.Loader
 
         internal static PluginExecutor? InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
-            if (meta.Manifest.GameVersion != UnityGame.GameVersion)
-                Logger.loader.Warn($"Mod {meta.Name} developed for game version {meta.Manifest.GameVersion}, so it may not work properly.");
+            if (meta.Manifest.GameVersion is { } gv && gv != UnityGame.GameVersion)
+                Logger.loader.Warn($"Mod {meta.Name} developed for game version {gv}, so it may not work properly.");
 
             if (meta.IsSelf)
                 return new PluginExecutor(meta, PluginExecutor.Special.Self);

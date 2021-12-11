@@ -30,8 +30,8 @@ namespace IPA.Loader
         [JsonProperty("version", Required = Required.Always), JsonConverter(typeof(SemverVersionConverter))]
         public Version Version = null!;
 
-        [JsonProperty("gameVersion", Required = Required.Always), JsonConverter(typeof(AlmostVersionConverter))]
-        public AlmostVersion GameVersion = null!;
+        [JsonProperty("gameVersion", Required = Required.DisallowNull), JsonConverter(typeof(AlmostVersionConverter))]
+        public AlmostVersion? GameVersion;
 
         [JsonProperty("author", Required = Required.Always)]
         public string Author = null!;
