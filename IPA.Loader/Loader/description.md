@@ -10,7 +10,3 @@ to actually inject itself into the game.
 ****
 
 The particular method of injection that BSIPA uses lets its user experience be far nicer than most others, not requiring a repatch for every game update.
-
-With updating the game being seamless, it also makes sense to make updating the mods themselves seamless. BSIPA's internal updater will automatically ask [BeatMods](https://beatmods.com/)
-for newer versions of your installed mods. Of course, this is configurable either in the config at `UserData\Beat Saber IPA.json` or with the Mod List, which lets you control the process
-to a greater extend than even the configs.
