@@ -23,6 +23,17 @@ namespace IPA.Config.Stores
         {
             EmitLoad(il, member, thisarg);
 
+            using var valueTypeLocal =
+                member.IsNullable
+                ? GetLocal.Allocate(member.Type)
+                : default;
+
+            if (member.IsNullable)
+            {
+                il.Emit(OpCodes.Stloc, valueTypeLocal.Local);
+                il.Emit(OpCodes.Ldloca, valueTypeLocal.Local);
+            }
+
             var endSerialize = il.DefineLabel();
 
             if (member.AllowNull)
@@ -48,7 +59,7 @@ namespace IPA.Config.Stores
             var targetType = GetExpectedValueTypeForType(memberConversionType);
             if (member.HasConverter)
             {
-                using var stlocal = GetLocal.Allocate(member.Type);
+                using var stlocal = GetLocal.Allocate(memberConversionType);
                 using var valLocal = GetLocal.Allocate(typeof(Value));
 
                 il.Emit(OpCodes.Stloc, stlocal);

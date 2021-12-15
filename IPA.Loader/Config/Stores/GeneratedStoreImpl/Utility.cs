@@ -60,7 +60,7 @@ namespace IPA.Config.Stores
 #endif
             public static implicit operator LocalBuilder(AllocatedLocal loc) => loc.Local;
 
-            public void Dealloc() => allocator.Deallocate(this);
+            public void Dealloc() => allocator?.Deallocate(this);
             public void Dispose() => Dealloc();
         }
 
