@@ -175,7 +175,7 @@ namespace IPA.Config
                                      &&   CommandLineValues.YeetMods;
 
         // LINE: ignore
-        [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
+        [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
         public virtual HashSet<string> GameAssemblies { get; set; } = new HashSet<string>
             {
             // LINE: ignore 5

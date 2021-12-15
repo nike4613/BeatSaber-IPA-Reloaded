@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace IPA.Config.Stores.Converters
     /// <typeparam name="T">the type of the items in the collection</typeparam>
     /// <typeparam name="TCollection">the instantiated type of collection</typeparam>
     public class CollectionConverter<T, TCollection> : ValueConverter<TCollection>
-        where TCollection : ICollection<T>
+        where TCollection : ICollection<T?>
     {
         /// <summary>
         /// Creates a <see cref="CollectionConverter{T, TCollection}"/> using the default converter for the
@@ -54,7 +55,7 @@ namespace IPA.Config.Stores.Converters
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
         protected void PopulateFromValue(TCollection col, List list, object parent)
         {
-            //Logger.log.Debug($"CollectionConverter<{typeof(T)}, {typeof(TCollection)}>({BaseConverter.GetType()}).PopulateFromValue([object], {list}, {parent.GetType()})");
+            if (list is null) throw new ArgumentNullException(nameof(list));
             foreach (var it in list)
                 col.Add(BaseConverter.FromValue(it, parent));
         }
@@ -66,9 +67,9 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the object that will own the resulting <typeparamref name="TCollection"/></param>
         /// <returns>a new <typeparamref name="TCollection"/> holding the deserialized content of <paramref name="value"/></returns>
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public override TCollection FromValue(Value value, object parent)
+        public override TCollection FromValue(Value? value, object parent)
         {
-            if (!(value is List list)) throw new ArgumentException("Argument not a List", nameof(value));
+            if (value is not List list) throw new ArgumentException("Argument not a List", nameof(value));
 
             var col = Create(list.Count, parent);
             PopulateFromValue(col, list, parent);
@@ -81,7 +82,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the object owning <paramref name="obj"/></param>
         /// <returns>the <see cref="List"/> that <paramref name="obj"/> was serialized into</returns>
         /// <seealso cref="ValueConverter{T}.ToValue(T, object)"/>
-        public override Value ToValue(TCollection obj, object parent)
+        public override Value? ToValue(TCollection? obj, object parent)
             => Value.From(obj.Select(t => BaseConverter.ToValue(t, parent)));
     }
     /// <summary>
@@ -92,7 +93,7 @@ namespace IPA.Config.Stores.Converters
     /// <typeparam name="TConverter">the type of the converter to use for <typeparamref name="T"/></typeparam>
     /// <seealso cref="CollectionConverter{T, TCollection}"/>
     public sealed class CollectionConverter<T, TCollection, TConverter> : CollectionConverter<T, TCollection>
-        where TCollection : ICollection<T>
+        where TCollection : ICollection<T?>
         where TConverter : ValueConverter<T>, new()
     {
         /// <summary>
@@ -110,7 +111,7 @@ namespace IPA.Config.Stores.Converters
     /// </summary>
     /// <typeparam name="T">the element type of the <see cref="ISet{T}"/></typeparam>
     /// <seealso cref="CollectionConverter{T, TCollection}"/>
-    public class ISetConverter<T> : CollectionConverter<T, ISet<T>>
+    public class ISetConverter<T> : CollectionConverter<T, ISet<T?>>
     {
         /// <summary>
         /// Creates an <see cref="ISetConverter{T}"/> using the default converter for <typeparamref name="T"/>.
@@ -128,8 +129,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="size">the size to initialize it to</param>
         /// <param name="parent">the object that will own the new object</param>
         /// <returns>the new <see cref="ISet{T}"/></returns>
-        protected override ISet<T> Create(int size, object parent)
-            => new HashSet<T>();
+        protected override ISet<T?> Create(int size, object parent)
+            => new HashSet<T?>();
     }
     /// <summary>
     /// An <see cref="ISetConverter{T}"/> which default constructs a converter for use as the value converter.
@@ -155,7 +156,7 @@ namespace IPA.Config.Stores.Converters
     /// </summary>
     /// <typeparam name="T">the element type of the <see cref="List{T}"/></typeparam>
     /// <seealso cref="CollectionConverter{T, TCollection}"/>
-    public class ListConverter<T> : CollectionConverter<T, List<T>>
+    public class ListConverter<T> : CollectionConverter<T, List<T?>>
     {
         /// <summary>
         /// Creates an <see cref="ListConverter{T}"/> using the default converter for <typeparamref name="T"/>.
@@ -173,8 +174,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="size">the size to initialize it to</param>
         /// <param name="parent">the object that will own the new object</param>
         /// <returns>the new <see cref="List{T}"/></returns>
-        protected override List<T> Create(int size, object parent)
-            => new List<T>(size);
+        protected override List<T?> Create(int size, object parent)
+            => new(size);
     }
     /// <summary>
     /// A <see cref="ListConverter{T}"/> which default constructs a converter for use as the value converter.
@@ -199,7 +200,7 @@ namespace IPA.Config.Stores.Converters
     /// </summary>
     /// <typeparam name="T">the element type of the <see cref="IList{T}"/></typeparam>
     /// <seealso cref="CollectionConverter{T, TCollection}"/>
-    public class IListConverter<T> : CollectionConverter<T, IList<T>>
+    public class IListConverter<T> : CollectionConverter<T, IList<T?>>
     {
         /// <summary>
         /// Creates an <see cref="IListConverter{T}"/> using the default converter for <typeparamref name="T"/>.
@@ -217,8 +218,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="size">the size to initialize it to</param>
         /// <param name="parent">the object that will own the new object</param>
         /// <returns>the new <see cref="IList{T}"/></returns>
-        protected override IList<T> Create(int size, object parent)
-            => new List<T>(size);
+        protected override IList<T?> Create(int size, object parent)
+            => new List<T?>(size);
     }
     /// <summary>
     /// An <see cref="IListConverter{T}"/> which default constructs a converter for use as the value converter.

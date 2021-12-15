@@ -305,15 +305,19 @@ namespace IPA.Utilities
         /// <param name="value">the <see cref="Text"/> node to convert</param>
         /// <param name="parent">the owner of the new object</param>
         /// <returns></returns>
-        public override AlmostVersion FromValue(Value value, object parent)
-            => new(Converter<string>.Default.FromValue(value, parent));
+        public override AlmostVersion? FromValue(Value? value, object parent)
+            => Converter<string>.Default.FromValue(value, parent) switch
+            {
+                { } v => new(v),
+                _ => null
+            };
         /// <summary>
         /// Converts an <see cref="AlmostVersion"/> to a <see cref="Text"/> node.
         /// </summary>
         /// <param name="obj">the <see cref="AlmostVersion"/> to convert</param>
         /// <param name="parent">the parent of <paramref name="obj"/></param>
         /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
-        public override Value ToValue(AlmostVersion obj, object parent)
-            => Value.From(obj.ToString());
+        public override Value? ToValue(AlmostVersion? obj, object parent)
+            => Value.From(obj?.ToString());
     }
 }

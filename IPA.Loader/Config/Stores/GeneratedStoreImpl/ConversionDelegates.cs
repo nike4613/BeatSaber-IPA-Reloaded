@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,12 @@ namespace IPA.Config.Stores
     {
 
         internal delegate Value SerializeObject<T>(T obj);
-        internal delegate T DeserializeObject<T>(Value val, object parent);
+        internal delegate T DeserializeObject<T>(Value? val, object parent);
 
         private static class DelegateStore<T> 
         {
-            public static SerializeObject<T> Serialize;
-            public static DeserializeObject<T> Deserialize;
+            public static SerializeObject<T>? Serialize;
+            public static DeserializeObject<T>? Deserialize;
         }
 
         internal static SerializeObject<T> GetSerializerDelegate<T>()

@@ -1,4 +1,5 @@
-﻿using IPA.Logging;
+﻿#nullable enable
+using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -42,27 +43,27 @@ namespace IPA.Config.Stores
         internal class Impl : IConfigStore
         {
             private readonly IGeneratedStore generated;
-            private long enteredTransactions = 0;
+            private long enteredTransactions;
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
 
-            private readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
+            private readonly AutoResetEvent resetEvent = new(false);
             public WaitHandle SyncObject => resetEvent;
-            public static WaitHandle ImplGetSyncObject(IGeneratedStore s) => FindImpl(s).SyncObject;
+            public static WaitHandle? ImplGetSyncObject(IGeneratedStore s) => FindImpl(s)?.SyncObject;
             internal static MethodInfo ImplGetSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetSyncObject));
 
-            public ReaderWriterLockSlim WriteSyncObject { get; } = new ReaderWriterLockSlim();
-            public static ReaderWriterLockSlim ImplGetWriteSyncObject(IGeneratedStore s) => FindImpl(s)?.WriteSyncObject;
+            public ReaderWriterLockSlim WriteSyncObject { get; } = new();
+            public static ReaderWriterLockSlim? ImplGetWriteSyncObject(IGeneratedStore s) => FindImpl(s)?.WriteSyncObject;
             internal static MethodInfo ImplGetWriteSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetWriteSyncObject));
 
             internal static MethodInfo ImplSignalChangedMethod = typeof(Impl).GetMethod(nameof(ImplSignalChanged));
-            public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s).SignalChanged();
+            public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s)?.SignalChanged();
             public void SignalChanged()
             {
                 try
                 {
-                    resetEvent.Set();
+                    _ = resetEvent.Set();
                 }
                 catch (ObjectDisposedException e)
                 {
@@ -72,11 +73,11 @@ namespace IPA.Config.Stores
             }
 
             internal static MethodInfo ImplInvokeChangedMethod = typeof(Impl).GetMethod(nameof(ImplInvokeChanged));
-            public static void ImplInvokeChanged(IGeneratedStore s) => FindImpl(s).InvokeChanged();
+            public static void ImplInvokeChanged(IGeneratedStore s) => FindImpl(s)?.InvokeChanged();
             public void InvokeChanged() => generated.Changed();
 
             internal static MethodInfo ImplTakeReadMethod = typeof(Impl).GetMethod(nameof(ImplTakeRead));
-            public static void ImplTakeRead(IGeneratedStore s) => FindImpl(s).TakeRead();
+            public static void ImplTakeRead(IGeneratedStore s) => FindImpl(s)?.TakeRead();
             public void TakeRead()
             {
                 if (!WriteSyncObject.IsWriteLockHeld)
@@ -84,7 +85,7 @@ namespace IPA.Config.Stores
             }
 
             internal static MethodInfo ImplReleaseReadMethod = typeof(Impl).GetMethod(nameof(ImplReleaseRead));
-            public static void ImplReleaseRead(IGeneratedStore s) => FindImpl(s).ReleaseRead();
+            public static void ImplReleaseRead(IGeneratedStore s) => FindImpl(s)?.ReleaseRead();
             public void ReleaseRead()
             {
                 if (!WriteSyncObject.IsWriteLockHeld)
@@ -92,24 +93,24 @@ namespace IPA.Config.Stores
             }
 
             internal static MethodInfo ImplTakeWriteMethod = typeof(Impl).GetMethod(nameof(ImplTakeWrite));
-            public static void ImplTakeWrite(IGeneratedStore s) => FindImpl(s).TakeWrite();
+            public static void ImplTakeWrite(IGeneratedStore s) => FindImpl(s)?.TakeWrite();
             public void TakeWrite() => WriteSyncObject.EnterWriteLock();
 
             internal static MethodInfo ImplReleaseWriteMethod = typeof(Impl).GetMethod(nameof(ImplReleaseWrite));
-            public static void ImplReleaseWrite(IGeneratedStore s) => FindImpl(s).ReleaseWrite();
+            public static void ImplReleaseWrite(IGeneratedStore s) => FindImpl(s)?.ReleaseWrite();
             public void ReleaseWrite() => WriteSyncObject.ExitWriteLock();
 
             internal static MethodInfo ImplChangeTransactionMethod = typeof(Impl).GetMethod(nameof(ImplChangeTransaction));
-            public static IDisposable ImplChangeTransaction(IGeneratedStore s, IDisposable nest) => FindImpl(s).ChangeTransaction(nest);
+            public static IDisposable? ImplChangeTransaction(IGeneratedStore s, IDisposable nest) => FindImpl(s)?.ChangeTransaction(nest);
             // TODO: improve trasactionals so they don't always save in every case
             public IDisposable ChangeTransaction(IDisposable nest, bool takeWrite = true)
                 => GetFreeTransaction().InitWith(this, nest, takeWrite && !WriteSyncObject.IsWriteLockHeld);
 
-            private ChangeTransactionObj GetFreeTransaction()
+            private static ChangeTransactionObj GetFreeTransaction()
                 => freeTransactionObjs.Count > 0 ? freeTransactionObjs.Pop()
                                                  : new ChangeTransactionObj();
             // TODO: maybe sometimes clean this?
-            private static readonly Stack<ChangeTransactionObj> freeTransactionObjs = new Stack<ChangeTransactionObj>();
+            private static readonly Stack<ChangeTransactionObj> freeTransactionObjs = new();
 
             private sealed class ChangeTransactionObj : IDisposable
             {
@@ -148,7 +149,7 @@ namespace IPA.Config.Stores
                     try
                     {
                         if (data.ownsWrite)
-                            data.impl.ReleaseWrite();
+                            data.impl?.ReleaseWrite();
                     }
                     catch
                     {
@@ -163,14 +164,14 @@ namespace IPA.Config.Stores
                 ~ChangeTransactionObj() => Dispose(false);
             }
 
-            public static Impl FindImpl(IGeneratedStore store)
+            public static Impl? FindImpl(IGeneratedStore store)
             {
                 while (store?.Parent != null) store = store.Parent; // walk to the top of the tree
                 return store?.Impl;
             }
 
             internal static MethodInfo ImplReadFromMethod = typeof(Impl).GetMethod(nameof(ImplReadFrom));
-            public static void ImplReadFrom(IGeneratedStore s, ConfigProvider provider) => FindImpl(s).ReadFrom(provider);
+            public static void ImplReadFrom(IGeneratedStore s, ConfigProvider provider) => FindImpl(s)?.ReadFrom(provider);
             public void ReadFrom(ConfigProvider provider)
             {
                 Logger.config.Debug($"Generated impl ReadFrom {generated.GetType()}");
@@ -183,7 +184,7 @@ namespace IPA.Config.Stores
             }
 
             internal static MethodInfo ImplWriteToMethod = typeof(Impl).GetMethod(nameof(ImplWriteTo));
-            public static void ImplWriteTo(IGeneratedStore s, ConfigProvider provider) => FindImpl(s).WriteTo(provider);
+            public static void ImplWriteTo(IGeneratedStore s, ConfigProvider provider) => FindImpl(s)?.WriteTo(provider);
             public void WriteTo(ConfigProvider provider)
             {
                 Logger.config.Debug($"Generated impl WriteTo {generated.GetType()}");

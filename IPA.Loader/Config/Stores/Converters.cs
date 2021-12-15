@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
 using IPA.Logging;
 using System;
@@ -22,7 +23,7 @@ namespace IPA.Config.Stores.Converters
         /// </summary>
         /// <param name="val">the <see cref="Value"/> to get the integral value of</param>
         /// <returns>the integral value of <paramref name="val"/>, or <see langword="null"/></returns>
-        public static long? IntValue(Value val)
+        public static long? IntValue(Value? val)
             => val is Integer inte ? inte.Value :
                val is FloatingPoint fp ? fp.AsInteger()?.Value :
                null;
@@ -32,7 +33,7 @@ namespace IPA.Config.Stores.Converters
         /// </summary>
         /// <param name="val">the <see cref="Value"/> to get the floaing point value of</param>
         /// <returns>the floaing point value of <paramref name="val"/>, or <see langword="null"/></returns>
-        public static decimal? FloatValue(Value val)
+        public static decimal? FloatValue(Value? val)
             => val is FloatingPoint fp ? fp.Value :
                val is Integer inte ? inte.AsFloat()?.Value :
                null;
@@ -83,7 +84,7 @@ namespace IPA.Config.Stores.Converters
                 }
 
                 //Logger.log.Debug($"gives converter for value type {t}");
-                var valConv = Activator.CreateInstance(typeof(ValConv<>).MakeGenericType(t)) as IValConv;
+                var valConv = (IValConv)Activator.CreateInstance(typeof(ValConv<>).MakeGenericType(t));
                 return valConv.Get();
             }
 
@@ -117,7 +118,7 @@ namespace IPA.Config.Stores.Converters
             IValConv<DateTime>, IValConv<DateTimeOffset>,
             IValConv<TimeSpan>
         {
-            internal static readonly ValConvImpls Impl = new ValConvImpls();
+            internal static readonly ValConvImpls Impl = new();
             Type IValConv<char>.Get() => typeof(CharConverter);
             Type IValConv<long>.Get() => typeof(LongConverter);
             Type IValConv<ulong>.Get() => typeof(ULongConverter);
@@ -145,7 +146,7 @@ namespace IPA.Config.Stores.Converters
     /// <typeparam name="T">the type of the <see cref="ValueConverter{T}"/> that this works on</typeparam>
     public static class Converter<T>
     {
-        private static ValueConverter<T> defaultConverter = null;
+        private static ValueConverter<T>? defaultConverter;
         /// <summary>
         /// Gets the default <see cref="ValueConverter{T}"/> for the current type.
         /// </summary>
@@ -158,7 +159,7 @@ namespace IPA.Config.Stores.Converters
             //Logger.log.Debug($"Converter<{t}>.MakeDefault()");
 
             static ValueConverter<T> MakeInstOf(Type ty)
-                => Activator.CreateInstance(ty) as ValueConverter<T>;
+                => (ValueConverter<T>)Activator.CreateInstance(ty);
 
             return MakeInstOf(Converter.GetDefaultConverterType(t));
         }
@@ -193,16 +194,16 @@ namespace IPA.Config.Stores.Converters
         /// <param name="value">the <see cref="Value"/> tree to convert</param>
         /// <param name="parent">the object which will own the created object</param>
         /// <returns>the object represented by <paramref name="value"/></returns>
-        public override T? FromValue(Value value, object parent)
-            => value == null ? null : new T?(baseConverter.FromValue(value, parent));
+        public override T? FromValue(Value? value, object parent)
+            => value is null ? null : new T?(baseConverter.FromValue(value, parent));
         /// <summary>
         /// Converts a nullable <typeparamref name="T"/> to a <see cref="Value"/> tree.
         /// </summary>
         /// <param name="obj">the value to serialize</param>
         /// <param name="parent">the object which owns <paramref name="obj"/></param>
         /// <returns>a <see cref="Value"/> tree representing <paramref name="obj"/>.</returns>
-        public override Value ToValue(T? obj, object parent)
-            => obj == null ? null : baseConverter.ToValue(obj.Value, parent);
+        public override Value? ToValue(T? obj, object parent)
+            => obj is null ? null : baseConverter.ToValue(obj.Value, parent);
     }
 
     /// <summary>
@@ -237,7 +238,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the object which will own the created object</param>
         /// <returns>the deserialized enum value</returns>
         /// <exception cref="ArgumentException">if <paramref name="value"/> is not a <see cref="Text"/> node</exception>
-        public override T FromValue(Value value, object parent)
+        public override T FromValue(Value? value, object parent)
             => value is Text t
                 ? (T)Enum.Parse(typeof(T), t.Value)
                 : throw new ArgumentException("Value not a string", nameof(value));
@@ -248,8 +249,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="obj">the value to serialize</param>
         /// <param name="parent">the object which owns <paramref name="obj"/></param>
         /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
-        public override Value ToValue(T obj, object parent)
-            => Value.Text(obj.ToString());
+        public override Value? ToValue(T? obj, object parent)
+            => Value.Text(obj?.ToString());
     }
 
     /// <summary>
@@ -267,7 +268,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the object which will own the created object</param>
         /// <returns>the deserialized enum value</returns>
         /// <exception cref="ArgumentException">if <paramref name="value"/> is not a <see cref="Text"/> node</exception>
-        public override T FromValue(Value value, object parent)
+        public override T FromValue(Value? value, object parent)
             => value is Text t
                 ? (T)Enum.Parse(typeof(T), t.Value, true)
                 : throw new ArgumentException("Value not a string", nameof(value));
@@ -278,8 +279,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="obj">the value to serialize</param>
         /// <param name="parent">the object which owns <paramref name="obj"/></param>
         /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
-        public override Value ToValue(T obj, object parent)
-            => Value.Text(obj.ToString());
+        public override Value? ToValue(T? obj, object parent)
+            => Value.Text(obj?.ToString());
     }
 
     /// <summary>
@@ -296,7 +297,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the object which will own the created object</param>
         /// <returns>the deserialized enum value</returns>
         /// <exception cref="ArgumentException">if <paramref name="value"/> is not a numeric node</exception>
-        public override T FromValue(Value value, object parent)
+        public override T FromValue(Value? value, object parent)
             => (T)Enum.ToObject(typeof(T), Converter.IntValue(value)
                     ?? throw new ArgumentException("Value not a numeric node", nameof(value)));
 
@@ -306,7 +307,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="obj">the value to serialize</param>
         /// <param name="parent">the object which owns <paramref name="obj"/></param>
         /// <returns>an <see cref="Integer"/> node representing <paramref name="obj"/></returns>
-        public override Value ToValue(T obj, object parent)
+        public override Value ToValue(T? obj, object parent)
             => Value.Integer(Convert.ToInt64(obj));
     }
 
@@ -314,7 +315,7 @@ namespace IPA.Config.Stores.Converters
     /// A converter for instances of <see cref="IDictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TValue">the value type of the dictionary</typeparam>
-    public class IDictionaryConverter<TValue> : ValueConverter<IDictionary<string, TValue>>
+    public class IDictionaryConverter<TValue> : ValueConverter<IDictionary<string, TValue?>>
     {
         /// <summary>
         /// Gets the converter for the dictionary's value type.
@@ -338,9 +339,9 @@ namespace IPA.Config.Stores.Converters
         /// <param name="value">the <see cref="Map"/> to convert</param>
         /// <param name="parent">the parent that will own the resulting object</param>
         /// <returns>the deserialized dictionary</returns>
-        public override IDictionary<string, TValue> FromValue(Value value, object parent)
-            => (value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
-                    ?.ToDictionary(p => p.Key, p => p.val)
+        public override IDictionary<string, TValue?> FromValue(Value? value, object parent)
+            => ((value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
+                    ?.ToDictionary(p => p.Key, p => p.val))
                 ?? throw new ArgumentException("Value not a map", nameof(value));
 
         /// <summary>
@@ -349,8 +350,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="obj">the dictionary to serialize</param>
         /// <param name="parent">the object that owns the dictionary</param>
         /// <returns>the dictionary serialized as a <see cref="Map"/></returns>
-        public override Value ToValue(IDictionary<string, TValue> obj, object parent)
-            => Value.From(obj.Select(p => new KeyValuePair<string, Value>(p.Key, BaseConverter.ToValue(p.Value, parent))));
+        public override Value? ToValue(IDictionary<string, TValue?>? obj, object parent)
+            => Value.From(obj.Select(p => new KeyValuePair<string, Value?>(p.Key, BaseConverter.ToValue(p.Value, parent))));
     }
 
     /// <summary>
@@ -373,7 +374,7 @@ namespace IPA.Config.Stores.Converters
     /// A converter for instances of <see cref="Dictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TValue">the value type of the dictionary</typeparam>
-    public class DictionaryConverter<TValue> : ValueConverter<Dictionary<string, TValue>>
+    public class DictionaryConverter<TValue> : ValueConverter<Dictionary<string, TValue?>>
     {
         /// <summary>
         /// Gets the converter for the dictionary's value type.
@@ -397,7 +398,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="value">the <see cref="Map"/> to convert</param>
         /// <param name="parent">the parent that will own the resulting object</param>
         /// <returns>the deserialized dictionary</returns>
-        public override Dictionary<string, TValue> FromValue(Value value, object parent)
+        public override Dictionary<string, TValue?> FromValue(Value? value, object parent)
             => (value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
                     ?.ToDictionary(p => p.Key, p => p.val)
                 ?? throw new ArgumentException("Value not a map", nameof(value));
@@ -408,8 +409,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="obj">the dictionary to serialize</param>
         /// <param name="parent">the object that owns the dictionary</param>
         /// <returns>the dictionary serialized as a <see cref="Map"/></returns>
-        public override Value ToValue(Dictionary<string, TValue> obj, object parent)
-            => Value.From(obj.Select(p => new KeyValuePair<string, Value>(p.Key, BaseConverter.ToValue(p.Value, parent))));
+        public override Value? ToValue(Dictionary<string, TValue?>? obj, object parent)
+            => Value.From(obj?.Select(p => new KeyValuePair<string, Value?>(p.Key, BaseConverter.ToValue(p.Value, parent))));
     }
 
     /// <summary>
@@ -433,7 +434,7 @@ namespace IPA.Config.Stores.Converters
     /// A converter for instances of <see cref="IReadOnlyDictionary{TKey, TValue}"/>.
     /// </summary>
     /// <typeparam name="TValue">the value type of the dictionary</typeparam>
-    public class IReadOnlyDictionaryConverter<TValue> : ValueConverter<IReadOnlyDictionary<string, TValue>>
+    public class IReadOnlyDictionaryConverter<TValue> : ValueConverter<IReadOnlyDictionary<string, TValue?>>
     {
         /// <summary>
         /// Gets the converter for the dictionary's value type.
@@ -457,7 +458,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="value">the <see cref="Map"/> to convert</param>
         /// <param name="parent">the parent that will own the resulting object</param>
         /// <returns>the deserialized dictionary</returns>
-        public override IReadOnlyDictionary<string, TValue> FromValue(Value value, object parent)
+        public override IReadOnlyDictionary<string, TValue?> FromValue(Value? value, object parent)
             => (value as Map)?.Select(kvp => (kvp.Key, val: BaseConverter.FromValue(kvp.Value, parent)))
                     ?.ToDictionary(p => p.Key, p => p.val)
                 ?? throw new ArgumentException("Value not a map", nameof(value));
@@ -468,8 +469,8 @@ namespace IPA.Config.Stores.Converters
         /// <param name="obj">the dictionary to serialize</param>
         /// <param name="parent">the object that owns the dictionary</param>
         /// <returns>the dictionary serialized as a <see cref="Map"/></returns>
-        public override Value ToValue(IReadOnlyDictionary<string, TValue> obj, object parent)
-            => Value.From(obj.Select(p => new KeyValuePair<string, Value>(p.Key, BaseConverter.ToValue(p.Value, parent))));
+        public override Value? ToValue(IReadOnlyDictionary<string, TValue?>? obj, object parent)
+            => Value.From(obj?.Select(p => new KeyValuePair<string, Value?>(p.Key, BaseConverter.ToValue(p.Value, parent))));
     }
 
     /// <summary>
@@ -500,7 +501,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the object which will own the created object</param>
         /// <returns>the deserialized Color object</returns>
         /// <exception cref="ArgumentException">if <paramref name="value"/> is not a <see cref="Text"/> node or couldn't be parsed into a Color object</exception>
-        public override Color FromValue(Value value, object parent)
+        public override Color FromValue(Value? value, object parent)
         {
             if (value is Text t)
             {
@@ -526,146 +527,146 @@ namespace IPA.Config.Stores.Converters
 
     internal class StringConverter : ValueConverter<string>
     {
-        public override string FromValue(Value value, object parent)
+        public override string? FromValue(Value? value, object parent)
             => (value as Text)?.Value;
 
-        public override Value ToValue(string obj, object parent)
+        public override Value? ToValue(string? obj, object parent)
             => Value.From(obj);
     }
 
     internal class CharConverter : ValueConverter<char>
     {
-        public override char FromValue(Value value, object parent)
+        public override char FromValue(Value? value, object parent)
             => (value as Text)?.Value[0]
                 ?? throw new ArgumentException("Value not a text node", nameof(value)); // can throw nullptr
 
-        public override Value ToValue(char obj, object parent)
+        public override Value? ToValue(char obj, object parent)
             => Value.From(char.ToString(obj));
     }
 
     internal class LongConverter : ValueConverter<long>
     {
-        public override long FromValue(Value value, object parent)
+        public override long FromValue(Value? value, object parent)
             => Converter.IntValue(value)
                 ?? throw new ArgumentException("Value not a numeric value", nameof(value));
 
-        public override Value ToValue(long obj, object parent)
+        public override Value? ToValue(long obj, object parent)
             => Value.From(obj);
     }
 
     internal class ULongConverter : ValueConverter<ulong>
     {
-        public override ulong FromValue(Value value, object parent)
+        public override ulong FromValue(Value? value, object parent)
             => (ulong)(Converter.FloatValue(value)
                 ?? throw new ArgumentException("Value not a numeric value", nameof(value)));
 
-        public override Value ToValue(ulong obj, object parent)
+        public override Value? ToValue(ulong obj, object parent)
             => Value.From(obj);
     }
 
     internal class IntPtrConverter : ValueConverter<IntPtr>
     {
-        public override IntPtr FromValue(Value value, object parent)
+        public override IntPtr FromValue(Value? value, object parent)
             => (IntPtr)Converter<long>.Default.FromValue(value, parent);
 
-        public override Value ToValue(IntPtr obj, object parent)
+        public override Value? ToValue(IntPtr obj, object parent)
             => Value.From((long)obj);
     }
 
     internal class UIntPtrConverter : ValueConverter<UIntPtr>
     {
-        public override UIntPtr FromValue(Value value, object parent)
+        public override UIntPtr FromValue(Value? value, object parent)
             => (UIntPtr)Converter<ulong>.Default.FromValue(value, parent);
 
-        public override Value ToValue(UIntPtr obj, object parent)
+        public override Value? ToValue(UIntPtr obj, object parent)
             => Value.From((decimal)obj);
     }
 
     internal class IntConverter : ValueConverter<int>
     {
-        public override int FromValue(Value value, object parent)
+        public override int FromValue(Value? value, object parent)
             => (int)Converter<long>.Default.FromValue(value, parent);
-        public override Value ToValue(int obj, object parent)
+        public override Value? ToValue(int obj, object parent)
             => Value.From(obj);
     }
 
     internal class UIntConverter : ValueConverter<uint>
     {
-        public override uint FromValue(Value value, object parent)
+        public override uint FromValue(Value? value, object parent)
             => (uint)Converter<long>.Default.FromValue(value, parent);
-        public override Value ToValue(uint obj, object parent)
+        public override Value? ToValue(uint obj, object parent)
             => Value.From(obj);
     }
 
     internal class ShortConverter : ValueConverter<short>
     {
-        public override short FromValue(Value value, object parent)
+        public override short FromValue(Value? value, object parent)
             => (short)Converter<long>.Default.FromValue(value, parent);
-        public override Value ToValue(short obj, object parent)
+        public override Value? ToValue(short obj, object parent)
             => Value.From(obj);
     }
 
     internal class UShortConverter : ValueConverter<ushort>
     {
-        public override ushort FromValue(Value value, object parent)
+        public override ushort FromValue(Value? value, object parent)
             => (ushort)Converter<long>.Default.FromValue(value, parent);
-        public override Value ToValue(ushort obj, object parent)
+        public override Value? ToValue(ushort obj, object parent)
             => Value.From(obj);
     }
 
     internal class ByteConverter : ValueConverter<byte>
     {
-        public override byte FromValue(Value value, object parent)
+        public override byte FromValue(Value? value, object parent)
             => (byte)Converter<long>.Default.FromValue(value, parent);
-        public override Value ToValue(byte obj, object parent)
+        public override Value? ToValue(byte obj, object parent)
             => Value.From(obj);
     }
 
     internal class SByteConverter : ValueConverter<sbyte>
     {
-        public override sbyte FromValue(Value value, object parent)
+        public override sbyte FromValue(Value? value, object parent)
             => (sbyte)Converter<long>.Default.FromValue(value, parent);
-        public override Value ToValue(sbyte obj, object parent)
+        public override Value? ToValue(sbyte obj, object parent)
             => Value.From(obj);
     }
 
     internal class DecimalConverter : ValueConverter<decimal>
     {
-        public override decimal FromValue(Value value, object parent)
+        public override decimal FromValue(Value? value, object parent)
             => Converter.FloatValue(value) ?? throw new ArgumentException("Value not a numeric value", nameof(value));
-        public override Value ToValue(decimal obj, object parent)
+        public override Value? ToValue(decimal obj, object parent)
             => Value.From(obj);
     }
 
     internal class FloatConverter : ValueConverter<float>
     {
-        public override float FromValue(Value value, object parent)
+        public override float FromValue(Value? value, object parent)
             => (float)Converter<decimal>.Default.FromValue(value, parent);
-        public override Value ToValue(float obj, object parent)
+        public override Value? ToValue(float obj, object parent)
             => Value.From((decimal)obj);
     }
 
     internal class DoubleConverter : ValueConverter<double>
     {
-        public override double FromValue(Value value, object parent)
+        public override double FromValue(Value? value, object parent)
             => (double)Converter<decimal>.Default.FromValue(value, parent);
-        public override Value ToValue(double obj, object parent)
+        public override Value? ToValue(double obj, object parent)
             => Value.From((decimal)obj);
     }
 
     internal class BooleanConverter : ValueConverter<bool>
     {
-        public override bool FromValue(Value value, object parent)
+        public override bool FromValue(Value? value, object parent)
             => (value as Boolean)?.Value ?? throw new ArgumentException("Value not a Boolean", nameof(value));
-        public override Value ToValue(bool obj, object parent)
+        public override Value? ToValue(bool obj, object parent)
             => Value.From(obj);
     }
 
     internal class DateTimeConverter : ValueConverter<DateTime>
     {
-        public override DateTime FromValue(Value value, object parent)
+        public override DateTime FromValue(Value? value, object parent)
         {
-            if (!(value is Text text))
+            if (value is not Text text)
             {
                 throw new ArgumentException("Value is not of type Text", nameof(value));
             }
@@ -678,14 +679,14 @@ namespace IPA.Config.Stores.Converters
             throw new ArgumentException($"Parsing failed, {text.Value}");
         }
 
-        public override Value ToValue(DateTime obj, object parent) => Value.Text(obj.ToString("O"));
+        public override Value? ToValue(DateTime obj, object parent) => Value.Text(obj.ToString("O"));
     }
 
     internal class DateTimeOffsetConverter : ValueConverter<DateTimeOffset>
     {
-        public override DateTimeOffset FromValue(Value value, object parent)
+        public override DateTimeOffset FromValue(Value? value, object parent)
         {
-            if (!(value is Text text))
+            if (value is not Text text)
             {
                 throw new ArgumentException("Value is not of type Text", nameof(value));
             }
@@ -703,9 +704,9 @@ namespace IPA.Config.Stores.Converters
 
     internal class TimeSpanConverter : ValueConverter<TimeSpan>
     {
-        public override TimeSpan FromValue(Value value, object parent)
+        public override TimeSpan FromValue(Value? value, object parent)
         {
-            if (!(value is Text text))
+            if (value is not Text text)
             {
                 throw new ArgumentException("Value is not of type Text", nameof(value));
             }
@@ -718,6 +719,6 @@ namespace IPA.Config.Stores.Converters
             throw new ArgumentException($"Parsing failed, {text.Value}");
         }
 
-        public override Value ToValue(TimeSpan obj, object parent) => Value.Text(obj.ToString());
+        public override Value? ToValue(TimeSpan obj, object parent) => Value.Text(obj.ToString());
     }
 }

@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
 using IPA.Logging;
 using System;
@@ -21,7 +22,7 @@ namespace IPA.Config.Stores
     internal static partial class GeneratedStoreImpl
     {
 
-        internal delegate IConfigStore GeneratedStoreCreator(IGeneratedStore parent);
+        internal delegate IConfigStore GeneratedStoreCreator(IGeneratedStore? parent);
         private static void GetMethodThis(ILGenerator il) => il.Emit(OpCodes.Ldarg_0);
 
         private static (GeneratedStoreCreator ctor, Type type) MakeCreator(Type type)
@@ -109,7 +110,7 @@ namespace IPA.Config.Stores
             const MethodAttributes virtualMemberMethod = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.Final;
 
             #region INotifyPropertyChanged
-            MethodBuilder notifyChanged = null;
+            MethodBuilder? notifyChanged = null;
             if (isINotifyPropertyChanged || hasNotifyAttribute)
             {
                 // we don't actually want to notify if the base class implements it
@@ -639,7 +640,7 @@ namespace IPA.Config.Stores
             #region Members
             foreach (var member in structure.Where(m => m.IsVirtual))
             { // IsVirtual implies !IsField
-                var prop = member.Member as PropertyInfo;
+                var prop = (PropertyInfo)member.Member;
                 var get = prop.GetGetMethod(true);
                 var set = prop.GetSetMethod(true);
 
