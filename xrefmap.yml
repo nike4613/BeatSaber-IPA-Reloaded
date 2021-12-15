@@ -341,6 +341,25 @@ references:
   commentId: T:IPA.Config.Data.Boolean
   fullName: IPA.Config.Data.Boolean
   nameWithType: Boolean
+- uid: IPA.Config.Data.Boolean.#ctor
+  name: Boolean()
+  href: api/IPA.Config.Data.Boolean.html#IPA_Config_Data_Boolean__ctor
+  commentId: M:IPA.Config.Data.Boolean.#ctor
+  fullName: IPA.Config.Data.Boolean.Boolean()
+  nameWithType: Boolean.Boolean()
+- uid: IPA.Config.Data.Boolean.#ctor(System.Boolean)
+  name: Boolean(Boolean)
+  href: api/IPA.Config.Data.Boolean.html#IPA_Config_Data_Boolean__ctor_System_Boolean_
+  commentId: M:IPA.Config.Data.Boolean.#ctor(System.Boolean)
+  fullName: IPA.Config.Data.Boolean.Boolean(System.Boolean)
+  nameWithType: Boolean.Boolean(Boolean)
+- uid: IPA.Config.Data.Boolean.#ctor*
+  name: Boolean
+  href: api/IPA.Config.Data.Boolean.html#IPA_Config_Data_Boolean__ctor_
+  commentId: Overload:IPA.Config.Data.Boolean.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Data.Boolean.Boolean
+  nameWithType: Boolean.Boolean
 - uid: IPA.Config.Data.Boolean.ToString
   name: ToString()
   href: api/IPA.Config.Data.Boolean.html#IPA_Config_Data_Boolean_ToString
@@ -373,6 +392,25 @@ references:
   commentId: T:IPA.Config.Data.FloatingPoint
   fullName: IPA.Config.Data.FloatingPoint
   nameWithType: FloatingPoint
+- uid: IPA.Config.Data.FloatingPoint.#ctor
+  name: FloatingPoint()
+  href: api/IPA.Config.Data.FloatingPoint.html#IPA_Config_Data_FloatingPoint__ctor
+  commentId: M:IPA.Config.Data.FloatingPoint.#ctor
+  fullName: IPA.Config.Data.FloatingPoint.FloatingPoint()
+  nameWithType: FloatingPoint.FloatingPoint()
+- uid: IPA.Config.Data.FloatingPoint.#ctor(System.Decimal)
+  name: FloatingPoint(Decimal)
+  href: api/IPA.Config.Data.FloatingPoint.html#IPA_Config_Data_FloatingPoint__ctor_System_Decimal_
+  commentId: M:IPA.Config.Data.FloatingPoint.#ctor(System.Decimal)
+  fullName: IPA.Config.Data.FloatingPoint.FloatingPoint(System.Decimal)
+  nameWithType: FloatingPoint.FloatingPoint(Decimal)
+- uid: IPA.Config.Data.FloatingPoint.#ctor*
+  name: FloatingPoint
+  href: api/IPA.Config.Data.FloatingPoint.html#IPA_Config_Data_FloatingPoint__ctor_
+  commentId: Overload:IPA.Config.Data.FloatingPoint.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Data.FloatingPoint.FloatingPoint
+  nameWithType: FloatingPoint.FloatingPoint
 - uid: IPA.Config.Data.FloatingPoint.AsInteger
   name: AsInteger()
   href: api/IPA.Config.Data.FloatingPoint.html#IPA_Config_Data_FloatingPoint_AsInteger
@@ -418,6 +456,25 @@ references:
   commentId: T:IPA.Config.Data.Integer
   fullName: IPA.Config.Data.Integer
   nameWithType: Integer
+- uid: IPA.Config.Data.Integer.#ctor
+  name: Integer()
+  href: api/IPA.Config.Data.Integer.html#IPA_Config_Data_Integer__ctor
+  commentId: M:IPA.Config.Data.Integer.#ctor
+  fullName: IPA.Config.Data.Integer.Integer()
+  nameWithType: Integer.Integer()
+- uid: IPA.Config.Data.Integer.#ctor(System.Int64)
+  name: Integer(Int64)
+  href: api/IPA.Config.Data.Integer.html#IPA_Config_Data_Integer__ctor_System_Int64_
+  commentId: M:IPA.Config.Data.Integer.#ctor(System.Int64)
+  fullName: IPA.Config.Data.Integer.Integer(System.Int64)
+  nameWithType: Integer.Integer(Int64)
+- uid: IPA.Config.Data.Integer.#ctor*
+  name: Integer
+  href: api/IPA.Config.Data.Integer.html#IPA_Config_Data_Integer__ctor_
+  commentId: Overload:IPA.Config.Data.Integer.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Data.Integer.Integer
+  nameWithType: Integer.Integer
 - uid: IPA.Config.Data.Integer.AsFloat
   name: AsFloat()
   href: api/IPA.Config.Data.Integer.html#IPA_Config_Data_Integer_AsFloat
@@ -948,6 +1005,25 @@ references:
   commentId: T:IPA.Config.Data.Text
   fullName: IPA.Config.Data.Text
   nameWithType: Text
+- uid: IPA.Config.Data.Text.#ctor
+  name: Text()
+  href: api/IPA.Config.Data.Text.html#IPA_Config_Data_Text__ctor
+  commentId: M:IPA.Config.Data.Text.#ctor
+  fullName: IPA.Config.Data.Text.Text()
+  nameWithType: Text.Text()
+- uid: IPA.Config.Data.Text.#ctor(System.String)
+  name: Text(String)
+  href: api/IPA.Config.Data.Text.html#IPA_Config_Data_Text__ctor_System_String_
+  commentId: M:IPA.Config.Data.Text.#ctor(System.String)
+  fullName: IPA.Config.Data.Text.Text(System.String)
+  nameWithType: Text.Text(String)
+- uid: IPA.Config.Data.Text.#ctor*
+  name: Text
+  href: api/IPA.Config.Data.Text.html#IPA_Config_Data_Text__ctor_
+  commentId: Overload:IPA.Config.Data.Text.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Data.Text.Text
+  nameWithType: Text.Text
 - uid: IPA.Config.Data.Text.ToString
   name: ToString()
   href: api/IPA.Config.Data.Text.html#IPA_Config_Data_Text_ToString
