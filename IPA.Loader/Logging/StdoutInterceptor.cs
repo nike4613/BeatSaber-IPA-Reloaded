@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using static IPA.Logging.Logger;
 
 namespace IPA.Logging
@@ -189,7 +190,7 @@ namespace IPA.Logging
             {
                 usingInterceptor = true;
 
-                ConfigureHarmonyLogging();
+                EnsureHarmonyLogging();
 
                 harmony ??= new Harmony("BSIPA Console Redirector Patcher");
                 stdoutInterceptor ??= new StdoutInterceptor();
@@ -209,17 +210,21 @@ namespace IPA.Logging
             }
         }
 
+        private static int harmonyLoggingInited;
         // I'm not completely sure this is the best place for this, but whatever
-        private static void ConfigureHarmonyLogging()
+        internal static void EnsureHarmonyLogging()
         {
+            if (Interlocked.Exchange(ref harmonyLoggingInited, 1) != 0)
+                return;
+
             HarmonyLib.Tools.Logger.ChannelFilter = HarmonyLib.Tools.Logger.LogChannel.All & ~HarmonyLib.Tools.Logger.LogChannel.IL;
             HarmonyLib.Tools.Logger.MessageReceived += (s, e) =>
             {
                 var msg = e.Message;
                 var lvl = e.LogChannel switch
                 {
-                    HarmonyLib.Tools.Logger.LogChannel.None => Level.Info,
-                    HarmonyLib.Tools.Logger.LogChannel.Info => Level.Info,
+                    HarmonyLib.Tools.Logger.LogChannel.None => Level.Notice,
+                    HarmonyLib.Tools.Logger.LogChannel.Info => Level.Trace, // HarmonyX logs a *lot* of Info messages
                     HarmonyLib.Tools.Logger.LogChannel.IL => Level.Trace,
                     HarmonyLib.Tools.Logger.LogChannel.Warn => Level.Warning,
                     HarmonyLib.Tools.Logger.LogChannel.Error => Level.Error,

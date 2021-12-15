@@ -312,7 +312,7 @@ namespace IPA.Injector
                 UnityLogProvider.UnityLogger.Log(level, $"{stackTrace}");
             };
 
-            ConfigureHarmonyLogging();
+            StdoutInterceptor.EnsureHarmonyLogging();
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
