@@ -81,7 +81,7 @@ namespace IPA.Config
         /// Registers a <see cref="IConfigProvider"/> to use for configs.
         /// </summary>
         /// <typeparam name="T">the type to register</typeparam>
-        public static void Register<T>() where T : IConfigProvider => Register(typeof(T));
+        public static void Register<T>() where T : IConfigProvider, new() => Register(typeof(T));
 
         /// <summary>
         /// Registers a <see cref="IConfigProvider"/> to use for configs.

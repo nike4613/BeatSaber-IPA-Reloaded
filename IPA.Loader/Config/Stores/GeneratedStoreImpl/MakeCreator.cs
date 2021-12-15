@@ -436,7 +436,7 @@ namespace IPA.Config.Stores
             var IConfigStore_ReadFrom = IConfigStore_t.GetMethod(nameof(IConfigStore.ReadFrom));
 
             #region IConfigStore.SyncObject
-            var syncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.SyncObject), PropertyAttributes.None, typeof(WaitHandle), null);
+            var syncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.SyncObject), PropertyAttributes.None, IConfigStore_GetSyncObject.ReturnType, null);
             var syncObjPropGet = typeBuilder.DefineMethod($"<g>{nameof(IConfigStore.SyncObject)}", virtualPropertyMethodAttr, syncObjProp.PropertyType, Type.EmptyTypes);
             syncObjProp.SetGetMethod(syncObjPropGet);
             typeBuilder.DefineMethodOverride(syncObjPropGet, IConfigStore_GetSyncObject);
@@ -451,7 +451,7 @@ namespace IPA.Config.Stores
             }
             #endregion
             #region IConfigStore.WriteSyncObject
-            var writeSyncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.WriteSyncObject), PropertyAttributes.None, typeof(WaitHandle), null);
+            var writeSyncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.WriteSyncObject), PropertyAttributes.None, IConfigStore_GetWriteSyncObject.ReturnType, null);
             var writeSyncObjPropGet = typeBuilder.DefineMethod($"<g>{nameof(IConfigStore.WriteSyncObject)}", virtualPropertyMethodAttr, writeSyncObjProp.PropertyType, Type.EmptyTypes);
             writeSyncObjProp.SetGetMethod(writeSyncObjPropGet);
             typeBuilder.DefineMethodOverride(writeSyncObjPropGet, IConfigStore_GetWriteSyncObject);

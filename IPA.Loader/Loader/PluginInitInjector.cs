@@ -152,10 +152,10 @@ namespace IPA.Loader
             if (!target.IsAssignableFrom(source)) return null;
             if (!target.IsInterface && !source.IsSubclassOf(target)) return int.MinValue;
 
-            int value = 0;
+            int value = int.MaxValue - 1;
             while (true)
             {
-                if (source == null) return value;
+                if (source is null) return value;
                 if (target.IsInterface && source.GetInterfaces().Contains(target))
                     return value;
                 else if (target == source)
