@@ -36,13 +36,16 @@ namespace IPA.Loader
     /// </item>
     /// <item>
     /// <term><see cref="Config.Config"/></term>
-    /// <description>
-    /// <para>A <see cref="Config.Config"/> object for the plugin being injected.</para>
+    /// <description>A <see cref="Config.Config"/> object for the plugin being injected.
     /// <para>
     /// These parameters may have <see cref="Config.Config.NameAttribute"/> and <see cref="Config.Config.PreferAttribute"/> to control
     /// how it is constructed.
     /// </para>
     /// </description>
+    /// </item>
+    /// <item>
+    /// <term><see cref="IAntiMalware"/></term>
+    /// <description>The <see cref="IAntiMalware"/> instance which should be used for any potentially dangerous files.</description>
     /// </item>
     /// </list>
     /// For all of the default injectors, only one of each will be generated, and any later parameters will recieve the same value as the first one.
@@ -202,10 +205,7 @@ namespace IPA.Loader
 
                 var val = pair.Inject(prev, param, meta, provider);
 
-                if (previousValues.ContainsKey(pair))
-                    previousValues[pair] = val;
-                else
-                    previousValues.Add(pair, val);
+                previousValues[pair] = val;
 
                 if (val == null) continue;
                 value = val;
