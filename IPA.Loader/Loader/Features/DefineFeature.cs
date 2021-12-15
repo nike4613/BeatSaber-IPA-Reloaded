@@ -25,7 +25,7 @@ namespace IPA.Loader.Features
 
         protected override bool Initialize(PluginMetadata meta, JObject featureData)
         {
-            Logger.features.Debug("Executing DefineFeature Init");
+            Logger.Features.Debug("Executing DefineFeature Init");
 
             try
             {
@@ -43,7 +43,7 @@ namespace IPA.Loader.Features
 
         public override void BeforeInit(PluginMetadata meta)
         {
-            Logger.features.Debug("Executing DefineFeature AfterInit");
+            Logger.Features.Debug("Executing DefineFeature AfterInit");
 
             Type type;
             try
@@ -52,7 +52,7 @@ namespace IPA.Loader.Features
             }
             catch (ArgumentException)
             {
-                Logger.features.Error($"Invalid type name {data.TypeName}");
+                Logger.Features.Error($"Invalid type name {data.TypeName}");
                 return;
             }
             catch (Exception e) when (e is FileNotFoundException or FileLoadException or BadImageFormatException)
@@ -72,13 +72,13 @@ namespace IPA.Loader.Features
                         break;
                 }
 
-                Logger.features.Error($"Could not find {filename} while loading type");
+                Logger.Features.Error($"Could not find {filename} while loading type");
                 return;
             }
 
             if (type == null)
             {
-                Logger.features.Error($"Invalid type name {data.TypeName}");
+                Logger.Features.Error($"Invalid type name {data.TypeName}");
                 return;
             }
 
@@ -90,12 +90,12 @@ namespace IPA.Loader.Features
                     return;
                 }
 
-                Logger.features.Error($"Feature with name {data.Name} already exists");
+                Logger.Features.Error($"Feature with name {data.Name} already exists");
                 return;
             }
             catch (ArgumentException)
             {
-                Logger.features.Error($"{type.FullName} not a subclass of {nameof(Feature)}");
+                Logger.Features.Error($"{type.FullName} not a subclass of {nameof(Feature)}");
                 return;
             }
         }

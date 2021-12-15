@@ -171,8 +171,8 @@ namespace IPA.Loader
                 Console.WriteLine($"[{lvl}] {message}");
         }
 
-        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.libLoader.Log(lvl, message);
-        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.libLoader.Log(lvl, message);
+        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.LibLoader.Log(lvl, message);
+        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.LibLoader.Log(lvl, message);
 
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
         private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool>? dirValidator = null)

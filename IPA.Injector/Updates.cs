@@ -42,12 +42,12 @@ namespace IPA.Injector
                 var scanResult = AntiMalwareEngine.Engine.ScanFile(new FileInfo(path));
                 if (scanResult == ScanResult.Detected)
                 {
-                    updater.Error("Scan of BSIPA installer found malware; not updating");
+                    Updater.Error("Scan of BSIPA installer found malware; not updating");
                     return;
                 }
                 if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && scanResult is not ScanResult.KnownSafe and not ScanResult.NotDetected)
                 {
-                    updater.Error("Scan of BSIPA installer returned partial threat; not updating. To allow this, enable AntiMalware.RunPartialThreatCode in the config.");
+                    Updater.Error("Scan of BSIPA installer returned partial threat; not updating. To allow this, enable AntiMalware.RunPartialThreatCode in the config.");
                     return;
                 }
 
@@ -59,7 +59,7 @@ namespace IPA.Injector
                     UseShellExecute = false
                 });
 
-                updater.Info("Updating BSIPA...");
+                Updater.Info("Updating BSIPA...");
                 Environment.Exit(0);
             }
         }
@@ -70,7 +70,7 @@ namespace IPA.Injector
             if (!Directory.Exists(pendingDir)) return; 
             
             // there are pending updates, install
-            updater.Info("Installing pending updates");
+            Updater.Info("Installing pending updates");
 
             var toDelete = Array.Empty<string>();
             var delFn = Path.Combine(pendingDir, DeleteFileName);
@@ -88,8 +88,8 @@ namespace IPA.Injector
                 }
                 catch (Exception e)
                 {
-                    updater.Error("While trying to install pending updates: Error deleting file marked for deletion");
-                    updater.Error(e);
+                    Updater.Error("While trying to install pending updates: Error deleting file marked for deletion");
+                    Updater.Error(e);
                 }
             }
 
@@ -114,12 +114,12 @@ namespace IPA.Injector
                     }
                     catch (UnauthorizedAccessException e)
                     {
-                        updater.Error(e);
+                        Updater.Error(e);
                         continue;
                     }
                     catch (DirectoryNotFoundException e)
                     {
-                        updater.Error(e);
+                        Updater.Error(e);
                         continue;
                     }
 
@@ -132,7 +132,7 @@ namespace IPA.Injector
                         }
                         catch (FileNotFoundException e)
                         {
-                            updater.Error(e);
+                            Updater.Error(e);
                         }
                     }
                     
@@ -153,15 +153,15 @@ namespace IPA.Injector
             {
                 Utils.CopyAll(new DirectoryInfo(pendingDir), new DirectoryInfo(UnityGame.InstallPath), onCopyException: (e, f) =>
                 {
-                    updater.Error($"Error copying file {Utils.GetRelativePath(f.FullName, pendingDir)} from Pending:");
-                    updater.Error(e);
+                    Updater.Error($"Error copying file {Utils.GetRelativePath(f.FullName, pendingDir)} from Pending:");
+                    Updater.Error(e);
                     return true;
                 });
             }
             catch (Exception e)
             {
-                updater.Error("While trying to install pending updates: Error copying files in");
-                updater.Error(e);
+                Updater.Error("While trying to install pending updates: Error copying files in");
+                Updater.Error(e);
             }
 
             try
@@ -170,8 +170,8 @@ namespace IPA.Injector
             }
             catch (Exception e)
             {
-                updater.Error("Something went wrong performing an operation that should never fail!");
-                updater.Error(e);
+                Updater.Error("Something went wrong performing an operation that should never fail!");
+                Updater.Error(e);
             }
         }
     }

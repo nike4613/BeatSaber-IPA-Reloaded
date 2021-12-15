@@ -67,8 +67,8 @@ namespace IPA.Config.Stores
                 }
                 catch (ObjectDisposedException e)
                 {
-                    Logger.config.Error($"ObjectDisposedException while signalling a change for generated store {generated?.GetType()}");
-                    Logger.config.Error(e);
+                    Logger.Config.Error($"ObjectDisposedException while signalling a change for generated store {generated?.GetType()}");
+                    Logger.Config.Error(e);
                 }
             }
 
@@ -174,7 +174,7 @@ namespace IPA.Config.Stores
             public static void ImplReadFrom(IGeneratedStore s, ConfigProvider provider) => FindImpl(s)?.ReadFrom(provider);
             public void ReadFrom(ConfigProvider provider)
             {
-                Logger.config.Debug($"Generated impl ReadFrom {generated.GetType()}");
+                Logger.Config.Debug($"Generated impl ReadFrom {generated.GetType()}");
                 var values = provider.Load();
                 //Logger.config.Debug($"Read {values}");
                 generated.Deserialize(values);
@@ -187,7 +187,7 @@ namespace IPA.Config.Stores
             public static void ImplWriteTo(IGeneratedStore s, ConfigProvider provider) => FindImpl(s)?.WriteTo(provider);
             public void WriteTo(ConfigProvider provider)
             {
-                Logger.config.Debug($"Generated impl WriteTo {generated.GetType()}");
+                Logger.Config.Debug($"Generated impl WriteTo {generated.GetType()}");
                 var values = generated.Serialize();
                 //Logger.config.Debug($"Serialized {values}");
                 provider.Store(values);

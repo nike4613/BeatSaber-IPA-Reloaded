@@ -27,7 +27,7 @@ namespace IPA.Utilities
         internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
             _gameVersion = ver;
-            Logging.Logger.log.Debug($"GameVersion set early to {ver}");
+            Logging.Logger.Default.Debug($"GameVersion set early to {ver}");
         }
         private static string ApplicationVersionProxy
         {
@@ -40,15 +40,15 @@ namespace IPA.Utilities
                 }
                 catch(MissingMemberException ex)
                 {
-                    Logging.Logger.log.Error($"Tried to grab 'Application.version' too early, it's probably broken now.");
+                    Logging.Logger.Default.Error($"Tried to grab 'Application.version' too early, it's probably broken now.");
                     if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                        Logging.Logger.log.Error(ex);
+                        Logging.Logger.Default.Error(ex);
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logger.log.Error($"Error getting Application.version: {ex.Message}");
+                    Logging.Logger.Default.Error($"Error getting Application.version: {ex.Message}");
                     if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                        Logging.Logger.log.Error(ex);
+                        Logging.Logger.Default.Error(ex);
                 }
                 return string.Empty;
             }
@@ -60,18 +60,18 @@ namespace IPA.Utilities
                 var rtVer = new AlmostVersion(ApplicationVersionProxy);
                 if (!rtVer.Equals(_gameVersion)) // this actually uses stricter equality than == for AlmostVersion
                 {
-                    Logging.Logger.log.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
+                    Logging.Logger.Default.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
                     _gameVersion = rtVer;
                 }
             }
             catch (MissingMethodException e)
             {
-                Logging.Logger.log.Error("Application.version was not found! Cannot check early parsed version");
+                Logging.Logger.Default.Error("Application.version was not found! Cannot check early parsed version");
                 if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                    Logging.Logger.log.Error(e);
+                    Logging.Logger.Default.Error(e);
 
                 var st = new StackTrace();
-                Logging.Logger.log.Notice($"{st}");
+                Logging.Logger.Default.Notice($"{st}");
             }
         }
 

@@ -50,7 +50,7 @@ namespace IPA.Loader
             LoadMetadata();
 
             sw.Stop();
-            Logger.loader.Info($"Loading metadata took {sw.Elapsed}");
+            Logger.Loader.Info($"Loading metadata took {sw.Elapsed}");
             sw.Reset();
 
             sw.Start();
@@ -60,7 +60,7 @@ namespace IPA.Loader
             DoOrderResolution();
 
             sw.Stop();
-            Logger.loader.Info($"Calculating load order took {sw.Elapsed}");
+            Logger.Loader.Info($"Calculating load order took {sw.Elapsed}");
         });
 
         internal static void YeetIfNeeded()
@@ -115,8 +115,8 @@ namespace IPA.Loader
             }
             catch (Exception e)
             {
-                Logger.loader.Critical("Error loading own manifest");
-                Logger.loader.Critical(e);
+                Logger.Loader.Critical("Error loading own manifest");
+                Logger.Loader.Critical(e);
             }
 
             using var resolver = new CecilLibLoader();
@@ -135,12 +135,12 @@ namespace IPA.Loader
                     var scanResult = AntiMalwareEngine.Engine.ScanFile(metadata.File);
                     if (scanResult is ScanResult.Detected)
                     {
-                        Logger.loader.Warn($"Scan of {plugin} found malware; not loading");
+                        Logger.Loader.Warn($"Scan of {plugin} found malware; not loading");
                         continue;
                     }
                     if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && scanResult is not ScanResult.KnownSafe and not ScanResult.NotDetected)
                     {
-                        Logger.loader.Warn($"Scan of {plugin} found partial threat; not loading. To load this, set AntiMalware.RunPartialThreatCode in the config.");
+                        Logger.Loader.Warn($"Scan of {plugin} found partial threat; not loading. To load this, set AntiMalware.RunPartialThreatCode in the config.");
                         continue;
                     }
 
@@ -175,14 +175,14 @@ namespace IPA.Loader
 #if DIRE_LOADER_WARNINGS
                         Logger.loader.Error($"Could not find manifest.json for {Path.GetFileName(plugin)}");
 #else
-                        Logger.loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
+                        Logger.Loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
 #endif
                         continue;
                     }
 
                     if (pluginManifest.Id == null)
                     {
-                        Logger.loader.Warn($"Plugin '{pluginManifest.Name}' does not have a listed ID, using name");
+                        Logger.Loader.Warn($"Plugin '{pluginManifest.Name}' does not have a listed ID, using name");
                         pluginManifest.Id = pluginManifest.Name;
                     }
 
@@ -199,20 +199,20 @@ namespace IPA.Loader
 
                         if (!attr.HasConstructorArguments)
                         {
-                            Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has no arguments");
+                            Logger.Loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has no arguments");
                             return false;
                         }
 
                         var args = attr.ConstructorArguments;
                         if (args.Count != 1)
                         {
-                            Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has unexpected number of arguments");
+                            Logger.Loader.Warn($"Attribute plugin found in {type.FullName}, but attribute has unexpected number of arguments");
                             return false;
                         }
                         var rtOptionsArg = args[0];
                         if (rtOptionsArg.Type.FullName != typeof(RuntimeOptions).FullName)
                         {
-                            Logger.loader.Warn($"Attribute plugin found in {type.FullName}, but first argument is of unexpected type {rtOptionsArg.Type.FullName}");
+                            Logger.Loader.Warn($"Attribute plugin found in {type.FullName}, but first argument is of unexpected type {rtOptionsArg.Type.FullName}");
                             return false;
                         }
 
@@ -248,17 +248,17 @@ namespace IPA.Loader
 
                     if (metadata.PluginType == null)
                     {
-                        Logger.loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
+                        Logger.Loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
                         continue;
                     }
 
-                    Logger.loader.Debug($"Adding info for {Path.GetFileName(plugin)}");
+                    Logger.Loader.Debug($"Adding info for {Path.GetFileName(plugin)}");
                     PluginsMetadata.Add(metadata);
                 }
                 catch (Exception e)
                 {
-                    Logger.loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
-                    Logger.loader.Error(e);
+                    Logger.Loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
+                    Logger.Loader.Error(e);
                     ignoredPlugins.Add(metadata, new IgnoreReason(Reason.Error)
                     {
                         ReasonText = "An error occurred loading the data",
@@ -283,16 +283,16 @@ namespace IPA.Loader
                     metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
 
                     if (metadata.Manifest.Files.Length < 1)
-                        Logger.loader.Warn($"Bare manifest {Path.GetFileName(manifest)} does not declare any files. " +
+                        Logger.Loader.Warn($"Bare manifest {Path.GetFileName(manifest)} does not declare any files. " +
                             $"Dependency resolution and verification cannot be completed.");
 
-                    Logger.loader.Debug($"Adding info for bare manifest {Path.GetFileName(manifest)}");
+                    Logger.Loader.Debug($"Adding info for bare manifest {Path.GetFileName(manifest)}");
                     PluginsMetadata.Add(metadata);
                 }
                 catch (Exception e)
                 {
-                    Logger.loader.Error($"Could not load data for bare manifest {Path.GetFileName(manifest)}");
-                    Logger.loader.Error(e);
+                    Logger.Loader.Error($"Could not load data for bare manifest {Path.GetFileName(manifest)}");
+                    Logger.Loader.Error(e);
                 }
             }
 
@@ -304,7 +304,7 @@ namespace IPA.Loader
                 {
                     if (meta.IsBare)
                     {
-                        Logger.loader.Warn($"Bare manifest cannot specify description file");
+                        Logger.Loader.Warn($"Bare manifest cannot specify description file");
                         meta.Manifest.Description = string.Join("\n", lines.Skip(1).StrJP()); // ignore first line
                         continue;
                     }
@@ -319,7 +319,7 @@ namespace IPA.Loader
                                                                    .FirstOrDefault(r => r.Name == name);
                         if (resc == null)
                         {
-                            Logger.loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
+                            Logger.Loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
                             meta.Manifest.Description = string.Join("\n", lines.Skip(1).StrJP()); // ignore first line
                             continue;
                         }
@@ -492,14 +492,14 @@ namespace IPA.Loader
         {
 #if DEBUG
             // print starting order
-            Logger.loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
+            Logger.Loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
 #endif
 
             PluginsMetadata.Sort((a, b) => b.HVersion.CompareTo(a.HVersion));
 
 #if DEBUG
             // print base resolution order
-            Logger.loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
+            Logger.Loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
 #endif
 
             var metadataCache = new Dictionary<string, (PluginMetadata Meta, bool Enabled)>(PluginsMetadata.Count);
@@ -526,7 +526,7 @@ namespace IPA.Loader
                 }
                 else
                 {
-                    Logger.loader.Warn($"Found duplicates of {meta.Id}, using newest");
+                    Logger.Loader.Warn($"Found duplicates of {meta.Id}, using newest");
                     ignoredPlugins.Add(meta, new(Reason.Duplicate)
                     {
                         ReasonText = $"Duplicate entry of same ID ({meta.Id})",
@@ -585,21 +585,21 @@ namespace IPA.Loader
                     meta = null;
                     disabled = false;
                     ignored = true;
-                    Logger.loader.Trace($"Trying to resolve plugin '{id}' partial:{partial}");
+                    Logger.Loader.Trace($"Trying to resolve plugin '{id}' partial:{partial}");
                     if (loadedPlugins.TryGetValue(id, out var foundMeta))
                     {
                         meta = foundMeta.Meta;
                         disabled = foundMeta.Disabled;
                         ignored = foundMeta.Ignored;
-                        Logger.loader.Trace($"- Found already processed");
+                        Logger.Loader.Trace($"- Found already processed");
                         return true;
                     }
                     if (metadataCache!.TryGetValue(id, out var plugin))
                     {
-                        Logger.loader.Trace($"- In metadata cache");
+                        Logger.Loader.Trace($"- In metadata cache");
                         if (partial)
                         {
-                            Logger.loader.Trace($"  - but requested in a partial lookup");
+                            Logger.Loader.Trace($"  - but requested in a partial lookup");
                             return false;
                         }
 
@@ -616,8 +616,8 @@ namespace IPA.Loader
                             {
                                 if (e is not DependencyResolutionLoopException)
                                 {
-                                    Logger.loader.Error($"While performing load order resolution for {id}:");
-                                    Logger.loader.Error(e);
+                                    Logger.Loader.Error($"While performing load order resolution for {id}:");
+                                    Logger.Loader.Error(e);
                                 }
 
                                 if (!ignored)
@@ -635,23 +635,23 @@ namespace IPA.Loader
                         if (!loadedPlugins.ContainsKey(id))
                         {
                             // this condition is specifically for when we fail resolution because of a graph loop
-                            Logger.loader.Trace($"- '{id}' resolved as ignored:{ignored},disabled:{disabled}");
+                            Logger.Loader.Trace($"- '{id}' resolved as ignored:{ignored},disabled:{disabled}");
                             loadedPlugins.Add(id, (plugin.Meta, disabled, ignored));
                         }
                         return true;
                     }
-                    Logger.loader.Trace($"- Not found");
+                    Logger.Loader.Trace($"- Not found");
                     return false;
                 }
 
                 void Resolve(PluginMetadata plugin, ref bool disabled, out bool ignored)
                 {
-                    Logger.loader.Trace($">Resolving '{plugin.Name}'");
+                    Logger.Loader.Trace($">Resolving '{plugin.Name}'");
 
                     // first we need to check for loops in the resolution graph to prevent stack overflows
                     if (isProcessing.Contains(plugin))
                     {
-                        Logger.loader.Error($"Loop detected while processing '{plugin.Name}'; flagging as ignored");
+                        Logger.Loader.Error($"Loop detected while processing '{plugin.Name}'; flagging as ignored");
                         throw new DependencyResolutionLoopException();
                     }
 
@@ -671,7 +671,7 @@ namespace IPA.Loader
                             {
                                 ReasonText = $"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)} does not exist"
                             });
-                            Logger.loader.Warn($"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)}" +
+                            Logger.Loader.Warn($"File {Utils.GetRelativePath(file.FullName, UnityGame.InstallPath)}" +
                                 $" (declared by '{plugin.Name}') does not exist! Mod installation is incomplete, not loading it.");
                             ignored = true;
                             return;
@@ -687,7 +687,7 @@ namespace IPA.Loader
                         if (!TryResolveId(id, out var depMeta, out var depDisabled, out var depIgnored)
                             || !range.Matches(depMeta.HVersion))
                         {
-                            Logger.loader.Warn($"'{plugin.Id}' is missing dependency '{id}@{range}'; ignoring");
+                            Logger.Loader.Warn($"'{plugin.Id}' is missing dependency '{id}@{range}'; ignoring");
                             ignoredPlugins.Add(plugin, new(Reason.Dependency)
                             {
                                 ReasonText = $"Dependency '{id}@{range}' not found",
@@ -698,7 +698,7 @@ namespace IPA.Loader
                         // make a point to propagate ignored
                         if (depIgnored)
                         {
-                            Logger.loader.Warn($"Dependency '{id}' for '{plugin.Id}' previously ignored; ignoring '{plugin.Id}'");
+                            Logger.Loader.Warn($"Dependency '{id}' for '{plugin.Id}' previously ignored; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Dependency)
                             {
                                 ReasonText = $"Dependency '{id}' ignored",
@@ -710,7 +710,7 @@ namespace IPA.Loader
                         // make a point to propagate disabled
                         if (depDisabled)
                         {
-                            Logger.loader.Warn($"Dependency '{id}' for '{plugin.Id}' disabled; disabling");
+                            Logger.Loader.Warn($"Dependency '{id}' for '{plugin.Id}' disabled; disabling");
                             disabledPlugins!.Add(plugin);
                             _ = disabledIds!.Add(plugin.Id);
                             disabled = true;
@@ -723,7 +723,7 @@ namespace IPA.Loader
                     // make sure the plugin depends on the loader (assuming it actually needs to)
                     if (!dependsOnSelf && !plugin.IsSelf && !plugin.IsBare)
                     {
-                        Logger.loader.Warn($"Plugin '{plugin.Id}' does not depend on any particular loader version; assuming its incompatible");
+                        Logger.Loader.Warn($"Plugin '{plugin.Id}' does not depend on any particular loader version; assuming its incompatible");
                         ignoredPlugins.Add(plugin, new(Reason.Dependency)
                         {
                             ReasonText = "Does not depend on any loader version, so it is assumed to be incompatible",
@@ -760,14 +760,14 @@ namespace IPA.Loader
                     // after we handle dependencies and loadafters, then check conflicts
                     foreach (var (id, range) in plugin.Manifest.Conflicts)
                     {
-                        Logger.loader.Trace($">- Checking conflict '{id}' {range}");
+                        Logger.Loader.Trace($">- Checking conflict '{id}' {range}");
                         // this lookup must be partial to prevent loadBefore/conflictsWith from creating a recursion loop
                         if (TryResolveId(id, out var meta, out var conflDisabled, out var conflIgnored, partial: true)
                             && range.Matches(meta.HVersion)
                             && !conflIgnored && !conflDisabled) // the conflict is only *actually* a problem if it is both not ignored and not disabled
                         {
                             
-                            Logger.loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.HVersion}; ignoring '{plugin.Id}'");
+                            Logger.Loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.HVersion}; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Conflict)
                             {
                                 ReasonText = $"Conflicts with {meta.Id}@{meta.HVersion}",
@@ -783,13 +783,13 @@ namespace IPA.Loader
                     if (!ignoredPlugins.ContainsKey(plugin))
                     {
                         // we can now load the current plugin
-                        Logger.loader.Trace($"->'{plugin.Name}' loads here");
+                        Logger.Loader.Trace($"->'{plugin.Name}' loads here");
                         outputOrder!.Add(plugin);
                     }
 
                     // loadbefores have already been preprocessed into loadafters
 
-                    Logger.loader.Trace($">Processed '{plugin.Name}'");
+                    Logger.Loader.Trace($">Processed '{plugin.Name}'");
                 }
 
                 // run TryResolveId over every plugin, which recursively calculates load order
@@ -817,7 +817,7 @@ namespace IPA.Loader
                     { // this is a DefineFeature, so we want to initialize it early
                         if (!feature.TryCreate(out var inst))
                         {
-                            Logger.features.Error($"Error evaluating {feature.Name}: {inst.InvalidMessage}");
+                            Logger.Features.Error($"Error evaluating {feature.Name}: {inst.InvalidMessage}");
                         }
                         else
                         {
@@ -850,7 +850,7 @@ namespace IPA.Loader
                     }
                     else
                     {
-                        Logger.features.Warn($"No such feature {feature.Name}");
+                        Logger.Features.Warn($"No such feature {feature.Name}");
                     }
                 }
             }
@@ -889,7 +889,7 @@ namespace IPA.Loader
         internal static PluginExecutor? InitPlugin(PluginMetadata meta, IEnumerable<PluginMetadata> alreadyLoaded)
         {
             if (meta.Manifest.GameVersion is { } gv && gv != UnityGame.GameVersion)
-                Logger.loader.Warn($"Mod {meta.Name} developed for game version {gv}, so it may not work properly.");
+                Logger.Loader.Warn($"Mod {meta.Name} developed for game version {gv}, so it may not work properly.");
 
             if (meta.IsSelf)
                 return new PluginExecutor(meta, PluginExecutor.Special.Self);
@@ -932,8 +932,8 @@ namespace IPA.Loader
             }
             catch (Exception e)
             {
-                Logger.loader.Error($"Error creating executor for {meta.Name}");
-                Logger.loader.Error(e);
+                Logger.Loader.Error($"Error creating executor for {meta.Name}");
+                Logger.Loader.Error(e);
                 return null;
             }
 
@@ -945,8 +945,8 @@ namespace IPA.Loader
                 }
                 catch (Exception e)
                 {
-                    Logger.loader.Critical($"Feature errored in {nameof(Feature.BeforeInit)}:");
-                    Logger.loader.Critical(e);
+                    Logger.Loader.Critical($"Feature errored in {nameof(Feature.BeforeInit)}:");
+                    Logger.Loader.Critical(e);
                 }
             }
 
@@ -956,8 +956,8 @@ namespace IPA.Loader
             }
             catch (Exception e)
             {
-                Logger.loader.Error($"Could not init plugin {meta.Name}");
-                Logger.loader.Error(e);
+                Logger.Loader.Error($"Could not init plugin {meta.Name}");
+                Logger.Loader.Error(e);
                 ignoredPlugins.Add(meta, new IgnoreReason(Reason.Error)
                 {
                     ReasonText = "Error occurred while initializing",
@@ -971,7 +971,7 @@ namespace IPA.Loader
             {
                 if (!feature.TryCreate(out var inst))
                 {
-                    Logger.features.Warn($"Could not create instance of feature {feature.Name}: {inst.InvalidMessage}");
+                    Logger.Features.Warn($"Could not create instance of feature {feature.Name}: {inst.InvalidMessage}");
                 }
                 else
                 {
@@ -988,8 +988,8 @@ namespace IPA.Loader
                 }
                 catch (Exception e)
                 {
-                    Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}:");
-                    Logger.loader.Critical(e);
+                    Logger.Loader.Critical($"Feature errored in {nameof(Feature.AfterInit)}:");
+                    Logger.Loader.Critical(e);
                 }
 
             return exec;
@@ -1016,8 +1016,8 @@ namespace IPA.Loader
                 }
                 catch (Exception e)
                 {
-                    Logger.log.Critical($"Uncaught exception while loading plugin {meta.Name}:");
-                    Logger.log.Critical(e);
+                    Logger.Default.Critical($"Uncaught exception while loading plugin {meta.Name}:");
+                    Logger.Default.Critical(e);
                 }
             }
 

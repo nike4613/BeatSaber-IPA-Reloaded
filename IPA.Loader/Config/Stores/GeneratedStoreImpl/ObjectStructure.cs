@@ -85,19 +85,19 @@ namespace IPA.Config.Stores
 
                 if (member.Converter.GetConstructor(Type.EmptyTypes) == null)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not default-constructible");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not default-constructible");
                     goto endConverterAttr; // is there a better control flow structure to do this?
                 }
 
                 if (member.Converter.ContainsGenericParameters)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that has unfilled type parameters");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that has unfilled type parameters");
                     goto endConverterAttr;
                 }
 
                 if (member.Converter.IsInterface || member.Converter.IsAbstract)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not constructible");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not constructible");
                     goto endConverterAttr;
                 }
 
@@ -111,13 +111,13 @@ namespace IPA.Config.Stores
                     }
                     catch
                     {
-                        Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter who's target type could not be determined");
+                        Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter who's target type could not be determined");
                         goto endConverterAttr;
                     }
                 }
                 if (targetType != member.Type)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not of the member's type");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not of the member's type");
                     goto endConverterAttr;
                 }
 

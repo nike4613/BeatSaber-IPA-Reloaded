@@ -76,26 +76,26 @@ namespace IPA.Logging.Printers
                         if (!CreateHardLink(symlink.FullName, fileInfo.FullName, IntPtr.Zero))
                         {
                             var error = Marshal.GetLastWin32Error();
-                            Logger.log.Error($"Hardlink creation failed ({error})");
+                            Logger.Default.Error($"Hardlink creation failed ({error})");
                         }
                     }
                     catch (Exception e)
                     {
-                        Logger.log.Error("Error creating latest hardlink!");
-                        Logger.log.Error(e);
+                        Logger.Default.Error("Error creating latest hardlink!");
+                        Logger.Default.Error(e);
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.log.Error("Error initializing log!");
-                Logger.log.Error(e);
+                Logger.Default.Error("Error initializing log!");
+                Logger.Default.Error(e);
             }
         }
 
         private static async void CompressOldLog(FileInfo file)
         {
-            Logger.log.Debug($"Compressing log file {file}");
+            Logger.Default.Debug($"Compressing log file {file}");
 
             var newFile = new FileInfo(file.FullName + ".gz");
 

@@ -102,7 +102,7 @@ namespace IPA.Config.Stores
                     var structure = ReadObjectMembers(targetType);
                     if (!structure.Any())
                     {
-                        Logger.config.Warn($"Custom value type {targetType.FullName} (when compiling serialization of" +
+                        Logger.Config.Warn($"Custom value type {targetType.FullName} (when compiling serialization of" +
                             $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
                         il.Emit(OpCodes.Pop);
                         il.Emit(OpCodes.Ldloca, resultLocal);
@@ -123,7 +123,7 @@ namespace IPA.Config.Stores
             }
             else
             {
-                Logger.config.Warn($"Implicit conversions to {expected} are not currently implemented");
+                Logger.Config.Warn($"Implicit conversions to {expected} are not currently implemented");
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }

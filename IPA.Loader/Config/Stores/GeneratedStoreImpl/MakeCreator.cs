@@ -53,7 +53,7 @@ namespace IPA.Config.Stores
 
             var structure = ReadObjectMembers(type);
             if (!structure.Any())
-                Logger.config.Warn($"Custom type {type.FullName} has no accessible members");
+                Logger.Config.Warn($"Custom type {type.FullName} has no accessible members");
             #endregion
 
             var typeBuilder = Module.DefineType($"{type.FullName}<Generated>",
@@ -135,7 +135,7 @@ namespace IPA.Config.Stores
                     }
                     else
                     {
-                        Logger.log.Critical($"Type '{type.FullName}' implements INotifyPropertyChanged but does not have an accessible " +
+                        Logger.Default.Critical($"Type '{type.FullName}' implements INotifyPropertyChanged but does not have an accessible " +
                             "'RaisePropertyChanged(string)' method, automatic raising of PropertyChanged event is disabled.");
                     }
                 }

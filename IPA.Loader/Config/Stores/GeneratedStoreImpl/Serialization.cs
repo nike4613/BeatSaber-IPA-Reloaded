@@ -125,7 +125,7 @@ namespace IPA.Config.Stores
             else if (targetType == typeof(List))
             {
                 // TODO: impl this (enumerables)
-                Logger.config.Warn($"Implicit conversions to {targetType} are not currently implemented");
+                Logger.Config.Warn($"Implicit conversions to {targetType} are not currently implemented");
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }
@@ -168,7 +168,7 @@ namespace IPA.Config.Stores
                     var structure = ReadObjectMembers(memberConversionType);
                     if (!structure.Any())
                     {
-                        Logger.config.Warn($"Custom value type {memberConversionType.FullName} (when compiling serialization of" +
+                        Logger.Config.Warn($"Custom value type {memberConversionType.FullName} (when compiling serialization of" +
                             $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
                         il.Emit(OpCodes.Pop);
                     }

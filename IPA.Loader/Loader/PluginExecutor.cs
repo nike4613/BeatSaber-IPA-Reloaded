@@ -80,7 +80,7 @@ namespace IPA.Loader
                             .OrderByDescending(t => t.c.GetParameters().Length)
                             .Select(t => t.c).ToArray();
             if (ctors.Length > 1)
-                Logger.loader.Warn($"Plugin {name} has multiple [Init] constructors. Picking the one with the most parameters.");
+                Logger.Loader.Warn($"Plugin {name} has multiple [Init] constructors. Picking the one with the most parameters.");
 
             bool usingDefaultCtor = false;
             var ctor = ctors.FirstOrDefault();
@@ -131,7 +131,7 @@ namespace IPA.Loader
             if (enableMethods.Length == 0)
             {
                 if (!noEnableDisable)
-                    Logger.loader.Notice($"Plugin {name} has no methods marked [OnStart] or [OnEnable]. Is this intentional?");
+                    Logger.Loader.Notice($"Plugin {name} has no methods marked [OnStart] or [OnEnable]. Is this intentional?");
                 return o => { };
             }
 
@@ -140,7 +140,7 @@ namespace IPA.Loader
                 if (m.GetParameters().Length > 0)
                     throw new InvalidOperationException($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and has parameters.");
                 if (m.ReturnType != typeof(void))
-                    Logger.loader.Warn($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and returns a value. It will be ignored.");
+                    Logger.Loader.Warn($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and returns a value. It will be ignored.");
             }
 
             var objParam = Expression.Parameter(typeof(object), "obj");
@@ -164,7 +164,7 @@ namespace IPA.Loader
             if (disableMethods.Length == 0)
             {
                 if (!noEnableDisable)
-                    Logger.loader.Notice($"Plugin {name} has no methods marked [OnExit] or [OnDisable]. Is this intentional?");
+                    Logger.Loader.Notice($"Plugin {name} has no methods marked [OnExit] or [OnDisable]. Is this intentional?");
                 return o => TaskEx.WhenAll();
             }
 
@@ -182,7 +182,7 @@ namespace IPA.Loader
                         continue;
                     }
                     else
-                        Logger.loader.Warn($"Method {m} on {type.FullName} is marked [OnExit] or [OnDisable] and returns a non-Task value. It will be ignored.");
+                        Logger.Loader.Warn($"Method {m} on {type.FullName} is marked [OnExit] or [OnDisable] and returns a non-Task value. It will be ignored.");
                 }
 
                 nonTaskMethods.Add(m);

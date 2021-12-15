@@ -36,7 +36,7 @@ namespace IPA.Config
 
         protected internal virtual void Changed()
         {
-            Logger.log.Debug("SelfConfig Changed called");
+            Logger.Default.Debug("SelfConfig Changed called");
         }
 
         public static void ReadCommandLine(string[] args)

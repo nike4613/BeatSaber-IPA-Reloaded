@@ -185,8 +185,8 @@ namespace IPA.Config
             }
             catch (Exception e)
             {
-                Logger.config.Error($"{nameof(IConfigStore)} for {config.File} errored while writing to disk");
-                Logger.config.Error(e);
+                Logger.Config.Error($"{nameof(IConfigStore)} for {config.File} errored while writing to disk");
+                Logger.Config.Error(e);
             }
         }
 
@@ -209,8 +209,8 @@ namespace IPA.Config
             }
             catch (Exception e)
             {
-                Logger.config.Error($"{nameof(IConfigStore)} for {config.File} errored while reading from the {nameof(IConfigProvider)}");
-                Logger.config.Error(e);
+                Logger.Config.Error($"{nameof(IConfigStore)} for {config.File} errored while reading from the {nameof(IConfigProvider)}");
+                Logger.Config.Error(e);
             }
         } 
 
@@ -235,8 +235,8 @@ namespace IPA.Config
                     }
                     catch (Exception e)
                     {
-                        Logger.config.Error($"Error waiting for in-memory updates");
-                        Logger.config.Error(e);
+                        Logger.Config.Error($"Error waiting for in-memory updates");
+                        Logger.Config.Error(e);
                         Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
 

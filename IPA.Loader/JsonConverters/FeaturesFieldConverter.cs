@@ -22,7 +22,7 @@ namespace IPA.JsonConverters
             if (reader.TokenType == JsonToken.StartArray)
             {
                 _ = serializer.Deserialize<string[]>(reader);
-                Logger.features.Warn("Encountered old features used. They no longer do anything, please move to the new format.");
+                Logger.Features.Warn("Encountered old features used. They no longer do anything, please move to the new format.");
                 return existingValue;
             }
 

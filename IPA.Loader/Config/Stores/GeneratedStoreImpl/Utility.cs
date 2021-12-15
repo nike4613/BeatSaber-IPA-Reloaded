@@ -25,17 +25,17 @@ namespace IPA.Config.Stores
         private static readonly MethodInfo LogErrorMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogError), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogError(Type? expected, Type? found, string message)
         {
-            Logger.config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
+            Logger.Config.Notice($"{message}{(expected == null ? "" : $" (expected {expected}, found {found?.ToString() ?? "null"})")}");
         }
         private static readonly MethodInfo LogWarningMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogWarning), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogWarning(string message)
         {
-            Logger.config.Warn(message);
+            Logger.Config.Warn(message);
         }
         private static readonly MethodInfo LogWarningExceptionMethod = typeof(GeneratedStoreImpl).GetMethod(nameof(LogWarningException), BindingFlags.NonPublic | BindingFlags.Static);
         internal static void LogWarningException(Exception exception)
         {
-            Logger.config.Warn(exception);
+            Logger.Config.Warn(exception);
         }
         #endregion
 

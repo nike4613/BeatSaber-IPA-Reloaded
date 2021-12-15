@@ -62,11 +62,11 @@ namespace IPA.Injector
                 }
                 catch (Exception e)
                 {
-                    Logger.log.Warn("Error configuring permissions in the game install dir");
-                    Logger.log.Warn(e);
+                    Logger.Default.Warn("Error configuring permissions in the game install dir");
+                    Logger.Default.Warn(e);
                 }
                 sw.Stop();
-                Logger.log.Info($"Configuring permissions took {sw.Elapsed}");
+                Logger.Default.Info($"Configuring permissions took {sw.Elapsed}");
             });
         }
     }

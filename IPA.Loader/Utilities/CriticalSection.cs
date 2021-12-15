@@ -16,7 +16,7 @@ namespace IPA.Utilities
 
         internal static void Configure()
         {
-            Logger.log.Debug("Configuring exit handlers");
+            Logger.Default.Debug("Configuring exit handlers");
 
             ResetExitHandlers();
         }
