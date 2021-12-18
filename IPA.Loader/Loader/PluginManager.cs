@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using IPA.Config;
-using IPA.Old;
 using IPA.Utilities;
 using Mono.Cecil;
 using UnityEngine;
@@ -52,10 +50,10 @@ namespace IPA.Loader
         /// <summary>
         /// Gets info about the enabled plugin with the specified ID.
         /// </summary>
-        /// <param name="name">the ID name of the plugin to get (must be an exact match)</param>
+        /// <param name="id">the ID name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin metadata for the requested plugin or <see langword="null"/> if it doesn't exist or is disabled</returns>
-        public static PluginMetadata GetPluginFromId(string name)
-            => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Id == name);
+        public static PluginMetadata GetPluginFromId(string id)
+            => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Id == id);
 
         /// <summary>
         /// Gets a disabled plugin's metadata by its name.
@@ -68,10 +66,10 @@ namespace IPA.Loader
         /// <summary>
         /// Gets a disabled plugin's metadata by its ID.
         /// </summary>
-        /// <param name="name">the ID of the disabled plugin to get</param>
+        /// <param name="id">the ID of the disabled plugin to get</param>
         /// <returns>the metadata for the corresponding plugin</returns>
-        public static PluginMetadata GetDisabledPluginFromId(string name) =>
-            DisabledPlugins.FirstOrDefault(p => p.Id == name);
+        public static PluginMetadata GetDisabledPluginFromId(string id) =>
+            DisabledPlugins.FirstOrDefault(p => p.Id == id);
 
         /// <summary>
         /// Creates a new transaction for mod enabling and disabling mods simultaneously.
