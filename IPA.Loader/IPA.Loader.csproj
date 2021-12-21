@@ -57,7 +57,7 @@
     </PackageReference>-->
     
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
-    <PackageReference Include="HarmonyX" Version="2.6.1" />
+    <PackageReference Include="HarmonyX" Version="2.7.0" />
     <PackageReference Include="MonoMod.RuntimeDetour" Version="21.12.13.1" />
     <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
 
