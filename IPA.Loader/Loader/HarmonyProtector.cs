@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace IPA.Loader
@@ -17,6 +16,8 @@ namespace IPA.Loader
         
         public static void Protect(Harmony inst = null)
         {
+            HarmonyGlobalSettings.DisallowLegacyGlobalUnpatchAll = true;
+
             selfAssem = Assembly.GetExecutingAssembly();
             harmonyAssem = typeof(Harmony).Assembly;
 
