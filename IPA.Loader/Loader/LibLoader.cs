@@ -76,10 +76,7 @@ namespace IPA.Loader
                 static void AddDir(string path)
                 {
                     var pathEnvironmentVariable = Environment.GetEnvironmentVariable("Path");
-                    if (!pathEnvironmentVariable.Contains(path))
-                    {
-                        Environment.SetEnvironmentVariable("Path", pathEnvironmentVariable + Path.PathSeparator + path);
-                    }
+                    Environment.SetEnvironmentVariable("Path", path + Path.PathSeparator + pathEnvironmentVariable);
                 }
 
                 if (Directory.Exists(NativeLibraryPath))
