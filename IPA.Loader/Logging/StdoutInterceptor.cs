@@ -192,9 +192,10 @@ namespace IPA.Logging
 
                 EnsureHarmonyLogging();
 
+                HarmonyGlobalSettings.DisallowLegacyGlobalUnpatchAll = true;
                 harmony ??= new Harmony("BSIPA Console Redirector Patcher");
                 stdoutInterceptor ??= new StdoutInterceptor();
-                stderrInterceptor ??= new StdoutInterceptor() { isStdErr = true };
+                stderrInterceptor ??= new StdoutInterceptor { isStdErr = true };
 
                 RedirectConsole();
                 ConsoleHarmonyPatches.Patch(harmony);
