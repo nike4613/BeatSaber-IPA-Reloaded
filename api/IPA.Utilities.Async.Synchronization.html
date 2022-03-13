@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Synchronization
    ">
-    <meta name="generator" content="docfx 2.58.9.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -93,39 +93,15 @@ and should only be used with <span class="xref">langword_csharp_using</span> to 
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">Synchronization</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.Async.html">IPA.Utilities.Async</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Utilities_Async_Synchronization_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class Synchronization</code></pre>
+    <pre><code class="lang-csharp hljs">public static class Synchronization : object</code></pre>
   </div>
   <h5 id="IPA_Utilities_Async_Synchronization_examples"><strong>Examples</strong></h5>
   <p><p>
-The canonical usage of <em>all</em> of the member functions is as follows, substituting <a class="xref" href="IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_System_Threading_Mutex_">Lock(Mutex)</a>
+The canonical usage of <em>all</em> of the member functions is as follows, substituting <a class="xref" href="IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_Mutex_">Lock(Mutex)</a>
 with whichever member you want to use, according to your lock type.
 </p></p>
 <pre><code>using var _locker = Synchronization.Lock(mutex);</code></pre>
@@ -134,13 +110,13 @@ with whichever member you want to use, according to your lock type.
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_Lock_System_Threading_Mutex_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.Lock(System.Threading.Mutex)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_Lock_Mutex_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.Lock(Mutex)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L176">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L176">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_Synchronization_Lock_" data-uid="IPA.Utilities.Async.Synchronization.Lock*"></a>
-  <h4 id="IPA_Utilities_Async_Synchronization_Lock_System_Threading_Mutex_" data-uid="IPA.Utilities.Async.Synchronization.Lock(System.Threading.Mutex)">Lock(Mutex)</h4>
+  <h4 id="IPA_Utilities_Async_Synchronization_Lock_Mutex_" data-uid="IPA.Utilities.Async.Synchronization.Lock(Mutex)">Lock(Mutex)</h4>
   <div class="markdown level1 summary"><p>Creates a locker for a mutex.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -159,7 +135,7 @@ with whichever member you want to use, according to your lock type.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.mutex">Mutex</a></td>
+        <td><span class="xref">Mutex</span></td>
         <td><span class="parametername">mut</span></td>
         <td><p>the mutex to acquire</p>
 </td>
@@ -184,13 +160,13 @@ with whichever member you want to use, according to your lock type.
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_Lock_System_Threading_Semaphore_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.Lock(System.Threading.Semaphore)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_Lock_Semaphore_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.Lock(Semaphore)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L183">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L183">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_Synchronization_Lock_" data-uid="IPA.Utilities.Async.Synchronization.Lock*"></a>
-  <h4 id="IPA_Utilities_Async_Synchronization_Lock_System_Threading_Semaphore_" data-uid="IPA.Utilities.Async.Synchronization.Lock(System.Threading.Semaphore)">Lock(Semaphore)</h4>
+  <h4 id="IPA_Utilities_Async_Synchronization_Lock_Semaphore_" data-uid="IPA.Utilities.Async.Synchronization.Lock(Semaphore)">Lock(Semaphore)</h4>
   <div class="markdown level1 summary"><p>Creates a locker for a semaphore.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -209,7 +185,7 @@ with whichever member you want to use, according to your lock type.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.semaphore">Semaphore</a></td>
+        <td><span class="xref">Semaphore</span></td>
         <td><span class="parametername">sem</span></td>
         <td><p>the semaphore to acquire</p>
 </td>
@@ -234,13 +210,13 @@ with whichever member you want to use, according to your lock type.
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_Lock_System_Threading_SemaphoreSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.Lock(System.Threading.SemaphoreSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_Lock_SemaphoreSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.Lock(SemaphoreSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L190">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L190">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_Synchronization_Lock_" data-uid="IPA.Utilities.Async.Synchronization.Lock*"></a>
-  <h4 id="IPA_Utilities_Async_Synchronization_Lock_System_Threading_SemaphoreSlim_" data-uid="IPA.Utilities.Async.Synchronization.Lock(System.Threading.SemaphoreSlim)">Lock(SemaphoreSlim)</h4>
+  <h4 id="IPA_Utilities_Async_Synchronization_Lock_SemaphoreSlim_" data-uid="IPA.Utilities.Async.Synchronization.Lock(SemaphoreSlim)">Lock(SemaphoreSlim)</h4>
   <div class="markdown level1 summary"><p>Creates a locker for a slim semaphore.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -259,7 +235,7 @@ with whichever member you want to use, according to your lock type.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.semaphoreslim">SemaphoreSlim</a></td>
+        <td><span class="xref">SemaphoreSlim</span></td>
         <td><span class="parametername">sem</span></td>
         <td><p>the slim semaphore to acquire</p>
 </td>
@@ -284,14 +260,14 @@ with whichever member you want to use, according to your lock type.
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_LockRead_System_Threading_ReaderWriterLockSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.LockRead(System.Threading.ReaderWriterLockSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_LockRead_ReaderWriterLockSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.LockRead(ReaderWriterLockSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L218">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L218">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_Synchronization_LockRead_" data-uid="IPA.Utilities.Async.Synchronization.LockRead*"></a>
-  <h4 id="IPA_Utilities_Async_Synchronization_LockRead_System_Threading_ReaderWriterLockSlim_" data-uid="IPA.Utilities.Async.Synchronization.LockRead(System.Threading.ReaderWriterLockSlim)">LockRead(ReaderWriterLockSlim)</h4>
-  <div class="markdown level1 summary"><p>Creates a locker for a read lock on a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a>.</p>
+  <h4 id="IPA_Utilities_Async_Synchronization_LockRead_ReaderWriterLockSlim_" data-uid="IPA.Utilities.Async.Synchronization.LockRead(ReaderWriterLockSlim)">LockRead(ReaderWriterLockSlim)</h4>
+  <div class="markdown level1 summary"><p>Creates a locker for a read lock on a <see cref="!:ReaderWriterLockSlim"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -309,7 +285,7 @@ with whichever member you want to use, according to your lock type.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a></td>
+        <td><span class="xref">ReaderWriterLockSlim</span></td>
         <td><span class="parametername">rwl</span></td>
         <td><p>the lock to acquire in read mode</p>
 </td>
@@ -334,14 +310,14 @@ with whichever member you want to use, according to your lock type.
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_LockReadUpgradable_System_Threading_ReaderWriterLockSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.LockReadUpgradable(System.Threading.ReaderWriterLockSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_LockReadUpgradable_ReaderWriterLockSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.LockReadUpgradable(ReaderWriterLockSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L225">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L225">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_Synchronization_LockReadUpgradable_" data-uid="IPA.Utilities.Async.Synchronization.LockReadUpgradable*"></a>
-  <h4 id="IPA_Utilities_Async_Synchronization_LockReadUpgradable_System_Threading_ReaderWriterLockSlim_" data-uid="IPA.Utilities.Async.Synchronization.LockReadUpgradable(System.Threading.ReaderWriterLockSlim)">LockReadUpgradable(ReaderWriterLockSlim)</h4>
-  <div class="markdown level1 summary"><p>Creates a locker for an upgradable read lock on a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a>.</p>
+  <h4 id="IPA_Utilities_Async_Synchronization_LockReadUpgradable_ReaderWriterLockSlim_" data-uid="IPA.Utilities.Async.Synchronization.LockReadUpgradable(ReaderWriterLockSlim)">LockReadUpgradable(ReaderWriterLockSlim)</h4>
+  <div class="markdown level1 summary"><p>Creates a locker for an upgradable read lock on a <see cref="!:ReaderWriterLockSlim"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -359,7 +335,7 @@ with whichever member you want to use, according to your lock type.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a></td>
+        <td><span class="xref">ReaderWriterLockSlim</span></td>
         <td><span class="parametername">rwl</span></td>
         <td><p>the lock to acquire in upgradable read mode</p>
 </td>
@@ -384,14 +360,14 @@ with whichever member you want to use, according to your lock type.
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_LockWrite_System_Threading_ReaderWriterLockSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.LockWrite(System.Threading.ReaderWriterLockSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization_LockWrite_ReaderWriterLockSlim_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization.LockWrite(ReaderWriterLockSlim)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L211">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L211">View Source</a>
   </span>
   <a id="IPA_Utilities_Async_Synchronization_LockWrite_" data-uid="IPA.Utilities.Async.Synchronization.LockWrite*"></a>
-  <h4 id="IPA_Utilities_Async_Synchronization_LockWrite_System_Threading_ReaderWriterLockSlim_" data-uid="IPA.Utilities.Async.Synchronization.LockWrite(System.Threading.ReaderWriterLockSlim)">LockWrite(ReaderWriterLockSlim)</h4>
-  <div class="markdown level1 summary"><p>Creates a locker for a write lock <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a>.</p>
+  <h4 id="IPA_Utilities_Async_Synchronization_LockWrite_ReaderWriterLockSlim_" data-uid="IPA.Utilities.Async.Synchronization.LockWrite(ReaderWriterLockSlim)">LockWrite(ReaderWriterLockSlim)</h4>
+  <div class="markdown level1 summary"><p>Creates a locker for a write lock <see cref="!:ReaderWriterLockSlim"></see>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -409,7 +385,7 @@ with whichever member you want to use, according to your lock type.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.readerwriterlockslim">ReaderWriterLockSlim</a></td>
+        <td><span class="xref">ReaderWriterLockSlim</span></td>
         <td><span class="parametername">rwl</span></td>
         <td><p>the lock to acquire in write mode</p>
 </td>
@@ -443,7 +419,7 @@ with whichever member you want to use, according to your lock type.
                     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Async_Synchronization.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.Synchronization%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Utilities/Async/Synchronization.cs/#L26" class="contribution-link">View Source</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Utilities/Async/Synchronization.cs/#L26" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

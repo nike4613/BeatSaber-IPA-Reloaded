@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Feature
    ">
-    <meta name="generator" content="docfx 2.58.9.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -92,35 +92,11 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">Feature</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Loader.Features.html">IPA.Loader.Features</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Loader_Features_Feature_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class Feature</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class Feature : object</code></pre>
   </div>
   <h5 id="IPA_Loader_Features_Feature_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Avoid storing any data in any subclasses. If you do, it may result in a failure to load the feature.</p>
@@ -132,7 +108,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature_InvalidMessage.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature.InvalidMessage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L37">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L37">View Source</a>
   </span>
   <a id="IPA_Loader_Features_Feature_InvalidMessage_" data-uid="IPA.Loader.Features.Feature.InvalidMessage*"></a>
   <h4 id="IPA_Loader_Features_Feature_InvalidMessage" data-uid="IPA.Loader.Features.Feature.InvalidMessage">InvalidMessage</h4>
@@ -142,7 +118,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual string InvalidMessage { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual string? InvalidMessage { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -154,7 +130,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><p>the message to show when the feature is marked invalid</p>
 </td>
       </tr>
@@ -167,7 +143,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature_AfterDisable_IPA_Loader_PluginMetadata_.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature.AfterDisable(IPA.Loader.PluginMetadata)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L63">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L63">View Source</a>
   </span>
   <a id="IPA_Loader_Features_Feature_AfterDisable_" data-uid="IPA.Loader.Features.Feature.AfterDisable*"></a>
   <h4 id="IPA_Loader_Features_Feature_AfterDisable_IPA_Loader_PluginMetadata_" data-uid="IPA.Loader.Features.Feature.AfterDisable(IPA.Loader.PluginMetadata)">AfterDisable(PluginMetadata)</h4>
@@ -201,7 +177,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginMetadata_.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L57">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L57">View Source</a>
   </span>
   <a id="IPA_Loader_Features_Feature_AfterInit_" data-uid="IPA.Loader.Features.Feature.AfterInit*"></a>
   <h4 id="IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginMetadata_" data-uid="IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata)">AfterInit(PluginMetadata)</h4>
@@ -235,7 +211,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginMetadata_System_Object_.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L51">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L51">View Source</a>
   </span>
   <a id="IPA_Loader_Features_Feature_AfterInit_" data-uid="IPA.Loader.Features.Feature.AfterInit*"></a>
   <h4 id="IPA_Loader_Features_Feature_AfterInit_IPA_Loader_PluginMetadata_System_Object_" data-uid="IPA.Loader.Features.Feature.AfterInit(IPA.Loader.PluginMetadata,System.Object)">AfterInit(PluginMetadata, Object)</h4>
@@ -275,7 +251,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature_BeforeInit_IPA_Loader_PluginMetadata_.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginMetadata)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L44">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L44">View Source</a>
   </span>
   <a id="IPA_Loader_Features_Feature_BeforeInit_" data-uid="IPA.Loader.Features.Feature.BeforeInit*"></a>
   <h4 id="IPA_Loader_Features_Feature_BeforeInit_IPA_Loader_PluginMetadata_" data-uid="IPA.Loader.Features.Feature.BeforeInit(IPA.Loader.PluginMetadata)">BeforeInit(PluginMetadata)</h4>
@@ -309,7 +285,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature_Initialize_IPA_Loader_PluginMetadata_JObject_.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata%2CJObject)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L30">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L30">View Source</a>
   </span>
   <a id="IPA_Loader_Features_Feature_Initialize_" data-uid="IPA.Loader.Features.Feature.Initialize*"></a>
   <h4 id="IPA_Loader_Features_Feature_Initialize_IPA_Loader_PluginMetadata_JObject_" data-uid="IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,JObject)">Initialize(PluginMetadata, JObject)</h4>
@@ -391,7 +367,7 @@ This should also be set whenever either <a class="xref" href="IPA.Loader.Feature
                     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_Features_Feature.md&amp;value=---%0Auid%3A%20IPA.Loader.Features.Feature%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Loader/Features/Feature.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Loader/Features/Feature.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

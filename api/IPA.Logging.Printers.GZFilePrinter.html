@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GZFilePrinter
    ">
-    <meta name="generator" content="docfx 2.58.9.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -98,7 +98,7 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><span class="xref">IDisposable</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -106,35 +106,14 @@
       <a class="xref" href="IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Filter">LogPrinter.Filter</a>
     </div>
     <div>
-      <a class="xref" href="IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_">LogPrinter.Print(Logger.Level, DateTime, String, String)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+      <a class="xref" href="IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_">LogPrinter.Print(Logger.Level, DateTime, String, String)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Logging.Printers.html">IPA.Logging.Printers</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Logging_Printers_GZFilePrinter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class GZFilePrinter : LogPrinter, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class GZFilePrinter : LogPrinter</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -143,10 +122,10 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter_FileWriter.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter.FileWriter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L40">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L40">View Source</a>
   </span>
   <h4 id="IPA_Logging_Printers_GZFilePrinter_FileWriter" data-uid="IPA.Logging.Printers.GZFilePrinter.FileWriter">FileWriter</h4>
-  <div class="markdown level1 summary"><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.streamwriter">StreamWriter</a> that writes to the GZip file.</p>
+  <div class="markdown level1 summary"><p>The <see cref="!:StreamWriter"></see> that writes to the GZip file.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -163,7 +142,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.streamwriter">StreamWriter</a></td>
+        <td><span class="xref">StreamWriter</span></td>
         <td><p>the writer to the underlying filestream</p>
 </td>
       </tr>
@@ -176,7 +155,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter_Dispose.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L135">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L135">View Source</a>
   </span>
   <a id="IPA_Logging_Printers_GZFilePrinter_Dispose_" data-uid="IPA.Logging.Printers.GZFilePrinter.Dispose*"></a>
   <h4 id="IPA_Logging_Printers_GZFilePrinter_Dispose" data-uid="IPA.Logging.Printers.GZFilePrinter.Dispose">Dispose()</h4>
@@ -191,7 +170,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L145">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L145">View Source</a>
   </span>
   <a id="IPA_Logging_Printers_GZFilePrinter_Dispose_" data-uid="IPA.Logging.Printers.GZFilePrinter.Dispose*"></a>
   <h4 id="IPA_Logging_Printers_GZFilePrinter_Dispose_System_Boolean_" data-uid="IPA.Logging.Printers.GZFilePrinter.Dispose(System.Boolean)">Dispose(Boolean)</h4>
@@ -225,7 +204,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter_EndPrint.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter.EndPrint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L124">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L124">View Source</a>
   </span>
   <a id="IPA_Logging_Printers_GZFilePrinter_EndPrint_" data-uid="IPA.Logging.Printers.GZFilePrinter.EndPrint*"></a>
   <h4 id="IPA_Logging_Printers_GZFilePrinter_EndPrint" data-uid="IPA.Logging.Printers.GZFilePrinter.EndPrint">EndPrint()</h4>
@@ -243,11 +222,11 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter_GetFileInfo.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter.GetFileInfo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L48">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L48">View Source</a>
   </span>
   <a id="IPA_Logging_Printers_GZFilePrinter_GetFileInfo_" data-uid="IPA.Logging.Printers.GZFilePrinter.GetFileInfo*"></a>
   <h4 id="IPA_Logging_Printers_GZFilePrinter_GetFileInfo" data-uid="IPA.Logging.Printers.GZFilePrinter.GetFileInfo">GetFileInfo()</h4>
-  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a> for the file to write to.</p>
+  <div class="markdown level1 summary"><p>Gets the <see cref="!:FileInfo"></see> for the file to write to.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -264,7 +243,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a></td>
+        <td><span class="xref">FileInfo</span></td>
         <td><p>the file to write to</p>
 </td>
       </tr>
@@ -275,7 +254,7 @@
     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter_StartPrint.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter.StartPrint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L113">View Source</a>
+    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L113">View Source</a>
   </span>
   <a id="IPA_Logging_Printers_GZFilePrinter_StartPrint_" data-uid="IPA.Logging.Printers.GZFilePrinter.StartPrint*"></a>
   <h4 id="IPA_Logging_Printers_GZFilePrinter_StartPrint" data-uid="IPA.Logging.Printers.GZFilePrinter.StartPrint">StartPrint()</h4>
@@ -290,7 +269,7 @@
   <div><a class="xref" href="IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_StartPrint">LogPrinter.StartPrint()</a></div>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+      <span class="xref">IDisposable</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
@@ -319,7 +298,7 @@
                     <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Logging_Printers_GZFilePrinter.md&amp;value=---%0Auid%3A%20IPA.Logging.Printers.GZFilePrinter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/3adbdc18e8891cba87b2754e0028bfc7f6b8b314/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/bsmg/BeatSaber-IPA-Reloaded/blob/c4dc707b6030c54b5c3255a81a2c104bc9582847/IPA.Loader/Logging/Printers/GZFilePrinter.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
