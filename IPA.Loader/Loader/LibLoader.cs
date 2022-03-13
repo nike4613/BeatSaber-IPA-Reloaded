@@ -90,6 +90,9 @@ namespace IPA.Loader
 
                 //var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
                 //AddDir(Path.Combine(unityData, "Plugins"));
+
+                // TODO: find a way to either safely remove Newtonsoft, or switch to a different JSON lib
+                _ = LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral"));
             }
         }
 
@@ -151,21 +154,29 @@ namespace IPA.Loader
             return Assembly.LoadFrom(path);
         }
 
-    internal static void Log(Logger.Level lvl, string message)
+        internal static void Log(Logger.Level lvl, string message)
         { // multiple proxy methods to delay loading of assemblies until it's done
             if (Logger.LogCreated)
+            {
                 AssemblyLibLoaderCallLogger(lvl, message);
+            }
             else
+            {
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
                     Console.WriteLine($"[{lvl}] {message}");
+            }
         }
         internal static void Log(Logger.Level lvl, Exception message)
         { // multiple proxy methods to delay loading of assemblies until it's done
             if (Logger.LogCreated)
+            {
                 AssemblyLibLoaderCallLogger(lvl, message);
+            }
             else
+            {
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
-                Console.WriteLine($"[{lvl}] {message}");
+                    Console.WriteLine($"[{lvl}] {message}");
+            }
         }
 
         private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.LibLoader.Log(lvl, message);
