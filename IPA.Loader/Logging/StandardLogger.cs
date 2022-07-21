@@ -122,7 +122,8 @@ namespace IPA.Logging
             PrintFilter = SelfConfig.Debug_.ShowDebug_ ? LogLevel.All : LogLevel.InfoUp;
             showTrace = SelfConfig.Debug_.ShowTrace_;
             syncLogging = SelfConfig.Debug_.SyncLogging_;
-            if(SelfConfig.CommandLineValues.WriteLogs && !addedFilePrinter) {
+            if (SelfConfig.CommandLineValues.WriteLogs && !addedFilePrinter)
+            {
                 addedFilePrinter = true;
                 AddDefaultPrinter(new GlobalLogFilePrinter());
             }
