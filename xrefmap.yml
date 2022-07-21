@@ -56,15 +56,15 @@ references:
   commentId: T:IPA.AntiMalware.IAntiMalware
   fullName: IPA.AntiMalware.IAntiMalware
   nameWithType: IAntiMalware
-- uid: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[],System.Nullable{System.String})
-  name: ScanData(Byte[], Nullable<String>)
-  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanData_System_Byte___System_Nullable_System_String__
-  commentId: M:IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[],System.Nullable{System.String})
-  name.vb: ScanData(Byte(), Nullable(Of String))
-  fullName: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[], System.Nullable<System.String>)
-  fullName.vb: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte(), System.Nullable(Of System.String))
-  nameWithType: IAntiMalware.ScanData(Byte[], Nullable<String>)
-  nameWithType.vb: IAntiMalware.ScanData(Byte(), Nullable(Of String))
+- uid: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[],System.String)
+  name: ScanData(Byte[], String)
+  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanData_System_Byte___System_String_
+  commentId: M:IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[],System.String)
+  name.vb: ScanData(Byte(), String)
+  fullName: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte[], System.String)
+  fullName.vb: IPA.AntiMalware.IAntiMalware.ScanData(System.Byte(), System.String)
+  nameWithType: IAntiMalware.ScanData(Byte[], String)
+  nameWithType.vb: IAntiMalware.ScanData(Byte(), String)
 - uid: IPA.AntiMalware.IAntiMalware.ScanData*
   name: ScanData
   href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanData_
@@ -72,11 +72,11 @@ references:
   isSpec: "True"
   fullName: IPA.AntiMalware.IAntiMalware.ScanData
   nameWithType: IAntiMalware.ScanData
-- uid: IPA.AntiMalware.IAntiMalware.ScanFile(FileInfo)
+- uid: IPA.AntiMalware.IAntiMalware.ScanFile(System.IO.FileInfo)
   name: ScanFile(FileInfo)
-  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanFile_FileInfo_
-  commentId: M:IPA.AntiMalware.IAntiMalware.ScanFile(FileInfo)
-  fullName: IPA.AntiMalware.IAntiMalware.ScanFile(FileInfo)
+  href: api/IPA.AntiMalware.IAntiMalware.html#IPA_AntiMalware_IAntiMalware_ScanFile_System_IO_FileInfo_
+  commentId: M:IPA.AntiMalware.IAntiMalware.ScanFile(System.IO.FileInfo)
+  fullName: IPA.AntiMalware.IAntiMalware.ScanFile(System.IO.FileInfo)
   nameWithType: IAntiMalware.ScanFile(FileInfo)
 - uid: IPA.AntiMalware.IAntiMalware.ScanFile*
   name: ScanFile
@@ -262,11 +262,11 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Config.Provider
   nameWithType: Config.Provider
-- uid: IPA.Config.Config.Register(Type)
+- uid: IPA.Config.Config.Register(System.Type)
   name: Register(Type)
-  href: api/IPA.Config.Config.html#IPA_Config_Config_Register_Type_
-  commentId: M:IPA.Config.Config.Register(Type)
-  fullName: IPA.Config.Config.Register(Type)
+  href: api/IPA.Config.Config.html#IPA_Config_Config_Register_System_Type_
+  commentId: M:IPA.Config.Config.Register(System.Type)
+  fullName: IPA.Config.Config.Register(System.Type)
   nameWithType: Config.Register(Type)
 - uid: IPA.Config.Config.Register*
   name: Register
@@ -533,13 +533,13 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Data.List.Add
   nameWithType: List.Add
-- uid: IPA.Config.Data.List.AddRange(IEnumerable{IPA.Config.Data.Value})
+- uid: IPA.Config.Data.List.AddRange(System.Collections.Generic.IEnumerable{IPA.Config.Data.Value})
   name: AddRange(IEnumerable<Value>)
-  href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_AddRange_IEnumerable_IPA_Config_Data_Value__
-  commentId: M:IPA.Config.Data.List.AddRange(IEnumerable{IPA.Config.Data.Value})
+  href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_AddRange_System_Collections_Generic_IEnumerable_IPA_Config_Data_Value__
+  commentId: M:IPA.Config.Data.List.AddRange(System.Collections.Generic.IEnumerable{IPA.Config.Data.Value})
   name.vb: AddRange(IEnumerable(Of Value))
-  fullName: IPA.Config.Data.List.AddRange(IEnumerable<IPA.Config.Data.Value>)
-  fullName.vb: IPA.Config.Data.List.AddRange(IEnumerable(Of IPA.Config.Data.Value))
+  fullName: IPA.Config.Data.List.AddRange(System.Collections.Generic.IEnumerable<IPA.Config.Data.Value>)
+  fullName.vb: IPA.Config.Data.List.AddRange(System.Collections.Generic.IEnumerable(Of IPA.Config.Data.Value))
   nameWithType: List.AddRange(IEnumerable<Value>)
   nameWithType.vb: List.AddRange(IEnumerable(Of Value))
 - uid: IPA.Config.Data.List.AddRange*
@@ -685,6 +685,40 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Data.List.RemoveAt
   nameWithType: List.RemoveAt
+- uid: IPA.Config.Data.List.System#Collections#Generic#ICollection{IPA#Config#Data#Value}#IsReadOnly
+  name: ICollection<Value>.IsReadOnly
+  href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_System_Collections_Generic_ICollection_IPA_Config_Data_Value__IsReadOnly
+  commentId: P:IPA.Config.Data.List.System#Collections#Generic#ICollection{IPA#Config#Data#Value}#IsReadOnly
+  name.vb: System.Collections.Generic.ICollection<IPA.Config.Data.Value>.IsReadOnly
+  fullName: IPA.Config.Data.List.System.Collections.Generic.ICollection<IPA.Config.Data.Value>.IsReadOnly
+  nameWithType: List.ICollection<Value>.IsReadOnly
+  nameWithType.vb: List.System.Collections.Generic.ICollection<IPA.Config.Data.Value>.IsReadOnly
+- uid: IPA.Config.Data.List.System#Collections#Generic#ICollection{IPA#Config#Data#Value}#IsReadOnly*
+  name: ICollection<Value>.IsReadOnly
+  href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_System_Collections_Generic_ICollection_IPA_Config_Data_Value__IsReadOnly_
+  commentId: Overload:IPA.Config.Data.List.System#Collections#Generic#ICollection{IPA#Config#Data#Value}#IsReadOnly
+  isSpec: "True"
+  name.vb: System.Collections.Generic.ICollection<IPA.Config.Data.Value>.IsReadOnly
+  fullName: IPA.Config.Data.List.System.Collections.Generic.ICollection<IPA.Config.Data.Value>.IsReadOnly
+  nameWithType: List.ICollection<Value>.IsReadOnly
+  nameWithType.vb: List.System.Collections.Generic.ICollection<IPA.Config.Data.Value>.IsReadOnly
+- uid: IPA.Config.Data.List.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:IPA.Config.Data.List.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: IPA.Config.Data.List.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: List.IEnumerable.GetEnumerator()
+  nameWithType.vb: List.System.Collections.IEnumerable.GetEnumerator()
+- uid: IPA.Config.Data.List.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:IPA.Config.Data.List.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: IPA.Config.Data.List.System.Collections.IEnumerable.GetEnumerator
+  nameWithType: List.IEnumerable.GetEnumerator
+  nameWithType.vb: List.System.Collections.IEnumerable.GetEnumerator
 - uid: IPA.Config.Data.List.ToString
   name: ToString()
   href: api/IPA.Config.Data.List.html#IPA_Config_Data_List_ToString
@@ -811,6 +845,118 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Data.Map.Remove
   nameWithType: Map.Remove
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Add(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value})
+  name: ICollection<KeyValuePair<String, Value>>.Add(KeyValuePair<String, Value>)
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___Add_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value__
+  commentId: M:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Add(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value})
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Add(KeyValuePair(Of String, Value))
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.Add(System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>)
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Add(System.Collections.Generic.KeyValuePair(Of System.String, IPA.Config.Data.Value))
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.Add(KeyValuePair<String, Value>)
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Add(KeyValuePair(Of String, Value))
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Add*
+  name: ICollection<KeyValuePair<String, Value>>.Add
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___Add_
+  commentId: Overload:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Add
+  isSpec: "True"
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Add
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.Add
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Add
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.Add
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Add
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Contains(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value})
+  name: ICollection<KeyValuePair<String, Value>>.Contains(KeyValuePair<String, Value>)
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___Contains_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value__
+  commentId: M:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Contains(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value})
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Contains(KeyValuePair(Of String, Value))
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.Contains(System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>)
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Contains(System.Collections.Generic.KeyValuePair(Of System.String, IPA.Config.Data.Value))
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.Contains(KeyValuePair<String, Value>)
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Contains(KeyValuePair(Of String, Value))
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Contains*
+  name: ICollection<KeyValuePair<String, Value>>.Contains
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___Contains_
+  commentId: Overload:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Contains
+  isSpec: "True"
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Contains
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.Contains
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Contains
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.Contains
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Contains
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#CopyTo(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value}[],System.Int32)
+  name: ICollection<KeyValuePair<String, Value>>.CopyTo(KeyValuePair<String, Value>[], Int32)
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___CopyTo_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value____System_Int32_
+  commentId: M:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#CopyTo(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value}[],System.Int32)
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.CopyTo(KeyValuePair(Of String, Value)(), Int32)
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.CopyTo(System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>[], System.Int32)
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.CopyTo(System.Collections.Generic.KeyValuePair(Of System.String, IPA.Config.Data.Value)(), System.Int32)
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.CopyTo(KeyValuePair<String, Value>[], Int32)
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.CopyTo(KeyValuePair(Of String, Value)(), Int32)
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#CopyTo*
+  name: ICollection<KeyValuePair<String, Value>>.CopyTo
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___CopyTo_
+  commentId: Overload:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#CopyTo
+  isSpec: "True"
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.CopyTo
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.CopyTo
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.CopyTo
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.CopyTo
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.CopyTo
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#IsReadOnly
+  name: ICollection<KeyValuePair<String, Value>>.IsReadOnly
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___IsReadOnly
+  commentId: P:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#IsReadOnly
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.IsReadOnly
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.IsReadOnly
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.IsReadOnly
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.IsReadOnly
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.IsReadOnly
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#IsReadOnly*
+  name: ICollection<KeyValuePair<String, Value>>.IsReadOnly
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___IsReadOnly_
+  commentId: Overload:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#IsReadOnly
+  isSpec: "True"
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.IsReadOnly
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.IsReadOnly
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.IsReadOnly
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.IsReadOnly
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.IsReadOnly
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Remove(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value})
+  name: ICollection<KeyValuePair<String, Value>>.Remove(KeyValuePair<String, Value>)
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___Remove_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value__
+  commentId: M:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Remove(System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value})
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Remove(KeyValuePair(Of String, Value))
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.Remove(System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>)
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Remove(System.Collections.Generic.KeyValuePair(Of System.String, IPA.Config.Data.Value))
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.Remove(KeyValuePair<String, Value>)
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Remove(KeyValuePair(Of String, Value))
+- uid: IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Remove*
+  name: ICollection<KeyValuePair<String, Value>>.Remove
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_Generic_ICollection_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___Remove_
+  commentId: Overload:IPA.Config.Data.Map.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{System#String,IPA#Config#Data#Value}}#Remove
+  isSpec: "True"
+  name.vb: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Remove
+  fullName: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>.Remove
+  fullName.vb: IPA.Config.Data.Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Remove
+  nameWithType: Map.ICollection<KeyValuePair<String, Value>>.Remove
+  nameWithType.vb: Map.System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<System.String,IPA.Config.Data.Value>>.Remove
+- uid: IPA.Config.Data.Map.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:IPA.Config.Data.Map.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: IPA.Config.Data.Map.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: Map.IEnumerable.GetEnumerator()
+  nameWithType.vb: Map.System.Collections.IEnumerable.GetEnumerator()
+- uid: IPA.Config.Data.Map.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:IPA.Config.Data.Map.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: IPA.Config.Data.Map.System.Collections.IEnumerable.GetEnumerator
+  nameWithType: Map.IEnumerable.GetEnumerator
+  nameWithType.vb: Map.System.Collections.IEnumerable.GetEnumerator
 - uid: IPA.Config.Data.Map.ToString
   name: ToString()
   href: api/IPA.Config.Data.Map.html#IPA_Config_Data_Map_ToString
@@ -936,21 +1082,39 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Data.Value.Float
   nameWithType: Value.Float
-- uid: IPA.Config.Data.Value.From(IDictionary{System.String,IPA.Config.Data.Value})
-  name: From(IDictionary<String, Value>)
-  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_IDictionary_System_String_IPA_Config_Data_Value__
-  commentId: M:IPA.Config.Data.Value.From(IDictionary{System.String,IPA.Config.Data.Value})
-  name.vb: From(IDictionary(Of String, Value))
-  fullName: IPA.Config.Data.Value.From(IDictionary<System.String, IPA.Config.Data.Value>)
-  fullName.vb: IPA.Config.Data.Value.From(IDictionary(Of System.String, IPA.Config.Data.Value))
-  nameWithType: Value.From(IDictionary<String, Value>)
-  nameWithType.vb: Value.From(IDictionary(Of String, Value))
 - uid: IPA.Config.Data.Value.From(System.Boolean)
   name: From(Boolean)
   href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Boolean_
   commentId: M:IPA.Config.Data.Value.From(System.Boolean)
   fullName: IPA.Config.Data.Value.From(System.Boolean)
   nameWithType: Value.From(Boolean)
+- uid: IPA.Config.Data.Value.From(System.Collections.Generic.IDictionary{System.String,IPA.Config.Data.Value})
+  name: From(IDictionary<String, Value>)
+  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IDictionary_System_String_IPA_Config_Data_Value__
+  commentId: M:IPA.Config.Data.Value.From(System.Collections.Generic.IDictionary{System.String,IPA.Config.Data.Value})
+  name.vb: From(IDictionary(Of String, Value))
+  fullName: IPA.Config.Data.Value.From(System.Collections.Generic.IDictionary<System.String, IPA.Config.Data.Value>)
+  fullName.vb: IPA.Config.Data.Value.From(System.Collections.Generic.IDictionary(Of System.String, IPA.Config.Data.Value))
+  nameWithType: Value.From(IDictionary<String, Value>)
+  nameWithType.vb: Value.From(IDictionary(Of String, Value))
+- uid: IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable{IPA.Config.Data.Value})
+  name: From(IEnumerable<Value>)
+  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IEnumerable_IPA_Config_Data_Value__
+  commentId: M:IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable{IPA.Config.Data.Value})
+  name.vb: From(IEnumerable(Of Value))
+  fullName: IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable<IPA.Config.Data.Value>)
+  fullName.vb: IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable(Of IPA.Config.Data.Value))
+  nameWithType: Value.From(IEnumerable<Value>)
+  nameWithType.vb: Value.From(IEnumerable(Of Value))
+- uid: IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value}})
+  name: From(IEnumerable<KeyValuePair<String, Value>>)
+  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___
+  commentId: M:IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,IPA.Config.Data.Value}})
+  name.vb: From(IEnumerable(Of KeyValuePair(Of String, Value)))
+  fullName: IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<System.String, IPA.Config.Data.Value>>)
+  fullName.vb: IPA.Config.Data.Value.From(System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of System.String, IPA.Config.Data.Value)))
+  nameWithType: Value.From(IEnumerable<KeyValuePair<String, Value>>)
+  nameWithType.vb: Value.From(IEnumerable(Of KeyValuePair(Of String, Value)))
 - uid: IPA.Config.Data.Value.From(System.Decimal)
   name: From(Decimal)
   href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Decimal_
@@ -963,33 +1127,12 @@ references:
   commentId: M:IPA.Config.Data.Value.From(System.Int64)
   fullName: IPA.Config.Data.Value.From(System.Int64)
   nameWithType: Value.From(Int64)
-- uid: IPA.Config.Data.Value.From(System.Nullable{IEnumerable{IPA.Config.Data.Value}})
-  name: From(Nullable<IEnumerable<Value>>)
-  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Nullable_IEnumerable_IPA_Config_Data_Value___
-  commentId: M:IPA.Config.Data.Value.From(System.Nullable{IEnumerable{IPA.Config.Data.Value}})
-  name.vb: From(Nullable(Of IEnumerable(Of Value)))
-  fullName: IPA.Config.Data.Value.From(System.Nullable<IEnumerable<IPA.Config.Data.Value>>)
-  fullName.vb: IPA.Config.Data.Value.From(System.Nullable(Of IEnumerable(Of IPA.Config.Data.Value)))
-  nameWithType: Value.From(Nullable<IEnumerable<Value>>)
-  nameWithType.vb: Value.From(Nullable(Of IEnumerable(Of Value)))
-- uid: IPA.Config.Data.Value.From(System.Nullable{IEnumerable{KeyValuePair{System.String,IPA.Config.Data.Value}}})
-  name: From(Nullable<IEnumerable<KeyValuePair<String, Value>>>)
-  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Nullable_IEnumerable_KeyValuePair_System_String_IPA_Config_Data_Value____
-  commentId: M:IPA.Config.Data.Value.From(System.Nullable{IEnumerable{KeyValuePair{System.String,IPA.Config.Data.Value}}})
-  name.vb: From(Nullable(Of IEnumerable(Of KeyValuePair(Of String, Value))))
-  fullName: IPA.Config.Data.Value.From(System.Nullable<IEnumerable<KeyValuePair<System.String, IPA.Config.Data.Value>>>)
-  fullName.vb: IPA.Config.Data.Value.From(System.Nullable(Of IEnumerable(Of KeyValuePair(Of System.String, IPA.Config.Data.Value))))
-  nameWithType: Value.From(Nullable<IEnumerable<KeyValuePair<String, Value>>>)
-  nameWithType.vb: Value.From(Nullable(Of IEnumerable(Of KeyValuePair(Of String, Value))))
-- uid: IPA.Config.Data.Value.From(System.Nullable{System.String})
-  name: From(Nullable<String>)
-  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Nullable_System_String__
-  commentId: M:IPA.Config.Data.Value.From(System.Nullable{System.String})
-  name.vb: From(Nullable(Of String))
-  fullName: IPA.Config.Data.Value.From(System.Nullable<System.String>)
-  fullName.vb: IPA.Config.Data.Value.From(System.Nullable(Of System.String))
-  nameWithType: Value.From(Nullable<String>)
-  nameWithType.vb: Value.From(Nullable(Of String))
+- uid: IPA.Config.Data.Value.From(System.String)
+  name: From(String)
+  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_String_
+  commentId: M:IPA.Config.Data.Value.From(System.String)
+  fullName: IPA.Config.Data.Value.From(System.String)
+  nameWithType: Value.From(String)
 - uid: IPA.Config.Data.Value.From*
   name: From
   href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_
@@ -1049,15 +1192,12 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Data.Value.Null
   nameWithType: Value.Null
-- uid: IPA.Config.Data.Value.Text(System.Nullable{System.String})
-  name: Text(Nullable<String>)
-  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_Text_System_Nullable_System_String__
-  commentId: M:IPA.Config.Data.Value.Text(System.Nullable{System.String})
-  name.vb: Text(Nullable(Of String))
-  fullName: IPA.Config.Data.Value.Text(System.Nullable<System.String>)
-  fullName.vb: IPA.Config.Data.Value.Text(System.Nullable(Of System.String))
-  nameWithType: Value.Text(Nullable<String>)
-  nameWithType.vb: Value.Text(Nullable(Of String))
+- uid: IPA.Config.Data.Value.Text(System.String)
+  name: Text(String)
+  href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_Text_System_String_
+  commentId: M:IPA.Config.Data.Value.Text(System.String)
+  fullName: IPA.Config.Data.Value.Text(System.String)
+  nameWithType: Value.Text(String)
 - uid: IPA.Config.Data.Value.Text*
   name: Text
   href: api/IPA.Config.Data.Value.html#IPA_Config_Data_Value_Text_
@@ -1097,11 +1237,11 @@ references:
   isSpec: "True"
   fullName: IPA.Config.IConfigProvider.Extension
   nameWithType: IConfigProvider.Extension
-- uid: IPA.Config.IConfigProvider.Load(FileInfo)
+- uid: IPA.Config.IConfigProvider.Load(System.IO.FileInfo)
   name: Load(FileInfo)
-  href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Load_FileInfo_
-  commentId: M:IPA.Config.IConfigProvider.Load(FileInfo)
-  fullName: IPA.Config.IConfigProvider.Load(FileInfo)
+  href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Load_System_IO_FileInfo_
+  commentId: M:IPA.Config.IConfigProvider.Load(System.IO.FileInfo)
+  fullName: IPA.Config.IConfigProvider.Load(System.IO.FileInfo)
   nameWithType: IConfigProvider.Load(FileInfo)
 - uid: IPA.Config.IConfigProvider.Load*
   name: Load
@@ -1110,11 +1250,11 @@ references:
   isSpec: "True"
   fullName: IPA.Config.IConfigProvider.Load
   nameWithType: IConfigProvider.Load
-- uid: IPA.Config.IConfigProvider.Store(IPA.Config.Data.Value,FileInfo)
+- uid: IPA.Config.IConfigProvider.Store(IPA.Config.Data.Value,System.IO.FileInfo)
   name: Store(Value, FileInfo)
-  href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Store_IPA_Config_Data_Value_FileInfo_
-  commentId: M:IPA.Config.IConfigProvider.Store(IPA.Config.Data.Value,FileInfo)
-  fullName: IPA.Config.IConfigProvider.Store(IPA.Config.Data.Value, FileInfo)
+  href: api/IPA.Config.IConfigProvider.html#IPA_Config_IConfigProvider_Store_IPA_Config_Data_Value_System_IO_FileInfo_
+  commentId: M:IPA.Config.IConfigProvider.Store(IPA.Config.Data.Value,System.IO.FileInfo)
+  fullName: IPA.Config.IConfigProvider.Store(IPA.Config.Data.Value, System.IO.FileInfo)
   nameWithType: IConfigProvider.Store(Value, FileInfo)
 - uid: IPA.Config.IConfigProvider.Store*
   name: Store
@@ -1667,11 +1807,11 @@ references:
   commentId: M:IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor
   fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.UseConverterAttribute()
   nameWithType: UseConverterAttribute.UseConverterAttribute()
-- uid: IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor(Type)
+- uid: IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor(System.Type)
   name: UseConverterAttribute(Type)
-  href: api/IPA.Config.Stores.Attributes.UseConverterAttribute.html#IPA_Config_Stores_Attributes_UseConverterAttribute__ctor_Type_
-  commentId: M:IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor(Type)
-  fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.UseConverterAttribute(Type)
+  href: api/IPA.Config.Stores.Attributes.UseConverterAttribute.html#IPA_Config_Stores_Attributes_UseConverterAttribute__ctor_System_Type_
+  commentId: M:IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor(System.Type)
+  fullName: IPA.Config.Stores.Attributes.UseConverterAttribute.UseConverterAttribute(System.Type)
   nameWithType: UseConverterAttribute.UseConverterAttribute(Type)
 - uid: IPA.Config.Stores.Attributes.UseConverterAttribute.#ctor*
   name: UseConverterAttribute
@@ -2208,15 +2348,15 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).FromValue
   nameWithType: DictionaryConverter<TValue>.FromValue
   nameWithType.vb: DictionaryConverter(Of TValue).FromValue
-- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue(System.Nullable{Dictionary{System.String,`0}},System.Object)
-  name: ToValue(Nullable<Dictionary<String, TValue>>, Object)
-  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_ToValue_System_Nullable_Dictionary_System_String__0___System_Object_
-  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue(System.Nullable{Dictionary{System.String,`0}},System.Object)
-  name.vb: ToValue(Nullable(Of Dictionary(Of String, TValue)), Object)
-  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.ToValue(System.Nullable<Dictionary<System.String, TValue>>, System.Object)
-  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).ToValue(System.Nullable(Of Dictionary(Of System.String, TValue)), System.Object)
-  nameWithType: DictionaryConverter<TValue>.ToValue(Nullable<Dictionary<String, TValue>>, Object)
-  nameWithType.vb: DictionaryConverter(Of TValue).ToValue(Nullable(Of Dictionary(Of String, TValue)), Object)
+- uid: IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue(System.Collections.Generic.Dictionary{System.String,`0},System.Object)
+  name: ToValue(Dictionary<String, TValue>, Object)
+  href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_ToValue_System_Collections_Generic_Dictionary_System_String__0__System_Object_
+  commentId: M:IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue(System.Collections.Generic.Dictionary{System.String,`0},System.Object)
+  name.vb: ToValue(Dictionary(Of String, TValue), Object)
+  fullName: IPA.Config.Stores.Converters.DictionaryConverter<TValue>.ToValue(System.Collections.Generic.Dictionary<System.String, TValue>, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.DictionaryConverter(Of TValue).ToValue(System.Collections.Generic.Dictionary(Of System.String, TValue), System.Object)
+  nameWithType: DictionaryConverter<TValue>.ToValue(Dictionary<String, TValue>, Object)
+  nameWithType.vb: DictionaryConverter(Of TValue).ToValue(Dictionary(Of String, TValue), Object)
 - uid: IPA.Config.Stores.Converters.DictionaryConverter`1.ToValue*
   name: ToValue
   href: api/IPA.Config.Stores.Converters.DictionaryConverter-1.html#IPA_Config_Stores_Converters_DictionaryConverter_1_ToValue_
@@ -2314,11 +2454,11 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Stores.Converters.HexColorConverter.FromValue
   nameWithType: HexColorConverter.FromValue
-- uid: IPA.Config.Stores.Converters.HexColorConverter.ToValue(Color,System.Object)
+- uid: IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color,System.Object)
   name: ToValue(Color, Object)
-  href: api/IPA.Config.Stores.Converters.HexColorConverter.html#IPA_Config_Stores_Converters_HexColorConverter_ToValue_Color_System_Object_
-  commentId: M:IPA.Config.Stores.Converters.HexColorConverter.ToValue(Color,System.Object)
-  fullName: IPA.Config.Stores.Converters.HexColorConverter.ToValue(Color, System.Object)
+  href: api/IPA.Config.Stores.Converters.HexColorConverter.html#IPA_Config_Stores_Converters_HexColorConverter_ToValue_UnityEngine_Color_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color,System.Object)
+  fullName: IPA.Config.Stores.Converters.HexColorConverter.ToValue(UnityEngine.Color, System.Object)
   nameWithType: HexColorConverter.ToValue(Color, Object)
 - uid: IPA.Config.Stores.Converters.HexColorConverter.ToValue*
   name: ToValue
@@ -2396,15 +2536,15 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).FromValue
   nameWithType: IDictionaryConverter<TValue>.FromValue
   nameWithType.vb: IDictionaryConverter(Of TValue).FromValue
-- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue(System.Nullable{IDictionary{System.String,`0}},System.Object)
-  name: ToValue(Nullable<IDictionary<String, TValue>>, Object)
-  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_ToValue_System_Nullable_IDictionary_System_String__0___System_Object_
-  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue(System.Nullable{IDictionary{System.String,`0}},System.Object)
-  name.vb: ToValue(Nullable(Of IDictionary(Of String, TValue)), Object)
-  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.ToValue(System.Nullable<IDictionary<System.String, TValue>>, System.Object)
-  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).ToValue(System.Nullable(Of IDictionary(Of System.String, TValue)), System.Object)
-  nameWithType: IDictionaryConverter<TValue>.ToValue(Nullable<IDictionary<String, TValue>>, Object)
-  nameWithType.vb: IDictionaryConverter(Of TValue).ToValue(Nullable(Of IDictionary(Of String, TValue)), Object)
+- uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue(System.Collections.Generic.IDictionary{System.String,`0},System.Object)
+  name: ToValue(IDictionary<String, TValue>, Object)
+  href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_ToValue_System_Collections_Generic_IDictionary_System_String__0__System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue(System.Collections.Generic.IDictionary{System.String,`0},System.Object)
+  name.vb: ToValue(IDictionary(Of String, TValue), Object)
+  fullName: IPA.Config.Stores.Converters.IDictionaryConverter<TValue>.ToValue(System.Collections.Generic.IDictionary<System.String, TValue>, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IDictionaryConverter(Of TValue).ToValue(System.Collections.Generic.IDictionary(Of System.String, TValue), System.Object)
+  nameWithType: IDictionaryConverter<TValue>.ToValue(IDictionary<String, TValue>, Object)
+  nameWithType.vb: IDictionaryConverter(Of TValue).ToValue(IDictionary(Of String, TValue), Object)
 - uid: IPA.Config.Stores.Converters.IDictionaryConverter`1.ToValue*
   name: ToValue
   href: api/IPA.Config.Stores.Converters.IDictionaryConverter-1.html#IPA_Config_Stores_Converters_IDictionaryConverter_1_ToValue_
@@ -2518,6 +2658,197 @@ references:
   fullName.vb: IPA.Config.Stores.Converters.IListConverter(Of T, TConverter).IListConverter
   nameWithType: IListConverter<T, TConverter>.IListConverter
   nameWithType.vb: IListConverter(Of T, TConverter).IListConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1
+  name: IReadOnlyDictionaryConverter<TValue>
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1
+  name.vb: IReadOnlyDictionaryConverter(Of TValue)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue)
+  nameWithType: IReadOnlyDictionaryConverter<TValue>
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor
+  name: IReadOnlyDictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1__ctor
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter()
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter()
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter()
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name: IReadOnlyDictionaryConverter(ValueConverter<TValue>)
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1__ctor_IPA_Config_Stores_ValueConverter__0__
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name.vb: IReadOnlyDictionaryConverter(ValueConverter(Of TValue))
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter(IPA.Config.Stores.ValueConverter<TValue>)
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter(IPA.Config.Stores.ValueConverter(Of TValue))
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter(ValueConverter<TValue>)
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter(ValueConverter(Of TValue))
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor*
+  name: IReadOnlyDictionaryConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.IReadOnlyDictionaryConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).IReadOnlyDictionaryConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_BaseConverter
+  commentId: P:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter*
+  name: BaseConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_BaseConverter_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.BaseConverter
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.BaseConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).BaseConverter
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  name: FromValue(Value, Object)
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_FromValue_IPA_Config_Data_Value_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue(IPA.Config.Data.Value,System.Object)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.FromValue(IPA.Config.Data.Value, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).FromValue(IPA.Config.Data.Value, System.Object)
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.FromValue(Value, Object)
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).FromValue(Value, Object)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue*
+  name: FromValue
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_FromValue_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.FromValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.FromValue
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).FromValue
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.FromValue
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).FromValue
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue(System.Collections.Generic.IReadOnlyDictionary{System.String,`0},System.Object)
+  name: ToValue(IReadOnlyDictionary<String, TValue>, Object)
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_ToValue_System_Collections_Generic_IReadOnlyDictionary_System_String__0__System_Object_
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue(System.Collections.Generic.IReadOnlyDictionary{System.String,`0},System.Object)
+  name.vb: ToValue(IReadOnlyDictionary(Of String, TValue), Object)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.ToValue(System.Collections.Generic.IReadOnlyDictionary<System.String, TValue>, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).ToValue(System.Collections.Generic.IReadOnlyDictionary(Of System.String, TValue), System.Object)
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.ToValue(IReadOnlyDictionary<String, TValue>, Object)
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).ToValue(IReadOnlyDictionary(Of String, TValue), Object)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue*
+  name: ToValue
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-1.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_1_ToValue_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`1.ToValue
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue>.ToValue
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue).ToValue
+  nameWithType: IReadOnlyDictionaryConverter<TValue>.ToValue
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue).ToValue
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2
+  name: IReadOnlyDictionaryConverter<TValue, TConverter>
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-2.html
+  commentId: T:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2
+  name.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter)
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue, TConverter>
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue, TConverter)
+  nameWithType: IReadOnlyDictionaryConverter<TValue, TConverter>
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter)
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor
+  name: IReadOnlyDictionaryConverter()
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-2.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_2__ctor
+  commentId: M:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter()
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter()
+  nameWithType: IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter()
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter()
+- uid: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor*
+  name: IReadOnlyDictionaryConverter
+  href: api/IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter-2.html#IPA_Config_Stores_Converters_IReadOnlyDictionaryConverter_2__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter`2.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter
+  fullName.vb: IPA.Config.Stores.Converters.IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter
+  nameWithType: IReadOnlyDictionaryConverter<TValue, TConverter>.IReadOnlyDictionaryConverter
+  nameWithType.vb: IReadOnlyDictionaryConverter(Of TValue, TConverter).IReadOnlyDictionaryConverter
+- uid: IPA.Config.Stores.Converters.ISetConverter`1
+  name: ISetConverter<T>
+  href: api/IPA.Config.Stores.Converters.ISetConverter-1.html
+  commentId: T:IPA.Config.Stores.Converters.ISetConverter`1
+  name.vb: ISetConverter(Of T)
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T>
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T)
+  nameWithType: ISetConverter<T>
+  nameWithType.vb: ISetConverter(Of T)
+- uid: IPA.Config.Stores.Converters.ISetConverter`1.#ctor
+  name: ISetConverter()
+  href: api/IPA.Config.Stores.Converters.ISetConverter-1.html#IPA_Config_Stores_Converters_ISetConverter_1__ctor
+  commentId: M:IPA.Config.Stores.Converters.ISetConverter`1.#ctor
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T>.ISetConverter()
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T).ISetConverter()
+  nameWithType: ISetConverter<T>.ISetConverter()
+  nameWithType.vb: ISetConverter(Of T).ISetConverter()
+- uid: IPA.Config.Stores.Converters.ISetConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name: ISetConverter(ValueConverter<T>)
+  href: api/IPA.Config.Stores.Converters.ISetConverter-1.html#IPA_Config_Stores_Converters_ISetConverter_1__ctor_IPA_Config_Stores_ValueConverter__0__
+  commentId: M:IPA.Config.Stores.Converters.ISetConverter`1.#ctor(IPA.Config.Stores.ValueConverter{`0})
+  name.vb: ISetConverter(ValueConverter(Of T))
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T>.ISetConverter(IPA.Config.Stores.ValueConverter<T>)
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T).ISetConverter(IPA.Config.Stores.ValueConverter(Of T))
+  nameWithType: ISetConverter<T>.ISetConverter(ValueConverter<T>)
+  nameWithType.vb: ISetConverter(Of T).ISetConverter(ValueConverter(Of T))
+- uid: IPA.Config.Stores.Converters.ISetConverter`1.#ctor*
+  name: ISetConverter
+  href: api/IPA.Config.Stores.Converters.ISetConverter-1.html#IPA_Config_Stores_Converters_ISetConverter_1__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.ISetConverter`1.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T>.ISetConverter
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T).ISetConverter
+  nameWithType: ISetConverter<T>.ISetConverter
+  nameWithType.vb: ISetConverter(Of T).ISetConverter
+- uid: IPA.Config.Stores.Converters.ISetConverter`1.Create(System.Int32,System.Object)
+  name: Create(Int32, Object)
+  href: api/IPA.Config.Stores.Converters.ISetConverter-1.html#IPA_Config_Stores_Converters_ISetConverter_1_Create_System_Int32_System_Object_
+  commentId: M:IPA.Config.Stores.Converters.ISetConverter`1.Create(System.Int32,System.Object)
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T>.Create(System.Int32, System.Object)
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T).Create(System.Int32, System.Object)
+  nameWithType: ISetConverter<T>.Create(Int32, Object)
+  nameWithType.vb: ISetConverter(Of T).Create(Int32, Object)
+- uid: IPA.Config.Stores.Converters.ISetConverter`1.Create*
+  name: Create
+  href: api/IPA.Config.Stores.Converters.ISetConverter-1.html#IPA_Config_Stores_Converters_ISetConverter_1_Create_
+  commentId: Overload:IPA.Config.Stores.Converters.ISetConverter`1.Create
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T>.Create
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T).Create
+  nameWithType: ISetConverter<T>.Create
+  nameWithType.vb: ISetConverter(Of T).Create
+- uid: IPA.Config.Stores.Converters.ISetConverter`2
+  name: ISetConverter<T, TConverter>
+  href: api/IPA.Config.Stores.Converters.ISetConverter-2.html
+  commentId: T:IPA.Config.Stores.Converters.ISetConverter`2
+  name.vb: ISetConverter(Of T, TConverter)
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T, TConverter>
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T, TConverter)
+  nameWithType: ISetConverter<T, TConverter>
+  nameWithType.vb: ISetConverter(Of T, TConverter)
+- uid: IPA.Config.Stores.Converters.ISetConverter`2.#ctor
+  name: ISetConverter()
+  href: api/IPA.Config.Stores.Converters.ISetConverter-2.html#IPA_Config_Stores_Converters_ISetConverter_2__ctor
+  commentId: M:IPA.Config.Stores.Converters.ISetConverter`2.#ctor
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T, TConverter>.ISetConverter()
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T, TConverter).ISetConverter()
+  nameWithType: ISetConverter<T, TConverter>.ISetConverter()
+  nameWithType.vb: ISetConverter(Of T, TConverter).ISetConverter()
+- uid: IPA.Config.Stores.Converters.ISetConverter`2.#ctor*
+  name: ISetConverter
+  href: api/IPA.Config.Stores.Converters.ISetConverter-2.html#IPA_Config_Stores_Converters_ISetConverter_2__ctor_
+  commentId: Overload:IPA.Config.Stores.Converters.ISetConverter`2.#ctor
+  isSpec: "True"
+  fullName: IPA.Config.Stores.Converters.ISetConverter<T, TConverter>.ISetConverter
+  fullName.vb: IPA.Config.Stores.Converters.ISetConverter(Of T, TConverter).ISetConverter
+  nameWithType: ISetConverter<T, TConverter>.ISetConverter
+  nameWithType.vb: ISetConverter(Of T, TConverter).ISetConverter
 - uid: IPA.Config.Stores.Converters.ListConverter`1
   name: ListConverter<T>
   href: api/IPA.Config.Stores.Converters.ListConverter-1.html
@@ -2798,15 +3129,12 @@ references:
   isSpec: "True"
   fullName: IPA.Config.Stores.IValueConverter.FromValue
   nameWithType: IValueConverter.FromValue
-- uid: IPA.Config.Stores.IValueConverter.ToValue(System.Nullable{System.Object},System.Object)
-  name: ToValue(Nullable<Object>, Object)
-  href: api/IPA.Config.Stores.IValueConverter.html#IPA_Config_Stores_IValueConverter_ToValue_System_Nullable_System_Object__System_Object_
-  commentId: M:IPA.Config.Stores.IValueConverter.ToValue(System.Nullable{System.Object},System.Object)
-  name.vb: ToValue(Nullable(Of Object), Object)
-  fullName: IPA.Config.Stores.IValueConverter.ToValue(System.Nullable<System.Object>, System.Object)
-  fullName.vb: IPA.Config.Stores.IValueConverter.ToValue(System.Nullable(Of System.Object), System.Object)
-  nameWithType: IValueConverter.ToValue(Nullable<Object>, Object)
-  nameWithType.vb: IValueConverter.ToValue(Nullable(Of Object), Object)
+- uid: IPA.Config.Stores.IValueConverter.ToValue(System.Object,System.Object)
+  name: ToValue(Object, Object)
+  href: api/IPA.Config.Stores.IValueConverter.html#IPA_Config_Stores_IValueConverter_ToValue_System_Object_System_Object_
+  commentId: M:IPA.Config.Stores.IValueConverter.ToValue(System.Object,System.Object)
+  fullName: IPA.Config.Stores.IValueConverter.ToValue(System.Object, System.Object)
+  nameWithType: IValueConverter.ToValue(Object, Object)
 - uid: IPA.Config.Stores.IValueConverter.ToValue*
   name: ToValue
   href: api/IPA.Config.Stores.IValueConverter.html#IPA_Config_Stores_IValueConverter_ToValue_
@@ -2872,15 +3200,15 @@ references:
   fullName.vb: IPA.Config.Stores.ValueConverter(Of T).IPA.Config.Stores.IValueConverter.FromValue
   nameWithType: ValueConverter<T>.IValueConverter.FromValue
   nameWithType.vb: ValueConverter(Of T).IPA.Config.Stores.IValueConverter.FromValue
-- uid: IPA.Config.Stores.ValueConverter`1.IPA#Config#Stores#IValueConverter#ToValue(System.Nullable{System.Object},System.Object)
-  name: IValueConverter.ToValue(Nullable<Object>, Object)
-  href: api/IPA.Config.Stores.ValueConverter-1.html#IPA_Config_Stores_ValueConverter_1_IPA_Config_Stores_IValueConverter_ToValue_System_Nullable_System_Object__System_Object_
-  commentId: M:IPA.Config.Stores.ValueConverter`1.IPA#Config#Stores#IValueConverter#ToValue(System.Nullable{System.Object},System.Object)
-  name.vb: IPA.Config.Stores.IValueConverter.ToValue(Nullable(Of Object), Object)
-  fullName: IPA.Config.Stores.ValueConverter<T>.IPA.Config.Stores.IValueConverter.ToValue(System.Nullable<System.Object>, System.Object)
-  fullName.vb: IPA.Config.Stores.ValueConverter(Of T).IPA.Config.Stores.IValueConverter.ToValue(System.Nullable(Of System.Object), System.Object)
-  nameWithType: ValueConverter<T>.IValueConverter.ToValue(Nullable<Object>, Object)
-  nameWithType.vb: ValueConverter(Of T).IPA.Config.Stores.IValueConverter.ToValue(Nullable(Of Object), Object)
+- uid: IPA.Config.Stores.ValueConverter`1.IPA#Config#Stores#IValueConverter#ToValue(System.Object,System.Object)
+  name: IValueConverter.ToValue(Object, Object)
+  href: api/IPA.Config.Stores.ValueConverter-1.html#IPA_Config_Stores_ValueConverter_1_IPA_Config_Stores_IValueConverter_ToValue_System_Object_System_Object_
+  commentId: M:IPA.Config.Stores.ValueConverter`1.IPA#Config#Stores#IValueConverter#ToValue(System.Object,System.Object)
+  name.vb: IPA.Config.Stores.IValueConverter.ToValue(Object, Object)
+  fullName: IPA.Config.Stores.ValueConverter<T>.IPA.Config.Stores.IValueConverter.ToValue(System.Object, System.Object)
+  fullName.vb: IPA.Config.Stores.ValueConverter(Of T).IPA.Config.Stores.IValueConverter.ToValue(System.Object, System.Object)
+  nameWithType: ValueConverter<T>.IValueConverter.ToValue(Object, Object)
+  nameWithType.vb: ValueConverter(Of T).IPA.Config.Stores.IValueConverter.ToValue(Object, Object)
 - uid: IPA.Config.Stores.ValueConverter`1.IPA#Config#Stores#IValueConverter#ToValue*
   name: IValueConverter.ToValue
   href: api/IPA.Config.Stores.ValueConverter-1.html#IPA_Config_Stores_ValueConverter_1_IPA_Config_Stores_IValueConverter_ToValue_
@@ -2958,11 +3286,11 @@ references:
   fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException(IPA.Loader.PluginMetadata, System.String)
   nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(PluginMetadata, String)
 - uid: IPA.Loader.CannotRuntimeDisableException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
-  name: CannotRuntimeDisableException(Serialization.SerializationInfo, Serialization.StreamingContext)
+  name: CannotRuntimeDisableException(SerializationInfo, StreamingContext)
   href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_
   commentId: M:IPA.Loader.CannotRuntimeDisableException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
   fullName: IPA.Loader.CannotRuntimeDisableException.CannotRuntimeDisableException(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)
-  nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(Serialization.SerializationInfo, Serialization.StreamingContext)
+  nameWithType: CannotRuntimeDisableException.CannotRuntimeDisableException(SerializationInfo, StreamingContext)
 - uid: IPA.Loader.CannotRuntimeDisableException.#ctor*
   name: CannotRuntimeDisableException
   href: api/IPA.Loader.CannotRuntimeDisableException.html#IPA_Loader_CannotRuntimeDisableException__ctor_
@@ -3040,11 +3368,11 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.Features.Feature.BeforeInit
   nameWithType: Feature.BeforeInit
-- uid: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,JObject)
+- uid: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,Newtonsoft.Json.Linq.JObject)
   name: Initialize(PluginMetadata, JObject)
-  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_Initialize_IPA_Loader_PluginMetadata_JObject_
-  commentId: M:IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,JObject)
-  fullName: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata, JObject)
+  href: api/IPA.Loader.Features.Feature.html#IPA_Loader_Features_Feature_Initialize_IPA_Loader_PluginMetadata_Newtonsoft_Json_Linq_JObject_
+  commentId: M:IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata,Newtonsoft.Json.Linq.JObject)
+  fullName: IPA.Loader.Features.Feature.Initialize(IPA.Loader.PluginMetadata, Newtonsoft.Json.Linq.JObject)
   nameWithType: Feature.Initialize(PluginMetadata, JObject)
 - uid: IPA.Loader.Features.Feature.Initialize*
   name: Initialize
@@ -3072,15 +3400,12 @@ references:
   commentId: T:IPA.Loader.IgnoreReason
   fullName: IPA.Loader.IgnoreReason
   nameWithType: IgnoreReason
-- uid: IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.Nullable{System.String},System.Nullable{Exception},IPA.Loader.PluginMetadata)
-  name: IgnoreReason(Reason, Nullable<String>, Nullable<Exception>, PluginMetadata)
-  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason__ctor_IPA_Loader_Reason_System_Nullable_System_String__System_Nullable_Exception__IPA_Loader_PluginMetadata_
-  commentId: M:IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.Nullable{System.String},System.Nullable{Exception},IPA.Loader.PluginMetadata)
-  name.vb: IgnoreReason(Reason, Nullable(Of String), Nullable(Of Exception), PluginMetadata)
-  fullName: IPA.Loader.IgnoreReason.IgnoreReason(IPA.Loader.Reason, System.Nullable<System.String>, System.Nullable<Exception>, IPA.Loader.PluginMetadata)
-  fullName.vb: IPA.Loader.IgnoreReason.IgnoreReason(IPA.Loader.Reason, System.Nullable(Of System.String), System.Nullable(Of Exception), IPA.Loader.PluginMetadata)
-  nameWithType: IgnoreReason.IgnoreReason(Reason, Nullable<String>, Nullable<Exception>, PluginMetadata)
-  nameWithType.vb: IgnoreReason.IgnoreReason(Reason, Nullable(Of String), Nullable(Of Exception), PluginMetadata)
+- uid: IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.String,System.Exception,IPA.Loader.PluginMetadata)
+  name: IgnoreReason(Reason, String, Exception, PluginMetadata)
+  href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason__ctor_IPA_Loader_Reason_System_String_System_Exception_IPA_Loader_PluginMetadata_
+  commentId: M:IPA.Loader.IgnoreReason.#ctor(IPA.Loader.Reason,System.String,System.Exception,IPA.Loader.PluginMetadata)
+  fullName: IPA.Loader.IgnoreReason.IgnoreReason(IPA.Loader.Reason, System.String, System.Exception, IPA.Loader.PluginMetadata)
+  nameWithType: IgnoreReason.IgnoreReason(Reason, String, Exception, PluginMetadata)
 - uid: IPA.Loader.IgnoreReason.#ctor*
   name: IgnoreReason
   href: api/IPA.Loader.IgnoreReason.html#IPA_Loader_IgnoreReason__ctor_
@@ -3204,17 +3529,17 @@ references:
   commentId: T:IPA.Loader.PluginInitInjector
   fullName: IPA.Loader.PluginInitInjector
   nameWithType: PluginInitInjector
-- uid: IPA.Loader.PluginInitInjector.AddInjector(Type,IPA.Loader.PluginInitInjector.InjectParameter)
+- uid: IPA.Loader.PluginInitInjector.AddInjector(System.Type,IPA.Loader.PluginInitInjector.InjectParameter)
   name: AddInjector(Type, PluginInitInjector.InjectParameter)
-  href: api/IPA.Loader.PluginInitInjector.html#IPA_Loader_PluginInitInjector_AddInjector_Type_IPA_Loader_PluginInitInjector_InjectParameter_
-  commentId: M:IPA.Loader.PluginInitInjector.AddInjector(Type,IPA.Loader.PluginInitInjector.InjectParameter)
-  fullName: IPA.Loader.PluginInitInjector.AddInjector(Type, IPA.Loader.PluginInitInjector.InjectParameter)
+  href: api/IPA.Loader.PluginInitInjector.html#IPA_Loader_PluginInitInjector_AddInjector_System_Type_IPA_Loader_PluginInitInjector_InjectParameter_
+  commentId: M:IPA.Loader.PluginInitInjector.AddInjector(System.Type,IPA.Loader.PluginInitInjector.InjectParameter)
+  fullName: IPA.Loader.PluginInitInjector.AddInjector(System.Type, IPA.Loader.PluginInitInjector.InjectParameter)
   nameWithType: PluginInitInjector.AddInjector(Type, PluginInitInjector.InjectParameter)
-- uid: IPA.Loader.PluginInitInjector.AddInjector(Type,IPA.Loader.PluginInitInjector.InjectParameterNested)
+- uid: IPA.Loader.PluginInitInjector.AddInjector(System.Type,IPA.Loader.PluginInitInjector.InjectParameterNested)
   name: AddInjector(Type, PluginInitInjector.InjectParameterNested)
-  href: api/IPA.Loader.PluginInitInjector.html#IPA_Loader_PluginInitInjector_AddInjector_Type_IPA_Loader_PluginInitInjector_InjectParameterNested_
-  commentId: M:IPA.Loader.PluginInitInjector.AddInjector(Type,IPA.Loader.PluginInitInjector.InjectParameterNested)
-  fullName: IPA.Loader.PluginInitInjector.AddInjector(Type, IPA.Loader.PluginInitInjector.InjectParameterNested)
+  href: api/IPA.Loader.PluginInitInjector.html#IPA_Loader_PluginInitInjector_AddInjector_System_Type_IPA_Loader_PluginInitInjector_InjectParameterNested_
+  commentId: M:IPA.Loader.PluginInitInjector.AddInjector(System.Type,IPA.Loader.PluginInitInjector.InjectParameterNested)
+  fullName: IPA.Loader.PluginInitInjector.AddInjector(System.Type, IPA.Loader.PluginInitInjector.InjectParameterNested)
   nameWithType: PluginInitInjector.AddInjector(Type, PluginInitInjector.InjectParameterNested)
 - uid: IPA.Loader.PluginInitInjector.AddInjector*
   name: AddInjector
@@ -3230,13 +3555,13 @@ references:
   isSpec: "True"
   fullName: IPA.Loader.PluginInitInjector.Inject
   nameWithType: PluginInitInjector.Inject
-- uid: IPA.Loader.PluginInitInjector.Inject``1(IPA.Loader.PluginInitInjector.InjectedValueProvider,ParameterInfo)
+- uid: IPA.Loader.PluginInitInjector.Inject``1(IPA.Loader.PluginInitInjector.InjectedValueProvider,System.Reflection.ParameterInfo)
   name: Inject<T>(PluginInitInjector.InjectedValueProvider, ParameterInfo)
-  href: api/IPA.Loader.PluginInitInjector.html#IPA_Loader_PluginInitInjector_Inject__1_IPA_Loader_PluginInitInjector_InjectedValueProvider_ParameterInfo_
-  commentId: M:IPA.Loader.PluginInitInjector.Inject``1(IPA.Loader.PluginInitInjector.InjectedValueProvider,ParameterInfo)
+  href: api/IPA.Loader.PluginInitInjector.html#IPA_Loader_PluginInitInjector_Inject__1_IPA_Loader_PluginInitInjector_InjectedValueProvider_System_Reflection_ParameterInfo_
+  commentId: M:IPA.Loader.PluginInitInjector.Inject``1(IPA.Loader.PluginInitInjector.InjectedValueProvider,System.Reflection.ParameterInfo)
   name.vb: Inject(Of T)(PluginInitInjector.InjectedValueProvider, ParameterInfo)
-  fullName: IPA.Loader.PluginInitInjector.Inject<T>(IPA.Loader.PluginInitInjector.InjectedValueProvider, ParameterInfo)
-  fullName.vb: IPA.Loader.PluginInitInjector.Inject(Of T)(IPA.Loader.PluginInitInjector.InjectedValueProvider, ParameterInfo)
+  fullName: IPA.Loader.PluginInitInjector.Inject<T>(IPA.Loader.PluginInitInjector.InjectedValueProvider, System.Reflection.ParameterInfo)
+  fullName.vb: IPA.Loader.PluginInitInjector.Inject(Of T)(IPA.Loader.PluginInitInjector.InjectedValueProvider, System.Reflection.ParameterInfo)
   nameWithType: PluginInitInjector.Inject<T>(PluginInitInjector.InjectedValueProvider, ParameterInfo)
   nameWithType.vb: PluginInitInjector.Inject(Of T)(PluginInitInjector.InjectedValueProvider, ParameterInfo)
 - uid: IPA.Loader.PluginInitInjector.InjectedValueProvider
@@ -3793,15 +4118,15 @@ references:
   commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Boolean)
   fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, System.Boolean)
   nameWithType: StateTransitionTransaction.Disable(PluginMetadata, Boolean)
-- uid: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Nullable{IEnumerable{IPA.Loader.PluginMetadata}}@,System.Boolean)
-  name: Disable(PluginMetadata, out Nullable<IEnumerable<PluginMetadata>>, Boolean)
-  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_IPA_Loader_PluginMetadata_System_Nullable_IEnumerable_IPA_Loader_PluginMetadata____System_Boolean_
-  commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Nullable{IEnumerable{IPA.Loader.PluginMetadata}}@,System.Boolean)
-  name.vb: Disable(PluginMetadata, ByRef Nullable(Of IEnumerable(Of PluginMetadata)), Boolean)
-  fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, out System.Nullable<IEnumerable<IPA.Loader.PluginMetadata>>, System.Boolean)
-  fullName.vb: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, ByRef System.Nullable(Of IEnumerable(Of IPA.Loader.PluginMetadata)), System.Boolean)
-  nameWithType: StateTransitionTransaction.Disable(PluginMetadata, out Nullable<IEnumerable<PluginMetadata>>, Boolean)
-  nameWithType.vb: StateTransitionTransaction.Disable(PluginMetadata, ByRef Nullable(Of IEnumerable(Of PluginMetadata)), Boolean)
+- uid: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name: Disable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_IPA_Loader_PluginMetadata_System_Collections_Generic_IEnumerable_IPA_Loader_PluginMetadata___System_Boolean_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name.vb: Disable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
+  fullName: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, out System.Collections.Generic.IEnumerable<IPA.Loader.PluginMetadata>, System.Boolean)
+  fullName.vb: IPA.Loader.StateTransitionTransaction.Disable(IPA.Loader.PluginMetadata, ByRef System.Collections.Generic.IEnumerable(Of IPA.Loader.PluginMetadata), System.Boolean)
+  nameWithType: StateTransitionTransaction.Disable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  nameWithType.vb: StateTransitionTransaction.Disable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
 - uid: IPA.Loader.StateTransitionTransaction.Disable*
   name: Disable
   href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Disable_
@@ -3841,15 +4166,15 @@ references:
   commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Boolean)
   fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, System.Boolean)
   nameWithType: StateTransitionTransaction.Enable(PluginMetadata, Boolean)
-- uid: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Nullable{IEnumerable{IPA.Loader.PluginMetadata}}@,System.Boolean)
-  name: Enable(PluginMetadata, out Nullable<IEnumerable<PluginMetadata>>, Boolean)
-  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_IPA_Loader_PluginMetadata_System_Nullable_IEnumerable_IPA_Loader_PluginMetadata____System_Boolean_
-  commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Nullable{IEnumerable{IPA.Loader.PluginMetadata}}@,System.Boolean)
-  name.vb: Enable(PluginMetadata, ByRef Nullable(Of IEnumerable(Of PluginMetadata)), Boolean)
-  fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, out System.Nullable<IEnumerable<IPA.Loader.PluginMetadata>>, System.Boolean)
-  fullName.vb: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, ByRef System.Nullable(Of IEnumerable(Of IPA.Loader.PluginMetadata)), System.Boolean)
-  nameWithType: StateTransitionTransaction.Enable(PluginMetadata, out Nullable<IEnumerable<PluginMetadata>>, Boolean)
-  nameWithType.vb: StateTransitionTransaction.Enable(PluginMetadata, ByRef Nullable(Of IEnumerable(Of PluginMetadata)), Boolean)
+- uid: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name: Enable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_IPA_Loader_PluginMetadata_System_Collections_Generic_IEnumerable_IPA_Loader_PluginMetadata___System_Boolean_
+  commentId: M:IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata,System.Collections.Generic.IEnumerable{IPA.Loader.PluginMetadata}@,System.Boolean)
+  name.vb: Enable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
+  fullName: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, out System.Collections.Generic.IEnumerable<IPA.Loader.PluginMetadata>, System.Boolean)
+  fullName.vb: IPA.Loader.StateTransitionTransaction.Enable(IPA.Loader.PluginMetadata, ByRef System.Collections.Generic.IEnumerable(Of IPA.Loader.PluginMetadata), System.Boolean)
+  nameWithType: StateTransitionTransaction.Enable(PluginMetadata, out IEnumerable<PluginMetadata>, Boolean)
+  nameWithType.vb: StateTransitionTransaction.Enable(PluginMetadata, ByRef IEnumerable(Of PluginMetadata), Boolean)
 - uid: IPA.Loader.StateTransitionTransaction.Enable*
   name: Enable
   href: api/IPA.Loader.StateTransitionTransaction.html#IPA_Loader_StateTransitionTransaction_Enable_
@@ -3934,11 +4259,11 @@ references:
   commentId: T:IPA.Logging.Logger
   fullName: IPA.Logging.Logger
   nameWithType: Logger
-- uid: IPA.Logging.Logger.Critical(Exception)
+- uid: IPA.Logging.Logger.Critical(System.Exception)
   name: Critical(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Critical_Exception_
-  commentId: M:IPA.Logging.Logger.Critical(Exception)
-  fullName: IPA.Logging.Logger.Critical(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Critical_System_Exception_
+  commentId: M:IPA.Logging.Logger.Critical(System.Exception)
+  fullName: IPA.Logging.Logger.Critical(System.Exception)
   nameWithType: Logger.Critical(Exception)
 - uid: IPA.Logging.Logger.Critical(System.String)
   name: Critical(String)
@@ -3953,11 +4278,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Logger.Critical
   nameWithType: Logger.Critical
-- uid: IPA.Logging.Logger.Debug(Exception)
+- uid: IPA.Logging.Logger.Debug(System.Exception)
   name: Debug(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Debug_Exception_
-  commentId: M:IPA.Logging.Logger.Debug(Exception)
-  fullName: IPA.Logging.Logger.Debug(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Debug_System_Exception_
+  commentId: M:IPA.Logging.Logger.Debug(System.Exception)
+  fullName: IPA.Logging.Logger.Debug(System.Exception)
   nameWithType: Logger.Debug(Exception)
 - uid: IPA.Logging.Logger.Debug(System.String)
   name: Debug(String)
@@ -3972,11 +4297,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Logger.Debug
   nameWithType: Logger.Debug
-- uid: IPA.Logging.Logger.Error(Exception)
+- uid: IPA.Logging.Logger.Error(System.Exception)
   name: Error(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Error_Exception_
-  commentId: M:IPA.Logging.Logger.Error(Exception)
-  fullName: IPA.Logging.Logger.Error(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Error_System_Exception_
+  commentId: M:IPA.Logging.Logger.Error(System.Exception)
+  fullName: IPA.Logging.Logger.Error(System.Exception)
   nameWithType: Logger.Error(Exception)
 - uid: IPA.Logging.Logger.Error(System.String)
   name: Error(String)
@@ -3991,11 +4316,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Logger.Error
   nameWithType: Logger.Error
-- uid: IPA.Logging.Logger.Info(Exception)
+- uid: IPA.Logging.Logger.Info(System.Exception)
   name: Info(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Info_Exception_
-  commentId: M:IPA.Logging.Logger.Info(Exception)
-  fullName: IPA.Logging.Logger.Info(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Info_System_Exception_
+  commentId: M:IPA.Logging.Logger.Info(System.Exception)
+  fullName: IPA.Logging.Logger.Info(System.Exception)
   nameWithType: Logger.Info(Exception)
 - uid: IPA.Logging.Logger.Info(System.String)
   name: Info(String)
@@ -4064,11 +4389,11 @@ references:
   commentId: F:IPA.Logging.Logger.Level.Warning
   fullName: IPA.Logging.Logger.Level.Warning
   nameWithType: Logger.Level.Warning
-- uid: IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,Exception)
+- uid: IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,System.Exception)
   name: Log(Logger.Level, Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_Exception_
-  commentId: M:IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,Exception)
-  fullName: IPA.Logging.Logger.Log(IPA.Logging.Logger.Level, Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_
+  commentId: M:IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,System.Exception)
+  fullName: IPA.Logging.Logger.Log(IPA.Logging.Logger.Level, System.Exception)
   nameWithType: Logger.Log(Logger.Level, Exception)
 - uid: IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,System.String)
   name: Log(Logger.Level, String)
@@ -4192,11 +4517,11 @@ references:
   commentId: F:IPA.Logging.Logger.LogLevel.WarningUp
   fullName: IPA.Logging.Logger.LogLevel.WarningUp
   nameWithType: Logger.LogLevel.WarningUp
-- uid: IPA.Logging.Logger.Notice(Exception)
+- uid: IPA.Logging.Logger.Notice(System.Exception)
   name: Notice(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Notice_Exception_
-  commentId: M:IPA.Logging.Logger.Notice(Exception)
-  fullName: IPA.Logging.Logger.Notice(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Notice_System_Exception_
+  commentId: M:IPA.Logging.Logger.Notice(System.Exception)
+  fullName: IPA.Logging.Logger.Notice(System.Exception)
   nameWithType: Logger.Notice(Exception)
 - uid: IPA.Logging.Logger.Notice(System.String)
   name: Notice(String)
@@ -4211,11 +4536,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Logger.Notice
   nameWithType: Logger.Notice
-- uid: IPA.Logging.Logger.Trace(Exception)
+- uid: IPA.Logging.Logger.Trace(System.Exception)
   name: Trace(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_Exception_
-  commentId: M:IPA.Logging.Logger.Trace(Exception)
-  fullName: IPA.Logging.Logger.Trace(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_System_Exception_
+  commentId: M:IPA.Logging.Logger.Trace(System.Exception)
+  fullName: IPA.Logging.Logger.Trace(System.Exception)
   nameWithType: Logger.Trace(Exception)
 - uid: IPA.Logging.Logger.Trace(System.String)
   name: Trace(String)
@@ -4230,11 +4555,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Logger.Trace
   nameWithType: Logger.Trace
-- uid: IPA.Logging.Logger.Warn(Exception)
+- uid: IPA.Logging.Logger.Warn(System.Exception)
   name: Warn(Exception)
-  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Warn_Exception_
-  commentId: M:IPA.Logging.Logger.Warn(Exception)
-  fullName: IPA.Logging.Logger.Warn(Exception)
+  href: api/IPA.Logging.Logger.html#IPA_Logging_Logger_Warn_System_Exception_
+  commentId: M:IPA.Logging.Logger.Warn(System.Exception)
+  fullName: IPA.Logging.Logger.Warn(System.Exception)
   nameWithType: Logger.Warn(Exception)
 - uid: IPA.Logging.Logger.Warn(System.String)
   name: Warn(String)
@@ -4300,11 +4625,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.LogPrinter.Filter
   nameWithType: LogPrinter.Filter
-- uid: IPA.Logging.LogPrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
+- uid: IPA.Logging.LogPrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
   name: Print(Logger.Level, DateTime, String, String)
-  href: api/IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_
-  commentId: M:IPA.Logging.LogPrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
-  fullName: IPA.Logging.LogPrinter.Print(IPA.Logging.Logger.Level, DateTime, System.String, System.String)
+  href: api/IPA.Logging.LogPrinter.html#IPA_Logging_LogPrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_
+  commentId: M:IPA.Logging.LogPrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
+  fullName: IPA.Logging.LogPrinter.Print(IPA.Logging.Logger.Level, System.DateTime, System.String, System.String)
   nameWithType: LogPrinter.Print(Logger.Level, DateTime, String, String)
 - uid: IPA.Logging.LogPrinter.Print*
   name: Print
@@ -4338,6 +4663,25 @@ references:
   commentId: T:IPA.Logging.Printers.ColoredConsolePrinter
   fullName: IPA.Logging.Printers.ColoredConsolePrinter
   nameWithType: ColoredConsolePrinter
+- uid: IPA.Logging.Printers.ColoredConsolePrinter.#ctor
+  name: ColoredConsolePrinter()
+  href: api/IPA.Logging.Printers.ColoredConsolePrinter.html#IPA_Logging_Printers_ColoredConsolePrinter__ctor
+  commentId: M:IPA.Logging.Printers.ColoredConsolePrinter.#ctor
+  fullName: IPA.Logging.Printers.ColoredConsolePrinter.ColoredConsolePrinter()
+  nameWithType: ColoredConsolePrinter.ColoredConsolePrinter()
+- uid: IPA.Logging.Printers.ColoredConsolePrinter.#ctor(System.Boolean)
+  name: ColoredConsolePrinter(Boolean)
+  href: api/IPA.Logging.Printers.ColoredConsolePrinter.html#IPA_Logging_Printers_ColoredConsolePrinter__ctor_System_Boolean_
+  commentId: M:IPA.Logging.Printers.ColoredConsolePrinter.#ctor(System.Boolean)
+  fullName: IPA.Logging.Printers.ColoredConsolePrinter.ColoredConsolePrinter(System.Boolean)
+  nameWithType: ColoredConsolePrinter.ColoredConsolePrinter(Boolean)
+- uid: IPA.Logging.Printers.ColoredConsolePrinter.#ctor*
+  name: ColoredConsolePrinter
+  href: api/IPA.Logging.Printers.ColoredConsolePrinter.html#IPA_Logging_Printers_ColoredConsolePrinter__ctor_
+  commentId: Overload:IPA.Logging.Printers.ColoredConsolePrinter.#ctor
+  isSpec: "True"
+  fullName: IPA.Logging.Printers.ColoredConsolePrinter.ColoredConsolePrinter
+  nameWithType: ColoredConsolePrinter.ColoredConsolePrinter
 - uid: IPA.Logging.Printers.ColoredConsolePrinter.Color
   name: Color
   href: api/IPA.Logging.Printers.ColoredConsolePrinter.html#IPA_Logging_Printers_ColoredConsolePrinter_Color
@@ -4364,11 +4708,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Printers.ColoredConsolePrinter.Filter
   nameWithType: ColoredConsolePrinter.Filter
-- uid: IPA.Logging.Printers.ColoredConsolePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
+- uid: IPA.Logging.Printers.ColoredConsolePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
   name: Print(Logger.Level, DateTime, String, String)
-  href: api/IPA.Logging.Printers.ColoredConsolePrinter.html#IPA_Logging_Printers_ColoredConsolePrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_
-  commentId: M:IPA.Logging.Printers.ColoredConsolePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
-  fullName: IPA.Logging.Printers.ColoredConsolePrinter.Print(IPA.Logging.Logger.Level, DateTime, System.String, System.String)
+  href: api/IPA.Logging.Printers.ColoredConsolePrinter.html#IPA_Logging_Printers_ColoredConsolePrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_
+  commentId: M:IPA.Logging.Printers.ColoredConsolePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
+  fullName: IPA.Logging.Printers.ColoredConsolePrinter.Print(IPA.Logging.Logger.Level, System.DateTime, System.String, System.String)
   nameWithType: ColoredConsolePrinter.Print(Logger.Level, DateTime, String, String)
 - uid: IPA.Logging.Printers.ColoredConsolePrinter.Print*
   name: Print
@@ -4396,11 +4740,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Printers.ColorlessConsolePrinter.Filter
   nameWithType: ColorlessConsolePrinter.Filter
-- uid: IPA.Logging.Printers.ColorlessConsolePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
+- uid: IPA.Logging.Printers.ColorlessConsolePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
   name: Print(Logger.Level, DateTime, String, String)
-  href: api/IPA.Logging.Printers.ColorlessConsolePrinter.html#IPA_Logging_Printers_ColorlessConsolePrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_
-  commentId: M:IPA.Logging.Printers.ColorlessConsolePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
-  fullName: IPA.Logging.Printers.ColorlessConsolePrinter.Print(IPA.Logging.Logger.Level, DateTime, System.String, System.String)
+  href: api/IPA.Logging.Printers.ColorlessConsolePrinter.html#IPA_Logging_Printers_ColorlessConsolePrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_
+  commentId: M:IPA.Logging.Printers.ColorlessConsolePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
+  fullName: IPA.Logging.Printers.ColorlessConsolePrinter.Print(IPA.Logging.Logger.Level, System.DateTime, System.String, System.String)
   nameWithType: ColorlessConsolePrinter.Print(Logger.Level, DateTime, String, String)
 - uid: IPA.Logging.Printers.ColorlessConsolePrinter.Print*
   name: Print
@@ -4441,11 +4785,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Printers.GlobalLogFilePrinter.GetFileInfo
   nameWithType: GlobalLogFilePrinter.GetFileInfo
-- uid: IPA.Logging.Printers.GlobalLogFilePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
+- uid: IPA.Logging.Printers.GlobalLogFilePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
   name: Print(Logger.Level, DateTime, String, String)
-  href: api/IPA.Logging.Printers.GlobalLogFilePrinter.html#IPA_Logging_Printers_GlobalLogFilePrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_
-  commentId: M:IPA.Logging.Printers.GlobalLogFilePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
-  fullName: IPA.Logging.Printers.GlobalLogFilePrinter.Print(IPA.Logging.Logger.Level, DateTime, System.String, System.String)
+  href: api/IPA.Logging.Printers.GlobalLogFilePrinter.html#IPA_Logging_Printers_GlobalLogFilePrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_
+  commentId: M:IPA.Logging.Printers.GlobalLogFilePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
+  fullName: IPA.Logging.Printers.GlobalLogFilePrinter.Print(IPA.Logging.Logger.Level, System.DateTime, System.String, System.String)
   nameWithType: GlobalLogFilePrinter.Print(Logger.Level, DateTime, String, String)
 - uid: IPA.Logging.Printers.GlobalLogFilePrinter.Print*
   name: Print
@@ -4569,11 +4913,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Printers.PluginLogFilePrinter.GetFileInfo
   nameWithType: PluginLogFilePrinter.GetFileInfo
-- uid: IPA.Logging.Printers.PluginLogFilePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
+- uid: IPA.Logging.Printers.PluginLogFilePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
   name: Print(Logger.Level, DateTime, String, String)
-  href: api/IPA.Logging.Printers.PluginLogFilePrinter.html#IPA_Logging_Printers_PluginLogFilePrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_
-  commentId: M:IPA.Logging.Printers.PluginLogFilePrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
-  fullName: IPA.Logging.Printers.PluginLogFilePrinter.Print(IPA.Logging.Logger.Level, DateTime, System.String, System.String)
+  href: api/IPA.Logging.Printers.PluginLogFilePrinter.html#IPA_Logging_Printers_PluginLogFilePrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_
+  commentId: M:IPA.Logging.Printers.PluginLogFilePrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
+  fullName: IPA.Logging.Printers.PluginLogFilePrinter.Print(IPA.Logging.Logger.Level, System.DateTime, System.String, System.String)
   nameWithType: PluginLogFilePrinter.Print(Logger.Level, DateTime, String, String)
 - uid: IPA.Logging.Printers.PluginLogFilePrinter.Print*
   name: Print
@@ -4627,11 +4971,11 @@ references:
   isSpec: "True"
   fullName: IPA.Logging.Printers.PluginSubLogPrinter.GetFileInfo
   nameWithType: PluginSubLogPrinter.GetFileInfo
-- uid: IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
+- uid: IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
   name: Print(Logger.Level, DateTime, String, String)
-  href: api/IPA.Logging.Printers.PluginSubLogPrinter.html#IPA_Logging_Printers_PluginSubLogPrinter_Print_IPA_Logging_Logger_Level_DateTime_System_String_System_String_
-  commentId: M:IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level,DateTime,System.String,System.String)
-  fullName: IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level, DateTime, System.String, System.String)
+  href: api/IPA.Logging.Printers.PluginSubLogPrinter.html#IPA_Logging_Printers_PluginSubLogPrinter_Print_IPA_Logging_Logger_Level_System_DateTime_System_String_System_String_
+  commentId: M:IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level,System.DateTime,System.String,System.String)
+  fullName: IPA.Logging.Printers.PluginSubLogPrinter.Print(IPA.Logging.Logger.Level, System.DateTime, System.String, System.String)
   nameWithType: PluginSubLogPrinter.Print(Logger.Level, DateTime, String, String)
 - uid: IPA.Logging.Printers.PluginSubLogPrinter.Print*
   name: Print
@@ -4965,11 +5309,11 @@ references:
   fullName: IPA.Utilities.AlmostVersion
   nameWithType: AlmostVersion
 - uid: IPA.Utilities.AlmostVersion.#ctor(Hive.Versioning.Version)
-  name: AlmostVersion(Hive.Versioning.Version)
+  name: AlmostVersion(Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_Hive_Versioning_Version_
   commentId: M:IPA.Utilities.AlmostVersion.#ctor(Hive.Versioning.Version)
   fullName: IPA.Utilities.AlmostVersion.AlmostVersion(Hive.Versioning.Version)
-  nameWithType: AlmostVersion.AlmostVersion(Hive.Versioning.Version)
+  nameWithType: AlmostVersion.AlmostVersion(Version)
 - uid: IPA.Utilities.AlmostVersion.#ctor(SemVer.Version)
   name: AlmostVersion(Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion__ctor_SemVer_Version_
@@ -5002,11 +5346,11 @@ references:
   fullName: IPA.Utilities.AlmostVersion.AlmostVersion
   nameWithType: AlmostVersion.AlmostVersion
 - uid: IPA.Utilities.AlmostVersion.CompareTo(Hive.Versioning.Version)
-  name: CompareTo(Hive.Versioning.Version)
+  name: CompareTo(Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_Hive_Versioning_Version_
   commentId: M:IPA.Utilities.AlmostVersion.CompareTo(Hive.Versioning.Version)
   fullName: IPA.Utilities.AlmostVersion.CompareTo(Hive.Versioning.Version)
-  nameWithType: AlmostVersion.CompareTo(Hive.Versioning.Version)
+  nameWithType: AlmostVersion.CompareTo(Version)
 - uid: IPA.Utilities.AlmostVersion.CompareTo(IPA.Utilities.AlmostVersion)
   name: CompareTo(AlmostVersion)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_CompareTo_IPA_Utilities_AlmostVersion_
@@ -5091,6 +5435,24 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.AlmostVersion.GreaterThanOrEqual
   nameWithType: AlmostVersion.GreaterThanOrEqual
+- uid: IPA.Utilities.AlmostVersion.op_Implicit(Hive.Versioning.Version)~IPA.Utilities.AlmostVersion
+  name: Implicit(Version to AlmostVersion)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_Hive_Versioning_Version__IPA_Utilities_AlmostVersion
+  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(Hive.Versioning.Version)~IPA.Utilities.AlmostVersion
+  name.vb: Widening(Version to AlmostVersion)
+  fullName: IPA.Utilities.AlmostVersion.Implicit(Hive.Versioning.Version to IPA.Utilities.AlmostVersion)
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening(Hive.Versioning.Version to IPA.Utilities.AlmostVersion)
+  nameWithType: AlmostVersion.Implicit(Version to AlmostVersion)
+  nameWithType.vb: AlmostVersion.Widening(Version to AlmostVersion)
+- uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~Hive.Versioning.Version
+  name: Implicit(AlmostVersion to Version)
+  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__Hive_Versioning_Version
+  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~Hive.Versioning.Version
+  name.vb: Widening(AlmostVersion to Version)
+  fullName: IPA.Utilities.AlmostVersion.Implicit(IPA.Utilities.AlmostVersion to Hive.Versioning.Version)
+  fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to Hive.Versioning.Version)
+  nameWithType: AlmostVersion.Implicit(AlmostVersion to Version)
+  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Version)
 - uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~SemVer.Version
   name: Implicit(AlmostVersion to Version)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__SemVer_Version
@@ -5100,15 +5462,6 @@ references:
   fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to SemVer.Version)
   nameWithType: AlmostVersion.Implicit(AlmostVersion to Version)
   nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Version)
-- uid: IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~System.Nullable{Hive.Versioning.Version}
-  name: Implicit(AlmostVersion to Nullable<Hive.Versioning.Version>)
-  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_IPA_Utilities_AlmostVersion__System_Nullable_Hive_Versioning_Version_
-  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(IPA.Utilities.AlmostVersion)~System.Nullable{Hive.Versioning.Version}
-  name.vb: Widening(AlmostVersion to Nullable(Of Hive.Versioning.Version))
-  fullName: IPA.Utilities.AlmostVersion.Implicit(IPA.Utilities.AlmostVersion to System.Nullable<Hive.Versioning.Version>)
-  fullName.vb: IPA.Utilities.AlmostVersion.Widening(IPA.Utilities.AlmostVersion to System.Nullable(Of Hive.Versioning.Version))
-  nameWithType: AlmostVersion.Implicit(AlmostVersion to Nullable<Hive.Versioning.Version>)
-  nameWithType.vb: AlmostVersion.Widening(AlmostVersion to Nullable(Of Hive.Versioning.Version))
 - uid: IPA.Utilities.AlmostVersion.op_Implicit(SemVer.Version)~IPA.Utilities.AlmostVersion
   name: Implicit(Version to AlmostVersion)
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_SemVer_Version__IPA_Utilities_AlmostVersion
@@ -5118,15 +5471,6 @@ references:
   fullName.vb: IPA.Utilities.AlmostVersion.Widening(SemVer.Version to IPA.Utilities.AlmostVersion)
   nameWithType: AlmostVersion.Implicit(Version to AlmostVersion)
   nameWithType.vb: AlmostVersion.Widening(Version to AlmostVersion)
-- uid: IPA.Utilities.AlmostVersion.op_Implicit(System.Nullable{Hive.Versioning.Version})~IPA.Utilities.AlmostVersion
-  name: Implicit(Nullable<Hive.Versioning.Version> to AlmostVersion)
-  href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_System_Nullable_Hive_Versioning_Version___IPA_Utilities_AlmostVersion
-  commentId: M:IPA.Utilities.AlmostVersion.op_Implicit(System.Nullable{Hive.Versioning.Version})~IPA.Utilities.AlmostVersion
-  name.vb: Widening(Nullable(Of Hive.Versioning.Version) to AlmostVersion)
-  fullName: IPA.Utilities.AlmostVersion.Implicit(System.Nullable<Hive.Versioning.Version> to IPA.Utilities.AlmostVersion)
-  fullName.vb: IPA.Utilities.AlmostVersion.Widening(System.Nullable(Of Hive.Versioning.Version) to IPA.Utilities.AlmostVersion)
-  nameWithType: AlmostVersion.Implicit(Nullable<Hive.Versioning.Version> to AlmostVersion)
-  nameWithType.vb: AlmostVersion.Widening(Nullable(Of Hive.Versioning.Version) to AlmostVersion)
 - uid: IPA.Utilities.AlmostVersion.op_Implicit*
   name: Implicit
   href: api/IPA.Utilities.AlmostVersion.html#IPA_Utilities_AlmostVersion_op_Implicit_
@@ -5290,11 +5634,11 @@ references:
   commentId: T:IPA.Utilities.Async.Coroutines
   fullName: IPA.Utilities.Async.Coroutines
   nameWithType: Coroutines
-- uid: IPA.Utilities.Async.Coroutines.AsTask(IEnumerator)
+- uid: IPA.Utilities.Async.Coroutines.AsTask(System.Collections.IEnumerator)
   name: AsTask(IEnumerator)
-  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_AsTask_IEnumerator_
-  commentId: M:IPA.Utilities.Async.Coroutines.AsTask(IEnumerator)
-  fullName: IPA.Utilities.Async.Coroutines.AsTask(IEnumerator)
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_AsTask_System_Collections_IEnumerator_
+  commentId: M:IPA.Utilities.Async.Coroutines.AsTask(System.Collections.IEnumerator)
+  fullName: IPA.Utilities.Async.Coroutines.AsTask(System.Collections.IEnumerator)
   nameWithType: Coroutines.AsTask(IEnumerator)
 - uid: IPA.Utilities.Async.Coroutines.AsTask*
   name: AsTask
@@ -5303,17 +5647,17 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.Coroutines.AsTask
   nameWithType: Coroutines.AsTask
-- uid: IPA.Utilities.Async.Coroutines.WaitForTask(Task)
+- uid: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
   name: WaitForTask(Task)
-  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_Task_
-  commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(Task)
-  fullName: IPA.Utilities.Async.Coroutines.WaitForTask(Task)
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_System_Threading_Tasks_Task_
+  commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
+  fullName: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task)
   nameWithType: Coroutines.WaitForTask(Task)
-- uid: IPA.Utilities.Async.Coroutines.WaitForTask(Task,System.Boolean)
+- uid: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task,System.Boolean)
   name: WaitForTask(Task, Boolean)
-  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_Task_System_Boolean_
-  commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(Task,System.Boolean)
-  fullName: IPA.Utilities.Async.Coroutines.WaitForTask(Task, System.Boolean)
+  href: api/IPA.Utilities.Async.Coroutines.html#IPA_Utilities_Async_Coroutines_WaitForTask_System_Threading_Tasks_Task_System_Boolean_
+  commentId: M:IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task,System.Boolean)
+  fullName: IPA.Utilities.Async.Coroutines.WaitForTask(System.Threading.Tasks.Task, System.Boolean)
   nameWithType: Coroutines.WaitForTask(Task, Boolean)
 - uid: IPA.Utilities.Async.Coroutines.WaitForTask*
   name: WaitForTask
@@ -5339,31 +5683,31 @@ references:
   fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache()
   nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache()
   nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache()
-- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(IEnumerable{KeyValuePair{`0,`1}})
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})
   name: SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>)
-  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_IEnumerable_KeyValuePair__0__1___
-  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(IEnumerable{KeyValuePair{`0,`1}})
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})
   name.vb: SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)))
-  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>)
-  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)))
   nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>)
   nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)))
-- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(IEnumerable{KeyValuePair{`0,`1}},IEqualityComparer{`0})
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEqualityComparer{`0})
   name: SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>, IEqualityComparer<TKey>)
-  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_IEnumerable_KeyValuePair__0__1___IEqualityComparer__0__
-  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(IEnumerable{KeyValuePair{`0,`1}},IEqualityComparer{`0})
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___System_Collections_Generic_IEqualityComparer__0__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEqualityComparer{`0})
   name.vb: SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEqualityComparer(Of TKey))
-  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>, IEqualityComparer<TKey>)
-  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEqualityComparer(Of TKey))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEqualityComparer<TKey>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)), System.Collections.Generic.IEqualityComparer(Of TKey))
   nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEnumerable<KeyValuePair<TKey, TValue>>, IEqualityComparer<TKey>)
   nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEqualityComparer(Of TKey))
-- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(IEqualityComparer{`0})
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})
   name: SingleCreationValueCache(IEqualityComparer<TKey>)
-  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_IEqualityComparer__0__
-  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(IEqualityComparer{`0})
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEqualityComparer__0__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})
   name.vb: SingleCreationValueCache(IEqualityComparer(Of TKey))
-  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEqualityComparer<TKey>)
-  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEqualityComparer(Of TKey))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(System.Collections.Generic.IEqualityComparer<TKey>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(System.Collections.Generic.IEqualityComparer(Of TKey))
   nameWithType: SingleCreationValueCache<TKey, TValue>.SingleCreationValueCache(IEqualityComparer<TKey>)
   nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).SingleCreationValueCache(IEqualityComparer(Of TKey))
 - uid: IPA.Utilities.Async.SingleCreationValueCache`2.#ctor*
@@ -5426,13 +5770,13 @@ references:
   fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).Count
   nameWithType: SingleCreationValueCache<TKey, TValue>.Count
   nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).Count
-- uid: IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,Func{`0,`1})
+- uid: IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,System.Func{`0,`1})
   name: GetOrAdd(TKey, Func<TKey, TValue>)
-  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd__0_Func__0__1__
-  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,Func{`0,`1})
+  href: api/IPA.Utilities.Async.SingleCreationValueCache-2.html#IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd__0_System_Func__0__1__
+  commentId: M:IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,System.Func{`0,`1})
   name.vb: GetOrAdd(TKey, Func(Of TKey, TValue))
-  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.GetOrAdd(TKey, Func<TKey, TValue>)
-  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).GetOrAdd(TKey, Func(Of TKey, TValue))
+  fullName: IPA.Utilities.Async.SingleCreationValueCache<TKey, TValue>.GetOrAdd(TKey, System.Func<TKey, TValue>)
+  fullName.vb: IPA.Utilities.Async.SingleCreationValueCache(Of TKey, TValue).GetOrAdd(TKey, System.Func(Of TKey, TValue))
   nameWithType: SingleCreationValueCache<TKey, TValue>.GetOrAdd(TKey, Func<TKey, TValue>)
   nameWithType.vb: SingleCreationValueCache(Of TKey, TValue).GetOrAdd(TKey, Func(Of TKey, TValue))
 - uid: IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd*
@@ -5573,11 +5917,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.SingleThreadTaskScheduler.Join
   nameWithType: SingleThreadTaskScheduler.Join
-- uid: IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask(Task)
+- uid: IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
   name: QueueTask(Task)
-  href: api/IPA.Utilities.Async.SingleThreadTaskScheduler.html#IPA_Utilities_Async_SingleThreadTaskScheduler_QueueTask_Task_
-  commentId: M:IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask(Task)
-  fullName: IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask(Task)
+  href: api/IPA.Utilities.Async.SingleThreadTaskScheduler.html#IPA_Utilities_Async_SingleThreadTaskScheduler_QueueTask_System_Threading_Tasks_Task_
+  commentId: M:IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
+  fullName: IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
   nameWithType: SingleThreadTaskScheduler.QueueTask(Task)
 - uid: IPA.Utilities.Async.SingleThreadTaskScheduler.QueueTask*
   name: QueueTask
@@ -5599,11 +5943,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.SingleThreadTaskScheduler.Start
   nameWithType: SingleThreadTaskScheduler.Start
-- uid: IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline(Task,System.Boolean)
+- uid: IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)
   name: TryExecuteTaskInline(Task, Boolean)
-  href: api/IPA.Utilities.Async.SingleThreadTaskScheduler.html#IPA_Utilities_Async_SingleThreadTaskScheduler_TryExecuteTaskInline_Task_System_Boolean_
-  commentId: M:IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline(Task,System.Boolean)
-  fullName: IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline(Task, System.Boolean)
+  href: api/IPA.Utilities.Async.SingleThreadTaskScheduler.html#IPA_Utilities_Async_SingleThreadTaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean_
+  commentId: M:IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)
+  fullName: IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task, System.Boolean)
   nameWithType: SingleThreadTaskScheduler.TryExecuteTaskInline(Task, Boolean)
 - uid: IPA.Utilities.Async.SingleThreadTaskScheduler.TryExecuteTaskInline*
   name: TryExecuteTaskInline
@@ -5618,23 +5962,23 @@ references:
   commentId: T:IPA.Utilities.Async.Synchronization
   fullName: IPA.Utilities.Async.Synchronization
   nameWithType: Synchronization
-- uid: IPA.Utilities.Async.Synchronization.Lock(Mutex)
+- uid: IPA.Utilities.Async.Synchronization.Lock(System.Threading.Mutex)
   name: Lock(Mutex)
-  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_Mutex_
-  commentId: M:IPA.Utilities.Async.Synchronization.Lock(Mutex)
-  fullName: IPA.Utilities.Async.Synchronization.Lock(Mutex)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_System_Threading_Mutex_
+  commentId: M:IPA.Utilities.Async.Synchronization.Lock(System.Threading.Mutex)
+  fullName: IPA.Utilities.Async.Synchronization.Lock(System.Threading.Mutex)
   nameWithType: Synchronization.Lock(Mutex)
-- uid: IPA.Utilities.Async.Synchronization.Lock(Semaphore)
+- uid: IPA.Utilities.Async.Synchronization.Lock(System.Threading.Semaphore)
   name: Lock(Semaphore)
-  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_Semaphore_
-  commentId: M:IPA.Utilities.Async.Synchronization.Lock(Semaphore)
-  fullName: IPA.Utilities.Async.Synchronization.Lock(Semaphore)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_System_Threading_Semaphore_
+  commentId: M:IPA.Utilities.Async.Synchronization.Lock(System.Threading.Semaphore)
+  fullName: IPA.Utilities.Async.Synchronization.Lock(System.Threading.Semaphore)
   nameWithType: Synchronization.Lock(Semaphore)
-- uid: IPA.Utilities.Async.Synchronization.Lock(SemaphoreSlim)
+- uid: IPA.Utilities.Async.Synchronization.Lock(System.Threading.SemaphoreSlim)
   name: Lock(SemaphoreSlim)
-  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_SemaphoreSlim_
-  commentId: M:IPA.Utilities.Async.Synchronization.Lock(SemaphoreSlim)
-  fullName: IPA.Utilities.Async.Synchronization.Lock(SemaphoreSlim)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_Lock_System_Threading_SemaphoreSlim_
+  commentId: M:IPA.Utilities.Async.Synchronization.Lock(System.Threading.SemaphoreSlim)
+  fullName: IPA.Utilities.Async.Synchronization.Lock(System.Threading.SemaphoreSlim)
   nameWithType: Synchronization.Lock(SemaphoreSlim)
 - uid: IPA.Utilities.Async.Synchronization.Lock*
   name: Lock
@@ -5643,11 +5987,24 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.Synchronization.Lock
   nameWithType: Synchronization.Lock
-- uid: IPA.Utilities.Async.Synchronization.LockRead(ReaderWriterLockSlim)
+- uid: IPA.Utilities.Async.Synchronization.LockAsync(System.Threading.SemaphoreSlim)
+  name: LockAsync(SemaphoreSlim)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockAsync_System_Threading_SemaphoreSlim_
+  commentId: M:IPA.Utilities.Async.Synchronization.LockAsync(System.Threading.SemaphoreSlim)
+  fullName: IPA.Utilities.Async.Synchronization.LockAsync(System.Threading.SemaphoreSlim)
+  nameWithType: Synchronization.LockAsync(SemaphoreSlim)
+- uid: IPA.Utilities.Async.Synchronization.LockAsync*
+  name: LockAsync
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockAsync_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.LockAsync
+  isSpec: "True"
+  fullName: IPA.Utilities.Async.Synchronization.LockAsync
+  nameWithType: Synchronization.LockAsync
+- uid: IPA.Utilities.Async.Synchronization.LockRead(System.Threading.ReaderWriterLockSlim)
   name: LockRead(ReaderWriterLockSlim)
-  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockRead_ReaderWriterLockSlim_
-  commentId: M:IPA.Utilities.Async.Synchronization.LockRead(ReaderWriterLockSlim)
-  fullName: IPA.Utilities.Async.Synchronization.LockRead(ReaderWriterLockSlim)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockRead_System_Threading_ReaderWriterLockSlim_
+  commentId: M:IPA.Utilities.Async.Synchronization.LockRead(System.Threading.ReaderWriterLockSlim)
+  fullName: IPA.Utilities.Async.Synchronization.LockRead(System.Threading.ReaderWriterLockSlim)
   nameWithType: Synchronization.LockRead(ReaderWriterLockSlim)
 - uid: IPA.Utilities.Async.Synchronization.LockRead*
   name: LockRead
@@ -5656,11 +6013,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.Synchronization.LockRead
   nameWithType: Synchronization.LockRead
-- uid: IPA.Utilities.Async.Synchronization.LockReadUpgradable(ReaderWriterLockSlim)
+- uid: IPA.Utilities.Async.Synchronization.LockReadUpgradable(System.Threading.ReaderWriterLockSlim)
   name: LockReadUpgradable(ReaderWriterLockSlim)
-  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockReadUpgradable_ReaderWriterLockSlim_
-  commentId: M:IPA.Utilities.Async.Synchronization.LockReadUpgradable(ReaderWriterLockSlim)
-  fullName: IPA.Utilities.Async.Synchronization.LockReadUpgradable(ReaderWriterLockSlim)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockReadUpgradable_System_Threading_ReaderWriterLockSlim_
+  commentId: M:IPA.Utilities.Async.Synchronization.LockReadUpgradable(System.Threading.ReaderWriterLockSlim)
+  fullName: IPA.Utilities.Async.Synchronization.LockReadUpgradable(System.Threading.ReaderWriterLockSlim)
   nameWithType: Synchronization.LockReadUpgradable(ReaderWriterLockSlim)
 - uid: IPA.Utilities.Async.Synchronization.LockReadUpgradable*
   name: LockReadUpgradable
@@ -5669,11 +6026,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.Synchronization.LockReadUpgradable
   nameWithType: Synchronization.LockReadUpgradable
-- uid: IPA.Utilities.Async.Synchronization.LockWrite(ReaderWriterLockSlim)
+- uid: IPA.Utilities.Async.Synchronization.LockWrite(System.Threading.ReaderWriterLockSlim)
   name: LockWrite(ReaderWriterLockSlim)
-  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockWrite_ReaderWriterLockSlim_
-  commentId: M:IPA.Utilities.Async.Synchronization.LockWrite(ReaderWriterLockSlim)
-  fullName: IPA.Utilities.Async.Synchronization.LockWrite(ReaderWriterLockSlim)
+  href: api/IPA.Utilities.Async.Synchronization.html#IPA_Utilities_Async_Synchronization_LockWrite_System_Threading_ReaderWriterLockSlim_
+  commentId: M:IPA.Utilities.Async.Synchronization.LockWrite(System.Threading.ReaderWriterLockSlim)
+  fullName: IPA.Utilities.Async.Synchronization.LockWrite(System.Threading.ReaderWriterLockSlim)
   nameWithType: Synchronization.LockWrite(ReaderWriterLockSlim)
 - uid: IPA.Utilities.Async.Synchronization.LockWrite*
   name: LockWrite
@@ -5688,18 +6045,69 @@ references:
   commentId: T:IPA.Utilities.Async.Synchronization.MutexLocker
   fullName: IPA.Utilities.Async.Synchronization.MutexLocker
   nameWithType: Synchronization.MutexLocker
+- uid: IPA.Utilities.Async.Synchronization.MutexLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.MutexLocker.html#IPA_Utilities_Async_Synchronization_MutexLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.MutexLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.MutexLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.MutexLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.MutexLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.MutexLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.MutexLocker.html#IPA_Utilities_Async_Synchronization_MutexLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.MutexLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.MutexLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.MutexLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.MutexLocker.System.IDisposable.Dispose
 - uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker
   name: Synchronization.ReaderWriterLockSlimReadLocker
   href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.html
   commentId: T:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker
   fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker
   nameWithType: Synchronization.ReaderWriterLockSlimReadLocker
+- uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimReadLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.ReaderWriterLockSlimReadLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.ReaderWriterLockSlimReadLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimReadLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimReadLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.ReaderWriterLockSlimReadLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.ReaderWriterLockSlimReadLocker.System.IDisposable.Dispose
 - uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker
   name: Synchronization.ReaderWriterLockSlimUpgradableReadLocker
   href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.html
   commentId: T:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker
   fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker
   nameWithType: Synchronization.ReaderWriterLockSlimUpgradableReadLocker
+- uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimUpgradableReadLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.ReaderWriterLockSlimUpgradableReadLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimUpgradableReadLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.ReaderWriterLockSlimUpgradableReadLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.ReaderWriterLockSlimUpgradableReadLocker.System.IDisposable.Dispose
 - uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.Upgrade
   name: Upgrade()
   href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimUpgradableReadLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimUpgradableReadLocker_Upgrade
@@ -5719,18 +6127,92 @@ references:
   commentId: T:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker
   fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker
   nameWithType: Synchronization.ReaderWriterLockSlimWriteLocker
+- uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimWriteLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.ReaderWriterLockSlimWriteLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.ReaderWriterLockSlimWriteLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.html#IPA_Utilities_Async_Synchronization_ReaderWriterLockSlimWriteLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.ReaderWriterLockSlimWriteLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.ReaderWriterLockSlimWriteLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.ReaderWriterLockSlimWriteLocker.System.IDisposable.Dispose
 - uid: IPA.Utilities.Async.Synchronization.SemaphoreLocker
   name: Synchronization.SemaphoreLocker
   href: api/IPA.Utilities.Async.Synchronization.SemaphoreLocker.html
   commentId: T:IPA.Utilities.Async.Synchronization.SemaphoreLocker
   fullName: IPA.Utilities.Async.Synchronization.SemaphoreLocker
   nameWithType: Synchronization.SemaphoreLocker
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreLocker.html#IPA_Utilities_Async_Synchronization_SemaphoreLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.SemaphoreLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.SemaphoreLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.SemaphoreLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreLocker.html#IPA_Utilities_Async_Synchronization_SemaphoreLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.SemaphoreLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.SemaphoreLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.SemaphoreLocker.System.IDisposable.Dispose
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker
+  name: Synchronization.SemaphoreSlimAsyncLocker
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.html
+  commentId: T:IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker
+  nameWithType: Synchronization.SemaphoreSlimAsyncLocker
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.html#IPA_Utilities_Async_Synchronization_SemaphoreSlimAsyncLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.SemaphoreSlimAsyncLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.SemaphoreSlimAsyncLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.html#IPA_Utilities_Async_Synchronization_SemaphoreSlimAsyncLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimAsyncLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.SemaphoreSlimAsyncLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.SemaphoreSlimAsyncLocker.System.IDisposable.Dispose
 - uid: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker
   name: Synchronization.SemaphoreSlimLocker
   href: api/IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.html
   commentId: T:IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker
   fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker
   nameWithType: Synchronization.SemaphoreSlimLocker
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.html#IPA_Utilities_Async_Synchronization_SemaphoreSlimLocker_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System.IDisposable.Dispose()
+  nameWithType: Synchronization.SemaphoreSlimLocker.IDisposable.Dispose()
+  nameWithType.vb: Synchronization.SemaphoreSlimLocker.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.html#IPA_Utilities_Async_Synchronization_SemaphoreSlimLocker_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Async.Synchronization.SemaphoreSlimLocker.System.IDisposable.Dispose
+  nameWithType: Synchronization.SemaphoreSlimLocker.IDisposable.Dispose
+  nameWithType.vb: Synchronization.SemaphoreSlimLocker.System.IDisposable.Dispose
 - uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler
   name: UnityMainThreadTaskScheduler
   href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html
@@ -5847,11 +6329,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.IsRunning
   nameWithType: UnityMainThreadTaskScheduler.IsRunning
-- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(Task)
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
   name: QueueTask(Task)
-  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_Task_
-  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(Task)
-  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(Task)
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_QueueTask_System_Threading_Tasks_Task_
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask(System.Threading.Tasks.Task)
   nameWithType: UnityMainThreadTaskScheduler.QueueTask(Task)
 - uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask*
   name: QueueTask
@@ -5860,11 +6342,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.QueueTask
   nameWithType: UnityMainThreadTaskScheduler.QueueTask
-- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(Task,System.Boolean)
+- uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)
   name: TryExecuteTaskInline(Task, Boolean)
-  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_Task_System_Boolean_
-  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(Task,System.Boolean)
-  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(Task, System.Boolean)
+  href: api/IPA.Utilities.Async.UnityMainThreadTaskScheduler.html#IPA_Utilities_Async_UnityMainThreadTaskScheduler_TryExecuteTaskInline_System_Threading_Tasks_Task_System_Boolean_
+  commentId: M:IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task,System.Boolean)
+  fullName: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline(System.Threading.Tasks.Task, System.Boolean)
   nameWithType: UnityMainThreadTaskScheduler.TryExecuteTaskInline(Task, Boolean)
 - uid: IPA.Utilities.Async.UnityMainThreadTaskScheduler.TryExecuteTaskInline*
   name: TryExecuteTaskInline
@@ -5911,6 +6393,23 @@ references:
   commentId: T:IPA.Utilities.CriticalSection.AutoExecuteSection
   fullName: IPA.Utilities.CriticalSection.AutoExecuteSection
   nameWithType: CriticalSection.AutoExecuteSection
+- uid: IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.CriticalSection.AutoExecuteSection.html#IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.CriticalSection.AutoExecuteSection.System.IDisposable.Dispose()
+  nameWithType: CriticalSection.AutoExecuteSection.IDisposable.Dispose()
+  nameWithType.vb: CriticalSection.AutoExecuteSection.System.IDisposable.Dispose()
+- uid: IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.CriticalSection.AutoExecuteSection.html#IPA_Utilities_CriticalSection_AutoExecuteSection_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.CriticalSection.AutoExecuteSection.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.CriticalSection.AutoExecuteSection.System.IDisposable.Dispose
+  nameWithType: CriticalSection.AutoExecuteSection.IDisposable.Dispose
+  nameWithType.vb: CriticalSection.AutoExecuteSection.System.IDisposable.Dispose
 - uid: IPA.Utilities.CriticalSection.EnterExecuteSection
   name: EnterExecuteSection()
   href: api/IPA.Utilities.CriticalSection.html#IPA_Utilities_CriticalSection_EnterExecuteSection
@@ -5963,40 +6462,40 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.EnumerableExtensions.NonNull
   nameWithType: EnumerableExtensions.NonNull
-- uid: IPA.Utilities.EnumerableExtensions.NonNull``1(IEnumerable{``0})
+- uid: IPA.Utilities.EnumerableExtensions.NonNull``1(System.Collections.Generic.IEnumerable{``0})
   name: NonNull<T>(IEnumerable<T>)
-  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__1_IEnumerable___0__
-  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``1(IEnumerable{``0})
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__1_System_Collections_Generic_IEnumerable___0__
+  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``1(System.Collections.Generic.IEnumerable{``0})
   name.vb: NonNull(Of T)(IEnumerable(Of T))
-  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T>(IEnumerable<T>)
-  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T)(IEnumerable(Of T))
+  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T>(System.Collections.Generic.IEnumerable<T>)
+  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T)(System.Collections.Generic.IEnumerable(Of T))
   nameWithType: EnumerableExtensions.NonNull<T>(IEnumerable<T>)
   nameWithType.vb: EnumerableExtensions.NonNull(Of T)(IEnumerable(Of T))
-- uid: IPA.Utilities.EnumerableExtensions.NonNull``1(IEnumerable{System.Nullable{``0}})
+- uid: IPA.Utilities.EnumerableExtensions.NonNull``1(System.Collections.Generic.IEnumerable{System.Nullable{``0}})
   name: NonNull<T>(IEnumerable<Nullable<T>>)
-  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__1_IEnumerable_System_Nullable___0___
-  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``1(IEnumerable{System.Nullable{``0}})
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__1_System_Collections_Generic_IEnumerable_System_Nullable___0___
+  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``1(System.Collections.Generic.IEnumerable{System.Nullable{``0}})
   name.vb: NonNull(Of T)(IEnumerable(Of Nullable(Of T)))
-  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T>(IEnumerable<System.Nullable<T>>)
-  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T)(IEnumerable(Of System.Nullable(Of T)))
+  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T>(System.Collections.Generic.IEnumerable<System.Nullable<T>>)
+  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T)(System.Collections.Generic.IEnumerable(Of System.Nullable(Of T)))
   nameWithType: EnumerableExtensions.NonNull<T>(IEnumerable<Nullable<T>>)
   nameWithType.vb: EnumerableExtensions.NonNull(Of T)(IEnumerable(Of Nullable(Of T)))
-- uid: IPA.Utilities.EnumerableExtensions.NonNull``2(IEnumerable{``0},Func{``0,``1})
+- uid: IPA.Utilities.EnumerableExtensions.NonNull``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})
   name: NonNull<T, U>(IEnumerable<T>, Func<T, U>)
-  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_IEnumerable___0__Func___0___1__
-  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``2(IEnumerable{``0},Func{``0,``1})
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_System_Collections_Generic_IEnumerable___0__System_Func___0___1__
+  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})
   name.vb: NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, U))
-  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T, U>(IEnumerable<T>, Func<T, U>)
-  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, U))
+  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T, U>(System.Collections.Generic.IEnumerable<T>, System.Func<T, U>)
+  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T, U)(System.Collections.Generic.IEnumerable(Of T), System.Func(Of T, U))
   nameWithType: EnumerableExtensions.NonNull<T, U>(IEnumerable<T>, Func<T, U>)
   nameWithType.vb: EnumerableExtensions.NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, U))
-- uid: IPA.Utilities.EnumerableExtensions.NonNull``2(IEnumerable{``0},Func{``0,System.Nullable{``1}})
+- uid: IPA.Utilities.EnumerableExtensions.NonNull``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Nullable{``1}})
   name: NonNull<T, U>(IEnumerable<T>, Func<T, Nullable<U>>)
-  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_IEnumerable___0__Func___0_System_Nullable___1___
-  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``2(IEnumerable{``0},Func{``0,System.Nullable{``1}})
+  href: api/IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_System_Collections_Generic_IEnumerable___0__System_Func___0_System_Nullable___1___
+  commentId: M:IPA.Utilities.EnumerableExtensions.NonNull``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Nullable{``1}})
   name.vb: NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, Nullable(Of U)))
-  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T, U>(IEnumerable<T>, Func<T, System.Nullable<U>>)
-  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, System.Nullable(Of U)))
+  fullName: IPA.Utilities.EnumerableExtensions.NonNull<T, U>(System.Collections.Generic.IEnumerable<T>, System.Func<T, System.Nullable<U>>)
+  fullName.vb: IPA.Utilities.EnumerableExtensions.NonNull(Of T, U)(System.Collections.Generic.IEnumerable(Of T), System.Func(Of T, System.Nullable(Of U)))
   nameWithType: EnumerableExtensions.NonNull<T, U>(IEnumerable<T>, Func<T, Nullable<U>>)
   nameWithType.vb: EnumerableExtensions.NonNull(Of T, U)(IEnumerable(Of T), Func(Of T, Nullable(Of U)))
 - uid: IPA.Utilities.Extensions
@@ -6005,11 +6504,11 @@ references:
   commentId: T:IPA.Utilities.Extensions
   fullName: IPA.Utilities.Extensions
   nameWithType: Extensions
-- uid: IPA.Utilities.Extensions.GetDefault(Type)
+- uid: IPA.Utilities.Extensions.GetDefault(System.Type)
   name: GetDefault(Type)
-  href: api/IPA.Utilities.Extensions.html#IPA_Utilities_Extensions_GetDefault_Type_
-  commentId: M:IPA.Utilities.Extensions.GetDefault(Type)
-  fullName: IPA.Utilities.Extensions.GetDefault(Type)
+  href: api/IPA.Utilities.Extensions.html#IPA_Utilities_Extensions_GetDefault_System_Type_
+  commentId: M:IPA.Utilities.Extensions.GetDefault(System.Type)
+  fullName: IPA.Utilities.Extensions.GetDefault(System.Type)
   nameWithType: Extensions.GetDefault(Type)
 - uid: IPA.Utilities.Extensions.GetDefault*
   name: GetDefault
@@ -6476,11 +6975,11 @@ references:
   commentId: T:IPA.Utilities.ReflectionUtil
   fullName: IPA.Utilities.ReflectionUtil
   nameWithType: ReflectionUtil
-- uid: IPA.Utilities.ReflectionUtil.CopyComponent(Component,Type,GameObject,Type)
+- uid: IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component,System.Type,UnityEngine.GameObject,System.Type)
   name: CopyComponent(Component, Type, GameObject, Type)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_Component_Type_GameObject_Type_
-  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent(Component,Type,GameObject,Type)
-  fullName: IPA.Utilities.ReflectionUtil.CopyComponent(Component, Type, GameObject, Type)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_
+  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component,System.Type,UnityEngine.GameObject,System.Type)
+  fullName: IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component, System.Type, UnityEngine.GameObject, System.Type)
   nameWithType: ReflectionUtil.CopyComponent(Component, Type, GameObject, Type)
 - uid: IPA.Utilities.ReflectionUtil.CopyComponent*
   name: CopyComponent
@@ -6489,13 +6988,13 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.ReflectionUtil.CopyComponent
   nameWithType: ReflectionUtil.CopyComponent
-- uid: IPA.Utilities.ReflectionUtil.CopyComponent``1(Component,GameObject,Type)
+- uid: IPA.Utilities.ReflectionUtil.CopyComponent``1(UnityEngine.Component,UnityEngine.GameObject,System.Type)
   name: CopyComponent<T>(Component, GameObject, Type)
-  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_Type_
-  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent``1(Component,GameObject,Type)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type_
+  commentId: M:IPA.Utilities.ReflectionUtil.CopyComponent``1(UnityEngine.Component,UnityEngine.GameObject,System.Type)
   name.vb: CopyComponent(Of T)(Component, GameObject, Type)
-  fullName: IPA.Utilities.ReflectionUtil.CopyComponent<T>(Component, GameObject, Type)
-  fullName.vb: IPA.Utilities.ReflectionUtil.CopyComponent(Of T)(Component, GameObject, Type)
+  fullName: IPA.Utilities.ReflectionUtil.CopyComponent<T>(UnityEngine.Component, UnityEngine.GameObject, System.Type)
+  fullName.vb: IPA.Utilities.ReflectionUtil.CopyComponent(Of T)(UnityEngine.Component, UnityEngine.GameObject, System.Type)
   nameWithType: ReflectionUtil.CopyComponent<T>(Component, GameObject, Type)
   nameWithType.vb: ReflectionUtil.CopyComponent(Of T)(Component, GameObject, Type)
 - uid: IPA.Utilities.ReflectionUtil.GetField*
@@ -6578,6 +7077,83 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.SetProperty(Of T, U)(T, System.String, U)
   nameWithType: ReflectionUtil.SetProperty<T, U>(T, String, U)
   nameWithType.vb: ReflectionUtil.SetProperty(Of T, U)(T, String, U)
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaitable
+  name: SwitchToUnityMainThreadAwaitable
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaitable.html
+  commentId: T:IPA.Utilities.SwitchToUnityMainThreadAwaitable
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaitable
+  nameWithType: SwitchToUnityMainThreadAwaitable
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaitable.GetAwaiter
+  name: GetAwaiter()
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaitable.html#IPA_Utilities_SwitchToUnityMainThreadAwaitable_GetAwaiter
+  commentId: M:IPA.Utilities.SwitchToUnityMainThreadAwaitable.GetAwaiter
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaitable.GetAwaiter()
+  nameWithType: SwitchToUnityMainThreadAwaitable.GetAwaiter()
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaitable.GetAwaiter*
+  name: GetAwaiter
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaitable.html#IPA_Utilities_SwitchToUnityMainThreadAwaitable_GetAwaiter_
+  commentId: Overload:IPA.Utilities.SwitchToUnityMainThreadAwaitable.GetAwaiter
+  isSpec: "True"
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaitable.GetAwaiter
+  nameWithType: SwitchToUnityMainThreadAwaitable.GetAwaiter
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter
+  name: SwitchToUnityMainThreadAwaiter
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html
+  commentId: T:IPA.Utilities.SwitchToUnityMainThreadAwaiter
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter
+  nameWithType: SwitchToUnityMainThreadAwaiter
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.GetResult
+  name: GetResult()
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_GetResult
+  commentId: M:IPA.Utilities.SwitchToUnityMainThreadAwaiter.GetResult
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.GetResult()
+  nameWithType: SwitchToUnityMainThreadAwaiter.GetResult()
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.GetResult*
+  name: GetResult
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_GetResult_
+  commentId: Overload:IPA.Utilities.SwitchToUnityMainThreadAwaiter.GetResult
+  isSpec: "True"
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.GetResult
+  nameWithType: SwitchToUnityMainThreadAwaiter.GetResult
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.IsCompleted
+  name: IsCompleted
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_IsCompleted
+  commentId: P:IPA.Utilities.SwitchToUnityMainThreadAwaiter.IsCompleted
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.IsCompleted
+  nameWithType: SwitchToUnityMainThreadAwaiter.IsCompleted
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.IsCompleted*
+  name: IsCompleted
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_IsCompleted_
+  commentId: Overload:IPA.Utilities.SwitchToUnityMainThreadAwaiter.IsCompleted
+  isSpec: "True"
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.IsCompleted
+  nameWithType: SwitchToUnityMainThreadAwaiter.IsCompleted
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.OnCompleted(System.Action)
+  name: OnCompleted(Action)
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_OnCompleted_System_Action_
+  commentId: M:IPA.Utilities.SwitchToUnityMainThreadAwaiter.OnCompleted(System.Action)
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.OnCompleted(System.Action)
+  nameWithType: SwitchToUnityMainThreadAwaiter.OnCompleted(Action)
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.OnCompleted*
+  name: OnCompleted
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_OnCompleted_
+  commentId: Overload:IPA.Utilities.SwitchToUnityMainThreadAwaiter.OnCompleted
+  isSpec: "True"
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.OnCompleted
+  nameWithType: SwitchToUnityMainThreadAwaiter.OnCompleted
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted(System.Action)
+  name: UnsafeOnCompleted(Action)
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_UnsafeOnCompleted_System_Action_
+  commentId: M:IPA.Utilities.SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted(System.Action)
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted(System.Action)
+  nameWithType: SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted(Action)
+- uid: IPA.Utilities.SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted*
+  name: UnsafeOnCompleted
+  href: api/IPA.Utilities.SwitchToUnityMainThreadAwaiter.html#IPA_Utilities_SwitchToUnityMainThreadAwaiter_UnsafeOnCompleted_
+  commentId: Overload:IPA.Utilities.SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted
+  isSpec: "True"
+  fullName: IPA.Utilities.SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted
+  nameWithType: SwitchToUnityMainThreadAwaiter.UnsafeOnCompleted
 - uid: IPA.Utilities.UnityGame
   name: UnityGame
   href: api/IPA.Utilities.UnityGame.html
@@ -6693,6 +7269,19 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.UnityGame.ReleaseType
   nameWithType: UnityGame.ReleaseType
+- uid: IPA.Utilities.UnityGame.SwitchToMainThreadAsync
+  name: SwitchToMainThreadAsync()
+  href: api/IPA.Utilities.UnityGame.html#IPA_Utilities_UnityGame_SwitchToMainThreadAsync
+  commentId: M:IPA.Utilities.UnityGame.SwitchToMainThreadAsync
+  fullName: IPA.Utilities.UnityGame.SwitchToMainThreadAsync()
+  nameWithType: UnityGame.SwitchToMainThreadAsync()
+- uid: IPA.Utilities.UnityGame.SwitchToMainThreadAsync*
+  name: SwitchToMainThreadAsync
+  href: api/IPA.Utilities.UnityGame.html#IPA_Utilities_UnityGame_SwitchToMainThreadAsync_
+  commentId: Overload:IPA.Utilities.UnityGame.SwitchToMainThreadAsync
+  isSpec: "True"
+  fullName: IPA.Utilities.UnityGame.SwitchToMainThreadAsync
+  nameWithType: UnityGame.SwitchToMainThreadAsync
 - uid: IPA.Utilities.UnityGame.UserDataPath
   name: UserDataPath
   href: api/IPA.Utilities.UnityGame.html#IPA_Utilities_UnityGame_UserDataPath
@@ -6741,15 +7330,15 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.CanUseDateTimeNowSafely
   nameWithType: Utils.CanUseDateTimeNowSafely
-- uid: IPA.Utilities.Utils.CopyAll(DirectoryInfo,DirectoryInfo,System.String,System.Nullable{Func{Exception,FileInfo,System.Boolean}})
-  name: CopyAll(DirectoryInfo, DirectoryInfo, String, Nullable<Func<Exception, FileInfo, Boolean>>)
-  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CopyAll_DirectoryInfo_DirectoryInfo_System_String_System_Nullable_Func_Exception_FileInfo_System_Boolean___
-  commentId: M:IPA.Utilities.Utils.CopyAll(DirectoryInfo,DirectoryInfo,System.String,System.Nullable{Func{Exception,FileInfo,System.Boolean}})
-  name.vb: CopyAll(DirectoryInfo, DirectoryInfo, String, Nullable(Of Func(Of Exception, FileInfo, Boolean)))
-  fullName: IPA.Utilities.Utils.CopyAll(DirectoryInfo, DirectoryInfo, System.String, System.Nullable<Func<Exception, FileInfo, System.Boolean>>)
-  fullName.vb: IPA.Utilities.Utils.CopyAll(DirectoryInfo, DirectoryInfo, System.String, System.Nullable(Of Func(Of Exception, FileInfo, System.Boolean)))
-  nameWithType: Utils.CopyAll(DirectoryInfo, DirectoryInfo, String, Nullable<Func<Exception, FileInfo, Boolean>>)
-  nameWithType.vb: Utils.CopyAll(DirectoryInfo, DirectoryInfo, String, Nullable(Of Func(Of Exception, FileInfo, Boolean)))
+- uid: IPA.Utilities.Utils.CopyAll(System.IO.DirectoryInfo,System.IO.DirectoryInfo,System.String,System.Func{System.Exception,System.IO.FileInfo,System.Boolean})
+  name: CopyAll(DirectoryInfo, DirectoryInfo, String, Func<Exception, FileInfo, Boolean>)
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CopyAll_System_IO_DirectoryInfo_System_IO_DirectoryInfo_System_String_System_Func_System_Exception_System_IO_FileInfo_System_Boolean__
+  commentId: M:IPA.Utilities.Utils.CopyAll(System.IO.DirectoryInfo,System.IO.DirectoryInfo,System.String,System.Func{System.Exception,System.IO.FileInfo,System.Boolean})
+  name.vb: CopyAll(DirectoryInfo, DirectoryInfo, String, Func(Of Exception, FileInfo, Boolean))
+  fullName: IPA.Utilities.Utils.CopyAll(System.IO.DirectoryInfo, System.IO.DirectoryInfo, System.String, System.Func<System.Exception, System.IO.FileInfo, System.Boolean>)
+  fullName.vb: IPA.Utilities.Utils.CopyAll(System.IO.DirectoryInfo, System.IO.DirectoryInfo, System.String, System.Func(Of System.Exception, System.IO.FileInfo, System.Boolean))
+  nameWithType: Utils.CopyAll(DirectoryInfo, DirectoryInfo, String, Func<Exception, FileInfo, Boolean>)
+  nameWithType.vb: Utils.CopyAll(DirectoryInfo, DirectoryInfo, String, Func(Of Exception, FileInfo, Boolean))
 - uid: IPA.Utilities.Utils.CopyAll*
   name: CopyAll
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_CopyAll_
@@ -6777,13 +7366,13 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.Deconstruct
   nameWithType: Utils.Deconstruct
-- uid: IPA.Utilities.Utils.Deconstruct``2(KeyValuePair{``0,``1},``0@,``1@)
+- uid: IPA.Utilities.Utils.Deconstruct``2(System.Collections.Generic.KeyValuePair{``0,``1},``0@,``1@)
   name: Deconstruct<TKey, TValue>(KeyValuePair<TKey, TValue>, out TKey, out TValue)
-  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_Deconstruct__2_KeyValuePair___0___1____0____1__
-  commentId: M:IPA.Utilities.Utils.Deconstruct``2(KeyValuePair{``0,``1},``0@,``1@)
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_Deconstruct__2_System_Collections_Generic_KeyValuePair___0___1____0____1__
+  commentId: M:IPA.Utilities.Utils.Deconstruct``2(System.Collections.Generic.KeyValuePair{``0,``1},``0@,``1@)
   name.vb: Deconstruct(Of TKey, TValue)(KeyValuePair(Of TKey, TValue), ByRef TKey, ByRef TValue)
-  fullName: IPA.Utilities.Utils.Deconstruct<TKey, TValue>(KeyValuePair<TKey, TValue>, out TKey, out TValue)
-  fullName.vb: IPA.Utilities.Utils.Deconstruct(Of TKey, TValue)(KeyValuePair(Of TKey, TValue), ByRef TKey, ByRef TValue)
+  fullName: IPA.Utilities.Utils.Deconstruct<TKey, TValue>(System.Collections.Generic.KeyValuePair<TKey, TValue>, out TKey, out TValue)
+  fullName.vb: IPA.Utilities.Utils.Deconstruct(Of TKey, TValue)(System.Collections.Generic.KeyValuePair(Of TKey, TValue), ByRef TKey, ByRef TValue)
   nameWithType: Utils.Deconstruct<TKey, TValue>(KeyValuePair<TKey, TValue>, out TKey, out TValue)
   nameWithType.vb: Utils.Deconstruct(Of TKey, TValue)(KeyValuePair(Of TKey, TValue), ByRef TKey, ByRef TValue)
 - uid: IPA.Utilities.Utils.GetRelativePath(System.String,System.String)
@@ -6799,11 +7388,11 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.GetRelativePath
   nameWithType: Utils.GetRelativePath
-- uid: IPA.Utilities.Utils.ScopeGuard(Action)
+- uid: IPA.Utilities.Utils.ScopeGuard(System.Action)
   name: ScopeGuard(Action)
-  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_ScopeGuard_Action_
-  commentId: M:IPA.Utilities.Utils.ScopeGuard(Action)
-  fullName: IPA.Utilities.Utils.ScopeGuard(Action)
+  href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_ScopeGuard_System_Action_
+  commentId: M:IPA.Utilities.Utils.ScopeGuard(System.Action)
+  fullName: IPA.Utilities.Utils.ScopeGuard(System.Action)
   nameWithType: Utils.ScopeGuard(Action)
 - uid: IPA.Utilities.Utils.ScopeGuard*
   name: ScopeGuard
@@ -6818,11 +7407,11 @@ references:
   commentId: T:IPA.Utilities.Utils.ScopeGuardObject
   fullName: IPA.Utilities.Utils.ScopeGuardObject
   nameWithType: Utils.ScopeGuardObject
-- uid: IPA.Utilities.Utils.ScopeGuardObject.#ctor(Action)
+- uid: IPA.Utilities.Utils.ScopeGuardObject.#ctor(System.Action)
   name: ScopeGuardObject(Action)
-  href: api/IPA.Utilities.Utils.ScopeGuardObject.html#IPA_Utilities_Utils_ScopeGuardObject__ctor_Action_
-  commentId: M:IPA.Utilities.Utils.ScopeGuardObject.#ctor(Action)
-  fullName: IPA.Utilities.Utils.ScopeGuardObject.ScopeGuardObject(Action)
+  href: api/IPA.Utilities.Utils.ScopeGuardObject.html#IPA_Utilities_Utils_ScopeGuardObject__ctor_System_Action_
+  commentId: M:IPA.Utilities.Utils.ScopeGuardObject.#ctor(System.Action)
+  fullName: IPA.Utilities.Utils.ScopeGuardObject.ScopeGuardObject(System.Action)
   nameWithType: Utils.ScopeGuardObject.ScopeGuardObject(Action)
 - uid: IPA.Utilities.Utils.ScopeGuardObject.#ctor*
   name: ScopeGuardObject
@@ -6831,6 +7420,23 @@ references:
   isSpec: "True"
   fullName: IPA.Utilities.Utils.ScopeGuardObject.ScopeGuardObject
   nameWithType: Utils.ScopeGuardObject.ScopeGuardObject
+- uid: IPA.Utilities.Utils.ScopeGuardObject.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  href: api/IPA.Utilities.Utils.ScopeGuardObject.html#IPA_Utilities_Utils_ScopeGuardObject_System_IDisposable_Dispose
+  commentId: M:IPA.Utilities.Utils.ScopeGuardObject.System#IDisposable#Dispose
+  name.vb: System.IDisposable.Dispose()
+  fullName: IPA.Utilities.Utils.ScopeGuardObject.System.IDisposable.Dispose()
+  nameWithType: Utils.ScopeGuardObject.IDisposable.Dispose()
+  nameWithType.vb: Utils.ScopeGuardObject.System.IDisposable.Dispose()
+- uid: IPA.Utilities.Utils.ScopeGuardObject.System#IDisposable#Dispose*
+  name: IDisposable.Dispose
+  href: api/IPA.Utilities.Utils.ScopeGuardObject.html#IPA_Utilities_Utils_ScopeGuardObject_System_IDisposable_Dispose_
+  commentId: Overload:IPA.Utilities.Utils.ScopeGuardObject.System#IDisposable#Dispose
+  isSpec: "True"
+  name.vb: System.IDisposable.Dispose
+  fullName: IPA.Utilities.Utils.ScopeGuardObject.System.IDisposable.Dispose
+  nameWithType: Utils.ScopeGuardObject.IDisposable.Dispose
+  nameWithType.vb: Utils.ScopeGuardObject.System.IDisposable.Dispose
 - uid: IPA.Utilities.Utils.StringToByteArray(System.String)
   name: StringToByteArray(String)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_StringToByteArray_System_String_
@@ -6861,11 +7467,11 @@ references:
   fullName: IPA.Utilities.Utils.UnsafeCompare
   nameWithType: Utils.UnsafeCompare
 - uid: IPA.Utilities.Utils.VersionCompareNoPrerelease(Hive.Versioning.Version,Hive.Versioning.Version)
-  name: VersionCompareNoPrerelease(Hive.Versioning.Version, Hive.Versioning.Version)
+  name: VersionCompareNoPrerelease(Version, Version)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_Hive_Versioning_Version_Hive_Versioning_Version_
   commentId: M:IPA.Utilities.Utils.VersionCompareNoPrerelease(Hive.Versioning.Version,Hive.Versioning.Version)
   fullName: IPA.Utilities.Utils.VersionCompareNoPrerelease(Hive.Versioning.Version, Hive.Versioning.Version)
-  nameWithType: Utils.VersionCompareNoPrerelease(Hive.Versioning.Version, Hive.Versioning.Version)
+  nameWithType: Utils.VersionCompareNoPrerelease(Version, Version)
 - uid: IPA.Utilities.Utils.VersionCompareNoPrerelease(SemVer.Version,SemVer.Version)
   name: VersionCompareNoPrerelease(Version, Version)
   href: api/IPA.Utilities.Utils.html#IPA_Utilities_Utils_VersionCompareNoPrerelease_SemVer_Version_SemVer_Version_
@@ -6910,18 +7516,21 @@ references:
   isSpec: "True"
   fullName: SemVer.Range.Range
   nameWithType: Range.Range
-- uid: SemVer.Range.Equals(Hive.Versioning.VersionRange)
-  name: Equals(VersionRange)
-  href: api/SemVer.Range.html#SemVer_Range_Equals_Hive_Versioning_VersionRange_
-  commentId: M:SemVer.Range.Equals(Hive.Versioning.VersionRange)
-  fullName: SemVer.Range.Equals(Hive.Versioning.VersionRange)
-  nameWithType: Range.Equals(VersionRange)
 - uid: SemVer.Range.Equals(SemVer.Range)
   name: Equals(Range)
   href: api/SemVer.Range.html#SemVer_Range_Equals_SemVer_Range_
   commentId: M:SemVer.Range.Equals(SemVer.Range)
   fullName: SemVer.Range.Equals(SemVer.Range)
   nameWithType: Range.Equals(Range)
+- uid: SemVer.Range.Equals(System.Nullable{VersionRange})
+  name: Equals(Nullable<VersionRange>)
+  href: api/SemVer.Range.html#SemVer_Range_Equals_System_Nullable_VersionRange__
+  commentId: M:SemVer.Range.Equals(System.Nullable{VersionRange})
+  name.vb: Equals(Nullable(Of VersionRange))
+  fullName: SemVer.Range.Equals(System.Nullable<VersionRange>)
+  fullName.vb: SemVer.Range.Equals(System.Nullable(Of VersionRange))
+  nameWithType: Range.Equals(Nullable<VersionRange>)
+  nameWithType.vb: Range.Equals(Nullable(Of VersionRange))
 - uid: SemVer.Range.Equals(System.Object)
   name: Equals(Object)
   href: api/SemVer.Range.html#SemVer_Range_Equals_System_Object_
@@ -6935,11 +7544,11 @@ references:
   isSpec: "True"
   fullName: SemVer.Range.Equals
   nameWithType: Range.Equals
-- uid: SemVer.Range.ForHiveRange(Hive.Versioning.VersionRange)
+- uid: SemVer.Range.ForHiveRange(VersionRange)
   name: ForHiveRange(VersionRange)
-  href: api/SemVer.Range.html#SemVer_Range_ForHiveRange_Hive_Versioning_VersionRange_
-  commentId: M:SemVer.Range.ForHiveRange(Hive.Versioning.VersionRange)
-  fullName: SemVer.Range.ForHiveRange(Hive.Versioning.VersionRange)
+  href: api/SemVer.Range.html#SemVer_Range_ForHiveRange_VersionRange_
+  commentId: M:SemVer.Range.ForHiveRange(VersionRange)
+  fullName: SemVer.Range.ForHiveRange(VersionRange)
   nameWithType: Range.ForHiveRange(VersionRange)
 - uid: SemVer.Range.ForHiveRange*
   name: ForHiveRange
@@ -6975,11 +7584,11 @@ references:
   fullName: SemVer.Range.Intersect
   nameWithType: Range.Intersect
 - uid: SemVer.Range.IsSatisfied(Hive.Versioning.Version)
-  name: IsSatisfied(Version)
+  name: IsSatisfied(Hive.Versioning.Version)
   href: api/SemVer.Range.html#SemVer_Range_IsSatisfied_Hive_Versioning_Version_
   commentId: M:SemVer.Range.IsSatisfied(Hive.Versioning.Version)
   fullName: SemVer.Range.IsSatisfied(Hive.Versioning.Version)
-  nameWithType: Range.IsSatisfied(Version)
+  nameWithType: Range.IsSatisfied(Hive.Versioning.Version)
 - uid: SemVer.Range.IsSatisfied(SemVer.Version)
   name: IsSatisfied(Version)
   href: api/SemVer.Range.html#SemVer_Range_IsSatisfied_SemVer_Version_
@@ -7189,18 +7798,21 @@ references:
   isSpec: "True"
   fullName: SemVer.Version.Clean
   nameWithType: Version.Clean
-- uid: SemVer.Version.CompareTo(Hive.Versioning.Version)
-  name: CompareTo(Version)
-  href: api/SemVer.Version.html#SemVer_Version_CompareTo_Hive_Versioning_Version_
-  commentId: M:SemVer.Version.CompareTo(Hive.Versioning.Version)
-  fullName: SemVer.Version.CompareTo(Hive.Versioning.Version)
-  nameWithType: Version.CompareTo(Version)
 - uid: SemVer.Version.CompareTo(SemVer.Version)
   name: CompareTo(Version)
   href: api/SemVer.Version.html#SemVer_Version_CompareTo_SemVer_Version_
   commentId: M:SemVer.Version.CompareTo(SemVer.Version)
   fullName: SemVer.Version.CompareTo(SemVer.Version)
   nameWithType: Version.CompareTo(Version)
+- uid: SemVer.Version.CompareTo(System.Nullable{Hive.Versioning.Version})
+  name: CompareTo(Nullable<Hive.Versioning.Version>)
+  href: api/SemVer.Version.html#SemVer_Version_CompareTo_System_Nullable_Hive_Versioning_Version__
+  commentId: M:SemVer.Version.CompareTo(System.Nullable{Hive.Versioning.Version})
+  name.vb: CompareTo(Nullable(Of Hive.Versioning.Version))
+  fullName: SemVer.Version.CompareTo(System.Nullable<Hive.Versioning.Version>)
+  fullName.vb: SemVer.Version.CompareTo(System.Nullable(Of Hive.Versioning.Version))
+  nameWithType: Version.CompareTo(Nullable<Hive.Versioning.Version>)
+  nameWithType.vb: Version.CompareTo(Nullable(Of Hive.Versioning.Version))
 - uid: SemVer.Version.CompareTo(System.Object)
   name: CompareTo(Object)
   href: api/SemVer.Version.html#SemVer_Version_CompareTo_System_Object_
@@ -7214,18 +7826,21 @@ references:
   isSpec: "True"
   fullName: SemVer.Version.CompareTo
   nameWithType: Version.CompareTo
-- uid: SemVer.Version.Equals(Hive.Versioning.Version)
-  name: Equals(Version)
-  href: api/SemVer.Version.html#SemVer_Version_Equals_Hive_Versioning_Version_
-  commentId: M:SemVer.Version.Equals(Hive.Versioning.Version)
-  fullName: SemVer.Version.Equals(Hive.Versioning.Version)
-  nameWithType: Version.Equals(Version)
 - uid: SemVer.Version.Equals(SemVer.Version)
   name: Equals(Version)
   href: api/SemVer.Version.html#SemVer_Version_Equals_SemVer_Version_
   commentId: M:SemVer.Version.Equals(SemVer.Version)
   fullName: SemVer.Version.Equals(SemVer.Version)
   nameWithType: Version.Equals(Version)
+- uid: SemVer.Version.Equals(System.Nullable{Hive.Versioning.Version})
+  name: Equals(Nullable<Hive.Versioning.Version>)
+  href: api/SemVer.Version.html#SemVer_Version_Equals_System_Nullable_Hive_Versioning_Version__
+  commentId: M:SemVer.Version.Equals(System.Nullable{Hive.Versioning.Version})
+  name.vb: Equals(Nullable(Of Hive.Versioning.Version))
+  fullName: SemVer.Version.Equals(System.Nullable<Hive.Versioning.Version>)
+  fullName.vb: SemVer.Version.Equals(System.Nullable(Of Hive.Versioning.Version))
+  nameWithType: Version.Equals(Nullable<Hive.Versioning.Version>)
+  nameWithType.vb: Version.Equals(Nullable(Of Hive.Versioning.Version))
 - uid: SemVer.Version.Equals(System.Object)
   name: Equals(Object)
   href: api/SemVer.Version.html#SemVer_Version_Equals_System_Object_
@@ -7240,11 +7855,11 @@ references:
   fullName: SemVer.Version.Equals
   nameWithType: Version.Equals
 - uid: SemVer.Version.ForHiveVersion(Hive.Versioning.Version)
-  name: ForHiveVersion(Version)
+  name: ForHiveVersion(Hive.Versioning.Version)
   href: api/SemVer.Version.html#SemVer_Version_ForHiveVersion_Hive_Versioning_Version_
   commentId: M:SemVer.Version.ForHiveVersion(Hive.Versioning.Version)
   fullName: SemVer.Version.ForHiveVersion(Hive.Versioning.Version)
-  nameWithType: Version.ForHiveVersion(Version)
+  nameWithType: Version.ForHiveVersion(Hive.Versioning.Version)
 - uid: SemVer.Version.ForHiveVersion*
   name: ForHiveVersion
   href: api/SemVer.Version.html#SemVer_Version_ForHiveVersion_

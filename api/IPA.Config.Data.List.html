@@ -85,7 +85,7 @@
   <h1 id="IPA_Config_Data_List" data-uid="IPA.Config.Data.List" class="text-break">Class List
   </h1>
   <div class="markdown level0 summary"><p>A list of <a class="xref" href="IPA.Config.Data.Value.html">Value</a>s for serialization by an <a class="xref" href="IPA.Config.IConfigProvider.html">IConfigProvider</a>.
-Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List">List()</a> or <see cref="!:Value.From(IEnumerable&lt;Value>)"></see> to create.</p>
+Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List">List()</a> or <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IEnumerable_IPA_Config_Data_Value__">From(IEnumerable&lt;Value&gt;)</a> to create.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -96,7 +96,10 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">IList</span>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1">IList</a>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -110,10 +113,10 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_Map">Value.Map()</a>
     </div>
     <div>
-      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Nullable_System_String__">Value.From(Nullable&lt;String&gt;)</a>
+      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_String_">Value.From(String)</a>
     </div>
     <div>
-      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_Text_System_Nullable_System_String__">Value.Text(Nullable&lt;String&gt;)</a>
+      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_Text_System_String_">Value.Text(String)</a>
     </div>
     <div>
       <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Int64_">Value.From(Int64)</a>
@@ -134,20 +137,38 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_Bool_System_Boolean_">Value.Bool(Boolean)</a>
     </div>
     <div>
-      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Nullable_IEnumerable_IPA_Config_Data_Value___">Value.From(Nullable&lt;IEnumerable&lt;Value&gt;&gt;)</a>
+      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IEnumerable_IPA_Config_Data_Value__">Value.From(IEnumerable&lt;Value&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_IDictionary_System_String_IPA_Config_Data_Value__">Value.From(IDictionary&lt;String, Value&gt;)</a>
+      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IDictionary_System_String_IPA_Config_Data_Value__">Value.From(IDictionary&lt;String, Value&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Nullable_IEnumerable_KeyValuePair_System_String_IPA_Config_Data_Value____">Value.From(Nullable&lt;IEnumerable&lt;KeyValuePair&lt;String, Value&gt;&gt;&gt;)</a>
+      <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_From_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_String_IPA_Config_Data_Value___">Value.From(IEnumerable&lt;KeyValuePair&lt;String, Value&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#system-object-gethashcode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#system-object-memberwiseclone">Object.MemberwiseClone()</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Config.Data.html">IPA.Config.Data</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Config_Data_List_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class List : Value</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class List : Value, IList&lt;Value&gt;, ICollection&lt;Value&gt;, IEnumerable&lt;Value&gt;, IEnumerable</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -156,7 +177,7 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Count.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Count%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L32">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L32">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Count_" data-uid="IPA.Config.Data.List.Count*"></a>
   <h4 id="IPA_Config_Data_List_Count" data-uid="IPA.Config.Data.List.Count">Count</h4>
@@ -182,12 +203,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_Count_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1.count#system-collections-generic-icollection-1-count">Count</a></div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Item_System_Int32_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Item(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L26">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L26">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Item_" data-uid="IPA.Config.Data.List.Item*"></a>
   <h4 id="IPA_Config_Data_List_Item_System_Int32_" data-uid="IPA.Config.Data.List.Item(System.Int32)">Item[Int32]</h4>
@@ -232,6 +257,10 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_Item_System_Int32__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1.item#system-collections-generic-ilist-1-item(system-int32)">Item</a>[<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>]</div>
+  </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -239,7 +268,7 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Add_IPA_Config_Data_Value_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Add(IPA.Config.Data.Value)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L41">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L41">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Add_" data-uid="IPA.Config.Data.List.Add*"></a>
   <h4 id="IPA_Config_Data_List_Add_IPA_Config_Data_Value_" data-uid="IPA.Config.Data.List.Add(IPA.Config.Data.Value)">Add(Value)</h4>
@@ -268,15 +297,19 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_Add_IPA_Config_Data_Value__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add#system-collections-generic-icollection-1-add(-0)">Add</a>(T)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_AddRange_IEnumerable_IPA_Config_Data_Value__.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.AddRange(IEnumerable%7BIPA.Config.Data.Value%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_AddRange_System_Collections_Generic_IEnumerable_IPA_Config_Data_Value__.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.AddRange(System.Collections.Generic.IEnumerable%7BIPA.Config.Data.Value%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L47">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L47">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_AddRange_" data-uid="IPA.Config.Data.List.AddRange*"></a>
-  <h4 id="IPA_Config_Data_List_AddRange_IEnumerable_IPA_Config_Data_Value__" data-uid="IPA.Config.Data.List.AddRange(IEnumerable{IPA.Config.Data.Value})">AddRange(IEnumerable&lt;Value&gt;)</h4>
+  <h4 id="IPA_Config_Data_List_AddRange_System_Collections_Generic_IEnumerable_IPA_Config_Data_Value__" data-uid="IPA.Config.Data.List.AddRange(System.Collections.Generic.IEnumerable{IPA.Config.Data.Value})">AddRange(IEnumerable&lt;Value&gt;)</h4>
   <div class="markdown level1 summary"><p>Adds a range of <a class="xref" href="IPA.Config.Data.Value.html">Value</a>s to the end of this <a class="xref" href="IPA.Config.Data.List.html">List</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -295,7 +328,7 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</td>
         <td><span class="parametername">vals</span></td>
         <td><p>the range of <a class="xref" href="IPA.Config.Data.Value.html">Value</a>s to add</p>
 </td>
@@ -307,7 +340,7 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Clear.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Clear%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L57">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L57">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Clear_" data-uid="IPA.Config.Data.List.Clear*"></a>
   <h4 id="IPA_Config_Data_List_Clear" data-uid="IPA.Config.Data.List.Clear">Clear()</h4>
@@ -318,12 +351,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
   </div>
+  <h5 id="IPA_Config_Data_List_Clear_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear#system-collections-generic-icollection-1-clear">Clear</a>()</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Contains_IPA_Config_Data_Value_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Contains(IPA.Config.Data.Value)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L65">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L65">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Contains_" data-uid="IPA.Config.Data.List.Contains*"></a>
   <h4 id="IPA_Config_Data_List_Contains_IPA_Config_Data_Value_" data-uid="IPA.Config.Data.List.Contains(IPA.Config.Data.Value)">Contains(Value)</h4>
@@ -367,16 +404,20 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_Contains_IPA_Config_Data_Value__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains#system-collections-generic-icollection-1-contains(-0)">Contains</a>(T)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_CopyTo_IPA_Config_Data_Value___System_Int32_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.CopyTo(IPA.Config.Data.Value%5B%5D%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L73">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L73">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_CopyTo_" data-uid="IPA.Config.Data.List.CopyTo*"></a>
   <h4 id="IPA_Config_Data_List_CopyTo_IPA_Config_Data_Value___System_Int32_" data-uid="IPA.Config.Data.List.CopyTo(IPA.Config.Data.Value[],System.Int32)">CopyTo(Value[], Int32)</h4>
-  <div class="markdown level1 summary"><p>Copies the <a class="xref" href="IPA.Config.Data.Value.html">Value</a>s in the <a class="xref" href="IPA.Config.Data.List.html">List</a> to the <see cref="!:Array"></see> in <code data-dev-comment-type="paramref" class="paramref">array</code>.</p>
+  <div class="markdown level1 summary"><p>Copies the <a class="xref" href="IPA.Config.Data.Value.html">Value</a>s in the <a class="xref" href="IPA.Config.Data.List.html">List</a> to the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.array">Array</a> in <code data-dev-comment-type="paramref" class="paramref">array</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -396,7 +437,7 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       <tr>
         <td><a class="xref" href="IPA.Config.Data.Value.html">Value</a>[]</td>
         <td><span class="parametername">array</span></td>
-        <td><p>the <see cref="!:Array"></see> to copy to</p>
+        <td><p>the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.array">Array</a> to copy to</p>
 </td>
       </tr>
       <tr>
@@ -407,12 +448,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_CopyTo_IPA_Config_Data_Value___System_Int32__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto#system-collections-generic-icollection-1-copyto(-0()-system-int32)">CopyTo</a>(T[], <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_GetEnumerator.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L80">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L80">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_GetEnumerator_" data-uid="IPA.Config.Data.List.GetEnumerator*"></a>
   <h4 id="IPA_Config_Data_List_GetEnumerator" data-uid="IPA.Config.Data.List.GetEnumerator">GetEnumerator()</h4>
@@ -433,18 +478,22 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerator</span>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</td>
-        <td><p>an <see cref="!:IEnumerator&lt;T>"></see> for this <a class="xref" href="IPA.Config.Data.List.html">List</a></p>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1">IEnumerator</a>&lt;<a class="xref" href="IPA.Config.Data.Value.html">Value</a>&gt;</td>
+        <td><p>an <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1">IEnumerator&lt;T&gt;</a> for this <a class="xref" href="IPA.Config.Data.List.html">List</a></p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_GetEnumerator_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator#system-collections-generic-ienumerable-1-getenumerator">GetEnumerator</a>()</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_IndexOf_IPA_Config_Data_Value_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.IndexOf(IPA.Config.Data.Value)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L88">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L88">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_IndexOf_" data-uid="IPA.Config.Data.List.IndexOf*"></a>
   <h4 id="IPA_Config_Data_List_IndexOf_IPA_Config_Data_Value_" data-uid="IPA.Config.Data.List.IndexOf(IPA.Config.Data.Value)">IndexOf(Value)</h4>
@@ -489,12 +538,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_IndexOf_IPA_Config_Data_Value__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof#system-collections-generic-ilist-1-indexof(-0)">IndexOf</a>(T)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Insert_System_Int32_IPA_Config_Data_Value_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Insert(System.Int32%2CIPA.Config.Data.Value)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L96">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L96">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Insert_" data-uid="IPA.Config.Data.List.Insert*"></a>
   <h4 id="IPA_Config_Data_List_Insert_System_Int32_IPA_Config_Data_Value_" data-uid="IPA.Config.Data.List.Insert(System.Int32,IPA.Config.Data.Value)">Insert(Int32, Value)</h4>
@@ -529,12 +582,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_Insert_System_Int32_IPA_Config_Data_Value__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert#system-collections-generic-ilist-1-insert(system-int32-0)">Insert</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>, T)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_Remove_IPA_Config_Data_Value_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.Remove(IPA.Config.Data.Value)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L104">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L104">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_Remove_" data-uid="IPA.Config.Data.List.Remove*"></a>
   <h4 id="IPA_Config_Data_List_Remove_IPA_Config_Data_Value_" data-uid="IPA.Config.Data.List.Remove(IPA.Config.Data.Value)">Remove(Value)</h4>
@@ -579,12 +636,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_Remove_IPA_Config_Data_Value__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove#system-collections-generic-icollection-1-remove(-0)">Remove</a>(T)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_RemoveAt_System_Int32_.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.RemoveAt(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L111">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L111">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_RemoveAt_" data-uid="IPA.Config.Data.List.RemoveAt*"></a>
   <h4 id="IPA_Config_Data_List_RemoveAt_System_Int32_" data-uid="IPA.Config.Data.List.RemoveAt(System.Int32)">RemoveAt(Int32)</h4>
@@ -613,12 +674,16 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
       </tr>
     </tbody>
   </table>
+  <h5 id="IPA_Config_Data_List_RemoveAt_System_Int32__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1.removeat#system-collections-generic-ilist-1-removeat(system-int32)">RemoveAt</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>)</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_ToString.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L117">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L117">View Source</a>
   </span>
   <a id="IPA_Config_Data_List_ToString_" data-uid="IPA.Config.Data.List.ToString*"></a>
   <h4 id="IPA_Config_Data_List_ToString" data-uid="IPA.Config.Data.List.ToString">ToString()</h4>
@@ -647,11 +712,91 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_ToString">Value.ToString()</a></div>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_System_Collections_Generic_ICollection_IPA_Config_Data_Value__IsReadOnly.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.System%23Collections%23Generic%23ICollection%7BIPA%23Config%23Data%23Value%7D%23IsReadOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L34">View Source</a>
+  </span>
+  <a id="IPA_Config_Data_List_System_Collections_Generic_ICollection_IPA_Config_Data_Value__IsReadOnly_" data-uid="IPA.Config.Data.List.System#Collections#Generic#ICollection{IPA#Config#Data#Value}#IsReadOnly*"></a>
+  <h4 id="IPA_Config_Data_List_System_Collections_Generic_ICollection_IPA_Config_Data_Value__IsReadOnly" data-uid="IPA.Config.Data.List.System#Collections#Generic#ICollection{IPA#Config#Data#Value}#IsReadOnly">ICollection&lt;Value&gt;.IsReadOnly</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ICollection&lt;Value&gt;.IsReadOnly { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List_System_Collections_IEnumerable_GetEnumerator.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List.System%23Collections%23IEnumerable%23GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L120">View Source</a>
+  </span>
+  <a id="IPA_Config_Data_List_System_Collections_IEnumerable_GetEnumerator_" data-uid="IPA.Config.Data.List.System#Collections#IEnumerable#GetEnumerator*"></a>
+  <h4 id="IPA_Config_Data_List_System_Collections_IEnumerable_GetEnumerator" data-uid="IPA.Config.Data.List.System#Collections#IEnumerable#GetEnumerator">IEnumerable.GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerator IEnumerable.GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">IList&lt;&gt;</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1">System.Collections.Generic.IList&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">System.Collections.Generic.ICollection&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">System.Collections.Generic.IEnumerable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">System.Collections.IEnumerable</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__1_System_Collections_Generic_IEnumerable___0__">EnumerableExtensions.NonNull&lt;T&gt;(IEnumerable&lt;T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_System_Collections_Generic_IEnumerable___0__System_Func___0___1__">EnumerableExtensions.NonNull&lt;T, U&gt;(IEnumerable&lt;T&gt;, Func&lt;T, U&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.EnumerableExtensions.html#IPA_Utilities_EnumerableExtensions_NonNull__2_System_Collections_Generic_IEnumerable___0__System_Func___0_System_Nullable___1___">EnumerableExtensions.NonNull&lt;T, U&gt;(IEnumerable&lt;T&gt;, Func&lt;T, Nullable&lt;U&gt;&gt;)</a>
+  </div>
   <div>
       <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
   </div>
@@ -678,7 +823,7 @@ Use <a class="xref" href="IPA.Config.Data.Value.html#IPA_Config_Data_Value_List"
                     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Config_Data_List.md&amp;value=---%0Auid%3A%20IPA.Config.Data.List%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Config/Data/List.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Config/Data/List.cs/#L14" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

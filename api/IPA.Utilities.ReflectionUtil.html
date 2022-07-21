@@ -92,24 +92,48 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">ReflectionUtil</span></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#system-object-tostring">Object.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#system-object-gethashcode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#system-object-memberwiseclone">Object.MemberwiseClone()</a>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Utilities_ReflectionUtil_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class ReflectionUtil : object</code></pre>
+    <pre><code class="lang-csharp hljs">public static class ReflectionUtil</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent_Component_Type_GameObject_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent(Component%2CType%2CGameObject%2CType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component%2CSystem.Type%2CUnityEngine.GameObject%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L93">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L93">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_CopyComponent_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent_Component_Type_GameObject_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent(Component,Type,GameObject,Type)">CopyComponent(Component, Type, GameObject, Type)</h4>
-  <div class="markdown level1 summary"><p>Copies a component <code data-dev-comment-type="paramref" class="paramref">original</code> to a component of <code data-dev-comment-type="paramref" class="paramref">overridingType</code> on the destination <see cref="!:GameObject"></see>.</p>
+  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent(UnityEngine.Component,System.Type,UnityEngine.GameObject,System.Type)">CopyComponent(Component, Type, GameObject, Type)</h4>
+  <div class="markdown level1 summary"><p>Copies a component <code data-dev-comment-type="paramref" class="paramref">original</code> to a component of <code data-dev-comment-type="paramref" class="paramref">overridingType</code> on the destination <span class="xref">UnityEngine.GameObject</span>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -127,25 +151,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Component</span></td>
+        <td><span class="xref">UnityEngine.Component</span></td>
         <td><span class="parametername">original</span></td>
         <td><p>the original component</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Type</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
         <td><span class="parametername">overridingType</span></td>
         <td><p>the new component&apos;s type</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">GameObject</span></td>
+        <td><span class="xref">UnityEngine.GameObject</span></td>
         <td><span class="parametername">destination</span></td>
         <td><p>the destination GameObject</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Type</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
         <td><span class="parametername">originalTypeOverride</span></td>
         <td><p>overrides the source component type (for example, to a superclass)</p>
 </td>
@@ -162,7 +186,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Component</span></td>
+        <td><span class="xref">UnityEngine.Component</span></td>
         <td><p>the copied component</p>
 </td>
       </tr>
@@ -170,14 +194,14 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent%60%601(Component%2CGameObject%2CType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.CopyComponent%60%601(UnityEngine.Component%2CUnityEngine.GameObject%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L117">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L117">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_CopyComponent_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent*"></a>
-  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent``1(Component,GameObject,Type)">CopyComponent&lt;T&gt;(Component, GameObject, Type)</h4>
-  <div class="markdown level1 summary"><p>A generic version of <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_Component_Type_GameObject_Type_">CopyComponent(Component, Type, GameObject, Type)</a>. </p>
+  <h4 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type_" data-uid="IPA.Utilities.ReflectionUtil.CopyComponent``1(UnityEngine.Component,UnityEngine.GameObject,System.Type)">CopyComponent&lt;T&gt;(Component, GameObject, Type)</h4>
+  <div class="markdown level1 summary"><p>A generic version of <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_">CopyComponent(Component, Type, GameObject, Type)</a>. </p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -196,19 +220,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Component</span></td>
+        <td><span class="xref">UnityEngine.Component</span></td>
         <td><span class="parametername">original</span></td>
         <td><p>the original component</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">GameObject</span></td>
+        <td><span class="xref">UnityEngine.GameObject</span></td>
         <td><span class="parametername">destination</span></td>
         <td><p>the destination game object</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Type</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
         <td><span class="parametername">originalTypeOverride</span></td>
         <td><p>overrides the source component type (for example, to a superclass)</p>
 </td>
@@ -247,16 +271,16 @@
       </tr>
     </tbody>
   </table>
-  <h5 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_Component_GameObject_Type__seealso">See Also</h5>
+  <h5 id="IPA_Utilities_ReflectionUtil_CopyComponent__1_UnityEngine_Component_UnityEngine_GameObject_System_Type__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_Component_Type_GameObject_Type_">CopyComponent(Component, Type, GameObject, Type)</a></div>
+      <div><a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_CopyComponent_UnityEngine_Component_System_Type_UnityEngine_GameObject_System_Type_">CopyComponent(Component, Type, GameObject, Type)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.GetField%60%602(%60%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L39">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L39">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_GetField_" data-uid="IPA.Utilities.ReflectionUtil.GetField*"></a>
   <h4 id="IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_" data-uid="IPA.Utilities.ReflectionUtil.GetField``2(``1,System.String)">GetField&lt;U, T&gt;(T, String)</h4>
@@ -328,6 +352,22 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingfieldexception">MissingFieldException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">fieldName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 id="IPA_Utilities_ReflectionUtil_GetField__2___1_System_String__seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Get__0__System_String_">Get(ref T, String)</a></div>
@@ -337,7 +377,7 @@
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.GetProperty%60%602(%60%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L65">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L65">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_GetProperty_" data-uid="IPA.Utilities.ReflectionUtil.GetProperty*"></a>
   <h4 id="IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_" data-uid="IPA.Utilities.ReflectionUtil.GetProperty``2(``1,System.String)">GetProperty&lt;U, T&gt;(T, String)</h4>
@@ -409,6 +449,22 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingmemberexception">MissingMemberException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">propertyName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 id="IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String__seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Get__0__System_String_">Get(ref T, String)</a></div>
@@ -418,7 +474,7 @@
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.InvokeMethod%60%602(%60%601%2CSystem.String%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L78">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L78">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_InvokeMethod_" data-uid="IPA.Utilities.ReflectionUtil.InvokeMethod*"></a>
   <h4 id="IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___" data-uid="IPA.Utilities.ReflectionUtil.InvokeMethod``2(``1,System.String,System.Object[])">InvokeMethod&lt;U, T&gt;(T, String, Object[])</h4>
@@ -496,12 +552,28 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingmethodexception">MissingMethodException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">methodName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.SetField%60%602(%60%600%2CSystem.String%2C%60%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L26">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L26">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_SetField_" data-uid="IPA.Utilities.ReflectionUtil.SetField*"></a>
   <h4 id="IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_" data-uid="IPA.Utilities.ReflectionUtil.SetField``2(``0,System.String,``1)">SetField&lt;T, U&gt;(T, String, U)</h4>
@@ -563,6 +635,22 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingfieldexception">MissingFieldException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">fieldName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 id="IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1__seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="IPA.Utilities.FieldAccessor-2.html#IPA_Utilities_FieldAccessor_2_Set__0__System_String__1_">Set(ref T, String, U)</a></div>
@@ -572,7 +660,7 @@
     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil.SetProperty%60%602(%60%600%2CSystem.String%2C%60%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L52">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L52">View Source</a>
   </span>
   <a id="IPA_Utilities_ReflectionUtil_SetProperty_" data-uid="IPA.Utilities.ReflectionUtil.SetProperty*"></a>
   <h4 id="IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_" data-uid="IPA.Utilities.ReflectionUtil.SetProperty``2(``0,System.String,``1)">SetProperty&lt;T, U&gt;(T, String, U)</h4>
@@ -634,6 +722,22 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.missingmemberexception">MissingMemberException</a></td>
+        <td><p>if <code data-dev-comment-type="paramref" class="paramref">propertyName</code> does not exist on <code data-dev-comment-type="typeparamref" class="typeparamref">T</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 id="IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1__seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="IPA.Utilities.PropertyAccessor-2.html#IPA_Utilities_PropertyAccessor_2_Set__0__System_String__1_">Set(ref T, String, U)</a></div>
@@ -649,7 +753,7 @@
                     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_ReflectionUtil.md&amp;value=---%0Auid%3A%20IPA.Utilities.ReflectionUtil%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/ReflectionUtil.cs/#L11" class="contribution-link">View Source</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/ReflectionUtil.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

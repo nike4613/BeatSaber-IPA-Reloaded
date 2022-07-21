@@ -89,13 +89,34 @@
   <div class="markdown level0 conceptual"></div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">IDisposable</span></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.equals#system-valuetype-equals(system-object)">ValueType.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.gethashcode#system-valuetype-gethashcode">ValueType.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.tostring#system-valuetype-tostring">ValueType.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.html">IPA.Utilities</a></h6>
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Utilities_Utils_ScopeGuardObject_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct ScopeGuardObject</code></pre>
+    <pre><code class="lang-csharp hljs">public struct ScopeGuardObject : IDisposable</code></pre>
   </div>
   <h5 id="IPA_Utilities_Utils_ScopeGuardObject_examples"><strong>Examples</strong></h5>
   <pre><code>using var _ = new Utils.ScopeGuardObject(() => RunOnScopeExit(value));</code></pre>
@@ -104,13 +125,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Utils_ScopeGuardObject__ctor_Action_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Utils.ScopeGuardObject.%23ctor(Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Utils_ScopeGuardObject__ctor_System_Action_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Utils.ScopeGuardObject.%23ctor(System.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/Utils.cs/#L241">View Source</a>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/Utils.cs/#L241">View Source</a>
   </span>
   <a id="IPA_Utilities_Utils_ScopeGuardObject__ctor_" data-uid="IPA.Utilities.Utils.ScopeGuardObject.#ctor*"></a>
-  <h4 id="IPA_Utilities_Utils_ScopeGuardObject__ctor_Action_" data-uid="IPA.Utilities.Utils.ScopeGuardObject.#ctor(Action)">ScopeGuardObject(Action)</h4>
+  <h4 id="IPA_Utilities_Utils_ScopeGuardObject__ctor_System_Action_" data-uid="IPA.Utilities.Utils.ScopeGuardObject.#ctor(System.Action)">ScopeGuardObject(Action)</h4>
   <div class="markdown level1 summary"><p>Creates a new scope guard that will invoke <code data-dev-comment-type="paramref" class="paramref">action</code> when disposed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -129,16 +150,33 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Action</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a></td>
         <td><span class="parametername">action</span></td>
         <td><p>the action to run on dispose</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Utils_ScopeGuardObject_System_IDisposable_Dispose.md&amp;value=---%0Auid%3A%20IPA.Utilities.Utils.ScopeGuardObject.System%23IDisposable%23Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/Utils.cs/#L243">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Utils_ScopeGuardObject_System_IDisposable_Dispose_" data-uid="IPA.Utilities.Utils.ScopeGuardObject.System#IDisposable#Dispose*"></a>
+  <h4 id="IPA_Utilities_Utils_ScopeGuardObject_System_IDisposable_Dispose" data-uid="IPA.Utilities.Utils.ScopeGuardObject.System#IDisposable#Dispose">IDisposable.Dispose()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void IDisposable.Dispose()</code></pre>
+  </div>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">IDisposable</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
@@ -158,7 +196,7 @@
   </div>
   <h3 id="seealso">See Also</h3>
   <div class="seealso">
-      <div><a class="xref" href="IPA.Utilities.Utils.html#IPA_Utilities_Utils_ScopeGuard_Action_">ScopeGuard(Action)</a></div>
+      <div><a class="xref" href="IPA.Utilities.Utils.html#IPA_Utilities_Utils_ScopeGuard_System_Action_">ScopeGuard(Action)</a></div>
   </div>
 </article>
           </div>
@@ -171,7 +209,7 @@
                     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Utilities_Utils_ScopeGuardObject.md&amp;value=---%0Auid%3A%20IPA.Utilities.Utils.ScopeGuardObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Utilities/Utils.cs/#L230" class="contribution-link">View Source</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Utilities/Utils.cs/#L230" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

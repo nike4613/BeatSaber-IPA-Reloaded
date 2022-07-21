@@ -91,7 +91,7 @@
   <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
   <h5 id="IPA_Loader_PluginInitInjector_InjectParameter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate object? InjectParameter(object? previous, ParameterInfo param, PluginMetadata meta);</code></pre>
+    <pre><code class="lang-csharp hljs">public delegate object InjectParameter(object previous, ParameterInfo param, PluginMetadata meta);</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -104,15 +104,15 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
         <td><span class="parametername">previous</span></td>
         <td><p>the previous return value of the function, or <span class="xref">null</span> if never called for plugin.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">ParameterInfo</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.reflection.parameterinfo">ParameterInfo</a></td>
         <td><span class="parametername">param</span></td>
-        <td><p>the <see cref="!:ParameterInfo"></see> of the parameter being injected.</p>
+        <td><p>the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.reflection.parameterinfo">ParameterInfo</a> of the parameter being injected.</p>
 </td>
       </tr>
       <tr>
@@ -133,7 +133,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
         <td><p>the value to inject into that parameter.</p>
 </td>
       </tr>
@@ -166,7 +166,7 @@
                     <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/master/docs/override/new?filename=IPA_Loader_PluginInitInjector_InjectParameter.md&amp;value=---%0Auid%3A%20IPA.Loader.PluginInitInjector.InjectParameter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3fa908a557fb00196c5729237ae859a2e3804623/IPA.Loader/Loader/PluginInitInjector.cs/#L63" class="contribution-link">View Source</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/IPA.Loader/Loader/PluginInitInjector.cs/#L63" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
