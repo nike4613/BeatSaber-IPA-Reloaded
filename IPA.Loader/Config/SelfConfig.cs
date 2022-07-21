@@ -53,6 +53,9 @@ namespace IPA.Config
                     case "--no-yeet":
                         CommandLineValues.YeetMods = false;
                         break;
+                    case "--no-logs":
+                        CommandLineValues.WriteLogs = true;
+                        break;
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
                         break;
@@ -173,6 +176,9 @@ namespace IPA.Config
         // LINE: ignore 2
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
+
+        [JsonIgnore]
+        public bool WriteLogs { get; set; } = true;
 
         // LINE: ignore
         [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
