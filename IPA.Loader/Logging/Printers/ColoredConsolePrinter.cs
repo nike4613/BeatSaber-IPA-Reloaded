@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Runtime.InteropServices;
 
 namespace IPA.Logging.Printers
@@ -22,6 +23,35 @@ namespace IPA.Logging.Printers
         // Initializer calls this function because Unity's .NET 3.5 doesn't have the color properties on Console
         public ConsoleColor Color { get; set; } = GetConsoleColor(WinConsole.OutHandle);
 
+        private static ConsoleColor GetDarkenedColor(ConsoleColor color)
+            => color switch
+            {
+                ConsoleColor.Gray => ConsoleColor.DarkGray,
+                ConsoleColor.Blue => ConsoleColor.DarkBlue,
+                ConsoleColor.Green => ConsoleColor.DarkGreen,
+                ConsoleColor.Cyan => ConsoleColor.DarkCyan,
+                ConsoleColor.Red => ConsoleColor.DarkRed,
+                ConsoleColor.Magenta => ConsoleColor.DarkMagenta,
+                ConsoleColor.Yellow => ConsoleColor.DarkYellow,
+                ConsoleColor.White => ConsoleColor.Gray,
+                _ => color,
+            };
+
+        private readonly bool darkenSetManually;
+        private readonly bool darkenMessages;
+
+
+        public ColoredConsolePrinter() : this(Config.SelfConfig.Debug_.DarkenMessages_)
+        {
+            darkenSetManually = false;
+        }
+
+        public ColoredConsolePrinter(bool darkenMessages)
+        {
+            darkenSetManually = true;
+            this.darkenMessages = darkenMessages;
+        }
+
         /// <summary>
         /// Prints an entry to the console window.
         /// </summary>
@@ -34,36 +64,43 @@ namespace IPA.Logging.Printers
             if (((byte)level & (byte)StandardLogger.PrintFilter) == 0) return;
             EnsureDefaultsPopulated(WinConsole.OutHandle);
             SetColor(Color, WinConsole.OutHandle);
+
+            var prefixStr = "";
+            if ((darkenSetManually && darkenMessages) || (!darkenSetManually && Config.SelfConfig.Debug_.DarkenMessages_))
+            {
+                prefixStr = StdoutInterceptor.ConsoleColorToForegroundSet(GetDarkenedColor(Color));
+            }
+
             foreach (var line in message.Split(new[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                WinConsole.ConOut.WriteLine(Logger.LogFormat, line, logName, time, level.ToString().ToUpper());
+                WinConsole.ConOut.WriteLine(Logger.LogFormat, prefixStr + line, logName, time, level.ToString().ToUpperInvariant());
             ResetColor(WinConsole.OutHandle);
         }
 
         private static bool _haveReadDefaultColors;
         private static short _defaultColors;
 
-        private void EnsureDefaultsPopulated(IntPtr handle, bool force = false)
+        private static void EnsureDefaultsPopulated(IntPtr handle, bool force = false)
         {
             if (!_haveReadDefaultColors | force)
             {
-                GetConsoleScreenBufferInfo(handle, out var info);
+                _ = GetConsoleScreenBufferInfo(handle, out var info);
                 _defaultColors = (short)(info.Attribute & ~15);
                 _haveReadDefaultColors = true;
             }
         }
 
-        private void ResetColor(IntPtr handle)
+        private static void ResetColor(IntPtr handle)
         {
-            GetConsoleScreenBufferInfo(handle, out var info);
+            _ = GetConsoleScreenBufferInfo(handle, out var info);
             var otherAttrs = (short)(info.Attribute & ~15);
-            SetConsoleTextAttribute(handle, (short)(otherAttrs | _defaultColors));
+            _ = SetConsoleTextAttribute(handle, (short)(otherAttrs | _defaultColors));
         }
 
-        private void SetColor(ConsoleColor col, IntPtr handle)
+        private static void SetColor(ConsoleColor col, IntPtr handle)
         {
-            GetConsoleScreenBufferInfo(handle, out var info);
+            _ = GetConsoleScreenBufferInfo(handle, out var info);
             var attr = GetAttrForeground(info.Attribute, col);
-            SetConsoleTextAttribute(handle, attr);
+            _ = SetConsoleTextAttribute(handle, attr);
         }
 
         private static short GetAttrForeground(int attr, ConsoleColor color)
@@ -74,7 +111,7 @@ namespace IPA.Logging.Printers
 
         private static ConsoleColor GetConsoleColor(IntPtr handle)
         {
-            GetConsoleScreenBufferInfo(handle, out var info);
+            _ = GetConsoleScreenBufferInfo(handle, out var info);
             return (ConsoleColor)(info.Attribute & 15);
         }
 

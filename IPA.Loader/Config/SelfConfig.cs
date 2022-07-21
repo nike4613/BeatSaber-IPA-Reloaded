@@ -56,6 +56,9 @@ namespace IPA.Config
                     case "--no-logs":
                         CommandLineValues.WriteLogs = false;
                         break;
+                    case "--darken-message":
+                        CommandLineValues.Debug.DarkenMessages = true;
+                        break;
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
                         break;
@@ -159,6 +162,11 @@ namespace IPA.Config
             public virtual bool SyncLogging { get; set; } = false;
             // LINE: ignore
             public static bool SyncLogging_ => Instance?.Debug?.SyncLogging ?? false;
+
+            public virtual bool DarkenMessages { get; set; } = false;
+            // LINE: ignore 2
+            public static bool DarkenMessages_ => (Instance?.Debug?.DarkenMessages ?? false)
+                                               || CommandLineValues.Debug.DarkenMessages;
         }
 
         // LINE: ignore
