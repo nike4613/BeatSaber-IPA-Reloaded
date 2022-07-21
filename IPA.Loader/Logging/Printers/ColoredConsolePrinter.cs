@@ -66,13 +66,19 @@ namespace IPA.Logging.Printers
             SetColor(Color, WinConsole.OutHandle);
 
             var prefixStr = "";
+            var suffixStr = "";
             if ((darkenSetManually && darkenMessages) || (!darkenSetManually && Config.SelfConfig.Debug_.DarkenMessages_))
             {
-                prefixStr = StdoutInterceptor.ConsoleColorToForegroundSet(GetDarkenedColor(Color));
+                var darkened = GetDarkenedColor(Color);
+                if (darkened != Color)
+                {
+                    prefixStr = StdoutInterceptor.ConsoleColorToForegroundSet(darkened);
+                    suffixStr = StdoutInterceptor.ConsoleColorToForegroundSet(Color);
+                }
             }
 
             foreach (var line in message.Split(new[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                WinConsole.ConOut.WriteLine(Logger.LogFormat, prefixStr + line, logName, time, level.ToString().ToUpperInvariant());
+                WinConsole.ConOut.WriteLine(Logger.LogFormat, prefixStr + line + suffixStr, logName, time, level.ToString().ToUpperInvariant());
             ResetColor(WinConsole.OutHandle);
         }
 
