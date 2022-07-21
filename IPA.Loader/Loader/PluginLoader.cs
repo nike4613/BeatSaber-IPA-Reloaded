@@ -104,7 +104,8 @@ namespace IPA.Loader
                         throw new InvalidOperationException()))
                     manifest = manifestReader.ReadToEnd();
 
-                selfMeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                selfMeta.Manifest = manifestObj ?? throw new InvalidOperationException("Deserialized manifest was null");
 
                 PluginsMetadata.Add(selfMeta);
                 SelfMeta = selfMeta;
@@ -276,7 +277,14 @@ namespace IPA.Loader
                         IsBare = true,
                     };
 
-                    metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+                    var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+                    if (manifestObj is null)
+                    {
+                        Logger.Loader.Error($"Bare manifest {Path.GetFileName(manifest)} deserialized to null");
+                        continue;
+                    }
+
+                    metadata.Manifest = manifestObj;
 
                     if (metadata.Manifest.Files.Length < 1)
                         Logger.Loader.Warn($"Bare manifest {Path.GetFileName(manifest)} does not declare any files. " +

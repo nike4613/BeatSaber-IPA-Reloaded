@@ -80,7 +80,7 @@ namespace IPA.Config.Stores.Converters
                 if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
                 { // this is a Nullable
                     //Logger.log.Debug($"gives NullableConverter<{Nullable.GetUnderlyingType(t)}>");
-                    return (typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t)));
+                    return typeof(NullableConverter<>).MakeGenericType(Nullable.GetUnderlyingType(t));
                 }
 
                 //Logger.log.Debug($"gives converter for value type {t}");
