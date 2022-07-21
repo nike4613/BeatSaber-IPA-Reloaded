@@ -80,10 +80,12 @@ namespace IPA.Injector
 
                 Logging.Logger.Injector.Debug("Prepping bootstrapper");
 
+                // make sure to load the game version and check boundaries before installing the bootstrap, because that uses the game assemblies property
+                GameVersionEarly.Load();
+                SelfConfig.Instance.CheckVersionBoundary();
+
                 // updates backup
                 InstallBootstrapPatch();
-
-                GameVersionEarly.Load();
 
                 AntiMalwareEngine.Initialize();
 

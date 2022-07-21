@@ -54,7 +54,7 @@ namespace IPA.Config
                         CommandLineValues.YeetMods = false;
                         break;
                     case "--no-logs":
-                        CommandLineValues.WriteLogs = true;
+                        CommandLineValues.WriteLogs = false;
                         break;
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
@@ -72,6 +72,14 @@ namespace IPA.Config
                         CommandLineValues.Debug.ShowTrace = true;
                         break;
                 }
+            }
+        }
+
+        public void CheckVersionBoundary()
+        {
+            if (ResetGameAssebliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
+            {
+                GameAssemblies = GetDefaultGameAssemblies();
             }
         }
 
@@ -180,19 +188,30 @@ namespace IPA.Config
         [JsonIgnore]
         public bool WriteLogs { get; set; } = true;
 
+        public virtual bool ResetGameAssebliesOnVersionChange { get; set; } = true;
+
         // LINE: ignore
         [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
-        public virtual HashSet<string> GameAssemblies { get; set; } = new HashSet<string>
+        public virtual HashSet<string> GameAssemblies { get; set; } = GetDefaultGameAssemblies();
+
+        // BEGIN: section ignore
+        public static HashSet<string> GetDefaultGameAssemblies()
+            => new()
             {
-            // LINE: ignore 5
 #if BeatSaber // provide these defaults only for Beat Saber builds
-                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll", 
+                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll",
                 "BeatmapCore.dll", "GameplayCore.dll","HMLibAttributes.dll", 
 #else // otherwise specify Assembly-CSharp.dll
                 "Assembly-CSharp.dll"
-            // LINE: ignore
 #endif
             };
+        // END: section ignore
+
+        // LINE: ignore
+#if false // used to make schema gen happy
+        private static HashSet<string> GetDefaultGameAssemblies() => null;
+        // LINE: ignore
+#endif
 
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
