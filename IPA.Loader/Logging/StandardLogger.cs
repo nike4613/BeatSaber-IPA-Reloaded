@@ -124,7 +124,7 @@ namespace IPA.Logging
             syncLogging = SelfConfig.Debug_.SyncLogging_;
             if(SelfConfig.CommandLineValues.WriteLogs && !addedFilePrinter) {
                 addedFilePrinter = true;
-                AddDefaultPrinter(new GZFilePrinter());
+                AddDefaultPrinter(new GlobalLogFilePrinter());
             }
         }
 
