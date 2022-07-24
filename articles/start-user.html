@@ -136,14 +136,18 @@ Otherwise, it will contain just <code>Assembly-CSharp.dll</code> since most game
 do is extract the plugin into the game installation folder.</p>
 </li>
 </ol>
-<div class="NOTE"><h5>Note</h5><p>For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection.
-To make the injection work with Wine, <code>winhttp</code> has to have a DLL override set to <code>native,builtin</code>. This can be set either through
-Protontricks, or with the following <code>.reg</code> file.</p>
+<div class="NOTE"><h5>Note</h5><p>For Linux users</p>
+<p>By default, WINE loads DLLs differently to Windows, causing issues with the injection. To make BSIPA&#39;s injection work
+with Wine, <code>winhttp</code> has to have a DLL override set to <code>native,builtin</code>. This is best achieved by putting
+<code>WINEDLLOVERRIDES=&quot;winhttp=native,builtin&quot; %command%</code> in Beat Saber&#39;s launch options in Steam.</p>
+<p>Alternatively, this can be set either through Protontricks, or using the following
+<code>.reg</code> file:</p>
 <pre><code class="lang-reg">REGEDIT4
 [HKEY_CURRENT_USER\Software\Wine\DllOverrides]
 &quot;winhttp&quot;=&quot;native,builtin&quot;
-</code></pre><p>For Steam there&#39;s a per-game Wine prefix under <code>compatdata</code>. In this case <code>SteamLibrary/steamapps/compatdata/620980/pfx/user.reg</code>.
-Changes to this file will likely be ovewritten when the game updates or if local files are validated through Steam.</p>
+</code></pre><p>For Steam, each game&#39;s Wine prefix is located under <code>compatdata</code>; in Beat Saber&#39;s case <code>SteamLibrary/steamapps/compatdata/620980/pfx/user.reg</code>.
+Changes to this file might be ovewritten when the game or Proton are updated however, so the launch options method is
+recommended.</p>
 </div>
 <p>Thats really all you have to do! The installation should persist across game updates for as long as <code>winhttp.dll</code> is present in
 the game directory, though your plugins will be moved to a different folder when it does update so things don&#39;t break horribly.</p>
@@ -161,7 +165,7 @@ the game directory, though your plugins will be moved to a different folder when
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/583fc19e1c9b85fb20f740e8b9017888f996e657/docs/articles/start-user.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/757388ebd92c145e7ea246ff25edeac0185f7edd/docs/articles/start-user.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
