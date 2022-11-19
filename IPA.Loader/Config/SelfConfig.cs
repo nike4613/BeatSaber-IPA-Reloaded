@@ -36,7 +36,7 @@ namespace IPA.Config
 
         protected internal virtual void Changed()
         {
-            Logger.log.Debug("SelfConfig Changed called");
+            Logger.Default.Debug("SelfConfig Changed called");
         }
 
         public static void ReadCommandLine(string[] args)
@@ -52,6 +52,12 @@ namespace IPA.Config
                         break;
                     case "--no-yeet":
                         CommandLineValues.YeetMods = false;
+                        break;
+                    case "--no-logs":
+                        CommandLineValues.WriteLogs = false;
+                        break;
+                    case "--darken-message":
+                        CommandLineValues.Debug.DarkenMessages = true;
                         break;
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
@@ -72,12 +78,23 @@ namespace IPA.Config
             }
         }
 
+        public void CheckVersionBoundary()
+        {
+            if (ResetGameAssebliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
+            {
+                GameAssemblies = GetDefaultGameAssemblies();
+            }
+        }
+
         internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "4.1.7.0";
+        internal const string IPAVersion = "4.2.2.0";
 
         // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
         //      Debug.CondenseModLogs
         internal static SelfConfig CommandLineValues = new();
+
+        // For readability's sake, I want the default values to be visible in source.
+#pragma warning disable CA1805 // Do not initialize unnecessarily
 
         // END: section ignore
 
@@ -145,30 +162,64 @@ namespace IPA.Config
             public virtual bool SyncLogging { get; set; } = false;
             // LINE: ignore
             public static bool SyncLogging_ => Instance?.Debug?.SyncLogging ?? false;
+
+            public virtual bool DarkenMessages { get; set; } = false;
+            // LINE: ignore 2
+            public static bool DarkenMessages_ => (Instance?.Debug?.DarkenMessages ?? false)
+                                               || CommandLineValues.Debug.DarkenMessages;
         }
 
         // LINE: ignore
         [NonNullable]
-        public virtual Debug_ Debug { get; set; } = new Debug_();
+        public virtual Debug_ Debug { get; set; } = new();
+
+        public class AntiMalware_
+        {
+            public virtual bool UseIfAvailable { get; set; } = true;
+            // LINE: ignore
+            public static bool UseIfAvailable_ => Instance?.AntiMalware?.UseIfAvailable ?? true;
+
+            public virtual bool RunPartialThreatCode { get; set; } = false;
+            // LINE: ignore
+            public static bool RunPartialThreatCode_ => Instance?.AntiMalware?.RunPartialThreatCode ?? true;
+        }
+
+        // LINE: ignore
+        [NonNullable]
+        public virtual AntiMalware_ AntiMalware { get; set; } = new();
 
         public virtual bool YeetMods { get; set; } = true;
         // LINE: ignore 2
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
 
+        [JsonIgnore]
+        public bool WriteLogs { get; set; } = true;
+
+        public virtual bool ResetGameAssebliesOnVersionChange { get; set; } = true;
+
         // LINE: ignore
-        [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string>>))]
-        public virtual HashSet<string> GameAssemblies { get; set; } = new HashSet<string>
+        [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
+        public virtual HashSet<string> GameAssemblies { get; set; } = GetDefaultGameAssemblies();
+
+        // BEGIN: section ignore
+        public static HashSet<string> GetDefaultGameAssemblies()
+            => new()
             {
-            // LINE: ignore 5
 #if BeatSaber // provide these defaults only for Beat Saber builds
-                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll", 
+                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll",
                 "BeatmapCore.dll", "GameplayCore.dll","HMLibAttributes.dll", 
 #else // otherwise specify Assembly-CSharp.dll
                 "Assembly-CSharp.dll"
-            // LINE: ignore
 #endif
             };
+        // END: section ignore
+
+        // LINE: ignore
+#if false // used to make schema gen happy
+        private static HashSet<string> GetDefaultGameAssemblies() => null;
+        // LINE: ignore
+#endif
 
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };

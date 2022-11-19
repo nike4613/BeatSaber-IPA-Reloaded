@@ -1,4 +1,5 @@
-﻿using IPA.Config.Stores.Attributes;
+﻿#nullable enable
+using IPA.Config.Stores.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

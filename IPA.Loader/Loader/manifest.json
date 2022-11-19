@@ -5,16 +5,17 @@
     "#![IPA.Loader.description.md]",
     "A mod loader specifically for Beat Saber."
   ],
-  "gameVersion": "1.14.0",
   "id": "BSIPA",
   "name": "Beat Saber IPA",
-  "version": "4.1.7-pre.1",
+  "version": "4.2.2",
   "icon": "IPA.icon_white.png",
   "features": {
-    "IPA.DefineFeature": {
-      "type": "IPA.Loader.Features.ConfigProviderFeature",
-      "name": "IPA.ConfigProvider"
-    }
+    "IPA.DefineFeature": [
+      {
+        "type": "IPA.Loader.Features.ConfigProviderFeature",
+        "name": "IPA.ConfigProvider"
+      }
+    ]
   },
   "links": {
     "project-home": "https://bsmg.github.io/BeatSaber-IPA-Reloaded/index.html",
@@ -28,6 +29,7 @@
     "Libs/Ionic.Zip.dll",
     "Libs/Newtonsoft.Json.dll",
     "Libs/Mono.Cecil.dll",
-    "Libs/SemVer.dll"
+    "Libs/SemVer.dll",
+    "Libs/Hive.Versioning.dll"
   ]
 }

@@ -77,11 +77,14 @@ uid: articles.start.user
     Many plugins will come in a zip such that the root of the zip represents the game install directory, so all you may have to
     do is extract the plugin into the game installation folder.
 
-> [!NOTE]
+> [!NOTE] For Linux users
 >
-> For some reason, by default, Wine does not load DLLs in quite the same way that Windows does, causing issues with the injection.
-> To make the injection work with Wine, `winhttp` has to have a DLL override set to `native,builtin`. This can be set either through
-> Protontricks, or with the following `.reg` file.
+> By default, WINE loads DLLs differently to Windows, causing issues with the injection. To make BSIPA's injection work
+> with Wine, `winhttp` has to have a DLL override set to `native,builtin`. This is best achieved by putting
+> `WINEDLLOVERRIDES="winhttp=native,builtin" %command%` in Beat Saber's launch options in Steam.
+>
+> Alternatively, this can be set either through Protontricks, or using the following
+> `.reg` file:
 >
 > ```reg
 > REGEDIT4
@@ -89,8 +92,9 @@ uid: articles.start.user
 > "winhttp"="native,builtin"
 > ```
 >
-> For Steam there's a per-game Wine prefix under `compatdata`. In this case `SteamLibrary/steamapps/compatdata/620980/pfx/user.reg`.
-> Changes to this file will likely be ovewritten when the game updates or if local files are validated through Steam.
+> For Steam, each game's Wine prefix is located under `compatdata`; in Beat Saber's case `SteamLibrary/steamapps/compatdata/620980/pfx/user.reg`.
+> Changes to this file might be ovewritten when the game or Proton are updated however, so the launch options method is
+> recommended.
 
 Thats really all you have to do! The installation should persist across game updates for as long as `winhttp.dll` is present in
 the game directory, though your plugins will be moved to a different folder when it does update so things don't break horribly.

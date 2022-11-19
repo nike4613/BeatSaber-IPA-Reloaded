@@ -1,9 +1,11 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Config.Stores;
 using IPA.Config.Stores.Converters;
 using System;
 using System.Collections.Generic;
-using Version = SemVer.Version;
+using SVersion = SemVer.Version;
+using Version = Hive.Versioning.Version;
 
 namespace IPA.Utilities
 {
@@ -11,7 +13,10 @@ namespace IPA.Utilities
     /// A type that wraps <see cref="Version"/> so that the string of the version is stored when the string is 
     /// not a valid <see cref="Version"/>.
     /// </summary>
-    public class AlmostVersion : IComparable<AlmostVersion>, IComparable<Version>
+    public class AlmostVersion : IComparable<AlmostVersion>, IComparable<Version>,
+#pragma warning disable CS0618 // Type or member is obsolete
+        IComparable<SVersion>
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
         /// Represents a storage type of either parsed <see cref="Version"/> object or raw <see cref="String"/>.
@@ -19,7 +24,7 @@ namespace IPA.Utilities
         public enum StoredAs
         {
             /// <summary>
-            /// The version was stored as a <see cref="Version"/>.
+            /// The version was stored as a <see cref="SVersion"/>.
             /// </summary>
             SemVer,
             /// <summary>
@@ -35,7 +40,7 @@ namespace IPA.Utilities
         public AlmostVersion(string vertext)
         {
             if (!TryParseFrom(vertext, StoredAs.SemVer))
-                TryParseFrom(vertext, StoredAs.String);
+                _ = TryParseFrom(vertext, StoredAs.String);
         }
 
         /// <summary>
@@ -47,6 +52,13 @@ namespace IPA.Utilities
             SemverValue = ver;
             StorageMode = StoredAs.SemVer;
         }
+
+        /// <summary>
+        /// Creates an <see cref="AlmostVersion"/> from the <see cref="SVersion"/> provided in <paramref name="ver"/>.
+        /// </summary>
+        /// <param name="ver">the <see cref="SVersion"/> to store</param>
+        [Obsolete("Use Hive.Versioning.Version constructor instead.")]
+        public AlmostVersion(SVersion ver) : this(ver?.UnderlyingVersion ?? throw new ArgumentNullException(nameof(ver))) { }
 
         /// <summary>
         /// Creates an <see cref="AlmostVersion"/> from the version string in <paramref name="vertext"/> stored using 
@@ -68,26 +80,22 @@ namespace IPA.Utilities
         /// <param name="copyMode">an <see cref="AlmostVersion"/> to copy the storage mode of</param>
         public AlmostVersion(string vertext, AlmostVersion copyMode)
         {
-            if (copyMode == null)
+            if (copyMode is null)
                 throw new ArgumentNullException(nameof(copyMode));
 
             if (!TryParseFrom(vertext, copyMode.StorageMode))
-                TryParseFrom(vertext, StoredAs.String); // silently parse differently
+                _ = TryParseFrom(vertext, StoredAs.String); // silently parse differently
         }
 
         private bool TryParseFrom(string str, StoredAs mode)
         {
             if (mode == StoredAs.SemVer)
-                try
-                {
-                    SemverValue = new Version(str, true);
-                    StorageMode = StoredAs.SemVer;
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+            {
+                StorageMode = StoredAs.SemVer;
+                var result = Version.TryParse(str, out var version);
+                SemverValue = version;
+                return result;
+            }
             else
             {
                 StringValue = str;
@@ -100,13 +108,13 @@ namespace IPA.Utilities
         /// The value of the <see cref="AlmostVersion"/> if it was stored as a <see cref="string"/>.
         /// </summary>
         /// <value>the stored value as a <see cref="string"/>, or <see langword="null"/> if not stored as a string.</value>
-        public string StringValue { get; private set; } = null;
+        public string? StringValue { get; private set; }
 
         /// <summary>
         /// The value of the <see cref="AlmostVersion"/> if it was stored as a <see cref="Version"/>.
         /// </summary>
         /// <value>the stored value as a <see cref="Version"/>, or <see langword="null"/> if not stored as a version.</value>
-        public Version SemverValue { get; private set; } = null;
+        public Version? SemverValue { get; private set; }
 
         /// <summary>
         /// The way the value is stored, whether it be as a <see cref="Version"/> or a <see cref="string"/>.
@@ -114,15 +122,14 @@ namespace IPA.Utilities
         /// <value>the storage mode used to store this value</value>
         public StoredAs StorageMode { get; private set; }
 
-        // can I just <inheritdoc /> this?
         /// <summary>
         /// Gets a string representation of the current version. If the value is stored as a string, this returns it. If it is
-        /// stored as a <see cref="Version"/>, it is equivalent to calling <see cref="Version.ToString"/>.
+        /// stored as a <see cref="Version"/>, it is equivalent to calling <see cref="Version.ToString()"/>.
         /// </summary>
         /// <returns>a string representation of the current version</returns>
         /// <seealso cref="object.ToString"/>
         public override string ToString() =>
-            StorageMode == StoredAs.SemVer ? SemverValue.ToString() : StringValue;
+            StorageMode == StoredAs.SemVer ? SemverValue!.ToString() : StringValue!;
 
         /// <summary>
         /// Compares <see langword="this"/> to the <see cref="AlmostVersion"/> in <paramref name="other"/> using <see cref="Version.CompareTo(Version)"/>
@@ -136,14 +143,11 @@ namespace IPA.Utilities
         /// <seealso cref="CompareTo(Version)"/>
         public int CompareTo(AlmostVersion other)
         {
-            if (other == null) return -1;
-            if (StorageMode != other.StorageMode)
-                throw new InvalidOperationException("Cannot compare AlmostVersions with different stores!");
+            if (other is null) return 1;
 
-            if (StorageMode == StoredAs.SemVer)
-                return SemverValue.CompareTo(other.SemverValue);
-            else
-                return StringValue.CompareTo(other.StringValue);
+            return StorageMode == StoredAs.SemVer && other.StorageMode == StoredAs.SemVer
+                ? SemverValue!.CompareTo(other.SemverValue!)
+                : string.Compare(ToString(), other.ToString(), StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -161,8 +165,21 @@ namespace IPA.Utilities
             if (StorageMode != StoredAs.SemVer)
                 throw new InvalidOperationException("Cannot compare a SemVer version with an AlmostVersion stored as a string!");
 
-            return SemverValue.CompareTo(other);
+            return SemverValue!.CompareTo(other);
         }
+
+        /// <summary>
+        /// Compares <see langword="this"/> to the <see cref="SVersion"/> in <paramref name="other"/> using <see cref="Version.CompareTo(Version)"/>.
+        /// </summary>
+        /// <remarks>
+        /// The storage method of <see langword="this"/> must be <see cref="StoredAs.SemVer"/>, else an <see cref="InvalidOperationException"/> will
+        /// be thrown.
+        /// </remarks>
+        /// <param name="other">the <see cref="SVersion"/> to compare to</param>
+        /// <returns>less than 0 if <paramref name="other"/> is considered bigger than <see langword="this"/>, 0 if equal, and greater than zero if smaller</returns>
+        /// <seealso cref="CompareTo(AlmostVersion)"/>
+        [Obsolete("Use the Hive.Versioning.Version overload instead.")]
+        public int CompareTo(SVersion other) => CompareTo(other.UnderlyingVersion);
 
         /// <summary>
         /// Performs a strict equality check between <see langword="this"/> and <paramref name="obj"/>.
@@ -173,7 +190,7 @@ namespace IPA.Utilities
         /// <param name="obj">the object to compare to</param>
         /// <returns><see langword="true"/> if they are equal, <see langword="false"/> otherwise</returns>
         /// <seealso cref="object.Equals(object)"/>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is AlmostVersion version &&
                    SemverValue == version.SemverValue &&
@@ -189,9 +206,9 @@ namespace IPA.Utilities
         public override int GetHashCode()
         {
             var hashCode = -126402897;
-            hashCode = hashCode * -1521134295 + EqualityComparer<Version>.Default.GetHashCode(SemverValue);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StringValue);
-            hashCode = hashCode * -1521134295 + StorageMode.GetHashCode();
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Version?>.Default.GetHashCode(SemverValue);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<string?>.Default.GetHashCode(StringValue);
+            hashCode = (hashCode * -1521134295) + StorageMode.GetHashCode();
             return hashCode;
         }
 
@@ -212,10 +229,9 @@ namespace IPA.Utilities
             if (l is null && r is null) return true;
             if (l is null || r is null) return false;
             if (l.StorageMode != r.StorageMode) return false;
-            if (l.StorageMode == StoredAs.SemVer)
-                return Utils.VersionCompareNoPrerelease(l.SemverValue, r.SemverValue) == 0;
-            else
-                return l.StringValue == r.StringValue;
+            return l.StorageMode == StoredAs.SemVer
+                ? Utils.VersionCompareNoPrerelease(l.SemverValue!, r.SemverValue!) == 0
+                : l.StringValue == r.StringValue;
         }
 
         /// <summary>
@@ -228,21 +244,54 @@ namespace IPA.Utilities
         public static bool operator!=(AlmostVersion l, AlmostVersion r) => !(l == r);
 
         // implicitly convertible from Version
+#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CA2225 // Operator overloads have named alternates
         /// <summary>
-        /// Implicitly converts a <see cref="Version"/> to <see cref="AlmostVersion"/> using <see cref="AlmostVersion(Version)"/>.
+        /// Implicitly converts a <see cref="SVersion"/> to <see cref="AlmostVersion"/> using <see cref="AlmostVersion(SVersion)"/>.
         /// </summary>
-        /// <param name="ver">the <see cref="Version"/> to convert</param>
-        /// <seealso cref="AlmostVersion(Version)"/>
-        public static implicit operator AlmostVersion(Version ver) => new AlmostVersion(ver);
+        /// <param name="ver">the <see cref="SVersion"/> to convert</param>
+        /// <seealso cref="AlmostVersion(SVersion)"/>
+        [Obsolete("Use Hive.Versioning.Version instead of SemVer.Version")]
+        public static implicit operator AlmostVersion?(SVersion? ver) => ver is null ? null : new(ver);
 
         // implicitly convertible to Version
         /// <summary>
-        /// Implicitly converts an <see cref="AlmostVersion"/> to <see cref="Version"/>, if applicable, using <see cref="SemverValue"/>.
+        /// Implicitly converts an <see cref="AlmostVersion"/> to <see cref="SVersion"/>, if applicable, using <see cref="SemverValue"/>.
         /// If not applicable, returns <see langword="null"/>
         /// </summary>
-        /// <param name="av">the <see cref="AlmostVersion"/> to convert to a <see cref="Version"/></param>
+        /// <param name="av">the <see cref="AlmostVersion"/> to convert to a <see cref="SVersion"/></param>
         /// <seealso cref="SemverValue"/>
-        public static implicit operator Version(AlmostVersion av) => av?.SemverValue;
+        [Obsolete("Use Hive.Versioning.Version instead of SemVer.Version")]
+        public static implicit operator SVersion?(AlmostVersion? av) => av?.SemverValue is not null ? SVersion.ForHiveVersion(av.SemverValue) : null;
+#pragma warning restore CS0618 // Type or member is obsolete
+        /// <summary>
+        /// Implicitly converts a <see cref="SVersion"/> to <see cref="AlmostVersion"/> using <see cref="AlmostVersion(SVersion)"/>.
+        /// </summary>
+        /// <param name="ver">the <see cref="SVersion"/> to convert</param>
+        /// <seealso cref="AlmostVersion(SVersion)"/>
+        public static implicit operator AlmostVersion?(Version? ver) => ver is null ? null : new(ver);
+
+        // implicitly convertible to Version
+        /// <summary>
+        /// Implicitly converts an <see cref="AlmostVersion"/> to <see cref="SVersion"/>, if applicable, using <see cref="SemverValue"/>.
+        /// If not applicable, returns <see langword="null"/>
+        /// </summary>
+        /// <param name="av">the <see cref="AlmostVersion"/> to convert to a <see cref="SVersion"/></param>
+        /// <seealso cref="SemverValue"/>
+        public static implicit operator Version?(AlmostVersion av) => av?.SemverValue;
+#pragma warning restore CA2225 // Operator overloads have named alternates
+
+        public static bool operator <(AlmostVersion left, AlmostVersion right)
+            => left is null ? right is not null : left.CompareTo(right) < 0;
+
+        public static bool operator <=(AlmostVersion left, AlmostVersion right)
+            => left is null || left.CompareTo(right) <= 0;
+
+        public static bool operator >(AlmostVersion left, AlmostVersion right)
+            => left is not null && left.CompareTo(right) > 0;
+
+        public static bool operator >=(AlmostVersion left, AlmostVersion right)
+            => left is null ? right is null : left.CompareTo(right) >= 0;
     }
 
     /// <summary>
@@ -256,15 +305,19 @@ namespace IPA.Utilities
         /// <param name="value">the <see cref="Text"/> node to convert</param>
         /// <param name="parent">the owner of the new object</param>
         /// <returns></returns>
-        public override AlmostVersion FromValue(Value value, object parent)
-            => new AlmostVersion(Converter<string>.Default.FromValue(value, parent));
+        public override AlmostVersion? FromValue(Value? value, object parent)
+            => Converter<string>.Default.FromValue(value, parent) switch
+            {
+                { } v => new(v),
+                _ => null
+            };
         /// <summary>
         /// Converts an <see cref="AlmostVersion"/> to a <see cref="Text"/> node.
         /// </summary>
         /// <param name="obj">the <see cref="AlmostVersion"/> to convert</param>
         /// <param name="parent">the parent of <paramref name="obj"/></param>
         /// <returns>a <see cref="Text"/> node representing <paramref name="obj"/></returns>
-        public override Value ToValue(AlmostVersion obj, object parent)
-            => Value.From(obj.ToString());
+        public override Value? ToValue(AlmostVersion? obj, object parent)
+            => Value.From(obj?.ToString());
     }
 }

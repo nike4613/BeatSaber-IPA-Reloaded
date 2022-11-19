@@ -3,16 +3,16 @@
   <Import Project="..\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net35</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <RootNamespace>IPA</RootNamespace>
     
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net461' ">true</BuildForBeatSaber>
+    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net472' ">true</BuildForBeatSaber>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
     <DefineConstants>$(DefineConstants);NET4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
@@ -22,7 +22,7 @@
     <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
       <Private>False</Private>
@@ -49,12 +49,19 @@
   
   <ItemGroup>
     <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
-    <PackageReference Include="Lib.Harmony" Version="2.0.2" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Portable.System.ValueTuple" Version="1.0.1" />
-    <PackageReference Include="SemanticVersioning" Version="1.2.2" />
-    <PackageReference Include="AsyncBridge" Version="0.3.1" />
+    <!--<PackageReference Include="Lib.Harmony" Version="2.0.2" />-->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <!--<PackageReference Include="AsyncBridge" Version="0.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0">
+      <ExcludeAssets>buildtransitive</ExcludeAssets>
+    </PackageReference>-->
+    
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="HarmonyX" Version="2.7.0" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="21.12.13.1" />
+    <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
+
+    <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>
   
   <ItemGroup>
@@ -67,6 +74,11 @@
   <ItemGroup>
     <Compile Remove="Updating\BeatMods\*.cs" />
     <None Include="Updating\BeatMods\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+    <Compile Remove="AntiMalware\_HideInNet3\**" />
+    <None Include="AntiMalware\_HideInNet3\**" />
   </ItemGroup>
 
   <Import Project="..\Common.targets" />

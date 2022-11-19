@@ -86,13 +86,13 @@ namespace IPA.Loader
                 try
                 {
                     if (transaction.WillNeedRestart)
-                        Logger.loader.Warn("Runtime disabled config reload will need game restart to apply");
+                        Logger.Loader.Warn("Runtime disabled config reload will need game restart to apply");
                     return transaction.Commit().ContinueWith(t =>
                     {
                         if (t.IsFaulted)
                         {
-                            Logger.loader.Error("Error changing disabled plugins");
-                            Logger.loader.Error(t.Exception);
+                            Logger.Loader.Error("Error changing disabled plugins");
+                            Logger.Loader.Error(t.Exception);
                         }
                     });
                 }

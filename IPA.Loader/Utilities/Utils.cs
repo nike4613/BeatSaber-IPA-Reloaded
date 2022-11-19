@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.IO;
 using System.Text;
 using System.Linq;
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Diagnostics.CodeAnalysis;
+using Version = Hive.Versioning.Version;
 #if NET3
 using File = Net3_Proxy.File;
 #endif
@@ -24,6 +27,8 @@ namespace IPA.Utilities
         /// <returns>the corresponding byte array</returns>
         public static byte[] StringToByteArray(string hex)
         {
+            if (hex is null)
+                throw new ArgumentNullException(nameof(hex));
             int numberChars = hex.Length;
             byte[] bytes = new byte[numberChars / 2];
             for (int i = 0; i < numberChars; i += 2)
@@ -38,9 +43,11 @@ namespace IPA.Utilities
         /// <returns>the hex form of the array</returns>
         public static string ByteArrayToString(byte[] ba)
         {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            if (ba is null)
+                throw new ArgumentNullException(nameof(ba));
+            var hex = new StringBuilder(ba.Length * 2);
             foreach (byte b in ba)
-                hex.AppendFormat("{0:x2}", b);
+                _ = hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
 
@@ -64,9 +71,9 @@ namespace IPA.Utilities
                 byte* x1 = p1, x2 = p2;
                 int l = a1.Length;
                 for (int i = 0; i < l / 8; i++, x1 += 8, x2 += 8)
-                    if (*((long*)x1) != *((long*)x2)) return false;
-                if ((l & 4) != 0) { if (*((int*)x1) != *((int*)x2)) return false; x1 += 4; x2 += 4; }
-                if ((l & 2) != 0) { if (*((short*)x1) != *((short*)x2)) return false; x1 += 2; x2 += 2; }
+                    if (*(long*)x1 != *(long*)x2) return false;
+                if ((l & 4) != 0) { if (*(int*)x1 != *(int*)x2) return false; x1 += 4; x2 += 4; }
+                if ((l & 2) != 0) { if (*(short*)x1 != *(short*)x2) return false; x1 += 2; x2 += 2; }
                 if ((l & 1) != 0) if (*x1 != *x2) return false;
                 return true;
             }
@@ -80,13 +87,18 @@ namespace IPA.Utilities
         /// <returns>a path to get from <paramref name="folder"/> to <paramref name="file"/></returns>
         public static string GetRelativePath(string file, string folder)
         {
-            Uri pathUri = new Uri(file);
+            if (file is null)
+                throw new ArgumentNullException(nameof(file));
+            if (folder is null)
+                throw new ArgumentNullException(nameof(folder));
+
+            var pathUri = new Uri(file);
             // Folders must end in a slash
-            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             {
                 folder += Path.DirectorySeparatorChar;
             }
-            Uri folderUri = new Uri(folder);
+            var folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
@@ -98,9 +110,14 @@ namespace IPA.Utilities
         /// <param name="appendFileName">the filename of the file to append together</param>
         /// <param name="onCopyException">a delegate called when there is an error copying. Return true to keep going.</param>
         public static void CopyAll(DirectoryInfo source, DirectoryInfo target, string appendFileName = "",
-            Func<Exception, FileInfo, bool> onCopyException = null)
+            Func<Exception, FileInfo, bool>? onCopyException = null)
         {
-            if (source.FullName.ToLower() == target.FullName.ToLower())
+            if (source is null)
+                throw new ArgumentNullException(nameof(source));
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
+
+            if (source.FullName.ToUpperInvariant() == target.FullName.ToUpperInvariant())
             {
                 return;
             }
@@ -108,18 +125,18 @@ namespace IPA.Utilities
             // Check if the target directory exists, if not, create it.
             if (Directory.Exists(target.FullName) == false)
             {
-                Directory.CreateDirectory(target.FullName);
+                _ = Directory.CreateDirectory(target.FullName);
             }
 
             // Copy each file into it's new directory.
-            foreach (FileInfo fi in source.GetFiles())
+            foreach (var fi in source.GetFiles())
             {
                 try
                 {
                     if (fi.Name == appendFileName)
                         File.AppendAllLines(Path.Combine(target.ToString(), fi.Name), File.ReadAllLines(fi.FullName));
                     else
-                        fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                        _ = fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
                 }
                 catch (Exception e)
                 {
@@ -130,10 +147,9 @@ namespace IPA.Utilities
             }
 
             // Copy each subdirectory using recursion.
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            foreach (var diSourceSubDir in source.GetDirectories())
             {
-                DirectoryInfo nextTargetSubDir =
-                    target.CreateSubdirectory(diSourceSubDir.Name);
+                var nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyAll(diSourceSubDir, nextTargetSubDir, appendFileName, onCopyException);
             }
         }
@@ -153,7 +169,7 @@ namespace IPA.Utilities
         {
             if (DateTimeSafetyUnknown)
             {
-                DateTime time = DateTime.MinValue;
+                var time = DateTime.MinValue;
                 try
                 {
                     time = DateTime.Now;
@@ -178,15 +194,29 @@ namespace IPA.Utilities
         /// <param name="l">the left value</param>
         /// <param name="r">the right value</param>
         /// <returns>&lt; 0 if l is less than r, 0 if they are equal in the numeric portion, or &gt; 0 if l is greater than r</returns>
+        [Obsolete("Use Hive.Versioning.Version overload instead.")]
         public static int VersionCompareNoPrerelease(SemVer.Version l, SemVer.Version r)
+            => VersionCompareNoPrerelease(l?.UnderlyingVersion!, r?.UnderlyingVersion!);
+
+        /// <summary>
+        /// Compares a pair of <see cref="Version"/>s ignoring both the prerelease and build fields.
+        /// </summary>
+        /// <param name="l">the left value</param>
+        /// <param name="r">the right value</param>
+        /// <returns>&lt; 0 if l is less than r, 0 if they are equal in the numeric portion, or &gt; 0 if l is greater than r</returns>
+        public static int VersionCompareNoPrerelease(Version l, Version r)
         {
-            var cmpVal = l.Major - r.Major;
+            if (l is null) throw new ArgumentNullException(nameof(l));
+            if (r is null) throw new ArgumentNullException(nameof(r));
+
+            var cmpVal = l.Major.CompareTo(r.Major);
             if (cmpVal != 0) return cmpVal;
-            cmpVal = l.Minor - r.Minor;
+            cmpVal = l.Minor.CompareTo(r.Minor);
             if (cmpVal != 0) return cmpVal;
-            cmpVal = l.Patch - r.Patch;
+            cmpVal = l.Patch.CompareTo(r.Patch);
             return cmpVal;
         }
+
 
         /// <summary>
         /// An object used to manage scope guards.
@@ -197,6 +227,10 @@ namespace IPA.Utilities
         /// </code>
         /// </example>
         /// <seealso cref="ScopeGuard(Action)"/>
+        [SuppressMessage("Design", "CA1034:Nested types should not be visible",
+            Justification = "This type needs to be public to avoid allocations")]
+        [SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types",
+            Justification = "This type is never supposed to be compared")]
         public struct ScopeGuardObject : IDisposable
         {
             private readonly Action action;
@@ -221,9 +255,20 @@ namespace IPA.Utilities
         /// </code>
         /// </example>
         public static ScopeGuardObject ScopeGuard(Action action)
-            => new ScopeGuardObject(action);
+            => new(action);
 
-        internal static bool HasInterface(this TypeDefinition type, string interfaceFullName)
+        /// <summary>
+        /// Deconstructs a <see cref="KeyValuePair{TKey, TValue}"/> as its key and value.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="kvp">The <see cref="KeyValuePair{TKey, TValue}"/> to deconstruct.</param>
+        /// <param name="key">The key in <paramref name="kvp"/>.</param>
+        /// <param name="value">The value in <paramref name="kvp"/>.</param>
+        public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key, out TValue value)
+            => (key, value) = (kvp.Key, kvp.Value);
+
+        internal static bool HasInterface(this TypeDefinition? type, string interfaceFullName)
         {
             return (type?.Interfaces?.Any(i => i.InterfaceType.FullName == interfaceFullName) ?? false)
                     || (type?.Interfaces?.Any(t => HasInterface(t?.InterfaceType?.Resolve(), interfaceFullName)) ?? false);

@@ -54,10 +54,10 @@ namespace IPA.Utilities.Async
         public static Task AsTask(IEnumerator coroutine)
         {
             if (!UnityGame.OnMainThread)
-                return UnityMainThreadTaskScheduler.Factory.StartNew(() => AsTask(coroutine)).Unwrap();
+                return UnityMainThreadTaskScheduler.Factory.StartNew(() => AsTask(coroutine), default, default, UnityMainThreadTaskScheduler.Default).Unwrap();
 
             var tcs = new TaskCompletionSource<VoidStruct>(coroutine, AsTaskSourceOptions);
-            PluginComponent.Instance.StartCoroutine(new AsTaskCoroutineExecutor(coroutine, tcs));
+            _ = PluginComponent.Instance.StartCoroutine(new AsTaskCoroutineExecutor(coroutine, tcs));
             return tcs.Task;
         }
 
@@ -85,7 +85,7 @@ namespace IPA.Utilities.Async
                 enumerators.Push(coroutine);
             }
 
-            private readonly Stack<IEnumerator> enumerators = new Stack<IEnumerator>(2);
+            private readonly Stack<IEnumerator> enumerators = new(2);
 
             public object Current => enumerators.FirstOrDefault()?.Current; // effectively a TryPeek
 
@@ -116,7 +116,7 @@ namespace IPA.Utilities.Async
                         }
                         else
                         { // this enumerator completed, so pop it and continue
-                            enumerators.Pop();
+                            _ = enumerators.Pop();
                             continue;
                         }
                     }

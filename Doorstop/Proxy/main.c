@@ -194,8 +194,10 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 
     wchar_t* dll_path_w; // self path
     size_t dll_path_len = get_module_path((HINSTANCE)&__ImageBase, &dll_path_w, NULL, 0);
-    char* self_dll_path = memalloc(dll_path_len + 1);
-    WideCharToMultiByte(CP_UTF8, 0, dll_path_w, -1, self_dll_path, dll_path_len + 1, NULL, NULL);
+    size_t multibyte_path_len = WideCharToMultiByte(CP_UTF8, 0, dll_path_w, dll_path_len, NULL, 0, NULL, NULL);
+    char* self_dll_path = memalloc(multibyte_path_len + 1);
+    WideCharToMultiByte(CP_UTF8, 0, dll_path_w, dll_path_len, self_dll_path, multibyte_path_len + 1, NULL, NULL);
+    self_dll_path[multibyte_path_len] = 0;
 
     mono_dllmap_insert(NULL, "i:bsipa-doorstop", NULL, self_dll_path, NULL); // remap `bsipa-doorstop` to this assembly
 

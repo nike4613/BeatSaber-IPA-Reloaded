@@ -1,12 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace IPA.Utilities.Async
@@ -20,15 +19,15 @@ namespace IPA.Utilities.Async
         /// Gets the default main thread scheduler that is managed by BSIPA.
         /// </summary>
         /// <value>a scheduler that is managed by BSIPA</value>
-        public static new TaskScheduler Default { get; } = new UnityMainThreadTaskScheduler();
+        public static new UnityMainThreadTaskScheduler Default { get; } = new UnityMainThreadTaskScheduler();
         /// <summary>
         /// Gets a factory for creating tasks on <see cref="Default"/>.
         /// </summary>
         /// <value>a factory for creating tasks on the default scheduler</value>
         public static TaskFactory Factory { get; } = new TaskFactory(Default);
 
-        private readonly ConcurrentQueue<QueueItem> tasks = new ConcurrentQueue<QueueItem>();
-        private static readonly ConditionalWeakTable<Task, QueueItem> itemTable = new ConditionalWeakTable<Task, QueueItem>();
+        private readonly ConcurrentQueue<QueueItem> tasks = new();
+        private static readonly ConditionalWeakTable<Task, QueueItem> itemTable = new();
 
         private class QueueItem : IEquatable<Task>, IEquatable<QueueItem>
         {
@@ -43,7 +42,9 @@ namespace IPA.Utilities.Async
                 }
             }
 
-            public Task Task { get; private set; } = null;
+            public Task? Task { get; private set; }
+
+            public Action? Action { get; private set; }
 
             public QueueItem(Task task)
             {
@@ -51,7 +52,13 @@ namespace IPA.Utilities.Async
                 Task = task;
             }
 
-            public bool Equals(Task other) => HasTask && other.Equals(Task);
+            public QueueItem(Action action)
+            {
+                HasTask = true;
+                Action = action;
+            }
+
+            public bool Equals(Task? other) => other is not null && HasTask && other.Equals(Task);
             public bool Equals(QueueItem other) => other.HasTask == HasTask && Equals(other.Task);
         }
 
@@ -146,7 +153,11 @@ namespace IPA.Utilities.Async
                             do if (!tasks.TryDequeue(out task)) goto exit; // try dequeue, if we can't exit
                             while (!task.HasTask); // if the dequeued task is empty, try again
 
-                            TryExecuteTask(task.Task);
+                            if (task.Task is not null)
+                            {
+                                _ = TryExecuteTask(task.Task);
+                            }
+                            task.Action?.Invoke();
                         }
                         exit:
                         sw.Reset();
@@ -181,7 +192,7 @@ namespace IPA.Utilities.Async
         /// <returns>nothing</returns>
         /// <exception cref="NotSupportedException">Always.</exception>
         protected override IEnumerable<Task> GetScheduledTasks()
-            => tasks.ToArray().Where(q => q.HasTask).Select(q => q.Task).ToArray();
+            => tasks.ToArray().Where(q => q.HasTask).Select(q => q.Task).NonNull().ToArray();
 
         /// <summary>
         /// Queues a given <see cref="Task"/> to this scheduler. The <see cref="Task"/> <i>must</i> be
@@ -196,6 +207,13 @@ namespace IPA.Utilities.Async
             var item = new QueueItem(task);
             itemTable.Add(task, item);
             tasks.Enqueue(item);
+        }
+
+        internal void QueueAction(Action action)
+        {
+            ThrowIfDisposed();
+
+            tasks.Enqueue(new(action));
         }
 
         /// <summary>

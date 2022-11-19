@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿#nullable enable
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace IPA.Config.Data
 {
@@ -25,21 +22,21 @@ namespace IPA.Config.Data
         /// Creates a Null <see cref="Value"/>.
         /// </summary>
         /// <returns><see langword="null"/></returns>
-        public static Value Null() => null;
+        public static Value? Null() => null;
 
         /// <summary>
         /// Creates an empty <see cref="List"/>.
         /// </summary>
         /// <returns>an empty <see cref="List"/></returns>
         /// <seealso cref="From(IEnumerable{Value})"/>
-        public static List List() => new List();
+        public static List List() => new();
         /// <summary>
         /// Creates an empty <see cref="Map"/>.
         /// </summary>
         /// <returns>an empty <see cref="Map"/></returns>
         /// <seealso cref="From(IDictionary{string, Value})"/>
         /// <seealso cref="From(IEnumerable{KeyValuePair{string, Value}})"/>
-        public static Map Map() => new Map();
+        public static Map Map() => new();
 
         /// <summary>
         /// Creates a new <see cref="Value"/> representing a <see cref="string"/>.
@@ -47,14 +44,16 @@ namespace IPA.Config.Data
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="Data.Text"/> wrapping <paramref name="val"/></returns>
         /// <seealso cref="Text(string)"/>
-        public static Text From(string val) => Text(val);
+        [return: NotNullIfNotNull("val")]
+        public static Text? From(string? val) => Text(val);
         /// <summary>
         /// Creates a new <see cref="Data.Text"/> object wrapping a <see cref="string"/>.
         /// </summary>
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="Data.Text"/> wrapping <paramref name="val"/></returns>
         /// <seealso cref="From(string)"/>
-        public static Text Text(string val) => val == null ? null : new Text { Value = val };
+        [return: NotNullIfNotNull("val")]
+        public static Text? Text(string? val) => val == null ? null : new(val);
 
         /// <summary>
         /// Creates a new <see cref="Value"/> wrapping a <see cref="long"/>.
@@ -69,7 +68,7 @@ namespace IPA.Config.Data
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="Data.Integer"/> wrapping <paramref name="val"/></returns>
         /// <seealso cref="From(long)"/>
-        public static Integer Integer(long val) => new Integer { Value = val };
+        public static Integer Integer(long val) => new(val);
 
         /// <summary>
         /// Creates a new <see cref="Value"/> wrapping a <see cref="double"/>.
@@ -84,7 +83,7 @@ namespace IPA.Config.Data
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="FloatingPoint"/> wrapping <paramref name="val"/></returns>
         /// <seealso cref="From(decimal)"/>
-        public static FloatingPoint Float(decimal val) => new FloatingPoint { Value = val };
+        public static FloatingPoint Float(decimal val) => new(val);
 
         /// <summary>
         /// Creates a new <see cref="Value"/> wrapping a <see cref="bool"/>.
@@ -99,7 +98,7 @@ namespace IPA.Config.Data
         /// <param name="val">the value to wrap</param>
         /// <returns>a <see cref="Boolean"/> wrapping <paramref name="val"/></returns>
         /// <seealso cref="From(bool)"/>
-        public static Boolean Bool(bool val) => new Boolean { Value = val };
+        public static Boolean Bool(bool val) => new(val);
 
         /// <summary>
         /// Creates a new <see cref="Data.List"/> holding the content of an <see cref="IEnumerable{T}"/>
@@ -108,9 +107,10 @@ namespace IPA.Config.Data
         /// <param name="vals">the <see cref="Value"/>s to initialize the <see cref="Data.List"/> with</param>
         /// <returns>a <see cref="Data.List"/> containing the content of <paramref name="vals"/></returns>
         /// <seealso cref="List"/>
-        public static List From(IEnumerable<Value> vals)
+        [return: NotNullIfNotNull("vals")]
+        public static List? From(IEnumerable<Value?>? vals)
         {
-            if (vals == null) return null;
+            if (vals is null) return null;
             var l = List();
             l.AddRange(vals);
             return l;
@@ -124,7 +124,7 @@ namespace IPA.Config.Data
         /// <returns>a <see cref="Data.Map"/> containing the content of <paramref name="vals"/></returns>
         /// <seealso cref="Map"/>
         /// <seealso cref="From(IEnumerable{KeyValuePair{string, Value}})"/>
-        public static Map From(IDictionary<string, Value> vals) => From(vals as IEnumerable<KeyValuePair<string, Value>>);
+        public static Map From(IDictionary<string, Value?> vals) => From(vals as IEnumerable<KeyValuePair<string, Value?>>);
 
         /// <summary>
         /// Creates a new <see cref="Data.Map"/> holding the content of an <see cref="IEnumerable{T}"/>
@@ -134,9 +134,10 @@ namespace IPA.Config.Data
         /// <returns>a <see cref="Data.Map"/> containing the content of <paramref name="vals"/></returns>
         /// <seealso cref="Map"/>
         /// <seealso cref="From(IDictionary{string, Value})"/>
-        public static Map From(IEnumerable<KeyValuePair<string, Value>> vals)
+        [return: NotNullIfNotNull("vals")]
+        public static Map? From(IEnumerable<KeyValuePair<string, Value?>>? vals)
         {
-            if (vals == null) return null;
+            if (vals is null) return null;
             var m = Map();
             foreach (var v in vals) m.Add(v.Key, v.Value);
             return m;

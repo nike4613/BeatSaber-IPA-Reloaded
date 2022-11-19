@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#nullable enable
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -18,7 +19,7 @@ namespace IPA.Loader.Features
             DataModel data;
             try
             {
-                data = featureData.ToObject<DataModel>();
+                data = featureData.ToObject<DataModel>() ?? throw new InvalidOperationException("Feature data is null");
             }
             catch (Exception e)
             {
@@ -36,7 +37,7 @@ namespace IPA.Loader.Features
                 InvalidMessage = $"Invalid type name {data.TypeName}";
                 return false;
             }
-            catch (Exception e) when (e is FileNotFoundException || e is FileLoadException || e is BadImageFormatException)
+            catch (Exception e) when (e is FileNotFoundException or FileLoadException or BadImageFormatException)
             {
                 string filename;
 

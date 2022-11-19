@@ -12,6 +12,8 @@ defaults:
   run:
     shell: pwsh
 
+permissions: read-all
+
 jobs:
   build:
     runs-on: windows-latest
@@ -33,20 +35,20 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
-          dotnet-version: "3.1.404" # since we now use this
+          dotnet-version: "6.0.100" # since we now use this
+      - name: Log in to package source
+        shell: pwsh
+        run: |
+            dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} `
+            --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Atlas-Rhythm/index.json"
       - name: Clear Nuget Cache
         run: dotnet nuget locals all --clear
       - name: Restore
         run: msbuild -t:Restore -m
       - name: Build
         run: msbuild -t:Build -m
-      - name: Upload net461
+      - name: Upload net472
         uses: actions/upload-artifact@v2
         with:
-          name: BSIPA-net461-${{ env.Platform }}
-          path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net461/
-      - name: Upload net35
-        uses: actions/upload-artifact@v2
-        with:
-          name: BSIPA-net35-${{ env.Platform }}
-          path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net35/
+          name: BSIPA-net472-${{ env.Platform }}
+          path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net472/

@@ -38,7 +38,7 @@ namespace IPA.Loader.Composite
                 }
                 catch (Exception ex) 
                 {
-                    Logger.log.Error($"{plugin.Name} {member}: {ex}");
+                    Logger.Default.Error($"{plugin.Name} {member}: {ex}");
                 }
             }
         }

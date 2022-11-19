@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using IPA.Config;
-using IPA.Old;
 using IPA.Utilities;
 using Mono.Cecil;
 using UnityEngine;
@@ -52,10 +50,10 @@ namespace IPA.Loader
         /// <summary>
         /// Gets info about the enabled plugin with the specified ID.
         /// </summary>
-        /// <param name="name">the ID name of the plugin to get (must be an exact match)</param>
+        /// <param name="id">the ID name of the plugin to get (must be an exact match)</param>
         /// <returns>the plugin metadata for the requested plugin or <see langword="null"/> if it doesn't exist or is disabled</returns>
-        public static PluginMetadata GetPluginFromId(string name)
-            => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Id == name);
+        public static PluginMetadata GetPluginFromId(string id)
+            => BSMetas.Select(p => p.Metadata).FirstOrDefault(p => p.Id == id);
 
         /// <summary>
         /// Gets a disabled plugin's metadata by its name.
@@ -68,10 +66,10 @@ namespace IPA.Loader
         /// <summary>
         /// Gets a disabled plugin's metadata by its ID.
         /// </summary>
-        /// <param name="name">the ID of the disabled plugin to get</param>
+        /// <param name="id">the ID of the disabled plugin to get</param>
         /// <returns>the metadata for the corresponding plugin</returns>
-        public static PluginMetadata GetDisabledPluginFromId(string name) =>
-            DisabledPlugins.FirstOrDefault(p => p.Id == name);
+        public static PluginMetadata GetDisabledPluginFromId(string id) =>
+            DisabledPlugins.FirstOrDefault(p => p.Id == id);
 
         /// <summary>
         /// Creates a new transaction for mod enabling and disabling mods simultaneously.
@@ -153,8 +151,8 @@ namespace IPA.Loader
                             }
                             catch (Exception e)
                             {
-                                Logger.loader.Error($"Error while enabling {meta.Id}:");
-                                Logger.loader.Error(e);
+                                Logger.Loader.Error($"Error while enabling {meta.Id}:");
+                                Logger.Loader.Error(e);
                                 // this should still be considered enabled, hence its position
                             }
                         }
@@ -215,7 +213,7 @@ namespace IPA.Loader
                                                 }
                                                 catch (Exception e)
                                                 {
-                                                    Logger.loader.Critical($"Feature errored in {nameof(Feature.AfterDisable)}: {e}");
+                                                    Logger.Loader.Critical($"Feature errored in {nameof(Feature.AfterDisable)}: {e}");
                                                 }
                                             }
                                         }, UnityMainThreadTaskScheduler.Default);
@@ -442,26 +440,26 @@ namespace IPA.Loader
 
             sw.Stop();
 
-            Logger.log.Info(exeName);
-            Logger.log.Info($"Running on Unity {Application.unityVersion}");
-            Logger.log.Info($"Game version {UnityGame.GameVersion}");
-            Logger.log.Info("-----------------------------");
-            Logger.log.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
-            Logger.log.Info("-----------------------------");
+            Logger.Default.Info(exeName);
+            Logger.Default.Info($"Running on Unity {Application.unityVersion}");
+            Logger.Default.Info($"Game version {UnityGame.GameVersion}");
+            Logger.Default.Info("-----------------------------");
+            Logger.Default.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
+            Logger.Default.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
-                Logger.log.Info($"{plugin.Metadata.Name} ({plugin.Metadata.Id}): {plugin.Metadata.Version}");
+                Logger.Default.Info($"{plugin.Metadata.Name} ({plugin.Metadata.Id}): {plugin.Metadata.Version}");
             }
-            Logger.log.Info("-----------------------------");
+            Logger.Default.Info("-----------------------------");
             if (_ipaPlugins.Count > 0)
             {
                 foreach (var plugin in _ipaPlugins)
                 {
-                    Logger.log.Info($"{plugin.Name}: {plugin.Version}");
+                    Logger.Default.Info($"{plugin.Name}: {plugin.Version}");
                 }
-                Logger.log.Info("-----------------------------");
+                Logger.Default.Info("-----------------------------");
             }
-            Logger.log.Info($"Initializing plugins took {sw.Elapsed}");
+            Logger.Default.Info($"Initializing plugins took {sw.Elapsed}");
         }
 
         private static IEnumerable<Old.IPlugin> LoadPluginsFromFile(string file)
@@ -482,7 +480,7 @@ namespace IPA.Loader
                     }
                     catch (Exception e)
                     {
-                        Logger.loader.Error($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
+                        Logger.Loader.Error($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
                     }
                 }
 
@@ -506,13 +504,13 @@ namespace IPA.Loader
             }
             catch (ReflectionTypeLoadException e)
             {
-                Logger.loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
-                Logger.loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message).StrJP() ?? Array.Empty<string>())}");
+                Logger.Loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
+                Logger.Loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message).StrJP() ?? Array.Empty<string>())}");
             }
             catch (Exception e)
             {
-                Logger.loader.Error($"Could not load {Path.GetFileName(file)}!");
-                Logger.loader.Error(e);
+                Logger.Loader.Error($"Could not load {Path.GetFileName(file)}!");
+                Logger.Loader.Error(e);
             }
 
             return ipaPlugins;

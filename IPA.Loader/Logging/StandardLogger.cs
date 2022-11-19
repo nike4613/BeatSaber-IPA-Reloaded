@@ -25,10 +25,7 @@ namespace IPA.Logging
     /// </remarks>
     public class StandardLogger : Logger
     {
-        private static readonly List<LogPrinter> defaultPrinters = new()
-        {
-            new GlobalLogFilePrinter()
-        };
+        private static readonly List<LogPrinter> defaultPrinters = new();
 
         static StandardLogger()
         {
@@ -115,6 +112,7 @@ namespace IPA.Logging
 
         private readonly Dictionary<string, StandardLogger> children = new();
 
+        private static bool addedFilePrinter = false;
         /// <summary>
         /// Configures internal debug settings based on the config passed in.
         /// </summary>
@@ -124,6 +122,11 @@ namespace IPA.Logging
             PrintFilter = SelfConfig.Debug_.ShowDebug_ ? LogLevel.All : LogLevel.InfoUp;
             showTrace = SelfConfig.Debug_.ShowTrace_;
             syncLogging = SelfConfig.Debug_.SyncLogging_;
+            if (SelfConfig.CommandLineValues.WriteLogs && !addedFilePrinter)
+            {
+                addedFilePrinter = true;
+                AddDefaultPrinter(new GlobalLogFilePrinter());
+            }
         }
 
         private StandardLogger(StandardLogger parent, string subName)
