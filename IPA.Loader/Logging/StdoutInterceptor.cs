@@ -114,8 +114,8 @@ namespace IPA.Logging
             return "\x1b[" + code + "m";
         }
 
-        private static StdoutInterceptor? stdoutInterceptor;
-        private static StdoutInterceptor? stderrInterceptor;
+        internal static StdoutInterceptor? Stdout;
+        internal static StdoutInterceptor? Stderr;
 
         private static class ConsoleHarmonyPatches
         {
@@ -145,9 +145,9 @@ namespace IPA.Logging
                 }
             }
 
-            public static ConsoleColor GetColor() => stdoutInterceptor!.currentColor;
-            public static void SetColor(ConsoleColor col) => stdoutInterceptor!.currentColor = col;
-            public static void ResetColor() => stdoutInterceptor!.currentColor = defaultColor;
+            public static ConsoleColor GetColor() => Stdout!.currentColor;
+            public static void SetColor(ConsoleColor col) => Stdout!.currentColor = col;
+            public static void ResetColor() => Stdout!.currentColor = defaultColor;
 
             public static IEnumerable<CodeInstruction> PatchGetForegroundColor(IEnumerable<CodeInstruction> _)
             {
@@ -194,8 +194,8 @@ namespace IPA.Logging
 
                 HarmonyGlobalSettings.DisallowLegacyGlobalUnpatchAll = true;
                 harmony ??= new Harmony("BSIPA Console Redirector Patcher");
-                stdoutInterceptor ??= new StdoutInterceptor();
-                stderrInterceptor ??= new StdoutInterceptor { isStdErr = true };
+                Stdout ??= new StdoutInterceptor();
+                Stderr ??= new StdoutInterceptor { isStdErr = true };
 
                 RedirectConsole();
                 ConsoleHarmonyPatches.Patch(harmony);
@@ -206,8 +206,9 @@ namespace IPA.Logging
         {
             if (usingInterceptor)
             {
-                Console.SetOut(stdoutInterceptor);
-                Console.SetError(stderrInterceptor);
+                Console.SetOut(Stdout);
+                Console.SetError(Stderr);
+                StdoutInterceptorPipes.ShouldRedirectStdHandles = true;
             }
         }
 

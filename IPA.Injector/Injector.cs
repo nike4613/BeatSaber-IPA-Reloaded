@@ -48,6 +48,8 @@ namespace IPA.Injector
                 var arguments = Environment.GetCommandLineArgs();
                 MaybeInitializeConsole(arguments);
 
+                StdoutInterceptorPipes.Initialize();
+
                 SetupLibraryLoading();
 
                 EnsureDirectories();
