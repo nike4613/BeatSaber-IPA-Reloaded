@@ -26,16 +26,18 @@ Here's a quick list of what they are and what they do.
 
   > Makes a console appear with log information at startup.
   >
-  > Optionally, to start Beat Saber with an external console, an explicit `-pid` can be specified. This allows the game to be launched without being interrupted by Steam's "Allow game launch?" popup when directly launching `Beat Saber.exe` with arguments.
+  > Optionally, an explicit process ID can be specified to start the game with an external console. This allows it to be launched without being interrupted by Steam's "Allow game launch?" popup when directly launching `Beat Saber.exe` with arguments.
   > - Using PowerShell: 
+  >
   >   ```powershell
-  >   .\steam -applaunch 620980 --verbose -pid $PID
-  >   ```
-  > - Using Command Prompt:
-  >   ```powershell
-  >   powershell -c ".\steam -applaunch 620980 --verbose -pid (Get-CimInstance Win32_Process -Filter ProcessId=$PID).ParentProcessId"
+  >   .\steam -applaunch 620980 --verbose $PID
   >   ```
   >
+  > - Using Command Prompt:
+  >
+  >   ```powershell
+  >   powershell -c ".\steam -applaunch 620980 --verbose (Get-CimInstance Win32_Process -Filter ProcessId=$PID).ParentProcessId"
+  >   ```
 
 - `--debug`
 
@@ -45,7 +47,6 @@ Here's a quick list of what they are and what they do.
   > This option also forces BSIPA to show all debug messages in the console, as well as where they were called.
   >
   > This overrides the config settings `Debug.ShowDebug` and `Debug.ShowCallSource`.
-  >
 
 - `--trace`
   
@@ -53,7 +54,6 @@ Here's a quick list of what they are and what they do.
   > When this or the config option is used, they are added and logged with the same rules as Debug messages.
   >
   > This overrides the config setting `Debug.ShowTrace`.
-  >
 
 - `--mono-debug`
 
@@ -63,7 +63,6 @@ Here's a quick list of what they are and what they do.
   > debugger server running on port 10000 on `localhost`.
   >
   > Implies `--debug`.
-  >
 
 - `--server`
 
@@ -72,7 +71,6 @@ Here's a quick list of what they are and what they do.
   > When paired with `--mono-debug`, this option makes the Mono soft debugger act in server mode. It begins listening on
   > port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I recommend using
   > SDB, but that is a command line debugger and a lot of people don't care for those.
-  >
 
 - `--no-yeet`
 
@@ -83,7 +81,6 @@ Here's a quick list of what they are and what they do.
   > behaviour is disabled.
   >
   > Overrides the config setting `YeetMods`.
-  >
 
 - `--condense-logs`
 

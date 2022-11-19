@@ -45,23 +45,8 @@ namespace IPA.Injector
             _ = args;
             try
             {
-                var cmd = Environment.GetCommandLineArgs();
-
-                if (cmd.Contains("--verbose"))
-                {
-                    var arg = string.Empty;
-
-                    for (var i = 0; i < cmd.Length; i++)
-                    {
-                        if (cmd[i] == "-pid" && cmd.Length > i + 1)
-                        {
-                            arg = cmd[i + 1];
-                            break;
-                        }
-                    }
-
-                    WinConsole.Initialize(uint.TryParse(arg, out uint pid) ? pid : WinConsole.AttachParent);
-                }
+                var arguments = Environment.GetCommandLineArgs();
+                MaybeInitializeConsole(arguments);
 
                 SetupLibraryLoading();
 
@@ -70,7 +55,7 @@ namespace IPA.Injector
                 // this is weird, but it prevents Mono from having issues loading the type.
                 // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
                 var unused = StandardLogger.PrintFilter;
-                #region // Above hack explaination
+                #region // Above hack explanation
                 /*
                  * Due to an unknown bug in the version of Mono that Unity uses, if the first access to StandardLogger
                  * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
@@ -80,7 +65,7 @@ namespace IPA.Injector
 
                 Default.Debug("Initializing logger");
 
-                SelfConfig.ReadCommandLine(Environment.GetCommandLineArgs());
+                SelfConfig.ReadCommandLine(arguments);
                 SelfConfig.Load();
                 DisabledConfig.Load();
 
@@ -114,6 +99,24 @@ namespace IPA.Injector
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        private static void MaybeInitializeConsole(string[] arguments)
+        {
+            var i = 0;
+            while (i < arguments.Length)
+            {
+                if (arguments[i++] == "--verbose")
+                {
+                    if (i == arguments.Length)
+                    {
+                        WinConsole.Initialize(WinConsole.AttachParent);
+                        return;
+                    }
+
+                    WinConsole.Initialize(int.TryParse(arguments[i], out var processId) ? processId : WinConsole.AttachParent);
+                }
             }
         }
 

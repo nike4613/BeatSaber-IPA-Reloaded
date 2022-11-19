@@ -22,11 +22,11 @@ namespace IPA.Logging
 
         internal static bool IsInitialized;
 
-        public static void Initialize(uint pid, bool alwaysCreateNewConsole = false)
+        public static void Initialize(int processId, bool alwaysCreateNewConsole = false)
         {
             bool consoleAttached = true;
             if (alwaysCreateNewConsole
-                || (!AttachConsole(pid)
+                || (!AttachConsole(processId)
                 && Marshal.GetLastWin32Error() != ErrorAccessDenied))
             {
                 consoleAttached = AllocConsole();
@@ -62,7 +62,7 @@ namespace IPA.Logging
                     if (!SetConsoleMode(handle, mode))
                     {
                         UseVTEscapes = false;
-                        Console.Error.WriteLine("Could not enable VT100 escape code processing (maybe you're running an old Windows?): " + 
+                        Console.Error.WriteLine("Could not enable VT100 escape code processing (maybe you're running an old Windows?): " +
                             new Win32Exception(Marshal.GetLastWin32Error()).Message);
                     }
                 }
@@ -106,12 +106,14 @@ namespace IPA.Logging
             return null;
         }
 
-#region Win API Functions and Constants
+        #region Win API Functions and Constants
+
         [DllImport("kernel32.dll",
             EntryPoint = "AllocConsole",
             SetLastError = true,
             CharSet = CharSet.Auto,
             CallingConvention = CallingConvention.StdCall)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern bool AllocConsole();
 
         [DllImport("kernel32.dll",
@@ -119,13 +121,15 @@ namespace IPA.Logging
             SetLastError = true,
             CharSet = CharSet.Auto,
             CallingConvention = CallingConvention.StdCall)]
-        private static extern bool AttachConsole(uint dwProcessId);
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+        private static extern bool AttachConsole(int dwProcessId);
 
         [DllImport("kernel32.dll",
             EntryPoint = "CreateFileW",
             SetLastError = true,
             CharSet = CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern IntPtr CreateFileW(
               string lpFileName,
               uint dwDesiredAccess,
@@ -137,12 +141,15 @@ namespace IPA.Logging
             );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern IntPtr GetStdHandle(int nStdHandle);
 
         private const uint EnableVTProcessing = 0x0004;
@@ -154,9 +161,9 @@ namespace IPA.Logging
         private const uint OpenExisting = 0x00000003;
         private const uint FileAttributeNormal = 0x80;
         private const uint ErrorAccessDenied = 5;
-        
-        public const uint AttachParent = 0xFFFFFFFF;
 
-#endregion
+        internal const int AttachParent = -1;
+
+        #endregion
     }
 }
