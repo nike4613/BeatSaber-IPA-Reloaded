@@ -118,6 +118,7 @@ namespace IPA.Injector
                     }
 
                     WinConsole.Initialize(int.TryParse(arguments[i], out var processId) ? processId : WinConsole.AttachParent);
+                    return;
                 }
             }
         }
