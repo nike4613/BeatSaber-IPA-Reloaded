@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using IPA.AntiMalware;
 using Hive.Versioning;
 #if NET4
@@ -37,7 +38,7 @@ namespace IPA.Loader
         internal static PluginMetadata SelfMeta = null!;
 
         internal static Task LoadTask() =>
-            TaskEx.Run(() =>
+            Task.Factory.StartNew(() =>
         {
             YeetIfNeeded();
 
@@ -57,7 +58,7 @@ namespace IPA.Loader
 
             sw.Stop();
             Logger.Loader.Info($"Calculating load order took {sw.Elapsed}");
-        });
+        }, TaskCreationOptions.LongRunning);
 
         internal static void YeetIfNeeded()
         {
@@ -770,7 +771,7 @@ namespace IPA.Loader
                             && range.Matches(meta.HVersion)
                             && !conflIgnored && !conflDisabled) // the conflict is only *actually* a problem if it is both not ignored and not disabled
                         {
-                            
+
                             Logger.Loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.HVersion}; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Conflict)
                             {
