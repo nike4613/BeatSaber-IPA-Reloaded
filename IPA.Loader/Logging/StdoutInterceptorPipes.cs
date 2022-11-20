@@ -11,7 +11,7 @@ namespace IPA.Logging
     {
         // Used to ensure the server starts first, as Mono struggles with this simple task.
         // Otherwise it would throw a ERROR_PIPE_CONNECTED Win32Exception.
-        private static readonly ManualResetEvent manualResetEvent = new(false);
+        private static readonly ManualResetEventSlim manualResetEvent = new(false);
 
         public static bool ShouldRedirectStdHandles;
 
@@ -58,6 +58,7 @@ namespace IPA.Logging
                 {
                     Console.WriteLine(ex);
                     pipeServer.Close();
+                    manualResetEvent.Dispose();
                 }
             });
         }
@@ -71,7 +72,7 @@ namespace IPA.Logging
                 try
                 {
                     // If the client starts first, blocks the client thread.
-                    manualResetEvent.WaitOne();
+                    manualResetEvent.Wait();
                     pipeClient.Connect();
                     SetStdHandle(stdHandle, pipeClient.SafePipeHandle.DangerousGetHandle());
                     while (pipeClient.IsConnected)
@@ -83,6 +84,7 @@ namespace IPA.Logging
                 {
                     Console.WriteLine(ex);
                     pipeClient.Close();
+                    manualResetEvent.Dispose();
                 }
             });
         }
