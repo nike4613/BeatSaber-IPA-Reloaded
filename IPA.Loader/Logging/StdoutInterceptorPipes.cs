@@ -23,7 +23,9 @@ namespace IPA.Logging
 
         private static void InitializePipe(int stdHandle)
         {
-            var pipeName = stdHandle == STD_OUTPUT_HANDLE ? "STD_OUT_PIPE" : "STD_ERR_PIPE";
+            // Makes sure that we won't get a ERROR_PIPE_BUSY Win32Exception
+            // if the pipe wasn't closed fast enough when restarting the game.
+            var pipeName = Guid.NewGuid().ToString();
             var serverThread = InstantiateServerThread(pipeName, stdHandle);
             serverThread.Start();
             var clientThread = InstantiateClientThread(pipeName, stdHandle);
