@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFramework>net472</TargetFramework>
     <RootNamespace>IPA.Injector</RootNamespace>
-    
+
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -21,12 +21,12 @@
   <PropertyGroup Condition="'$(BuildForBeatSaber)' == 'true'">
     <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj" />
     <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(TargetFramework)' == 'net35' " />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Reference Include="UnityEngine.CoreModule" Condition=" '$(TargetFramework)' == 'net472' ">
       <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
@@ -37,7 +37,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Content Include="..\Libs\I18N.Net4.dll">
       <Link>Libraries\Mono\I18N.dll</Link>
@@ -67,7 +67,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <Content Include="..\Libs\I18N.Net3.dll">
       <Link>Libraries\Mono\I18N.dll</Link>
@@ -82,14 +82,22 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="AsyncBridge" Version="0.3.1" />
-    
+
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>
-  
+
+  <Target Name="CopyDocumentation" BeforeTargets="Build">
+    <ItemGroup>
+      <ReferenceFiles Include="%(Reference.RelativeDir)%(Reference.Filename).xml" />
+    </ItemGroup>
+    <Message Text="Copying documentation" />
+    <Copy SourceFiles="@(ReferenceFiles)" DestinationFolder="$(OutputPath)Libs" Condition="Exists('%(RootDir)%(Directory)%(Filename)%(Extension)')" />
+  </Target>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Message Text="Relocating" Importance="normal" />
     <ItemGroup>
@@ -104,7 +112,7 @@
     </ItemGroup>
     <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
     <RemoveDir Directories="$(OutputPath)Libraries\Mono" />
-    
+
     <Delete Files="@(OldLibFiles)" />
     <RemoveDir Directories="$(OutputPath)Libs" />
     <ItemGroup>
