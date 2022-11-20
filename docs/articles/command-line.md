@@ -26,7 +26,9 @@ Here's a quick list of what they are and what they do.
 
   > Makes a console appear with log information at startup.
   >
-  > Optionally, an explicit process ID can be specified to start the game with an external console. This allows it to be launched without being interrupted by Steam's "Allow game launch?" popup when directly launching `Beat Saber.exe` with arguments.
+  > Optionally, an explicit process ID can be specified to start the game with an external console. This allows it to be
+  > launched via Steam without being interrupted by its "Allow game launch?" if launched directly from `Beat Saber.exe`.
+  > 
   > - Using PowerShell: 
   >
   >   ```powershell
