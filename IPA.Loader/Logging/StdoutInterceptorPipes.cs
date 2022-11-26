@@ -56,9 +56,10 @@ namespace IPA.Logging
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    pipeServer.Close();
-                    manualResetEvent.Dispose();
                 }
+
+                pipeServer.Close();
+                manualResetEvent.Dispose();
             });
         }
 
@@ -82,9 +83,10 @@ namespace IPA.Logging
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    pipeClient.Close();
-                    manualResetEvent.Dispose();
                 }
+
+                pipeClient.Close();
+                manualResetEvent.Dispose();
             });
         }
 
