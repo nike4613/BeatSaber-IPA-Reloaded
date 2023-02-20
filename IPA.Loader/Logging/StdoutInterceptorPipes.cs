@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Text;
 using System.Threading;
 
@@ -17,8 +16,8 @@ namespace IPA.Logging
 
         public static void Initialize()
         {
-            InitializePipe(STD_OUTPUT_HANDLE);
-            InitializePipe(STD_ERROR_HANDLE);
+            InitializePipe(StdOutputHandle);
+            InitializePipe(StdErrorHandle);
         }
 
         private static void InitializePipe(int stdHandle)
@@ -36,7 +35,7 @@ namespace IPA.Logging
         {
             return new Thread(() =>
             {
-                NamedPipeServerStream pipeServer = new(pipeName, PipeDirection.In);
+                var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.In);
 
                 try
                 {
@@ -46,11 +45,14 @@ namespace IPA.Logging
                     var buffer = new byte[1024];
                     while (pipeServer.IsConnected)
                     {
+                        // TODO: Figure out why this line is absolutely needed
+                        // to avoid blocking the main thread when ShouldRedirectStdHandles is false.
+                        var length = pipeServer.Read(buffer, 0, buffer.Length);
                         if (ShouldRedirectStdHandles)
                         {
                             // Separate method to avoid a BadImageFormatException when accessing StdoutInterceptor early.
                             // This happens because the Harmony DLL is not loaded at this point.
-                            Redirect(pipeServer, buffer, stdHandle);
+                            WriteToInterceptor(length , buffer, stdHandle);
                         }
                     }
                 }
@@ -68,7 +70,7 @@ namespace IPA.Logging
         {
             return new Thread(() =>
             {
-                NamedPipeClientStream pipeClient = new(".", pipeName, PipeDirection.Out);
+                var pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.Out);
 
                 try
                 {
@@ -91,19 +93,17 @@ namespace IPA.Logging
             });
         }
 
-        private static void Redirect(NamedPipeServerStream server, byte[] buffer, int stdHandle)
+        private static void WriteToInterceptor(int length, byte[] buffer, int stdHandle)
         {
-            var charsRead = server.Read(buffer, 0, buffer.Length);
-            var interceptor = stdHandle == STD_OUTPUT_HANDLE ? StdoutInterceptor.Stdout : StdoutInterceptor.Stderr;
-            interceptor!.Write(Encoding.UTF8.GetString(buffer, 0, charsRead));
+            var interceptor = stdHandle == StdOutputHandle ? StdoutInterceptor.Stdout : StdoutInterceptor.Stderr;
+            interceptor!.Write(Encoding.UTF8.GetString(buffer, 0, length));
         }
 
-        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll")]
         [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-        [ResourceExposure(ResourceScope.Process)]
         private static extern bool SetStdHandle(int nStdHandle, IntPtr hHandle);
 
-        private const int STD_OUTPUT_HANDLE = -11;
-        private const int STD_ERROR_HANDLE = -12;
+        private const int StdOutputHandle = -11;
+        private const int StdErrorHandle = -12;
     }
 }

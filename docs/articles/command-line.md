@@ -43,7 +43,6 @@ Here's a quick list of what they are and what they do.
   >   
   > Do note that this isn't going to work from an elevated terminal.
 
-
 - `--debug`
 
   > Enables the loading of debug information in Mono. The debugging information must be in the portable PDB format,
@@ -54,7 +53,7 @@ Here's a quick list of what they are and what they do.
   > This overrides the config settings `Debug.ShowDebug` and `Debug.ShowCallSource`.
 
 - `--trace`
-  
+
   > Enables trace level messages. By default, they do not ever enter the message queue, and thus cost almost nothing.
   > When this or the config option is used, they are added and logged with the same rules as Debug messages.
   >
@@ -97,11 +96,11 @@ Here's a quick list of what they are and what they do.
   > Overrides the config setting `Debug.CondenseModLogs`.
 
 - `--plugin-logs`
-  
+
   > Causes each plugins' log messages to be written to files in their own folder for ease of debugging.
   >
   > This was the default through 4.1.6, however is now disabled by default.
   >
   > Overrides the config setting `Debug.CreateModLogs`.
-  
+
 ***
