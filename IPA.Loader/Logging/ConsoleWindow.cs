@@ -24,10 +24,8 @@ namespace IPA.Logging
 
         public static void Initialize(int processId, bool alwaysCreateNewConsole = false)
         {
-            bool consoleAttached = true;
-            if (alwaysCreateNewConsole
-                || (!AttachConsole(processId)
-                && Marshal.GetLastWin32Error() != ErrorAccessDenied))
+            bool consoleAttached;
+            if (alwaysCreateNewConsole || !(consoleAttached = AttachConsole(processId)))
             {
                 consoleAttached = AllocConsole();
             }

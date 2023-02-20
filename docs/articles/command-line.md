@@ -40,6 +40,9 @@ Here's a quick list of what they are and what they do.
   >   ```powershell
   >   powershell -c ".\steam -applaunch 620980 --verbose (Get-CimInstance Win32_Process -Filter ProcessId=$PID).ParentProcessId"
   >   ```
+  >   
+  > Do note that this isn't going to work from an elevated terminal.
+
 
 - `--debug`
 
