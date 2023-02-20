@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading;
 
@@ -35,7 +36,7 @@ namespace IPA.Logging
         {
             return new Thread(() =>
             {
-                var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.In);
+                NamedPipeServerStream pipeServer = new(pipeName, PipeDirection.In);
 
                 try
                 {
@@ -67,14 +68,14 @@ namespace IPA.Logging
         {
             return new Thread(() =>
             {
-                var pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.Out);
+                NamedPipeClientStream pipeClient = new(".", pipeName, PipeDirection.Out);
 
                 try
                 {
                     // If the client starts first, blocks the client thread.
                     manualResetEvent.Wait();
                     pipeClient.Connect();
-                    SetStdHandle(stdHandle, pipeClient.SafePipeHandle);
+                    SetStdHandle(stdHandle, pipeClient.SafePipeHandle.DangerousGetHandle());
                     while (pipeClient.IsConnected)
                     {
                         // Keeps the thread alive.
@@ -97,9 +98,10 @@ namespace IPA.Logging
             interceptor!.Write(Encoding.UTF8.GetString(buffer, 0, charsRead));
         }
 
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
         [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-        private static extern bool SetStdHandle(int nStdHandle, SafeHandle hHandle);
+        [ResourceExposure(ResourceScope.Process)]
+        private static extern bool SetStdHandle(int nStdHandle, IntPtr hHandle);
 
         private const int STD_OUTPUT_HANDLE = -11;
         private const int STD_ERROR_HANDLE = -12;
