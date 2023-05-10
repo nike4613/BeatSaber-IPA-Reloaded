@@ -40,6 +40,7 @@ typedef enum {
 
 void (*mono_jit_parse_options)(int argc, char * argv[]);
 void (*mono_debug_init)(MonoDebugFormat format);
+BOOL (*mono_debug_enabled)(void);
 void (*mono_debug_domain_create)(void*);
 
 void *(*mono_jit_init_version)(const char *root_domain_name, const char *runtime_version);
@@ -90,6 +91,7 @@ inline void loadMonoFunctions(HMODULE monoLib)
 	GET_MONO_PROC(mono_assembly_get_image);
 	GET_MONO_PROC(mono_runtime_invoke);
 	GET_MONO_PROC(mono_debug_init);
+	GET_MONO_PROC(mono_debug_enabled);
 	GET_MONO_PROC(mono_jit_init_version);
 	GET_MONO_PROC(mono_jit_parse_options);
 	GET_MONO_PROC(mono_method_desc_new);
