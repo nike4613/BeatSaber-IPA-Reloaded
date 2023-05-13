@@ -7077,6 +7077,19 @@ references:
   fullName.vb: IPA.Utilities.ReflectionUtil.SetProperty(Of T, U)(T, System.String, U)
   nameWithType: ReflectionUtil.SetProperty<T, U>(T, String, U)
   nameWithType.vb: ReflectionUtil.SetProperty(Of T, U)(T, String, U)
+- uid: IPA.Utilities.ReflectionUtil.ToCompilerGeneratedBackingField(System.String)
+  name: ToCompilerGeneratedBackingField(String)
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_ToCompilerGeneratedBackingField_System_String_
+  commentId: M:IPA.Utilities.ReflectionUtil.ToCompilerGeneratedBackingField(System.String)
+  fullName: IPA.Utilities.ReflectionUtil.ToCompilerGeneratedBackingField(System.String)
+  nameWithType: ReflectionUtil.ToCompilerGeneratedBackingField(String)
+- uid: IPA.Utilities.ReflectionUtil.ToCompilerGeneratedBackingField*
+  name: ToCompilerGeneratedBackingField
+  href: api/IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_ToCompilerGeneratedBackingField_
+  commentId: Overload:IPA.Utilities.ReflectionUtil.ToCompilerGeneratedBackingField
+  isSpec: "True"
+  fullName: IPA.Utilities.ReflectionUtil.ToCompilerGeneratedBackingField
+  nameWithType: ReflectionUtil.ToCompilerGeneratedBackingField
 - uid: IPA.Utilities.SwitchToUnityMainThreadAwaitable
   name: SwitchToUnityMainThreadAwaitable
   href: api/IPA.Utilities.SwitchToUnityMainThreadAwaitable.html
