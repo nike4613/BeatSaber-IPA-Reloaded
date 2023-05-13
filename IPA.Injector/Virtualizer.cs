@@ -1,8 +1,10 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace IPA.Injector
@@ -24,6 +26,10 @@ namespace IPA.Injector
             LoadModules();
         }
 
+        public string FileName => file.Name;
+
+        public bool Changed { get; private set; }
+
         private void LoadModules()
         {
             module = ModuleDefinition.ReadModule(file.FullName, new ReaderParameters
@@ -34,9 +40,8 @@ namespace IPA.Injector
             });
         }
         
-        public void Virtualize(AssemblyName selfName, Action beforeChangeCallback = null)
+        public void Virtualize(AssemblyName selfName, Dictionary<string, MethodReference> modifiedMethods)
         {
-            var changed = false;
             var virtualize = true;
             foreach (var r in module.AssemblyReferences)
             {
@@ -46,33 +51,51 @@ namespace IPA.Injector
                     if (r.Version != selfName.Version)
                     {
                         r.Version = selfName.Version;
-                        changed = true;
+                        Changed = true;
                     }
                 }
             }
 
             if (virtualize)
             {
-                changed = true;
+                Changed = true;
                 module.AssemblyReferences.Add(new AssemblyNameReference(selfName.Name, selfName.Version));
 
                 foreach (var type in module.Types)
                 {
-                    VirtualizeType(type);
+                    VirtualizeType(type, modifiedMethods);
                 }
             }
+        }
 
-            if (changed)
+        public void FixReferences(Dictionary<string, MethodReference> modifiedMethods)
+        {
+            foreach (var type in module.Types)
             {
-                beforeChangeCallback?.Invoke();
-                module.Write(file.FullName);
+                foreach (var method in type.Methods)
+                {
+                    if (!method.HasBody) continue;
+
+                    foreach (var instruction in method.Body.Instructions.ToList())
+                    {
+                        if (instruction.OpCode == OpCodes.Callvirt && modifiedMethods.TryGetValue(((MethodReference)instruction.Operand).FullName, out MethodReference value))
+                        {
+                            Changed = true;
+                            instruction.Operand = module.ImportReference(value);
+                        }
+                    }
+                }
             }
         }
+
+        public TypeDefinition GetType(string name) => module.GetType(name);
+
+        public void Write(string path) => module.Write(path);
 
         private TypeReference inModreqRef;
         // private TypeReference outModreqRef;
 
-        private void VirtualizeType(TypeDefinition type)
+        private void VirtualizeType(TypeDefinition type, Dictionary<string, MethodReference> modifiedMethods)
         {
             if(type.IsSealed)
             {
@@ -89,13 +112,10 @@ namespace IPA.Injector
             if (type.IsInterface) return;
             if (type.IsAbstract) return;
 
-            // These two don't seem to work.
-            if (type.Name == "SceneControl" || type.Name == "ConfigUI") return;
-            
             // Take care of sub types
             foreach (var subType in type.NestedTypes)
             {
-                VirtualizeType(subType);
+                VirtualizeType(subType, modifiedMethods);
             }
 
             foreach (var method in type.Methods)
@@ -111,13 +131,20 @@ namespace IPA.Injector
                     && !method.IsGenericInstance
                     && !method.HasOverrides)
                 {
+                    string oldName = null;
+                    bool modified = false;
+
                     // fix In parameters to have the modreqs required by the compiler
                     foreach (var param in method.Parameters)
                     {
                         if (param.IsIn)
                         {
+                            // MethodReference doesn't override Equals or == so we have to use something else
+                            // FullName contains basically all the necessary info
+                            oldName ??= method.FullName;
                             inModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.InAttribute));
                             param.ParameterType = AddModreqIfNotExist(param.ParameterType, inModreqRef);
+                            modified = true;
                         }
                         // Breaks override methods if modreq is applied to `out` parameters
                         //if (param.IsOut)
@@ -133,6 +160,11 @@ namespace IPA.Injector
                     method.IsPrivate = false;
                     method.IsNewSlot = true;
                     method.IsHideBySig = true;
+
+                    if (modified)
+                    {
+                        modifiedMethods.Add(oldName, method);
+                    }
                 }
             }
 

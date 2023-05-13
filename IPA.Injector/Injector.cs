@@ -8,6 +8,7 @@ using IPA.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -244,17 +245,18 @@ namespace IPA.Injector
 
             #region Virtualize game assemblies
             bool isFirst = true;
-            foreach (var name in SelfConfig.GameAssemblies_)
-            {
-                var ascPath = Path.Combine(managedPath, name);
+            var modifiedMethods = new Dictionary<string, MethodReference>();
+            List<VirtualizedModule> modules = SelfConfig.GameAssemblies_.Select(ga => VirtualizedModule.Load(Path.Combine(managedPath, ga))).ToList();
 
+            foreach (var ascModule in modules)
+            {
                 using var execSec = CriticalSection.ExecuteSection();
+                var ascPath = Path.Combine(managedPath, ascModule.FileName);
 
                 try
                 {
-                    Logging.Logger.Injector.Debug($"Virtualizing {name}");
-                    using var ascModule = VirtualizedModule.Load(ascPath);
-                    ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
+                    Logging.Logger.Injector.Debug($"Virtualizing {ascModule.FileName}");
+                    ascModule.Virtualize(cAsmName, modifiedMethods);
                 }
                 catch (Exception e) 
                 {
@@ -270,18 +272,8 @@ namespace IPA.Injector
                     {
                         Logging.Logger.Injector.Debug("Applying anti-yeet patch");
 
-                        using var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
-                        {
-                            ReadWrite = false,
-                            InMemory = true,
-                            ReadingMode = ReadingMode.Immediate
-                        });
-                        var ascModDef = ascAsmDef.MainModule;
-
-                        var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
+                        var deleter = ascModule.GetType("IPAPluginsDirDeleter");
                         deleter.Methods.Clear(); // delete all methods
-
-                        ascAsmDef.Write(ascPath);
 
                         isFirst = false;
                     }
@@ -293,6 +285,36 @@ namespace IPA.Injector
                     }
                 }
 #endif
+            }
+
+            // if a virtualized method has a modreq added to it and it is referenced by
+            // another assembly, we need to update the method reference in the other assembly
+            foreach (var ascModule in modules)
+            {
+                using var execSec = CriticalSection.ExecuteSection();
+                var ascPath = Path.Combine(managedPath, ascModule.FileName);
+
+                try
+                {
+                    Logging.Logger.Injector.Debug($"Fixing references in {ascModule.FileName}");
+                    ascModule.FixReferences(modifiedMethods);
+
+                    if (ascModule.Changed)
+                    {
+                        bkp?.Add(ascPath);
+                        ascModule.Write(ascPath);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.Logger.Injector.Error($"Could not fix references in {ascPath}");
+                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                        Logging.Logger.Injector.Error(e);
+                }
+                finally
+                {
+                    ascModule.Dispose();
+                }
             }
             #endregion
 
