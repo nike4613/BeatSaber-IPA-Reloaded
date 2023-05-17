@@ -33,7 +33,7 @@ namespace IPA.Injector
                 ReadingMode = ReadingMode.Immediate
             });
         }
-        
+
         public void Virtualize(AssemblyName selfName, Action beforeChangeCallback = null)
         {
             var changed = false;
@@ -91,7 +91,7 @@ namespace IPA.Injector
 
             // These two don't seem to work.
             if (type.Name == "SceneControl" || type.Name == "ConfigUI") return;
-            
+
             // Take care of sub types
             foreach (var subType in type.NestedTypes)
             {
@@ -102,7 +102,6 @@ namespace IPA.Injector
             {
                 if (method.IsManaged
                     && method.IsIL
-                    && !method.IsStatic
                     && (!method.IsVirtual || method.IsFinal)
                     && !method.IsAbstract
                     && !method.IsAddOn
@@ -111,28 +110,32 @@ namespace IPA.Injector
                     && !method.IsGenericInstance
                     && !method.HasOverrides)
                 {
-                    // fix In parameters to have the modreqs required by the compiler
-                    foreach (var param in method.Parameters)
+                    if (!method.IsStatic)
                     {
-                        if (param.IsIn)
+                        // fix In parameters to have the modreqs required by the compiler
+                        foreach (var param in method.Parameters)
                         {
-                            inModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.InAttribute));
-                            param.ParameterType = AddModreqIfNotExist(param.ParameterType, inModreqRef);
+                            if (param.IsIn)
+                            {
+                                inModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.InAttribute));
+                                param.ParameterType = AddModreqIfNotExist(param.ParameterType, inModreqRef);
+                            }
+                            // Breaks override methods if modreq is applied to `out` parameters
+                            //if (param.IsOut)
+                            //{
+                            //    outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
+                            //    param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
+                            //}
                         }
-                        // Breaks override methods if modreq is applied to `out` parameters
-                        //if (param.IsOut)
-                        //{
-                        //    outModreqRef ??= module.ImportReference(typeof(System.Runtime.InteropServices.OutAttribute));
-                        //    param.ParameterType = AddModreqIfNotExist(param.ParameterType, outModreqRef);
-                        //}
+
+                        method.IsVirtual = true;
+                        method.IsFinal = false;
+                        method.IsNewSlot = true;
+                        method.IsHideBySig = true;
                     }
 
-                    method.IsVirtual = true;
-                    method.IsFinal = false;
                     method.IsPublic = true;
                     method.IsPrivate = false;
-                    method.IsNewSlot = true;
-                    method.IsHideBySig = true;
                 }
             }
 
