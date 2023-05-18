@@ -111,6 +111,13 @@ void unhandledException(void* exc, void* data)
 // We use this since it will always be called once to initialize Mono's JIT
 void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_version)
 {
+	const BOOL debugger_already_initialized = mono_debug_enabled();
+
+	if(debugger_already_initialized)
+	{
+		LOG("Debugger was already initialized\n");
+	}
+	
 	// Call the original mono_jit_init_version to initialize the Unity Root Domain
 	if (debug) {
 		char* opts[1];
@@ -118,14 +125,14 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 		ownMonoJitParseOptions(0, opts);
 	}
 #ifdef WIN32
-    if (debug_info) {
+    if (debug_info && !debugger_already_initialized) {
         mono_debug_init(MONO_DEBUG_FORMAT_MONO);
     }
 #endif
 
 	void *domain = mono_jit_init_version(root_domain_name, runtime_version);
 
-	if (debug_info) {
+	if (debug_info && !debugger_already_initialized) {
 #ifdef WIN64
         mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 #endif
@@ -194,8 +201,10 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 
     wchar_t* dll_path_w; // self path
     size_t dll_path_len = get_module_path((HINSTANCE)&__ImageBase, &dll_path_w, NULL, 0);
-    char* self_dll_path = memalloc(dll_path_len + 1);
-    WideCharToMultiByte(CP_UTF8, 0, dll_path_w, -1, self_dll_path, dll_path_len + 1, NULL, NULL);
+    size_t multibyte_path_len = WideCharToMultiByte(CP_UTF8, 0, dll_path_w, dll_path_len, NULL, 0, NULL, NULL);
+    char* self_dll_path = memalloc(multibyte_path_len + 1);
+    WideCharToMultiByte(CP_UTF8, 0, dll_path_w, dll_path_len, self_dll_path, multibyte_path_len + 1, NULL, NULL);
+    self_dll_path[multibyte_path_len] = 0;
 
     mono_dllmap_insert(NULL, "i:bsipa-doorstop", NULL, self_dll_path, NULL); // remap `bsipa-doorstop` to this assembly
 

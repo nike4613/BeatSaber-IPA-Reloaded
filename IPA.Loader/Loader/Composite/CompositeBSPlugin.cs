@@ -27,7 +27,7 @@ namespace IPA.Loader.Composite
                 }
                 catch (Exception ex)
                 {
-                    Logger.log.Error($"{plugin.Metadata.Name} {method}: {ex}");
+                    Logger.Default.Error($"{plugin.Metadata.Name} {method}: {ex}");
                 }
             }
         }

@@ -1,6 +1,8 @@
-﻿using IPA.Config.Stores.Converters;
+﻿#nullable enable
+using IPA.Config.Stores.Converters;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace IPA.Config.Stores.Attributes
@@ -37,23 +39,25 @@ namespace IPA.Config.Stores.Attributes
         /// <summary>
         /// Gets whether or not to use the default converter for the member type instead of the specified type.
         /// </summary>
+        [MemberNotNullWhen(false, nameof(ConverterType))]
         public bool UseDefaultConverterForType { get; }
 
         /// <summary>
         /// Gets the type of the converter to use.
         /// </summary>
-        public Type ConverterType { get; }
+        public Type? ConverterType { get; }
 
         /// <summary>
         /// Gets the target type of the converter if it is avaliable at instantiation time, otherwise
         /// <see langword="null"/>.
         /// </summary>
-        public Type ConverterTargetType { get; }
+        public Type? ConverterTargetType { get; }
 
         /// <summary>
         /// Gets whether or not this converter is a generic <see cref="ValueConverter{T}"/>.
         /// </summary>
-        public bool IsGenericConverter => ConverterTargetType != null;
+        [MemberNotNullWhen(true, nameof(ConverterTargetType))]
+        public bool IsGenericConverter => ConverterTargetType is not null;
 
         /// <summary>
         /// Creates a new <see cref="UseConverterAttribute"/> specifying to use the default converter type for the target member.
@@ -67,11 +71,17 @@ namespace IPA.Config.Stores.Attributes
         /// <param name="converterType">the type to assign to <see cref="ConverterType"/></param>
         public UseConverterAttribute(Type converterType)
         {
+            if (converterType is null)
+                throw new ArgumentNullException(nameof(converterType));
+
             UseDefaultConverterForType = false;
             ConverterType = converterType;
 
+            if (converterType.IsValueType)
+                throw new ArgumentException("Type is not a value converter!");
+
             var baseT = ConverterType.BaseType;
-            while (baseT != null && baseT != typeof(object) &&
+            while (baseT != typeof(object) &&
                 (!baseT.IsGenericType || baseT.GetGenericTypeDefinition() != typeof(ValueConverter<>)))
                 baseT = baseT.BaseType;
             if (baseT == typeof(object)) ConverterTargetType = null;

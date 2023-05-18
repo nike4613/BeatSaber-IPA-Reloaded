@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
 using IPA.Logging;
 using System;

@@ -130,6 +130,19 @@ namespace IPA.Utilities
             return copy;
         }
 
+        /// <summary>
+        /// Converts the property name to the one of the compiler-generated backing field.
+        /// This can be used for the field-based reflection when you want to set the value of a get-only property
+        /// </summary>
+        /// <param name="propertyName">Name of the property</param>
+        /// <returns>Name of the backing field</returns>
+        /// <remarks>
+        /// Only works for properties with compiler-generated backing fields.
+        /// This is only a simple method and doesn't have any guarantees to work 100% of the time across different compilers/runtimes.
+        /// See <a href="https://github.com/dotnet/roslyn/blob/1497e87d967c5b7797edb5f782131508607139e5/src/Compilers/CSharp/Portable/Symbols/Synthesized/GeneratedNames.cs#L24-L28">this link</a> for more info.
+        /// </remarks>
+        public static string ToCompilerGeneratedBackingField(string propertyName) => $"<{propertyName}>k__BackingField";
+
         private static void CopyForType(Type type, Component source, Component destination)
         {
             FieldInfo[] myObjectFields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);

@@ -1,15 +1,20 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿#nullable enable
+using System;
+using System.Runtime.Remoting.Messaging;
+using Hive.Versioning;
 using Newtonsoft.Json;
-using SemVer;
 
 namespace IPA.JsonConverters
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    internal class SemverRangeConverter : JsonConverter<Range>
+    internal class SemverRangeConverter : JsonConverter<VersionRange?>
     {
-        public override Range ReadJson(JsonReader reader, Type objectType, Range existingValue, bool hasExistingValue, JsonSerializer serializer) => new Range(reader.Value as string);
+        public override VersionRange? ReadJson(JsonReader reader, Type objectType, VersionRange? existingValue, bool hasExistingValue, JsonSerializer serializer)
+            => reader.Value is not string s ? existingValue : new VersionRange(s);
 
-        public override void WriteJson(JsonWriter writer, Range value, JsonSerializer serializer) => writer.WriteValue(value.ToString());
+        public override void WriteJson(JsonWriter writer, VersionRange? value, JsonSerializer serializer)
+        {
+            if (value is null) writer.WriteNull();
+            else writer.WriteValue(value.ToString());
+        }
     }
 }

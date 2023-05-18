@@ -1,10 +1,12 @@
-﻿using IPA.Config.Stores.Attributes;
+﻿#nullable enable
+using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
 using IPA.Logging;
 using IPA.Utilities;
 using IPA.Utilities.Async;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,23 +22,25 @@ namespace IPA.Config.Stores
     {
         private class SerializedMemberInfo
         {
-            public string Name;
-            public MemberInfo Member;
-            public Type Type;
+            public string Name = null!;
+            public MemberInfo Member = null!;
+            public Type Type = null!;
             public bool AllowNull;
             public bool IsVirtual;
             public bool IsField;
-            public bool IsNullable; // signifies whether this is a Nullable<T>
+            [MemberNotNullWhen(true, nameof(NullableWrappedType))]
+            public bool IsNullable { get; set; } // signifies whether this is a Nullable<T>
 
-            public bool HasConverter;
-            public bool IsGenericConverter; // used so we can call directly to the generic version if it is
-            public Type Converter;
-            public Type ConverterBase;
-            public Type ConverterTarget;
-            public FieldInfo ConverterField;
+            [MemberNotNullWhen(true, nameof(Converter), nameof(ConverterBase))]
+            public bool HasConverter { get; set; }
+            public bool IsGenericConverter { get; set; } // used so we can call directly to the generic version if it is
+            public Type? Converter;
+            public Type? ConverterBase;
+            public Type? ConverterTarget;
+            public FieldInfo? ConverterField;
 
             // invalid for objects with IsNullable false
-            public Type NullableWrappedType => Nullable.GetUnderlyingType(Type);
+            public Type? NullableWrappedType => Nullable.GetUnderlyingType(Type);
             // invalid for objects with IsNullable false
             public PropertyInfo Nullable_HasValue => Type.GetProperty(nameof(Nullable<int>.HasValue));
             // invalid for objects with IsNullable false
@@ -73,25 +77,27 @@ namespace IPA.Config.Stores
             {
                 if (converterAttr.UseDefaultConverterForType)
                     converterAttr = new UseConverterAttribute(Converter.GetDefaultConverterType(member.Type));
+                if (converterAttr.UseDefaultConverterForType)
+                    throw new InvalidOperationException("How did we get here?"); 
 
                 member.Converter = converterAttr.ConverterType;
                 member.IsGenericConverter = converterAttr.IsGenericConverter;
 
                 if (member.Converter.GetConstructor(Type.EmptyTypes) == null)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not default-constructible");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not default-constructible");
                     goto endConverterAttr; // is there a better control flow structure to do this?
                 }
 
                 if (member.Converter.ContainsGenericParameters)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that has unfilled type parameters");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that has unfilled type parameters");
                     goto endConverterAttr;
                 }
 
                 if (member.Converter.IsInterface || member.Converter.IsAbstract)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not constructible");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not constructible");
                     goto endConverterAttr;
                 }
 
@@ -100,18 +106,18 @@ namespace IPA.Config.Stores
                 {
                     try
                     {
-                        var conv = Activator.CreateInstance(converterAttr.ConverterType) as IValueConverter;
+                        var conv = (IValueConverter)Activator.CreateInstance(converterAttr.ConverterType);
                         targetType = conv.Type;
                     }
                     catch
                     {
-                        Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter who's target type could not be determined");
+                        Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter who's target type could not be determined");
                         goto endConverterAttr;
                     }
                 }
                 if (targetType != member.Type)
                 {
-                    Logger.config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not of the member's type");
+                    Logger.Config.Warn($"{type.FullName}'s member {member.Member.Name} requests a converter that is not of the member's type");
                     goto endConverterAttr;
                 }
 
@@ -128,8 +134,7 @@ namespace IPA.Config.Stores
             return true;
         }
 
-        private static readonly SingleCreationValueCache<Type, SerializedMemberInfo[]> objectStructureCache 
-            = new SingleCreationValueCache<Type, SerializedMemberInfo[]>();
+        private static readonly SingleCreationValueCache<Type, SerializedMemberInfo[]> objectStructureCache = new();
 
         private static IEnumerable<SerializedMemberInfo> ReadObjectMembers(Type type)
             => objectStructureCache.GetOrAdd(type, t => ReadObjectMembersInternal(type).ToArray());

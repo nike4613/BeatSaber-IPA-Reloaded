@@ -1,4 +1,6 @@
-﻿using IPA.Config;
+﻿#nullable enable
+using IPA.AntiMalware;
+using IPA.Config;
 using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
@@ -29,8 +31,8 @@ namespace IPA.Injector
     // ReSharper disable once UnusedMember.Global
     internal static class Injector
     {
-        private static Task pluginAsyncLoadTask;
-        private static Task permissionFixTask;
+        private static Task? pluginAsyncLoadTask;
+        private static Task? permissionFixTask;
         //private static string otherNewtonsoftJson = null;
 
         // ReSharper disable once UnusedParameter.Global
@@ -40,23 +42,13 @@ namespace IPA.Injector
           // and since this class doesn't have any static fields that
           // aren't defined in mscorlib, we can control exactly what
           // gets loaded.
-
+            _ = args;
             try
             {
                 if (Environment.GetCommandLineArgs().Contains("--verbose"))
                     WinConsole.Initialize();
 
                 SetupLibraryLoading();
-
-                /*var otherNewtonsoft = Path.Combine(
-                    Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First(),
-                    "Managed",
-                    "Newtonsoft.Json.dll");
-                if (File.Exists(otherNewtonsoft))
-                { // this game ships its own Newtonsoft; force load ours and flag loading theirs
-                    LibLoader.LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"));
-                    otherNewtonsoftJson = otherNewtonsoft;
-                }*/
 
                 EnsureDirectories();
 
@@ -71,7 +63,7 @@ namespace IPA.Injector
                  */
                 #endregion
 
-                log.Debug("Initializing logger");
+                Default.Debug("Initializing logger");
 
                 SelfConfig.ReadCommandLine(Environment.GetCommandLineArgs());
                 SelfConfig.Load();
@@ -79,23 +71,27 @@ namespace IPA.Injector
 
                 if (AntiPiracy.IsInvalid(Environment.CurrentDirectory))
                 {
-                    log.Error("Invalid installation; please buy the game to run BSIPA.");
+                    Default.Error("Invalid installation; please buy the game to run BSIPA.");
 
                     return;
                 }
 
                 CriticalSection.Configure();
 
-                injector.Debug("Prepping bootstrapper");
+                Logging.Logger.Injector.Debug("Prepping bootstrapper");
+
+                // make sure to load the game version and check boundaries before installing the bootstrap, because that uses the game assemblies property
+                GameVersionEarly.Load();
+                SelfConfig.Instance.CheckVersionBoundary();
 
                 // updates backup
                 InstallBootstrapPatch();
 
-                GameVersionEarly.Load();
+                AntiMalwareEngine.Initialize();
 
                 Updates.InstallPendingUpdates();
 
-                LibLoader.SetupAssemblyFilenames(true);
+                Loader.LibLoader.SetupAssemblyFilenames(true);
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
@@ -110,16 +106,16 @@ namespace IPA.Injector
         {
             string path;
             if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "UserData")))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
             if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "Plugins")))
-                Directory.CreateDirectory(path);
+                _ = Directory.CreateDirectory(path);
         }
 
         private static void SetupLibraryLoading()
         {
             if (loadingDone) return;
             loadingDone = true;
-            LibLoader.Configure();
+            Loader.LibLoader.Configure();
         }
 
         private static void InstallHarmonyProtections()
@@ -137,13 +133,13 @@ namespace IPA.Injector
             var dataDir = new DirectoryInfo(managedPath).Parent.Name;
             var gameName = dataDir.Substring(0, dataDir.Length - 5);
 
-            injector.Debug("Finding backup");
+            Logging.Logger.Injector.Debug("Finding backup");
             var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", gameName);
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
-                injector.Warn("No backup found! Was BSIPA installed using the installer?");
+                Logging.Logger.Injector.Warn("No backup found! Was BSIPA installed using the installer?");
 
-            injector.Debug("Ensuring patch on UnityEngine.CoreModule exists");
+            Logging.Logger.Injector.Debug("Ensuring patch on UnityEngine.CoreModule exists");
 
             #region Insert patch into UnityEngine.CoreModule.dll
 
@@ -179,12 +175,12 @@ namespace IPA.Injector
 
                 if (application == null)
                 {
-                    injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Camera!"
+                    Logging.Logger.Injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Camera!"
                         + "Nothing to patch to get ourselves into the Unity run cycle!");
                     goto endPatchCoreModule;
                 }
 
-                MethodDefinition cctor = null;
+                MethodDefinition? cctor = null;
                 foreach (var m in application.Methods)
                     if (m.IsRuntimeSpecialName && m.Name == ".cctor")
                         cctor = m;
@@ -244,7 +240,7 @@ namespace IPA.Injector
             endPatchCoreModule:
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
-            injector.Debug("Ensuring game assemblies are virtualized");
+            Logging.Logger.Injector.Debug("Ensuring game assemblies are virtualized");
 
             #region Virtualize game assemblies
             bool isFirst = true;
@@ -256,15 +252,15 @@ namespace IPA.Injector
 
                 try
                 {
-                    injector.Debug($"Virtualizing {name}");
+                    Logging.Logger.Injector.Debug($"Virtualizing {name}");
                     using var ascModule = VirtualizedModule.Load(ascPath);
                     ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
                 }
                 catch (Exception e) 
                 {
-                    injector.Error($"Could not virtualize {ascPath}");
+                    Logging.Logger.Injector.Error($"Could not virtualize {ascPath}");
                     if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                        injector.Error(e);
+                        Logging.Logger.Injector.Error(e);
                 }
 
 #if BeatSaber
@@ -272,7 +268,7 @@ namespace IPA.Injector
                 {
                     try
                     {
-                        injector.Debug("Applying anti-yeet patch");
+                        Logging.Logger.Injector.Debug("Applying anti-yeet patch");
 
                         using var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
                         {
@@ -291,9 +287,9 @@ namespace IPA.Injector
                     }
                     catch (Exception e)
                     {
-                        injector.Warn($"Could not apply anti-yeet patch to {ascPath}");
+                        Logging.Logger.Injector.Warn($"Could not apply anti-yeet patch to {ascPath}");
                         if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                            injector.Warn(e);
+                            Logging.Logger.Injector.Warn(e);
                     }
                 }
 #endif
@@ -301,7 +297,7 @@ namespace IPA.Injector
             #endregion
 
             sw.Stop();
-            injector.Info($"Installing bootstrapper took {sw.Elapsed}");
+            Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");
         }
 
         private static bool bootstrapped;
@@ -311,16 +307,14 @@ namespace IPA.Injector
             if (bootstrapped) return;
             bootstrapped = true;
 
-            /*if (otherNewtonsoftJson != null)
-                Assembly.LoadFrom(otherNewtonsoftJson);*/
-
-
             Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
             {
                 var level = UnityLogRedirector.LogTypeToLevel(type);
                 UnityLogProvider.UnityLogger.Log(level, $"{condition}");
                 UnityLogProvider.UnityLogger.Log(level, $"{stackTrace}");
             };
+
+            StdoutInterceptor.EnsureHarmonyLogging();
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
@@ -336,12 +330,12 @@ namespace IPA.Injector
         private static void Bootstrapper_Destroyed()
         {
             // wait for plugins to finish loading
-            pluginAsyncLoadTask.Wait();
-            permissionFixTask.Wait();
+            pluginAsyncLoadTask?.Wait();
+            permissionFixTask?.Wait();
 
-            log.Debug("Plugins loaded");
-            log.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
-            PluginComponent.Create();
+            Default.Debug("Plugins loaded");
+            Default.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
+            _ = PluginComponent.Create();
         }
     }
 }

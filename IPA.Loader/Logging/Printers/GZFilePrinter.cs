@@ -1,5 +1,7 @@
-﻿using Ionic.Zlib;
+﻿#nullable enable
+using Ionic.Zlib;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -29,17 +31,17 @@ namespace IPA.Logging.Printers
         private const RegexOptions reOptions = RegexOptions.None;
 #endif
 
-        internal static Regex removeControlCodes = new Regex("\x1b\\[\\d+m", reOptions);
+        internal static Regex removeControlCodes = new("\x1b\\[\\d+m", reOptions);
 
-        private FileInfo fileInfo;
+        private FileInfo? fileInfo;
 
         /// <summary>
         /// The <see cref="StreamWriter"/> that writes to the GZip file.
         /// </summary>
         /// <value>the writer to the underlying filestream</value>
-        protected StreamWriter FileWriter;
+        protected StreamWriter? FileWriter;
 
-        private FileStream fstream;
+        private FileStream? fstream;
 
         /// <summary>
         /// Gets the <see cref="FileInfo"/> for the file to write to.
@@ -49,6 +51,7 @@ namespace IPA.Logging.Printers
 
         private const string latestFormat = "_latest{0}";
 
+        [MemberNotNull(nameof(fileInfo))]
         private void InitLog()
         {
             try
@@ -76,35 +79,44 @@ namespace IPA.Logging.Printers
                         if (!CreateHardLink(symlink.FullName, fileInfo.FullName, IntPtr.Zero))
                         {
                             var error = Marshal.GetLastWin32Error();
-                            Logger.log.Error($"Hardlink creation failed ({error})");
+                            Logger.Default.Error($"Hardlink creation failed ({error})");
                         }
                     }
                     catch (Exception e)
                     {
-                        Logger.log.Error("Error creating latest hardlink!");
-                        Logger.log.Error(e);
+                        Logger.Default.Error("Error creating latest hardlink!");
+                        Logger.Default.Error(e);
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.log.Error("Error initializing log!");
-                Logger.log.Error(e);
+                Logger.Default.Error("Error initializing log!");
+                Logger.Default.Error(e);
+                throw;
             }
         }
 
         private static async void CompressOldLog(FileInfo file)
         {
-            Logger.log.Debug($"Compressing log file {file}");
+            try
+            {
+                Logger.Default.Debug($"Compressing log file {file}");
 
-            var newFile = new FileInfo(file.FullName + ".gz");
+                var newFile = new FileInfo(file.FullName + ".gz");
 
-            using (var istream = file.OpenRead())
-            using (var ostream = newFile.Create())
-            using (var gz = new GZipStream(ostream, CompressionMode.Compress, CompressionLevel.BestCompression, false))
-                await istream.CopyToAsync(gz);
+                using (var istream = file.OpenRead())
+                using (var ostream = newFile.Create())
+                using (var gz = new GZipStream(ostream, CompressionMode.Compress, CompressionLevel.BestCompression, false))
+                    await istream.CopyToAsync(gz).ConfigureAwait(false);
 
-            file.Delete();
+                file.Delete();
+            }
+            catch (Exception e)
+            {
+                Logger.Default.Error("Error compressing old log file:");
+                Logger.Default.Error(e);
+            }
         }
 
         /// <summary>
@@ -123,10 +135,10 @@ namespace IPA.Logging.Printers
         /// </summary>
         public sealed override void EndPrint()
         {
-            FileWriter.Flush();
-            fstream.Flush();
-            FileWriter.Dispose();
-            fstream.Dispose();
+            FileWriter?.Flush();
+            fstream?.Flush();
+            FileWriter?.Dispose();
+            fstream?.Dispose();
             FileWriter = null;
             fstream = null;
         }
@@ -146,12 +158,12 @@ namespace IPA.Logging.Printers
         {
             if (disposing)
             {
-                FileWriter.Flush();
-                fstream.Flush();
-                FileWriter.Close();
-                fstream.Close();
-                FileWriter.Dispose();
-                fstream.Dispose();
+                FileWriter?.Flush();
+                fstream?.Flush();
+                FileWriter?.Close();
+                fstream?.Close();
+                FileWriter?.Dispose();
+                fstream?.Dispose();
             }
         }
     }

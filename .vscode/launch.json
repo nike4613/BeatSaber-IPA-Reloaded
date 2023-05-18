@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to BSIPA",
+      "type": "mono",
+      "request": "attach",
+      "address": "localhost",
+      "port": 10000
+    }
+  ]
+}

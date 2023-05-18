@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Logging;
 using System;
 using System.Collections;
@@ -43,6 +44,7 @@ namespace IPA.Config.Stores
         private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, LocalAllocator GetLocal, 
             Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
+            if (!member.IsNullable) throw new InvalidOperationException("EmitDeserializeNullable called for non-nullable!");
             thisarg ??= il => il.Emit(OpCodes.Ldarg_0);
             parentobj ??= thisarg;
             EmitDeserializeValue(il, member, member.NullableWrappedType, expected, GetLocal, thisarg, parentobj);
@@ -100,7 +102,7 @@ namespace IPA.Config.Stores
                     var structure = ReadObjectMembers(targetType);
                     if (!structure.Any())
                     {
-                        Logger.config.Warn($"Custom value type {targetType.FullName} (when compiling serialization of" +
+                        Logger.Config.Warn($"Custom value type {targetType.FullName} (when compiling serialization of" +
                             $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
                         il.Emit(OpCodes.Pop);
                         il.Emit(OpCodes.Ldloca, resultLocal);
@@ -121,7 +123,7 @@ namespace IPA.Config.Stores
             }
             else
             {
-                Logger.config.Warn($"Implicit conversions to {expected} are not currently implemented");
+                Logger.Config.Warn($"Implicit conversions to {expected} are not currently implemented");
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }
@@ -161,6 +163,9 @@ namespace IPA.Config.Stores
         private static void EmitDeserializeConverter(ILGenerator il, SerializedMemberInfo member, Label nextLabel, LocalAllocator GetLocal,
             Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
+            if (!member.HasConverter)
+                throw new InvalidOperationException("EmitDeserializeConverter called for member without converter");
+
             using var stlocal = GetLocal.Allocate(typeof(Value));
             using var valLocal = GetLocal.Allocate(member.Type);
 

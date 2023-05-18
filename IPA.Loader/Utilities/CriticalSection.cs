@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#nullable enable
+using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using IPA.Logging;
 
 namespace IPA.Utilities
@@ -16,14 +13,14 @@ namespace IPA.Utilities
 
         internal static void Configure()
         {
-            Logger.log.Debug("Configuring exit handlers");
+            Logger.Default.Debug("Configuring exit handlers");
 
             ResetExitHandlers();
         }
 
-        private static void Reset(object sender, EventArgs e)
+        private static void Reset(object? sender, EventArgs? e)
         {
-            Win32.SetConsoleCtrlHandler(registeredHandler, false);
+            _ = Win32.SetConsoleCtrlHandler(registeredHandler, false);
             WinHttp.SetPeekMessageHook(null);
         }
 
@@ -32,8 +29,8 @@ namespace IPA.Utilities
         private static readonly Win32.ConsoleCtrlDelegate registeredHandler = HandleExit;
         internal static void ResetExitHandlers()
         {
-            Win32.SetConsoleCtrlHandler(registeredHandler, false);
-            Win32.SetConsoleCtrlHandler(registeredHandler, true);
+            _ = Win32.SetConsoleCtrlHandler(registeredHandler, false);
+            _ = Win32.SetConsoleCtrlHandler(registeredHandler, true);
             WinHttp.SetPeekMessageHook(PeekMessageHook);
 
             AppDomain.CurrentDomain.ProcessExit -= OnProcessExit;
@@ -60,14 +57,14 @@ namespace IPA.Utilities
             [DllImport("bsipa-doorstop")]
             public static extern void SetPeekMessageHook(
                 [MarshalAs(UnmanagedType.FunctionPtr)]
-                PeekMessageHook hook);
+                PeekMessageHook? hook);
 
             [DllImport("bsipa-doorstop")]
             public static extern void SetIgnoreUnhandledExceptions(
                 [MarshalAs(UnmanagedType.Bool)] bool ignore);
         }
 
-        private static Win32.ConsoleCtrlDelegate _handler = null;
+        private static Win32.ConsoleCtrlDelegate? _handler = null;
         private static volatile bool isInExecuteSection = false;
 
         // returns true to continue looping and calling PeekMessage

@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using System;
 
 namespace IPA.Config.Stores.Converters
@@ -12,24 +13,26 @@ namespace IPA.Config.Stores.Converters
     {
         private interface IImpl
         {
-            T FromValue(Value value, object parent);
-            Value ToValue(T obj, object parent);
+            T? FromValue(Value? value, object parent);
+            Value? ToValue(T? obj, object parent);
         }
         private class Impl<U> : IImpl where U : class, GeneratedStoreImpl.IGeneratedStore<T>, T
         {
             private static readonly GeneratedStoreImpl.GeneratedStoreCreator creator = GeneratedStoreImpl.GetCreator(typeof(T));
-            private static U Create(GeneratedStoreImpl.IGeneratedStore parent)
-                => creator(parent) as U;
+            private static U Create(GeneratedStoreImpl.IGeneratedStore? parent)
+                => (U)creator(parent);
 
-            public T FromValue(Value value, object parent)
+            public T? FromValue(Value? value, object parent)
             { // lots of casting here, but it works i promise (probably) (parent can be a non-IGeneratedStore, however it won't necessarily behave then)
+                if (value is null) return null;
                 var obj = Create(parent as GeneratedStoreImpl.IGeneratedStore);
                 obj.Deserialize(value);
                 return obj;
             }
 
-            public Value ToValue(T obj, object parent)
+            public Value? ToValue(T? obj, object parent)
             {
+                if (obj is null) return null;
                 if (obj is GeneratedStoreImpl.IGeneratedStore store)
                     return store.Serialize();
                 else
@@ -51,7 +54,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that will own the deserialized value</param>
         /// <returns>the deserialized value</returns>
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public static T Deserialize(Value value, object parent)
+        public static T? Deserialize(Value? value, object parent)
             => impl.FromValue(value, parent);
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that owns <paramref name="obj"/></param>
         /// <returns>the <see cref="Value"/> tree that represents <paramref name="obj"/></returns>
         /// <seealso cref="ValueConverter{T}.ToValue(T, object)"/>
-        public static Value Serialize(T obj, object parent)
+        public static Value? Serialize(T? obj, object parent)
             => impl.ToValue(obj, parent);
 
         /// <summary>
@@ -71,7 +74,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that will own the deserialized value</param>
         /// <returns>the deserialized value</returns>
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public override T FromValue(Value value, object parent)
+        public override T? FromValue(Value? value, object parent)
             => Deserialize(value, parent);
 
         /// <summary>
@@ -81,7 +84,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that owns <paramref name="obj"/></param>
         /// <returns>the <see cref="Value"/> tree that represents <paramref name="obj"/></returns>
         /// <seealso cref="ValueConverter{T}.ToValue(T, object)"/>
-        public override Value ToValue(T obj, object parent)
+        public override Value? ToValue(T? obj, object parent)
             => Serialize(obj, parent);
     }
 
@@ -104,7 +107,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that will own the deserialized value</param>
         /// <returns>the deserialized value</returns>
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public static T Deserialize(Value value, object parent)
+        public static T Deserialize(Value? value, object parent)
             => deserialize(value, parent);
 
         /// <summary>
@@ -123,7 +126,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that will own the deserialized value</param>
         /// <returns>the deserialized value</returns>
         /// <seealso cref="ValueConverter{T}.FromValue(Value, object)"/>
-        public override T FromValue(Value value, object parent)
+        public override T FromValue(Value? value, object parent)
             => Deserialize(value, parent);
 
         /// <summary>
@@ -133,7 +136,7 @@ namespace IPA.Config.Stores.Converters
         /// <param name="parent">the parent object that owns <paramref name="obj"/></param>
         /// <returns>the <see cref="Value"/> tree that represents <paramref name="obj"/></returns>
         /// <seealso cref="ValueConverter{T}.ToValue(T, object)"/>
-        public override Value ToValue(T obj, object parent)
+        public override Value? ToValue(T obj, object parent)
             => Serialize(obj);
     }
 

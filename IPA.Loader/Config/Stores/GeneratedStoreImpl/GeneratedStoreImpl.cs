@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
 using IPA.Logging;
 using System;
@@ -36,13 +37,12 @@ namespace IPA.Config.Stores
         private static readonly MethodInfo CreateGParent = 
             typeof(GeneratedStoreImpl).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static, null, 
                                              CallingConventions.Any, new[] { typeof(IGeneratedStore) }, Array.Empty<ParameterModifier>());
-        internal static T Create<T>(IGeneratedStore parent) where T : class => (T)Create(typeof(T), parent);
+        internal static T Create<T>(IGeneratedStore? parent) where T : class => (T)Create(typeof(T), parent);
 
-        private static IConfigStore Create(Type type, IGeneratedStore parent)
+        private static IConfigStore Create(Type type, IGeneratedStore? parent)
             => GetCreator(type)(parent);
 
-        private static readonly SingleCreationValueCache<Type, (GeneratedStoreCreator ctor, Type type)> generatedCreators
-            = new SingleCreationValueCache<Type, (GeneratedStoreCreator ctor, Type type)>();
+        private static readonly SingleCreationValueCache<Type, (GeneratedStoreCreator ctor, Type type)> generatedCreators = new();
 
         private static (GeneratedStoreCreator ctor, Type type) GetCreatorAndGeneratedType(Type t)
             => generatedCreators.GetOrAdd(t, MakeCreator);
@@ -55,7 +55,7 @@ namespace IPA.Config.Stores
 
         internal const string GeneratedAssemblyName = "IPA.Config.Generated";
 
-        private static AssemblyBuilder assembly = null;
+        private static AssemblyBuilder? assembly;
         private static AssemblyBuilder Assembly
         {
             get
@@ -75,7 +75,7 @@ namespace IPA.Config.Stores
             Assembly.Save(file);
         }
 
-        private static ModuleBuilder module = null;
+        private static ModuleBuilder? module;
         private static ModuleBuilder Module
         {
             get
@@ -88,7 +88,7 @@ namespace IPA.Config.Stores
         }
 
         // TODO: does this need to be a SingleCreationValueCache or similar?
-        private static readonly Dictionary<Type, Dictionary<Type, FieldInfo>> TypeRequiredConverters = new Dictionary<Type, Dictionary<Type, FieldInfo>>();
+        private static readonly Dictionary<Type, Dictionary<Type, FieldInfo>> TypeRequiredConverters = new();
         private static void CreateAndInitializeConvertersFor(Type type, IEnumerable<SerializedMemberInfo> structure)
         {
             if (!TypeRequiredConverters.TryGetValue(type, out var converters))
@@ -96,7 +96,8 @@ namespace IPA.Config.Stores
                 var converterFieldType = Module.DefineType($"{type.FullName}<Converters>",
                     TypeAttributes.Public | TypeAttributes.Sealed | TypeAttributes.Abstract | TypeAttributes.AnsiClass); // a static class
 
-                var uniqueConverterTypes = structure.Where(m => m.HasConverter).Select(m => m.Converter).Distinct().ToArray();
+                var uniqueConverterTypes = structure.Where(m => m.HasConverter)
+                    .Select(m => m.Converter).NonNull().Distinct().ToArray();
                 converters = new Dictionary<Type, FieldInfo>(uniqueConverterTypes.Length);
 
                 foreach (var convType in uniqueConverterTypes)
@@ -122,11 +123,14 @@ namespace IPA.Config.Stores
 
                 TypeRequiredConverters.Add(type, converters);
 
-                converterFieldType.CreateType();
+                _ = converterFieldType.CreateType();
             }
 
-            foreach (var member in structure.Where(m => m.HasConverter))
+            foreach (var member in structure)
+            {
+                if (!member.HasConverter) continue;
                 member.ConverterField = converters[member.Converter];
+            }
         }
     }
 }

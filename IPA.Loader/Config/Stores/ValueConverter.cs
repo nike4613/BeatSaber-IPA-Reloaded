@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using System;
 
 namespace IPA.Config.Stores
@@ -31,14 +32,14 @@ namespace IPA.Config.Stores
         /// <param name="obj">the object to convert</param>
         /// <param name="parent">the owning object of <paramref name="obj"/></param>
         /// <returns>a representation of <paramref name="obj"/> as a <see cref="Value"/> structure</returns>
-        Value ToValue(object obj, object parent);
+        Value? ToValue(object? obj, object parent);
         /// <summary>
         /// Converts the given <see cref="Value"/> to the object type handled by this converter.
         /// </summary>
         /// <param name="value">the <see cref="Value"/> to deserialize</param>
         /// <param name="parent">the object that will own the result</param>
         /// <returns>the deserialized object</returns>
-        object FromValue(Value value, object parent);
+        object? FromValue(Value? value, object parent);
         /// <summary>
         /// Gets the type that this <see cref="IValueConverter"/> handles.
         /// </summary>
@@ -59,7 +60,7 @@ namespace IPA.Config.Stores
         /// <param name="parent">the owning object of <paramref name="obj"/></param>
         /// <returns>a representation of <paramref name="obj"/> as a <see cref="Value"/> structure</returns>
         /// <seealso cref="IValueConverter.ToValue"/>
-        public abstract Value ToValue(T obj, object parent);
+        public abstract Value? ToValue(T? obj, object parent);
         /// <summary>
         /// Converts the given <see cref="Value"/> to the object type handled by this converter.
         /// </summary>
@@ -67,10 +68,10 @@ namespace IPA.Config.Stores
         /// <param name="parent">the object that will own the result</param>
         /// <returns>the deserialized object</returns>
         /// <seealso cref="IValueConverter.FromValue"/>
-        public abstract T FromValue(Value value, object parent);
+        public abstract T? FromValue(Value? value, object parent);
 
-        Value IValueConverter.ToValue(object obj, object parent) => ToValue((T)obj, parent);
-        object IValueConverter.FromValue(Value value, object parent) => FromValue(value, parent);
+        Value? IValueConverter.ToValue(object? obj, object parent) => ToValue((T?)obj, parent);
+        object? IValueConverter.FromValue(Value? value, object parent) => FromValue(value, parent);
         Type IValueConverter.Type => typeof(T);
     }
 }

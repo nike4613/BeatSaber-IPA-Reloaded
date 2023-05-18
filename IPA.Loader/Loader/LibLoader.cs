@@ -1,14 +1,15 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Linq;
 using IPA.Logging;
 using IPA.Utilities;
 using Mono.Cecil;
+using IPA.AntiMalware;
+using IPA.Config;
 #if NET3
 using Net3_Proxy;
 using Directory = Net3_Proxy.Directory;
@@ -50,7 +51,7 @@ namespace IPA.Loader
     {
         internal static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
         internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        internal static Dictionary<string, string> FilenameLocations;
+        internal static Dictionary<string, string> FilenameLocations = null!;
 
         internal static void Configure()
         {
@@ -72,24 +73,10 @@ namespace IPA.Loader
                     else FilenameLocations.Add(fn.Name, fn.FullName);
                 }
 
-                if (!SetDefaultDllDirectories(LoadLibraryFlags.LOAD_LIBRARY_SEARCH_USER_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_SYSTEM32
-                                            | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LoadLibraryFlags.LOAD_LIBRARY_SEARCH_APPLICATION_DIR))
-                {
-                    var err = new Win32Exception();
-                    Log(Logger.Level.Critical, $"Error configuring DLL search path");
-                    Log(Logger.Level.Critical, err);
-                    return;
-                }
-
                 static void AddDir(string path)
                 {
-                    var retPtr = AddDllDirectory(path);
-                    if (retPtr == IntPtr.Zero)
-                    {
-                        var err = new Win32Exception();
-                        Log(Logger.Level.Warning, $"Could not add DLL directory {path}");
-                        Log(Logger.Level.Warning, err);
-                    }
+                    var pathEnvironmentVariable = Environment.GetEnvironmentVariable("Path");
+                    Environment.SetEnvironmentVariable("Path", path + Path.PathSeparator + pathEnvironmentVariable);
                 }
 
                 if (Directory.Exists(NativeLibraryPath))
@@ -104,22 +91,18 @@ namespace IPA.Loader
                 //var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
                 //AddDir(Path.Combine(unityData, "Plugins"));
 
-                foreach (var dir in Environment.GetEnvironmentVariable("path")
-                    .Split(Path.PathSeparator)
-                    .Select(Environment.ExpandEnvironmentVariables))
-                {
-                    AddDir(dir);
-                }
+                // TODO: find a way to either safely remove Newtonsoft, or switch to a different JSON lib
+                _ = LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral"));
             }
         }
 
-        public static Assembly AssemblyLibLoader(object source, ResolveEventArgs e)
+        public static Assembly? AssemblyLibLoader(object source, ResolveEventArgs e)
         {
             var asmName = new AssemblyName(e.Name);
             return LoadLibrary(asmName);
         }
 
-        internal static Assembly LoadLibrary(AssemblyName asmName)
+        internal static Assembly? LoadLibrary(AssemblyName asmName)
         {
             Log(Logger.Level.Debug, $"Resolving library {asmName}");
 
@@ -131,19 +114,13 @@ namespace IPA.Loader
             if (FilenameLocations.TryGetValue(testFile, out var path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
-                if (File.Exists(path))
-                    return Assembly.LoadFrom(path);
-
-                Log(Logger.Level.Critical, $"but {path} no longer exists!");
+                return LoadSafe(path);
             }
             else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out path))
             {
                 Log(Logger.Level.Debug, $"Found file {testFile} as {path}");
                 Log(Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
-                if (File.Exists(path))
-                    return Assembly.LoadFrom(path);
-
-                Log(Logger.Level.Critical, $"but {path} no longer exists!");
+                return LoadSafe(path);
             }
 
             Log(Logger.Level.Critical, $"No library {asmName} found");
@@ -151,28 +128,62 @@ namespace IPA.Loader
             return null;
         }
 
+        private static Assembly? LoadSafe(string path)
+        {
+            if (!File.Exists(path))
+            {
+                Log(Logger.Level.Critical, $"{path} no longer exists!");
+                return null;
+            }
+
+            if (AntiMalwareEngine.IsInitialized)
+            {
+                var result = AntiMalwareEngine.Engine.ScanFile(new FileInfo(path));
+                if (result is ScanResult.Detected)
+                {
+                    Log(Logger.Level.Error, $"Scan of '{path}' found malware; not loading");
+                    return null;
+                }
+                if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && result is not ScanResult.KnownSafe and not ScanResult.NotDetected)
+                {
+                    Log(Logger.Level.Error, $"Scan of '{path}' found partial threat; not loading. To load this, enable AntiMalware.RunPartialThreatCode in the config.");
+                    return null;
+                }
+            }
+
+            return Assembly.LoadFrom(path);
+        }
+
         internal static void Log(Logger.Level lvl, string message)
         { // multiple proxy methods to delay loading of assemblies until it's done
             if (Logger.LogCreated)
+            {
                 AssemblyLibLoaderCallLogger(lvl, message);
+            }
             else
+            {
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
                     Console.WriteLine($"[{lvl}] {message}");
+            }
         }
         internal static void Log(Logger.Level lvl, Exception message)
         { // multiple proxy methods to delay loading of assemblies until it's done
             if (Logger.LogCreated)
+            {
                 AssemblyLibLoaderCallLogger(lvl, message);
+            }
             else
+            {
                 if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
-                Console.WriteLine($"[{lvl}] {message}");
+                    Console.WriteLine($"[{lvl}] {message}");
+            }
         }
 
-        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.libLoader.Log(lvl, message);
-        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.libLoader.Log(lvl, message);
+        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.LibLoader.Log(lvl, message);
+        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.LibLoader.Log(lvl, message);
 
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
-        private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool> dirValidator = null)
+        private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool>? dirValidator = null)
         {
             if (dirValidator == null) dirValidator = s => true;
 
@@ -222,27 +233,5 @@ namespace IPA.Loader
                 }
             }
         }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-#if NET461
-        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-#endif
-        private static extern IntPtr AddDllDirectory(string lpPathName);
-
-        [Flags]
-        private enum LoadLibraryFlags : uint
-        {
-            None = 0,
-            LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
-            LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
-            LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
-            LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
-        }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-#if NET461
-        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-#endif
-        private static extern bool SetDefaultDllDirectories(LoadLibraryFlags dwFlags);
     }
 }

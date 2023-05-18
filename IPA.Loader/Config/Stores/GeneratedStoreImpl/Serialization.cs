@@ -1,4 +1,5 @@
-﻿using IPA.Config.Data;
+﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,17 @@ namespace IPA.Config.Stores
         private static void EmitSerializeMember(ILGenerator il, SerializedMemberInfo member, LocalAllocator GetLocal, Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             EmitLoad(il, member, thisarg);
+
+            using var valueTypeLocal =
+                member.IsNullable
+                ? GetLocal.Allocate(member.Type)
+                : default;
+
+            if (member.IsNullable)
+            {
+                il.Emit(OpCodes.Stloc, valueTypeLocal.Local);
+                il.Emit(OpCodes.Ldloca, valueTypeLocal.Local);
+            }
 
             var endSerialize = il.DefineLabel();
 
@@ -47,7 +59,7 @@ namespace IPA.Config.Stores
             var targetType = GetExpectedValueTypeForType(memberConversionType);
             if (member.HasConverter)
             {
-                using var stlocal = GetLocal.Allocate(member.Type);
+                using var stlocal = GetLocal.Allocate(memberConversionType);
                 using var valLocal = GetLocal.Allocate(typeof(Value));
 
                 il.Emit(OpCodes.Stloc, stlocal);
@@ -113,7 +125,7 @@ namespace IPA.Config.Stores
             else if (targetType == typeof(List))
             {
                 // TODO: impl this (enumerables)
-                Logger.config.Warn($"Implicit conversions to {targetType} are not currently implemented");
+                Logger.Config.Warn($"Implicit conversions to {targetType} are not currently implemented");
                 il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
             }
@@ -156,7 +168,7 @@ namespace IPA.Config.Stores
                     var structure = ReadObjectMembers(memberConversionType);
                     if (!structure.Any())
                     {
-                        Logger.config.Warn($"Custom value type {memberConversionType.FullName} (when compiling serialization of" +
+                        Logger.Config.Warn($"Custom value type {memberConversionType.FullName} (when compiling serialization of" +
                             $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
                         il.Emit(OpCodes.Pop);
                     }

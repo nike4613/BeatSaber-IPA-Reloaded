@@ -1,9 +1,12 @@
-﻿using HarmonyLib;
+﻿#nullable enable
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
+using static IPA.Logging.Logger;
 
 namespace IPA.Logging
 {
@@ -19,7 +22,7 @@ namespace IPA.Logging
         }
 
         private string lineBuffer = "";
-        private readonly object bufferLock = new object();
+        private readonly object bufferLock = new();
 
         public override void Write(string value)
         {
@@ -51,7 +54,7 @@ namespace IPA.Logging
         private const ConsoleColor defaultColor = ConsoleColor.Gray;
         private ConsoleColor currentColor = defaultColor;
 
-        private static string ConsoleColorToForegroundSet(ConsoleColor col)
+        internal static string ConsoleColorToForegroundSet(ConsoleColor col)
         {
             if (!WinConsole.UseVTEscapes) return "";
             string code = "0"; // reset
@@ -111,8 +114,8 @@ namespace IPA.Logging
             return "\x1b[" + code + "m";
         }
 
-        private static StdoutInterceptor stdoutInterceptor;
-        private static StdoutInterceptor stderrInterceptor;
+        private static StdoutInterceptor? stdoutInterceptor;
+        private static StdoutInterceptor? stderrInterceptor;
 
         private static class ConsoleHarmonyPatches
         {
@@ -127,24 +130,24 @@ namespace IPA.Logging
                 try
                 {
                     if (resetColor != null)
-                        harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchResetColor)));
+                        _ = harmony.Patch(resetColor, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchResetColor)));
                     if (foregroundProperty != null)
                     {
-                        harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchSetForegroundColor)));
-                        harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchGetForegroundColor)));
+                        _ = harmony.Patch(setFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchSetForegroundColor)));
+                        _ = harmony.Patch(getFg, transpiler: new HarmonyMethod(typeof(ConsoleHarmonyPatches), nameof(PatchGetForegroundColor)));
                     }
                 }
                 catch (Exception e)
                 {
                     // Harmony might be fucked because of wierdness in Guid.NewGuid, don't let that kill us
-                    Logger.log.Error("Error installing harmony patches to intercept Console color properties:");
-                    Logger.log.Error(e);
+                    Logger.Default.Error("Error installing harmony patches to intercept Console color properties:");
+                    Logger.Default.Error(e);
                 }
             }
 
-            public static ConsoleColor GetColor() => stdoutInterceptor.currentColor;
-            public static void SetColor(ConsoleColor col) => stdoutInterceptor.currentColor = col;
-            public static void ResetColor() => stdoutInterceptor.currentColor = defaultColor;
+            public static ConsoleColor GetColor() => stdoutInterceptor!.currentColor;
+            public static void SetColor(ConsoleColor col) => stdoutInterceptor!.currentColor = col;
+            public static void ResetColor() => stdoutInterceptor!.currentColor = defaultColor;
 
             public static IEnumerable<CodeInstruction> PatchGetForegroundColor(IEnumerable<CodeInstruction> _)
             {
@@ -178,20 +181,21 @@ namespace IPA.Logging
             }
         }
 
-        private static Harmony harmony;
-        private static bool usingInterceptor = false;
+        private static Harmony? harmony;
+        private static bool usingInterceptor;
 
         public static void Intercept()
         {
             if (!usingInterceptor)
             {
                 usingInterceptor = true;
-                if (harmony == null)
-                    harmony = new Harmony("BSIPA Console Redirector Patcher");
-                if (stdoutInterceptor == null)
-                    stdoutInterceptor = new StdoutInterceptor();
-                if (stderrInterceptor == null)
-                    stderrInterceptor = new StdoutInterceptor() { isStdErr = true };
+
+                EnsureHarmonyLogging();
+
+                HarmonyGlobalSettings.DisallowLegacyGlobalUnpatchAll = true;
+                harmony ??= new Harmony("BSIPA Console Redirector Patcher");
+                stdoutInterceptor ??= new StdoutInterceptor();
+                stderrInterceptor ??= new StdoutInterceptor { isStdErr = true };
 
                 RedirectConsole();
                 ConsoleHarmonyPatches.Patch(harmony);
@@ -205,6 +209,32 @@ namespace IPA.Logging
                 Console.SetOut(stdoutInterceptor);
                 Console.SetError(stderrInterceptor);
             }
+        }
+
+        private static int harmonyLoggingInited;
+        // I'm not completely sure this is the best place for this, but whatever
+        internal static void EnsureHarmonyLogging()
+        {
+            if (Interlocked.Exchange(ref harmonyLoggingInited, 1) != 0)
+                return;
+
+            HarmonyLib.Tools.Logger.ChannelFilter = HarmonyLib.Tools.Logger.LogChannel.All & ~HarmonyLib.Tools.Logger.LogChannel.IL;
+            HarmonyLib.Tools.Logger.MessageReceived += (s, e) =>
+            {
+                var msg = e.Message;
+                var lvl = e.LogChannel switch
+                {
+                    HarmonyLib.Tools.Logger.LogChannel.None => Level.Notice,
+                    HarmonyLib.Tools.Logger.LogChannel.Info => Level.Trace, // HarmonyX logs a *lot* of Info messages
+                    HarmonyLib.Tools.Logger.LogChannel.IL => Level.Trace,
+                    HarmonyLib.Tools.Logger.LogChannel.Warn => Level.Warning,
+                    HarmonyLib.Tools.Logger.LogChannel.Error => Level.Error,
+                    HarmonyLib.Tools.Logger.LogChannel.Debug => Level.Debug,
+                    HarmonyLib.Tools.Logger.LogChannel.All => Level.Critical,
+                    _ => Level.Critical,
+                };
+                Logger.Harmony.Log(lvl, msg);
+            };
         }
     }
 }

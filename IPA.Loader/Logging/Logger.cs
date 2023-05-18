@@ -1,6 +1,5 @@
-﻿using System;
-
-// ReSharper disable InconsistentNaming
+﻿#nullable enable
+using System;
 
 namespace IPA.Logging
 {
@@ -9,9 +8,9 @@ namespace IPA.Logging
     /// </summary>
     public abstract class Logger
     {
-        private static Logger _log;
+        private static Logger? _log;
 
-        internal static Logger log
+        internal static Logger Default
         {
             get
             {
@@ -21,7 +20,7 @@ namespace IPA.Logging
             }
         }
 
-        private static StandardLogger _stdout;
+        private static StandardLogger? _stdout;
 
         internal static StandardLogger stdout
         {
@@ -33,12 +32,16 @@ namespace IPA.Logging
             }
         }
 
-        internal static Logger updater => log.GetChildLogger("Updater");
-        internal static Logger libLoader => log.GetChildLogger("LibraryLoader");
-        internal static Logger injector => log.GetChildLogger("Injector");
-        internal static Logger loader => log.GetChildLogger("Loader");
-        internal static Logger features => loader.GetChildLogger("Features");
-        internal static Logger config => log.GetChildLogger("Config");
+        private static StandardLogger? lazyHarmony;
+        internal static StandardLogger Harmony => lazyHarmony ??= new StandardLogger("Harmony");
+
+        internal static Logger AntiMalware => Default.GetChildLogger("AntiMalware");
+        internal static Logger Updater => Default.GetChildLogger("Updater");
+        internal static Logger LibLoader => Default.GetChildLogger("LibraryLoader");
+        internal static Logger Injector => Default.GetChildLogger("Injector");
+        internal static Logger Loader => Default.GetChildLogger("Loader");
+        internal static Logger Features => Loader.GetChildLogger("Features");
+        internal static Logger Config => Default.GetChildLogger("Config");
         internal static bool LogCreated => _log != null;
 
         /// <summary>
