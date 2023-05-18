@@ -3,6 +3,7 @@ using Mono.Cecil.Rocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace IPA.Injector
@@ -69,11 +70,20 @@ namespace IPA.Injector
             }
         }
 
+        private TypeReference compilerGeneratedAttributeRef;
         private TypeReference inModreqRef;
         // private TypeReference outModreqRef;
 
+        private bool IsCompilerGenerated(Mono.Cecil.ICustomAttributeProvider customAttributeProvider)
+        {
+            compilerGeneratedAttributeRef ??= module.ImportReference(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute));
+            return customAttributeProvider.CustomAttributes.Any(ca => ca.AttributeType.FullName == compilerGeneratedAttributeRef.FullName);
+        }
+
         private void VirtualizeType(TypeDefinition type)
         {
+            if (IsCompilerGenerated(type)) return;
+
             if(type.IsSealed)
             {
                 // Unseal
@@ -108,7 +118,8 @@ namespace IPA.Injector
                     && !method.IsConstructor
                     && !method.IsSpecialName
                     && !method.IsGenericInstance
-                    && !method.HasOverrides)
+                    && !method.HasOverrides
+                    && !IsCompilerGenerated(method))
                 {
                     if (!method.IsStatic)
                     {
