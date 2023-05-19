@@ -22,10 +22,10 @@ namespace IPA.Logging
 
         internal static bool IsInitialized;
 
-        public static void Initialize(bool alwaysCreateNewConsole = false)
+        public static void Initialize(int processId, bool alwaysCreateNewConsole = false)
         {
             bool consoleAttached;
-            if (alwaysCreateNewConsole || !(consoleAttached = AttachConsole(AttachParent)))
+            if (alwaysCreateNewConsole || !(consoleAttached = AttachConsole(processId)))
             {
                 consoleAttached = AllocConsole();
             }
@@ -132,9 +132,8 @@ namespace IPA.Logging
         private const uint FileShareWrite = 0x00000002;
         private const uint OpenExisting = 0x00000003;
         private const uint FileAttributeNormal = 0x80;
-        private const uint ErrorAccessDenied = 5;
 
-        private const int AttachParent = -1;
+        internal const int AttachParent = -1;
 
         #endregion
     }

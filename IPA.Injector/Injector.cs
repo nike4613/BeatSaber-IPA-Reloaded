@@ -43,8 +43,8 @@ namespace IPA.Injector
 
             try
             {
-                if (Environment.GetCommandLineArgs().Contains("--verbose"))
-                    WinConsole.Initialize();
+                var arguments = Environment.GetCommandLineArgs();
+                MaybeInitializeConsole(arguments);
 
                 SetupLibraryLoading();
 
@@ -63,8 +63,8 @@ namespace IPA.Injector
                 // this is weird, but it prevents Mono from having issues loading the type.
                 // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
                 var unused = StandardLogger.PrintFilter;
-                #region // Above hack explaination
-                /* 
+                #region // Above hack explanation
+                /*
                  * Due to an unknown bug in the version of Mono that Unity uses, if the first access to StandardLogger
                  * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
                  * the above static property (or maybe any, but I don't really know) it behaves as expected and works fine.
@@ -73,7 +73,7 @@ namespace IPA.Injector
 
                 log.Debug("Initializing logger");
 
-                SelfConfig.ReadCommandLine(Environment.GetCommandLineArgs());
+                SelfConfig.ReadCommandLine(arguments);
                 SelfConfig.Load();
                 DisabledConfig.Load();
 
@@ -103,6 +103,25 @@ namespace IPA.Injector
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        private static void MaybeInitializeConsole(string[] arguments)
+        {
+            var i = 0;
+            while (i < arguments.Length)
+            {
+                if (arguments[i++] == "--verbose")
+                {
+                    if (i == arguments.Length)
+                    {
+                        WinConsole.Initialize(WinConsole.AttachParent);
+                        return;
+                    }
+
+                    WinConsole.Initialize(int.TryParse(arguments[i], out int processId) ? processId : WinConsole.AttachParent);
+                    return;
+                }
             }
         }
 
@@ -260,7 +279,7 @@ namespace IPA.Injector
                     using var ascModule = VirtualizedModule.Load(ascPath);
                     ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
                 }
-                catch (Exception e) 
+                catch (Exception e)
                 {
                     injector.Error($"Could not virtualize {ascPath}");
                     if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
