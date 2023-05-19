@@ -24,10 +24,8 @@ namespace IPA.Logging
 
         public static void Initialize(bool alwaysCreateNewConsole = false)
         {
-            bool consoleAttached = true;
-            if (alwaysCreateNewConsole
-                || (AttachConsole(AttachParent)
-                && Marshal.GetLastWin32Error() != ErrorAccessDenied))
+            bool consoleAttached;
+            if (alwaysCreateNewConsole || !(consoleAttached = AttachConsole(AttachParent)))
             {
                 consoleAttached = AllocConsole();
             }
