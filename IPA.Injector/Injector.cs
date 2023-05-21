@@ -137,11 +137,6 @@ namespace IPA.Injector
             Loader.LibLoader.Configure();
         }
 
-        private static void InstallHarmonyProtections()
-        { // proxy function to delay resolution
-            HarmonyProtectorProxy.ProtectNull();
-        }
-
         private static void InstallBootstrapPatch()
         {
             var sw = Stopwatch.StartNew();
@@ -259,28 +254,12 @@ namespace IPA.Injector
             endPatchCoreModule:
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
-            Logging.Logger.Injector.Debug("Ensuring game assemblies are virtualized");
-
-            #region Virtualize game assemblies
             bool isFirst = true;
             foreach (var name in SelfConfig.GameAssemblies_)
             {
                 var ascPath = Path.Combine(managedPath, name);
 
                 using var execSec = CriticalSection.ExecuteSection();
-
-                try
-                {
-                    Logging.Logger.Injector.Debug($"Virtualizing {name}");
-                    using var ascModule = VirtualizedModule.Load(ascPath);
-                    ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
-                }
-                catch (Exception e)
-                {
-                    Logging.Logger.Injector.Error($"Could not virtualize {ascPath}");
-                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                        Logging.Logger.Injector.Error(e);
-                }
 
 #if BeatSaber
                 if (isFirst)
@@ -313,7 +292,6 @@ namespace IPA.Injector
                 }
 #endif
             }
-            #endregion
 
             sw.Stop();
             Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");
@@ -337,8 +315,6 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
-
-            InstallHarmonyProtections();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
