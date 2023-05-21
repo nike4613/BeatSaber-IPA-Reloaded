@@ -199,7 +199,8 @@ namespace IPA.Loader
                             var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
                                  .ContinueWith(t => 
                                  {
-                                     if (t.IsFaulted) {
+                                     if (t.IsFaulted)
+                                     {
                                          return TaskEx.WhenAll(t, TaskEx6.FromException(
                                              new CannotRuntimeDisableException(exec.Executor.Metadata, "Dependents cannot be disabled for plugin")));
                                      }
@@ -208,7 +209,8 @@ namespace IPA.Loader
                                         {
                                             foreach (var feature in exec.Executor.Metadata.Features)
                                             {
-                                                try { 
+                                                try
+                                                { 
                                                     feature.AfterDisable(exec.Executor.Metadata);
                                                 }
                                                 catch (Exception e)
