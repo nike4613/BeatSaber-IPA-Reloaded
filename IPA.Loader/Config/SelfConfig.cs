@@ -89,7 +89,7 @@ namespace IPA.Config
         internal const string IPAName = "Beat Saber IPA";
         internal const string IPAVersion = "4.2.2.0";
 
-        // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
+        // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug,
         //      Debug.CondenseModLogs
         internal static SelfConfig CommandLineValues = new();
 
@@ -208,7 +208,7 @@ namespace IPA.Config
             {
 #if BeatSaber // provide these defaults only for Beat Saber builds
                 "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll",
-                "BeatmapCore.dll", "GameplayCore.dll","HMLibAttributes.dll", 
+                "BeatmapCore.dll", "GameplayCore.dll", "HMLibAttributes.dll", "BeatmapEditor3D.dll"
 #else // otherwise specify Assembly-CSharp.dll
                 "Assembly-CSharp.dll"
 #endif
