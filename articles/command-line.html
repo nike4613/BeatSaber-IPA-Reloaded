@@ -123,6 +123,11 @@ flags:
 <ul>
 <li><p><code>--verbose</code></p>
 <blockquote><p>Makes a console appear with log information at startup.</p>
+<p>Optionally, an explicit process ID can be specified to start the game with an external console. This allows it to be
+launched via Steam without being interrupted by its &quot;Allow game launch?&quot; if launched directly from the <code>.exe</code>.</p>
+<p>Example for Beat Saber using PowerShell:</p>
+<pre><code>.\steam.exe -applaunch 620980 --verbose $PID
+</code></pre><p>Do note that this isn&#39;t going to work from an elevated terminal.</p>
 </blockquote>
 </li>
 <li><p><code>--debug</code></p>
@@ -184,7 +189,7 @@ that behaviour, and restricts it to only create a global log and mod logs.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/1b35392cfc5328c4538dbf3dae84fb8ead70ca86/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/1cdbee7fcd2fa21ff447b8e7a4a09cda836a5bdd/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
