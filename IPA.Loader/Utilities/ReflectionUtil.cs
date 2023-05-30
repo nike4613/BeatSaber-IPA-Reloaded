@@ -81,6 +81,25 @@ namespace IPA.Utilities
             if (dynMethod == null) throw new MissingMethodException($"Method {methodName} does not exist", nameof(methodName));
             return (U)dynMethod?.Invoke(obj, args);
         }
+        
+        /// <summary>
+        /// Invokes a generic method from <typeparamref name="T"/> on an object.
+        /// </summary>
+        /// <typeparam name="U">the type that the method returns</typeparam>
+        /// <typeparam name="T">the type to search for the method on</typeparam>
+        /// <typeparam name="G">the generic type to invoke the method with</typeparam>
+        /// <param name="obj">the object instance</param>
+        /// <param name="methodName">the method's name</param>
+        /// <param name="args">the method arguments</param>
+        /// <returns>the return value</returns>
+        /// <exception cref="T:System.MissingMethodException">if <paramref name="methodName" /> does not exist on <typeparamref name="T" /></exception>
+        public static U InvokeGenericMethod<U, T, G>(this T obj, string methodName, params object[] args)
+        {
+            var dynMethod = typeof(T).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (dynMethod == null) throw new MissingMethodException($"Method {methodName} does not exist", nameof(methodName));
+            var genMethod = dynMethod.MakeGenericMethod(typeof(G));
+            return (U)genMethod?.Invoke(obj, args);
+        }
 
         /// <summary>
         /// Copies a component <paramref name="original"/> to a component of <paramref name="overridingType"/> on the destination <see cref="GameObject"/>.
