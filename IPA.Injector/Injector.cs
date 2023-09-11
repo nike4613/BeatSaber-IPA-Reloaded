@@ -247,8 +247,11 @@ namespace IPA.Injector
 
                 if (modified)
                 {
+                    string tempFilePath = Path.GetTempFileName();
                     bkp?.Add(unityPath);
-                    unityAsmDef.Write(unityPath);
+                    unityAsmDef.Write(tempFilePath);
+                    File.Delete(unityPath);
+                    File.Move(tempFilePath, unityPath);
                 }
             }
             endPatchCoreModule:
@@ -279,7 +282,10 @@ namespace IPA.Injector
                         var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
                         deleter.Methods.Clear(); // delete all methods
 
-                        ascAsmDef.Write(ascPath);
+                        string tempFilePath = Path.GetTempFileName();
+                        ascAsmDef.Write(tempFilePath);
+                        File.Delete(ascPath);
+                        File.Move(tempFilePath, ascPath);
 
                         isFirst = false;
                     }
