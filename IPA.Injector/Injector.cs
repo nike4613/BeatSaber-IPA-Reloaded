@@ -283,6 +283,7 @@ namespace IPA.Injector
                         deleter.Methods.Clear(); // delete all methods
 
                         string tempFilePath = Path.GetTempFileName();
+                        bkp?.Add(ascPath);
                         ascAsmDef.Write(tempFilePath);
                         File.Delete(ascPath);
                         File.Move(tempFilePath, ascPath);
