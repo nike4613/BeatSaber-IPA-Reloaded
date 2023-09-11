@@ -142,9 +142,9 @@ namespace IPA.Injector
             var sw = Stopwatch.StartNew();
 
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
-            var managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 
-            var dataDir = new DirectoryInfo(managedPath).Parent.Name;
+            var dataDir = new DirectoryInfo(managedPath).Parent!.Name;
             var gameName = dataDir.Substring(0, dataDir.Length - 5);
 
             Logging.Logger.Injector.Debug("Finding backup");
@@ -153,152 +153,141 @@ namespace IPA.Injector
             if (bkp == null)
                 Logging.Logger.Injector.Warn("No backup found! Was BSIPA installed using the installer?");
 
+            // TODO: Investigate if this ever worked properly.
+            // this is a critical section because if you exit in here, assembly can die
+            using var critSec = CriticalSection.ExecuteSection();
+
+            var readerParameters = new ReaderParameters
+            {
+                ReadWrite = false,
+                InMemory = true,
+                ReadingMode = ReadingMode.Immediate
+            };
+
             Logging.Logger.Injector.Debug("Ensuring patch on UnityEngine.CoreModule exists");
 
             #region Insert patch into UnityEngine.CoreModule.dll
 
+            var unityPath = Path.Combine(managedPath, "UnityEngine.CoreModule.dll");
+
+            using var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, readerParameters);
+            var unityModDef = unityAsmDef.MainModule;
+
+            bool modified = false;
+            foreach (var asmref in unityModDef.AssemblyReferences)
             {
-                var unityPath = Path.Combine(managedPath,
-                    "UnityEngine.CoreModule.dll");
-
-                // this is a critical section because if you exit in here, CoreModule can die
-                using var critSec = CriticalSection.ExecuteSection();
-
-                using var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, new ReaderParameters
+                if (asmref.Name == cAsmName.Name)
                 {
-                    ReadWrite = false,
-                    InMemory = true,
-                    ReadingMode = ReadingMode.Immediate
-                });
-                var unityModDef = unityAsmDef.MainModule;
-
-                bool modified = false;
-                foreach (var asmref in unityModDef.AssemblyReferences)
-                {
-                    if (asmref.Name == cAsmName.Name)
+                    if (asmref.Version != cAsmName.Version)
                     {
-                        if (asmref.Version != cAsmName.Version)
-                        {
-                            asmref.Version = cAsmName.Version;
+                        asmref.Version = cAsmName.Version;
+                        modified = true;
+                    }
+                }
+            }
+
+            var application = unityModDef.GetType("UnityEngine", "Camera");
+
+            if (application == null)
+            {
+                Logging.Logger.Injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Camera!"
+                    + "Nothing to patch to get ourselves into the Unity run cycle!");
+                goto endPatchCoreModule;
+            }
+
+            MethodDefinition? cctor = null;
+            foreach (var m in application.Methods)
+                if (m.IsRuntimeSpecialName && m.Name == ".cctor")
+                    cctor = m;
+
+            var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
+
+            if (cctor == null)
+            {
+                cctor = new MethodDefinition(".cctor",
+                    MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName,
+                    unityModDef.TypeSystem.Void);
+                application.Methods.Add(cctor);
+                modified = true;
+
+                var ilp = cctor.Body.GetILProcessor();
+                ilp.Emit(OpCodes.Call, cbs);
+                ilp.Emit(OpCodes.Ret);
+            }
+            else
+            {
+                var ilp = cctor.Body.GetILProcessor();
+                for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
+                {
+                    var ins = cctor.Body.Instructions[i];
+                    switch (i)
+                    {
+                        case 0 when ins.OpCode != OpCodes.Call:
+                            ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
                             modified = true;
-                        }
-                    }
-                }
+                            break;
 
-                var application = unityModDef.GetType("UnityEngine", "Camera");
-
-                if (application == null)
-                {
-                    Logging.Logger.Injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Camera!"
-                        + "Nothing to patch to get ourselves into the Unity run cycle!");
-                    goto endPatchCoreModule;
-                }
-
-                MethodDefinition? cctor = null;
-                foreach (var m in application.Methods)
-                    if (m.IsRuntimeSpecialName && m.Name == ".cctor")
-                        cctor = m;
-
-                var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
-
-                if (cctor == null)
-                {
-                    cctor = new MethodDefinition(".cctor",
-                        MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName,
-                        unityModDef.TypeSystem.Void);
-                    application.Methods.Add(cctor);
-                    modified = true;
-
-                    var ilp = cctor.Body.GetILProcessor();
-                    ilp.Emit(OpCodes.Call, cbs);
-                    ilp.Emit(OpCodes.Ret);
-                }
-                else
-                {
-                    var ilp = cctor.Body.GetILProcessor();
-                    for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
-                    {
-                        var ins = cctor.Body.Instructions[i];
-                        switch (i)
-                        {
-                            case 0 when ins.OpCode != OpCodes.Call:
-                                ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                                modified = true;
-                                break;
-
-                            case 0:
+                        case 0:
+                            {
+                                var methodRef = ins.Operand as MethodReference;
+                                if (methodRef?.FullName != cbs.FullName)
                                 {
-                                    var methodRef = ins.Operand as MethodReference;
-                                    if (methodRef?.FullName != cbs.FullName)
-                                    {
-                                        ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                                        modified = true;
-                                    }
-
-                                    break;
+                                    ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
+                                    modified = true;
                                 }
-                            case 1 when ins.OpCode != OpCodes.Ret:
-                                ilp.Replace(ins, ilp.Create(OpCodes.Ret));
-                                modified = true;
+
                                 break;
-                        }
+                            }
+                        case 1 when ins.OpCode != OpCodes.Ret:
+                            ilp.Replace(ins, ilp.Create(OpCodes.Ret));
+                            modified = true;
+                            break;
                     }
                 }
+            }
 
-                if (modified)
-                {
-                    string tempFilePath = Path.GetTempFileName();
-                    bkp?.Add(unityPath);
-                    unityAsmDef.Write(tempFilePath);
-                    File.Delete(unityPath);
-                    File.Move(tempFilePath, unityPath);
-                }
+            if (modified)
+            {
+                string tempFilePath = Path.GetTempFileName();
+                bkp?.Add(unityPath);
+                unityAsmDef.Write(tempFilePath);
+                File.Delete(unityPath);
+                File.Move(tempFilePath, unityPath);
             }
             endPatchCoreModule:
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
-            bool isFirst = true;
-            foreach (var name in SelfConfig.GameAssemblies_)
-            {
-                var ascPath = Path.Combine(managedPath, name);
-
-                using var execSec = CriticalSection.ExecuteSection();
-
 #if BeatSaber
-                if (isFirst)
+            Logging.Logger.Injector.Debug("Ensuring anti-yeet patch exists");
+
+            var name = SelfConfig.GameAssemblies_.FirstOrDefault() ?? SelfConfig.GetDefaultGameAssemblies().First();
+            var ascPath = Path.Combine(managedPath, name);
+
+            try
+            {
+                using var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, readerParameters);
+                var ascModDef = ascAsmDef.MainModule;
+
+                var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
+
+                if (deleter.Methods.Count > 0)
                 {
-                    try
-                    {
-                        Logging.Logger.Injector.Debug("Applying anti-yeet patch");
+                    deleter.Methods.Clear(); // delete all methods
 
-                        using var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, new ReaderParameters
-                        {
-                            ReadWrite = false,
-                            InMemory = true,
-                            ReadingMode = ReadingMode.Immediate
-                        });
-                        var ascModDef = ascAsmDef.MainModule;
-
-                        var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
-                        deleter.Methods.Clear(); // delete all methods
-
-                        string tempFilePath = Path.GetTempFileName();
-                        bkp?.Add(ascPath);
-                        ascAsmDef.Write(tempFilePath);
-                        File.Delete(ascPath);
-                        File.Move(tempFilePath, ascPath);
-
-                        isFirst = false;
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Logger.Injector.Warn($"Could not apply anti-yeet patch to {ascPath}");
-                        if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                            Logging.Logger.Injector.Warn(e);
-                    }
+                    string tempFilePath = Path.GetTempFileName();
+                    bkp?.Add(ascPath);
+                    ascAsmDef.Write(tempFilePath);
+                    File.Delete(ascPath);
+                    File.Move(tempFilePath, ascPath);
                 }
-#endif
             }
+            catch (Exception e)
+            {
+                Logging.Logger.Injector.Warn($"Could not apply anti-yeet patch to {ascPath}");
+                if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
+                    Logging.Logger.Injector.Warn(e);
+            }
+#endif
 
             sw.Stop();
             Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");
