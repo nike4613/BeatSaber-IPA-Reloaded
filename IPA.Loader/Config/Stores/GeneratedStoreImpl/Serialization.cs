@@ -52,15 +52,18 @@ namespace IPA.Config.Stores
                 il.MarkLabel(passedNull);
             }
 
-            if (member.IsNullable)
+            if (member is { IsNullable: true, HasConverter: false })
                 il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
 
             var memberConversionType = member.ConversionType;
             var targetType = GetExpectedValueTypeForType(memberConversionType);
             if (member.HasConverter)
             {
-                using var stlocal = GetLocal.Allocate(memberConversionType);
+                using var stlocal = GetLocal.Allocate(member.IsNullable ? member.Type : memberConversionType);
                 using var valLocal = GetLocal.Allocate(typeof(Value));
+
+                if (member.IsNullable)
+                    il.Emit(OpCodes.Ldloc_S, valueTypeLocal.Local);
 
                 il.Emit(OpCodes.Stloc, stlocal);
                 il.BeginExceptionBlock();
