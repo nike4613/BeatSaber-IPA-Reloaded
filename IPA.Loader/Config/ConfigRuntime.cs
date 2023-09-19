@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using IPA.Utilities;
 using IPA.Utilities.Async;
 using System.IO;
-using System.Runtime.CompilerServices;
-using IPA.Logging;
-using UnityEngine;
 using Logger = IPA.Logging.Logger;
 #if NET4
 using Task = System.Threading.Tasks.Task;
@@ -31,7 +26,13 @@ namespace IPA.Config
         }
 
         private static readonly ConcurrentBag<Config> configs = new ConcurrentBag<Config>();
-        private static readonly AutoResetEvent configsChangedWatcher = new AutoResetEvent(false);
+        private static readonly Action configsChangedWatcher = () =>
+        {
+            foreach (var config in configs.Where(c => c.Store != null).ToArray())
+            {
+                config.Store.SyncAction = () => RequiresSave.Add(() => Save(config));
+            }
+        };
         private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
         private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
@@ -92,7 +93,7 @@ namespace IPA.Config
 
                 configs.Add(cfg);
             }
-            configsChangedWatcher.Set();
+            configsChangedWatcher?.Invoke();
 
             TryStartRuntime();
 
@@ -101,7 +102,7 @@ namespace IPA.Config
 
         public static void ConfigChanged()
         {
-            configsChangedWatcher.Set();
+            configsChangedWatcher.Invoke();
         }
 
         private static void AddConfigToWatchers(Config config)
@@ -212,22 +213,23 @@ namespace IPA.Config
                 Logger.Config.Error($"{nameof(IConfigStore)} for {config.File} errored while reading from the {nameof(IConfigProvider)}");
                 Logger.Config.Error(e);
             }
-        } 
+        }
+
+        static readonly BlockingCollection<Action> RequiresSave = new();
 
         private static void SaveThread()
         {
             try
             {
-                while (true)
+                var configArr = configs.Where(c => c.Store != null).ToArray();
+
+                configsChangedWatcher.Invoke();
+
+                foreach (var item in RequiresSave.GetConsumingEnumerable())
                 {
-                    var configArr = configs.Where(c => c.Store != null).ToArray();
-                    int index = -1;
                     try
                     {
-                        var waitHandles = configArr.Select(c => c.Store.SyncObject)
-                                                 .Prepend(configsChangedWatcher)
-                                                 .ToArray();
-                        index = WaitHandle.WaitAny(waitHandles);
+                        item.Invoke();
                     }
                     catch (ThreadAbortException)
                     {
@@ -239,19 +241,15 @@ namespace IPA.Config
                         Logger.Config.Error(e);
                         Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
-
-                    if (index <= 0)
-                    { // we got a signal that the configs collection changed, loop around, or errored
-                        continue;
-                    }
-
-                    // otherwise, we have a thing that changed in a store
-                    Save(configArr[index - 1]);
                 }
             }
             catch (ThreadAbortException)
             {
                 // we got aborted :(
+            }
+            finally
+            {
+                RequiresSave.Dispose();
             }
         }
     }

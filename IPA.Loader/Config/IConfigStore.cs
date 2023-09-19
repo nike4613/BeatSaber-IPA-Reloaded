@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static UnityEngine.Random;
 
 namespace IPA.Config
 {
@@ -14,11 +15,11 @@ namespace IPA.Config
     public interface IConfigStore
     {
         /// <summary>
-        /// A synchronization object for the save thread to wait on for changes. 
+        /// An action that is gonna be called when a save is required
         /// It should be signaled whenever the internal state of the object is changed.
-        /// The writer will never signal this handle. 
+        /// The writer will never signal this. 
         /// </summary>
-        WaitHandle SyncObject { get; }
+        public Action SyncAction { get; set; }
 
         /// <summary>
         /// A synchronization object for the load thread and accessors to maintain safe synchronization.
