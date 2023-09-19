@@ -55,10 +55,8 @@ namespace IPA.Config.Stores
                 var impl = FindImpl(s);
                 if (impl != null) impl.SyncAction = value;
             }
-
             internal static MethodInfo ImplGetSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetSyncObject));
             internal static MethodInfo ImplSetSyncActionMethod = typeof(Impl).GetMethod(nameof(ImplSetSyncAction));
-
 
             public ReaderWriterLockSlim WriteSyncObject { get; } = new();
             public static ReaderWriterLockSlim? ImplGetWriteSyncObject(IGeneratedStore s) => FindImpl(s)?.WriteSyncObject;

@@ -26,13 +26,12 @@ namespace IPA.Config
         }
 
         private static readonly ConcurrentBag<Config> configs = new ConcurrentBag<Config>();
-        private static readonly Action configsChangedWatcher = () =>
+        private static readonly Action configsChangedAction = () =>
         {
             foreach (var config in configs.Where(c => c.Store != null).ToArray())
-            {
                 config.Store.SyncAction = () => RequiresSave.Add(() => Save(config));
-            }
         };
+        private static readonly BlockingCollection<Action> RequiresSave = new();
         private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
         private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
@@ -93,7 +92,7 @@ namespace IPA.Config
 
                 configs.Add(cfg);
             }
-            configsChangedWatcher?.Invoke();
+            configsChangedAction.Invoke();
 
             TryStartRuntime();
 
@@ -102,7 +101,7 @@ namespace IPA.Config
 
         public static void ConfigChanged()
         {
-            configsChangedWatcher.Invoke();
+            configsChangedAction.Invoke();
         }
 
         private static void AddConfigToWatchers(Config config)
@@ -215,16 +214,11 @@ namespace IPA.Config
             }
         }
 
-        static readonly BlockingCollection<Action> RequiresSave = new();
-
         private static void SaveThread()
         {
             try
             {
-                var configArr = configs.Where(c => c.Store != null).ToArray();
-
-                configsChangedWatcher.Invoke();
-
+                configsChangedAction.Invoke();
                 foreach (var item in RequiresSave.GetConsumingEnumerable())
                 {
                     try
