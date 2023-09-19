@@ -83,9 +83,37 @@ namespace IPA.Loader
 
         private static readonly Regex embeddedTextDescriptionPattern = new(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
+        public static string[] LoadFilesRecursively(string folderPath, string fileName)
+        {
+            var dlls = new List<string>();
+
+            dlls.AddRange(Directory.GetFiles(folderPath, fileName));
+
+            foreach (var subfolder in Directory.GetDirectories(folderPath))
+            {
+                dlls.AddRange(LoadFilesRecursively(subfolder, fileName));
+            }
+
+            return dlls.ToArray();
+        }
+
+        public static string[] LoadDirectoriesRecursively(string folderPath)
+        {
+            var directories = new List<string>();
+
+            foreach (var subfolder in Directory.GetDirectories(folderPath))
+            {
+                directories.AddRange(LoadDirectoriesRecursively(subfolder));
+            }
+
+            directories.Add(folderPath);
+
+            return directories.ToArray();
+        }
+
         internal static void LoadMetadata()
         {
-            string[] plugins = Directory.GetFiles(UnityGame.PluginsPath, "*.dll");
+            string[] plugins = LoadFilesRecursively(UnityGame.PluginsPath, "*.dll");
 
             try
             {
@@ -116,13 +144,18 @@ namespace IPA.Loader
             }
 
             using var resolver = new CecilLibLoader();
-            resolver.AddSearchDirectory(UnityGame.LibraryPath);
-            resolver.AddSearchDirectory(UnityGame.PluginsPath);
+
+            foreach (var libSubDirectory in LoadDirectoriesRecursively(UnityGame.LibraryPath))
+                resolver.AddSearchDirectory(libSubDirectory);
+
+            foreach (var pluginSubDirectory in LoadDirectoriesRecursively(UnityGame.PluginsPath))
+                resolver.AddSearchDirectory(pluginSubDirectory);
+            
             foreach (var plugin in plugins)
             {
                 var metadata = new PluginMetadata
                 {
-                    File = new FileInfo(Path.Combine(UnityGame.PluginsPath, plugin)),
+                    File = new FileInfo(plugin),
                     IsSelf = false
                 };
 
@@ -263,15 +296,15 @@ namespace IPA.Loader
                 }
             }
 
-            IEnumerable<string> bareManifests = Directory.GetFiles(UnityGame.PluginsPath, "*.json");
-            bareManifests = bareManifests.Concat(Directory.GetFiles(UnityGame.PluginsPath, "*.manifest"));
+            IEnumerable<string> bareManifests = LoadFilesRecursively(UnityGame.PluginsPath, "*.json");
+            bareManifests = bareManifests.Concat(LoadFilesRecursively(UnityGame.PluginsPath, "*.manifest"));
             foreach (var manifest in bareManifests)
             {
                 try
                 {
                     var metadata = new PluginMetadata
                     {
-                        File = new FileInfo(Path.Combine(UnityGame.PluginsPath, manifest)),
+                        File = new FileInfo(manifest),
                         IsSelf = false,
                         IsBare = true,
                     };
