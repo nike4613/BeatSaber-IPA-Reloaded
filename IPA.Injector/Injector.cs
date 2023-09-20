@@ -137,6 +137,11 @@ namespace IPA.Injector
             Loader.LibLoader.Configure();
         }
 
+        private static void InstallHarmonyProtections()
+        { // proxy function to delay resolution
+            HarmonyProtectorProxy.ProtectNull();
+        }
+
         private static void InstallBootstrapPatch()
         {
             var sw = Stopwatch.StartNew();
@@ -311,6 +316,8 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
+
+            InstallHarmonyProtections();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
