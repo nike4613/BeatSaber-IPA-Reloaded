@@ -47,16 +47,9 @@ namespace IPA.Config.Stores
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
-
-            public Action? SyncAction { get; set; }
-            public static Action? ImplGetSyncObject(IGeneratedStore s) => FindImpl(s)?.SyncAction;
-            public static void ImplSetSyncAction(IGeneratedStore s, Action? value)
-            {
-                var impl = FindImpl(s);
-                if (impl != null) impl.SyncAction = value;
-            }
+            public WaitHandle? SyncObject => null;
+            public static WaitHandle? ImplGetSyncObject(IGeneratedStore s) => FindImpl(s)?.SyncObject;
             internal static MethodInfo ImplGetSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetSyncObject));
-            internal static MethodInfo ImplSetSyncActionMethod = typeof(Impl).GetMethod(nameof(ImplSetSyncAction));
 
             public ReaderWriterLockSlim WriteSyncObject { get; } = new();
             public static ReaderWriterLockSlim? ImplGetWriteSyncObject(IGeneratedStore s) => FindImpl(s)?.WriteSyncObject;
@@ -66,15 +59,7 @@ namespace IPA.Config.Stores
             public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s)?.SignalChanged();
             public void SignalChanged()
             {
-                try
-                {
-                    SyncAction?.Invoke();
-                }
-                catch (ObjectDisposedException e)
-                {
-                    Logger.Config.Error($"ObjectDisposedException while signalling a change for generated store {generated?.GetType()}");
-                    Logger.Config.Error(e);
-                }
+                ConfigRuntime.RequiresSave.Add(this);
             }
 
             internal static MethodInfo ImplInvokeChangedMethod = typeof(Impl).GetMethod(nameof(ImplInvokeChanged));

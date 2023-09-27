@@ -25,20 +25,17 @@ namespace IPA.Config
                 => obj?.GetHashCode() ?? 0;
         }
 
-        private static readonly ConcurrentBag<Config> configs = new ConcurrentBag<Config>();
-        private static readonly Action configsChangedAction = () =>
-        {
-            foreach (var config in configs.Where(c => c.Store != null).ToArray())
-                config.Store.SyncAction = () => RequiresSave.Add(() => Save(config));
-        };
-        private static readonly BlockingCollection<Action> RequiresSave = new();
+        private static readonly ConcurrentBag<Config> configs = new();
+        private static readonly AutoResetEvent configsChangedWatcher = new(false);
+        public static readonly BlockingCollection<IConfigStore> RequiresSave = new();
         private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
         private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
             = new ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>>();
-        private static SingleThreadTaskScheduler loadScheduler = null;
-        private static TaskFactory loadFactory = null;
-        private static Thread saveThread = null;
+        private static SingleThreadTaskScheduler loadScheduler;
+        private static TaskFactory loadFactory;
+        private static Thread saveThread;
+        private static Thread legacySaveThread;
 
         private static void TryStartRuntime()
         {
@@ -54,6 +51,11 @@ namespace IPA.Config
             {
                 saveThread = new Thread(SaveThread);
                 saveThread.Start();
+            }
+            if (legacySaveThread == null || !legacySaveThread.IsAlive)
+            {
+                legacySaveThread = new Thread(LegacySaveThread);
+                legacySaveThread.Start();
             }
 
             AppDomain.CurrentDomain.ProcessExit -= ShutdownRuntime;
@@ -92,7 +94,7 @@ namespace IPA.Config
 
                 configs.Add(cfg);
             }
-            configsChangedAction.Invoke();
+            configsChangedWatcher.Set();
 
             TryStartRuntime();
 
@@ -101,7 +103,7 @@ namespace IPA.Config
 
         public static void ConfigChanged()
         {
-            configsChangedAction.Invoke();
+            configsChangedWatcher.Set();
         }
 
         private static void AddConfigToWatchers(Config config)
@@ -218,12 +220,11 @@ namespace IPA.Config
         {
             try
             {
-                configsChangedAction.Invoke();
                 foreach (var item in RequiresSave.GetConsumingEnumerable())
                 {
                     try
                     {
-                        item.Invoke();
+                        Save(configs.First((c) => ReferenceEquals(c.Store.WriteSyncObject, item.WriteSyncObject)));
                     }
                     catch (ThreadAbortException)
                     {
@@ -244,6 +245,47 @@ namespace IPA.Config
             finally
             {
                 RequiresSave.Dispose();
+            }
+        }
+
+        private static void LegacySaveThread()
+        {
+            try
+            {
+                while (true)
+                {
+                    var configArr = configs.Where(c => c.Store != null).Where(c => c.Store.SyncObject != null).ToArray();
+                    int index = -1;
+                    try
+                    {
+                        var waitHandles = configArr.Select(c => c.Store.SyncObject)
+                                                 .Prepend(configsChangedWatcher)
+                                                 .ToArray();
+                        index = WaitHandle.WaitAny(waitHandles);
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Config.Error($"Error waiting for in-memory updates");
+                        Logger.Config.Error(e);
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
+                    }
+
+                    if (index <= 0)
+                    { // we got a signal that the configs collection changed, loop around, or errored
+                        continue;
+                    }
+
+                    // otherwise, we have a thing that changed in a store
+                    Save(configArr[index - 1]);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                // we got aborted :(
             }
         }
     }
