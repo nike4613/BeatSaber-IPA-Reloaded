@@ -83,37 +83,9 @@ namespace IPA.Loader
 
         private static readonly Regex embeddedTextDescriptionPattern = new(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
-        public static string[] LoadFilesRecursively(string folderPath, string fileName)
-        {
-            var dlls = new List<string>();
-
-            dlls.AddRange(Directory.GetFiles(folderPath, fileName));
-
-            foreach (var subfolder in Directory.GetDirectories(folderPath))
-            {
-                dlls.AddRange(LoadFilesRecursively(subfolder, fileName));
-            }
-
-            return dlls.ToArray();
-        }
-
-        public static string[] LoadDirectoriesRecursively(string folderPath)
-        {
-            var directories = new List<string>();
-
-            foreach (var subfolder in Directory.GetDirectories(folderPath))
-            {
-                directories.AddRange(LoadDirectoriesRecursively(subfolder));
-            }
-
-            directories.Add(folderPath);
-
-            return directories.ToArray();
-        }
-
         internal static void LoadMetadata()
         {
-            string[] plugins = LoadFilesRecursively(UnityGame.PluginsPath, "*.dll");
+            string[] plugins = Directory.GetFiles(UnityGame.PluginsPath, "*.dll", SearchOption.AllDirectories);
 
             try
             {
@@ -132,7 +104,7 @@ namespace IPA.Loader
                         throw new InvalidOperationException()))
                     manifest = manifestReader.ReadToEnd();
 
-                selfMeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                selfMeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest) ?? throw new NotSupportedException();
 
                 PluginsMetadata.Add(selfMeta);
                 SelfMeta = selfMeta;
@@ -145,11 +117,17 @@ namespace IPA.Loader
 
             using var resolver = new CecilLibLoader();
 
-            foreach (var libSubDirectory in LoadDirectoriesRecursively(UnityGame.LibraryPath))
-                resolver.AddSearchDirectory(libSubDirectory);
+            foreach (var libDirectory in Directory.GetDirectories(UnityGame.LibraryPath, "*", SearchOption.AllDirectories).Where((x) => !x.Contains("Native")).Prepend(UnityGame.LibraryPath))
+            {
+                Logger.Loader.Debug($"Adding lib search directory: {libDirectory.Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar)}");
+                resolver.AddSearchDirectory(libDirectory);
+            }
 
-            foreach (var pluginSubDirectory in LoadDirectoriesRecursively(UnityGame.PluginsPath))
-                resolver.AddSearchDirectory(pluginSubDirectory);
+            foreach (var pluginDirectory in Directory.GetDirectories(UnityGame.PluginsPath, "*", SearchOption.AllDirectories).Where((x) => !x.Contains(".cache")).Prepend(UnityGame.PluginsPath))
+            {
+                Logger.Loader.Debug($"Adding plugin search directory: {pluginDirectory.Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar)}");
+                resolver.AddSearchDirectory(pluginDirectory);
+            }
             
             foreach (var plugin in plugins)
             {
@@ -158,6 +136,8 @@ namespace IPA.Loader
                     File = new FileInfo(plugin),
                     IsSelf = false
                 };
+
+                var pluginRelative = plugin.Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar);
 
                 try
                 {
@@ -202,9 +182,9 @@ namespace IPA.Loader
                     if (pluginManifest == null)
                     {
 #if DIRE_LOADER_WARNINGS
-                        Logger.loader.Error($"Could not find manifest.json for {Path.GetFileName(plugin)}");
+                        Logger.loader.Error($"Could not find manifest.json for {pluginRelative}");
 #else
-                        Logger.Loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
+                        Logger.Loader.Notice($"No manifest.json in {pluginRelative}");
 #endif
                         continue;
                     }
@@ -277,16 +257,16 @@ namespace IPA.Loader
 
                     if (metadata.PluginType == null)
                     {
-                        Logger.Loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
+                        Logger.Loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {pluginRelative}");
                         continue;
                     }
 
-                    Logger.Loader.Debug($"Adding info for {Path.GetFileName(plugin)}");
+                    Logger.Loader.Debug($"Adding info for {pluginRelative}");
                     PluginsMetadata.Add(metadata);
                 }
                 catch (Exception e)
                 {
-                    Logger.Loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
+                    Logger.Loader.Error($"Could not load data for plugin {pluginRelative}");
                     Logger.Loader.Error(e);
                     ignoredPlugins.Add(metadata, new IgnoreReason(Reason.Error)
                     {
@@ -296,8 +276,8 @@ namespace IPA.Loader
                 }
             }
 
-            IEnumerable<string> bareManifests = LoadFilesRecursively(UnityGame.PluginsPath, "*.json");
-            bareManifests = bareManifests.Concat(LoadFilesRecursively(UnityGame.PluginsPath, "*.manifest"));
+            IEnumerable<string> bareManifests = Directory.GetFiles(UnityGame.PluginsPath, "*.json", SearchOption.AllDirectories);
+            bareManifests = bareManifests.Concat(Directory.GetFiles(UnityGame.PluginsPath, "*.manifest", SearchOption.AllDirectories));
             foreach (var manifest in bareManifests)
             {
                 try
@@ -309,13 +289,15 @@ namespace IPA.Loader
                         IsBare = true,
                     };
 
-                    metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+                    metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest)) ?? throw new NotSupportedException();
+
+                    var manifestRelative = manifest.Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar);
 
                     if (metadata.Manifest.Files.Length < 1)
-                        Logger.Loader.Warn($"Bare manifest {Path.GetFileName(manifest)} does not declare any files. " +
+                        Logger.Loader.Warn($"Bare manifest {manifestRelative} does not declare any files. " +
                             $"Dependency resolution and verification cannot be completed.");
 
-                    Logger.Loader.Debug($"Adding info for bare manifest {Path.GetFileName(manifest)}");
+                    Logger.Loader.Debug($"Adding info for bare manifest {manifestRelative}");
                     PluginsMetadata.Add(metadata);
                 }
                 catch (Exception e)
@@ -555,7 +537,9 @@ namespace IPA.Loader
                 }
                 else
                 {
-                    Logger.Loader.Warn($"Found duplicates of {meta.Id}, using newest");
+                    Logger.Loader.Warn(
+                        $"{meta.Name}@{meta.HVersion} ({meta.File.ToString().Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar)}) --- " +
+                        $"Used plugin: {existing.Meta.File.ToString().Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar)}@{existing.Meta.HVersion}");
                     ignoredPlugins.Add(meta, new(Reason.Duplicate)
                     {
                         ReasonText = $"Duplicate entry of same ID ({meta.Id})",
