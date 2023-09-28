@@ -430,18 +430,15 @@ namespace IPA.Config.Stores
             typeBuilder.AddInterfaceImplementation(typeof(IConfigStore));
 
             var IConfigStore_t = typeof(IConfigStore);
-            var IConfigStore_GetSyncObject = IConfigStore_t.GetProperty(nameof(IConfigStore.SyncAction)).GetGetMethod();
-            var IConfigStore_SetSyncAction = IConfigStore_t.GetProperty(nameof(IConfigStore.SyncAction)).GetSetMethod();
+            var IConfigStore_GetSyncObject = IConfigStore_t.GetProperty(nameof(IConfigStore.SyncObject)).GetGetMethod();
             var IConfigStore_GetWriteSyncObject = IConfigStore_t.GetProperty(nameof(IConfigStore.WriteSyncObject)).GetGetMethod();
             var IConfigStore_WriteTo = IConfigStore_t.GetMethod(nameof(IConfigStore.WriteTo));
             var IConfigStore_ReadFrom = IConfigStore_t.GetMethod(nameof(IConfigStore.ReadFrom));
 
             #region IConfigStore.SyncObject
-            var syncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.SyncAction), PropertyAttributes.None, IConfigStore_GetSyncObject.ReturnType, null);
-            var syncObjPropGet = typeBuilder.DefineMethod($"get_{nameof(IConfigStore.SyncAction)}", virtualPropertyMethodAttr, syncObjProp.PropertyType, Type.EmptyTypes);
-            var syncObjPropSet = typeBuilder.DefineMethod($"set_{nameof(IConfigStore.SyncAction)}", virtualPropertyMethodAttr, null, new[] { syncObjProp.PropertyType });
+            var syncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.SyncObject), PropertyAttributes.None, IConfigStore_GetSyncObject.ReturnType, null);
+            var syncObjPropGet = typeBuilder.DefineMethod($"<g>{nameof(IConfigStore.SyncObject)}", virtualPropertyMethodAttr, syncObjProp.PropertyType, Type.EmptyTypes);
             syncObjProp.SetGetMethod(syncObjPropGet);
-            syncObjProp.SetSetMethod(syncObjPropSet);
             typeBuilder.DefineMethodOverride(syncObjPropGet, IConfigStore_GetSyncObject);
 
             {
@@ -452,18 +449,7 @@ namespace IPA.Config.Stores
                 il.Emit(OpCodes.Call, Impl.ImplGetSyncObjectMethod);
                 il.Emit(OpCodes.Ret);
             }
-
-            {
-                var il = syncObjPropSet.GetILGenerator();
-
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Tailcall);
-                il.Emit(OpCodes.Call, Impl.ImplSetSyncActionMethod);
-                il.Emit(OpCodes.Ret);
-            }
             #endregion
-
             #region IConfigStore.WriteSyncObject
             var writeSyncObjProp = typeBuilder.DefineProperty(nameof(IConfigStore.WriteSyncObject), PropertyAttributes.None, IConfigStore_GetWriteSyncObject.ReturnType, null);
             var writeSyncObjPropGet = typeBuilder.DefineMethod($"<g>{nameof(IConfigStore.WriteSyncObject)}", virtualPropertyMethodAttr, writeSyncObjProp.PropertyType, Type.EmptyTypes);
