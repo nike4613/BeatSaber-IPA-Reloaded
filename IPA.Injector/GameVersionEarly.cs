@@ -1,4 +1,5 @@
-﻿using IPA.Utilities;
+﻿#nullable enable
+using IPA.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,7 +49,7 @@ namespace IPA.Injector
                 }
 
                 var rewind = -sizeof(int) - sizeof(byte);
-                stream.Seek(rewind, SeekOrigin.Current); // rewind to the string length
+                _ = stream.Seek(rewind, SeekOrigin.Current); // rewind to the string length
 
                 var strlen = reader.ReadInt32();
                 var strbytes = reader.ReadBytes(strlen);
@@ -57,7 +58,7 @@ namespace IPA.Injector
             }
         }
 
-        internal static AlmostVersion SafeParseVersion() => new AlmostVersion(GetGameVersion());
+        internal static AlmostVersion SafeParseVersion() => new(GetGameVersion());
 
         private static void _Load() 
         {

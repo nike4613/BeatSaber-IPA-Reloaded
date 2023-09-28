@@ -111,6 +111,13 @@ void unhandledException(void* exc, void* data)
 // We use this since it will always be called once to initialize Mono's JIT
 void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_version)
 {
+	const BOOL debugger_already_initialized = mono_debug_enabled();
+
+	if(debugger_already_initialized)
+	{
+		LOG("Debugger was already initialized\n");
+	}
+	
 	// Call the original mono_jit_init_version to initialize the Unity Root Domain
 	if (debug) {
 		char* opts[1];
@@ -118,14 +125,14 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 		ownMonoJitParseOptions(0, opts);
 	}
 #ifdef WIN32
-    if (debug_info) {
+    if (debug_info && !debugger_already_initialized) {
         mono_debug_init(MONO_DEBUG_FORMAT_MONO);
     }
 #endif
 
 	void *domain = mono_jit_init_version(root_domain_name, runtime_version);
 
-	if (debug_info) {
+	if (debug_info && !debugger_already_initialized) {
 #ifdef WIN64
         mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 #endif

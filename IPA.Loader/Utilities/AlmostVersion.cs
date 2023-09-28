@@ -190,7 +190,7 @@ namespace IPA.Utilities
         /// <param name="obj">the object to compare to</param>
         /// <returns><see langword="true"/> if they are equal, <see langword="false"/> otherwise</returns>
         /// <seealso cref="object.Equals(object)"/>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is AlmostVersion version &&
                    SemverValue == version.SemverValue &&

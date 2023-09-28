@@ -7,8 +7,8 @@ if ($PSEdition -eq "Core") {
 
 # read SelfConfig, remove wierd bits, load it, load Newtonsoft, and turn it into a schema
 
-$newtonsoftVer = "12.0.2"
-$newtonsoftSchemaVer = "3.0.11"
+$newtonsoftVer = "13.0.1"
+$newtonsoftSchemaVer = "3.0.15-beta2"
 $codeDomProviderVer = "3.6.0"
 $roslynVer = "3.10.0"
 $nugetBase = "$(Get-Location)/nuget"

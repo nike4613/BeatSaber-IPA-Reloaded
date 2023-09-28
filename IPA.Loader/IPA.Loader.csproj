@@ -50,7 +50,7 @@
   <ItemGroup>
     <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
     <!--<PackageReference Include="Lib.Harmony" Version="2.0.2" />-->
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!--<PackageReference Include="AsyncBridge" Version="0.3.1" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0">
       <ExcludeAssets>buildtransitive</ExcludeAssets>

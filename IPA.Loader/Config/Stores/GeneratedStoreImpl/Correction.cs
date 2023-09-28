@@ -46,6 +46,7 @@ namespace IPA.Config.Stores
 
             var endLabel = il.DefineLabel();
 
+            // TODO: when we have a nullable, we need to save to a local to call methods
             if (member.IsNullable)
             {
                 il.Emit(OpCodes.Dup);

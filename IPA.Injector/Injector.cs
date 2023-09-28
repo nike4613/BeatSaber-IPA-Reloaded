@@ -45,8 +45,8 @@ namespace IPA.Injector
             _ = args;
             try
             {
-                if (Environment.GetCommandLineArgs().Contains("--verbose"))
-                    WinConsole.Initialize();
+                var arguments = Environment.GetCommandLineArgs();
+                MaybeInitializeConsole(arguments);
 
                 SetupLibraryLoading();
 
@@ -55,8 +55,8 @@ namespace IPA.Injector
                 // this is weird, but it prevents Mono from having issues loading the type.
                 // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
                 var unused = StandardLogger.PrintFilter;
-                #region // Above hack explaination
-                /* 
+                #region // Above hack explanation
+                /*
                  * Due to an unknown bug in the version of Mono that Unity uses, if the first access to StandardLogger
                  * is a call to a constructor, then Mono fails to load the type correctly. However, if the first access is to
                  * the above static property (or maybe any, but I don't really know) it behaves as expected and works fine.
@@ -65,7 +65,7 @@ namespace IPA.Injector
 
                 Default.Debug("Initializing logger");
 
-                SelfConfig.ReadCommandLine(Environment.GetCommandLineArgs());
+                SelfConfig.ReadCommandLine(arguments);
                 SelfConfig.Load();
                 DisabledConfig.Load();
 
@@ -80,10 +80,12 @@ namespace IPA.Injector
 
                 Logging.Logger.Injector.Debug("Prepping bootstrapper");
 
+                // make sure to load the game version and check boundaries before installing the bootstrap, because that uses the game assemblies property
+                GameVersionEarly.Load();
+                SelfConfig.Instance.CheckVersionBoundary();
+
                 // updates backup
                 InstallBootstrapPatch();
-
-                GameVersionEarly.Load();
 
                 AntiMalwareEngine.Initialize();
 
@@ -97,6 +99,25 @@ namespace IPA.Injector
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        private static void MaybeInitializeConsole(string[] arguments)
+        {
+            var i = 0;
+            while (i < arguments.Length)
+            {
+                if (arguments[i++] == "--verbose")
+                {
+                    if (i == arguments.Length)
+                    {
+                        WinConsole.Initialize(WinConsole.AttachParent);
+                        return;
+                    }
+
+                    WinConsole.Initialize(int.TryParse(arguments[i], out int processId) ? processId : WinConsole.AttachParent);
+                    return;
+                }
             }
         }
 
@@ -114,11 +135,6 @@ namespace IPA.Injector
             if (loadingDone) return;
             loadingDone = true;
             Loader.LibLoader.Configure();
-        }
-
-        private static void InstallHarmonyProtections()
-        { // proxy function to delay resolution
-            HarmonyProtectorProxy.ProtectNull();
         }
 
         private static void InstallBootstrapPatch()
@@ -238,28 +254,12 @@ namespace IPA.Injector
             endPatchCoreModule:
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
-            Logging.Logger.Injector.Debug("Ensuring game assemblies are virtualized");
-
-            #region Virtualize game assemblies
             bool isFirst = true;
             foreach (var name in SelfConfig.GameAssemblies_)
             {
                 var ascPath = Path.Combine(managedPath, name);
 
                 using var execSec = CriticalSection.ExecuteSection();
-
-                try
-                {
-                    Logging.Logger.Injector.Debug($"Virtualizing {name}");
-                    using var ascModule = VirtualizedModule.Load(ascPath);
-                    ascModule.Virtualize(cAsmName, () => bkp?.Add(ascPath));
-                }
-                catch (Exception e) 
-                {
-                    Logging.Logger.Injector.Error($"Could not virtualize {ascPath}");
-                    if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                        Logging.Logger.Injector.Error(e);
-                }
 
 #if BeatSaber
                 if (isFirst)
@@ -292,7 +292,6 @@ namespace IPA.Injector
                 }
 #endif
             }
-            #endregion
 
             sw.Stop();
             Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");
@@ -316,8 +315,6 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
-
-            InstallHarmonyProtections();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;

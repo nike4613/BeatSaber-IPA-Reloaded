@@ -53,6 +53,12 @@ namespace IPA.Config
                     case "--no-yeet":
                         CommandLineValues.YeetMods = false;
                         break;
+                    case "--no-logs":
+                        CommandLineValues.WriteLogs = false;
+                        break;
+                    case "--darken-message":
+                        CommandLineValues.Debug.DarkenMessages = true;
+                        break;
                     case "--condense-logs":
                         CommandLineValues.Debug.CondenseModLogs = true;
                         break;
@@ -72,10 +78,18 @@ namespace IPA.Config
             }
         }
 
-        internal const string IPAName = "Beat Saber IPA";
-        internal const string IPAVersion = "4.2.2.0";
+        public void CheckVersionBoundary()
+        {
+            if (ResetGameAssebliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
+            {
+                GameAssemblies = GetDefaultGameAssemblies();
+            }
+        }
 
-        // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug, 
+        internal const string IPAName = "Beat Saber IPA";
+        internal const string IPAVersion = "4.3.0.0";
+
+        // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug,
         //      Debug.CondenseModLogs
         internal static SelfConfig CommandLineValues = new();
 
@@ -148,6 +162,11 @@ namespace IPA.Config
             public virtual bool SyncLogging { get; set; } = false;
             // LINE: ignore
             public static bool SyncLogging_ => Instance?.Debug?.SyncLogging ?? false;
+
+            public virtual bool DarkenMessages { get; set; } = false;
+            // LINE: ignore 2
+            public static bool DarkenMessages_ => (Instance?.Debug?.DarkenMessages ?? false)
+                                               || CommandLineValues.Debug.DarkenMessages;
         }
 
         // LINE: ignore
@@ -174,19 +193,33 @@ namespace IPA.Config
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
                                      &&   CommandLineValues.YeetMods;
 
+        [JsonIgnore]
+        public bool WriteLogs { get; set; } = true;
+
+        public virtual bool ResetGameAssebliesOnVersionChange { get; set; } = true;
+
         // LINE: ignore
         [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
-        public virtual HashSet<string> GameAssemblies { get; set; } = new HashSet<string>
+        public virtual HashSet<string> GameAssemblies { get; set; } = GetDefaultGameAssemblies();
+
+        // BEGIN: section ignore
+        public static HashSet<string> GetDefaultGameAssemblies()
+            => new()
             {
-            // LINE: ignore 5
 #if BeatSaber // provide these defaults only for Beat Saber builds
-                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll", 
-                "BeatmapCore.dll", "GameplayCore.dll","HMLibAttributes.dll", 
+                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll",
+                "BeatmapCore.dll", "GameplayCore.dll", "HMLibAttributes.dll", "BeatmapEditor3D.dll"
 #else // otherwise specify Assembly-CSharp.dll
                 "Assembly-CSharp.dll"
-            // LINE: ignore
 #endif
             };
+        // END: section ignore
+
+        // LINE: ignore
+#if false // used to make schema gen happy
+        private static HashSet<string> GetDefaultGameAssemblies() => null;
+        // LINE: ignore
+#endif
 
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };

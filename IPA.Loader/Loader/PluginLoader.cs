@@ -104,7 +104,9 @@ namespace IPA.Loader
                         throw new InvalidOperationException()))
                     manifest = manifestReader.ReadToEnd();
 
-                selfMeta.Manifest = JsonConvert.DeserializeObject<PluginManifest>(manifest) ?? throw new NotSupportedException();
+                var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                selfMeta.Manifest = manifestObj ?? throw new InvalidOperationException("Deserialized manifest was null");
+
 
                 PluginsMetadata.Add(selfMeta);
                 SelfMeta = selfMeta;
@@ -288,10 +290,17 @@ namespace IPA.Loader
                         IsSelf = false,
                         IsBare = true,
                     };
-
-                    metadata.Manifest = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest)) ?? throw new NotSupportedException();
-
+                    
                     var manifestRelative = manifest.Replace(UnityGame.InstallPath, "").TrimStart(Path.DirectorySeparatorChar);
+                    
+                    var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+                    if (manifestObj is null)
+                    {
+                        Logger.Loader.Error($"Bare manifest {manifestRelative} deserialized to null");
+                        continue;
+                    }
+
+                    metadata.Manifest = manifestObj;
 
                     if (metadata.Manifest.Files.Length < 1)
                         Logger.Loader.Warn($"Bare manifest {manifestRelative} does not declare any files. " +

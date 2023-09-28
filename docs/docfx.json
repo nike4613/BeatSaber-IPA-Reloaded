@@ -20,7 +20,7 @@
     "disableGitFeatures": false,
     "disableDefaultFilter": false,
     "properties": {
-      "TargetFramework": "net461"
+      "TargetFramework": "net472"
     }
   }],
   "build": {

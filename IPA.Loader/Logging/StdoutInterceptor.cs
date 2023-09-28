@@ -54,7 +54,7 @@ namespace IPA.Logging
         private const ConsoleColor defaultColor = ConsoleColor.Gray;
         private ConsoleColor currentColor = defaultColor;
 
-        private static string ConsoleColorToForegroundSet(ConsoleColor col)
+        internal static string ConsoleColorToForegroundSet(ConsoleColor col)
         {
             if (!WinConsole.UseVTEscapes) return "";
             string code = "0"; // reset

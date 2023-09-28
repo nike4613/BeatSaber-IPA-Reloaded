@@ -22,14 +22,12 @@ namespace IPA.Logging
 
         internal static bool IsInitialized;
 
-        public static void Initialize(bool alwaysCreateNewConsole = false)
+        public static void Initialize(int processId, bool alwaysCreateNewConsole = false)
         {
-            bool consoleAttached = true;
-            if (alwaysCreateNewConsole
-                || (AttachConsole(AttachParent) == 0
-                && Marshal.GetLastWin32Error() != ErrorAccessDenied))
+            bool consoleAttached;
+            if (alwaysCreateNewConsole || !(consoleAttached = AttachConsole(processId)))
             {
-                consoleAttached = AllocConsole() != 0;
+                consoleAttached = AllocConsole();
             }
 
             if (consoleAttached)
@@ -39,7 +37,7 @@ namespace IPA.Logging
             }
         }
 
-        public static void InitializeStreams()
+        private static void InitializeStreams()
         {
             InitializeOutStream();
             InitializeInStream();
@@ -62,7 +60,7 @@ namespace IPA.Logging
                     if (!SetConsoleMode(handle, mode))
                     {
                         UseVTEscapes = false;
-                        Console.Error.WriteLine("Could not enable VT100 escape code processing (maybe you're running an old Windows?): " + 
+                        Console.Error.WriteLine("Could not enable VT100 escape code processing (maybe you're running an old Windows?): " +
                             new Win32Exception(Marshal.GetLastWin32Error()).Message);
                     }
                 }
@@ -87,18 +85,11 @@ namespace IPA.Logging
         private static FileStream CreateFileStream(string name, uint win32DesiredAccess, uint win32ShareMode,
                                 FileAccess dotNetFileAccess, out SafeFileHandle handle)
         {
-            var file = new SafeFileHandle(CreateFileW(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OpenExisting, FileAttributeNormal, IntPtr.Zero), true);
+            var file = new SafeFileHandle(CreateFile(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OpenExisting, FileAttributeNormal, IntPtr.Zero), true);
             if (!file.IsInvalid)
             {
                 handle = file;
-#if NET4
                 var fs = new FileStream(file, dotNetFileAccess);
-#elif NET3
-#pragma warning disable CS0618
-                // this is marked obsolete, and shouldn't need to be used, but the constructor used in .NET 4 doesn't exist in Unity's mscorlib.dll
-                var fs = new FileStream(file.DangerousGetHandle(), dotNetFileAccess);
-#pragma warning restore
-#endif
                 return fs;
             }
 
@@ -106,43 +97,31 @@ namespace IPA.Logging
             return null;
         }
 
-#region Win API Functions and Constants
-        [DllImport("kernel32.dll",
-            EntryPoint = "AllocConsole",
-            SetLastError = true,
-            CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall)]
-        private static extern int AllocConsole();
+        #region Win API Functions and Constants
 
-        [DllImport("kernel32.dll",
-            EntryPoint = "AttachConsole",
-            SetLastError = true,
-            CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall)]
-        private static extern uint AttachConsole(uint dwProcessId);
+        [DllImport("kernel32.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+        private static extern bool AllocConsole();
 
-        [DllImport("kernel32.dll",
-            EntryPoint = "CreateFileW",
-            SetLastError = true,
-            CharSet = CharSet.Unicode,
-            CallingConvention = CallingConvention.StdCall)]
-        private static extern IntPtr CreateFileW(
-              string lpFileName,
-              uint dwDesiredAccess,
-              uint dwShareMode,
-              IntPtr lpSecurityAttributes,
-              uint dwCreationDisposition,
-              uint dwFlagsAndAttributes,
-              IntPtr hTemplateFile
-            );
+        [DllImport("kernel32.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+        private static extern bool AttachConsole(int dwProcessId);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+        private static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode,
+            IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static extern IntPtr GetStdHandle(int nStdHandle);
 
         private const uint EnableVTProcessing = 0x0004;
@@ -153,10 +132,9 @@ namespace IPA.Logging
         private const uint FileShareWrite = 0x00000002;
         private const uint OpenExisting = 0x00000003;
         private const uint FileAttributeNormal = 0x80;
-        private const uint ErrorAccessDenied = 5;
-        
-        private const uint AttachParent = 0xFFFFFFFF;
 
-#endregion
+        internal const int AttachParent = -1;
+
+        #endregion
     }
 }

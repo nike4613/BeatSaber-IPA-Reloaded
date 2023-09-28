@@ -112,6 +112,7 @@ namespace IPA.Config.Stores
                     {
                         il.Emit(OpCodes.Stloc, mapLocal);
 
+                        // TODO: handle creating a nullable, when applicable
                         EmitLoad(il, member, thisarg);
                         il.Emit(OpCodes.Stloc, resultLocal);
 
