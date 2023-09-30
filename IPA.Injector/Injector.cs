@@ -305,7 +305,7 @@ namespace IPA.Injector
             if (bootstrapped) return;
             bootstrapped = true;
 
-            Application.logMessageReceived += delegate (string condition, string stackTrace, LogType type)
+            Application.logMessageReceivedThreaded += delegate (string condition, string stackTrace, LogType type)
             {
                 var level = UnityLogRedirector.LogTypeToLevel(type);
                 UnityLogProvider.UnityLogger.Log(level, $"{condition}");
