@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 
 namespace IPA.Config
 {
@@ -12,8 +11,8 @@ namespace IPA.Config
         /// A synchronization object for the save thread to wait on for changes. 
         /// It should be signaled whenever the internal state of the object is changed.
         /// The writer will never signal this handle. 
+        /// This will be null for internally-implemented providers
         /// </summary>
-        [Obsolete("Add a message here...")] // Do this later
         WaitHandle SyncObject { get; }
 
         /// <summary>
