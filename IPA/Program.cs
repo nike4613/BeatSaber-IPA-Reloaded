@@ -72,7 +72,7 @@ namespace IPA
                 }
 
                 PatchContext? context = null;
-                
+
                 Assembly? AssemblyLibLoader(object? source, ResolveEventArgs e)
                 {
                     // ReSharper disable AccessToModifiedClosure
@@ -329,8 +329,16 @@ namespace IPA
                     Debug.Assert(targetFile.Directory != null, "targetFile.Directory != null");
                     targetFile.Directory?.Create();
 
-                    LineBack();
-                    ClearLine();
+                    try
+                    {
+                        LineBack();
+                        ClearLine();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Might throw IOException due to an invalid handle when accessing IsConsole from a MSBuild task.
+                    }
+
                     Console.WriteLine(@"Copying {0}", targetFile.FullName);
                     backup.Add(targetFile);
                     _ = fi.CopyTo(targetFile.FullName, true);
@@ -366,7 +374,7 @@ namespace IPA
         /// Encodes an argument for passing into a program
         /// </summary>
         /// <param name="original">The value_ that should be received by the program</param>
-        /// <returns>The value_ which needs to be passed to the program for the original value_ 
+        /// <returns>The value_ which needs to be passed to the program for the original value_
         /// to come through</returns>
         public static string EncodeParameterArgument(string original)
         {

@@ -34,8 +34,8 @@ namespace IPA.Config.Stores
 
         public static IConfigStore Create(Type type) => Create(type, null);
 
-        private static readonly MethodInfo CreateGParent = 
-            typeof(GeneratedStoreImpl).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static, null, 
+        private static readonly MethodInfo CreateGParent =
+            typeof(GeneratedStoreImpl).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static, null,
                                              CallingConventions.Any, new[] { typeof(IGeneratedStore) }, Array.Empty<ParameterModifier>());
         internal static T Create<T>(IGeneratedStore? parent) where T : class => (T)Create(typeof(T), parent);
 
@@ -72,7 +72,14 @@ namespace IPA.Config.Stores
 
         internal static void DebugSaveAssembly(string file)
         {
-            Assembly.Save(file);
+            try
+            {
+                Assembly.Save(file);
+            }
+            catch (Exception ex)
+            {
+                Logger.Config.Error(ex);
+            }
         }
 
         private static ModuleBuilder? module;
