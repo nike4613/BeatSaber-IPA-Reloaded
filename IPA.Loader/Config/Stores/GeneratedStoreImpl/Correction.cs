@@ -1,17 +1,8 @@
 ﻿#nullable enable
 using IPA.Config.Data;
-using IPA.Config.Stores.Attributes;
-using IPA.Logging;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 #if NET3
 using Net3_Proxy;
 using Array = Net3_Proxy.Array;
@@ -46,12 +37,27 @@ namespace IPA.Config.Stores
 
             var endLabel = il.DefineLabel();
 
-            // TODO: when we have a nullable, we need to save to a local to call methods
             if (member.IsNullable)
             {
-                il.Emit(OpCodes.Dup);
+                using var valueTypeLocal = GetLocal.Allocate(member.Type);
+                var passedNull = il.DefineLabel();
+
+                il.Emit(OpCodes.Stloc, valueTypeLocal);
+                il.Emit(OpCodes.Ldloca, valueTypeLocal);
                 il.Emit(OpCodes.Call, member.Nullable_HasValue.GetGetMethod());
-                il.Emit(OpCodes.Brfalse, endLabel);
+                il.Emit(OpCodes.Brtrue, passedNull);
+
+                if (member.ConversionType.IsValueType)
+                {
+                    il.Emit(OpCodes.Ldloca, valueTypeLocal);
+                    il.Emit(OpCodes.Initobj, member.Type);
+                }
+                il.Emit(OpCodes.Ldloc, valueTypeLocal);
+                il.Emit(OpCodes.Br, endLabel);
+
+                il.MarkLabel(passedNull);
+
+                il.Emit(OpCodes.Ldloca, valueTypeLocal);
                 il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
             }
 

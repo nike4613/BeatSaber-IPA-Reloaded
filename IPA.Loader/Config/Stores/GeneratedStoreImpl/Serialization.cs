@@ -28,47 +28,58 @@ namespace IPA.Config.Stores
                 ? GetLocal.Allocate(member.Type)
                 : default;
 
-            if (member.IsNullable)
-            {
-                il.Emit(OpCodes.Stloc, valueTypeLocal.Local);
-                il.Emit(OpCodes.Ldloca, valueTypeLocal.Local);
-            }
-
             var endSerialize = il.DefineLabel();
 
             if (member.AllowNull)
             {
                 var passedNull = il.DefineLabel();
 
-                il.Emit(OpCodes.Dup);
                 if (member.IsNullable)
+                {
+                    il.Emit(OpCodes.Stloc, valueTypeLocal.Local);
+                    il.Emit(OpCodes.Ldloca, valueTypeLocal.Local);
                     il.Emit(OpCodes.Call, member.Nullable_HasValue.GetGetMethod());
+                }
                 il.Emit(OpCodes.Brtrue, passedNull);
 
-                il.Emit(OpCodes.Pop);
                 il.Emit(OpCodes.Ldnull);
                 il.Emit(OpCodes.Br, endSerialize);
 
                 il.MarkLabel(passedNull);
-            }
 
-            if (member is { IsNullable: true, HasConverter: false })
-                il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
+                if (member.IsNullable)
+                {
+                    if (!member.HasConverter)
+                    {
+                        il.Emit(OpCodes.Ldloca, valueTypeLocal.Local);
+                        il.Emit(OpCodes.Call, member.Nullable_Value.GetGetMethod());
+                    }
+                }
+                else
+                {
+                    EmitLoad(il, member, thisarg);
+                }
+            }
 
             var memberConversionType = member.ConversionType;
             var targetType = GetExpectedValueTypeForType(memberConversionType);
             if (member.HasConverter)
             {
-                using var stlocal = GetLocal.Allocate(member.IsNullable ? member.Type : memberConversionType);
-                using var valLocal = GetLocal.Allocate(typeof(Value));
-
                 if (member.IsNullable)
-                    il.Emit(OpCodes.Ldloc_S, valueTypeLocal.Local);
+                {
+                    il.BeginExceptionBlock();
+                    il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                    il.Emit(OpCodes.Ldloc, valueTypeLocal.Local);
+                }
+                else
+                {
+                    using var stlocal = GetLocal.Allocate(memberConversionType);
 
-                il.Emit(OpCodes.Stloc, stlocal);
-                il.BeginExceptionBlock();
-                il.Emit(OpCodes.Ldsfld, member.ConverterField);
-                il.Emit(OpCodes.Ldloc, stlocal);
+                    il.Emit(OpCodes.Stloc, stlocal);
+                    il.BeginExceptionBlock();
+                    il.Emit(OpCodes.Ldsfld, member.ConverterField);
+                    il.Emit(OpCodes.Ldloc, stlocal);
+                }
 
                 if (member.IsGenericConverter)
                 {
@@ -90,18 +101,18 @@ namespace IPA.Config.Stores
                     il.Emit(OpCodes.Call, toValue);
                 }
 
-                il.Emit(OpCodes.Stloc, valLocal);
+                il.Emit(OpCodes.Stloc_1);
                 il.BeginCatchBlock(typeof(Exception));
                 EmitWarnException(il, "Error serializing member using converter");
                 il.Emit(OpCodes.Ldnull);
-                il.Emit(OpCodes.Stloc, valLocal);
+                il.Emit(OpCodes.Stloc_1);
                 il.EndExceptionBlock();
-                il.Emit(OpCodes.Ldloc, valLocal);
+                il.Emit(OpCodes.Ldloc_1);
             }
             else if (targetType == typeof(Text))
             { // only happens when arg is a string or char
                 var TextCreate = typeof(Value).GetMethod(nameof(Value.Text));
-                if (member.Type == typeof(char))
+                if (memberConversionType == typeof(char))
                 {
                     var strFromChar = typeof(char).GetMethod(nameof(char.ToString), new[] { typeof(char) });
                     il.Emit(OpCodes.Call, strFromChar);
@@ -172,7 +183,7 @@ namespace IPA.Config.Stores
                     if (!structure.Any())
                     {
                         Logger.Config.Warn($"Custom value type {memberConversionType.FullName} (when compiling serialization of" +
-                            $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
+                            $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members, might need a converter");
                         il.Emit(OpCodes.Pop);
                     }
                     else

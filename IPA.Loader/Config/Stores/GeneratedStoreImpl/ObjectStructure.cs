@@ -78,7 +78,7 @@ namespace IPA.Config.Stores
                 if (converterAttr.UseDefaultConverterForType)
                     converterAttr = new UseConverterAttribute(Converter.GetDefaultConverterType(member.Type));
                 if (converterAttr.UseDefaultConverterForType)
-                    throw new InvalidOperationException("How did we get here?"); 
+                    throw new InvalidOperationException("How did we get here?");
 
                 member.Converter = converterAttr.ConverterType;
                 member.IsGenericConverter = converterAttr.IsGenericConverter;
@@ -175,7 +175,7 @@ namespace IPA.Config.Stores
             // only look at public/protected fields
             foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                if (field.IsPrivate)
+                if (field.IsPrivate || field.IsAssembly)
                     continue;
 
                 var smi = new SerializedMemberInfo
