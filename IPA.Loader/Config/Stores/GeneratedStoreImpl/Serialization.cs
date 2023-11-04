@@ -127,13 +127,13 @@ namespace IPA.Config.Stores
             else if (targetType == typeof(Integer))
             {
                 var IntCreate = typeof(Value).GetMethod(nameof(Value.Integer));
-                EmitNumberConvertTo(il, IntCreate.GetParameters()[0].ParameterType, member.Type);
+                EmitNumberConvertTo(il, IntCreate.GetParameters()[0].ParameterType, memberConversionType);
                 il.Emit(OpCodes.Call, IntCreate);
             }
             else if (targetType == typeof(FloatingPoint))
             {
                 var FloatCreate = typeof(Value).GetMethod(nameof(Value.Float));
-                EmitNumberConvertTo(il, FloatCreate.GetParameters()[0].ParameterType, member.Type);
+                EmitNumberConvertTo(il, FloatCreate.GetParameters()[0].ParameterType, memberConversionType);
                 il.Emit(OpCodes.Call, FloatCreate);
             }
             else if (targetType == typeof(List))
