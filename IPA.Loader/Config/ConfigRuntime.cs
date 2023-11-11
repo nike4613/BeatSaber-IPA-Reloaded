@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using IPA.Utilities;
 using IPA.Utilities.Async;
 using System.IO;
-using System.Runtime.CompilerServices;
-using IPA.Logging;
-using UnityEngine;
 using Logger = IPA.Logging.Logger;
 #if NET4
 using Task = System.Threading.Tasks.Task;
@@ -30,15 +25,17 @@ namespace IPA.Config
                 => obj?.GetHashCode() ?? 0;
         }
 
-        private static readonly ConcurrentBag<Config> configs = new ConcurrentBag<Config>();
-        private static readonly AutoResetEvent configsChangedWatcher = new AutoResetEvent(false);
+        private static readonly ConcurrentBag<Config> configs = new();
+        private static readonly AutoResetEvent configsChangedWatcher = new(false);
+        public static readonly BlockingCollection<IConfigStore> RequiresSave = new();
         private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
         private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
             = new ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>>();
-        private static SingleThreadTaskScheduler loadScheduler = null;
-        private static TaskFactory loadFactory = null;
-        private static Thread saveThread = null;
+        private static SingleThreadTaskScheduler loadScheduler;
+        private static TaskFactory loadFactory;
+        private static Thread saveThread;
+        private static Thread legacySaveThread;
 
         private static void TryStartRuntime()
         {
@@ -54,6 +51,11 @@ namespace IPA.Config
             {
                 saveThread = new Thread(SaveThread);
                 saveThread.Start();
+            }
+            if (legacySaveThread == null || !legacySaveThread.IsAlive)
+            {
+                legacySaveThread = new Thread(LegacySaveThread);
+                legacySaveThread.Start();
             }
 
             AppDomain.CurrentDomain.ProcessExit -= ShutdownRuntime;
@@ -212,15 +214,47 @@ namespace IPA.Config
                 Logger.Config.Error($"{nameof(IConfigStore)} for {config.File} errored while reading from the {nameof(IConfigProvider)}");
                 Logger.Config.Error(e);
             }
-        } 
+        }
 
         private static void SaveThread()
         {
             try
             {
+                foreach (var item in RequiresSave.GetConsumingEnumerable())
+                {
+                    try
+                    {
+                        Save(configs.First((c) => ReferenceEquals(c.Store.WriteSyncObject, item.WriteSyncObject)));
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Config.Error($"Error waiting for in-memory updates");
+                        Logger.Config.Error(e);
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
+                    }
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                // we got aborted :(
+            }
+            finally
+            {
+                RequiresSave.Dispose();
+            }
+        }
+
+        private static void LegacySaveThread()
+        {
+            try
+            {
                 while (true)
                 {
-                    var configArr = configs.Where(c => c.Store != null).ToArray();
+                    var configArr = configs.Where(c => c.Store != null).Where(c => c.Store.SyncObject != null).ToArray();
                     int index = -1;
                     try
                     {

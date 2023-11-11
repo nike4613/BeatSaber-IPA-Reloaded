@@ -47,9 +47,7 @@ namespace IPA.Config.Stores
 
             internal static ConstructorInfo Ctor = typeof(Impl).GetConstructor(new[] { typeof(IGeneratedStore) });
             public Impl(IGeneratedStore store) => generated = store;
-
-            private readonly AutoResetEvent resetEvent = new(false);
-            public WaitHandle SyncObject => resetEvent;
+            public WaitHandle? SyncObject => null;
             public static WaitHandle? ImplGetSyncObject(IGeneratedStore s) => FindImpl(s)?.SyncObject;
             internal static MethodInfo ImplGetSyncObjectMethod = typeof(Impl).GetMethod(nameof(ImplGetSyncObject));
 
@@ -61,15 +59,7 @@ namespace IPA.Config.Stores
             public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s)?.SignalChanged();
             public void SignalChanged()
             {
-                try
-                {
-                    _ = resetEvent.Set();
-                }
-                catch (ObjectDisposedException e)
-                {
-                    Logger.Config.Error($"ObjectDisposedException while signalling a change for generated store {generated?.GetType()}");
-                    Logger.Config.Error(e);
-                }
+                ConfigRuntime.RequiresSave.Add(this);
             }
 
             internal static MethodInfo ImplInvokeChangedMethod = typeof(Impl).GetMethod(nameof(ImplInvokeChanged));
