@@ -10,7 +10,7 @@ using Version = Hive.Versioning.Version;
 namespace IPA.Utilities
 {
     /// <summary>
-    /// A type that wraps <see cref="Version"/> so that the string of the version is stored when the string is 
+    /// A type that wraps <see cref="Version"/> so that the string of the version is stored when the string is
     /// not a valid <see cref="Version"/>.
     /// </summary>
     public class AlmostVersion : IComparable<AlmostVersion>, IComparable<Version>,
@@ -61,7 +61,7 @@ namespace IPA.Utilities
         public AlmostVersion(SVersion ver) : this(ver?.UnderlyingVersion ?? throw new ArgumentNullException(nameof(ver))) { }
 
         /// <summary>
-        /// Creates an <see cref="AlmostVersion"/> from the version string in <paramref name="vertext"/> stored using 
+        /// Creates an <see cref="AlmostVersion"/> from the version string in <paramref name="vertext"/> stored using
         /// the storage mode specified in <paramref name="mode"/>.
         /// </summary>
         /// <param name="vertext">the text to parse as an <see cref="AlmostVersion"/></param>
@@ -92,7 +92,13 @@ namespace IPA.Utilities
             if (mode == StoredAs.SemVer)
             {
                 StorageMode = StoredAs.SemVer;
+#if BeatSaber
+                var index = str.IndexOf('_');
+                var versionString = index >= 0 ? str.Substring(0, index) : str;
+                var result = Version.TryParse(versionString, out var version);
+#else
                 var result = Version.TryParse(str, out var version);
+#endif
                 SemverValue = version;
                 return result;
             }

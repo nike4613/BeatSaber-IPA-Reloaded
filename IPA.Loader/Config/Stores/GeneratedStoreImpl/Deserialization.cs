@@ -41,7 +41,7 @@ namespace IPA.Config.Stores
             il.Emit(OpCodes.Callvirt, IGeneratedStore_Deserialize);
         }
 
-        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, LocalAllocator GetLocal, 
+        private static void EmitDeserializeNullable(ILGenerator il, SerializedMemberInfo member, Type expected, LocalAllocator GetLocal,
             Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             if (!member.IsNullable) throw new InvalidOperationException("EmitDeserializeNullable called for non-nullable!");
@@ -53,7 +53,7 @@ namespace IPA.Config.Stores
 
         // top of stack is the Value to deserialize; the type will be as returned from GetExpectedValueTypeForType
         // after, top of stack will be thing to write to field
-        private static void EmitDeserializeValue(ILGenerator il, SerializedMemberInfo member, Type targetType, Type expected, LocalAllocator GetLocal, 
+        private static void EmitDeserializeValue(ILGenerator il, SerializedMemberInfo member, Type targetType, Type expected, LocalAllocator GetLocal,
             Action<ILGenerator> thisarg, Action<ILGenerator> parentobj)
         {
             if (typeof(Value).IsAssignableFrom(targetType)) return; // do nothing
@@ -96,14 +96,14 @@ namespace IPA.Config.Stores
                 {
 
                     using var mapLocal = GetLocal.Allocate(typeof(Map));
-                    using var resultLocal = GetLocal.Allocate(targetType);
+                    using var resultLocal = GetLocal.Allocate(member.IsNullable ? member.Type : targetType);
                     using var valueLocal = GetLocal.Allocate(typeof(Value));
 
                     var structure = ReadObjectMembers(targetType);
                     if (!structure.Any())
                     {
-                        Logger.Config.Warn($"Custom value type {targetType.FullName} (when compiling serialization of" +
-                            $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members");
+                        Logger.Config.Warn($"Custom value type {targetType.FullName} (when compiling deserialization of" +
+                            $" {member.Name} on {member.Member.DeclaringType.FullName}) has no accessible members, might need a converter");
                         il.Emit(OpCodes.Pop);
                         il.Emit(OpCodes.Ldloca, resultLocal);
                         il.Emit(OpCodes.Initobj, targetType);
@@ -112,7 +112,6 @@ namespace IPA.Config.Stores
                     {
                         il.Emit(OpCodes.Stloc, mapLocal);
 
-                        // TODO: handle creating a nullable, when applicable
                         EmitLoad(il, member, thisarg);
                         il.Emit(OpCodes.Stloc, resultLocal);
 
@@ -130,7 +129,7 @@ namespace IPA.Config.Stores
             }
         }
 
-        private static void EmitDeserializeStructure(ILGenerator il, IEnumerable<SerializedMemberInfo> structure, 
+        private static void EmitDeserializeStructure(ILGenerator il, IEnumerable<SerializedMemberInfo> structure,
             LocalBuilder mapLocal, LocalBuilder valueLocal,
             LocalAllocator GetLocal, Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
@@ -204,7 +203,7 @@ namespace IPA.Config.Stores
         }
 
         // emit takes the value being deserialized, logs on error, leaves nothing on stack
-        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, LocalAllocator GetLocal, 
+        private static void EmitDeserializeMember(ILGenerator il, SerializedMemberInfo member, Label nextLabel, Action<ILGenerator> getValue, LocalAllocator GetLocal,
             Action<ILGenerator> thisobj, Action<ILGenerator> parentobj)
         {
             var Object_GetType = typeof(object).GetMethod(nameof(Object.GetType));

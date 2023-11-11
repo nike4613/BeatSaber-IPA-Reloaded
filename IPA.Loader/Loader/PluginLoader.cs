@@ -598,7 +598,7 @@ namespace IPA.Loader
                         Logger.Loader.Trace($"- Found already processed");
                         return true;
                     }
-                    if (metadataCache!.TryGetValue(id, out var plugin))
+                    if (metadataCache.TryGetValue(id, out var plugin))
                     {
                         Logger.Loader.Trace($"- In metadata cache");
                         if (partial)
@@ -609,11 +609,11 @@ namespace IPA.Loader
 
                         disabled = !plugin.Enabled;
                         meta = plugin.Meta;
+                        ignored = false;
                         if (!disabled)
                         {
                             try
                             {
-                                ignored = false;
                                 Resolve(plugin.Meta, ref disabled, out ignored);
                             }
                             catch (Exception e)
@@ -715,8 +715,7 @@ namespace IPA.Loader
                         if (depDisabled)
                         {
                             Logger.Loader.Warn($"Dependency '{id}' for '{plugin.Id}' disabled; disabling");
-                            disabledPlugins!.Add(plugin);
-                            _ = disabledIds!.Add(plugin.Id);
+                            disabledPlugins.Add(plugin);
                             disabled = true;
                         }
 
@@ -770,7 +769,6 @@ namespace IPA.Loader
                             && range.Matches(meta.HVersion)
                             && !conflIgnored && !conflDisabled) // the conflict is only *actually* a problem if it is both not ignored and not disabled
                         {
-                            
                             Logger.Loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.HVersion}; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Conflict)
                             {
