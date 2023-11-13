@@ -59,7 +59,7 @@ namespace IPA.Loader
                 initialized = true;
 
 #if DEBUG
-                Config.Stores.GeneratedStoreImpl.DebugSaveAssembly("GeneratedAssembly.dll");
+                Config.Stores.GeneratedStoreImpl.DebugSaveAssembly($"{Config.Stores.GeneratedStoreImpl.GeneratedAssemblyName}.dll");
 #endif
             }
         }
