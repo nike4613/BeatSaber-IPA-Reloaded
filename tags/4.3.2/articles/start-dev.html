@@ -1,0 +1,548 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Making your own mod </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Making your own mod ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="articles.start.dev">
+<h1 id="making-a-mod">Making a mod</h1>
+
+<h2 id="overview">Overview</h2>
+<p>What follows is a <em>very</em> barebones, and frankly not very useful plugin class, even as a starting point,
+but it should be enough to give a decent idea of how to do quick upgrades of existing mods for those who want to.</p>
+<pre><code class="lang-cs" name="Plugin.cs">using System;
+using IPA;
+using IPA.Logging;
+
+namespace Demo
+{
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    internal class Plugin
+    {
+        public static Logger log { get; private set; }
+
+        [Init]
+        public Plugin(Logger logger)
+        {
+            log = logger;
+            log.Debug(&quot;Basic plugin running!&quot;);
+
+            // setup that does not require game code
+            // this is only called once ever, so do once-ever initialization
+        }
+
+        [OnStart]
+        public void OnStart()
+        {
+            // setup that requires game code
+        }
+
+        [OnExit]
+        public void OnExit()
+        {
+            // teardown
+        }
+    }
+}
+</code></pre><p>There are basically 4 major concepts here:</p>
+<ol>
+<li><a class="xref" href="../api/IPA.Logging.Logger.html">Logger</a>, the logging system.</li>
+<li><a class="xref" href="../api/IPA.PluginAttribute.html">PluginAttribute</a>, which declares that this class is a plugin and how it should behave.</li>
+<li><a class="xref" href="../api/IPA.InitAttribute.html">InitAttribute</a>, which declares the constructor (and optionally other methods) as being
+used for initialization.</li>
+<li>The lifecycle event attributes <a class="xref" href="../api/IPA.OnStartAttribute.html">OnStartAttribute</a> and <a class="xref" href="../api/IPA.OnExitAttribute.html">OnExitAttribute</a>.</li>
+</ol>
+<p>I reccommend you read the docs for each of those to get an idea for what they do.</p>
+<p>It is worth noting that this example is of a mod that <em>cannot</em> be enabled and disabled at runtime, as marked by
+<a class="xref" href="../api/IPA.RuntimeOptions.html#IPA_RuntimeOptions_SingleStartInit">RuntimeOptions.SingleStartInit</a>.</p>
+<h3 id="what-can-be-changed">What can be changed</h3>
+<p>Before we go adding more functionality, its worth mentioning that that is not the <em>only</em> way to have a plugin set up.</p>
+<p>For starters, we can add another <em>method</em> marked <code>[Init]</code>, and it will be called after the constructor, with the same
+injected parameters, if those are applicable.</p>
+<pre><code class="lang-cs" name="Plugin.cs#Init(Logger)">[Init]
+public void Init(Logger logger)
+{
+    // logger will be the same instance as log currently is
+}
+</code></pre><p>If you only had a method marked <code>[Init]</code>, and no constructors marked <code>[Init]</code>, then the plugin type must expose a
+public default constructor. If multiple constructors are marked <code>[Init]</code>, only the one with the most parameters will
+be called.</p>
+<p>You may also mark as many methods as you wish with <code>[Init]</code> and all of them will be called, in no well-defined order on
+initialization. The same is true for <code>[OnStart]</code> and <code>[OnExit]</code>, respectively.</p>
+<h2 id="from-scratch">From Scratch</h2>
+<p>If you are starting from scratch, you will need one other thing to get your plugin up and running: a manifest.</p>
+<p>A basic manifest for that might look a little like this:</p>
+<pre><code class="lang-json" name="manifest.json">{
+  &quot;author&quot;: &quot;ExampleMan&quot;,
+  &quot;description&quot;: [
+    &quot;A demo plugin written for the BSIPA basic tutorial.&quot;
+  ],
+  &quot;gameVersion&quot;: &quot;1.6.0&quot;,
+  &quot;id&quot;: null,
+  &quot;name&quot;: &quot;Demo Plugin&quot;,
+  &quot;version&quot;: &quot;0.0.1&quot;,
+  &quot;links&quot;: {
+    &quot;project-source&quot;: &quot;https://github.com/exampleman/demo-plugin/&quot;,
+    &quot;donate&quot;: &quot;https://ko-fi.com/exampleman&quot;
+  },
+}
+</code></pre><p>There is a lot going on there, but most of it should be decently obvious. Among the things that <em>aren&#39;t</em> immediately obvious,
+are</p>
+<ul>
+<li><code>id</code>: This represents a unique identifier for the mod, for use by package managers such as BeatMods. It may be null if the
+mod chooses not to support those.</li>
+<li><code>features</code>: Don&#39;t worry about this for now, this is a not-very-simple thing that will be touched on later.</li>
+</ul>
+<p>In addition, there are a few gatchas with it:</p>
+<ul>
+<li><code>description</code>: This can be either a string or an array representing different lines. Markdown formatting is permitted.</li>
+<li><code>gameVersion</code>: This should match <em>exactly</em> with the application version of the game being targeted. While this is not enforced
+by BSIPA, mod repositories like BeatMods may require it match, and it is good practice regardless.</li>
+<li><code>version</code>: This must be a valid SemVer version number for your mod.</li>
+</ul>
+<p>In order for your plugin to load, the manifest must be embedded into the plugin DLL as an embedded resource. This can be set in
+the Visual Studio file properties panel under <code>Build Action</code>, or in the <code>.csproj</code> like so:</p>
+<pre><code class="lang-xml" name="Demo.csproj#manifest">&lt;ItemGroup&gt;
+  &lt;EmbeddedResource Include=&quot;manifest.json&quot; /&gt;
+&lt;/ItemGroup&gt;
+</code></pre><p>At this point, if the main plugin source file and the manifest are in the same source location, and the plugin class is using the
+project&#39;s default namespace, the plugin will load just fine. However, this is somewhat difficult both to explain and verify, so I
+recommend you use the the <code>misc.plugin-hint</code> field in your manifest. It can be used like so:</p>
+<pre><code class="lang-json" name="manifest.json#misc.plugin-hint">&quot;misc&quot;: {
+  &quot;plugin-hint&quot;: &quot;Demo.Plugin&quot;
+}
+</code></pre><p>With this, you can set <code>plugin-hint</code> to the full typename of your plugin type, and it will correctly load. This is a hint though,
+and will also try it as a namespace if it fails to find the plugin type. If that fails, it will then fall back to using the manifest&#39;s
+embedded namespace.</p>
+<h3 id="a-less-painful-description">A less painful description</h3>
+<p>If you want to have a relatively long or well-formatted description for your mod, it may start to become painful to embed it in a list
+of JSON strings in the manifest. Luckily, there is a way to handle this.</p>
+<p>The first step is to create another embedded file, but this time it should be a Markdown file, perhaps <code>description.md</code>. It may contain
+something like this:</p>
+<pre><code class="lang-markdown" name="description.md"># Demo Plugin
+
+A little demo for the BSIPA modding introduction.
+
+---
+
+WE CAN USE MARKDOWN!!!
+</code></pre><p>Then, in your manifest description, have the first line be something look like this, but replacing <code>Demo.description.md</code> with the fully
+namespaced name of the resource:</p>
+<pre><code class="lang-json" name="manifest.json#description">&quot;#![Demo.description.md]&quot;,
+</code></pre><p>Now, when loaded into memory, if anything reads your description metadata, they get the content of that file instead of the content of the
+manifest key.</p>
+<h3 id="configuring-your-plugin">Configuring your plugin</h3>
+<p>Something that many plugins want and need is configuration. Fortunately, BSIPA provides a fairly powerful configuration system out of the
+box. To start using it, first create a config class of some kind. Lets take a look at a fairly simple example of this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic">namespace Demo
+{
+    public class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public int IntValue { get; set; } = 42;
+
+        public float FloatValue { get; set; } = 3.14159f;
+    }
+}
+</code></pre><p>Notice how the class is both marked <code>public</code> <strong>and</strong> is not marked <code>sealed</code>. For the moment, both of these are necessary. Also notice that
+all of the members are properties. While this doesn&#39;t change much now, it will be significant in the near future.</p>
+<p>Now, how do we get this object off of disk? Simple. Back in your plugin class, change your <code>[Init]</code> constructor to look like this:</p>
+<pre><code class="lang-cs" name="Plugin.cs#config-init">[Init]
+public Plugin(Logger logger, Config conf)
+{
+    log = logger;
+    PluginConfig.Instance = conf.Generated&lt;PluginConfig&gt;();
+    log.Debug(&quot;Config loaded&quot;);
+
+    // setup that does not require game code
+}
+</code></pre><p>For this to compile, though, we will need to add a few <code>using</code>s:</p>
+<pre><code class="lang-cs" name="Plugin.cs#usings">using IPA.Config;
+using IPA.Config.Stores;
+</code></pre><p>With just this, you have your config automatically loading from disk! It&#39;s even reloaded when it gets changed mid-game! You can now access
+it from anywhere by simply accessing <code>PluginConfig.Instance</code>. Make sure you don&#39;t accidentally reassign this though, as then you will loose
+your only interaction with the user&#39;s preferences.</p>
+<p>By default, it will be named the same as is in your plugin&#39;s manifest&#39;s <code>name</code> field, and will use the built-in <code>json</code> provider. This means
+that the file that will be loaded from will be <code>UserData/Demo Plugin.json</code> for our demo plugin. You can, however, control both of those by
+applying attributes to the <a class="xref" href="../api/IPA.Config.Config.html">Config</a> parameter, namely <a class="xref" href="../api/IPA.Config.Config.NameAttribute.html">Config.NameAttribute</a> to control the name, and
+<a class="xref" href="../api/IPA.Config.Config.PreferAttribute.html">Config.PreferAttribute</a> to control the type. If the type preferences aren&#39;t registered though, it will just fall back to JSON.</p>
+<p>The config&#39;s behaviour can be found either later here, or in the remarks section of
+<a class="xref" href="../api/IPA.Config.Stores.GeneratedStore.html#IPA_Config_Stores_GeneratedStore_Generated__1_IPA_Config_Config_System_Boolean_">Generated&lt;T&gt;(Config, Boolean)</a>.</p>
+<p>At this point, your main plugin file should look something like this:</p>
+<pre><code class="lang-cs" name="Plugin.cs">using System;
+using IPA;
+using IPA.Logging;
+using IPA.Config;
+using IPA.Config.Stores;
+
+namespace Demo
+{
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    internal class Plugin
+    {
+        public static Logger log { get; private set; }
+
+        [Init]
+        public Plugin(Logger logger, Config conf)
+        {
+            log = logger;
+            PluginConfig.Instance = conf.Generated&lt;PluginConfig&gt;();
+            log.Debug(&quot;Config loaded&quot;);
+
+            // setup that does not require game code
+        }
+
+        [OnStart]
+        public void OnStart()
+        {
+            // setup that requires game code
+        }
+
+        [OnExit]
+        public void OnExit()
+        {
+            // teardown
+        }
+    }
+}
+</code></pre><hr>
+<p>But what about more complex types than just <code>int</code> and <code>float</code>? What if you want sub-objects?</p>
+<p>Those are supported natively, and so are very easy to set up. We just add this to the config class:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#sub-basic">public class SubThingsObject
+{
+    public double DoubleValue { get; set; } = 2.718281828459045;
+}
+
+public SubThingsObject SubThings { get; set; } = new SubThingsObject();
+</code></pre><p>Now this object will be automatically read from disk too.</p>
+<p>But there is one caveat to this: because <code>SubThingsObject</code> is a reference type, <em><code>SubThings</code> can be null</em>.</p>
+<p>This is often undesireable. The obvious solution may be to simply change it to a <code>struct</code>, but that is both not supported <em>and</em> potentially
+undesirable for other reasons we&#39;ll get to later.</p>
+<p>Instead, you can use <a class="xref" href="../api/IPA.Config.Stores.Attributes.NonNullableAttribute.html">NonNullableAttribute</a>. Change the definition of <code>SubThings</code> to this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#sub-basic-nonnull">[NonNullable]
+public SubThingsObject SubThings { get; set; } = new SubThingsObject();
+</code></pre><p>And add this to the <code>using</code>s:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#includes-attributes">using IPA.Config.Stores.Attributes;
+</code></pre><p>This attribute tells the serializer that <code>null</code> is an invalid value for the config object. This does, however, require that <em>you</em> take extra care
+ensure that it never becomes null in code, as that will break the serializer.</p>
+<hr>
+<p>What about collection types?</p>
+<p>Well, you can use those too, but you have to use something new: a converter.</p>
+<p>You may be familiar with them if you have used something like the popular Newtonsoft.Json library before. In BSIPA, they lie in the
+<a class="xref" href="../api/IPA.Config.Stores.Converters.html">IPA.Config.Stores.Converters</a> namespace. All converters either implement <a class="xref" href="../api/IPA.Config.Stores.IValueConverter.html">IValueConverter</a> or derive from
+<a class="xref" href="../api/IPA.Config.Stores.ValueConverter-1.html">ValueConverter&lt;T&gt;</a>. You will mostly use them with an <a class="xref" href="../api/IPA.Config.Stores.Attributes.UseConverterAttribute.html">UseConverterAttribute</a>.</p>
+<p>To use them, we&#39;ll want to import them:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#includes-attributes">using System.Collections.Generic;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Converters;
+</code></pre><p>Then add a field, for example a list field:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#list-basic">[UseConverter(typeof(ListConverter&lt;string&gt;))]
+public List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+</code></pre><p>This uses a converter that is provided with BSIPA for <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List&lt;T&gt;</a>s specifically. It converts the list to
+an ordered array, which is then written to disk as a JSON array.</p>
+<p>We could also potentially want use something like a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet&lt;T&gt;</a>. Lets start by looking at the definition
+for such a member, then deciphering what exactly it means:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#set-basic">[UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+public HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+</code></pre><p>The converter we&#39;re using here is <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a>, a base type for converters of all kinds of
+collections. In fact, the <a class="xref" href="../api/IPA.Config.Stores.Converters.ListConverter-1.html">ListConverter&lt;T&gt;</a> is derived from this, and uses it for most of its implementation.
+If a type implements <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a>, <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a> can convert it.</p>
+<p>It, like most other BSIPA provided aggregate converters, provides a type argument overload <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-3.html">CollectionConverter&lt;T, TCollection, TConverter&gt;</a>
+to compose other converters with it to handle unusual element types.</p>
+<p>Now after all that, your plugin class has not changed, and your config class should look something like this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+
+namespace Demo
+{
+    public class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public class SubThingsObject
+        {
+            public double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
+        public int IntValue { get; set; } = 42;
+
+        public float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+        [UseConverter(typeof(ListConverter&lt;string&gt;))]
+        public List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+        [UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+        public HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+    }
+}
+</code></pre><hr>
+<p>I mentioned earlier that your config file will be automatically reloaded -- but isn&#39;t that a bad thing? Doesn&#39;t that mean that the config could change
+under your feet without you having a way to tell?</p>
+<p>Not so- I just haven&#39;t introduced the mechanism.</p>
+<p>Define a public or protected virtual method named <code>OnReload</code>:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#on-reload">public virtual void OnReload()
+{
+    // this is called whenever the config file is reloaded from disk
+    // use it to tell all of your systems that something has changed
+    
+    // this is called off of the main thread, and is not safe to interact
+    //   with Unity in
+}
+</code></pre><p>This method will be called whenever BSIPA reloads your config from disk. When it is called, the object will already have been populated. Use it to
+notify all of your systems that configuration has changed.</p>
+<hr>
+<p>Now, we know how to read from disk, and how to use unusual types, but how do we write it back to disk?</p>
+<p>This config system is based on automatic saving (though we haven&#39;t quite gotten to the <em>automatic</em> part), and so the config is written to disk whenever
+the system recognizes that something has changed. To tell is as much, define a public or protected virtual method named <code>Changed</code>:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#changed">public virtual void Changed()
+{
+    // this is called whenever one of the virtual properties is changed
+    // can be called to signal that the content has been changed
+}
+</code></pre><p>This method can be called to tell BSIPA that this config object has changed. Later, when we enable automated change tracking, this will also be called
+when one of the config&#39;s members changes. You can use this body to validate something or, for example, write a timestamp for last change.</p>
+<hr>
+<p>I just mentioned automated change tracking -- lets add that now.</p>
+<p>To do this, just make all of the properties virtual, like so:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#auto-props">public class SubThingsObject
+{
+    public virtual double DoubleValue { get; set; } = 2.718281828459045;
+}
+
+public virtual int IntValue { get; set; } = 42;
+
+public virtual float FloatValue { get; set; } = 3.14159f;
+
+[NonNullable]
+public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+[UseConverter(typeof(ListConverter&lt;string&gt;))]
+public virtual List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+[UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+public virtual HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+</code></pre><p>Now, whenever you assign to any of those properties, your <code>Changed</code> method will be called, and the config object will be marked as changed and will be
+written to disk. Unfortunately, any properties that can be modified while only using the property getter do not trigger this, and so if you change any
+collections for example, you will have to manually call <code>Changed</code>.</p>
+<p>After doing all this, your config class should look something like this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+
+namespace Demo
+{
+    public class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public class SubThingsObject
+        {
+            public virtual double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
+        public virtual int IntValue { get; set; } = 42;
+
+        public virtual float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+        [UseConverter(typeof(ListConverter&lt;string&gt;))]
+        public virtual List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+        [UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+        public virtual HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+
+        public virtual void Changed()
+        {
+            // this is called whenever one of the virtual properties is changed
+            // can be called to signal that the content has been changed
+        }
+
+        public virtual void OnReload()
+        {
+            // this is called whenever the config file is reloaded from disk
+            // use it to tell all of your systems that something has changed
+            
+            // this is called off of the main thread, and is not safe to interact
+            //   with Unity in
+        }
+    }
+}
+</code></pre><hr>
+<p>There is one more major problem with this though: the main class is still public. Most configs shouldn&#39;t be. Lets make it internal.</p>
+<p>So we make it internal:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#internal">internal class PluginConfig
+</code></pre><p>But to make it actually work, we add this outside the namespace declaration:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#internals-visible">using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
+</code></pre><p>And now our full file looks like this:</p>
+<pre><code class="lang-cs" name="PluginConfig.cs#basic-complete">using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+
+[assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
+
+namespace Demo
+{
+    internal class PluginConfig
+    {
+        public static PluginConfig Instance { get; set; }
+
+        public class SubThingsObject
+        {
+            public virtual double DoubleValue { get; set; } = 2.718281828459045;
+        }
+
+        public virtual int IntValue { get; set; } = 42;
+
+        public virtual float FloatValue { get; set; } = 3.14159f;
+
+        [NonNullable]
+        public virtual SubThingsObject SubThings { get; set; } = new SubThingsObject();
+
+        [UseConverter(typeof(ListConverter&lt;string&gt;))]
+        public virtual List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
+
+        [UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
+        public virtual HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
+
+        public virtual void Changed()
+        {
+            // this is called whenever one of the virtual properties is changed
+            // can be called to signal that the content has been changed
+        }
+
+        public virtual void OnReload()
+        {
+            // this is called whenever the config file is reloaded from disk
+            // use it to tell all of your systems that something has changed
+            
+            // this is called off of the main thread, and is not safe to interact
+            //   with Unity in
+        }
+    }
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/607ab516a4167c897fc4f07fce11fb60225379a5/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
