@@ -334,9 +334,9 @@ namespace IPA
                         LineBack();
                         ClearLine();
                     }
-                    catch (Exception ex)
+                    catch (IOException)
                     {
-                        // Might throw IOException due to an invalid handle when accessing IsConsole from a MSBuild task.
+                        // Might throw due to an invalid handle when accessing IsConsole from a MSBuild task.
                     }
 
                     Console.WriteLine(@"Copying {0}", targetFile.FullName);

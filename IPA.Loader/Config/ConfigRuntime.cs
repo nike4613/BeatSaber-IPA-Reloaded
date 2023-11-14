@@ -27,10 +27,8 @@ namespace IPA.Config
 
         private static readonly ConcurrentBag<Config> configs = new();
         private static readonly AutoResetEvent configsChangedWatcher = new(false);
-        private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
-            = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
-        private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
-            = new ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>>();
+        private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers = new(new DirInfoEqComparer());
+        private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs = new();
         private static BlockingCollection<IConfigStore> requiresSave = new();
         private static SingleThreadTaskScheduler loadScheduler;
         private static TaskFactory loadFactory;
@@ -82,13 +80,14 @@ namespace IPA.Config
 
                 loadScheduler.Join(); // we can wait for the loads to finish
                 saveThread.Abort(); // eww, but i don't like any of the other potential solutions
+                legacySaveThread.Abort();
 
                 SaveAll();
 
                 requiresSave.Dispose();
                 requiresSave = null;
             }
-            catch 
+            catch
             {
             }
         }
@@ -237,7 +236,7 @@ namespace IPA.Config
                 {
                     try
                     {
-                        Save(configs.First((c) => ReferenceEquals(c.Store.WriteSyncObject, item.WriteSyncObject)));
+                        Save(configs.First((c) => c.Store != null && ReferenceEquals(c.Store.WriteSyncObject, item.WriteSyncObject)));
                     }
                     catch (ThreadAbortException)
                     {
@@ -263,7 +262,7 @@ namespace IPA.Config
             {
                 while (true)
                 {
-                    var configArr = configs.Where(c => c.Store != null).Where(c => c.Store.SyncObject != null).ToArray();
+                    var configArr = configs.Where(c => c.Store?.SyncObject != null).ToArray();
                     int index = -1;
                     try
                     {
