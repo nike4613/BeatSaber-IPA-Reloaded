@@ -27,11 +27,11 @@ namespace IPA.Config
 
         private static readonly ConcurrentBag<Config> configs = new();
         private static readonly AutoResetEvent configsChangedWatcher = new(false);
-        public static readonly BlockingCollection<IConfigStore> RequiresSave = new();
         private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers 
             = new ConcurrentDictionary<DirectoryInfo, FileSystemWatcher>(new DirInfoEqComparer());
         private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs
             = new ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>>();
+        private static BlockingCollection<IConfigStore> requiresSave = new();
         private static SingleThreadTaskScheduler loadScheduler;
         private static TaskFactory loadFactory;
         private static Thread saveThread;
@@ -62,6 +62,11 @@ namespace IPA.Config
             AppDomain.CurrentDomain.ProcessExit += ShutdownRuntime;
         }
 
+        internal static void AddRequiresSave(IConfigStore configStore)
+        {
+            requiresSave?.Add(configStore);
+        }
+
         private static void ShutdownRuntime(object sender, EventArgs e)
             => ShutdownRuntime();
         internal static void ShutdownRuntime()
@@ -79,6 +84,9 @@ namespace IPA.Config
                 saveThread.Abort(); // eww, but i don't like any of the other potential solutions
 
                 SaveAll();
+
+                requiresSave.Dispose();
+                requiresSave = null;
             }
             catch 
             {
@@ -218,9 +226,14 @@ namespace IPA.Config
 
         private static void SaveThread()
         {
+            if (requiresSave == null)
+            {
+                return;
+            }
+
             try
             {
-                foreach (var item in RequiresSave.GetConsumingEnumerable())
+                foreach (var item in requiresSave.GetConsumingEnumerable())
                 {
                     try
                     {
@@ -241,10 +254,6 @@ namespace IPA.Config
             catch (ThreadAbortException)
             {
                 // we got aborted :(
-            }
-            finally
-            {
-                RequiresSave.Dispose();
             }
         }
 

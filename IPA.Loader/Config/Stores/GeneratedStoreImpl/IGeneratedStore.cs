@@ -59,7 +59,7 @@ namespace IPA.Config.Stores
             public static void ImplSignalChanged(IGeneratedStore s) => FindImpl(s)?.SignalChanged();
             public void SignalChanged()
             {
-                ConfigRuntime.RequiresSave.Add(this);
+                ConfigRuntime.AddRequiresSave(this);
             }
 
             internal static MethodInfo ImplInvokeChangedMethod = typeof(Impl).GetMethod(nameof(ImplInvokeChanged));
