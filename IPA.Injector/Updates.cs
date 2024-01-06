@@ -35,7 +35,7 @@ namespace IPA.Injector
             if (!File.Exists(path)) return;
 
             var ipaVersion = new Version(FileVersionInfo.GetVersionInfo(path).FileVersion);
-            var selfVersion = Injector.ExecutingAssembly.GetName().Version;
+            var selfVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
             if (ipaVersion > selfVersion)
             {

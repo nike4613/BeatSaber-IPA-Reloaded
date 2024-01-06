@@ -35,8 +35,6 @@ namespace IPA.Injector
         private static Task? permissionFixTask;
         //private static string otherNewtonsoftJson = null;
 
-        public static Assembly ExecutingAssembly => typeof(Injector).Assembly;
-
         // ReSharper disable once UnusedParameter.Global
         internal static void Main(string[] args)
         { // entry point for doorstop
@@ -143,8 +141,8 @@ namespace IPA.Injector
         {
             var sw = Stopwatch.StartNew();
 
-            var cAsmName = ExecutingAssembly.GetName();
-            var managedPath = Path.GetDirectoryName(ExecutingAssembly.Location)!;
+            var cAsmName = Assembly.GetExecutingAssembly().GetName();
+            var managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 
             var dataDir = new DirectoryInfo(managedPath).Parent!.Name;
             var gameName = dataDir.Substring(0, dataDir.Length - 5);

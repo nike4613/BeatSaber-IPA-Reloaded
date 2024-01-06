@@ -143,7 +143,7 @@ namespace IPA.Utilities
             {
                 if (_installRoot == null)
                     _installRoot = Path.GetFullPath(
-                        Path.Combine(Path.GetDirectoryName(PluginLoader.ExecutingAssembly.Location), "..", ".."));
+                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", ".."));
                 return _installRoot;
             }
         }

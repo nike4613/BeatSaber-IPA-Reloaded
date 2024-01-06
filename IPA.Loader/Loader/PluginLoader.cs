@@ -36,8 +36,6 @@ namespace IPA.Loader
     {
         internal static PluginMetadata SelfMeta = null!;
 
-        public static Assembly ExecutingAssembly => typeof(PluginLoader).Assembly;
-
         internal static Task LoadTask() =>
             TaskEx.Run(() =>
         {
@@ -93,7 +91,7 @@ namespace IPA.Loader
             {
                 var selfMeta = new PluginMetadata
                 {
-                    Assembly = ExecutingAssembly,
+                    Assembly = Assembly.GetExecutingAssembly(),
                     File = new FileInfo(Path.Combine(UnityGame.InstallPath, "IPA.exe")),
                     PluginType = null,
                     IsSelf = true

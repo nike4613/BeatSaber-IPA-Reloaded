@@ -21,8 +21,8 @@ namespace IPA.Loader
 {
     internal class CecilLibLoader : BaseAssemblyResolver
     {
-        private static readonly string CurrentAssemblyName = PluginLoader.ExecutingAssembly.GetName().Name;
-        private static readonly string CurrentAssemblyPath = PluginLoader.ExecutingAssembly.Location;
+        private static readonly string CurrentAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        private static readonly string CurrentAssemblyPath = Assembly.GetExecutingAssembly().Location;
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
         {
