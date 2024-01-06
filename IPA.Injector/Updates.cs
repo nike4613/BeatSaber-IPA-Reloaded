@@ -35,7 +35,7 @@ namespace IPA.Injector
             if (!File.Exists(path)) return;
 
             var ipaVersion = new Version(FileVersionInfo.GetVersionInfo(path).FileVersion);
-            var selfVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var selfVersion = Injector.ExecutingAssembly.GetName().Version;
 
             if (ipaVersion > selfVersion)
             {
@@ -67,8 +67,8 @@ namespace IPA.Injector
         private static void InstallPendingModUpdates()
         {
             var pendingDir = Path.Combine(UnityGame.InstallPath, "IPA", "Pending");
-            if (!Directory.Exists(pendingDir)) return; 
-            
+            if (!Directory.Exists(pendingDir)) return;
+
             // there are pending updates, install
             Updater.Info("Installing pending updates");
 
@@ -99,7 +99,7 @@ namespace IPA.Injector
             if (Directory.Exists(path = Path.Combine(pendingDir, "IPA")))
             {
                 var dirs = new Stack<string>(20);
-                
+
                 dirs.Push(path);
 
                 while (dirs.Count > 0)
@@ -135,7 +135,7 @@ namespace IPA.Injector
                             Updater.Error(e);
                         }
                     }
-                    
+
                     foreach (var str in subDirs)
                         dirs.Push(str);
                 }

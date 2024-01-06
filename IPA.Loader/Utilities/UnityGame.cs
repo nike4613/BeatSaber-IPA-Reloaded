@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using IPA.Config;
+using IPA.Loader;
 using IPA.Utilities.Async;
 using System;
 using System.Diagnostics;
@@ -142,7 +143,7 @@ namespace IPA.Utilities
             {
                 if (_installRoot == null)
                     _installRoot = Path.GetFullPath(
-                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", ".."));
+                        Path.Combine(Path.GetDirectoryName(PluginLoader.ExecutingAssembly.Location), "..", ".."));
                 return _installRoot;
             }
         }

@@ -21,8 +21,8 @@ namespace IPA.Loader
 {
     internal class CecilLibLoader : BaseAssemblyResolver
     {
-        private static readonly string CurrentAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-        private static readonly string CurrentAssemblyPath = Assembly.GetExecutingAssembly().Location;
+        private static readonly string CurrentAssemblyName = PluginLoader.ExecutingAssembly.GetName().Name;
+        private static readonly string CurrentAssemblyPath = PluginLoader.ExecutingAssembly.Location;
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
         {
@@ -215,7 +215,7 @@ namespace IPA.Loader
                 { continue; }
                 catch (DirectoryNotFoundException)
                 { continue; }
-                
+
                 foreach (string str in subDirs)
                     if (dirValidator(str)) dirs.Push(str);
 

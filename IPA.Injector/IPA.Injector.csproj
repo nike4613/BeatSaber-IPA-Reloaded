@@ -90,19 +90,18 @@
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyDocumentation" BeforeTargets="Build">
-    <ItemGroup>
-      <ReferenceFiles Include="%(Reference.RelativeDir)%(Reference.Filename).xml" />
-    </ItemGroup>
-    <Message Text="Copying documentation" />
-    <Copy SourceFiles="@(ReferenceFiles)" DestinationFolder="$(OutputPath)Libs" Condition="Exists('%(RootDir)%(Directory)%(Filename)%(Extension)')" />
-  </Target>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Message Text="Copying documentation" Importance="normal" />
+    <ItemGroup>
+      <XmlFiles Include="%(Reference.RelativeDir)%(Reference.Filename).xml"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(XmlFiles)" DestinationFolder="$(OutputPath)" Condition="Exists('%(RootDir)%(Directory)%(Filename)%(Extension)')" />
     <Message Text="Relocating" Importance="normal" />
     <ItemGroup>
       <SystemFiles Include="$(OutputPath)IPA.Injector.*" />
       <SystemFiles Include="$(OutputPath)IPA.Loader.*" />
+      <SystemFiles Include="$(OutputPath)MonoMod.Backports.*" />
+      <SystemFiles Include="$(OutputPath)MonoMod.ILHelpers.*" />
       <SystemFiles Include="$(OutputPath)AsyncBridge.*" />
       <SystemFiles Include="$(OutputPath)System.*" />
       <SystemFiles Include="$(OutputPath)Portable.System.*" />

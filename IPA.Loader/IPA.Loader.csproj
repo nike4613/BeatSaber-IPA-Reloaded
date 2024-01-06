@@ -57,7 +57,7 @@
     </PackageReference>-->
 
     <PackageReference Include="Mono.Cecil" Version="0.11.5" />
-    <PackageReference Include="HarmonyX" Version="2.10.2" />
+    <PackageReference Include="HarmonyX" Version="2.11.0" />
     <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
