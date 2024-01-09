@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Logger = IPA.Logging.Logger;
 
@@ -10,9 +12,9 @@ namespace IPA.Loader.Composite
     {
         private readonly IEnumerable<PluginExecutor> plugins;
 
-        private delegate void CompositeCall(PluginExecutor plugin);
-        
-        public CompositeBSPlugin(IEnumerable<PluginExecutor> plugins) 
+        private delegate Task CompositeCall(PluginExecutor plugin);
+
+        public CompositeBSPlugin(IEnumerable<PluginExecutor> plugins)
         {
             this.plugins = plugins;
         }
@@ -23,7 +25,12 @@ namespace IPA.Loader.Composite
                 try
                 {
                     if (plugin != null)
-                        callback(plugin);
+                    {
+                        callback(plugin).ContinueWith(t =>
+                        {
+                            Logger.Default.Error($"{plugin.Metadata.Name} {method}: {t.Exception!.InnerException}");
+                        }, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -38,7 +38,7 @@ namespace IPA.Loader
             if (specialType != Special.None)
             {
                 CreatePlugin = m => null;
-                LifecycleEnable = o => { };
+                LifecycleEnable = o => TaskEx.WhenAll();
                 LifecycleDisable = o => TaskEx.WhenAll();
             }
             else
@@ -48,8 +48,7 @@ namespace IPA.Loader
 
         public object Instance { get; private set; } = null;
         private Func<PluginMetadata, object> CreatePlugin { get; set; }
-        private Action<object> LifecycleEnable { get; set; }
-        // disable may be async (#24)
+        private Func<object, Task> LifecycleEnable { get; set; }
         private Func<object, Task> LifecycleDisable { get; set; }
 
         public void Create()
@@ -58,7 +57,7 @@ namespace IPA.Loader
             Instance = CreatePlugin(Metadata);
         }
 
-        public void Enable() => LifecycleEnable(Instance);
+        public Task Enable() => LifecycleEnable(Instance);
         public Task Disable() => LifecycleDisable(Instance);
 
 
@@ -120,7 +119,7 @@ namespace IPA.Loader
             return createExpr.Compile();
         }
         // TODO: make enable and disable able to take a bool indicating which it is
-        private static Action<object> MakeLifecycleEnableFunc(Type type, string name)
+        private static Func<object, Task> MakeLifecycleEnableFunc(Type type, string name)
         {
             var noEnableDisable = type.GetCustomAttribute<NoEnableDisableAttribute>() is not null;
             var enableMethods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
@@ -132,24 +131,47 @@ namespace IPA.Loader
             {
                 if (!noEnableDisable)
                     Logger.Loader.Notice($"Plugin {name} has no methods marked [OnStart] or [OnEnable]. Is this intentional?");
-                return o => { };
+                return o => TaskEx.WhenAll();
             }
 
+            var taskMethods = new List<MethodInfo>();
+            var nonTaskMethods = new List<MethodInfo>();
             foreach (var m in enableMethods)
             {
                 if (m.GetParameters().Length > 0)
                     throw new InvalidOperationException($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and has parameters.");
                 if (m.ReturnType != typeof(void))
-                    Logger.Loader.Warn($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and returns a value. It will be ignored.");
+                {
+                    if (typeof(Task).IsAssignableFrom(m.ReturnType))
+                    {
+                        taskMethods.Add(m);
+                        continue;
+                    }
+
+                    Logger.Loader.Warn($"Method {m} on {type.FullName} is marked [OnStart] or [OnEnable] and returns a non-Task value. It will be ignored.");
+                }
+
+                nonTaskMethods.Add(m);
             }
+
+            Expression<Func<Task>> completedTaskDel = () => TaskEx.WhenAll();
+            var getCompletedTask = completedTaskDel.Body;
+            var taskWhenAll = typeof(TaskEx).GetMethod(nameof(TaskEx.WhenAll), new[] { typeof(Task[]) });
 
             var objParam = Expression.Parameter(typeof(object), "obj");
             var instVar = ExpressionEx.Variable(type, "inst");
-            var createExpr = Expression.Lambda<Action<object>>(
+            var createExpr = Expression.Lambda<Func<object, Task>>(
                 ExpressionEx.Block(new[] { instVar },
-                    enableMethods
+                    nonTaskMethods
                         .Select(m => (Expression)Expression.Call(instVar, m))
-                        .Prepend(ExpressionEx.Assign(instVar, Expression.Convert(objParam, type)))),
+                        .Prepend(ExpressionEx.Assign(instVar, Expression.Convert(objParam, type)))
+                        .Append(
+                            taskMethods.Count == 0
+                                ? getCompletedTask
+                                : Expression.Call(taskWhenAll,
+                                    Expression.NewArrayInit(typeof(Task),
+                                        taskMethods.Select(m =>
+                                            (Expression)Expression.Convert(Expression.Call(instVar, m), typeof(Task))))))),
                 objParam);
             return createExpr.Compile();
         }
@@ -181,8 +203,8 @@ namespace IPA.Loader
                         taskMethods.Add(m);
                         continue;
                     }
-                    else
-                        Logger.Loader.Warn($"Method {m} on {type.FullName} is marked [OnExit] or [OnDisable] and returns a non-Task value. It will be ignored.");
+
+                    Logger.Loader.Warn($"Method {m} on {type.FullName} is marked [OnExit] or [OnDisable] and returns a non-Task value. It will be ignored.");
                 }
 
                 nonTaskMethods.Add(m);
@@ -200,11 +222,11 @@ namespace IPA.Loader
                         .Select(m => (Expression)Expression.Call(instVar, m))
                         .Prepend(ExpressionEx.Assign(instVar, Expression.Convert(objParam, type)))
                         .Append(
-                            taskMethods.Count == 0 
+                            taskMethods.Count == 0
                                 ? getCompletedTask
                                 : Expression.Call(taskWhenAll,
                                     Expression.NewArrayInit(typeof(Task),
-                                        taskMethods.Select(m => 
+                                        taskMethods.Select(m =>
                                             (Expression)Expression.Convert(Expression.Call(instVar, m), typeof(Task))))))),
                 objParam);
             return createExpr.Compile();
