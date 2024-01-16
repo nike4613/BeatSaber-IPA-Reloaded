@@ -1,19 +1,20 @@
 ﻿#nullable enable
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Version = Hive.Versioning.Version;
 
 namespace IPA.JsonConverters
 {
     internal class SemverVersionConverter : JsonConverter<Version?>
     {
-        public override Version? ReadJson(JsonReader reader, Type objectType, Version? existingValue, bool hasExistingValue, JsonSerializer serializer)
-            => reader.Value is not string s ? existingValue : new Version(s);
+        public override Version? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+           => reader.TokenType is not JsonTokenType.String ? null : new Version(reader.GetString()!);
 
-        public override void WriteJson(JsonWriter writer, Version? value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, Version? value, JsonSerializerOptions options)
         {
-            if (value == null) writer.WriteNull();
-            else writer.WriteValue(value.ToString());
+            if (value is null) writer.WriteNullValue();
+            else writer.WriteStringValue(value.ToString());
         }
     }
 }

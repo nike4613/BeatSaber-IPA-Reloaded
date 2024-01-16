@@ -48,17 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
-    <!--<PackageReference Include="Lib.Harmony" Version="2.0.2" />-->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <!--<PackageReference Include="AsyncBridge" Version="0.3.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0">
-      <ExcludeAssets>buildtransitive</ExcludeAssets>
-    </PackageReference>-->
-
-    <PackageReference Include="Mono.Cecil" Version="0.11.5" />
     <PackageReference Include="HarmonyX" Version="2.10.2" />
     <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
+    <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.5" />
+    <PackageReference Include="System.Text.Json" Version="8.0.1" />
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>

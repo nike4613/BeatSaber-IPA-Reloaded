@@ -1,22 +1,19 @@
 ﻿using IPA.Utilities;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace IPA.JsonConverters
 {
     internal class AlmostVersionConverter : JsonConverter<AlmostVersion>
     {
-        public override AlmostVersion ReadJson(JsonReader reader, Type objectType, AlmostVersion existingValue, bool hasExistingValue, JsonSerializer serializer) =>
-            reader.Value == null ? null : new AlmostVersion(reader.Value as string);
+        public override AlmostVersion Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+            reader.TokenType == JsonTokenType.Null ? null : new AlmostVersion(reader.GetString());
 
-        public override void WriteJson(JsonWriter writer, AlmostVersion value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, AlmostVersion value, JsonSerializerOptions options)
         {
-            if (value == null) writer.WriteNull();
-            else writer.WriteValue(value.ToString());
+            if (value == null) writer.WriteNullValue();
+            else writer.WriteStringValue(value.ToString());
         }
     }
 }

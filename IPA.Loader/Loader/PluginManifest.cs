@@ -2,11 +2,10 @@
 using Hive.Versioning;
 using IPA.JsonConverters;
 using IPA.Utilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SemVer;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using AlmostVersionConverter = IPA.JsonConverters.AlmostVersionConverter;
 using Version = Hive.Versioning.Version;
 #if NET3
@@ -18,69 +17,91 @@ namespace IPA.Loader
 {
     internal class PluginManifest
     {
-        [JsonProperty("name", Required = Required.Always)]
-        public string Name = null!;
+        [JsonPropertyName("name")]
+        [JsonRequired]
+        public string Name { get; init; } = null!;
 
-        [JsonProperty("id", Required = Required.AllowNull)] // TODO: on major version bump, make this always
-        public string? Id;
+        [JsonPropertyName("id")]
+        [JsonRequired] // TODO: Originally AllowNull
+        public string? Id { get; set; }
 
-        [JsonProperty("description", Required = Required.Always), JsonConverter(typeof(MultilineStringConverter))]
-        public string Description = null!;
+        [JsonPropertyName("description")]
+        [JsonRequired]
+        [JsonConverter(typeof(MultilineStringConverter))]
+        public string Description { get; set; } = null!;
 
-        [JsonProperty("version", Required = Required.Always), JsonConverter(typeof(SemverVersionConverter))]
-        public Version Version = null!;
+        [JsonPropertyName("version")]
+        [JsonRequired]
+        [JsonConverter(typeof(SemverVersionConverter))]
+        public Version Version { get; init; } = null!;
 
-        [JsonProperty("gameVersion", Required = Required.DisallowNull), JsonConverter(typeof(AlmostVersionConverter))]
-        public AlmostVersion? GameVersion;
+        [JsonPropertyName("gameVersion")]
+        [JsonRequired] // TODO: Originally DisallowNull
+        [JsonConverter(typeof(AlmostVersionConverter))]
+        public AlmostVersion? GameVersion { get; init; }
 
-        [JsonProperty("author", Required = Required.Always)]
-        public string Author = null!;
+        [JsonPropertyName("author")]
+        [JsonRequired]
+        public string Author { get; init; } = null!;
 
-        [JsonProperty("dependsOn", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
-        public Dictionary<string, VersionRange> Dependencies = new();
+        [JsonPropertyName("dependsOn")]
+        [JsonRequired] // TODO: Originally DisallowNull
+        public Dictionary<string, VersionRange> Dependencies { get; init; } = new();
 
-        [JsonProperty("conflictsWith", Required = Required.DisallowNull, ItemConverterType = typeof(SemverRangeConverter))]
-        public Dictionary<string, VersionRange> Conflicts = new();
+        [JsonPropertyName("conflictsWith")]
+        // TODO: Originally DisallowNull
+        public Dictionary<string, VersionRange> Conflicts { get; init; } = new();
 
-        [JsonProperty("features", Required = Required.DisallowNull), JsonConverter(typeof(FeaturesFieldConverter))]
-        public Dictionary<string, List<JObject>> Features = new();
+        [JsonPropertyName("features")]
+        // TODO: Originally DisallowNull
+        public Dictionary<string, List<JsonObject>> Features { get; init; } = new();
 
-        [JsonProperty("loadBefore", Required = Required.DisallowNull)]
-        public string[] LoadBefore = Array.Empty<string>();
+        [JsonPropertyName("loadBefore")]
+        // TODO: Originally DisallowNull
+        public string[] LoadBefore { get; init; } = Array.Empty<string>();
 
-        [JsonProperty("loadAfter", Required = Required.DisallowNull)]
-        public string[] LoadAfter = Array.Empty<string>();
+        [JsonPropertyName("loadAfter")]
+        // TODO: Originally DisallowNull
+        public string[] LoadAfter { get; init; } = Array.Empty<string>();
 
-        [JsonProperty("icon", Required = Required.DisallowNull)]
-        public string? IconPath = null;
+        [JsonPropertyName("icon")]
+        // TODO: Originally DisallowNull
+        public string? IconPath { get; init; }
 
-        [JsonProperty("files", Required = Required.DisallowNull)]
-        public string[] Files = Array.Empty<string>();
+        [JsonPropertyName("files")]
+        // TODO: Originally DisallowNull
+        public string[] Files { get; init; } = Array.Empty<string>();
 
         [Serializable]
         public class LinksObject
         {
-            [JsonProperty("project-home", Required = Required.DisallowNull)]
-            public Uri? ProjectHome = null;
+            [JsonPropertyName("project-home")]
+            // TODO: Originally DisallowNull
+            public Uri? ProjectHome { get; init; }
 
-            [JsonProperty("project-source", Required = Required.DisallowNull)]
-            public Uri? ProjectSource = null;
+            [JsonPropertyName("project-source")]
+            // TODO: Originally DisallowNull
+            public Uri? ProjectSource { get; init; }
 
-            [JsonProperty("donate", Required = Required.DisallowNull)]
-            public Uri? Donate = null;
+            [JsonPropertyName("donate")]
+            // TODO: Originally DisallowNull
+            public Uri? Donate { get; init; }
         }
 
-        [JsonProperty("links", Required = Required.DisallowNull)]
-        public LinksObject? Links = null;
+        [JsonPropertyName("links")]
+        // TODO: Originally DisallowNull
+        public LinksObject? Links { get; init; }
 
         [Serializable]
         public class MiscObject
         {
-            [JsonProperty("plugin-hint", Required = Required.DisallowNull)]
-            public string? PluginMainHint = null;
+            [JsonPropertyName("plugin-hint")]
+            // TODO: Originally DisallowNull
+            public string? PluginMainHint { get; init; }
         }
 
-        [JsonProperty("misc", Required = Required.DisallowNull)]
-        public MiscObject? Misc = null;
+        [JsonPropertyName("misc")]
+        // TODO: Originally DisallowNull
+        public MiscObject? Misc { get; init; }
     }
 }

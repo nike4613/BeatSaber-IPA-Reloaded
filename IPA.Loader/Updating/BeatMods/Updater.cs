@@ -15,7 +15,6 @@ using IPA.Loader;
 using IPA.Loader.Features;
 using IPA.Utilities;
 using IPA.Utilities.Async;
-using Newtonsoft.Json;
 using SemVer;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -268,7 +267,7 @@ namespace IPA.Updating.BeatMods
                 Logger.updater.Debug($"Phantom Dependency: {dep}");
 
             yield return ResolveDependencyRanges(depList);
-            
+
             foreach (var dep in depList.Value)
                 Logger.updater.Debug($"Dependency: {dep}");
 
@@ -292,7 +291,7 @@ namespace IPA.Updating.BeatMods
                 var dep = list.Value[i];
 
                 var mod = new Ref<ApiEndpoint.Mod>(null);
-                
+
                 yield return GetModInfo(dep.Name, "", mod);
 
                 try { mod.Verify(); }
@@ -381,12 +380,12 @@ namespace IPA.Updating.BeatMods
                     .Select(mod => mod.Version).Max(); // (2.1) get the max version
                 dep.Resolved = ver != null;
                 if (dep.Resolved) dep.ResolvedVersion = ver; // (2.2)
-                dep.Has = dep.Resolved && dep.Version == dep.ResolvedVersion; 
+                dep.Has = dep.Resolved && dep.Version == dep.ResolvedVersion;
             }
         }
 
         internal void CheckDependencies(Ref<List<DependencyObject>> list)
-        { 
+        {
             var toDl = new List<DependencyObject>();
 
             foreach (var dep in list.Value)
@@ -432,8 +431,8 @@ namespace IPA.Updating.BeatMods
         /// <param name="error"></param>
         internal delegate void InstallFailed(DependencyObject obj, Exception error);
 
-        internal void StartDownload(IEnumerable<DependencyObject> download, DownloadStart downloadStart = null, 
-            DownloadProgress downloadProgress = null, DownloadFailed downloadFail = null, DownloadFinish downloadFinish = null, 
+        internal void StartDownload(IEnumerable<DependencyObject> download, DownloadStart downloadStart = null,
+            DownloadProgress downloadProgress = null, DownloadFailed downloadFail = null, DownloadFinish downloadFinish = null,
             InstallFailed installFail = null, InstallFinish installFinish = null)
         {
             foreach (var item in download)
@@ -457,7 +456,7 @@ namespace IPA.Updating.BeatMods
                 yield break;
             }
 
-            var releaseName = UnityGame.ReleaseType == UnityGame.Release.Steam 
+            var releaseName = UnityGame.ReleaseType == UnityGame.Release.Steam
                 ? ApiEndpoint.Mod.DownloadsObject.TypeSteam : ApiEndpoint.Mod.DownloadsObject.TypeOculus;
             var platformFile = mod.Value.Downloads.First(f => f.Type == ApiEndpoint.Mod.DownloadsObject.TypeUniversal || f.Type == releaseName);
 
@@ -658,7 +657,7 @@ namespace IPA.Updating.BeatMods
                                 FileInfo targetFile = new FileInfo(Path.Combine(targetDir, entry.FileName));
                                 Directory.CreateDirectory(targetFile.DirectoryName ?? throw new InvalidOperationException());
 
-                                if (item.LocalPluginMeta != null && 
+                                if (item.LocalPluginMeta != null &&
                                     Utils.GetRelativePath(targetFile.FullName, targetDir) == Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, UnityGame.InstallPath))
                                     shouldDeleteOldFile = false; // overwriting old file, no need to delete
 
@@ -676,7 +675,7 @@ namespace IPA.Updating.BeatMods
                         }
                     }
                 }
-                
+
                 if (shouldDeleteOldFile && item.LocalPluginMeta != null)
                     File.AppendAllLines(Path.Combine(targetDir, SpecialDeletionsFile), new[] { Utils.GetRelativePath(item.LocalPluginMeta?.File.FullName, UnityGame.InstallPath) });
             }
@@ -730,7 +729,7 @@ namespace IPA.Updating.BeatMods
         {
         }
     }
-    
+
     [Serializable]
     internal class BeatmodsInterceptException : Exception
     {

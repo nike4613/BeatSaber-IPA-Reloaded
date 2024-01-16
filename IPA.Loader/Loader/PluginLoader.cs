@@ -4,7 +4,6 @@ using IPA.Loader.Features;
 using IPA.Logging;
 using IPA.Utilities;
 using Mono.Cecil;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +14,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using IPA.AntiMalware;
 using Hive.Versioning;
+using IPA.JsonConverters;
+using System.Text.Json;
 #if NET4
 using Task = System.Threading.Tasks.Task;
 using TaskEx = System.Threading.Tasks.Task;
@@ -37,13 +38,13 @@ namespace IPA.Loader
         internal static PluginMetadata SelfMeta = null!;
 
         internal static Task LoadTask() =>
-            TaskEx.Run(() =>
+            TaskEx.Run(async () =>
         {
             YeetIfNeeded();
 
             var sw = Stopwatch.StartNew();
 
-            LoadMetadata();
+            await LoadMetadata();
 
             sw.Stop();
             Logger.Loader.Info($"Loading metadata took {sw.Elapsed}");
@@ -83,9 +84,14 @@ namespace IPA.Loader
 
         private static readonly Regex embeddedTextDescriptionPattern = new(@"#!\[(.+)\]", RegexOptions.Compiled | RegexOptions.Singleline);
 
-        internal static void LoadMetadata()
+        private static async Task LoadMetadata()
         {
             string[] plugins = Directory.GetFiles(UnityGame.PluginsPath, "*.dll");
+
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new SemverRangeConverter(), new FeaturesFieldConverter() }
+            };
 
             try
             {
@@ -97,14 +103,10 @@ namespace IPA.Loader
                     IsSelf = true
                 };
 
-                string manifest;
-                using (var manifestReader =
-                    new StreamReader(
-                        selfMeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ??
-                        throw new InvalidOperationException()))
-                    manifest = manifestReader.ReadToEnd();
+                using var manifestStream = selfMeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ??
+                                     throw new InvalidOperationException();
 
-                var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                var manifestObj = await JsonSerializer.DeserializeAsync<PluginManifest>(manifestStream, options).ConfigureAwait(false);
                 selfMeta.Manifest = manifestObj ?? throw new InvalidOperationException("Deserialized manifest was null");
 
                 PluginsMetadata.Add(selfMeta);
@@ -159,11 +161,9 @@ namespace IPA.Loader
 
                         pluginNs = embedded.Name.Substring(0, embedded.Name.Length - manifestSuffix.Length);
 
-                        string manifest;
-                        using (var manifestReader = new StreamReader(embedded.GetResourceStream()))
-                            manifest = manifestReader.ReadToEnd();
+                        using var manifestStream = embedded.GetResourceStream();
 
-                        pluginManifest = JsonConvert.DeserializeObject<PluginManifest?>(manifest);
+                        pluginManifest = await JsonSerializer.DeserializeAsync<PluginManifest?>(manifestStream, options).ConfigureAwait(false);
                         break;
                     }
 
@@ -277,7 +277,8 @@ namespace IPA.Loader
                         IsBare = true,
                     };
 
-                    var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+                    using var manifestStream = File.OpenRead(manifest);
+                    var manifestObj = await JsonSerializer.DeserializeAsync<PluginManifest>(manifestStream, options).ConfigureAwait(false);
                     if (manifestObj is null)
                     {
                         Logger.Loader.Error($"Bare manifest {Path.GetFileName(manifest)} deserialized to null");
@@ -329,12 +330,12 @@ namespace IPA.Loader
                         }
 
                         using var reader = new StreamReader(resc.GetResourceStream());
-                        description = reader.ReadToEnd();
+                        description = await reader.ReadToEndAsync().ConfigureAwait(false);
                     }
                     else
                     {
                         using var descriptionReader = new StreamReader(meta.Assembly.GetManifestResourceStream(name));
-                        description = descriptionReader.ReadToEnd();
+                        description = await descriptionReader.ReadToEndAsync().ConfigureAwait(false);
                     }
 
                     meta.Manifest.Description = description;
@@ -809,7 +810,8 @@ namespace IPA.Loader
 
         internal static void InitFeatures()
         {
-            foreach (var meta in PluginsMetadata)
+            // TODO: Find out why this is null.
+            foreach (var meta in PluginsMetadata.Where(m => m.Manifest.Features is not null))
             {
                 foreach (var feature in meta.Manifest.Features
                     .SelectMany(f => f.Value.Select(o => (f.Key, o)))

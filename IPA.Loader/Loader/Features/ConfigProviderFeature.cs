@@ -1,8 +1,9 @@
 ﻿#nullable enable
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace IPA.Loader.Features
 {
@@ -10,16 +11,17 @@ namespace IPA.Loader.Features
     {
         private class DataModel
         {
-            [JsonProperty("type", Required = Required.Always)]
-            public string TypeName = "";
+            [JsonPropertyName("type")]
+            [JsonRequired]
+            public string TypeName { get; init; } = "";
         }
 
-        protected override bool Initialize(PluginMetadata meta, JObject featureData)
+        protected override bool Initialize(PluginMetadata meta, JsonObject featureData)
         {
             DataModel data;
             try
             {
-                data = featureData.ToObject<DataModel>() ?? throw new InvalidOperationException("Feature data is null");
+                data = featureData.Deserialize<DataModel>() ?? throw new InvalidOperationException("Feature data is null");
             }
             catch (Exception e)
             {

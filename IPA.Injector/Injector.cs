@@ -33,7 +33,6 @@ namespace IPA.Injector
     {
         private static Task? pluginAsyncLoadTask;
         private static Task? permissionFixTask;
-        //private static string otherNewtonsoftJson = null;
 
         // ReSharper disable once UnusedParameter.Global
         internal static void Main(string[] args)

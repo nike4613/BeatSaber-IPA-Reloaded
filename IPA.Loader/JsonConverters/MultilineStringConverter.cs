@@ -1,32 +1,29 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace IPA.JsonConverters
 {
     internal class MultilineStringConverter : JsonConverter<string>
     {
-        public override string ReadJson(JsonReader reader, Type objectType, string existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonToken.StartArray)
+            if (reader.TokenType == JsonTokenType.StartArray)
             {
-                var list = serializer.Deserialize<string[]>(reader);
+                var list = JsonSerializer.Deserialize<string[]>(ref reader, options);
                 return string.Join("\n", list);
             }
-            else
-                return reader.Value as string;
+
+            return reader.GetString();
         }
 
-        public override void WriteJson(JsonWriter writer, string value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
         {
             var list = value.Split('\n');
             if (list.Length == 1)
-                serializer.Serialize(writer, value);
+                writer.WriteStringValue(value);
             else
-                serializer.Serialize(writer, list);
+                JsonSerializer.Serialize(writer, list, options);
         }
     }
 }

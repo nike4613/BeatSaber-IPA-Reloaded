@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using IPA.JsonConverters;
 using IPA.Utilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SemVer;
 using Version = SemVer.Version;
 
@@ -133,7 +131,7 @@ namespace IPA.Updating.BeatMods
 
             [JsonProperty("link")]
             public Uri Link;
-            
+
 #pragma warning restore CS0649
 
             [Serializable]

@@ -90,9 +90,6 @@ namespace IPA.Loader
 
                 //var unityData = Directory.EnumerateDirectories(Environment.CurrentDirectory, "*_Data").First();
                 //AddDir(Path.Combine(unityData, "Plugins"));
-
-                // TODO: find a way to either safely remove Newtonsoft, or switch to a different JSON lib
-                _ = LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral"));
             }
         }
 
