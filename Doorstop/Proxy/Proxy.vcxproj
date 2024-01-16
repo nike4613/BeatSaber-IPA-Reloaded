@@ -185,6 +185,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="AfterBuild">
-    <Exec Command="$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine($(MSBuildProjectDirectory), '..', 'BuildUtils', 'ducible.exe')))) $(OutDir)$(MSBuildProjectName).dll $(OutDir)$(MSBuildProjectName).pdb" />
+    <Exec Command="&quot;$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine($(MSBuildProjectDirectory), '..', 'BuildUtils', 'ducible.exe'))))&quot; &quot;$(OutDir)$(MSBuildProjectName).dll&quot; &quot;$(OutDir)$(MSBuildProjectName).pdb&quot;" />
   </Target>
 </Project>
