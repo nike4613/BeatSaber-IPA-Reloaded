@@ -2,19 +2,19 @@
  * main.cpp -- The main "entry point" and the main logic of the DLL.
  *
  * Here, we define and initialize struct Main that contains the main code of this DLL.
- * 
+ *
  * The main procedure goes as follows:
  * 1. The loader checks that PatchLoader.dll and mono.dll exist
  * 2. mono.dll is loaded into memory and some of its functions are looked up
  * 3. mono_jit_init_version is hooked with the help of MinHook
- * 
+ *
  * Then, the loader waits until Unity creates its root domain for mono (which is done with mono_jit_init_version).
- * 
+ *
  * Inside mono_jit_init_version hook:
  * 1. Call the original mono_jit_init_version to get the Unity root domain
  * 2. Load PatchLoader.dll into the root domain
  * 3. Find and invoke PatchLoader.Loader.Run()
- * 
+ *
  * Rest of the work is done on the managed side.
  *
  */
@@ -117,7 +117,7 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 	{
 		LOG("Debugger was already initialized\n");
 	}
-	
+
 	// Call the original mono_jit_init_version to initialize the Unity Root Domain
 	if (debug) {
 		char* opts[1];
@@ -139,9 +139,14 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
 		mono_debug_domain_create(domain);
 	}
 
-	size_t len = WideCharToMultiByte(CP_UTF8, 0, targetAssembly, -1, NULL, 0, NULL, NULL);
-	char *dll_path = memalloc(sizeof(char) * len);
-	WideCharToMultiByte(CP_UTF8, 0, targetAssembly, -1, dll_path, len, NULL, NULL);
+	DWORD len = GetFullPathName(targetAssembly, 0, NULL, NULL);
+	wchar_t *full_path = memalloc(sizeof(wchar_t) * len);
+	GetFullPathName(targetAssembly, len, full_path, NULL);
+	size_t path_len = WideCharToMultiByte(CP_UTF8, 0, full_path, -1, NULL, 0, NULL, NULL);
+	char *dll_path = memalloc(sizeof(char) * path_len);
+	WideCharToMultiByte(CP_UTF8, 0, full_path, -1, dll_path, path_len, NULL, NULL);
+
+	memfree(full_path);
 
 	LOG("Loading assembly: %s\n", dll_path);
 	// Load our custom assembly into the domain
@@ -234,7 +239,7 @@ void *ownMonoJitInitVersion(const char *root_domain_name, const char *runtime_ve
         void* monostr = mono_object_to_string(exception, &exception);
         if (exception != NULL)
             LOG("An error occurred while invoking the injector, but the error could not be stringified.\n")
-        else 
+        else
         {
             char* str = mono_string_to_utf8(monostr);
             LOG("An error occurred invoking the injector: %s\n", str);
