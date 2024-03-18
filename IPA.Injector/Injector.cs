@@ -257,38 +257,6 @@ namespace IPA.Injector
             endPatchCoreModule:
             #endregion Insert patch into UnityEngine.CoreModule.dll
 
-#if BeatSaber
-            Logging.Logger.Injector.Debug("Ensuring anti-yeet patch exists");
-
-            var name = SelfConfig.GameAssemblies_.FirstOrDefault() ?? SelfConfig.GetDefaultGameAssemblies().First();
-            var ascPath = Path.Combine(managedPath, name);
-
-            try
-            {
-                using var ascAsmDef = AssemblyDefinition.ReadAssembly(ascPath, readerParameters);
-                var ascModDef = ascAsmDef.MainModule;
-
-                var deleter = ascModDef.GetType("IPAPluginsDirDeleter");
-
-                if (deleter.Methods.Count > 0)
-                {
-                    deleter.Methods.Clear(); // delete all methods
-
-                    string tempFilePath = Path.GetTempFileName();
-                    bkp?.Add(ascPath);
-                    ascAsmDef.Write(tempFilePath);
-                    File.Delete(ascPath);
-                    File.Move(tempFilePath, ascPath);
-                }
-            }
-            catch (Exception e)
-            {
-                Logging.Logger.Injector.Warn($"Could not apply anti-yeet patch to {ascPath}");
-                if (SelfConfig.Debug_.ShowHandledErrorStackTraces_)
-                    Logging.Logger.Injector.Warn(e);
-            }
-#endif
-
             sw.Stop();
             Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");
         }
@@ -311,6 +279,8 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
+
+            AntiYeetPatch.Apply();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
