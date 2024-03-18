@@ -1,0 +1,677 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SingleCreationValueCache&lt;TKey, TValue&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SingleCreationValueCache&lt;TKey, TValue&gt;
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2">
+  
+  
+  <h1 id="IPA_Utilities_Async_SingleCreationValueCache_2" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2" class="text-break">Class SingleCreationValueCache&lt;TKey, TValue&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>A dictionary-like type intended for thread-safe value caches whose values are created only once ever.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">SingleCreationValueCache&lt;TKey, TValue&gt;</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring#system-object-tostring">Object.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode#system-object-gethashcode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone#system-object-memberwiseclone">Object.MemberwiseClone()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Utilities.Async.html">IPA.Utilities.Async</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Utilities_Async_SingleCreationValueCache_2_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SingleCreationValueCache&lt;TKey, TValue&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TKey</span></td>
+        <td><p>the key type of the cache</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TValue</span></td>
+        <td><p>the value type of the cache</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Utilities_Async_SingleCreationValueCache_2_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This object basically wraps a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2">ConcurrentDictionary&lt;TKey,TValue&gt;</a> with some special handling
+to ensure that values are only created once ever, without having multiple parallel constructions.</p>
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2__ctor.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L38">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor">SingleCreationValueCache()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="IPA.Utilities.Async.SingleCreationValueCache-2.html">SingleCreationValueCache&lt;TKey, TValue&gt;</a>
+class that is empty, has the default concurrency level, has the default initial
+capacity, and uses the default comparer for the key type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SingleCreationValueCache()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.%23ctor(System.Collections.Generic.IEnumerable%7BSystem.Collections.Generic.KeyValuePair%7B%600%2C%601%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L49">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">SingleCreationValueCache(IEnumerable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="IPA.Utilities.Async.SingleCreationValueCache-2.html">SingleCreationValueCache&lt;TKey, TValue&gt;</a>
+class that contains elements copied from the specified <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a>,
+has the default concurrency level, has the default initial capacity, and uses
+the default comparer for the key type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SingleCreationValueCache(IEnumerable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt; collection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;TKey, TValue&gt;&gt;</td>
+        <td><span class="parametername">collection</span></td>
+        <td><p>the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> whose element are to be used for the new cache</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>when any arguments are null</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">collection</code> contains duplicate keys</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___System_Collections_Generic_IEqualityComparer__0__.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.%23ctor(System.Collections.Generic.IEnumerable%7BSystem.Collections.Generic.KeyValuePair%7B%600%2C%601%7D%7D%2CSystem.Collections.Generic.IEqualityComparer%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L69">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair__0__1___System_Collections_Generic_IEqualityComparer__0__" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEqualityComparer{`0})">SingleCreationValueCache(IEnumerable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt;, IEqualityComparer&lt;TKey&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="IPA.Utilities.Async.SingleCreationValueCache-2.html">SingleCreationValueCache&lt;TKey, TValue&gt;</a>
+class that contains elements copied from the specified <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a>
+has the default concurrency level, has the default initial capacity, and uses
+the specified <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer&lt;T&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SingleCreationValueCache(IEnumerable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt; collection, IEqualityComparer&lt;TKey&gt; comparer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;TKey, TValue&gt;&gt;</td>
+        <td><span class="parametername">collection</span></td>
+        <td><p>the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable&lt;T&gt;</a> whose elements are to be used for the new cache</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;TKey&gt;</td>
+        <td><span class="parametername">comparer</span></td>
+        <td><p>the equality comparer to use when comparing keys</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">collection</code> or <code data-dev-comment-type="paramref" class="paramref">comparer</code> is null</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEqualityComparer__0__.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.%23ctor(System.Collections.Generic.IEqualityComparer%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L58">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2__ctor_System_Collections_Generic_IEqualityComparer__0__" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})">SingleCreationValueCache(IEqualityComparer&lt;TKey&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="IPA.Utilities.Async.SingleCreationValueCache-2.html">SingleCreationValueCache&lt;TKey, TValue&gt;</a>
+class that is empty, has the default concurrency level and capacity, and uses
+the specified <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer&lt;T&gt;</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SingleCreationValueCache(IEqualityComparer&lt;TKey&gt; comparer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;TKey&gt;</td>
+        <td><span class="parametername">comparer</span></td>
+        <td><p>the equality comparer to use when comparing keys</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">comparer</code> is null</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_Count.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.Count%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L80">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_Count_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.Count*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_Count" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.Count">Count</h4>
+  <div class="markdown level1 summary"><p>Gets the number of elements that this cache contains.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_IsEmpty.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.IsEmpty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L76">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_IsEmpty_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.IsEmpty*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_IsEmpty" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.IsEmpty">IsEmpty</h4>
+  <div class="markdown level1 summary"><p>Gets a value that indicates whether this cache is empty. </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsEmpty { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_Clear.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.Clear%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L85">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_Clear_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.Clear*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_Clear" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.Clear">Clear()</h4>
+  <div class="markdown level1 summary"><p>Clears the cache.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_ContainsKey__0_.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.ContainsKey(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L91">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_ContainsKey_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.ContainsKey*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_ContainsKey__0_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.ContainsKey(`0)">ContainsKey(TKey)</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether or not this cache contains <code data-dev-comment-type="paramref" class="paramref">key</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ContainsKey(TKey key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TKey</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>the key to search for</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><span class="xref">true</span> if the cache contains the key, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd__0_System_Func__0__1__.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.GetOrAdd(%600%2CSystem.Func%7B%600%2C%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L126">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_GetOrAdd__0_System_Func__0__1__" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.GetOrAdd(`0,System.Func{`0,`1})">GetOrAdd(TKey, Func&lt;TKey, TValue&gt;)</h4>
+  <div class="markdown level1 summary"><p>Gets the value associated with the specified key from the cache. If it does not exist, and
+no creators are currently running for this key, then the creator is called to create the value
+and the value is added to the cache. If there is a creator currently running for the key, then
+this waits for the creator to finish and retrieves the value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TValue GetOrAdd(TKey key, Func&lt;TKey, TValue&gt; creator)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TKey</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>the key to search for</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TKey, TValue&gt;</td>
+        <td><span class="parametername">creator</span></td>
+        <td><p>the delegate to use to create the value if it does not exist</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TValue</span></td>
+        <td><p>the value that was found, or the result of <code data-dev-comment-type="paramref" class="paramref">creator</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_ToArray.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.ToArray%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L97">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_ToArray_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.ToArray*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_ToArray" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.ToArray">ToArray()</h4>
+  <div class="markdown level1 summary"><p>Copies the key-value pairs stored by the cache to a new array, filtering all elements that are currently being
+created.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KeyValuePair&lt;TKey, TValue&gt;[] ToArray()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;TKey, TValue&gt;[]</td>
+        <td><p>an array containing a snapshot of the key-value pairs contained in this cache</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2_TryGetValue__0__1__.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602.TryGetValue(%600%2C%601%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L106">View Source</a>
+  </span>
+  <a id="IPA_Utilities_Async_SingleCreationValueCache_2_TryGetValue_" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.TryGetValue*"></a>
+  <h4 id="IPA_Utilities_Async_SingleCreationValueCache_2_TryGetValue__0__1__" data-uid="IPA.Utilities.Async.SingleCreationValueCache`2.TryGetValue(`0,`1@)">TryGetValue(TKey, out TValue)</h4>
+  <div class="markdown level1 summary"><p>Attempts to get the value associated with the specified key from the cache.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryGetValue(TKey key, out TValue value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TKey</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>the key to search for</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TValue</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>the value retrieved, if any</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><span class="xref">true</span> if the value was found, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/01a05403ef4edd9646be6b698e7da30c741965e5/docs/override/new?filename=IPA_Utilities_Async_SingleCreationValueCache_2.md&amp;value=---%0Auid%3A%20IPA.Utilities.Async.SingleCreationValueCache%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/01a05403ef4edd9646be6b698e7da30c741965e5/IPA.Loader/Utilities/Async/SingleCreationValueCache.cs/#L23" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
