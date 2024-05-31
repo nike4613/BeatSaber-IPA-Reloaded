@@ -22,7 +22,7 @@ namespace IPA.Config
                 => x?.FullName == y?.FullName;
 
             public int GetHashCode(DirectoryInfo obj)
-                => obj?.GetHashCode() ?? 0;
+                => obj?.FullName.GetHashCode() ?? 0;
         }
 
         private static readonly ConcurrentBag<Config> configs = new();
