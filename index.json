@@ -44,6 +44,11 @@
     "title": "Class ConfigProvider",
     "keywords": "Class ConfigProvider A wrapper for an IConfigProvider and the FileInfo to use with it. Inheritance Object ConfigProvider Inherited Members Object.ToString() Object.Equals(Object) Object.Equals(Object, Object) Object.ReferenceEquals(Object, Object) Object.GetHashCode() Object.GetType() Object.MemberwiseClone() Namespace : IPA.Config Assembly : IPA.Loader.dll Syntax public class ConfigProvider Methods | Improve this Doc View Source Load() Loads a Value from disk in whatever format this provider provides and returns it. Declaration public Value Load() Returns Type Description Value the Value loaded | Improve this Doc View Source Store(Value) Stores the Value given to disk in the format specified. Declaration public void Store(Value value) Parameters Type Name Description Value value the Value to store Extension Methods ReflectionUtil.SetField<T, U>(T, String, U) ReflectionUtil.GetField<U, T>(T, String) ReflectionUtil.SetProperty<T, U>(T, String, U) ReflectionUtil.GetProperty<U, T>(T, String) ReflectionUtil.InvokeMethod<U, T>(T, String, Object[])"
   },
+  "api/IPA.Config.ConfigWatchersHelper.html": {
+    "href": "api/IPA.Config.ConfigWatchersHelper.html",
+    "title": "Class ConfigWatchersHelper",
+    "keywords": "Class ConfigWatchersHelper Inheritance Object ConfigWatchersHelper Inherited Members Object.ToString() Object.Equals(Object) Object.Equals(Object, Object) Object.ReferenceEquals(Object, Object) Object.GetHashCode() Object.GetType() Object.MemberwiseClone() Namespace : IPA.Config Assembly : IPA.Loader.dll Syntax public static class ConfigWatchersHelper Methods | Improve this Doc View Source ToggleWatchers() Declaration public static void ToggleWatchers()"
+  },
   "api/IPA.Config.Data.Boolean.html": {
     "href": "api/IPA.Config.Data.Boolean.html",
     "title": "Class Boolean",
@@ -87,7 +92,7 @@
   "api/IPA.Config.html": {
     "href": "api/IPA.Config.html",
     "title": "",
-    "keywords": "Classes Config An abstraction of a config file on disk, which handles synchronizing between a memory representation and the disk representation. Config.NameAttribute Specifies a preferred config name, instead of using the plugin's name. Config.PreferAttribute Specifies that a particular parameter is preferred to use a particular IConfigProvider . If it is not available, also specifies backups. If none are available, the default is used. ConfigProvider A wrapper for an IConfigProvider and the FileInfo to use with it. ModPrefs Allows to get and set preferences for your mod. Interfaces IConfigProvider An interface for configuration providers. IConfigStore A storage for a config structure. IModPrefs Allows to get and set preferences for your mod."
+    "keywords": "Classes Config An abstraction of a config file on disk, which handles synchronizing between a memory representation and the disk representation. Config.NameAttribute Specifies a preferred config name, instead of using the plugin's name. Config.PreferAttribute Specifies that a particular parameter is preferred to use a particular IConfigProvider . If it is not available, also specifies backups. If none are available, the default is used. ConfigProvider A wrapper for an IConfigProvider and the FileInfo to use with it. ConfigWatchersHelper ModPrefs Allows to get and set preferences for your mod. Interfaces IConfigProvider An interface for configuration providers. IConfigStore A storage for a config structure. IModPrefs Allows to get and set preferences for your mod."
   },
   "api/IPA.Config.IConfigProvider.html": {
     "href": "api/IPA.Config.IConfigProvider.html",

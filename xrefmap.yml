@@ -329,6 +329,25 @@ references:
   isSpec: "True"
   fullName: IPA.Config.ConfigProvider.Store
   nameWithType: ConfigProvider.Store
+- uid: IPA.Config.ConfigWatchersHelper
+  name: ConfigWatchersHelper
+  href: api/IPA.Config.ConfigWatchersHelper.html
+  commentId: T:IPA.Config.ConfigWatchersHelper
+  fullName: IPA.Config.ConfigWatchersHelper
+  nameWithType: ConfigWatchersHelper
+- uid: IPA.Config.ConfigWatchersHelper.ToggleWatchers
+  name: ToggleWatchers()
+  href: api/IPA.Config.ConfigWatchersHelper.html#IPA_Config_ConfigWatchersHelper_ToggleWatchers
+  commentId: M:IPA.Config.ConfigWatchersHelper.ToggleWatchers
+  fullName: IPA.Config.ConfigWatchersHelper.ToggleWatchers()
+  nameWithType: ConfigWatchersHelper.ToggleWatchers()
+- uid: IPA.Config.ConfigWatchersHelper.ToggleWatchers*
+  name: ToggleWatchers
+  href: api/IPA.Config.ConfigWatchersHelper.html#IPA_Config_ConfigWatchersHelper_ToggleWatchers_
+  commentId: Overload:IPA.Config.ConfigWatchersHelper.ToggleWatchers
+  isSpec: "True"
+  fullName: IPA.Config.ConfigWatchersHelper.ToggleWatchers
+  nameWithType: ConfigWatchersHelper.ToggleWatchers
 - uid: IPA.Config.Data
   name: IPA.Config.Data
   href: api/IPA.Config.Data.html
