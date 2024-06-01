@@ -145,6 +145,11 @@ namespace IPA.Config
             watcher.EnableRaisingEvents = true;
         }
 
+        internal static FileSystemWatcher[] GetWatchers()
+        {
+            return watcherTrackConfigs.Keys.ToArray();
+        }
+
         private static void EnsureWritesSane(Config config)
         {
             // compare exchange loop to be sane
