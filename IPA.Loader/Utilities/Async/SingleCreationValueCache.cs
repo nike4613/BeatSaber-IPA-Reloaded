@@ -71,7 +71,7 @@ namespace IPA.Utilities.Async
         #endregion
 
         /// <summary>
-        /// Gets a value that indicates whether this cache is empty. 
+        /// Gets a value that indicates whether this cache is empty.
         /// </summary>
         public bool IsEmpty => dict.IsEmpty;
         /// <summary>
@@ -143,10 +143,22 @@ namespace IPA.Utilities.Async
                 var cmp = (wh, default(TValue));
                 if (!dict.TryAdd(key, cmp))
                     goto retry; // someone else beat us to the punch, retry getting their value and wait for them
-                var val = creator(key);
-                while (!dict.TryUpdate(key, (null, val), cmp))
-                    throw new InvalidOperationException();
-                wh.Set();
+                TValue val;
+                try
+                {
+                    val = creator(key);
+                    while (!dict.TryUpdate(key, (null, val), cmp))
+                        throw new InvalidOperationException();
+                }
+                catch
+                {
+                    dict.TryRemove(key, out _);
+                    throw;
+                }
+                finally
+                {
+                    wh.Set();
+                }
                 return val;
             }
         }
