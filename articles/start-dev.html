@@ -312,15 +312,15 @@ using IPA.Config.Stores.Converters;
 </code></pre><p>Then add a field, for example a list field:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#list-basic">[UseConverter(typeof(ListConverter&lt;string&gt;))]
 public List&lt;string&gt; ListValue { get; set; } = new List&lt;string&gt;();
-</code></pre><p>This uses a converter that is provided with BSIPA for <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List&lt;T&gt;</a>s specifically. It converts the list to
+</code></pre><p>This uses a converter that is provided with BSIPA for &lt;xref:System.Collections.Generic.List`1&gt;s specifically. It converts the list to
 an ordered array, which is then written to disk as a JSON array.</p>
-<p>We could also potentially want use something like a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet&lt;T&gt;</a>. Lets start by looking at the definition
+<p>We could also potentially want use something like a &lt;xref:System.Collections.Generic.HashSet`1&gt;. Lets start by looking at the definition
 for such a member, then deciphering what exactly it means:</p>
 <pre><code class="lang-cs" name="PluginConfig.cs#set-basic">[UseConverter(typeof(CollectionConverter&lt;string, HashSet&lt;string&gt;&gt;))]
 public HashSet&lt;string&gt; SetValue { get; set; } = new HashSet&lt;string&gt;();
 </code></pre><p>The converter we&#39;re using here is <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a>, a base type for converters of all kinds of
 collections. In fact, the <a class="xref" href="../api/IPA.Config.Stores.Converters.ListConverter-1.html">ListConverter&lt;T&gt;</a> is derived from this, and uses it for most of its implementation.
-If a type implements <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a>, <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a> can convert it.</p>
+If a type implements &lt;xref:System.Collections.Generic.ICollection`1&gt;, <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-2.html">CollectionConverter&lt;T, TCollection&gt;</a> can convert it.</p>
 <p>It, like most other BSIPA provided aggregate converters, provides a type argument overload <a class="xref" href="../api/IPA.Config.Stores.Converters.CollectionConverter-3.html">CollectionConverter&lt;T, TCollection, TConverter&gt;</a>
 to compose other converters with it to handle unusual element types.</p>
 <p>Now after all that, your plugin class has not changed, and your config class should look something like this:</p>
@@ -514,7 +514,7 @@ namespace Demo
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/80222a6da147bae9b95433ef78d03c5dd581e465/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/bd7245aecbbb8193ab5fb014fbda985b7854bfa6/docs/articles/start-dev.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
