@@ -31,27 +31,53 @@ namespace IPA.Injector
             {
                 const string key = "public.app-category.games";
                 int pos = 0;
+                var streamLength = stream.Length;
 
-                while (stream.Position < stream.Length && pos < key.Length)
+                while (stream.Position < streamLength && pos < key.Length)
                 {
                     if (reader.ReadByte() == key[pos]) pos++;
                     else pos = 0;
                 }
 
-                if (stream.Position == stream.Length) // we went through the entire stream without finding the key
+                if (stream.Position == streamLength) // we went through the entire stream without finding the key
                     throw new KeyNotFoundException("Could not find key '" + key + "' in " + mgr);
 
-                while (stream.Position < stream.Length)
+                var startIndex = 0L;
+                var endIndex = 0L;
+
+                while (stream.Position < streamLength && endIndex == 0L)
                 {
                     var current = (char)reader.ReadByte();
                     if (char.IsDigit(current))
-                        break;
+                    {
+                        startIndex = stream.Position - 1;
+                        var dotCount = 0;
+
+                        while (stream.Position < streamLength)
+                        {
+                            current = (char)reader.ReadByte();
+                            if (char.IsDigit(current))
+                            {
+                                if (dotCount == 2 && stream.Position < streamLength && !char.IsDigit((char)reader.PeekChar()))
+                                {
+                                    endIndex = stream.Position;
+                                    break;
+                                }
+                            }
+                            else if (current == '.')
+                            {
+                                dotCount++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                var rewind = -sizeof(int) - sizeof(byte);
-                _ = stream.Seek(rewind, SeekOrigin.Current); // rewind to the string length
-
-                var strlen = reader.ReadInt32();
+                var strlen = (int)(endIndex - startIndex);
+                _ = stream.Seek(-strlen, SeekOrigin.Current);
                 var strbytes = reader.ReadBytes(strlen);
 
                 return Encoding.UTF8.GetString(strbytes);
@@ -60,7 +86,7 @@ namespace IPA.Injector
 
         internal static AlmostVersion SafeParseVersion() => new(GetGameVersion());
 
-        private static void _Load() 
+        private static void _Load()
         {
             UnityGame.SetEarlyGameVersion(SafeParseVersion());
             UnityGame.CheckGameVersionBoundary();
