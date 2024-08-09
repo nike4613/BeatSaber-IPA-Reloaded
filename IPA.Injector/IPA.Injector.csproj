@@ -82,11 +82,9 @@
       <SystemFiles Include="$(OutputPath)System.*" />
       <SystemFiles Include="$(OutputPath)Portable.System.*" />
       <SystemFiles Include="$(OutputPath)Net3-Proxy.*" />
-      <SystemFiles Include="$(OutputPath)Libraries\Mono\**\*" />
       <OldLibFiles Include="$(OutputPath)Libs\**\*" />
     </ItemGroup>
     <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
-    <RemoveDir Directories="$(OutputPath)Libraries\Mono" />
 
     <Delete Files="@(OldLibFiles)" />
     <RemoveDir Directories="$(OutputPath)Libs" />
