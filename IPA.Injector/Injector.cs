@@ -16,7 +16,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
-using static UnityEngine.Scripting.GarbageCollector;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 #if NET3
 using Net3_Proxy;
