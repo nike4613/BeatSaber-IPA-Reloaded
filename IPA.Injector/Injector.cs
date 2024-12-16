@@ -5,6 +5,7 @@ using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using IPA.Utilities;
+using Microsoft.Win32;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
@@ -15,6 +16,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using static IPA.Logging.Logger;
+using static UnityEngine.Scripting.GarbageCollector;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 #if NET3
 using Net3_Proxy;
@@ -84,6 +86,8 @@ namespace IPA.Injector
                 GameVersionEarly.Load();
                 SelfConfig.Instance.CheckVersionBoundary();
 
+                SetOpenXRRuntime(arguments);
+
                 // updates backup
                 InstallBootstrapPatch();
 
@@ -100,6 +104,59 @@ namespace IPA.Injector
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public static void SetOpenXRRuntime(string[] arguments)
+        {
+            if (arguments == null)
+                return;
+
+            string targetRuntime = string.Empty;
+
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                if (arguments[i] == "-vrmode" && i + 1 < arguments.Length)
+                {
+                    targetRuntime = arguments[i + 1];
+                    break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(targetRuntime))
+                return;
+
+            targetRuntime = targetRuntime.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+
+            //This forces the OpenXRLoader to error as there is no OpenXR Runtime found, which is intentional as a mod can then select it
+            switch (targetRuntime)
+            {
+                case "none":
+                case "fpfc":
+                case "controllable":
+                    Environment.SetEnvironmentVariable("XR_RUNTIME_JSON", targetRuntime); //By checking the env variable you can see what caused the override while still causing the fail
+                    return;
+            }
+
+            string registryPath = @"SOFTWARE\Khronos\OpenXR\1\AvailableRuntimes";
+            RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(registryPath);
+            string foundRuntime = string.Empty;
+            if (baseKey != null)
+            {
+                foreach (string valueName in baseKey.GetValueNames())
+                {
+                    if (Path.GetFileNameWithoutExtension(valueName).ToLower().Contains(targetRuntime))
+                    {
+                        foundRuntime = valueName;
+                        break;
+                    }
+                }
+                baseKey.Close();
+            }
+
+            if(!string.IsNullOrEmpty(foundRuntime))
+                Environment.SetEnvironmentVariable("XR_RUNTIME_JSON", foundRuntime);
+
+            //This is not stored within CommandLineValues.Debug as you can check the environment variable 
         }
 
         private static void MaybeInitializeConsole(string[] arguments)
