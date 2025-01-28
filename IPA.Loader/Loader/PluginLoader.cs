@@ -999,11 +999,10 @@ namespace IPA.Loader
 
         internal static bool IsFirstLoadComplete { get; private set; }
 
-        internal static List<PluginExecutor> LoadPlugins()
+        internal static void LoadPlugins(List<PluginExecutor> list)
         {
             DisabledPlugins.ForEach(Load); // make sure they get loaded into memory so their metadata and stuff can be read more easily
 
-            var list = new List<PluginExecutor>();
             var loaded = new HashSet<PluginMetadata>();
             foreach (var meta in PluginsMetadata)
             {
@@ -1025,8 +1024,6 @@ namespace IPA.Loader
 
             // TODO: should this be somewhere else?
             IsFirstLoadComplete = true;
-
-            return list;
         }
     }
 }

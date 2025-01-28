@@ -35,7 +35,7 @@ namespace IPA.Loader
     public static class PluginManager
     {
 #pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
-        
+
         private static List<PluginExecutor> _bsPlugins;
         internal static IEnumerable<PluginExecutor> BSMetas => _bsPlugins;
 
@@ -210,7 +210,7 @@ namespace IPA.Loader
                                             foreach (var feature in exec.Executor.Metadata.Features)
                                             {
                                                 try
-                                                { 
+                                                {
                                                     feature.AfterDisable(exec.Executor.Metadata);
                                                 }
                                                 catch (Exception e)
@@ -357,7 +357,7 @@ namespace IPA.Loader
             var sw = Stopwatch.StartNew();
 
             // initialize BSIPA plugins first
-            _bsPlugins.AddRange(PluginLoader.LoadPlugins());
+            PluginLoader.LoadPlugins(_bsPlugins);
 
             var metadataPaths = new HashSet<string>(PluginLoader.PluginsMetadata.Select(m => m.File.FullName));
             var ignoredPaths = new HashSet<string>(PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName)
@@ -495,7 +495,7 @@ namespace IPA.Loader
 
                 foreach (Type t in assembly.GetTypes())
                 {
-                       
+
                     var ipaPlugin = OptionalGetPlugin<Old.IPlugin>(t);
                     if (ipaPlugin != null)
                     {
