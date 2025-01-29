@@ -20,13 +20,13 @@ jobs:
           git config --global user.email (($env:GITHUB_ACTOR,"@users.noreply.github.com") -join "")
           git config --global user.name $env:GITHUB_ACTOR
       - name: Checkout branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Locate MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v2
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
           dotnet-version: "6.0.100" # since we now use this
@@ -40,11 +40,11 @@ jobs:
       - name: Nuget Restore
         run: msbuild -t:Restore -m
       - name: Install DocFX
-        uses: crazy-max/ghaction-chocolatey@v1
+        uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install docfx -y
       - name: Checkout current pages
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
           token: ${{ secrets.pagesCommitToken }}
@@ -78,4 +78,4 @@ jobs:
           Move-Item ../_site $tagPath
           git add -A 2>&1
           git commit -q -a -m "Saved tag $tagName"
-          git push -q origin gh-pages 
+          git push -q origin gh-pages

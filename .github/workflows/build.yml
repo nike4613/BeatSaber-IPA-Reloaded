@@ -26,13 +26,13 @@ jobs:
       Platform: ${{ matrix.platform }}
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Locate MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v2
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           # As usual, obtained from: https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json
           dotnet-version: "6.0.100" # since we now use this
@@ -48,7 +48,7 @@ jobs:
       - name: Build
         run: msbuild -t:Build -m
       - name: Upload net472
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: BSIPA-net472-${{ env.Platform }}
           path: BSIPA-Meta/bin/${{ env.Platform }}/${{ env.Configuration }}/net472/
