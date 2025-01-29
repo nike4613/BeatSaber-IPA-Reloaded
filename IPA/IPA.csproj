@@ -5,7 +5,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
-    <RuntimeIdentifiers>win7-x64;win7-x86;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;win-x86;linux-x64</RuntimeIdentifiers>
     <RootNamespace>IPA</RootNamespace>
     <AssemblyName>IPA</AssemblyName>
     <PathMap>$(SolutionDir)=C:\</PathMap>
@@ -14,10 +14,10 @@
 
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-  
+
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Import Project="..\Common.targets"/>
-  
+
 </Project>
