@@ -1,0 +1,849 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Logger
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Logger
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IPA.Logging.Logger">
+  
+  
+  <h1 id="IPA_Logging_Logger" data-uid="IPA.Logging.Logger" class="text-break">Class Logger
+  </h1>
+  <div class="markdown level0 summary"><p>The logger base class. Provides the format for console logs.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Logger</span></div>
+      <div class="level2"><a class="xref" href="IPA.Logging.StandardLogger.html">StandardLogger</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Logging.html">IPA.Logging</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Logging_Logger_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class Logger</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_LogFormat.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.LogFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L51">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_LogFormat_" data-uid="IPA.Logging.Logger.LogFormat*"></a>
+  <h4 id="IPA_Logging_Logger_LogFormat" data-uid="IPA.Logging.Logger.LogFormat">LogFormat</h4>
+  <div class="markdown level1 summary"><p>The standard format for log messages.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string LogFormat { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>the format for the standard loggers to print in</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Critical_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Critical(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L305">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Critical_" data-uid="IPA.Logging.Logger.Critical*"></a>
+  <h4 id="IPA_Logging_Logger_Critical_System_Exception_" data-uid="IPA.Logging.Logger.Critical(System.Exception)">Critical(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as a critical message.
+Equivalent to <code>Log(Level.Critical, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Critical(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Critical_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Critical_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Critical(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L297">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Critical_" data-uid="IPA.Logging.Logger.Critical*"></a>
+  <h4 id="IPA_Logging_Logger_Critical_System_String_" data-uid="IPA.Logging.Logger.Critical(System.String)">Critical(String)</h4>
+  <div class="markdown level1 summary"><p>Sends a critical message.
+Equivalent to <code>Log(Level.Critical, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Critical(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Critical_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Debug_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Debug(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L225">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Debug_" data-uid="IPA.Logging.Logger.Debug*"></a>
+  <h4 id="IPA_Logging_Logger_Debug_System_Exception_" data-uid="IPA.Logging.Logger.Debug(System.Exception)">Debug(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as a debug message.
+Equivalent to <code>Log(Level.Debug, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Debug(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Debug_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Debug_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Debug(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L217">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Debug_" data-uid="IPA.Logging.Logger.Debug*"></a>
+  <h4 id="IPA_Logging_Logger_Debug_System_String_" data-uid="IPA.Logging.Logger.Debug(System.String)">Debug(String)</h4>
+  <div class="markdown level1 summary"><p>Sends a debug message.
+Equivalent to <code>Log(Level.Debug, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Debug(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Debug_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Error_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Error(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L289">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Error_" data-uid="IPA.Logging.Logger.Error*"></a>
+  <h4 id="IPA_Logging_Logger_Error_System_Exception_" data-uid="IPA.Logging.Logger.Error(System.Exception)">Error(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as an error message.
+Equivalent to <code>Log(Level.Error, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Error(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Error_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Error_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Error(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L281">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Error_" data-uid="IPA.Logging.Logger.Error*"></a>
+  <h4 id="IPA_Logging_Logger_Error_System_String_" data-uid="IPA.Logging.Logger.Error(System.String)">Error(String)</h4>
+  <div class="markdown level1 summary"><p>Sends an error message.
+Equivalent to <code>Log(Level.Error, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Error(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Error_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Info_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Info(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L241">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Info_" data-uid="IPA.Logging.Logger.Info*"></a>
+  <h4 id="IPA_Logging_Logger_Info_System_Exception_" data-uid="IPA.Logging.Logger.Info(System.Exception)">Info(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as an info message.
+Equivalent to <code>Log(Level.Info, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Info(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Info_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Info_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Info(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L233">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Info_" data-uid="IPA.Logging.Logger.Info*"></a>
+  <h4 id="IPA_Logging_Logger_Info_System_String_" data-uid="IPA.Logging.Logger.Info(System.String)">Info(String)</h4>
+  <div class="markdown level1 summary"><p>Sends an info message.
+Equivalent to <code>Log(Level.Info, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Info(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Info_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Log(IPA.Logging.Logger.Level%2CSystem.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L193">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Log_" data-uid="IPA.Logging.Logger.Log*"></a>
+  <h4 id="IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_" data-uid="IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,System.Exception)">Log(Logger.Level, Exception)</h4>
+  <div class="markdown level1 summary"><p>A basic log function taking an exception to log.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Log(Logger.Level level, Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.Logger.Level.html">Logger.Level</a></td>
+        <td><span class="parametername">level</span></td>
+        <td><p>the level of the message</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Log(IPA.Logging.Logger.Level%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L186">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Log_" data-uid="IPA.Logging.Logger.Log*"></a>
+  <h4 id="IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_" data-uid="IPA.Logging.Logger.Log(IPA.Logging.Logger.Level,System.String)">Log(Logger.Level, String)</h4>
+  <div class="markdown level1 summary"><p>A basic log function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void Log(Logger.Level level, string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.Logger.Level.html">Logger.Level</a></td>
+        <td><span class="parametername">level</span></td>
+        <td><p>the level of the message</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Notice_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Notice(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L257">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Notice_" data-uid="IPA.Logging.Logger.Notice*"></a>
+  <h4 id="IPA_Logging_Logger_Notice_System_Exception_" data-uid="IPA.Logging.Logger.Notice(System.Exception)">Notice(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as a notice message.
+Equivalent to <code>Log(Level.Notice, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Notice(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Notice_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Notice_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Notice(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L249">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Notice_" data-uid="IPA.Logging.Logger.Notice*"></a>
+  <h4 id="IPA_Logging_Logger_Notice_System_String_" data-uid="IPA.Logging.Logger.Notice(System.String)">Notice(String)</h4>
+  <div class="markdown level1 summary"><p>Sends a notice message.
+Equivalent to <code>Log(Level.Notice, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Notice(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Notice_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Trace_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Trace(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L209">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Trace_" data-uid="IPA.Logging.Logger.Trace*"></a>
+  <h4 id="IPA_Logging_Logger_Trace_System_Exception_" data-uid="IPA.Logging.Logger.Trace(System.Exception)">Trace(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as a trace message.
+Equivalent to <code>Log(Level.Trace, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Trace(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Trace_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Trace_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Trace(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L201">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Trace_" data-uid="IPA.Logging.Logger.Trace*"></a>
+  <h4 id="IPA_Logging_Logger_Trace_System_String_" data-uid="IPA.Logging.Logger.Trace(System.String)">Trace(String)</h4>
+  <div class="markdown level1 summary"><p>Sends a trace message.
+Equivalent to <code>Log(Level.Trace, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Trace(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Trace_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Warn_System_Exception_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Warn(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L273">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Warn_" data-uid="IPA.Logging.Logger.Warn*"></a>
+  <h4 id="IPA_Logging_Logger_Warn_System_Exception_" data-uid="IPA.Logging.Logger.Warn(System.Exception)">Warn(Exception)</h4>
+  <div class="markdown level1 summary"><p>Sends an exception as a warning message.
+Equivalent to <code>Log(Level.Warning, e);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Warn(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>the exception to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Warn_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Log(Logger.Level, Exception)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger_Warn_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger.Warn(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L265">View Source</a>
+  </span>
+  <a id="IPA_Logging_Logger_Warn_" data-uid="IPA.Logging.Logger.Warn*"></a>
+  <h4 id="IPA_Logging_Logger_Warn_System_String_" data-uid="IPA.Logging.Logger.Warn(System.String)">Warn(String)</h4>
+  <div class="markdown level1 summary"><p>Sends a warning message.
+Equivalent to <code>Log(Level.Warning, message);</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Warn(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="IPA_Logging_Logger_Warn_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log(Logger.Level, String)</a></div>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Logging.LoggerExtensions.html#IPA_Logging_LoggerExtensions_GetChildLogger_IPA_Logging_Logger_System_String_">LoggerExtensions.GetChildLogger(Logger, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/ci-test/docs/override/new?filename=IPA_Logging_Logger.md&amp;value=---%0Auid%3A%20IPA.Logging.Logger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/IPA.Loader/Logging/Logger.cs/#L9" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

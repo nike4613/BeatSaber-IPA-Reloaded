@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Installing BSIPA </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Installing BSIPA ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="articles.start.user">
+<h1 id="installing-bsipa">Installing BSIPA</h1>
+
+<div class="NOTE"><h5>Note</h5><p>This guide assumes that you are starting completely fresh.</p>
+</div>
+<ol>
+<li><p>Grab a release from the GitHub <a href="https://github.com/beat-saber-modding-group/BeatSaber-IPA-Reloaded/releases">Releases page</a>.
+Make sure to download one of the <code>BSIPA-*.zip</code>s, as <code>ModList.zip</code> contains the Beat Saber mod for showing your mods in-game, not the loader itself.</p>
+<div class="NOTE"><h5>Note</h5><p>The specific ZIP you need to download varies on the game you will be patching. For example, if you are patching Beat Saber, you will need the file
+<code>BSIPA-x64-Net4.zip</code>. This is because Beat Saber is a 64 bit game running .NET 4. If you are patching Muse Dash, however, you nee the file
+<code>BSIPA-x86-Net3.zip</code>.</p>
+</div>
+<div class="TIP"><h5>Tip</h5><p>There are a few tricks for figuring out which file you need. If the game has a folder called <code>MonoBleedingEdge</code> in the install directory, then you
+need one of the <code>Net4</code> builds. To determine <em>which</em> build to use, right click on the game executable, go to the <code>Compatability</code> tab, check the
+<code>Run this program in compatability mode for</code> checkbox, and look and see if the dropdown has any Windows XP emulation options. If it does, the
+application is 32 bit, and you need to get one of the x86 builds. Otherwise, get one of the x64 builds.</p>
+<p>Make sure to uncheck that checkbox before leaving the menu.</p>
+</div>
+</li>
+<li><p>Extract the zip into your game installation directory. There should now be a folder named <code>IPA</code> and a file named <code>IPA.exe</code> in
+the same folder as the game executable.</p>
+<p>For example, if you are installing BSIPA in Beat Saber, it might look like this after extraction:</p>
+<p><img src="../images/install-extracted.png" alt="What your game directory may look like after extracting BSIPA"></p>
+</li>
+<li><p>Run <code>IPA.exe</code> by double clicking it. A console window should pop up, and eventually, a gold message asking you to press a key
+will appear. Here is an example of a successful installation:</p>
+<p><img src="../images/install-successful.png" alt="A successful installation"></p>
+<div class="NOTE"><h5>Note</h5><p>In some cases, this may fail, something like this: <img src="../images/install-failed.png" alt="A failing installation"></p>
+<p>In these cases, try dragging the game executable over <code>IPA.exe</code>.</p>
+</div>
+<p>After installing, your game directory should look something like this:
+<img src="../images/install-correct.png" alt="A properly installed BSIPA"></p>
+<div class="NOTE"><h5>Note</h5><p>At this point it is recommended to run the game once before continuing, to ensure that things are installed correctly.</p>
+<p>The first run should create a <code>UserData</code> folder with <code>Beat Saber IPA.json</code> and <code>Disabled Mods.json</code>, as well as a
+<code>Logs</code> folder with several subfolders with their own files. If these are created, then the installation was very
+likely successful.</p>
+</div>
+<div class="TIP"><h5>Tip</h5><p>If you are not installing BSIPA on Beat Saber, you probably want to go to the config at <code>UserData/Beat Saber IPA.json</code>
+and set both of the following to <code>false</code>:</p>
+<pre><code class="lang-json">{
+  ...
+  &quot;Updates&quot;: {
+    &quot;AutoUpdate&quot;: false,
+    &quot;AutoCheckUpdates&quot;: false
+  },
+  ...
+}
+</code></pre></div>
+<div class="TIP"><h5>Tip</h5><p>Depending on the game, you may have to set the config member <code>GameAssemblies</code> to the names of the assemblies
+that the game uses for BSIPA to virtualize them properly.</p>
+<p>For Beat Saber distrobutions, this will be set according to the version that it was built for by default.
+Otherwise, it will contain just <code>Assembly-CSharp.dll</code> since most games use that default.</p>
+</div>
+</li>
+<li><p>From here, just place all of your plugins in the <code>Plugins</code> folder, and you&#39;re all set!</p>
+<p>Many plugins will come in a zip such that the root of the zip represents the game install directory, so all you may have to
+do is extract the plugin into the game installation folder.</p>
+</li>
+</ol>
+<div class="NOTE"><h5>Note</h5><p>For Linux users</p>
+<p>By default, WINE loads DLLs differently to Windows, causing issues with the injection. To make BSIPA&#39;s injection work
+with Wine, <code>winhttp</code> has to have a DLL override set to <code>native,builtin</code>. This is best achieved by putting
+<code>WINEDLLOVERRIDES=&quot;winhttp=native,builtin&quot; %command%</code> in Beat Saber&#39;s launch options in Steam.</p>
+<p>Alternatively, this can be set either through Protontricks, or using the following
+<code>.reg</code> file:</p>
+<pre><code class="lang-reg">REGEDIT4
+[HKEY_CURRENT_USER\Software\Wine\DllOverrides]
+&quot;winhttp&quot;=&quot;native,builtin&quot;
+</code></pre><p>For Steam, each game&#39;s Wine prefix is located under <code>compatdata</code>; in Beat Saber&#39;s case <code>SteamLibrary/steamapps/compatdata/620980/pfx/user.reg</code>.
+Changes to this file might be ovewritten when the game or Proton are updated however, so the launch options method is
+recommended.</p>
+</div>
+<p>Thats really all you have to do! The installation should persist across game updates for as long as <code>winhttp.dll</code> is present in
+the game directory, though your plugins will be moved to a different folder when it does update so things don&#39;t break horribly.</p>
+<h2 id="uninstalling">Uninstalling</h2>
+<p>Uninstalling is fairly simple, and can be done one of two ways:</p>
+<ol>
+<li>Drag the game executable over <code>IPA.exe</code> while holding <kbd>Alt</kbd>.</li>
+<li>Open a command prompt or Powershell terminal and run <code>.\IPA.exe -rn</code>. (see <a class="xref" href="command-line.html">The Command Line</a> for what those options mean)</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/42a52cf016850c617605ede7d135009f267ff8c5/docs/articles/start-user.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
