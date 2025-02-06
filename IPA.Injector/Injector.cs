@@ -126,16 +126,6 @@ namespace IPA.Injector
 
             targetRuntime = targetRuntime.ToLower(System.Globalization.CultureInfo.CurrentCulture);
 
-            //This forces the OpenXRLoader to error as there is no OpenXR Runtime found, which is intentional as a mod can then select it
-            switch (targetRuntime)
-            {
-                case "none":
-                case "fpfc":
-                case "controllable":
-                    Environment.SetEnvironmentVariable("XR_RUNTIME_JSON", targetRuntime); //By checking the env variable you can see what caused the override while still causing the fail
-                    return;
-            }
-
             string registryPath = @"SOFTWARE\Khronos\OpenXR\1\AvailableRuntimes";
             RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(registryPath);
             string foundRuntime = string.Empty;
@@ -143,6 +133,9 @@ namespace IPA.Injector
             {
                 foreach (string valueName in baseKey.GetValueNames())
                 {
+                    if (!File.Exists(valueName))
+                        continue;
+
                     if (Path.GetFileNameWithoutExtension(valueName).ToLower().Contains(targetRuntime))
                     {
                         foundRuntime = valueName;
@@ -152,10 +145,10 @@ namespace IPA.Injector
                 baseKey.Close();
             }
 
-            if(!string.IsNullOrEmpty(foundRuntime))
+            //We also check for the input "none" as this would forcefully select an invalid OpenXR Runtime causing none to be found for uses like FPFC 
+            if (!string.IsNullOrEmpty(targetRuntime) || string.Equals("none", targetRuntime, StringComparison.OrdinalIgnoreCase)) {
                 Environment.SetEnvironmentVariable("XR_RUNTIME_JSON", foundRuntime);
-
-            //This is not stored within CommandLineValues.Debug as you can check the environment variable 
+            }
         }
 
         private static void MaybeInitializeConsole(string[] arguments)
