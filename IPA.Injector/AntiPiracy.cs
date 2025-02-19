@@ -2,7 +2,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using IPA.Utilities;
 using System.Linq;
 #if NET3
 using Net3_Proxy;
@@ -19,35 +18,36 @@ namespace IPA.Injector
         {
             var dataPlugins = Path.Combine(GameVersionEarly.ResolveDataPath(path), "Plugins");
 
-            try
-            {
-                var userDir = GetPath(new Guid("374DE290-123F-4565-9164-39C4925E467B"),
-                                               KnownFolderFlags.AliasOnly | KnownFolderFlags.DontVerify);
-                var userDir2 = GetPath(new Guid("7d83ee9b-2244-4e70-b1f5-5393042af1e4"),
-                                               KnownFolderFlags.AliasOnly | KnownFolderFlags.DontVerify);
-
-                var curdir = Environment.CurrentDirectory;
-
-                if (curdir.IsSubPathOf(userDir) ||
-                    curdir.IsSubPathOf(userDir2)) return false;
-            }
-            catch { }
+            // try
+            // {
+            //     var userDir = GetPath(new Guid("374DE290-123F-4565-9164-39C4925E467B"), KnownFolderFlags.DontVerify);
+            //     var userDir2 = GetPath(new Guid("7d83ee9b-2244-4e70-b1f5-5393042af1e4"), KnownFolderFlags.DontVerify);
+            //     var userDir3 = GetPath(new Guid("FDD39AD0-238F-46AF-ADB4-6C85480369C7"), KnownFolderFlags.DontVerify);
+            //     var userDir4 = GetPath(new Guid("B4BFCC3A-DB2C-424C-B029-7FE99A87C641"), KnownFolderFlags.DontVerify);
+            //
+            //     var curdir = Environment.CurrentDirectory;
+            //
+            //     if (curdir.IsSubPathOf(userDir) ||
+            //         curdir.IsSubPathOf(userDir2) ||
+            //         curdir.IsSubPathOf(userDir3) ||
+            //         curdir.IsSubPathOf(userDir4)) return true;
+            // }
+            // catch { }
 
             // To the guys that maintain a fork that removes this code: I would greatly appreciate if we could talk
             //   about this for a little bit. Please message me on Discord at DaNike#6223
-
-            var steamFile = Directory.GetFiles(dataPlugins, "steam_api64.dll", SearchOption.AllDirectories).FirstOrDefault();
-
-            if (steamFile != null && new FileInfo(steamFile).Length >= 300 * 1024)
-                return true;
-
             return
-                File.Exists(Path.Combine(path, "IGG-GAMES.COM.url")) ||
-                File.Exists(Path.Combine(path, "SmartSteamEmu.ini")) ||
-                File.Exists(Path.Combine(path, "GAMESTORRENT.CO.url")) ||
-                File.Exists(Path.Combine(dataPlugins, "BSteam crack.dll")) ||
-                File.Exists(Path.Combine(dataPlugins, "HUHUVR_steam_api64.dll")) ||
-                Directory.GetFiles(dataPlugins, "*.ini", SearchOption.AllDirectories).Length > 0;
+                Directory.EnumerateFiles(path, "*").Any(IsInvalidFile) ||
+                Directory.EnumerateFiles(dataPlugins, "*", SearchOption.AllDirectories).Any(IsInvalidFile);
+        }
+
+        private static bool IsInvalidFile(string filePath)
+        {
+            var fileName = Path.GetFileName(filePath);
+            var extension = Path.GetExtension(filePath);
+            return extension.Equals(".url", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".ini", StringComparison.OrdinalIgnoreCase) ||
+                   fileName.Contains("steam", StringComparison.OrdinalIgnoreCase) && new FileInfo(filePath).Length >= 300 * 1024;
         }
 
         private static string GetPath(Guid guid, KnownFolderFlags flags)
