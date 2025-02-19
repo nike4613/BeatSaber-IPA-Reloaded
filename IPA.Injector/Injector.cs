@@ -124,8 +124,6 @@ namespace IPA.Injector
             if (string.IsNullOrEmpty(targetRuntime))
                 return;
 
-            targetRuntime = targetRuntime.ToLower(System.Globalization.CultureInfo.CurrentCulture);
-
             string registryPath = @"SOFTWARE\Khronos\OpenXR\1\AvailableRuntimes";
             RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(registryPath);
             string foundRuntime = string.Empty;
@@ -136,7 +134,9 @@ namespace IPA.Injector
                     if (!File.Exists(valueName))
                         continue;
 
-                    if (Path.GetFileNameWithoutExtension(valueName).ToLower().Contains(targetRuntime))
+                    var runtimePath = Path.GetFileNameWithoutExtension(valueName);
+
+                    if (runtimePath.IndexOf(targetRuntime, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         foundRuntime = valueName;
                         break;
@@ -146,7 +146,7 @@ namespace IPA.Injector
             }
 
             //We also check for the input "none" as this would forcefully select an invalid OpenXR Runtime causing none to be found for uses like FPFC 
-            if (!string.IsNullOrEmpty(targetRuntime) || string.Equals("none", targetRuntime, StringComparison.OrdinalIgnoreCase)) {
+            if (!string.IsNullOrEmpty(foundRuntime) || string.Equals("none", targetRuntime, StringComparison.OrdinalIgnoreCase)) {
                 Environment.SetEnvironmentVariable("XR_RUNTIME_JSON", foundRuntime);
             }
         }
