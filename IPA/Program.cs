@@ -93,6 +93,7 @@ namespace IPA
                 AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
 
                 var argExeName = Arguments.CmdLine.PositionalArgs.FirstOrDefault(s => s.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
+                // TODO: Figure out why Directory.GetCurrentDirectory could potentially return "C:\Windows\system32", even when IPA is launched manually.
                 argExeName ??= new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles()
                             .FirstOrDefault(o => o.Extension == ".exe" && o.FullName != Assembly.GetEntryAssembly()!.Location)
                             ?.FullName;
@@ -157,9 +158,9 @@ namespace IPA
         {
             if (!Directory.Exists(c.DataPathDst) || !File.Exists(c.EngineFile))
             {
-                Fail("Game does not seem to be a Unity project. Could not find the libraries to patch.");
                 Console.WriteLine($"DataPath: {c.DataPathDst}");
                 Console.WriteLine($"EngineFile: {c.EngineFile}");
+                Fail("Game does not seem to be a Unity project. Could not find the libraries to patch.");
             }
         }
 
