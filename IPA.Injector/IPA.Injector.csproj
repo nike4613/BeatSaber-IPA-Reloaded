@@ -43,6 +43,10 @@
       <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Libs\netstandard.dll">
+      <Link>Libraries\Mono\netstandard.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
