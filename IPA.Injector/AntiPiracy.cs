@@ -12,7 +12,7 @@ using Directory = Net3_Proxy.Directory;
 
 namespace IPA.Injector
 {
-    internal class AntiPiracy
+    internal static class AntiPiracy
     {
         public static bool IsInvalid(string path)
         {

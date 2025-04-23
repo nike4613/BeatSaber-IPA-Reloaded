@@ -93,6 +93,8 @@ namespace IPA.Injector
 
                 Loader.LibLoader.SetupAssemblyFilenames(true);
 
+                AntiYeet.Initialize();
+
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
             }
@@ -279,8 +281,6 @@ namespace IPA.Injector
 
             // need to reinit streams singe Unity seems to redirect stdout
             StdoutInterceptor.RedirectConsole();
-
-            AntiYeetPatch.Apply();
 
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
