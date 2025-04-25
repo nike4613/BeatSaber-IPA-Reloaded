@@ -93,8 +93,6 @@ namespace IPA.Injector
 
                 Loader.LibLoader.SetupAssemblyFilenames(true);
 
-                AntiYeet.Initialize();
-
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
             }

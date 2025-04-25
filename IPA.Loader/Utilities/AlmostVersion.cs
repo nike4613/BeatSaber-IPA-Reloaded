@@ -92,13 +92,7 @@ namespace IPA.Utilities
             if (mode == StoredAs.SemVer)
             {
                 StorageMode = StoredAs.SemVer;
-#if BeatSaber
-                var index = str.IndexOf('_');
-                var versionString = index >= 0 ? str.Substring(0, index) : str;
-                var result = Version.TryParse(versionString, out var version);
-#else
                 var result = Version.TryParse(str, out var version);
-#endif
                 SemverValue = version;
                 return result;
             }
@@ -230,7 +224,7 @@ namespace IPA.Utilities
         /// <param name="r">the second value to compare</param>
         /// <returns><see langword="true"/> if they are mostly equal, <see langword="false"/> otherwise</returns>
         /// <seealso cref="Equals(object)"/>
-        public static bool operator==(AlmostVersion l, AlmostVersion r)
+        public static bool operator==(AlmostVersion? l, AlmostVersion? r)
         {
             if (l is null && r is null) return true;
             if (l is null || r is null) return false;

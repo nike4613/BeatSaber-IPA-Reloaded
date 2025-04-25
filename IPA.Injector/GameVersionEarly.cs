@@ -42,45 +42,38 @@ namespace IPA.Injector
                 if (stream.Position == streamLength) // we went through the entire stream without finding the key
                     throw new KeyNotFoundException("Could not find key '" + key + "' in " + mgr);
 
-                var startIndex = 0L;
-                var endIndex = 0L;
-
-                while (stream.Position < streamLength && endIndex == 0L)
+                while (stream.Position < streamLength)
                 {
-                    var current = (char)reader.ReadByte();
-                    if (char.IsDigit(current))
+                    if (char.IsDigit((char)reader.ReadByte()))
                     {
-                        startIndex = stream.Position - 1;
+                        var startIndex = stream.Position - 1;
                         var dotCount = 0;
 
                         while (stream.Position < streamLength)
                         {
-                            current = (char)reader.ReadByte();
-                            if (char.IsDigit(current))
-                            {
-                                if (dotCount == 2 && stream.Position < streamLength && !char.IsDigit((char)reader.PeekChar()))
-                                {
-                                    endIndex = stream.Position;
-                                    break;
-                                }
-                            }
-                            else if (current == '.')
+                            var current = (char)reader.ReadByte();
+                            if (current == '.')
                             {
                                 dotCount++;
+                                continue;
                             }
-                            else
+
+                            if (!char.IsDigit(current) && current != '_')
                             {
                                 break;
+                            }
+
+                            if (dotCount == 2 && stream.Position < streamLength && (char)reader.PeekChar() == char.MinValue)
+                            {
+                                var length = (int)(stream.Position - startIndex);
+                                stream.Position = startIndex;
+                                return Encoding.UTF8.GetString(reader.ReadBytes(length));
                             }
                         }
                     }
                 }
 
-                var strlen = (int)(endIndex - startIndex);
-                _ = stream.Seek(-strlen, SeekOrigin.Current);
-                var strbytes = reader.ReadBytes(strlen);
-
-                return Encoding.UTF8.GetString(strbytes);
+                throw new EndOfStreamException("Could not find game version in " + mgr);
             }
         }
 

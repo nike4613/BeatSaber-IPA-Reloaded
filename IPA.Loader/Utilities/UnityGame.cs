@@ -20,12 +20,36 @@ namespace IPA.Utilities
     /// </summary>
     public static class UnityGame
     {
+#if BeatSaber
+        private const string GameVersionFilename = "BeatSaberVersion.txt";
+#else
+        private const string GameVersionFilename = "GameVersion.txt";
+#endif
+
         private static AlmostVersion? _gameVersion;
         /// <summary>
         /// Provides the current game version.
         /// </summary>
         /// <value>the SemVer version of the game</value>
-        public static AlmostVersion GameVersion => _gameVersion ??= new AlmostVersion(ApplicationVersionProxy);
+        public static AlmostVersion GameVersion
+        {
+            get
+            {
+                if (_gameVersion == null)
+                {
+                    _gameVersion = new AlmostVersion(ApplicationVersionProxy);
+                }
+
+#if BeatSaber
+                if (_gameVersion.StorageMode != AlmostVersion.StoredAs.SemVer)
+                {
+                    _gameVersion = new AlmostVersion(_gameVersion.StringValue!.Split('_')[0]);
+                }
+#endif
+
+                return _gameVersion;
+            }
+        }
 
         internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
@@ -82,13 +106,29 @@ namespace IPA.Utilities
         internal static AlmostVersion? OldVersion { get; private set; }
         internal static void CheckGameVersionBoundary()
         {
-            var gameVer = GameVersion;
-            var lastVerS = SelfConfig.LastGameVersion_;
-            OldVersion = lastVerS != null ? new AlmostVersion(lastVerS, gameVer) : null;
+            try
+            {
+                var gameVersion = _gameVersion!.StringValue ?? _gameVersion.SemverValue!.ToString();
 
-            IsGameVersionBoundary = OldVersion is not null && gameVer != OldVersion;
+                if (!File.Exists(GameVersionFilename))
+                {
+                    File.WriteAllText(GameVersionFilename, gameVersion);
+                    return;
+                }
 
-            SelfConfig.Instance.LastGameVersion = gameVer.ToString();
+                var lastGameVersion = File.ReadAllText(GameVersionFilename);
+                OldVersion = new AlmostVersion(lastGameVersion, GameVersion);
+
+                if (lastGameVersion != gameVersion)
+                {
+                    IsGameVersionBoundary = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                IsGameVersionBoundary = true;
+            }
         }
 
         private static Thread? mainThread;

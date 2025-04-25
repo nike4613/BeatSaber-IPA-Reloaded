@@ -80,7 +80,7 @@ namespace IPA.Config
 
         public void CheckVersionBoundary()
         {
-            if (ResetGameAssebliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
+            if (ResetGameAssembliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
             {
                 GameAssemblies = GetDefaultGameAssemblies();
             }
@@ -196,7 +196,7 @@ namespace IPA.Config
         [JsonIgnore]
         public bool WriteLogs { get; set; } = true;
 
-        public virtual bool ResetGameAssebliesOnVersionChange { get; set; } = true;
+        public virtual bool ResetGameAssembliesOnVersionChange { get; set; } = true;
 
         // LINE: ignore
         [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
@@ -223,16 +223,5 @@ namespace IPA.Config
 
         // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
-
-        // LINE: ignore
-#if false // Used for documentation schema generation
-        [JsonProperty(Required = Required.DisallowNull)]
-        public virtual string LastGameVersion { get; set; } = null;
-        // LINE: ignore 2
-#endif
-        public virtual string? LastGameVersion { get; set; } = null;
-
-        // LINE: ignore
-        public static string? LastGameVersion_ => Instance?.LastGameVersion;
     }
 }
