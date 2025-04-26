@@ -5,13 +5,11 @@ using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using IPA.Utilities;
-using Microsoft.Win32;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -46,8 +44,7 @@ namespace IPA.Injector
             _ = args;
             try
             {
-                var arguments = Environment.GetCommandLineArgs();
-                MaybeInitializeConsole(arguments);
+                CommandLineParser.ParseCommandLine(Environment.GetCommandLineArgs());
 
                 SetupLibraryLoading();
 
@@ -66,7 +63,6 @@ namespace IPA.Injector
 
                 Default.Debug("Initializing logger");
 
-                SelfConfig.ReadCommandLine(arguments);
                 SelfConfig.Load();
                 DisabledConfig.Load();
 
@@ -85,8 +81,6 @@ namespace IPA.Injector
                 GameVersionEarly.Load();
                 SelfConfig.Instance.CheckVersionBoundary();
 
-                SetOpenXRRuntime(arguments);
-
                 // updates backup
                 InstallBootstrapPatch();
 
@@ -102,71 +96,6 @@ namespace IPA.Injector
             catch (Exception e)
             {
                 Console.WriteLine(e);
-            }
-        }
-
-        public static void SetOpenXRRuntime(string[] arguments)
-        {
-            if (arguments == null)
-                return;
-
-            string targetRuntime = string.Empty;
-
-            for (int i = 0; i < arguments.Length; i++)
-            {
-                if (arguments[i] == "-vrmode" && i + 1 < arguments.Length)
-                {
-                    targetRuntime = arguments[i + 1];
-                    break;
-                }
-            }
-
-            if (string.IsNullOrEmpty(targetRuntime))
-                return;
-
-            string registryPath = @"SOFTWARE\Khronos\OpenXR\1\AvailableRuntimes";
-            RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(registryPath);
-            string foundRuntime = string.Empty;
-            if (baseKey != null)
-            {
-                foreach (string valueName in baseKey.GetValueNames())
-                {
-                    if (!File.Exists(valueName))
-                        continue;
-
-                    var runtimePath = Path.GetFileNameWithoutExtension(valueName);
-
-                    if (runtimePath.IndexOf(targetRuntime, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        foundRuntime = valueName;
-                        break;
-                    }
-                }
-                baseKey.Close();
-            }
-
-            //We also check for the input "none" as this would forcefully select an invalid OpenXR Runtime causing none to be found for uses like FPFC 
-            if (!string.IsNullOrEmpty(foundRuntime) || string.Equals("none", targetRuntime, StringComparison.OrdinalIgnoreCase)) {
-                Environment.SetEnvironmentVariable("XR_RUNTIME_JSON", foundRuntime);
-            }
-        }
-
-        private static void MaybeInitializeConsole(string[] arguments)
-        {
-            var i = 0;
-            while (i < arguments.Length)
-            {
-                if (arguments[i++] == "--verbose")
-                {
-                    if (i == arguments.Length)
-                    {
-                        WinConsole.Initialize(WinConsole.AttachParent);
-                        return;
-                    }
-
-                    WinConsole.Initialize(int.TryParse(arguments[i], out int processId) ? processId : WinConsole.AttachParent);
-                    return;
-                }
             }
         }
 

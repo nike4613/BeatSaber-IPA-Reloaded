@@ -39,45 +39,6 @@ namespace IPA.Config
             Logger.Default.Debug("SelfConfig Changed called");
         }
 
-        public static void ReadCommandLine(string[] args)
-        {
-            foreach (var arg in args)
-            {
-                switch (arg)
-                {
-                    case "--debug":
-                    case "--mono-debug":
-                        CommandLineValues.Debug.ShowDebug = true;
-                        CommandLineValues.Debug.ShowCallSource = true;
-                        break;
-                    case "--no-yeet":
-                        CommandLineValues.YeetMods = false;
-                        break;
-                    case "--no-logs":
-                        CommandLineValues.WriteLogs = false;
-                        break;
-                    case "--darken-message":
-                        CommandLineValues.Debug.DarkenMessages = true;
-                        break;
-                    case "--condense-logs":
-                        CommandLineValues.Debug.CondenseModLogs = true;
-                        break;
-                    case "--plugin-logs":
-                        CommandLineValues.Debug.CreateModLogs = true;
-                        break;
-#if false
-                    case "--no-updates":
-                        CommandLineValues.Updates.AutoCheckUpdates = false;
-                        CommandLineValues.Updates.AutoUpdate = false;
-                        break;
-#endif
-                    case "--trace":
-                        CommandLineValues.Debug.ShowTrace = true;
-                        break;
-                }
-            }
-        }
-
         public void CheckVersionBoundary()
         {
             if (ResetGameAssembliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
