@@ -64,39 +64,24 @@ namespace IPA.Loader
             {
                 FilenameLocations = new Dictionary<string, (string, Version)>();
 
-                foreach (var fn in TraverseTree(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!))
+                var files = TraverseTree(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!)
+                    .Concat(TraverseTree(LibraryPath, s => s != NativeLibraryPath));
+
+                foreach (var fileInfo in files)
                 {
-                    if (!fn.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
+                    if (!fileInfo.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
 
-                    var assemblyName = AssemblyName.GetAssemblyName(fn.FullName);
-                    if (!FilenameLocations.TryGetValue(fn.Name, out var assemblyInfo) || assemblyName.Version > assemblyInfo.Version)
+                    var assemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
+                    if (!FilenameLocations.TryGetValue(fileInfo.Name, out var assemblyInfo) || assemblyName.Version > assemblyInfo.Version)
                     {
-                        FilenameLocations[fn.Name] = (fn.FullName, assemblyName.Version);
+                        FilenameLocations[fileInfo.Name] = (fileInfo.FullName, assemblyName.Version);
                     }
                     else
                     {
-                        Log(Logger.Level.Notice, $"Multiple instances of {fn.Name} exist! Ignoring {fn.FullName}");
-                    }
-                }
-
-                foreach (var fn in TraverseTree(LibraryPath, s => s != NativeLibraryPath))
-                {
-                    if (!fn.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-
-                    var assemblyName = AssemblyName.GetAssemblyName(fn.FullName);
-                    if (!FilenameLocations.TryGetValue(fn.Name, out var assemblyInfo) || assemblyName.Version > assemblyInfo.Version)
-                    {
-                        FilenameLocations[fn.Name] = (fn.FullName, assemblyName.Version);
-                    }
-                    else
-                    {
-                        Log(Logger.Level.Notice, $"Multiple instances of {fn.Name} exist! Ignoring {fn.FullName}");
+                        Log(Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {fileInfo.FullName}");
                     }
                 }
 
