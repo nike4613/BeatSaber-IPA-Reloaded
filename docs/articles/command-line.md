@@ -97,4 +97,10 @@ Here's a quick list of what they are and what they do.
   >
   > Overrides the config setting `Debug.CreateModLogs`.
 
+- `-vrmode`
+
+  > Allows changing the OpenXR runtime. Value must be a substring of the runtime filename. 
+  > 
+  > Set to `none` to disable VR by forcing an invalid runtime.
+
 ***
