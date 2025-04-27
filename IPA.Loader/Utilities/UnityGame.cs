@@ -26,6 +26,7 @@ namespace IPA.Utilities
         private const string GameVersionFilename = "GameVersion.txt";
 #endif
 
+        private static AlmostVersion? _earlyGameVersion;
         private static AlmostVersion? _gameVersion;
         /// <summary>
         /// Provides the current game version.
@@ -53,8 +54,9 @@ namespace IPA.Utilities
 
         internal static void SetEarlyGameVersion(AlmostVersion ver)
         {
+            _earlyGameVersion = ver;
             _gameVersion = ver;
-            Logging.Logger.Default.Debug($"GameVersion set early to {ver}");
+            Logging.Logger.Default.Debug($"Game version set early to {ver}");
         }
         private static string ApplicationVersionProxy
         {
@@ -85,9 +87,9 @@ namespace IPA.Utilities
             try
             {
                 var rtVer = new AlmostVersion(ApplicationVersionProxy);
-                if (!rtVer.Equals(_gameVersion)) // this actually uses stricter equality than == for AlmostVersion
+                if (!rtVer.Equals(_earlyGameVersion)) // this actually uses stricter equality than == for AlmostVersion
                 {
-                    Logging.Logger.Default.Warn($"Early version {_gameVersion} parsed from game files doesn't match runtime version {rtVer}!");
+                    Logging.Logger.Default.Warn($"Early version {_earlyGameVersion} parsed from game files doesn't match runtime version {rtVer}!");
                     _gameVersion = rtVer;
                 }
             }
@@ -108,18 +110,18 @@ namespace IPA.Utilities
         {
             try
             {
-                var gameVersion = _gameVersion!.StringValue ?? _gameVersion.SemverValue!.ToString();
+                var earlyGameVersion = _earlyGameVersion!.ToString();
 
                 if (!File.Exists(GameVersionFilename))
                 {
-                    File.WriteAllText(GameVersionFilename, gameVersion);
+                    File.WriteAllText(GameVersionFilename, earlyGameVersion);
                     return;
                 }
 
                 var lastGameVersion = File.ReadAllText(GameVersionFilename);
                 OldVersion = new AlmostVersion(lastGameVersion, GameVersion);
 
-                if (lastGameVersion != gameVersion)
+                if (lastGameVersion != earlyGameVersion)
                 {
                     IsGameVersionBoundary = true;
                 }
