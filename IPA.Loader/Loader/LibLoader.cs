@@ -74,15 +74,19 @@ namespace IPA.Loader
                         continue;
                     }
 
-                    var assemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
-                    if (!FilenameLocations.TryGetValue(fileInfo.Name, out var assemblyInfo) || assemblyName.Version > assemblyInfo.Version)
+                    try
                     {
-                        FilenameLocations[fileInfo.Name] = (fileInfo.FullName, assemblyName.Version);
+                        var assemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
+                        if (!FilenameLocations.TryGetValue(fileInfo.Name, out var assemblyInfo) || assemblyName.Version > assemblyInfo.Version)
+                        {
+                            FilenameLocations[fileInfo.Name] = (fileInfo.FullName, assemblyName.Version);
+                        }
+                        else
+                        {
+                            Log(Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {fileInfo.FullName}");
+                        }
                     }
-                    else
-                    {
-                        Log(Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {fileInfo.FullName}");
-                    }
+                    catch (BadImageFormatException) { }
                 }
 
                 static void AddDirectoryToPath(string path)
