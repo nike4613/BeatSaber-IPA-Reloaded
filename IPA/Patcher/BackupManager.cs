@@ -20,7 +20,7 @@ namespace IPA.Patcher
         {
             return FindLatestBackup(context) != null;
         }
-        
+
         public static bool Restore(PatchContext context)
         {
             var backup = FindLatestBackup(context);
@@ -59,6 +59,7 @@ namespace IPA.Patcher
                 catch (DirectoryNotFoundException) { }
             }
             catch (UnauthorizedAccessException) { }
+            catch (DirectoryNotFoundException) { }
         }
 
     }
