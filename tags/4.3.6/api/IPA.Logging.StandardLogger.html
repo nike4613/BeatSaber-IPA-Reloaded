@@ -1,0 +1,454 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class StandardLogger
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class StandardLogger
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/fix.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IPA.Logging.StandardLogger">
+  
+  
+  <h1 id="IPA_Logging_StandardLogger" data-uid="IPA.Logging.StandardLogger" class="text-break">Class StandardLogger
+  </h1>
+  <div class="markdown level0 summary"><p>The default (and standard) <a class="xref" href="IPA.Logging.Logger.html">Logger</a> implementation.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="IPA.Logging.Logger.html">Logger</a></div>
+    <div class="level2"><span class="xref">StandardLogger</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_LogFormat">Logger.LogFormat</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_Exception_">Logger.Log(Logger.Level, Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_System_String_">Logger.Trace(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Trace_System_Exception_">Logger.Trace(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Debug_System_Exception_">Logger.Debug(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Info_System_String_">Logger.Info(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Info_System_Exception_">Logger.Info(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Notice_System_String_">Logger.Notice(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Notice_System_Exception_">Logger.Notice(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Warn_System_String_">Logger.Warn(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Warn_System_Exception_">Logger.Warn(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Error_System_String_">Logger.Error(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Error_System_Exception_">Logger.Error(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Critical_System_String_">Logger.Critical(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Critical_System_Exception_">Logger.Critical(Exception)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IPA.Logging.html">IPA.Logging</a></h6>
+  <h6><strong>Assembly</strong>: IPA.Loader.dll</h6>
+  <h5 id="IPA_Logging_StandardLogger_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class StandardLogger : Logger</code></pre>
+  </div>
+  <h5 id="IPA_Logging_StandardLogger_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p><a class="xref" href="IPA.Logging.StandardLogger.html">StandardLogger</a> uses a multi-threaded approach to logging. All actual I/O is done on another thread,
+where all messaged are guaranteed to be logged in the order they appeared. It is up to the printers to format them.</p>
+<p>This logger supports child loggers. Use <a class="xref" href="IPA.Logging.LoggerExtensions.html#IPA_Logging_LoggerExtensions_GetChildLogger_IPA_Logging_Logger_System_String_">GetChildLogger(Logger, String)</a> to safely get a child.
+The modification of printers on a parent are reflected down the chain.</p>
+</div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger_ConsoleWriter.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger.ConsoleWriter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L88">View Source</a>
+  </span>
+  <a id="IPA_Logging_StandardLogger_ConsoleWriter_" data-uid="IPA.Logging.StandardLogger.ConsoleWriter*"></a>
+  <h4 id="IPA_Logging_StandardLogger_ConsoleWriter" data-uid="IPA.Logging.StandardLogger.ConsoleWriter">ConsoleWriter</h4>
+  <div class="markdown level1 summary"><p>The <span class="xref">System.IO.TextWriter</span> for writing directly to the console window, or stdout if no window open.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TextWriter ConsoleWriter { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.TextWriter</span></td>
+        <td><p>a <span class="xref">System.IO.TextWriter</span> for the current primary text output</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger_IsOnLoggerThread.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger.IsOnLoggerThread%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L281">View Source</a>
+  </span>
+  <a id="IPA_Logging_StandardLogger_IsOnLoggerThread_" data-uid="IPA.Logging.StandardLogger.IsOnLoggerThread*"></a>
+  <h4 id="IPA_Logging_StandardLogger_IsOnLoggerThread" data-uid="IPA.Logging.StandardLogger.IsOnLoggerThread">IsOnLoggerThread</h4>
+  <div class="markdown level1 summary"><p>Whether or not the calling thread is the logger thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsOnLoggerThread { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p><span class="xref">true</span> if the current thread is the logger thread, <span class="xref">false</span> otherwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger_PrintFilter.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger.PrintFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L106">View Source</a>
+  </span>
+  <a id="IPA_Logging_StandardLogger_PrintFilter_" data-uid="IPA.Logging.StandardLogger.PrintFilter*"></a>
+  <h4 id="IPA_Logging_StandardLogger_PrintFilter" data-uid="IPA.Logging.StandardLogger.PrintFilter">PrintFilter</h4>
+  <div class="markdown level1 summary"><p>All levels defined by this filter will be sent to loggers. All others will be ignored.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Logger.LogLevel PrintFilter { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.Logger.LogLevel.html">Logger.LogLevel</a></td>
+        <td><p>the global filter level</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger_AddPrinter_IPA_Logging_LogPrinter_.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger.AddPrinter(IPA.Logging.LogPrinter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L189">View Source</a>
+  </span>
+  <a id="IPA_Logging_StandardLogger_AddPrinter_" data-uid="IPA.Logging.StandardLogger.AddPrinter*"></a>
+  <h4 id="IPA_Logging_StandardLogger_AddPrinter_IPA_Logging_LogPrinter_" data-uid="IPA.Logging.StandardLogger.AddPrinter(IPA.Logging.LogPrinter)">AddPrinter(LogPrinter)</h4>
+  <div class="markdown level1 summary"><p>Adds a log printer to the logger.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddPrinter(LogPrinter printer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.LogPrinter.html">LogPrinter</a></td>
+        <td><span class="parametername">printer</span></td>
+        <td><p>the printer to add</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger_Debug_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger.Debug(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L243">View Source</a>
+  </span>
+  <a id="IPA_Logging_StandardLogger_Debug_" data-uid="IPA.Logging.StandardLogger.Debug*"></a>
+  <h4 id="IPA_Logging_StandardLogger_Debug_System_String_" data-uid="IPA.Logging.StandardLogger.Debug(System.String)">Debug(String)</h4>
+  <div class="markdown level1 summary"><p>An override to <a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Debug_System_String_">Debug(String)</a> which shows the method that called it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Debug(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Debug_System_String_">Logger.Debug(String)</a></div>
+  <h5 id="IPA_Logging_StandardLogger_Debug_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Log</a>(<a class="xref" href="IPA.Logging.Logger.Level.html">Logger.Level</a>, <span class="xref">System.String</span>)</div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger_Log_IPA_Logging_Logger_Level_System_String_.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger.Log(IPA.Logging.Logger.Level%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L199">View Source</a>
+  </span>
+  <a id="IPA_Logging_StandardLogger_Log_" data-uid="IPA.Logging.StandardLogger.Log*"></a>
+  <h4 id="IPA_Logging_StandardLogger_Log_IPA_Logging_Logger_Level_System_String_" data-uid="IPA.Logging.StandardLogger.Log(IPA.Logging.Logger.Level,System.String)">Log(Logger.Level, String)</h4>
+  <div class="markdown level1 summary"><p>Logs a specific message at a given level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Log(Logger.Level level, string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IPA.Logging.Logger.Level.html">Logger.Level</a></td>
+        <td><span class="parametername">level</span></td>
+        <td><p>the message level</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>the message to log</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="IPA.Logging.Logger.html#IPA_Logging_Logger_Log_IPA_Logging_Logger_Level_System_String_">Logger.Log(Logger.Level, String)</a></div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="IPA.Logging.LoggerExtensions.html#IPA_Logging_LoggerExtensions_GetChildLogger_IPA_Logging_Logger_System_String_">LoggerExtensions.GetChildLogger(Logger, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetField__2___0_System_String___1_">ReflectionUtil.SetField&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetField__2___1_System_String_">ReflectionUtil.GetField&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_SetProperty__2___0_System_String___1_">ReflectionUtil.SetProperty&lt;T, U&gt;(T, String, U)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_GetProperty__2___1_System_String_">ReflectionUtil.GetProperty&lt;U, T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="IPA.Utilities.ReflectionUtil.html#IPA_Utilities_ReflectionUtil_InvokeMethod__2___1_System_String_System_Object___">ReflectionUtil.InvokeMethod&lt;U, T&gt;(T, String, Object[])</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/new/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/docs/override/new?filename=IPA_Logging_StandardLogger.md&amp;value=---%0Auid%3A%20IPA.Logging.StandardLogger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/39e36ce4f3c21408dbbe4c41c1a954ed1f717a6a/IPA.Loader/Logging/StandardLogger.cs/#L26" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
