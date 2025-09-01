@@ -14,6 +14,13 @@ namespace IPA.Injector
 {
     internal static class AntiPiracy
     {
+        private static readonly string[] excludedIniFiles =
+        {
+            "desktop.ini",
+            "ReShade.ini",
+            "ReShadePreset.ini"
+        };
+
         public static bool IsInvalid(string path)
         {
             var dataPlugins = Path.Combine(GameVersionEarly.ResolveDataPath(path), "Plugins");
@@ -45,7 +52,7 @@ namespace IPA.Injector
             var fileName = Path.GetFileName(filePath);
             var extension = Path.GetExtension(filePath);
             return extension.Equals(".url", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".ini", StringComparison.OrdinalIgnoreCase) && fileName != "desktop.ini" ||
+                   extension.Equals(".ini", StringComparison.OrdinalIgnoreCase) && !excludedIniFiles.Contains(fileName, StringComparer.OrdinalIgnoreCase) ||
                    fileName.IndexOf("steam", StringComparison.OrdinalIgnoreCase) >= 0 && new FileInfo(filePath).Length >= 300 * 1024;
         }
 
