@@ -2,6 +2,7 @@
 using IPA.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,68 +17,96 @@ namespace IPA.Injector
 {
     internal static class GameVersionEarly
     {
+        private const string GlobalGameManagersFileName = "globalgamemanagers";
+        private const string AppStoreCategory = "public.app-category.games";
+
         internal static string ResolveDataPath(string installDir) =>
             Directory.EnumerateDirectories(installDir, "*_Data").First();
 
-        internal static string GlobalGameManagers(string installDir) =>
-            Path.Combine(ResolveDataPath(installDir), "globalgamemanagers");
-
-        internal static string GetGameVersion()
+        private static string GetGameVersion()
         {
-            var mgr = GlobalGameManagers(UnityGame.InstallPath);
+            var filePath = Path.Combine(ResolveDataPath(UnityGame.InstallPath), GlobalGameManagersFileName);
+            using var fileStream = File.OpenRead(filePath);
+            using var binaryReader = new BinaryReader(fileStream, Encoding.UTF8);
 
-            using (var stream = File.OpenRead(mgr))
-            using (var reader = new BinaryReader(stream, Encoding.UTF8))
+            if (!TrySeekToKey(binaryReader, AppStoreCategory))
             {
-                const string key = "public.app-category.games";
-                int pos = 0;
-                var streamLength = stream.Length;
-
-                while (stream.Position < streamLength && pos < key.Length)
-                {
-                    if (reader.ReadByte() == key[pos]) pos++;
-                    else pos = 0;
-                }
-
-                if (stream.Position == streamLength) // we went through the entire stream without finding the key
-                    throw new KeyNotFoundException("Could not find key '" + key + "' in " + mgr);
-
-                while (stream.Position < streamLength)
-                {
-                    if (char.IsDigit((char)reader.ReadByte()))
-                    {
-                        var startIndex = stream.Position - 1;
-                        var dotCount = 0;
-
-                        while (stream.Position < streamLength)
-                        {
-                            var current = (char)reader.ReadByte();
-                            if (current == '.')
-                            {
-                                dotCount++;
-                                continue;
-                            }
-
-                            if (!char.IsDigit(current) && current != '_')
-                            {
-                                break;
-                            }
-
-                            if (dotCount == 2 && stream.Position < streamLength && (char)reader.PeekChar() == char.MinValue)
-                            {
-                                var length = (int)(stream.Position - startIndex);
-                                stream.Position = startIndex;
-                                return Encoding.UTF8.GetString(reader.ReadBytes(length));
-                            }
-                        }
-                    }
-                }
-
-                throw new EndOfStreamException("Could not find game version in " + mgr);
+                throw new KeyNotFoundException($"Could not find key '{AppStoreCategory}' in {GlobalGameManagersFileName}");
             }
+
+            if (!TryFindVersion(binaryReader, out var gameVersion))
+            {
+                throw new InvalidDataException($"Could not find a valid game version string in {GlobalGameManagersFileName}");
+            }
+
+            return gameVersion;
         }
 
-        internal static AlmostVersion SafeParseVersion() => new(GetGameVersion());
+        private static bool TrySeekToKey(BinaryReader reader, string key)
+        {
+            var position = 0;
+            var stream = reader.BaseStream;
+            while (stream.Position < stream.Length && position < key.Length)
+            {
+                if (reader.ReadByte() == key[position])
+                {
+                    position++;
+                }
+                else
+                {
+                    position = 0;
+                }
+            }
+
+            return stream.Position != stream.Length;
+        }
+
+        private static bool TryFindVersion(BinaryReader reader, [MaybeNullWhen(false)] out string version)
+        {
+            var stream = reader.BaseStream;
+            while (stream.Position < stream.Length)
+            {
+                var current = (char)reader.ReadByte();
+
+                if (!char.IsDigit(current))
+                {
+                    continue;
+                }
+
+                var bytesRead = 1;
+                var dotCount = 0;
+
+                while (stream.Position < stream.Length)
+                {
+                    current = (char)reader.ReadByte();
+                    bytesRead++;
+
+                    if (current == '.')
+                    {
+                        dotCount++;
+                    }
+                    else if (!char.IsDigit(current))
+                    {
+                        break;
+                    }
+
+                    // Ensures we get a valid SemVer.
+                    if (dotCount == 2)
+                    {
+                        stream.Seek(-bytesRead - sizeof(int), SeekOrigin.Current);
+                        var lengthPrefix = reader.ReadInt32();
+                        version = Encoding.UTF8.GetString(reader.ReadBytes(lengthPrefix));
+
+                        return true;
+                    }
+                }
+            }
+
+            version = null;
+            return false;
+        }
+
+        private static AlmostVersion SafeParseVersion() => new(GetGameVersion());
 
         private static void _Load()
         {
@@ -87,19 +116,10 @@ namespace IPA.Injector
 
         internal static void Load()
         {
-            // This exists for the same reason the wierdness in Injector.Main does
+            // This exists for the same reason the weirdness in Injector.Main does
             _ = Type.GetType("SemVer.Version, SemVer", false);
 
             _Load();
         }
-
-        internal static readonly char[] IllegalCharacters = new char[]
-            {
-                '<', '>', ':', '/', '\\', '|', '?', '*', '"',
-                '\u0000', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
-                '\u0008', '\u0009', '\u000a', '\u000b', '\u000c', '\u000d', '\u000e', '\u000d',
-                '\u000f', '\u0010', '\u0011', '\u0012', '\u0013', '\u0014', '\u0015', '\u0016',
-                '\u0017', '\u0018', '\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001f',
-            };
     }
 }
