@@ -1,18 +1,12 @@
 ﻿#nullable enable
+using IPA.AntiMalware;
+using IPA.Logging;
+using IPA.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
-using IPA.Logging;
-using IPA.Utilities;
-using IPA.AntiMalware;
-#if NET4
-using Expression = System.Linq.Expressions.Expression;
-using ExpressionEx = System.Linq.Expressions.Expression;
-#endif
-#if NET3
-using Net3_Proxy;
-#endif
 
 namespace IPA.Loader
 {
@@ -127,7 +121,7 @@ namespace IPA.Loader
             public bool Equals(TypedInjector other)
                 => Type == other.Type && Injector == other.Injector;
 
-            public override bool Equals(object obj) 
+            public override bool Equals(object obj)
                 => obj is TypedInjector i && Equals(i);
 
 
@@ -171,9 +165,9 @@ namespace IPA.Loader
         private static readonly MethodInfo InjectMethod = typeof(PluginInitInjector).GetMethod(nameof(Inject), BindingFlags.NonPublic | BindingFlags.Static);
         internal static Expression InjectedCallExpr(ParameterInfo[] initParams, Expression meta, Expression persistVar, Func<IEnumerable<Expression>, Expression> exprGen)
         {
-            var arr = ExpressionEx.Variable(typeof(object[]), "initArr");
-            return ExpressionEx.Block(new[] { arr },
-                ExpressionEx.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta, persistVar)),
+            var arr = Expression.Variable(typeof(object[]), "initArr");
+            return Expression.Block(new[] { arr },
+                Expression.Assign(arr, Expression.Call(InjectMethod, Expression.Constant(initParams), meta, persistVar)),
                 exprGen(initParams
                             .Select(p => p.ParameterType)
                             .Select((t, i) => (Expression)Expression.Convert(
@@ -181,7 +175,7 @@ namespace IPA.Loader
         }
 
         private static object? InjectForParameter(
-            Dictionary<TypedInjector, object?> previousValues, 
+            Dictionary<TypedInjector, object?> previousValues,
             PluginMetadata meta,
             ParameterInfo param,
             Type paramType,
@@ -196,7 +190,7 @@ namespace IPA.Loader
                 .OrderByDescending(t => t.priority)                    // sort by value
                 .Select(t => t.inject);                                // remove priority value
 
-            // this tries injectors in order of closest match by type provided 
+            // this tries injectors in order of closest match by type provided
             foreach (var pair in toUse)
             {
                 object? prev = null;

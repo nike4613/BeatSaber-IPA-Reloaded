@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IPA.Utilities.Async
@@ -61,17 +60,13 @@ namespace IPA.Utilities.Async
             return tcs.Task;
         }
 
-#if NET4
         private static readonly TaskCreationOptions AsTaskSourceOptions = TaskCreationOptions.RunContinuationsAsynchronously;
-#else
-        private static readonly TaskCreationOptions AsTaskSourceOptions = TaskCreationOptions.None;
-#endif
 
         private struct VoidStruct { }
         private class ExceptionLocation : Exception
         {
-            public ExceptionLocation(IEnumerable<string> locations) 
-                : base(string.Join("\n", Utils.StrJP(locations.Select(s => "in " + s))))
+            public ExceptionLocation(IEnumerable<string> locations)
+                : base(string.Join("\n", locations.Select(s => "in " + s)))
             {
             }
         }

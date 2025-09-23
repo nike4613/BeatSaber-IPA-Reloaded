@@ -9,9 +9,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
-#if NET3
-using Path = Net3_Proxy.Path;
-#endif
 
 namespace IPA.Utilities
 {

@@ -6,9 +6,6 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading.Tasks;
-#if NET3
-using Net3_Proxy;
-#endif
 
 namespace IPA.Injector
 {

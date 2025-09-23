@@ -6,10 +6,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-#endif
 
 namespace IPA.Logging.Printers
 {
@@ -25,11 +21,7 @@ namespace IPA.Logging.Printers
             IntPtr lpSecurityAttributes
         );
 
-#if NET4
         private const RegexOptions reOptions = RegexOptions.Compiled;
-#elif NET3 // Needed because Compiled doesn't exist in Unity's .NET 3 runtime
-        private const RegexOptions reOptions = RegexOptions.None;
-#endif
 
         internal static Regex removeControlCodes = new("\x1b\\[\\d+m", reOptions);
 

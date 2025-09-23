@@ -9,10 +9,6 @@ using System.Linq;
 using System.Reflection;
 using SVersion = SemVer.Version;
 using Version = Hive.Versioning.Version;
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-#endif
 
 namespace IPA.Loader
 {

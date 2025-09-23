@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using IPA.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -115,7 +114,7 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>a comma-seperated list of the result of <see cref="Value.ToString"/> wrapped in square brackets</returns>
         public override string ToString()
-            => $"[{string.Join(",",this.Select(v => v?.ToString() ?? "null").StrJP())}]";
+            => $"[{string.Join(",",this.Select(v => v?.ToString() ?? "null"))}]";
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

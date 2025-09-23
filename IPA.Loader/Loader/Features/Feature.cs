@@ -2,10 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-#if NET3
-using Net3_Proxy;
-#endif
 
 namespace IPA.Loader.Features
 {

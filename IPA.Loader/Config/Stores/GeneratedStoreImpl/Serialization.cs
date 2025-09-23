@@ -6,13 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using Boolean = IPA.Config.Data.Boolean;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Config.Stores
 {

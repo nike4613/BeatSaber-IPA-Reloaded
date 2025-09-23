@@ -151,7 +151,7 @@ namespace IPA.Logging
             {
                 if (!addedConsolePrinters)
                     AddDefaultPrinter(new ColorlessConsolePrinter());
-                
+
                 finalizedDefaultPrinters = true;
             }
 
@@ -251,7 +251,7 @@ namespace IPA.Logging
                 if (lineNo == 0)
                 { // no debug info
                     var method = stackFrame.GetMethod();
-                    var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName).StrJP());
+                    var paramString = string.Join(", ", method.GetParameters().Select(p => p.ParameterType.FullName));
 
                     message = $"{{{method.DeclaringType?.FullName}::{method.Name}({paramString})}} {message}";
                 }
@@ -428,7 +428,7 @@ namespace IPA.Logging
                 }
             }
             catch (InvalidOperationException)
-            { 
+            {
             }
         }
 

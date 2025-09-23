@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using Hive.Versioning;
+using IPA.AntiMalware;
 using IPA.Config;
 using IPA.Loader.Features;
 using IPA.Logging;
@@ -7,24 +9,13 @@ using Mono.Cecil;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics;
-using IPA.AntiMalware;
-using Hive.Versioning;
-#if NET4
-using Task = System.Threading.Tasks.Task;
-using TaskEx = System.Threading.Tasks.Task;
-#endif
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-using File = Net3_Proxy.File;
-using Directory = Net3_Proxy.Directory;
-#endif
+using System.Threading.Tasks;
 
 namespace IPA.Loader
 {
@@ -37,7 +28,7 @@ namespace IPA.Loader
         internal static PluginMetadata SelfMeta = null!;
 
         internal static Task LoadTask() =>
-            TaskEx.Run(() =>
+            Task.Run(() =>
         {
             YeetIfNeeded();
 
@@ -309,7 +300,7 @@ namespace IPA.Loader
                     if (meta.IsBare)
                     {
                         Logger.Loader.Warn($"Bare manifest cannot specify description file");
-                        meta.Manifest.Description = string.Join("\n", lines.Skip(1).StrJP()); // ignore first line
+                        meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
                         continue;
                     }
 
@@ -324,7 +315,7 @@ namespace IPA.Loader
                         if (resc == null)
                         {
                             Logger.Loader.Warn($"Could not find description file for plugin {meta.Name} ({name}); ignoring include");
-                            meta.Manifest.Description = string.Join("\n", lines.Skip(1).StrJP()); // ignore first line
+                            meta.Manifest.Description = string.Join("\n", lines.Skip(1)); // ignore first line
                             continue;
                         }
 
@@ -496,14 +487,14 @@ namespace IPA.Loader
         {
 #if DEBUG
             // print starting order
-            Logger.Loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
+            Logger.Loader.Debug(string.Join(", ", PluginsMetadata));
 #endif
 
             PluginsMetadata.Sort((a, b) => b.HVersion.CompareTo(a.HVersion));
 
 #if DEBUG
             // print base resolution order
-            Logger.Loader.Debug(string.Join(", ", PluginsMetadata.StrJP()));
+            Logger.Loader.Debug(string.Join(", ", PluginsMetadata));
 #endif
 
             var metadataCache = new Dictionary<string, (PluginMetadata Meta, bool Enabled)>(PluginsMetadata.Count);

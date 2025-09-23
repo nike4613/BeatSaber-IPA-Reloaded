@@ -5,11 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Threading;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Utilities
 {
@@ -198,7 +193,7 @@ namespace IPA.Utilities
             return (getter, setter);
         }
 
-        private static readonly SingleCreationValueCache<string, (Getter get, Setter set)> props 
+        private static readonly SingleCreationValueCache<string, (Getter get, Setter set)> props
             = new SingleCreationValueCache<string, (Getter get, Setter set)>();
 
         private static (Getter get, Setter set) GetAccessors(string propName)
@@ -223,7 +218,7 @@ namespace IPA.Utilities
         /// Gets the value of the property identified by <paramref name="name"/> on <paramref name="obj"/>.
         /// </summary>
         /// <remarks>
-        /// The only reason to use this over <see cref="Get(T, string)"/> is if you are using a value type because 
+        /// The only reason to use this over <see cref="Get(T, string)"/> is if you are using a value type because
         /// it avoids a copy.
         /// </remarks>
         /// <param name="obj">the instance to access</param>

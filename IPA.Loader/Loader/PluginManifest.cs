@@ -4,15 +4,10 @@ using IPA.JsonConverters;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SemVer;
 using System;
 using System.Collections.Generic;
 using AlmostVersionConverter = IPA.JsonConverters.AlmostVersionConverter;
 using Version = Hive.Versioning.Version;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Loader
 {

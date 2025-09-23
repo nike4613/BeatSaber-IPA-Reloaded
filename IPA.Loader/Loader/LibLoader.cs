@@ -1,19 +1,14 @@
 ﻿#nullable enable
+using IPA.AntiMalware;
+using IPA.Config;
+using IPA.Logging;
+using IPA.Utilities;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Linq;
-using IPA.Logging;
-using Mono.Cecil;
-using IPA.AntiMalware;
-using IPA.Config;
-#if NET3
-using Net3_Proxy;
-using Directory = Net3_Proxy.Directory;
-using Path = Net3_Proxy.Path;
-using File = Net3_Proxy.File;
-#endif
+using System.Reflection;
 
 namespace IPA.Loader
 {

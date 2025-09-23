@@ -1,35 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
 
   <PropertyGroup>
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFramework>net472</TargetFramework>
     <Platforms>x86;x64</Platforms>
     <Configurations>Debug;Release;Verbose;Verbose_Release</Configurations>
-    
+
     <RootNamespace>BSIPA_Meta</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-    
+
     <PackageAction>Assemble</PackageAction>
     <InnerTargets>Assemble</InnerTargets>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    
+
     <IsVerbose>false</IsVerbose>
     <IsVerbose Condition="'$(Configuration)' == 'Verbose' Or '$(Configuration)' == 'Verbose_Release'">true</IsVerbose>
-    
+
     <NoVerboseConfig>$(Configuration)</NoVerboseConfig>
     <NoVerboseConfig Condition="'$(IsVerbose)' == 'true' And '$(Configuration)' == 'Verbose'">Debug</NoVerboseConfig>
     <NoVerboseConfig Condition="'$(IsVerbose)' == 'true' And '$(Configuration)' == 'Verbose_Release'">Release</NoVerboseConfig>
-    
+
     <ProxyConfig>Release</ProxyConfig>
     <ProxyConfig Condition="'$(IsVerbose)' == 'true'">Verbose_Release</ProxyConfig>
-    
+
     <ProxyPlatform>Win32</ProxyPlatform>
     <ProxyPlatform Condition="'$(Platform)' == 'x64'">x64</ProxyPlatform>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\IPA\IPA.csproj" ReferenceOutputAssembly="false">
       <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
@@ -52,23 +52,23 @@
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
-  
+
   <Target Name="Clean">
     <ItemGroup>
       <Files Include="$(OutputPath)**\*" />
     </ItemGroup>
     <Delete Files="@(Files)" />
   </Target>
-  
-  <Target Name="CoreCompile">
+
+  <Target Name="RunAssemble" AfterTargets="Build">
     <CallTarget Targets="Assemble" />
   </Target>
-  
+
   <Target Name="Assemble" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     <ItemGroup>
-      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\$(TargetFramework)\Libraries\**\*" />
+      <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\net472\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\net472\Libraries\**\*" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.dll" />
       <InputDlls Include="$(SolutionDir)Doorstop\Proxy\bin\$(ProxyPlatform)\$(ProxyConfig)\**\*.pdb" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\net472\**\*" Exclude="$(SolutionDir)IPA\bin\$(Configuration)\net472\*.runtimeconfig.*" />
@@ -87,6 +87,6 @@
     <Delete Files="@(BadFiles)" />
     <RemoveDir Directories="$(OutputPath)Libraries\" />
   </Target>
-  
+
 </Project>
 

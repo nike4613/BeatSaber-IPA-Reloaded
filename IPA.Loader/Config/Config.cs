@@ -1,17 +1,11 @@
-﻿using System;
+﻿using IPA.Config.Providers;
+using IPA.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using IPA.Config.Providers;
-using IPA.Utilities;
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Config
 {
@@ -27,14 +21,14 @@ namespace IPA.Config
         }
 
         /// <summary>
-        /// Specifies that a particular parameter is preferred to use a particular <see cref="IConfigProvider" />. 
+        /// Specifies that a particular parameter is preferred to use a particular <see cref="IConfigProvider" />.
         /// If it is not available, also specifies backups. If none are available, the default is used.
         /// </summary>
         [AttributeUsage(AttributeTargets.Parameter)]
         public sealed class PreferAttribute : Attribute
         {
             /// <summary>
-            /// The order of preference for the config type. 
+            /// The order of preference for the config type.
             /// </summary>
             /// <value>the list of config extensions in order of preference</value>
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
@@ -117,7 +111,7 @@ namespace IPA.Config
 
             return config;
         }
-        
+
         internal static Config GetConfigFor(string modName, ParameterInfo info)
         {
             var prefs = Array.Empty<string>();
@@ -168,7 +162,7 @@ namespace IPA.Config
 
         private Config(string name, IConfigProvider provider, FileInfo file)
         {
-            Name = name; Provider = provider; File = file; 
+            Name = name; Provider = provider; File = file;
             configProvider = new ConfigProvider(file, provider);
         }
     }

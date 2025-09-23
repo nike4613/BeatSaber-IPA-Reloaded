@@ -3,19 +3,12 @@ using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
 using IPA.Logging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Config.Stores
 {
@@ -116,7 +109,7 @@ namespace IPA.Config.Stores
                 // we don't actually want to notify if the base class implements it
                 if (isINotifyPropertyChanged)
                 {
-                    var ExistingRaisePropertyChanged = type.GetMethod("RaisePropertyChanged", 
+                    var ExistingRaisePropertyChanged = type.GetMethod("RaisePropertyChanged",
                         BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy,
                         null, new Type[] { typeof(string) }, Array.Empty<ParameterModifier>());
                     if (ExistingRaisePropertyChanged != null && !ExistingRaisePropertyChanged.IsPrivate)
@@ -152,7 +145,7 @@ namespace IPA.Config.Stores
 
                     var PropertyChangedEventArgs_t = typeof(PropertyChangedEventArgs);
                     var PropertyChangedEventArgs_ctor = PropertyChangedEventArgs_t.GetConstructor(new[] { typeof(string) });
-                    
+
                     var Delegate_t = typeof(Delegate);
                     var Delegate_Combine = Delegate_t.GetMethod(nameof(Delegate.Combine), BindingFlags.Static | BindingFlags.Public, null,
                                                                 new[] { Delegate_t, Delegate_t }, Array.Empty<ParameterModifier>());

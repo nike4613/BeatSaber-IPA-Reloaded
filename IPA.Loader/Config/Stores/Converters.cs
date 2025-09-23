@@ -1,12 +1,9 @@
 ﻿#nullable enable
 using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
-using IPA.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Boolean = IPA.Config.Data.Boolean;
 
@@ -56,12 +53,10 @@ namespace IPA.Config.Stores.Converters
                     return (typeof(DictionaryConverter<>).MakeGenericType(args[1]));
                 else if (generic == typeof(IDictionary<,>) && args[0] == typeof(string))
                     return (typeof(IDictionaryConverter<>).MakeGenericType(args[1]));
-#if NET4
                 else if (generic == typeof(ISet<>))
                     return (typeof(ISetConverter<>).MakeGenericType(args));
                 else if (generic == typeof(IReadOnlyDictionary<,>) && args[0] == typeof(string))
                     return (typeof(IReadOnlyDictionaryConverter<>).MakeGenericType(args[1]));
-#endif
             }
             var iCollBase = t.GetInterfaces()
                 .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>));
@@ -174,7 +169,7 @@ namespace IPA.Config.Stores.Converters
         private readonly ValueConverter<T> baseConverter;
         /// <summary>
         /// Creates a converter with the default converter for the base type.
-        /// Equivalent to 
+        /// Equivalent to
         /// <code>
         /// new NullableConverter(Converter&lt;T&gt;.Default)
         /// </code>
@@ -363,7 +358,7 @@ namespace IPA.Config.Stores.Converters
         where TConverter : ValueConverter<TValue>, new()
     {
         /// <summary>
-        /// Constructs a new <see cref="IDictionaryConverter{TValue, TConverter}"/> with a new instance of 
+        /// Constructs a new <see cref="IDictionaryConverter{TValue, TConverter}"/> with a new instance of
         /// <typeparamref name="TConverter"/> as the value converter.
         /// </summary>
         public IDictionaryConverter() : base(new TConverter()) { }
@@ -422,13 +417,11 @@ namespace IPA.Config.Stores.Converters
         where TConverter : ValueConverter<TValue>, new()
     {
         /// <summary>
-        /// Constructs a new <see cref="IDictionaryConverter{TValue, TConverter}"/> with a new instance of 
+        /// Constructs a new <see cref="IDictionaryConverter{TValue, TConverter}"/> with a new instance of
         /// <typeparamref name="TConverter"/> as the value converter.
         /// </summary>
         public DictionaryConverter() : base(new TConverter()) { }
     }
-
-#if NET4
 
     /// <summary>
     /// A converter for instances of <see cref="IReadOnlyDictionary{TKey, TValue}"/>.
@@ -482,13 +475,12 @@ namespace IPA.Config.Stores.Converters
         where TConverter : ValueConverter<TValue>, new()
     {
         /// <summary>
-        /// Constructs a new <see cref="IReadOnlyDictionaryConverter{TValue, TConverter}"/> with a new instance of 
+        /// Constructs a new <see cref="IReadOnlyDictionaryConverter{TValue, TConverter}"/> with a new instance of
         /// <typeparamref name="TConverter"/> as the value converter.
         /// </summary>
         public IReadOnlyDictionaryConverter() : base(new TConverter()) { }
     }
-#endif
-    
+
     /// <summary>
     /// A converter for <see cref="Color"/> objects.
     /// </summary>

@@ -1,31 +1,19 @@
-﻿using System;
+﻿using IPA.Config;
+using IPA.Loader.Features;
+using IPA.Utilities;
+using IPA.Utilities.Async;
+using Mono.Cecil;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using IPA.Config;
-using IPA.Utilities;
-using Mono.Cecil;
+using System.Threading.Tasks;
 using UnityEngine;
 using Logger = IPA.Logging.Logger;
-using System.Threading.Tasks;
-using IPA.Utilities.Async;
-using IPA.Loader.Features;
-using System.Diagnostics;
-#if NET4
-using TaskEx = System.Threading.Tasks.Task;
-using TaskEx6 = System.Threading.Tasks.Task;
-using Task = System.Threading.Tasks.Task;
-#endif
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-using File = Net3_Proxy.File;
-using Directory = Net3_Proxy.Directory;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Loader
 {
@@ -82,7 +70,7 @@ namespace IPA.Loader
 
         internal static Task CommitTransaction(StateTransitionTransaction transaction)
         {
-            if (!transaction.HasStateChanged) return TaskEx.WhenAll();
+            if (!transaction.HasStateChanged) return Task.CompletedTask;
 
             if (!UnityGame.OnMainThread)
             {
@@ -159,7 +147,7 @@ namespace IPA.Loader
                     }
                 }
 
-                var result = TaskEx.WhenAll();
+                var result = Task.CompletedTask;
                 {
                     // then disable the mods that need to be
                     static DisableExecutor MakeDisableExec(PluginExecutor e)
@@ -194,14 +182,14 @@ namespace IPA.Loader
                         else
                         {
                             if (exec.Executor.Metadata.RuntimeOptions != RuntimeOptions.DynamicInit)
-                                return TaskEx6.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
+                                return Task.FromException(new CannotRuntimeDisableException(exec.Executor.Metadata));
 
-                            var res = TaskEx.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
-                                 .ContinueWith(t => 
+                            var res = Task.WhenAll(exec.Dependents.Select(d => Disable(d, alreadyDisabled)))
+                                 .ContinueWith(t =>
                                  {
                                      if (t.IsFaulted)
                                      {
-                                         return TaskEx.WhenAll(t, TaskEx6.FromException(
+                                         return Task.WhenAll(t, Task.FromException(
                                              new CannotRuntimeDisableException(exec.Executor.Metadata, "Dependents cannot be disabled for plugin")));
                                      }
                                      return exec.Executor.Disable()
@@ -228,7 +216,7 @@ namespace IPA.Loader
                     }
 
                     var disabled = new Dictionary<PluginExecutor, Task>();
-                    result = TaskEx.WhenAll(disableStructure.Select(d => Disable(d, disabled)));
+                    result = Task.WhenAll(disableStructure.Select(d => Disable(d, disabled)));
                 }
 
                 OnAnyPluginsStateChanged?.Invoke(result, toEnable, toDisable);
@@ -507,7 +495,7 @@ namespace IPA.Loader
             catch (ReflectionTypeLoadException e)
             {
                 Logger.Loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
-                Logger.Loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message).StrJP() ?? Array.Empty<string>())}");
+                Logger.Loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message) ?? Array.Empty<string>())}");
             }
             catch (Exception e)
             {

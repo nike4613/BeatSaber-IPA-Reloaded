@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-#if NET3
-using Net3_Proxy;
-#endif
 
 namespace IPA.Utilities.Async
 {
@@ -83,7 +77,6 @@ namespace IPA.Utilities.Async
             void IDisposable.Dispose() => sem.Release();
         }
 
-#if NET4
         /// <summary>
         /// A locker for a <see cref="SemaphoreSlim"/> that was created asynchronously and automatically releases
         /// when it is disposed. Create this with <see cref="LockAsync(SemaphoreSlim)"/>.
@@ -99,7 +92,6 @@ namespace IPA.Utilities.Async
 
             void IDisposable.Dispose() => sem.Release();
         }
-#endif
 
         /// <summary>
         /// A locker for a write lock on a <see cref="ReaderWriterLockSlim"/> that automatically releases when
@@ -189,7 +181,6 @@ namespace IPA.Utilities.Async
         /// <returns>the locker to use with <see langword="using"/></returns>
         public static SemaphoreSlimLocker Lock(SemaphoreSlim sem) => new SemaphoreSlimLocker(sem);
 
-#if NET4 // TODO: make this work on NET3 too
         /// <summary>
         /// Creates a locker for a slim semaphore asynchronously.
         /// </summary>
@@ -201,7 +192,6 @@ namespace IPA.Utilities.Async
             await locker.Lock();
             return locker;
         }
-#endif
 
         /// <summary>
         /// Creates a locker for a write lock <see cref="ReaderWriterLockSlim"/>.

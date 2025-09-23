@@ -3,10 +3,6 @@ using IPA.Config.Data;
 using System;
 using System.Linq;
 using System.Reflection.Emit;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Config.Stores
 {

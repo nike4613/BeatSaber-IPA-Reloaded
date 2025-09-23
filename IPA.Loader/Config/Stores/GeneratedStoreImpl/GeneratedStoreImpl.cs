@@ -1,28 +1,13 @@
 ﻿#nullable enable
-using IPA.Config.Data;
-using IPA.Config.Stores.Attributes;
 using IPA.Logging;
+using IPA.Utilities;
+using IPA.Utilities.Async;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.IO;
-using Boolean = IPA.Config.Data.Boolean;
-using System.Collections;
-using IPA.Utilities;
-using System.ComponentModel;
-using System.Collections.Concurrent;
-using IPA.Utilities.Async;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget)]
 

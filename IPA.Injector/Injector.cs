@@ -13,14 +13,8 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
-using static IPA.Logging.Logger;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-using File = Net3_Proxy.File;
-using Directory = Net3_Proxy.Directory;
-#endif
+using static IPA.Logging.Logger;
 
 namespace IPA.Injector
 {
@@ -271,7 +265,7 @@ namespace IPA.Injector
             permissionFixTask?.Wait();
 
             Default.Debug("Plugins loaded");
-            Default.Debug(string.Join(", ", PluginLoader.PluginsMetadata.StrJP()));
+            Default.Debug(string.Join(", ", PluginLoader.PluginsMetadata.ToString()));
             _ = PluginComponent.Create();
         }
     }

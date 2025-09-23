@@ -2,23 +2,11 @@
 "Beat Saber_Data/
 ""Managed/
 """UnityEngine.
-""""dll?alias=UnityEngine.Net4.dll
-""""xml?alias=UnityEngine.Net4.xml?optional
+""""dll?alias=UnityEngine.dll
+""""xml?alias=UnityEngine.xml?optional
 """"UnityWebRequestModule.
-"""""dll?alias=UnityEngine.UnityWebRequestModule.Net4.dll
-"""""xml?alias=UnityEngine.UnityWebRequestModule.Net4.xml?optional
+"""""dll?alias=UnityEngine.UnityWebRequestModule.dll
+"""""xml?alias=UnityEngine.UnityWebRequestModule.xml?optional
 """"CoreModule.
-"""""dll?alias=UnityEngine.CoreModule.Net4.dll
-"""""xml?alias=UnityEngine.CoreModule.Net4.xml?optional
-
-::startopt
-::from ./mdinstalldir.txt
-"MuseDash_Data/
-""Managed/
-"""UnityEngine.
-""""dll?alias=UnityEngine.Net3.dll
-""""UnityWebRequestModule.
-"""""dll?alias=UnityEngine.UnityWebRequestModule.Net3.dll
-""""CoreModule.
-"""""dll?alias=UnityEngine.CoreModule.Net3.dll
-::endopt
+"""""dll?alias=UnityEngine.CoreModule.dll
+"""""xml?alias=UnityEngine.CoreModule.xml?optional

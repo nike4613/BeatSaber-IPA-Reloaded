@@ -3,62 +3,36 @@
   <Import Project="..\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFramework>net472</TargetFramework>
     <RootNamespace>IPA</RootNamespace>
 
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net472' ">true</BuildForBeatSaber>
+    <BuildForBeatSaber Condition="'$(BuildForBeatSaber)' == ''">true</BuildForBeatSaber>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
-    <DefineConstants>$(DefineConstants);NET4</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-    <DefineConstants>$(DefineConstants);NET3</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildForBeatSaber)' == 'true'">
     <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+  <ItemGroup>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
+      <HintPath>..\Refs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\Refs\UnityEngine.UnityWebRequestModule.Net4.dll</HintPath>
+      <HintPath>..\Refs\UnityEngine.UnityWebRequestModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Refs\UnityEngine.CoreModule.Net3.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\Refs\UnityEngine.UnityWebRequestModule.Net3.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
-    <!--<PackageReference Include="Lib.Harmony" Version="2.0.2" />-->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <!--<PackageReference Include="AsyncBridge" Version="0.3.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0">
-      <ExcludeAssets>buildtransitive</ExcludeAssets>
-    </PackageReference>-->
-
-    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
     <PackageReference Include="HarmonyX" Version="2.10.2" />
+    <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
     <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>
@@ -73,11 +47,6 @@
   <ItemGroup>
     <Compile Remove="Updating\BeatMods\*.cs" />
     <None Include="Updating\BeatMods\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
-    <Compile Remove="AntiMalware\_HideInNet3\**" />
-    <None Include="AntiMalware\_HideInNet3\**" />
   </ItemGroup>
 
   <Import Project="..\Common.targets" />

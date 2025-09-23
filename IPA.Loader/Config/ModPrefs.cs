@@ -1,15 +1,12 @@
-﻿using System;
+﻿using IPA.Loader;
+using System;
 using System.Globalization;
 using System.IO;
-using IPA.Loader;
-#if NET3
-using Path = Net3_Proxy.Path;
-#endif
 
 namespace IPA.Config
 {
     /// <summary>
-    /// Allows to get and set preferences for your mod. 
+    /// Allows to get and set preferences for your mod.
     /// </summary>
     [Obsolete("Uses IniFile, which uses 16 bit system calls. Use the new object based config system.")]
     public interface IModPrefs
@@ -89,7 +86,7 @@ namespace IPA.Config
 
     /// <inheritdoc />
     /// <summary>
-    /// Allows to get and set preferences for your mod. 
+    /// Allows to get and set preferences for your mod.
     /// </summary>
     [Obsolete("Uses IniFile, which uses 16 bit system calls. Use BS Utils INI system for now.")]
     public class ModPrefs : IModPrefs
@@ -140,7 +137,7 @@ namespace IPA.Config
                 return value;
             else if (autoSave)
                 (this as IModPrefs).SetInt(section, name, defaultValue);
-                
+
             return defaultValue;
         }
         /// <summary>

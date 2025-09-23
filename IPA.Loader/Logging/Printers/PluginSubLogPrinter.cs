@@ -1,9 +1,6 @@
-﻿using System;
+﻿using IPA.Utilities;
+using System;
 using System.IO;
-using IPA.Utilities;
-#if NET3
-using Path = Net3_Proxy.Path;
-#endif
 
 namespace IPA.Logging.Printers
 {

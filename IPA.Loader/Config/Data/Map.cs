@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using IPA.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +61,7 @@ namespace IPA.Config.Data
             keyOrder.Add(key);
         }
 
-        void ICollection<KeyValuePair<string, Value?>>.Add(KeyValuePair<string, Value?> item) 
+        void ICollection<KeyValuePair<string, Value?>>.Add(KeyValuePair<string, Value?> item)
             => Add(item.Key, item.Value);
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace IPA.Config.Data
             keyOrder.Clear();
         }
 
-        bool ICollection<KeyValuePair<string, Value?>>.Contains(KeyValuePair<string, Value?> item) 
+        bool ICollection<KeyValuePair<string, Value?>>.Contains(KeyValuePair<string, Value?> item)
             => ((IDictionary<string, Value?>)values).Contains(item);
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace IPA.Config.Data
         /// <seealso cref="IDictionary{TKey, TValue}.Remove(TKey)"/>
         public bool Remove(string key) => values.Remove(key) && keyOrder.Remove(key);
 
-        bool ICollection<KeyValuePair<string, Value?>>.Remove(KeyValuePair<string, Value?> item) 
+        bool ICollection<KeyValuePair<string, Value?>>.Remove(KeyValuePair<string, Value?> item)
             => ((IDictionary<string, Value?>)values).Remove(item) && (keyOrder.Remove(item.Key) || true);
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace IPA.Config.Data
         /// </summary>
         /// <returns>a JSON-like set of key-value pairs</returns>
         public override string ToString()
-            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value?.ToString() ?? "null"}").StrJP())}}}";
+            => $"{{{string.Join(",", this.Select(p => $"\"{p.Key}\":{p.Value?.ToString() ?? "null"}"))}}}";
     }
 
 

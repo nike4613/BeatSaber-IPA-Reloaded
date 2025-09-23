@@ -1,8 +1,5 @@
 ﻿using System;
 using System.IO;
-#if NET3
-using Path = Net3_Proxy.Path;
-#endif
 
 namespace IPA.Utilities
 {

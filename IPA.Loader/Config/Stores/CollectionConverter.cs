@@ -1,11 +1,8 @@
 ﻿#nullable enable
+using IPA.Config.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IPA.Config.Data;
-using IPA.Logging;
 
 namespace IPA.Config.Stores.Converters
 {
@@ -105,7 +102,6 @@ namespace IPA.Config.Stores.Converters
         public CollectionConverter() : base(new TConverter()) { }
     }
 
-#if NET4
     /// <summary>
     /// A <see cref="CollectionConverter{T, TCollection}"/> for an <see cref="ISet{T}"/>, creating a <see cref="HashSet{T}"/> when deserializing.
     /// </summary>
@@ -149,7 +145,6 @@ namespace IPA.Config.Stores.Converters
         /// <seealso cref="ISetConverter{T}.ISetConverter(ValueConverter{T})"/>
         public ISetConverter() : base(new TConverter()) { }
     }
-#endif
 
     /// <summary>
     /// A <see cref="CollectionConverter{T, TCollection}"/> for a <see cref="List{T}"/>.

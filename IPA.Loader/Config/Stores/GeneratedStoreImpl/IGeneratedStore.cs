@@ -1,16 +1,12 @@
 ﻿#nullable enable
+using IPA.Config.Data;
 using IPA.Logging;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using IPA.Config.Data;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 [assembly: InternalsVisibleTo(IPA.Config.Stores.GeneratedStore.AssemblyVisibilityTarget)]
 

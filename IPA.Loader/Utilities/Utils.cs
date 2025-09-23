@@ -1,17 +1,13 @@
 ﻿#nullable enable
-using System;
-using System.IO;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
 using Mono.Cecil;
-using System.Runtime.CompilerServices;
-using System.Threading;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Version = Hive.Versioning.Version;
-#if NET3
-using File = Net3_Proxy.File;
-#endif
 
 namespace IPA.Utilities
 {
@@ -273,16 +269,5 @@ namespace IPA.Utilities
             return (type?.Interfaces?.Any(i => i.InterfaceType.FullName == interfaceFullName) ?? false)
                     || (type?.Interfaces?.Any(t => HasInterface(t?.InterfaceType?.Resolve(), interfaceFullName)) ?? false);
         }
-
-#if NET4
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static IEnumerable<string> StrJP(this IEnumerable<string> a) => a;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static IEnumerable<string> StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */);
-#endif
-#if NET3
-        internal static string[] StrJP(this IEnumerable<string> a) => a.ToArray();
-        internal static string[] StrJP<T>(this IEnumerable<T> a) => a.Select(o => $"{o}" /* safer than .ToString() */).ToArray();
-#endif
     }
 }

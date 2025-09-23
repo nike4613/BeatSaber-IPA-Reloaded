@@ -9,13 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using static IPA.Logging.Logger;
-#if NET3
-using Net3_Proxy;
-using Path = Net3_Proxy.Path;
-using File = Net3_Proxy.File;
-using Directory = Net3_Proxy.Directory;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Injector
 {
@@ -55,7 +48,7 @@ namespace IPA.Injector
                 {
                     FileName = path,
                     Arguments = $"\"-nw={Process.GetCurrentProcess().Id}," +
-                        $"s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1).StrJP()).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
+                        $"s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1)).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
                     UseShellExecute = false
                 });
 
@@ -67,8 +60,8 @@ namespace IPA.Injector
         private static void InstallPendingModUpdates()
         {
             var pendingDir = Path.Combine(UnityGame.InstallPath, "IPA", "Pending");
-            if (!Directory.Exists(pendingDir)) return; 
-            
+            if (!Directory.Exists(pendingDir)) return;
+
             // there are pending updates, install
             Updater.Info("Installing pending updates");
 
@@ -99,7 +92,7 @@ namespace IPA.Injector
             if (Directory.Exists(path = Path.Combine(pendingDir, "IPA")))
             {
                 var dirs = new Stack<string>(20);
-                
+
                 dirs.Push(path);
 
                 while (dirs.Count > 0)
@@ -135,7 +128,7 @@ namespace IPA.Injector
                             Updater.Error(e);
                         }
                     }
-                    
+
                     foreach (var str in subDirs)
                         dirs.Push(str);
                 }

@@ -1,21 +1,11 @@
-﻿using IPA.Config;
-using IPA.Config.Stores;
+﻿using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
 using IPA.Logging;
-using IPA.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-#if NET4
-using Task = System.Threading.Tasks.Task;
-using TaskEx = System.Threading.Tasks.Task;
-#endif
-#if NET3
-using Net3_Proxy;
-#endif
 
 namespace IPA.Loader
 {
@@ -64,7 +54,7 @@ namespace IPA.Loader
                 disableUpdateTask = disableUpdateTask.ContinueWith(t =>
                 {
                     // skip if another got here before the last finished
-                    if (referToState != updateState) return TaskEx.WhenAll();
+                    if (referToState != updateState) return Task.CompletedTask;
                     else return UpdateDisabledMods(copy);
                 });
             }

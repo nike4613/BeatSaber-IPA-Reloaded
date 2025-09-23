@@ -9,36 +9,25 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <BuildForBeatSaber Condition=" '$(BuildForBeatSaber)' == '' And '$(TargetFramework)' == 'net472' ">true</BuildForBeatSaber>
+    <BuildForBeatSaber Condition="'$(BuildForBeatSaber)' == ''">true</BuildForBeatSaber>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
-    <DefineConstants>$(DefineConstants);NET4</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-    <DefineConstants>$(DefineConstants);NET3</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildForBeatSaber)' == 'true'">
     <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj" />
-    <ProjectReference Include="..\Net3-Proxy\Net3-Proxy.csproj" Condition=" '$(TargetFramework)' == 'net35' " />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="UnityEngine.CoreModule" Condition=" '$(TargetFramework)' == 'net472' ">
-      <HintPath>..\Refs\UnityEngine.CoreModule.Net4.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule" Condition=" '$(TargetFramework)' == 'net35' ">
-      <HintPath>..\Refs\UnityEngine.CoreModule.Net3.dll</HintPath>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\Refs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+  <ItemGroup>
     <Content Include="..\Libs\Microsoft.CSharp.dll">
       <Link>Libraries\Mono\Microsoft.CSharp.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -49,24 +38,8 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <Content Include="..\Libs\I18N.Net3.dll">
-      <Link>Libraries\Mono\I18N.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Libs\I18N.West.Net3.dll">
-      <Link>Libraries\Mono\I18N.West.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Libs\System.Runtime.Serialization.Net3.dll">
-      <Link>Libraries\Mono\System.Runtime.Serialization.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
-    <PackageReference Include="AsyncBridge" Version="0.3.1" />
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>
@@ -82,10 +55,6 @@
     <ItemGroup>
       <SystemFiles Include="$(OutputPath)IPA.Injector.*" />
       <SystemFiles Include="$(OutputPath)IPA.Loader.*" />
-      <SystemFiles Include="$(OutputPath)AsyncBridge.*" />
-      <SystemFiles Include="$(OutputPath)System.*" />
-      <SystemFiles Include="$(OutputPath)Portable.System.*" />
-      <SystemFiles Include="$(OutputPath)Net3-Proxy.*" />
       <OldLibFiles Include="$(OutputPath)Libs\**\*" />
     </ItemGroup>
     <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />

@@ -5,17 +5,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Boolean = IPA.Config.Data.Boolean;
-#if NET3
-using Net3_Proxy;
-using Array = Net3_Proxy.Array;
-#endif
 
 namespace IPA.Config.Stores
 {
@@ -55,9 +48,7 @@ namespace IPA.Config.Stores
                 Local = builder;
             }
 
-#if NET4
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
             public static implicit operator LocalBuilder(AllocatedLocal loc) => loc.Local;
 
             public void Dealloc() => allocator?.Deallocate(this);
