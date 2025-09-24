@@ -27,6 +27,7 @@
     "winhttp.dll",
     "Libs/0Harmony.dll",
     "Libs/Ionic.Zip.dll",
+    "Libs/netstandard.dll",
     "Libs/Newtonsoft.Json.dll",
     "Libs/Mono.Cecil.dll",
     "Libs/SemVer.dll",
