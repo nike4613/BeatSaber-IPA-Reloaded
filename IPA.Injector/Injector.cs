@@ -42,8 +42,6 @@ namespace IPA.Injector
 
                 SetupLibraryLoading();
 
-                EnsureDirectories();
-
                 // this is weird, but it prevents Mono from having issues loading the type.
                 // IMPORTANT: NO CALLS TO ANY LOGGER CAN HAPPEN BEFORE THIS
                 var unused = StandardLogger.PrintFilter;
@@ -57,15 +55,17 @@ namespace IPA.Injector
 
                 Default.Debug("Initializing logger");
 
-                SelfConfig.Load();
-                DisabledConfig.Load();
-
                 if (AntiPiracy.IsInvalid(Environment.CurrentDirectory))
                 {
                     Default.Error("Invalid installation; please buy the game to run BSIPA.");
 
                     return;
                 }
+
+                EnsureDirectories();
+
+                SelfConfig.Load();
+                DisabledConfig.Load();
 
                 CriticalSection.Configure();
 
