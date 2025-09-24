@@ -121,6 +121,7 @@ namespace IPA.Utilities
                 if (lastGameVersion != earlyGameVersion)
                 {
                     IsGameVersionBoundary = true;
+                    File.WriteAllText(GameVersionFilename, earlyGameVersion);
                 }
             }
             catch (Exception e)
