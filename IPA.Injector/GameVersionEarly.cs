@@ -48,24 +48,25 @@ namespace IPA.Injector
                     {
                         var startIndex = stream.Position - 1;
                         var dotCount = 0;
+                        // read possible size and go back to 2nd character
+                        var afterFirstIndex = stream.Position;
+                        stream.Position = startIndex - 4;
+                        var versionSize = reader.ReadInt32();
+                        stream.Position = afterFirstIndex;
 
                         while (stream.Position < streamLength)
                         {
                             var current = (char)reader.ReadByte();
-                            if (current == '.')
-                            {
-                                dotCount++;
-                                continue;
-                            }
 
-                            if (!char.IsDigit(current) && current != '_')
+                            if (current == '.') { dotCount++; }
+                            else if (!char.IsDigit(current) && current != '_')
                             {
                                 break;
                             }
 
-                            if (dotCount == 2 && stream.Position < streamLength && (char)reader.PeekChar() == char.MinValue)
+                            var length = (int) (stream.Position - startIndex);
+                            if (dotCount == 2 && length == versionSize)
                             {
-                                var length = (int)(stream.Position - startIndex);
                                 stream.Position = startIndex;
                                 return Encoding.UTF8.GetString(reader.ReadBytes(length));
                             }
