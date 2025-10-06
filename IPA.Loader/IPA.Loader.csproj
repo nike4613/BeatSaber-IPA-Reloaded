@@ -28,10 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HarmonyX" Version="2.10.2" />
+    <PackageReference Include="HarmonyX" Version="2.15.0" />
     <PackageReference Include="Ionic.Zip" Version="1.9.1.8" />
     <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+    <PackageReference Include="MonoMod.Backports" Version="1.1.2" Aliases="MONOMOD_BACKPORTS" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 
     <ProjectReference Include="..\SemVer\SemVer.csproj" />
