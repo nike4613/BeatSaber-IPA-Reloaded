@@ -60,11 +60,7 @@
     <Delete Files="@(Files)" />
   </Target>
 
-  <Target Name="RunAssemble" AfterTargets="Build">
-    <CallTarget Targets="Assemble" />
-  </Target>
-
-  <Target Name="Assemble" Returns="$(OutputPath)">
+  <Target Name="Assemble" AfterTargets="Build" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     <ItemGroup>
