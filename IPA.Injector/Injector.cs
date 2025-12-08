@@ -10,6 +10,7 @@ using Mono.Cecil.Cil;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -55,11 +56,10 @@ namespace IPA.Injector
 
                 Default.Debug("Initializing logger");
 
-                if (AntiPiracy.IsInvalid(Environment.CurrentDirectory))
+                var invalidFiles = AntiPiracy.IsInvalid(Environment.CurrentDirectory).ToList();
+                if (invalidFiles.Any())
                 {
-                    Default.Error("Invalid installation; please buy the game to run BSIPA.");
-
-                    return;
+                    Default.Warn($"Invalid installation; Unknown files: {string.Join(", ", invalidFiles)}");
                 }
 
                 EnsureDirectories();
