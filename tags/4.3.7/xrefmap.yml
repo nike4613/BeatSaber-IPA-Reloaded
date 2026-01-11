@@ -1,0 +1,27 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: articles.command_line
+  name: The Command Line
+  href: articles/command-line.html
+- uid: articles.contributing
+  name: Contributing
+  href: articles/contributing.html
+- uid: articles.start
+  name: Getting Started
+  href: articles/index.html
+- uid: articles.start.dev
+  name: Making your own mod
+  href: articles/start-dev.html
+- uid: articles.start.user
+  name: Installing BSIPA
+  href: articles/start-user.html
+- uid: home
+  name: BSIPA - Home
+  href: index.html
+- uid: other.config.schema
+  name: Configuration File Schema
+  href: other_api/config/schema.html
+- uid: other.index
+  name: other.index
+  href: other_api/index.html
