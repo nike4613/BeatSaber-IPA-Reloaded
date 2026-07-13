@@ -1,8 +1,6 @@
-﻿using IPA.Utilities.Async;
+using IPA.Utilities.Async;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,24 +10,16 @@ namespace IPA.Config
 {
     internal static class ConfigRuntime
     {
-        private class DirInfoEqComparer : IEqualityComparer<DirectoryInfo>
-        {
-            public bool Equals(DirectoryInfo x, DirectoryInfo y)
-                => x?.FullName == y?.FullName;
-
-            public int GetHashCode(DirectoryInfo obj)
-                => obj?.FullName.GetHashCode() ?? 0;
-        }
-
         private static readonly ConcurrentBag<Config> configs = new();
         private static readonly AutoResetEvent configsChangedWatcher = new(false);
-        private static readonly ConcurrentDictionary<DirectoryInfo, FileSystemWatcher> watchers = new(new DirInfoEqComparer());
-        private static readonly ConcurrentDictionary<FileSystemWatcher, ConcurrentBag<Config>> watcherTrackConfigs = new();
+        private static readonly TimeSpan watchInterval = TimeSpan.FromSeconds(1);
+        private static volatile Config[] watchedConfigs = Array.Empty<Config>();
         private static BlockingCollection<IConfigStore> requiresSave = new();
         private static SingleThreadTaskScheduler loadScheduler;
         private static TaskFactory loadFactory;
         private static Thread saveThread;
         private static Thread legacySaveThread;
+        private static Thread watchThread;
 
         private static void TryStartRuntime()
         {
@@ -51,6 +41,11 @@ namespace IPA.Config
                 legacySaveThread = new Thread(LegacySaveThread);
                 legacySaveThread.Start();
             }
+            if (watchThread == null || !watchThread.IsAlive)
+            {
+                watchThread = new Thread(WatchThread) { IsBackground = true };
+                watchThread.Start();
+            }
 
             AppDomain.CurrentDomain.ProcessExit -= ShutdownRuntime;
             AppDomain.CurrentDomain.ProcessExit += ShutdownRuntime;
@@ -67,20 +62,14 @@ namespace IPA.Config
         {
             try
             {
-                watcherTrackConfigs.Clear();
-                var watchList = watchers.ToArray();
-                watchers.Clear();
-
-                foreach (var pair in watchList)
-                    pair.Value.EnableRaisingEvents = false;
-
+                watchThread.Abort();
                 loadScheduler.Join(); // we can wait for the loads to finish
                 saveThread.Abort(); // eww, but i don't like any of the other potential solutions
                 legacySaveThread.Abort();
 
                 SaveAll();
 
-                requiresSave.Dispose();
+                requiresSave?.Dispose();
                 requiresSave = null;
             }
             catch
@@ -95,13 +84,15 @@ namespace IPA.Config
                 if (configs.ToArray().Contains(cfg))
                     throw new InvalidOperationException("Config already registered to runtime!");
 
+                cfg.File.Refresh();
+                cfg.LastKnownWriteTimeUtc = cfg.File.Exists ? cfg.File.LastWriteTimeUtc : DateTime.MinValue;
+
                 configs.Add(cfg);
+                watchedConfigs = configs.ToArray();
             }
             configsChangedWatcher.Set();
 
             TryStartRuntime();
-
-            AddConfigToWatchers(cfg);
         }
 
         public static void ConfigChanged()
@@ -109,60 +100,59 @@ namespace IPA.Config
             configsChangedWatcher.Set();
         }
 
-        private static void AddConfigToWatchers(Config config)
+        private static void WatchThread()
         {
-            var dir = config.File.Directory;
-            if (!watchers.TryGetValue(dir, out var watcher))
-            { // create the watcher
-                watcher = watchers.GetOrAdd(dir, dir => new FileSystemWatcher(dir.FullName));
+            try
+            {
+                while (true)
+                {
+                    Thread.Sleep(watchInterval);
 
-                watcher.NotifyFilter =
-                    NotifyFilters.FileName
-                    | NotifyFilters.LastWrite
-                    | NotifyFilters.Size
-                    | NotifyFilters.LastAccess
-                    | NotifyFilters.Attributes
-                    | NotifyFilters.CreationTime;
+                    var watched = watchedConfigs;
+                    foreach (var config in watched)
+                    {
+                        try
+                        {
+                            CheckForExternalChanges(config);
+                        }
+                        catch (ThreadAbortException)
+                        {
+                            throw;
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Config.Error($"Error checking {config.File} for external changes");
+                            Logger.Config.Error(e);
+                        }
+                    }
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                // we got aborted :(
+            }
+        }
 
-                watcher.Changed += FileChangedEvent;
-                watcher.Created += FileChangedEvent;
-                watcher.Renamed += FileChangedEvent;
-                watcher.Deleted += FileChangedEvent;
+        private static void CheckForExternalChanges(Config config)
+        {
+            bool isExternal;
+
+            lock (config.WriteTimeLock)
+            {
+                var file = config.File;
+                file.Refresh();
+                var writeTime = file.Exists ? file.LastWriteTimeUtc : DateTime.MinValue;
+                isExternal = writeTime != config.LastKnownWriteTimeUtc;
+
+                if (isExternal)
+                {
+                    config.LastKnownWriteTimeUtc = writeTime;
+                }
             }
 
-            TryStartRuntime();
-
-            watcher.EnableRaisingEvents = false; // disable while we do shit
-
-            var bag = watcherTrackConfigs.GetOrAdd(watcher, w => new ConcurrentBag<Config>());
-            // we don't need to check containment because this function will only be called once per config ever
-            bag.Add(config);
-
-            watcher.EnableRaisingEvents = true;
-        }
-
-        internal static FileSystemWatcher[] GetWatchers()
-        {
-            return watcherTrackConfigs.Keys.ToArray();
-        }
-
-        private static void EnsureWritesSane(Config config)
-        {
-            // compare exchange loop to be sane
-            var writes = config.Writes;
-            while (writes < 0)
-                writes = Interlocked.CompareExchange(ref config.Writes, 0, writes);
-        }
-
-        private static void FileChangedEvent(object sender, FileSystemEventArgs e)
-        {
-            var watcher = sender as FileSystemWatcher;
-            if (!watcherTrackConfigs.TryGetValue(watcher, out var bag)) return;
-
-            var config = bag.FirstOrDefault(c => c.File.FullName == e.FullPath);
-            if (config != null && Interlocked.Decrement(ref config.Writes) + 1 <= 0)
+            if (isExternal)
             {
-                EnsureWritesSane(config);
+                Logger.Config.Notice($"Detected external changes for {config.File.Name}");
                 TriggerFileLoad(config);
             }
         }
@@ -184,10 +174,12 @@ namespace IPA.Config
             try
             {
                 using var readLock = Synchronization.LockRead(store.WriteSyncObject);
-
-                EnsureWritesSane(config);
-                Interlocked.Increment(ref config.Writes);
-                store.WriteTo(config.configProvider);
+                lock (config.WriteTimeLock)
+                {
+                    store.WriteTo(config.configProvider);
+                    config.File.Refresh();
+                    config.LastKnownWriteTimeUtc = config.File.LastWriteTimeUtc;
+                }
             }
             catch (ThreadAbortException)
             {
@@ -299,3 +291,4 @@ namespace IPA.Config
         }
     }
 }
+

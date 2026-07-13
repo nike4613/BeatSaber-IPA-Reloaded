@@ -1,4 +1,4 @@
-﻿using IPA.Config.Providers;
+using IPA.Config.Providers;
 using IPA.Utilities;
 using System;
 using System.Collections.Generic;
@@ -135,7 +135,8 @@ namespace IPA.Config
         internal IConfigStore Store = null;
         internal readonly FileInfo File;
         internal readonly ConfigProvider configProvider;
-        internal int Writes = 0;
+        internal readonly object WriteTimeLock = new();
+        internal DateTime LastKnownWriteTimeUtc;
 
         /// <summary>
         /// Sets this object's <see cref="IConfigStore"/>. Can only be called once.
