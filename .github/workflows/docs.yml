@@ -69,8 +69,7 @@ jobs:
           cd _site
           $ErrorActionPreference = "SilentlyContinue"
           git add -A 2>&1
-          $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
-          git commit -q -a -m "Generated Docs -- $srcMessage"
+          git commit -q -a -m "Generated Docs -- $env:GITHUB_SHA"
           git push -q origin gh-pages
         if: github.ref == 'refs/heads/master'
       - name: Publish branch site to GitHub pages
@@ -79,7 +78,6 @@ jobs:
         run: |
           $ErrorActionPreference = "Continue"
           $branchName = (git rev-parse --abbrev-ref=loose $env:GITHUB_REF) -join ""
-          $srcMessage = (git show -s --format=%B $env:GITHUB_SHA) -join "`n"
           cd $env:ORIGIN_SITE
           if (-Not (Test-Path $env:BRANCH_DIR)) {
             New-Item -ItemType directory -Path $env:BRANCH_DIR
@@ -93,6 +91,6 @@ jobs:
           # move generated into place
           Move-Item ../_site $branchPath
           git add -A 2>&1
-          git commit -q -a -m "Generated Docs ($branchName) -- $srcMessage"
+          git commit -q -a -m "Generated Docs ($branchName) -- $env:GITHUB_SHA"
           git push -q origin gh-pages
         if: github.ref != 'refs/heads/master'
