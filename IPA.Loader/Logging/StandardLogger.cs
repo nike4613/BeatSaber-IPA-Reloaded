@@ -26,6 +26,8 @@ namespace IPA.Logging
     public class StandardLogger : Logger
     {
         private static readonly List<LogPrinter> defaultPrinters = new();
+        private static readonly ConcurrentDictionary<string, PluginLogFilePrinter> logFilePrinters = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, PluginSubLogPrinter> subLogFilePrinters = new(StringComparer.OrdinalIgnoreCase);
 
         static StandardLogger()
         {
@@ -135,7 +137,7 @@ namespace IPA.Logging
             this.parent = parent;
             printers = new List<LogPrinter>();
             if (SelfConfig.Debug_.CreateModLogs_ && !SelfConfig.Debug_.CondenseModLogs_)
-                printers.Add(new PluginSubLogPrinter(parent.logName, subName));
+                printers.Add(subLogFilePrinters.GetOrAdd(logName, new PluginSubLogPrinter(parent.logName, subName)));
 
             if (logThread == null || !logThread.IsAlive)
             {
@@ -157,7 +159,7 @@ namespace IPA.Logging
 
             logName = name;
             if (SelfConfig.Debug_.CreateModLogs_)
-                printers.Add(new PluginLogFilePrinter(name));
+                printers.Add(logFilePrinters.GetOrAdd(name, new PluginLogFilePrinter(name)));
 
             if (logThread == null || !logThread.IsAlive)
             {

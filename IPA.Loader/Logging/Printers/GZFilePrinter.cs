@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 using Ionic.Zlib;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -50,35 +50,47 @@ namespace IPA.Logging.Printers
             {
                 if (fileInfo == null)
                 { // first init
-                    fileInfo = GetFileInfo();
-                    var ext = fileInfo.Extension;
+                    var targetFile = GetFileInfo();
+                    var ext = targetFile.Extension;
 
-                    var symlink = new FileInfo(Path.Combine(fileInfo.DirectoryName ?? throw new InvalidOperationException(), string.Format(latestFormat, ext)));
-                    if (symlink.Exists) symlink.Delete();
-
-                    foreach (var file in fileInfo.Directory.EnumerateFiles("*.log", SearchOption.TopDirectoryOnly))
+                    var symlink = new FileInfo(Path.Combine(targetFile.DirectoryName ?? throw new InvalidOperationException(), string.Format(latestFormat, ext)));
+                    try
                     {
-                        if (file.Equals(fileInfo)) continue;
+                        if (symlink.Exists) symlink.Delete();
+                    }
+                    catch
+                    {
+                        symlink = null;
+                    }
+
+                    foreach (var file in targetFile.Directory.EnumerateFiles("*.log", SearchOption.TopDirectoryOnly))
+                    {
+                        if (file.FullName == targetFile.FullName) continue;
                         if (file.Extension == ".gz") continue;
 
                         CompressOldLog(file);
                     }
 
-                    fileInfo.Create().Close();
+                    targetFile = CreateLogFile(targetFile);
 
-                    try
+                    if (symlink != null)
                     {
-                        if (!CreateHardLink(symlink.FullName, fileInfo.FullName, IntPtr.Zero))
+                        try
                         {
-                            var error = Marshal.GetLastWin32Error();
-                            Logger.Default.Error($"Hardlink creation failed ({error})");
+                            if (!CreateHardLink(symlink.FullName, targetFile.FullName, IntPtr.Zero))
+                            {
+                                var error = Marshal.GetLastWin32Error();
+                                Logger.Default.Error($"Hardlink creation failed ({error})");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Default.Error("Error creating latest hardlink!");
+                            Logger.Default.Error(e);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Logger.Default.Error("Error creating latest hardlink!");
-                        Logger.Default.Error(e);
-                    }
+
+                    fileInfo = targetFile;
                 }
             }
             catch (Exception e)
@@ -86,6 +98,27 @@ namespace IPA.Logging.Printers
                 Logger.Default.Error("Error initializing log!");
                 Logger.Default.Error(e);
                 throw;
+            }
+        }
+
+        private static FileInfo CreateLogFile(FileInfo targetFile)
+        {
+            var directory = targetFile.DirectoryName!;
+            var name = Path.GetFileNameWithoutExtension(targetFile.Name);
+            var extension = targetFile.Extension;
+
+            var file = targetFile;
+            for (var i = 1; ; i++)
+            {
+                try
+                {
+                    file.Open(FileMode.CreateNew).Close();
+                    return file;
+                }
+                catch (IOException) when (i <= 10)
+                {
+                    file = new FileInfo(Path.Combine(directory, $"{name}.{i}{extension}"));
+                }
             }
         }
 
