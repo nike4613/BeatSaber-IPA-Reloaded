@@ -1,0 +1,58 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="Verbose" />
+    <BuildType Name="Verbose_Release" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/release_draft.yml" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/docs.yml" />
+    <File Path=".github/workflows/tag_docs.yml" />
+    <File Path="Common.props" />
+    <File Path="Common.targets" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <File Path="Refs/refs.txt" />
+    <Project Path="BuildTools/CollectDependencies/CollectDependencies.csproj">
+      <BuildType Solution="Verbose_Release|*" Project="Release" />
+      <BuildType Solution="Verbose|*" Project="Debug" />
+      <Build Solution="Release|*" Project="false" />
+      <Build Solution="Verbose_Release|*" Project="false" />
+    </Project>
+  </Folder>
+  <Project Path="BSIPA-Meta/BSIPA-Meta.csproj">
+    <BuildDependency Project="Doorstop/Proxy/Proxy.vcxproj" />
+    <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
+    <BuildDependency Project="IPA/IPA.csproj" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+  <Project Path="Doorstop/Proxy/Proxy.vcxproj">
+    <BuildType Solution="Debug|*" Project="Release" />
+    <BuildType Solution="Verbose|*" Project="Verbose_Release" />
+  </Project>
+  <Project Path="IPA.Injector/IPA.Injector.csproj">
+    <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
+    <BuildType Solution="Verbose_Release|*" Project="Release" />
+    <BuildType Solution="Verbose|*" Project="Debug" />
+  </Project>
+  <Project Path="IPA.Loader/IPA.Loader.csproj">
+    <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
+    <BuildType Solution="Verbose_Release|*" Project="Release" />
+    <BuildType Solution="Verbose|*" Project="Debug" />
+  </Project>
+  <Project Path="IPA/IPA.csproj">
+    <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
+    <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
+  </Project>
+  <Project Path="SemVer/SemVer.csproj">
+    <BuildType Solution="Verbose_Release|*" Project="Release" />
+    <BuildType Solution="Verbose|*" Project="Debug" />
+  </Project>
+</Solution>
