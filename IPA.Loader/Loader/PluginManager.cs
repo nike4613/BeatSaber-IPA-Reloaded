@@ -295,12 +295,6 @@ namespace IPA.Loader
         public static event OnAnyPluginsStateChangedDelegate OnAnyPluginsStateChanged;
 
         /// <summary>
-        /// Gets a list of all enabled BSIPA plugins. Use <see cref="EnabledPlugins"/> instead of this.
-        /// </summary>
-        /// <value>a collection of all enabled plugins as <see cref="PluginMetadata"/>s</value>
-        [Obsolete("This is an old name that no longer accurately represents its value. Use EnabledPlugins instead.")]
-        public static IEnumerable<PluginMetadata> AllPlugins => EnabledPlugins;
-        /// <summary>
         /// Gets a collection of all enabled plugins, as represented by <see cref="PluginMetadata"/>.
         /// </summary>
         /// <value>a collection of all enabled plugins</value>

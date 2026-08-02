@@ -8,20 +8,11 @@ using System.Threading.Tasks;
 namespace IPA.Config.Data
 {
     /// <summary>
-    /// A <see cref="Value"/> representing a piece of text. The only reason this is not named 
+    /// A <see cref="Value"/> representing a piece of text. The only reason this is not named
     /// String is so that it doesn't conflict with <see cref="string"/>.
     /// </summary>
     public sealed class Text : Value
     {
-        /// <summary>
-        /// Constructs an empty <see cref="Text"/> object.
-        /// </summary>
-        [Obsolete("Use the String constructor.")]
-        public Text()
-        {
-            Value = null!;
-        }
-
         /// <summary>
         /// Constructs a <see cref="Text"/> object containing the provided value.
         /// </summary>
@@ -44,20 +35,11 @@ namespace IPA.Config.Data
     }
 
     /// <summary>
-    /// A <see cref="Value"/> representing an integer. This may hold a <see cref="long"/>'s 
+    /// A <see cref="Value"/> representing an integer. This may hold a <see cref="long"/>'s
     /// worth of data.
     /// </summary>
     public sealed class Integer : Value
     {
-        /// <summary>
-        /// Constructs an empty <see cref="Integer"/> object.
-        /// </summary>
-        [Obsolete("Use the long constructor.")]
-        public Integer()
-        {
-            Value = 0;
-        }
-
         /// <summary>
         /// Constructs a <see cref="Integer"/> object containing the provided value.
         /// </summary>
@@ -86,20 +68,11 @@ namespace IPA.Config.Data
     }
 
     /// <summary>
-    /// A <see cref="Value"/> representing a floating point value. This may hold a 
+    /// A <see cref="Value"/> representing a floating point value. This may hold a
     /// <see cref="decimal"/>'s worth of data.
     /// </summary>
     public sealed class FloatingPoint : Value
     {
-        /// <summary>
-        /// Constructs an empty <see cref="FloatingPoint"/> object.
-        /// </summary>
-        [Obsolete("Use the long constructor.")]
-        public FloatingPoint()
-        {
-            Value = 0;
-        }
-
         /// <summary>
         /// Constructs a <see cref="FloatingPoint"/> object containing the provided value.
         /// </summary>
@@ -132,15 +105,6 @@ namespace IPA.Config.Data
     /// </summary>
     public sealed class Boolean : Value
     {
-        /// <summary>
-        /// Constructs an empty <see cref="Boolean"/> object.
-        /// </summary>
-        [Obsolete("Use the long constructor.")]
-        public Boolean()
-        {
-            Value = false;
-        }
-
         /// <summary>
         /// Constructs a <see cref="Boolean"/> object containing the provided value.
         /// </summary>
