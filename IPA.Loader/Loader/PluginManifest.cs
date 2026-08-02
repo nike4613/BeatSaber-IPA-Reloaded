@@ -16,7 +16,7 @@ namespace IPA.Loader
         [JsonProperty("name", Required = Required.Always)]
         public string Name = null!;
 
-        [JsonProperty("id", Required = Required.AllowNull)] // TODO: on major version bump, make this always
+        [JsonProperty("id", Required = Required.Always)]
         public string? Id;
 
         [JsonProperty("description", Required = Required.Always), JsonConverter(typeof(MultilineStringConverter))]
