@@ -22,8 +22,6 @@ namespace IPA.Loader
     /// </summary>
     public static class PluginManager
     {
-#pragma warning disable CS0618 // Type or member is obsolete (IPlugin)
-
         private static List<PluginExecutor> _bsPlugins;
         internal static IEnumerable<PluginExecutor> BSMetas => _bsPlugins;
 
@@ -320,14 +318,6 @@ namespace IPA.Loader
         /// <value>a dictionary of <see cref="PluginMetadata"/> to <see cref="IgnoreReason"/> of ignored plugins</value>
         public static IReadOnlyDictionary<PluginMetadata, IgnoreReason> IgnoredPlugins => PluginLoader.ignoredPlugins;
 
-        /// <summary>
-        /// An <see cref="IEnumerable{T}"/> of old IPA plugins.
-        /// </summary>
-        /// <value>all legacy plugin instances</value>
-        [Obsolete("This exists only to provide support for legacy IPA plugins based on the IPlugin interface.")]
-        public static IEnumerable<Old.IPlugin> Plugins => _ipaPlugins;
-        private static List<Old.IPlugin> _ipaPlugins;
-
         internal static IConfigProvider SelfConfigProvider { get; set; }
 
         internal static void Load()
@@ -338,95 +328,12 @@ namespace IPA.Loader
             // so we need to resort to P/Invoke
             string exeName = Path.GetFileNameWithoutExtension(AppInfo.StartupPath);
             _bsPlugins = new List<PluginExecutor>();
-            _ipaPlugins = new List<Old.IPlugin>();
 
             if (!Directory.Exists(pluginDirectory)) return;
 
             var sw = Stopwatch.StartNew();
 
-            // initialize BSIPA plugins first
             PluginLoader.LoadPlugins(_bsPlugins);
-
-            var metadataPaths = new HashSet<string>(PluginLoader.PluginsMetadata.Select(m => m.File.FullName));
-            var ignoredPaths = new HashSet<string>(PluginLoader.ignoredPlugins.Select(m => m.Key.File.FullName)
-                .Concat(PluginLoader.ignoredPlugins.SelectMany(m => m.Key.AssociatedFiles.Select(f => f.FullName))));
-            var disabledPaths = new HashSet<string>(DisabledPlugins.Select(m => m.File.FullName).ToList());
-
-            //Copy plugins to .cache
-            string[] originalPlugins = Directory.GetFiles(pluginDirectory, "*.dll");
-
-            string cacheDir = Path.Combine(pluginDirectory, ".cache");
-            bool exists = Directory.Exists(cacheDir);
-
-            if (exists)
-            {
-                foreach (string plugin in Directory.GetFiles(cacheDir, "*"))
-                    File.Delete(plugin);
-            }
-
-            foreach (string s in originalPlugins)
-            {
-                if (metadataPaths.Contains(s)) continue;
-                if (ignoredPaths.Contains(s)) continue;
-                if (disabledPaths.Contains(s)) continue;
-
-                if (!exists)
-                {
-                    Directory.CreateDirectory(cacheDir);
-                    exists = true;
-                }
-
-                string pluginCopy = Path.Combine(cacheDir, Path.GetFileName(s));
-
-                #region Fix assemblies for refactor
-
-                var module = ModuleDefinition.ReadModule(Path.Combine(pluginDirectory, s));
-                foreach (var @ref in module.AssemblyReferences)
-                { // fix assembly references
-                    if (@ref.Name == "IllusionPlugin" || @ref.Name == "IllusionInjector")
-                    {
-                        @ref.Name = "IPA.Loader";
-                    }
-                }
-
-                foreach (var @ref in module.GetTypeReferences())
-                { // fix type references
-                    if (@ref.FullName == "IllusionPlugin.IPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.IEnhancedPlugin") @ref.Namespace = "IPA.Old"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.IniFile") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.IModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.ModPrefs") @ref.Namespace = "IPA.Config"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.Utils.ReflectionUtil") @ref.Namespace = "IPA.Utilities"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.Logging.Logger") @ref.Namespace = "IPA.Logging"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionPlugin.Logging.LogPrinter") @ref.Namespace = "IPA.Logging"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.PluginManager") @ref.Namespace = "IPA.Loader"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.PluginComponent") @ref.Namespace = "IPA.Loader"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.CompositeBSPlugin") @ref.Namespace = "IPA.Loader.Composite"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.CompositeIPAPlugin") @ref.Namespace = "IPA.Loader.Composite"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.Logging.UnityLogInterceptor") @ref.Namespace = "IPA.Logging"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.Logging.StandardLogger") @ref.Namespace = "IPA.Logging"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.Updating.SelfPlugin") @ref.Namespace = "IPA.Updating"; //@ref.Name = "";
-                    if (@ref.FullName == "IllusionInjector.Updating.Backup.BackupUnit") @ref.Namespace = "IPA.Updating.Backup"; //@ref.Name = "";
-                    if (@ref.Namespace == "IllusionInjector.Utilities") @ref.Namespace = "IPA.Utilities"; //@ref.Name = "";
-                    if (@ref.Namespace == "IllusionInjector.Logging.Printers") @ref.Namespace = "IPA.Logging.Printers"; //@ref.Name = "";
-                }
-                module.Write(pluginCopy);
-
-                #endregion
-            }
-
-            //Load copied plugins
-
-            if (exists)
-            {
-                string[] copiedPlugins = Directory.GetFiles(cacheDir, "*.dll");
-                foreach (string s in copiedPlugins)
-                {
-                    var result = LoadPluginsFromFile(s);
-                    if (result == null) continue;
-                    _ipaPlugins.AddRange(result.NonNull());
-                }
-            }
 
             sw.Stop();
 
@@ -434,76 +341,14 @@ namespace IPA.Loader
             Logger.Default.Info($"Running on Unity {Application.unityVersion}");
             Logger.Default.Info($"Game version {UnityGame.GameVersion}");
             Logger.Default.Info("-----------------------------");
-            Logger.Default.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count + _ipaPlugins.Count}");
+            Logger.Default.Info($"Loading plugins from {Utils.GetRelativePath(pluginDirectory, Environment.CurrentDirectory)} and found {_bsPlugins.Count}");
             Logger.Default.Info("-----------------------------");
             foreach (var plugin in _bsPlugins)
             {
                 Logger.Default.Info($"{plugin.Metadata.Name} ({plugin.Metadata.Id}): {plugin.Metadata.Version}");
             }
             Logger.Default.Info("-----------------------------");
-            if (_ipaPlugins.Count > 0)
-            {
-                foreach (var plugin in _ipaPlugins)
-                {
-                    Logger.Default.Info($"{plugin.Name}: {plugin.Version}");
-                }
-                Logger.Default.Info("-----------------------------");
-            }
             Logger.Default.Info($"Initializing plugins took {sw.Elapsed}");
-        }
-
-        private static IEnumerable<Old.IPlugin> LoadPluginsFromFile(string file)
-        {
-            var ipaPlugins = new List<Old.IPlugin>();
-
-            if (!File.Exists(file) || !file.EndsWith(".dll", true, null))
-                return ipaPlugins;
-
-            T OptionalGetPlugin<T>(Type t) where T : class
-            {
-                if (t.FindInterfaces((t, o) => t == (o as Type), typeof(T)).Length > 0)
-                {
-                    try
-                    {
-                        T pluginInstance = Activator.CreateInstance(t) as T;
-                        return pluginInstance;
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Loader.Error($"Could not load plugin {t.FullName} in {Path.GetFileName(file)}! {e}");
-                    }
-                }
-
-                return null;
-            }
-
-            try
-            {
-                Assembly assembly = Assembly.LoadFrom(file);
-
-                foreach (Type t in assembly.GetTypes())
-                {
-
-                    var ipaPlugin = OptionalGetPlugin<Old.IPlugin>(t);
-                    if (ipaPlugin != null)
-                    {
-                        ipaPlugins.Add(ipaPlugin);
-                    }
-                }
-
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                Logger.Loader.Error($"Could not load the following types from {Path.GetFileName(file)}:");
-                Logger.Loader.Error($"  {string.Join("\n  ", e.LoaderExceptions?.Select(e1 => e1?.Message) ?? Array.Empty<string>())}");
-            }
-            catch (Exception e)
-            {
-                Logger.Loader.Error($"Could not load {Path.GetFileName(file)}!");
-                Logger.Loader.Error(e);
-            }
-
-            return ipaPlugins;
         }
 
         internal static class AppInfo
@@ -521,6 +366,5 @@ namespace IPA.Loader
                 }
             }
         }
-#pragma warning restore CS0618 // Type or member is obsolete (IPlugin)
     }
 }

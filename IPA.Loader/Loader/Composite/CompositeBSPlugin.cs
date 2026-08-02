@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine.SceneManagement;
 using Logger = IPA.Logging.Logger;
 
 namespace IPA.Loader.Composite
@@ -18,6 +17,7 @@ namespace IPA.Loader.Composite
         {
             this.plugins = plugins;
         }
+
         private void Invoke(CompositeCall callback, [CallerMemberName] string method = "")
         {
             foreach (var plugin in plugins)
@@ -42,35 +42,7 @@ namespace IPA.Loader.Composite
         public void OnEnable()
             => Invoke(plugin => plugin.Enable());
 
-        public void OnApplicationQuit() // do something useful with the Task that Disable gives us
+        public void OnDisable() // do something useful with the Task that Disable gives us
              => Invoke(plugin => plugin.Disable());
-
-        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
-        { }//=> Invoke(plugin => plugin.Plugin.OnSceneLoaded(scene, sceneMode));
-
-        public void OnSceneUnloaded(Scene scene)
-        { }//=> Invoke(plugin => plugin.Plugin.OnSceneUnloaded(scene));
-
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
-        { }//=> Invoke(plugin => plugin.Plugin.OnActiveSceneChanged(prevScene, nextScene));
-
-        public void OnUpdate()
-        { }/*=> Invoke(plugin =>
-            {
-                if (plugin.Plugin is IEnhancedPlugin saberPlugin)
-                    saberPlugin.OnUpdate();
-            });*/
-
-        public void OnFixedUpdate()
-        { }/*=> Invoke(plugin => {
-                if (plugin.Plugin is IEnhancedPlugin saberPlugin)
-                    saberPlugin.OnFixedUpdate();
-            });*/
-
-        public void OnLateUpdate()
-        { }/*=> Invoke(plugin => {
-                if (plugin.Plugin is IEnhancedPlugin saberPlugin)
-                    saberPlugin.OnLateUpdate();
-            });*/
     }
 }
