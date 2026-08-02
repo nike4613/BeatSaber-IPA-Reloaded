@@ -1,14 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
+﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.0" DefaultTargets="Build">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <Platforms>x86;x64</Platforms>
     <Configurations>Debug;Release;Verbose;Verbose_Release</Configurations>
-
-    <RootNamespace>BSIPA_Meta</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-
     <PackageAction>Assemble</PackageAction>
     <InnerTargets>Assemble</InnerTargets>
   </PropertyGroup>
