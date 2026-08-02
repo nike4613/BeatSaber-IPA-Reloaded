@@ -1,13 +1,9 @@
 ﻿#nullable enable
-using IPA.AntiMalware;
-using IPA.Config;
 using IPA.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using static IPA.Logging.Logger;
 
 namespace IPA.Injector
@@ -18,43 +14,7 @@ namespace IPA.Injector
 
         public static void InstallPendingUpdates()
         {
-            InstallPendingSelfUpdates();
             InstallPendingModUpdates();
-        }
-
-        private static void InstallPendingSelfUpdates()
-        {
-            var path = Path.Combine(UnityGame.InstallPath, "IPA.exe");
-            if (!File.Exists(path)) return;
-
-            var ipaVersion = new Version(FileVersionInfo.GetVersionInfo(path).FileVersion);
-            var selfVersion = Assembly.GetExecutingAssembly().GetName().Version;
-
-            if (ipaVersion > selfVersion)
-            {
-                var scanResult = AntiMalwareEngine.Engine.ScanFile(new FileInfo(path));
-                if (scanResult == ScanResult.Detected)
-                {
-                    Updater.Error("Scan of BSIPA installer found malware; not updating");
-                    return;
-                }
-                if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && scanResult is not ScanResult.KnownSafe and not ScanResult.NotDetected)
-                {
-                    Updater.Error("Scan of BSIPA installer returned partial threat; not updating. To allow this, enable AntiMalware.RunPartialThreatCode in the config.");
-                    return;
-                }
-
-                _ = Process.Start(new ProcessStartInfo
-                {
-                    FileName = path,
-                    Arguments = $"\"-nw={Process.GetCurrentProcess().Id}," +
-                        $"s={string.Join(" ", Environment.GetCommandLineArgs().Skip(1)).Replace("\\", "\\\\").Replace(",", "\\,")}\"",
-                    UseShellExecute = false
-                });
-
-                Updater.Info("Updating BSIPA...");
-                Environment.Exit(0);
-            }
         }
 
         private static void InstallPendingModUpdates()

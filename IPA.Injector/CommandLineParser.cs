@@ -22,7 +22,6 @@ namespace IPA.Injector
                         WinConsole.Initialize(i + 1 < args.Length && int.TryParse(args[i + 1], out var processId) ? processId : WinConsole.AttachParent);
                         break;
                     case "--debug":
-                    case "--mono-debug":
                         SelfConfig.CommandLineValues.Debug.ShowDebug = true;
                         SelfConfig.CommandLineValues.Debug.ShowCallSource = true;
                         break;

@@ -27,15 +27,9 @@
     </Project>
   </Folder>
   <Project Path="BSIPA-Meta/BSIPA-Meta.csproj">
-    <BuildDependency Project="Doorstop/Proxy/Proxy.vcxproj" />
     <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
-    <BuildDependency Project="IPA/IPA.csproj" />
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />
-  </Project>
-  <Project Path="Doorstop/Proxy/Proxy.vcxproj">
-    <BuildType Solution="Debug|*" Project="Release" />
-    <BuildType Solution="Verbose|*" Project="Verbose_Release" />
   </Project>
   <Project Path="IPA.Injector/IPA.Injector.csproj">
     <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
@@ -46,10 +40,6 @@
     <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
     <BuildType Solution="Verbose_Release|*" Project="Release" />
     <BuildType Solution="Verbose|*" Project="Debug" />
-  </Project>
-  <Project Path="IPA/IPA.csproj">
-    <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
-    <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
   </Project>
   <Project Path="SemVer/SemVer.csproj">
     <BuildType Solution="Verbose_Release|*" Project="Release" />

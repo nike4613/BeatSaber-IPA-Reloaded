@@ -23,8 +23,6 @@
     "donate": "https://ko-fi.com/danike"
   },
   "files": [
-    "IPA.exe",
-    "winhttp.dll",
     "Libs/0Harmony.dll",
     "Libs/Ionic.Zip.dll",
     "Libs/netstandard.dll",

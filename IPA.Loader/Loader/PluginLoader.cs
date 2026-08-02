@@ -83,7 +83,7 @@ namespace IPA.Loader
                 var selfMeta = new PluginMetadata
                 {
                     Assembly = Assembly.GetExecutingAssembly(),
-                    File = new FileInfo(Path.Combine(UnityGame.InstallPath, "IPA.exe")),
+                    File = new FileInfo(Path.Combine(Directory.EnumerateDirectories(UnityGame.InstallPath, "*_Data").First(), "IPA.Loader.dll")),
                     PluginType = null,
                     IsSelf = true
                 };

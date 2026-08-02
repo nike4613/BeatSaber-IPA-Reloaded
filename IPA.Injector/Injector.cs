@@ -71,8 +71,6 @@ namespace IPA.Injector
                 SelfConfig.Load();
                 DisabledConfig.Load();
 
-                CriticalSection.Configure();
-
                 Logging.Logger.Injector.Debug("Prepping bootstrapper");
 
                 // make sure to load the game version and check boundaries before installing the bootstrap, because that uses the game assemblies property
@@ -137,10 +135,6 @@ namespace IPA.Injector
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
                 Logging.Logger.Injector.Warn("No backup found! Was BSIPA installed using the installer?");
-
-            // TODO: Investigate if this ever worked properly.
-            // this is a critical section because if you exit in here, assembly can die
-            using var critSec = CriticalSection.ExecuteSection();
 
             var readerParameters = new ReaderParameters
             {
