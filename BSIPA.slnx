@@ -51,8 +51,4 @@
     <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
     <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
   </Project>
-  <Project Path="SemVer/SemVer.csproj">
-    <BuildType Solution="Verbose_Release|*" Project="Release" />
-    <BuildType Solution="Verbose|*" Project="Debug" />
-  </Project>
 </Solution>

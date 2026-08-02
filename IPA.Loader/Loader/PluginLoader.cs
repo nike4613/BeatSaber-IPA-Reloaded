@@ -490,7 +490,7 @@ namespace IPA.Loader
             Logger.Loader.Debug(string.Join(", ", PluginsMetadata));
 #endif
 
-            PluginsMetadata.Sort((a, b) => b.HVersion.CompareTo(a.HVersion));
+            PluginsMetadata.Sort((a, b) => b.Version.CompareTo(a.Version));
 
 #if DEBUG
             // print base resolution order
@@ -550,17 +550,17 @@ namespace IPA.Loader
                 foreach (var (id, range) in meta.Manifest.Conflicts)
                 {
                     if (metadataCache.TryGetValue(id, out var plugin)
-                        && range.Matches(plugin.Meta.HVersion))
+                        && range.Matches(plugin.Meta.Version))
                     {
                         // make sure that there's a mutual dependency
-                        var targetRange = VersionRange.ForVersion(meta.HVersion);
+                        var targetRange = VersionRange.ForVersion(meta.Version);
                         var targetConflicts = plugin.Meta.Manifest.Conflicts;
                         if (!targetConflicts.TryGetValue(meta.Id, out var realRange))
                         {
                             // there's not already a listed conflict
                             targetConflicts.Add(meta.Id, targetRange);
                         }
-                        else if (!realRange.Matches(meta.HVersion))
+                        else if (!realRange.Matches(meta.Version))
                         {
                             // there is already a listed conflict that isn't mutual
                             targetRange = realRange | targetRange;
@@ -680,7 +680,7 @@ namespace IPA.Loader
                         if (id == SelfMeta.Id)
                             dependsOnSelf = true;
                         if (!TryResolveId(id, out var depMeta, out var depDisabled, out var depIgnored)
-                            || !range.Matches(depMeta.HVersion))
+                            || !range.Matches(depMeta.Version))
                         {
                             Logger.Loader.Warn($"'{plugin.Id}' is missing dependency '{id}@{range}'; ignoring");
                             ignoredPlugins.Add(plugin, new(Reason.Dependency)
@@ -757,13 +757,13 @@ namespace IPA.Loader
                         Logger.Loader.Trace($">- Checking conflict '{id}' {range}");
                         // this lookup must be partial to prevent loadBefore/conflictsWith from creating a recursion loop
                         if (TryResolveId(id, out var meta, out var conflDisabled, out var conflIgnored, partial: true)
-                            && range.Matches(meta.HVersion)
+                            && range.Matches(meta.Version)
                             && !conflIgnored && !conflDisabled) // the conflict is only *actually* a problem if it is both not ignored and not disabled
                         {
-                            Logger.Loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.HVersion}; ignoring '{plugin.Id}'");
+                            Logger.Loader.Warn($"Plugin '{plugin.Id}' conflicts with {meta.Id}@{meta.Version}; ignoring '{plugin.Id}'");
                             ignoredPlugins.Add(plugin, new(Reason.Conflict)
                             {
-                                ReasonText = $"Conflicts with {meta.Id}@{meta.HVersion}",
+                                ReasonText = $"Conflicts with {meta.Id}@{meta.Version}",
                                 RelatedTo = meta
                             });
                             ignored = true;

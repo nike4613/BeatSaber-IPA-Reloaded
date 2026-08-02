@@ -102,18 +102,10 @@ namespace IPA.Injector
 
         private static AlmostVersion SafeParseVersion() => new(GetGameVersion());
 
-        private static void _Load()
+        internal static void Load()
         {
             UnityGame.SetEarlyGameVersion(SafeParseVersion());
             UnityGame.CheckGameVersionBoundary();
-        }
-
-        internal static void Load()
-        {
-            // This exists for the same reason the weirdness in Injector.Main does
-            _ = Type.GetType("SemVer.Version, SemVer", false);
-
-            _Load();
         }
     }
 }

@@ -185,16 +185,6 @@ namespace IPA.Utilities
         }
 
         /// <summary>
-        /// Compares a pair of <see cref="SemVer.Version"/>s ignoring both the prerelease and build fields.
-        /// </summary>
-        /// <param name="l">the left value</param>
-        /// <param name="r">the right value</param>
-        /// <returns>&lt; 0 if l is less than r, 0 if they are equal in the numeric portion, or &gt; 0 if l is greater than r</returns>
-        [Obsolete("Use Hive.Versioning.Version overload instead.")]
-        public static int VersionCompareNoPrerelease(SemVer.Version l, SemVer.Version r)
-            => VersionCompareNoPrerelease(l?.UnderlyingVersion!, r?.UnderlyingVersion!);
-
-        /// <summary>
         /// Compares a pair of <see cref="Version"/>s ignoring both the prerelease and build fields.
         /// </summary>
         /// <param name="l">the left value</param>
