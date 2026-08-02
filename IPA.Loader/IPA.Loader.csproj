@@ -35,8 +35,6 @@
     <PackageReference Include="MonoMod.Backports" Version="1.1.2" Aliases="MONOMOD_BACKPORTS" />
     <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-
-    <ProjectReference Include="..\SemVer\SemVer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

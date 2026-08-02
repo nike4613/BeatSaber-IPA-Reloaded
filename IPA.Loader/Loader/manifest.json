@@ -28,7 +28,6 @@
     "Libs/netstandard.dll",
     "Libs/Newtonsoft.Json.dll",
     "Libs/Mono.Cecil.dll",
-    "Libs/SemVer.dll",
     "Libs/Hive.Versioning.dll"
   ]
 }
