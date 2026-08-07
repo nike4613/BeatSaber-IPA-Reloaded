@@ -40,12 +40,6 @@ namespace IPA.Injector
                     case "--plugin-logs":
                         SelfConfig.CommandLineValues.Debug.CreateModLogs = true;
                         break;
-#if false
-                    case "--no-updates":
-                        CommandLineValues.Updates.AutoCheckUpdates = false;
-                        CommandLineValues.Updates.AutoUpdate = false;
-                        break;
-#endif
                     case "--trace":
                         SelfConfig.CommandLineValues.Debug.ShowTrace = true;
                         break;

@@ -33,13 +33,6 @@ namespace IPA.Loader
                 PluginManager.Load();
 
                 bsPlugins = new CompositeBSPlugin(PluginManager.BSMetas);
-
-                /*
-#if BeatSaber // TODO: remove this
-                gameObject.AddComponent<Updating.BeatMods.Updater>();
-#endif
-                */
-
                 bsPlugins.OnEnable();
 
                 var unitySched = UnityMainThreadTaskScheduler.Default as UnityMainThreadTaskScheduler;

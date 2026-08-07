@@ -36,7 +36,6 @@ namespace IPA.Logging
         internal static StandardLogger Harmony => lazyHarmony ??= new StandardLogger("Harmony");
 
         internal static Logger AntiMalware => Default.GetChildLogger("AntiMalware");
-        internal static Logger Updater => Default.GetChildLogger("Updater");
         internal static Logger LibLoader => Default.GetChildLogger("LibraryLoader");
         internal static Logger Injector => Default.GetChildLogger("Injector");
         internal static Logger Loader => Default.GetChildLogger("Loader");
