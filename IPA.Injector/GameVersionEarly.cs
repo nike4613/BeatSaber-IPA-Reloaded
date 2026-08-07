@@ -1,10 +1,10 @@
 ﻿#nullable enable
 using IPA.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace IPA.Injector
@@ -100,11 +100,10 @@ namespace IPA.Injector
             return false;
         }
 
-        private static AlmostVersion SafeParseVersion() => new(GetGameVersion());
-
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void Load()
         {
-            UnityGame.SetEarlyGameVersion(SafeParseVersion());
+            UnityGame.SetEarlyGameVersion(new AlmostVersion(GetGameVersion()));
             UnityGame.CheckGameVersionBoundary();
         }
     }
