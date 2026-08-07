@@ -39,12 +39,6 @@
     <EmbeddedResource Include="Loader\description.md" />
   </ItemGroup>
 
-  <!-- disable the updater -->
-  <ItemGroup>
-    <Compile Remove="Updating\BeatMods\*.cs" />
-    <None Include="Updating\BeatMods\*.cs" />
-  </ItemGroup>
-
   <Import Project="..\Common.targets" />
 
 </Project>

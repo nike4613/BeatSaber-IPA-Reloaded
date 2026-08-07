@@ -84,8 +84,6 @@ namespace IPA.Injector
 
                 AntiMalwareEngine.Initialize();
 
-                Updates.InstallPendingUpdates();
-
                 Loader.LibLoader.SetupAssemblyFilenames(true);
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();

@@ -50,8 +50,7 @@ namespace IPA.Config
         internal const string IPAName = "Beat Saber IPA";
         internal const string IPAVersion = "4.3.7.0";
 
-        // uses Updates.AutoUpdate, Updates.AutoCheckUpdates, YeetMods, Debug.ShowCallSource, Debug.ShowDebug,
-        //      Debug.CondenseModLogs
+        // uses YeetMods, Debug.ShowCallSource, Debug.ShowDebug, Debug.CondenseModLogs
         internal static SelfConfig CommandLineValues = new();
 
         // For readability's sake, I want the default values to be visible in source.
@@ -60,25 +59,6 @@ namespace IPA.Config
         // END: section ignore
 
         public virtual bool Regenerate { get; set; } = true;
-
-#if false
-        public class Updates_
-        {
-            public virtual bool AutoUpdate { get; set; } = true;
-            // LINE: ignore 2
-            public static bool AutoUpdate_ => (Instance?.Updates?.AutoUpdate ?? true)
-                                           &&   CommandLineValues.Updates.AutoUpdate;
-
-            public virtual bool AutoCheckUpdates { get; set; } = true;
-            // LINE: ignore 2
-            public static bool AutoCheckUpdates_ => (Instance?.Updates?.AutoCheckUpdates ?? true)
-                                                 &&   CommandLineValues.Updates.AutoCheckUpdates;
-        }
-
-        // LINE: ignore
-        [NonNullable]
-        public virtual Updates_ Updates { get; set; } = new Updates_();
-#endif
 
         public class Debug_
         {

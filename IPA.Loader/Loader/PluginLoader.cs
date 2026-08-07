@@ -479,8 +479,6 @@ namespace IPA.Loader
 
     internal partial class PluginLoader
     {
-        // keep track of these for the updater; it should still be able to update mods not loaded
-        // the thing -> the reason
         internal static Dictionary<PluginMetadata, IgnoreReason> ignoredPlugins = new();
 
         internal static void DoOrderResolution()
