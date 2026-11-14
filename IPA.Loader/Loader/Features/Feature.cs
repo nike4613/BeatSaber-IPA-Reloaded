@@ -1,7 +1,7 @@
 ﻿#nullable enable
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace IPA.Loader.Features
 {
@@ -23,7 +23,7 @@ namespace IPA.Loader.Features
         /// <param name="meta">the metadata of the plugin that is being prepared</param>
         /// <param name="featureData">the data provided with the feature</param>
         /// <returns><see langword="true"/> if the feature is valid for the plugin, <see langword="false"/> otherwise</returns>
-        protected abstract bool Initialize(PluginMetadata meta, JObject featureData);
+        protected abstract bool Initialize(PluginMetadata meta, JsonObject featureData);
 
         /// <summary>
         /// The message to be logged when the feature is not valid for a plugin.
@@ -112,7 +112,7 @@ namespace IPA.Loader.Features
 
         private class EmptyFeature : Feature
         {
-            protected override bool Initialize(PluginMetadata meta, JObject featureData)
+            protected override bool Initialize(PluginMetadata meta, JsonObject featureData)
             {
                 throw new NotImplementedException();
             }
@@ -124,9 +124,9 @@ namespace IPA.Loader.Features
         {
             public readonly PluginMetadata AppliedTo;
             public readonly string Name;
-            public readonly JObject Data;
+            public readonly JsonObject Data;
 
-            public Instance(PluginMetadata appliedTo, string name, JObject data)
+            public Instance(PluginMetadata appliedTo, string name, JsonObject data)
             {
                 AppliedTo = appliedTo;
                 Name = name;

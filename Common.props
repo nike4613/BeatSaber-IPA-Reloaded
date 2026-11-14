@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!--<PathMap>$(SolutionDir)=C:\</PathMap>-->
     <DebugType>portable</DebugType>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
     <NoWarn>CA1031;CA1305;CA1303</NoWarn>
     <Nullable>disable</Nullable>
     <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>

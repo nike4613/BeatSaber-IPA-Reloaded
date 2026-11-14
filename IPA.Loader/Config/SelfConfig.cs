@@ -1,20 +1,15 @@
-﻿// BEGIN: section ignore
-#nullable enable
+﻿#nullable enable
 using IPA.Logging;
 using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
-// END: section ignore
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace IPA.Config
 {
     internal class SelfConfig
     {
-        // This is to allow the doc generation to parse this file and use Newtonsoft to generate a JSON schema
-        // BEGIN: section ignore
-
         public static Config LoaderConfig { get; set; } = null!; // this is set before used
 
         public static SelfConfig Instance = new();
@@ -56,94 +51,89 @@ namespace IPA.Config
         // For readability's sake, I want the default values to be visible in source.
 #pragma warning disable CA1805 // Do not initialize unnecessarily
 
-        // END: section ignore
-
         public virtual bool Regenerate { get; set; } = true;
 
         public class Debug_
         {
             public virtual bool ShowCallSource { get; set; } = false;
-            // LINE: ignore 2
+
             public static bool ShowCallSource_ => (Instance?.Debug?.ShowCallSource ?? false)
-                                               ||   CommandLineValues.Debug.ShowCallSource;
+                                                  || CommandLineValues.Debug.ShowCallSource;
 
             public virtual bool ShowDebug { get; set; } = false;
-            // LINE: ignore 2
+
             public static bool ShowDebug_ => (Instance?.Debug?.ShowDebug ?? false)
-                                          ||   CommandLineValues.Debug.ShowDebug;
+                                             || CommandLineValues.Debug.ShowDebug;
 
             // This option only takes effect after a full game restart, unless new logs are created again
             public virtual bool CondenseModLogs { get; set; } = false;
-            // LINE: ignore 2
+
             public static bool CondenseModLogs_ => (Instance?.Debug?.CondenseModLogs ?? false)
-                                                ||   CommandLineValues.Debug.CondenseModLogs;
+                                                   || CommandLineValues.Debug.CondenseModLogs;
 
             // This option only takes effect after a full game restart, unless new logs are created again
             public virtual bool CreateModLogs { get; set; } = false;
-            // LINE: ignore 2
+
             public static bool CreateModLogs_ => (Instance?.Debug?.CreateModLogs ?? false)
-                                              ||    CommandLineValues.Debug.CreateModLogs;
+                                                 || CommandLineValues.Debug.CreateModLogs;
 
             public virtual bool ShowHandledErrorStackTraces { get; set; } = false;
-            // LINE: ignore
+
             public static bool ShowHandledErrorStackTraces_ => Instance?.Debug?.ShowHandledErrorStackTraces ?? false;
 
             public virtual bool HideMessagesForPerformance { get; set; } = true;
-            // LINE: ignore
+
             public static bool HideMessagesForPerformance_ => Instance?.Debug?.HideMessagesForPerformance ?? true;
 
             public virtual int HideLogThreshold { get; set; } = 512;
-            // LINE: ignore
+
             public static int HideLogThreshold_ => Instance?.Debug?.HideLogThreshold ?? 512;
 
             public virtual bool ShowTrace { get; set; } = false;
-            // LINE: ignore 2
+
             public static bool ShowTrace_ => (Instance?.Debug?.ShowTrace ?? false)
-                                          ||   CommandLineValues.Debug.ShowTrace;
+                                             || CommandLineValues.Debug.ShowTrace;
+
             public virtual bool SyncLogging { get; set; } = false;
-            // LINE: ignore
+
             public static bool SyncLogging_ => Instance?.Debug?.SyncLogging ?? false;
 
             public virtual bool DarkenMessages { get; set; } = false;
-            // LINE: ignore 2
+
             public static bool DarkenMessages_ => (Instance?.Debug?.DarkenMessages ?? false)
-                                               || CommandLineValues.Debug.DarkenMessages;
+                                                  || CommandLineValues.Debug.DarkenMessages;
         }
 
-        // LINE: ignore
         [NonNullable]
         public virtual Debug_ Debug { get; set; } = new();
 
         public class AntiMalware_
         {
             public virtual bool UseIfAvailable { get; set; } = true;
-            // LINE: ignore
+
             public static bool UseIfAvailable_ => Instance?.AntiMalware?.UseIfAvailable ?? true;
 
             public virtual bool RunPartialThreatCode { get; set; } = false;
-            // LINE: ignore
+
             public static bool RunPartialThreatCode_ => Instance?.AntiMalware?.RunPartialThreatCode ?? true;
         }
 
-        // LINE: ignore
         [NonNullable]
         public virtual AntiMalware_ AntiMalware { get; set; } = new();
 
         public virtual bool YeetMods { get; set; } = true;
-        // LINE: ignore 2
+
         public static bool YeetMods_ => (Instance?.YeetMods ?? true)
-                                     &&   CommandLineValues.YeetMods;
+                                        && CommandLineValues.YeetMods;
 
         [JsonIgnore]
         public bool WriteLogs { get; set; } = true;
 
         public virtual bool ResetGameAssembliesOnVersionChange { get; set; } = true;
 
-        // LINE: ignore
         [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
         public virtual HashSet<string> GameAssemblies { get; set; } = GetDefaultGameAssemblies();
 
-        // BEGIN: section ignore
         public static HashSet<string> GetDefaultGameAssemblies()
             => new()
             {
@@ -154,15 +144,7 @@ namespace IPA.Config
                 "Assembly-CSharp.dll"
 #endif
             };
-        // END: section ignore
 
-        // LINE: ignore
-#if false // used to make schema gen happy
-        private static HashSet<string> GetDefaultGameAssemblies() => null;
-        // LINE: ignore
-#endif
-
-        // LINE: ignore
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
     }
 }

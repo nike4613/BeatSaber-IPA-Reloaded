@@ -117,7 +117,6 @@ namespace IPA.Loader
 
                     FilenameLocations = newFilenameLocations;
 
-                    _ = LoadLibrary(new AssemblyName("Newtonsoft.Json, Version=12.0.0.0, Culture=neutral"));
                     _ = LoadLibrary(new AssemblyName("netstandard, Version=2.0.0.0, Culture=neutral"));
 
                     thisThreadIsInitializing = false;

@@ -1,25 +1,28 @@
 ﻿#nullable enable
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using IPA.Json.SerializerContexts;
 using System;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace IPA.Loader.Features
 {
     internal class ConfigProviderFeature : Feature
     {
-        private class DataModel
+        public class DataModel
         {
-            [JsonProperty("type", Required = Required.Always)]
-            public string TypeName = "";
+            [JsonPropertyName("type")]
+            [JsonRequired]
+            public string TypeName { get; init; } = null!;
         }
 
-        protected override bool Initialize(PluginMetadata meta, JObject featureData)
+        protected override bool Initialize(PluginMetadata meta, JsonObject featureData)
         {
             DataModel data;
             try
             {
-                data = featureData.ToObject<DataModel>() ?? throw new InvalidOperationException("Feature data is null");
+                data = featureData.Deserialize(FeatureDataModelSerializerContext.Default.ConfigProviderFeatureDataModel) ?? throw new InvalidOperationException("Feature data is null");
             }
             catch (Exception e)
             {

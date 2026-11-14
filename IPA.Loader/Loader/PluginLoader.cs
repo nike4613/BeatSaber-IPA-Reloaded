@@ -2,11 +2,11 @@
 using Hive.Versioning;
 using IPA.AntiMalware;
 using IPA.Config;
+using IPA.Json.SerializerContexts;
 using IPA.Loader.Features;
 using IPA.Logging;
 using IPA.Utilities;
 using Mono.Cecil;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -88,14 +89,9 @@ namespace IPA.Loader
                     IsSelf = true
                 };
 
-                string manifest;
-                using (var manifestReader =
-                    new StreamReader(
-                        selfMeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ??
-                        throw new InvalidOperationException()))
-                    manifest = manifestReader.ReadToEnd();
+                using var manifestStream = selfMeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ?? throw new InvalidOperationException();
 
-                var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(manifest);
+                var manifestObj = JsonSerializer.Deserialize(manifestStream, PluginManifestSerializerContext.Default.PluginManifest);
                 selfMeta.Manifest = manifestObj ?? throw new InvalidOperationException("Deserialized manifest was null");
 
                 PluginsMetadata.Add(selfMeta);
@@ -150,11 +146,9 @@ namespace IPA.Loader
 
                         pluginNs = embedded.Name.Substring(0, embedded.Name.Length - manifestSuffix.Length);
 
-                        string manifest;
-                        using (var manifestReader = new StreamReader(embedded.GetResourceStream()))
-                            manifest = manifestReader.ReadToEnd();
+                        using var manifestStream = embedded.GetResourceStream();
 
-                        pluginManifest = JsonConvert.DeserializeObject<PluginManifest?>(manifest);
+                        pluginManifest = JsonSerializer.Deserialize(manifestStream, PluginManifestSerializerContext.Default.PluginManifest);
                         break;
                     }
 
@@ -166,12 +160,6 @@ namespace IPA.Loader
                         Logger.Loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
 #endif
                         continue;
-                    }
-
-                    if (pluginManifest.Id == null)
-                    {
-                        Logger.Loader.Warn($"Plugin '{pluginManifest.Name}' does not have a listed ID, using name");
-                        pluginManifest.Id = pluginManifest.Name;
                     }
 
                     metadata.Manifest = pluginManifest;
@@ -268,7 +256,8 @@ namespace IPA.Loader
                         IsBare = true,
                     };
 
-                    var manifestObj = JsonConvert.DeserializeObject<PluginManifest>(File.ReadAllText(manifest));
+                    using var manifestStream = File.OpenRead(manifest);
+                    var manifestObj = JsonSerializer.Deserialize(manifestStream, PluginManifestSerializerContext.Default.PluginManifest);
                     if (manifestObj is null)
                     {
                         Logger.Loader.Error($"Bare manifest {Path.GetFileName(manifest)} deserialized to null");
