@@ -40,6 +40,4 @@
     <EmbeddedResource Include="Loader\description.md" />
   </ItemGroup>
 
-  <Import Project="..\Common.targets" />
-
 </Project>

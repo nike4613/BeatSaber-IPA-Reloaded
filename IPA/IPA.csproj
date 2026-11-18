@@ -18,6 +18,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <Import Project="..\Common.targets"/>
-
 </Project>

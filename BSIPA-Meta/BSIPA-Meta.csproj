@@ -9,14 +9,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-
-    <IsVerbose>false</IsVerbose>
-    <IsVerbose Condition="'$(Configuration)' == 'Verbose' Or '$(Configuration)' == 'Verbose_Release'">true</IsVerbose>
-
     <NoVerboseConfig>$(Configuration)</NoVerboseConfig>
-    <NoVerboseConfig Condition="'$(IsVerbose)' == 'true' And '$(Configuration)' == 'Verbose'">Debug</NoVerboseConfig>
-    <NoVerboseConfig Condition="'$(IsVerbose)' == 'true' And '$(Configuration)' == 'Verbose_Release'">Release</NoVerboseConfig>
+    <NoVerboseConfig Condition="'$(Configuration)' == 'Verbose'">Debug</NoVerboseConfig>
+    <NoVerboseConfig Condition="'$(Configuration)' == 'Verbose_Release'">Release</NoVerboseConfig>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,13 +35,6 @@
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
-
-  <Target Name="Clean">
-    <ItemGroup>
-      <Files Include="$(OutputPath)**\*" />
-    </ItemGroup>
-    <Delete Files="@(Files)" />
-  </Target>
 
   <Target Name="Assemble" AfterTargets="Build" Returns="$(OutputPath)">
     <Message Text="Packing..." Importance="High" />

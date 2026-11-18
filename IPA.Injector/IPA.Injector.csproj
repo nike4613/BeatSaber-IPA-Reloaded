@@ -63,10 +63,7 @@
       <LibFiles Include="$(OutputPath)**\*" Exclude="$(OutputPath)Data\**\*;$(OutputPath)Libs\**\*" />
     </ItemGroup>
     <Move SourceFiles="@(LibFiles)" DestinationFolder="$(OutputPath)Libs\" />
-    <RemoveDir Directories="$(OutputPath)Libraries\Included" />
     <RemoveDir Directories="$(OutputPath)Libraries" />
   </Target>
-
-  <Import Project="..\Common.targets" />
 
 </Project>
