@@ -20,21 +20,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IPA\IPA.csproj" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\IPA\IPA.csproj" ReferenceOutputAssembly="false" Private="false">
       <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
       <SetPlatform>Platform=AnyCPU</SetPlatform>
       <SetTargetFramework>TargetFramework=net472</SetTargetFramework>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-    <ProjectReference Include="..\IPA.Doorstop\IPA.Doorstop.csproj" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\IPA.Doorstop\IPA.Doorstop.csproj" ReferenceOutputAssembly="false" Private="false">
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" ReferenceOutputAssembly="false" Private="false">
       <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
       <SetPlatform>Platform=AnyCPU</SetPlatform>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj" ReferenceOutputAssembly="false">
+    <ProjectReference Include="..\IPA.Loader\IPA.Loader.csproj" ReferenceOutputAssembly="false" Private="false">
       <SetConfiguration>Configuration=$(NoVerboseConfig)</SetConfiguration>
       <SetPlatform>Platform=AnyCPU</SetPlatform>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
@@ -60,10 +60,7 @@
     <Copy SourceFiles="@(InputDlls)" DestinationFolder="$(OutputPath)IPA\%(RecursiveDir)" />
     <Copy SourceFiles="@(InputIPAFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
     <ItemGroup>
-      <BadFiles Include="$(OutputPath)*.dll" />
-      <BadFiles Remove="$(OutputPath)IPA.dll" />
       <BadFiles Include="$(OutputPath)*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
-      <BadFiles Include="$(OutputPath)IPA\*.pdb" Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Verbose_Release'" />
     </ItemGroup>
     <Delete Files="@(BadFiles)" />
     <RemoveDir Directories="$(OutputPath)Libraries\" />
