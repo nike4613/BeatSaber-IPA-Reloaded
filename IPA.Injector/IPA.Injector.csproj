@@ -42,6 +42,12 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
   </ItemGroup>
 
+  <Target Name="CopyValueTuple" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="@(ReferencePath)" Condition="'%(Filename)' == 'System.ValueTuple'" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Message Text="Copying documentation" Importance="high" />
     <ItemGroup>
