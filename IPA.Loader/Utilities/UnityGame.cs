@@ -17,11 +17,7 @@ namespace IPA.Utilities
     /// </summary>
     public static class UnityGame
     {
-#if BeatSaber
         private const string GameVersionFilename = "BeatSaberVersion.txt";
-#else
-        private const string GameVersionFilename = "GameVersion.txt";
-#endif
 
         private static AlmostVersion? _earlyGameVersion;
         private static AlmostVersion? _gameVersion;
@@ -38,12 +34,10 @@ namespace IPA.Utilities
                     _gameVersion = new AlmostVersion(ApplicationVersionProxy);
                 }
 
-#if BeatSaber
                 if (_gameVersion.StorageMode != AlmostVersion.StoredAs.SemVer)
                 {
                     _gameVersion = new AlmostVersion(_gameVersion.StringValue!.Split('_')[0]);
                 }
-#endif
 
                 return _gameVersion;
             }

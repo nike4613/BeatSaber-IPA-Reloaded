@@ -137,12 +137,8 @@ namespace IPA.Config
         public static HashSet<string> GetDefaultGameAssemblies()
             => new()
             {
-#if BeatSaber // provide these defaults only for Beat Saber builds
                 "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll",
                 "BeatmapCore.dll", "GameplayCore.dll", "HMLibAttributes.dll", "BeatmapEditor3D.dll"
-#else // otherwise specify Assembly-CSharp.dll
-                "Assembly-CSharp.dll"
-#endif
             };
 
         public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };

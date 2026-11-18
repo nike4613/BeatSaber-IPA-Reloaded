@@ -5,15 +5,9 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>IPA.Injector</RootNamespace>
-
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <BuildForBeatSaber Condition="'$(BuildForBeatSaber)' == ''">true</BuildForBeatSaber>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(BuildForBeatSaber)' == 'true'">
-    <DefineConstants>$(DefineConstants);BeatSaber</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
