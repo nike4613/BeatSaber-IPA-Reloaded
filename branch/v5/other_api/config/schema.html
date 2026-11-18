@@ -81,23 +81,12 @@
 <h1 id="configuration-file-schema">Configuration File Schema</h1>
 
 <pre><code name="Schema File">{
-  &quot;definitions&quot;: {
-    &quot;AntiMalware_&quot;: {
-      &quot;type&quot;: &quot;object&quot;,
-      &quot;properties&quot;: {
-        &quot;UseIfAvailable&quot;: {
-          &quot;type&quot;: &quot;boolean&quot;
-        },
-        &quot;RunPartialThreatCode&quot;: {
-          &quot;type&quot;: &quot;boolean&quot;
-        }
-      },
-      &quot;required&quot;: [
-        &quot;UseIfAvailable&quot;,
-        &quot;RunPartialThreatCode&quot;
-      ]
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;Regenerate&quot;: {
+      &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;Debug_&quot;: {
+    &quot;Debug&quot;: {
       &quot;type&quot;: &quot;object&quot;,
       &quot;properties&quot;: {
         &quot;ShowCallSource&quot;: {
@@ -130,31 +119,18 @@
         &quot;DarkenMessages&quot;: {
           &quot;type&quot;: &quot;boolean&quot;
         }
-      },
-      &quot;required&quot;: [
-        &quot;ShowCallSource&quot;,
-        &quot;ShowDebug&quot;,
-        &quot;CondenseModLogs&quot;,
-        &quot;CreateModLogs&quot;,
-        &quot;ShowHandledErrorStackTraces&quot;,
-        &quot;HideMessagesForPerformance&quot;,
-        &quot;HideLogThreshold&quot;,
-        &quot;ShowTrace&quot;,
-        &quot;SyncLogging&quot;,
-        &quot;DarkenMessages&quot;
-      ]
-    }
-  },
-  &quot;type&quot;: &quot;object&quot;,
-  &quot;properties&quot;: {
-    &quot;Regenerate&quot;: {
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;Debug&quot;: {
-      &quot;$ref&quot;: &quot;#/definitions/Debug_&quot;
+      }
     },
     &quot;AntiMalware&quot;: {
-      &quot;$ref&quot;: &quot;#/definitions/AntiMalware_&quot;
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;UseIfAvailable&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;RunPartialThreatCode&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      }
     },
     &quot;YeetMods&quot;: {
       &quot;type&quot;: &quot;boolean&quot;
@@ -168,15 +144,7 @@
         &quot;type&quot;: &quot;string&quot;
       }
     }
-  },
-  &quot;required&quot;: [
-    &quot;Regenerate&quot;,
-    &quot;Debug&quot;,
-    &quot;AntiMalware&quot;,
-    &quot;YeetMods&quot;,
-    &quot;ResetGameAssembliesOnVersionChange&quot;,
-    &quot;GameAssemblies&quot;
-  ]
+  }
 }
 </code></pre></article>
           </div>
@@ -186,7 +154,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/c010c1f603f7c29681dfed54c3529d1c9c1ba422/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/1879a4e47f850c108b4acb60dfc17b68dfd89334/docs/other_api/config/schema.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
