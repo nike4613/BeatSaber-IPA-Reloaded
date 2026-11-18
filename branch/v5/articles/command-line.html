@@ -122,20 +122,6 @@ When this or the config option is used, they are added and logged with the same 
 <p>This overrides the config setting <code>Debug.ShowTrace</code>.</p>
 </blockquote>
 </li>
-<li><p><code>--mono-debug</code></p>
-<blockquote><p>Enables the built-in Mono soft debugger engine.</p>
-<p>By default, it acts as a client, and requires that there be a soft
-debugger server running on port 10000 on <code>localhost</code>.</p>
-<p>Implies <code>--debug</code>.</p>
-</blockquote>
-</li>
-<li><p><code>--server</code></p>
-<blockquote><p>Does nothing on its own.</p>
-<p>When paired with <code>--mono-debug</code>, this option makes the Mono soft debugger act in server mode. It begins listening on
-port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I recommend using
-SDB, but that is a command line debugger and a lot of people don&#39;t care for those.</p>
-</blockquote>
-</li>
 <li><p><code>--no-yeet</code></p>
 <blockquote><p>Disables mod yeeting.</p>
 <p>By default, whenever BSIPA detects that the game is now running a newer version than previous runs, it will move all
@@ -163,6 +149,7 @@ that behaviour, and restricts it to only create a global log and mod logs.</p>
 </blockquote>
 </li>
 </ul>
+<p>More arguments can be used to change the behavior of the Doorstop, including debugging capabilities. Refer to its <a href="https://github.com/NeighTools/UnityDoorstop?tab=readme-ov-file#cli-arguments">documentation</a> for more details.</p>
 </section>
 </div>
 </article>
@@ -173,7 +160,7 @@ that behaviour, and restricts it to only create a global log and mod logs.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/bc94d6b157664be37d3927f18a503f8e61f19989/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/nike4613/BeatSaber-IPA-Reloaded/blob/3350ea702a75b12822fcb0d3882551bd9ba7d361/docs/articles/command-line.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
