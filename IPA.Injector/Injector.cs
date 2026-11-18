@@ -29,17 +29,15 @@ namespace IPA.Injector
         private static Task? permissionFixTask;
         //private static string otherNewtonsoftJson = null;
 
-        // ReSharper disable once UnusedParameter.Global
-        internal static void Main(string[] args)
+        internal static void Inject()
         { // entry point for doorstop
           // At this point, literally nothing but mscorlib is loaded,
           // and since this class doesn't have any static fields that
           // aren't defined in mscorlib, we can control exactly what
           // gets loaded.
-            _ = args;
             try
             {
-                args = Environment.GetCommandLineArgs();
+                var args = Environment.GetCommandLineArgs();
                 CommandLineParser.ParseArguments(args);
 
                 SetupLibraryLoading();
@@ -70,8 +68,6 @@ namespace IPA.Injector
 
                 SelfConfig.Load();
                 DisabledConfig.Load();
-
-                CriticalSection.Configure();
 
                 Logging.Logger.Injector.Debug("Prepping bootstrapper");
 
@@ -135,10 +131,6 @@ namespace IPA.Injector
             var bkp = BackupManager.FindLatestBackup(backupPath);
             if (bkp == null)
                 Logging.Logger.Injector.Warn("No backup found! Was BSIPA installed using the installer?");
-
-            // TODO: Investigate if this ever worked properly.
-            // this is a critical section because if you exit in here, assembly can die
-            using var critSec = CriticalSection.ExecuteSection();
 
             var readerParameters = new ReaderParameters
             {

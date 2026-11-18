@@ -13,7 +13,8 @@ namespace IPA.Injector
             "desktop.ini",
             "ReShade.ini",
             "ReShadePreset.ini",
-            "imgui.ini"
+            "imgui.ini",
+            "doorstop_config.ini"
         };
 
         public static bool IsInvalid(string path)

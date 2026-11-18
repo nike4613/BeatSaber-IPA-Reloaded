@@ -53,23 +53,6 @@ Here's a quick list of what they are and what they do.
   >
   > This overrides the config setting `Debug.ShowTrace`.
 
-- `--mono-debug`
-
-  > Enables the built-in Mono soft debugger engine.
-  >
-  > By default, it acts as a client, and requires that there be a soft
-  > debugger server running on port 10000 on `localhost`.
-  >
-  > Implies `--debug`.
-
-- `--server`
-
-  > Does nothing on its own.
-  >
-  > When paired with `--mono-debug`, this option makes the Mono soft debugger act in server mode. It begins listening on
-  > port 10000 on any address, and will pause startup (with no window) until a debugger is connected. I recommend using
-  > SDB, but that is a command line debugger and a lot of people don't care for those.
-
 - `--no-yeet`
 
   > Disables mod yeeting.
@@ -102,5 +85,7 @@ Here's a quick list of what they are and what they do.
   > Allows changing the OpenXR runtime. Value must be a substring of the runtime filename. 
   > 
   > Set to `none` to disable VR by forcing an invalid runtime.
+
+More arguments can be used to change the behavior of the Doorstop, including debugging capabilities. Refer to its [documentation](https://github.com/NeighTools/UnityDoorstop?tab=readme-ov-file#cli-arguments) for more details.
 
 ***

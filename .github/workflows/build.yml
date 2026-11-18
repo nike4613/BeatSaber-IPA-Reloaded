@@ -43,6 +43,8 @@ jobs:
             --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Atlas-Rhythm/index.json"
       - name: Clear Nuget Cache
         run: dotnet nuget locals all --clear
+      - name: Download Doorstop
+        run: ./IPA.Doorstop/Get-Doorstop.ps1
       - name: Restore
         run: msbuild -t:Restore -m
       - name: Build

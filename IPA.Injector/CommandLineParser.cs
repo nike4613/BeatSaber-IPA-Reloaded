@@ -22,9 +22,13 @@ namespace IPA.Injector
                         WinConsole.Initialize(i + 1 < args.Length && int.TryParse(args[i + 1], out var processId) ? processId : WinConsole.AttachParent);
                         break;
                     case "--debug":
-                    case "--mono-debug":
                         SelfConfig.CommandLineValues.Debug.ShowDebug = true;
                         SelfConfig.CommandLineValues.Debug.ShowCallSource = true;
+                        break;
+                    case "--doorstop-mono-debug-enabled":
+                        if (i + 1 >= args.Length || !bool.TryParse(args[i + 1], out var value)) continue;
+                        SelfConfig.CommandLineValues.Debug.ShowDebug = value;
+                        SelfConfig.CommandLineValues.Debug.ShowCallSource = value;
                         break;
                     case "--no-yeet":
                         SelfConfig.CommandLineValues.YeetMods = false;

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Platforms>x86;x64</Platforms>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DoorstopVersion>4.6.0</DoorstopVersion>
+    <DoorstopVariant>release</DoorstopVariant>
+    <DoorstopVariant Condition="'$(Configuration)' == 'Verbose' Or '$(Configuration)' == 'Verbose_Release'">debug</DoorstopVariant>
+    <DoorstopDir>obj\doorstop\$(DoorstopVersion)-$(DoorstopVariant)\</DoorstopDir>
+  </PropertyGroup>
+
+  <Target Name="IncludeDoorstop" BeforeTargets="AssignTargetPaths">
+    <Error Condition="!Exists('$(DoorstopDir)doorstop_config.ini')" Text="Doorstop $(DoorstopVersion) ($(DoorstopVariant)) has not been downloaded. Run IPA.Doorstop\Get-Doorstop.ps1 -Variant $(DoorstopVariant) first." />
+    <ItemGroup>
+      <None Include="$(DoorstopDir)$(Platform)\winhttp.dll" Link="winhttp.dll" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="$(DoorstopDir)doorstop_config.ini" Link="doorstop_config.ini" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <SystemFiles Include="$(OutputPath)IPA.Doorstop.*" />
+    </ItemGroup>
+    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
+  </Target>
+
+</Project>
