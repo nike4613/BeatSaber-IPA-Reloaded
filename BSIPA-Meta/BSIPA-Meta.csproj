@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Platforms>x86;x64</Platforms>
+    <Platforms>x64</Platforms>
     <Configurations>Debug;Release;Verbose;Verbose_Release</Configurations>
     <PackageAction>Assemble</PackageAction>
     <InnerTargets>Assemble</InnerTargets>
@@ -22,6 +22,7 @@
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
     <ProjectReference Include="..\IPA.Doorstop\IPA.Doorstop.csproj" ReferenceOutputAssembly="false" Private="false">
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
     <ProjectReference Include="..\IPA.Injector\IPA.Injector.csproj" ReferenceOutputAssembly="false" Private="false">
@@ -41,7 +42,7 @@
     <Message Text="Results will be put in $(OutputPath)" Importance="High" />
     <ItemGroup>
       <InputDlls Include="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\net472\**\*" Exclude="$(SolutionDir)IPA.Injector\bin\$(NoVerboseConfig)\net472\Libraries\**\*" />
-      <InputDlls Include="$(SolutionDir)IPA.Doorstop\bin\$(Platform)\$(Configuration)\net472\**\*" />
+      <InputDlls Include="$(SolutionDir)IPA.Doorstop\bin\$(Configuration)\net472\**\*" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\net472\**\*" Exclude="$(SolutionDir)IPA\bin\$(Configuration)\net472\*.runtimeconfig.*" />
       <InputIPAFiles Include="$(SolutionDir)IPA\bin\$(Configuration)\netcoreapp3.1\IPA.runtimeconfig.json" />
     </ItemGroup>

@@ -17,13 +17,9 @@ permissions: read-all
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: ["x86", "x64"]
     env:
       Configuration: Release
-      Platform: ${{ matrix.platform }}
+      Platform: x64
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
