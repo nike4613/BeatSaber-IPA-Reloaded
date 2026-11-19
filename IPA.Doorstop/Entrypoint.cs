@@ -18,6 +18,14 @@ namespace Doorstop
                     throw new FileNotFoundException("Could not find Injector. BSIPA installation is corrupted.");
                 }
 
+                AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+                {
+                    if (e.IsTerminating)
+                    {
+                        MessageBox(IntPtr.Zero, ((Exception)e.ExceptionObject).ToString(), "BSIPA", MbIconError | MbSetForeground | MbSystemModal);
+                    }
+                };
+
                 Assembly.LoadFrom(injectorFilePath).GetType("IPA.Injector.Injector")!.GetMethod("Inject", BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, null);
             }
             catch (Exception ex)
