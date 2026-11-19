@@ -43,9 +43,9 @@ namespace IPA.Logging
                             str = ConsoleColorToForegroundSet(currentColor) + str;
 
                         if (isStdErr)
-                            Logger.stdout.Error(str);
+                            Stdout.Error(str);
                         else
-                            Logger.stdout.Info(str);
+                            Stdout.Info(str);
                     }
                 }
             }
@@ -181,7 +181,6 @@ namespace IPA.Logging
             }
         }
 
-        private static Harmony? harmony;
         private static bool usingInterceptor;
 
         public static void Intercept()
@@ -193,7 +192,9 @@ namespace IPA.Logging
                 EnsureHarmonyLogging();
 
                 HarmonyGlobalSettings.DisallowLegacyGlobalUnpatchAll = true;
-                harmony ??= new Harmony("BSIPA Console Redirector Patcher");
+#pragma warning disable CA2000 // Dispose() would UnpatchSelf(); the patches must outlive this method
+                var harmony = new Harmony("BSIPA Console Redirector Patcher");
+#pragma warning restore CA2000
                 stdoutInterceptor ??= new StdoutInterceptor();
                 stderrInterceptor ??= new StdoutInterceptor { isStdErr = true };
 

@@ -66,7 +66,7 @@ namespace IPA.Loader
                 {
                     if (thisThreadIsInitializing)
                     {
-                        Log(Logger.Level.Warning, "Library loader initialization recursion detected");
+                        Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Warning, "Library loader initialization recursion detected");
                         return;
                     }
                     if (FilenameLocations is not null && !force) return;
@@ -97,7 +97,7 @@ namespace IPA.Loader
                         }
                         else
                         {
-                            Log(Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {fileInfo.FullName}");
+                            Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {fileInfo.FullName}");
                         }
                     }
 
@@ -132,26 +132,26 @@ namespace IPA.Loader
 
         internal static Assembly? LoadLibrary(AssemblyName asmName)
         {
-            Log(Logger.Level.Debug, $"Resolving library {asmName}");
+            Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Resolving library {asmName}");
 
             SetupAssemblyFilenames();
 
             var testFile = $"{asmName.Name}.dll";
-            Log(Logger.Level.Debug, $"Looking for file {asmName.Name}.dll");
+            Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Looking for file {asmName.Name}.dll");
 
             if (FilenameLocations.TryGetValue(testFile, out var assemblyInfo))
             {
-                Log(Logger.Level.Debug, $"Found file {testFile} as {assemblyInfo.Path}");
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyInfo.Path}");
                 return LoadSafe(assemblyInfo.Path);
             }
             else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out assemblyInfo))
             {
-                Log(Logger.Level.Debug, $"Found file {testFile} as {assemblyInfo.Path}");
-                Log(Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyInfo.Path}");
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
                 return LoadSafe(assemblyInfo.Path);
             }
 
-            Log(Logger.Level.Critical, $"No library {asmName} found");
+            Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Critical, $"No library {asmName} found");
 
             return null;
         }
@@ -160,7 +160,7 @@ namespace IPA.Loader
         {
             if (!File.Exists(path))
             {
-                Log(Logger.Level.Critical, $"{path} no longer exists!");
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Critical, $"{path} no longer exists!");
                 return null;
             }
 
@@ -169,46 +169,18 @@ namespace IPA.Loader
                 var result = AntiMalwareEngine.Engine.ScanFile(new FileInfo(path));
                 if (result is ScanResult.Detected)
                 {
-                    Log(Logger.Level.Error, $"Scan of '{path}' found malware; not loading");
+                    Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Error, $"Scan of '{path}' found malware; not loading");
                     return null;
                 }
                 if (!SelfConfig.AntiMalware_.RunPartialThreatCode_ && result is not ScanResult.KnownSafe and not ScanResult.NotDetected)
                 {
-                    Log(Logger.Level.Error, $"Scan of '{path}' found partial threat; not loading. To load this, enable AntiMalware.RunPartialThreatCode in the config.");
+                    Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Error, $"Scan of '{path}' found partial threat; not loading. To load this, enable AntiMalware.RunPartialThreatCode in the config.");
                     return null;
                 }
             }
 
             return Assembly.LoadFrom(path);
         }
-
-        internal static void Log(Logger.Level lvl, string message)
-        { // multiple proxy methods to delay loading of assemblies until it's done
-            if (Logger.LogCreated)
-            {
-                AssemblyLibLoaderCallLogger(lvl, message);
-            }
-            else
-            {
-                if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
-                    Console.WriteLine($"[{lvl}] {message}");
-            }
-        }
-        internal static void Log(Logger.Level lvl, Exception message)
-        { // multiple proxy methods to delay loading of assemblies until it's done
-            if (Logger.LogCreated)
-            {
-                AssemblyLibLoaderCallLogger(lvl, message);
-            }
-            else
-            {
-                if (((byte)lvl & (byte)StandardLogger.PrintFilter) != 0)
-                    Console.WriteLine($"[{lvl}] {message}");
-            }
-        }
-
-        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, string message) => Logger.LibLoader.Log(lvl, message);
-        private static void AssemblyLibLoaderCallLogger(Logger.Level lvl, Exception message) => Logger.LibLoader.Log(lvl, message);
 
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
         private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool>? dirValidator = null)

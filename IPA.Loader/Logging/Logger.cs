@@ -8,32 +8,11 @@ namespace IPA.Logging
     /// </summary>
     public abstract class Logger
     {
-        private static Logger? _log;
+        private static StandardLogger? _log;
 
-        internal static Logger Default
-        {
-            get
-            {
-                if (_log == null)
-                    _log = new StandardLogger("IPA");
-                return _log;
-            }
-        }
-
-        private static StandardLogger? _stdout;
-
-        internal static StandardLogger stdout
-        {
-            get
-            {
-                if (_stdout == null)
-                    _stdout = new StandardLogger("_");
-                return _stdout;
-            }
-        }
-
-        private static StandardLogger? lazyHarmony;
-        internal static StandardLogger Harmony => lazyHarmony ??= new StandardLogger("Harmony");
+        internal static StandardLogger Default => _log ??= new StandardLogger("IPA");
+        internal static StandardLogger Stdout => field ??= new StandardLogger("_");
+        internal static StandardLogger Harmony => field ??= new StandardLogger("Harmony");
 
         internal static Logger AntiMalware => Default.GetChildLogger("AntiMalware");
         internal static Logger LibLoader => Default.GetChildLogger("LibraryLoader");
@@ -48,6 +27,34 @@ namespace IPA.Logging
         /// </summary>
         /// <value>the format for the standard loggers to print in</value>
         public static string LogFormat { get; protected internal set; } = "[{3} @ {2:HH:mm:ss} | {1}] {0}";
+
+        internal static void Log(LoggerId loggerId, Level level, string message)
+        {
+            if (LogCreated)
+            {
+                var logger = loggerId switch
+                {
+                    LoggerId.LibLoader => LibLoader,
+                    LoggerId.Injector => Injector,
+                    _ => Default
+                };
+
+                logger.Log(level, message);
+                return;
+            }
+
+            if (WinConsole.IsInitialized && ((byte)level & (byte)StandardLogger.PrintFilter) != 0)
+            {
+                Console.WriteLine($"[{level}] {message}");
+            }
+        }
+
+        internal enum LoggerId
+        {
+            Default,
+            LibLoader,
+            Injector
+        }
 
         /// <summary>
         /// An enum specifying the level of the message. Resembles Syslog.
