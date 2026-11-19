@@ -136,13 +136,16 @@ namespace IPA.Config
         private static void CheckForExternalChanges(Config config)
         {
             bool isExternal;
+            DateTime writeTime;
+            DateTime lastKnown;
 
             lock (config.WriteTimeLock)
             {
                 var file = config.File;
                 file.Refresh();
-                var writeTime = file.Exists ? file.LastWriteTimeUtc : DateTime.MinValue;
-                isExternal = writeTime != config.LastKnownWriteTimeUtc;
+                writeTime = file.Exists ? file.LastWriteTimeUtc : DateTime.MinValue;
+                lastKnown = config.LastKnownWriteTimeUtc;
+                isExternal = writeTime != lastKnown;
 
                 if (isExternal)
                 {
@@ -152,7 +155,7 @@ namespace IPA.Config
 
             if (isExternal)
             {
-                Logger.Config.Notice($"Detected external changes for {config.File.Name}");
+                Logger.Config.Notice($"Detected external changes for {config.File.Name} (observed {writeTime:O}, recorded {lastKnown:O})");
                 TriggerFileLoad(config);
             }
         }
@@ -179,6 +182,7 @@ namespace IPA.Config
                     store.WriteTo(config.configProvider);
                     config.File.Refresh();
                     config.LastKnownWriteTimeUtc = config.File.LastWriteTimeUtc;
+                    Logger.Config.Debug($"Saved {config.File.Name} (recorded {config.LastKnownWriteTimeUtc:O}, written at about {DateTime.UtcNow:O})");
                 }
             }
             catch (ThreadAbortException)
