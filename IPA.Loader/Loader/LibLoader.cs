@@ -2,13 +2,16 @@
 using IPA.AntiMalware;
 using IPA.Config;
 using IPA.Logging;
+using IPA.Utilities;
 using Mono.Cecil;
+using MonoMod.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace IPA.Loader
 {
@@ -75,7 +78,7 @@ namespace IPA.Loader
 
                     var newFilenameLocations = new Dictionary<string, (string, Version Version)>();
 
-                    var files = TraverseTree(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!)
+                    var files = TraverseTree(DoorstopEnvironment.ManagedFolderDir)
                         .Concat(TraverseTree(LibraryPath, s => s != NativeLibraryPath));
 
                     foreach (var fileInfo in files)
@@ -182,6 +185,31 @@ namespace IPA.Loader
             return Assembly.LoadFrom(path);
         }
 
+        // https://github.com/mono/mono/blob/0f53e9e151d92944cacab3e24ac359410c606df6/mono/metadata/image.c#L2035-L2047
+        // https://github.com/mono/mono/blob/0f53e9e151d92944cacab3e24ac359410c606df6/mono/metadata/assembly.c#L2996-L3029
+        internal static void LoadFromMemory(AssemblyDefinition assemblyDefinition, string path)
+        {
+            var monoHandle = DynDll.OpenLibrary(DoorstopEnvironment.MonoLibPath);
+            var monoImageOpenFromDataWithName = Marshal.GetDelegateForFunctionPointer<MonoImageOpenFromDataWithNameDelegate>(monoHandle.GetExport("mono_image_open_from_data_with_name"));
+            var monoAssemblyLoadFromFull = Marshal.GetDelegateForFunctionPointer<MonoAssemblyLoadFromFullDelegate>(monoHandle.GetExport("mono_assembly_load_from_full"));
+
+            using var memoryStream = new MemoryStream();
+            assemblyDefinition.Write(memoryStream);
+
+            var status = MonoImageOpenStatus.Ok;
+            var image = monoImageOpenFromDataWithName(memoryStream.GetBuffer(), (uint)memoryStream.Length, true, ref status, false, path);
+
+            if (image == 0)
+            {
+                throw new BadImageFormatException($"Failed to load image {path}: {status}");
+            }
+
+            if (monoAssemblyLoadFromFull(image, path, ref status, false) == 0)
+            {
+                throw new BadImageFormatException($"Failed to load assembly {path}: {status}");
+            }
+        }
+
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
         private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool>? dirValidator = null)
         {
@@ -233,5 +261,21 @@ namespace IPA.Loader
                 }
             }
         }
+
+        private enum MonoImageOpenStatus
+        {
+            Ok,
+            ErrorErrNo,
+            MissingAssemblyRef,
+            ImageInvalid
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate nint MonoImageOpenFromDataWithNameDelegate(byte[] data, uint dataLength, bool needCopy,
+            ref MonoImageOpenStatus status, bool refOnly, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate nint MonoAssemblyLoadFromFullDelegate(IntPtr image,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string fileName, ref MonoImageOpenStatus status, bool refOnly);
     }
 }

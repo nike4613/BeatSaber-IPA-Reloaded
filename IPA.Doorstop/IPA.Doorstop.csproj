@@ -22,11 +22,4 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <ItemGroup>
-      <SystemFiles Include="$(OutputPath)IPA.Doorstop.*" />
-    </ItemGroup>
-    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
-  </Target>
-
 </Project>

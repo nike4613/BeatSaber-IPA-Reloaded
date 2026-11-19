@@ -23,7 +23,7 @@
     <PackageReference Include="Hive.Versioning.Standalone" Version="0.1.0-gh846.1" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
     <PackageReference Include="MonoMod.Backports" Version="1.1.2" Aliases="MONOMOD_BACKPORTS" />
-    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.5" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.6" />
     <PackageReference Include="System.Text.Json" Version="11.0.0" />
   </ItemGroup>
 

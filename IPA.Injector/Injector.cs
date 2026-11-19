@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using IPA.AntiMalware;
 using IPA.Config;
-using IPA.Injector.Backups;
 using IPA.Loader;
 using IPA.Logging;
 using IPA.Utilities;
@@ -60,12 +59,9 @@ namespace IPA.Injector
 
                 Logging.Logger.Injector.Debug("Prepping bootstrapper");
 
-                // make sure to load the game version and check boundaries before installing the bootstrap, because that uses the game assemblies property
-                GameVersionEarly.Load();
-                SelfConfig.Instance.CheckVersionBoundary();
-
-                // updates backup
                 InstallBootstrapPatch();
+
+                GameVersionEarly.Load();
 
                 AntiMalwareEngine.Initialize();
 
@@ -110,16 +106,6 @@ namespace IPA.Injector
             var sw = Stopwatch.StartNew();
 
             var cAsmName = Assembly.GetExecutingAssembly().GetName();
-            var managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-
-            var dataDir = new DirectoryInfo(managedPath).Parent!.Name;
-            var gameName = dataDir.Substring(0, dataDir.Length - 5);
-
-            Logging.Logger.Injector.Debug("Finding backup");
-            var backupPath = Path.Combine(Environment.CurrentDirectory, "IPA", "Backups", gameName);
-            var bkp = BackupManager.FindLatestBackup(backupPath);
-            if (bkp == null)
-                Logging.Logger.Injector.Warn("No backup found! Was BSIPA installed using the installer?");
 
             var readerParameters = new ReaderParameters
             {
@@ -128,11 +114,7 @@ namespace IPA.Injector
                 ReadingMode = ReadingMode.Immediate
             };
 
-            Logging.Logger.Injector.Debug("Ensuring patch on UnityEngine.CoreModule exists");
-
-            #region Insert patch into UnityEngine.CoreModule.dll
-
-            var unityPath = Path.Combine(managedPath, "UnityEngine.CoreModule.dll");
+            var unityPath = Path.Combine(DoorstopEnvironment.ManagedFolderDir, "UnityEngine.CoreModule.dll");
 
             using var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, readerParameters);
             var unityModDef = unityAsmDef.MainModule;
@@ -212,14 +194,10 @@ namespace IPA.Injector
 
             if (modified)
             {
-                string tempFilePath = Path.GetTempFileName();
-                bkp?.Add(unityPath);
-                unityAsmDef.Write(tempFilePath);
-                File.Delete(unityPath);
-                File.Move(tempFilePath, unityPath);
+                Logging.Logger.Injector.Info($"Loading {unityModDef.Name} from memory");
+                Loader.LibLoader.LoadFromMemory(unityAsmDef, unityPath);
             }
             endPatchCoreModule:
-            #endregion Insert patch into UnityEngine.CoreModule.dll
 
             sw.Stop();
             Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");

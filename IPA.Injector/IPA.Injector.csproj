@@ -53,14 +53,12 @@
     <ItemGroup>
       <SystemFiles Include="$(OutputPath)IPA.Injector.*" />
       <SystemFiles Include="$(OutputPath)IPA.Loader.*" />
-      <OldLibFiles Include="$(OutputPath)Libs\**\*" />
     </ItemGroup>
-    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)Data\Managed" />
+    <Move SourceFiles="@(SystemFiles)" DestinationFolder="$(OutputPath)IPA" />
 
-    <Delete Files="@(OldLibFiles)" />
     <RemoveDir Directories="$(OutputPath)Libs" />
     <ItemGroup>
-      <LibFiles Include="$(OutputPath)**\*" Exclude="$(OutputPath)Data\**\*;$(OutputPath)Libs\**\*" />
+      <LibFiles Include="$(OutputPath)**\*" Exclude="$(OutputPath)IPA\**\*;$(OutputPath)Libs\**\*" />
     </ItemGroup>
     <Move SourceFiles="@(LibFiles)" DestinationFolder="$(OutputPath)Libs\" />
     <RemoveDir Directories="$(OutputPath)Libraries" />

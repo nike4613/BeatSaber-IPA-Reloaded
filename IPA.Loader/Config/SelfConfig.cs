@@ -34,14 +34,6 @@ namespace IPA.Config
             Logger.Default.Debug("SelfConfig Changed called");
         }
 
-        public void CheckVersionBoundary()
-        {
-            if (ResetGameAssembliesOnVersionChange && Utilities.UnityGame.IsGameVersionBoundary)
-            {
-                GameAssemblies = GetDefaultGameAssemblies();
-            }
-        }
-
         internal const string IPAName = "Beat Saber IPA";
         internal const string IPAVersion = "4.3.7.0";
 
@@ -128,19 +120,5 @@ namespace IPA.Config
 
         [JsonIgnore]
         public bool WriteLogs { get; set; } = true;
-
-        public virtual bool ResetGameAssembliesOnVersionChange { get; set; } = true;
-
-        [NonNullable, UseConverter(typeof(CollectionConverter<string, HashSet<string?>>))]
-        public virtual HashSet<string> GameAssemblies { get; set; } = GetDefaultGameAssemblies();
-
-        public static HashSet<string> GetDefaultGameAssemblies()
-            => new()
-            {
-                "Main.dll", "Core.dll", "HMLib.dll", "HMUI.dll", "HMRendering.dll", "VRUI.dll",
-                "BeatmapCore.dll", "GameplayCore.dll", "HMLibAttributes.dll", "BeatmapEditor3D.dll"
-            };
-
-        public static HashSet<string> GameAssemblies_ => Instance?.GameAssemblies ?? new HashSet<string> { "Assembly-CSharp.dll" };
     }
 }

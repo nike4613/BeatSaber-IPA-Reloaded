@@ -4,21 +4,7 @@ uid: articles.command_line
 
 # The Command Line
 
-BSIPA has 2 command lines: the installer, and the game.
-
-Their documentation is below.
-
-## [The Installer (`IPA.exe`)](#tab/installer)
-
-The installer has quite a few options, which are documented inline with the `-h` or `--help` flag.
-
-This is what it currently looks like:
-
-[!code[IPA command line](_ipa_command_line.txt "the result of IPA.exe -h")]
-
-## [The Game](#tab/game)
-
-The game *also* gets quite a few command line options, though there isn't anything as convenient as a help page for them.
+BSIPA supports a number of useful command-line arguments.
 
 Here's a quick list of what they are and what they do.
 
@@ -87,5 +73,3 @@ Here's a quick list of what they are and what they do.
   > Set to `none` to disable VR by forcing an invalid runtime.
 
 More arguments can be used to change the behavior of the Doorstop, including debugging capabilities. Refer to its [documentation](https://github.com/NeighTools/UnityDoorstop?tab=readme-ov-file#cli-arguments) for more details.
-
-***

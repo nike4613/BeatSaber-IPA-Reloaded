@@ -26,7 +26,6 @@
   </Folder>
   <Project Path="BSIPA-Meta/BSIPA-Meta.csproj">
     <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
-    <BuildDependency Project="IPA/IPA.csproj" />
     <Platform Solution="*|x64" Project="x64" />
   </Project>
   <Project Path="IPA.Doorstop/IPA.Doorstop.csproj" />
@@ -39,9 +38,5 @@
     <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
     <BuildType Solution="Verbose_Release|*" Project="Release" />
     <BuildType Solution="Verbose|*" Project="Debug" />
-  </Project>
-  <Project Path="IPA/IPA.csproj">
-    <BuildDependency Project="BuildTools/CollectDependencies/CollectDependencies.csproj" />
-    <BuildDependency Project="IPA.Injector/IPA.Injector.csproj" />
   </Project>
 </Solution>

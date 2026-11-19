@@ -165,21 +165,11 @@ namespace IPA.Utilities
         /// <value>the type of release this is</value>
         public static Release ReleaseType => _releaseCache ??= CheckIsSteam() ? Release.Steam : Release.Other;
 
-        private static string? _installRoot;
         /// <summary>
         /// Gets the path to the game's install directory.
         /// </summary>
         /// <value>the path of the game install directory</value>
-        public static string InstallPath
-        {
-            get
-            {
-                if (_installRoot == null)
-                    _installRoot = Path.GetFullPath(
-                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", ".."));
-                return _installRoot;
-            }
-        }
+        public static string InstallPath => field ??= Path.GetFullPath(Path.GetDirectoryName(DoorstopEnvironment.ProcessPath)!);
         /// <summary>
         /// The path to the `Libs` folder. Use only if necessary.
         /// </summary>

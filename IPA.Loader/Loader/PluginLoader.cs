@@ -81,15 +81,16 @@ namespace IPA.Loader
 
             try
             {
+                var assembly = Assembly.GetExecutingAssembly();
                 var selfMeta = new PluginMetadata
                 {
-                    Assembly = Assembly.GetExecutingAssembly(),
-                    File = new FileInfo(Path.Combine(UnityGame.InstallPath, "IPA.exe")),
+                    Assembly = assembly,
+                    File = new FileInfo(assembly.Location),
                     PluginType = null,
                     IsSelf = true
                 };
 
-                using var manifestStream = selfMeta.Assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ?? throw new InvalidOperationException();
+                using var manifestStream = assembly.GetManifestResourceStream(typeof(PluginLoader), "manifest.json") ?? throw new InvalidOperationException();
 
                 var manifestObj = JsonSerializer.Deserialize(manifestStream, PluginManifestSerializerContext.Default.PluginManifest);
                 selfMeta.Manifest = manifestObj ?? throw new InvalidOperationException("Deserialized manifest was null");
@@ -104,19 +105,20 @@ namespace IPA.Loader
             }
 
             using var resolver = new CecilLibLoader();
-            resolver.AddSearchDirectory(UnityGame.LibraryPath);
             resolver.AddSearchDirectory(UnityGame.PluginsPath);
             foreach (var plugin in plugins)
             {
+                var fileInfo = new FileInfo(Path.Combine(UnityGame.PluginsPath, plugin));
+                var fileName = fileInfo.Name;
                 var metadata = new PluginMetadata
                 {
-                    File = new FileInfo(Path.Combine(UnityGame.PluginsPath, plugin)),
+                    File = fileInfo,
                     IsSelf = false
                 };
 
                 try
                 {
-                    var scanResult = AntiMalwareEngine.Engine.ScanFile(metadata.File);
+                    var scanResult = AntiMalwareEngine.Engine.ScanFile(fileInfo);
                     if (scanResult is ScanResult.Detected)
                     {
                         Logger.Loader.Warn($"Scan of {plugin} found malware; not loading");
@@ -128,7 +130,7 @@ namespace IPA.Loader
                         continue;
                     }
 
-                    var pluginModule = AssemblyDefinition.ReadAssembly(metadata.File.FullName, new ReaderParameters
+                    var pluginModule = AssemblyDefinition.ReadAssembly(fileInfo.FullName, new ReaderParameters
                     {
                         ReadingMode = ReadingMode.Immediate,
                         ReadWrite = false,
@@ -157,7 +159,7 @@ namespace IPA.Loader
 #if DIRE_LOADER_WARNINGS
                         Logger.loader.Error($"Could not find manifest.json for {Path.GetFileName(plugin)}");
 #else
-                        Logger.Loader.Notice($"No manifest.json in {Path.GetFileName(plugin)}");
+                        Logger.Loader.Notice($"No manifest.json in {fileName}");
 #endif
                         continue;
                     }
@@ -224,16 +226,16 @@ namespace IPA.Loader
 
                     if (metadata.PluginType == null)
                     {
-                        Logger.Loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {Path.GetFileName(plugin)}");
+                        Logger.Loader.Error($"No plugin found in the manifest {(hint != null ? $"hint path ({hint}) or " : "")}namespace ({pluginNs}) in {fileName}");
                         continue;
                     }
 
-                    Logger.Loader.Debug($"Adding info for {Path.GetFileName(plugin)}");
+                    Logger.Loader.Debug($"Adding info for {fileName}");
                     PluginsMetadata.Add(metadata);
                 }
                 catch (Exception e)
                 {
-                    Logger.Loader.Error($"Could not load data for plugin {Path.GetFileName(plugin)}");
+                    Logger.Loader.Error($"Could not load data for plugin {fileName}");
                     Logger.Loader.Error(e);
                     ignoredPlugins.Add(metadata, new IgnoreReason(Reason.Error)
                     {
@@ -313,7 +315,7 @@ namespace IPA.Loader
                     }
                     else
                     {
-                        using var descriptionReader = new StreamReader(meta.Assembly.GetManifestResourceStream(name));
+                        using var descriptionReader = new StreamReader(meta.Assembly.GetManifestResourceStream(name)!);
                         description = descriptionReader.ReadToEnd();
                     }
 

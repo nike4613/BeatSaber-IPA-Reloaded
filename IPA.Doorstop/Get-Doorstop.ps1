@@ -6,7 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$targetAssembly = 'Beat Saber_Data\Managed\IPA.Doorstop.dll'
+$targetAssembly = 'IPA\IPA.Doorstop.dll'
 $version = ([xml](Get-Content -Raw "$PSScriptRoot\IPA.Doorstop.csproj")).SelectSingleNode('//DoorstopVersion').InnerText
 
 $dir = "$PSScriptRoot\obj\doorstop\$version-$Variant"
