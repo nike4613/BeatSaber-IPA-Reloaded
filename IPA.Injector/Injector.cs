@@ -39,7 +39,7 @@ namespace IPA.Injector
                 var args = Environment.GetCommandLineArgs();
                 CommandLineParser.ParseArguments(args);
 
-                SetupLibraryLoading();
+                Loader.LibLoader.Configure();
 
                 Default.Debug("Initializing logger");
 
@@ -64,8 +64,6 @@ namespace IPA.Injector
                 GameVersionEarly.Load();
 
                 AntiMalwareEngine.Initialize();
-
-                Loader.LibLoader.SetupAssemblyFilenames(true);
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
                 permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
@@ -92,13 +90,6 @@ namespace IPA.Injector
                 _ = Directory.CreateDirectory(path);
             if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "Plugins")))
                 _ = Directory.CreateDirectory(path);
-        }
-
-        private static void SetupLibraryLoading()
-        {
-            if (loadingDone) return;
-            loadingDone = true;
-            Loader.LibLoader.Configure();
         }
 
         private static void InstallBootstrapPatch()
@@ -225,8 +216,6 @@ namespace IPA.Injector
             var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
             bootstrapper.Destroyed += Bootstrapper_Destroyed;
         }
-
-        private static bool loadingDone;
 
         private static void Bootstrapper_Destroyed()
         {

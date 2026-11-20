@@ -24,17 +24,11 @@ namespace IPA.Loader
         {
             parameters.AssemblyResolver ??= this;
 
-            LibLoader.SetupAssemblyFilenames();
-
             if (name.Name == CurrentAssemblyName)
                 return AssemblyDefinition.ReadAssembly(CurrentAssemblyPath, parameters);
 
-            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out var assemblyPath))
-            {
-                if (File.Exists(assemblyPath))
-                    return AssemblyDefinition.ReadAssembly(assemblyPath, parameters);
-            }
-            else if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out assemblyPath))
+            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out var assemblyPath) ||
+                LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out assemblyPath))
             {
                 if (File.Exists(assemblyPath))
                     return AssemblyDefinition.ReadAssembly(assemblyPath, parameters);
@@ -46,106 +40,56 @@ namespace IPA.Loader
 
     internal static class LibLoader
     {
-        internal static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
-        internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        internal static Dictionary<string, string> FilenameLocations = null!;
+        private static readonly string LibraryPath = Path.Combine(Environment.CurrentDirectory, "Libs");
+        private static readonly string NativeLibraryPath = Path.Combine(LibraryPath, "Native");
+        internal static readonly Dictionary<string, string> FilenameLocations = [];
 
         internal static void Configure()
         {
-            SetupAssemblyFilenames(true);
-            AppDomain.CurrentDomain.AssemblyResolve -= AssemblyLibLoader;
+            SetupAssemblyFilenames();
+            Environment.SetEnvironmentVariable("Path", NativeLibraryPath + Path.PathSeparator + Environment.GetEnvironmentVariable("Path"));
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyLibLoader;
         }
 
-        private static readonly object lockObj = new();
-
-        [ThreadStatic]
-        private static bool thisThreadIsInitializing;
-
-        internal static void SetupAssemblyFilenames(bool force = false)
+        private static void SetupAssemblyFilenames()
         {
-            if (FilenameLocations == null || force)
+            var files = Directory.EnumerateFiles(DoorstopEnvironment.ManagedFolderDir)
+                .Concat(Directory.EnumerateFiles(LibraryPath, "*", SearchOption.TopDirectoryOnly))
+                .Where(f => f.EndsWith(".dll", StringComparison.OrdinalIgnoreCase));
+
+            foreach (var file in files)
             {
-                lock (lockObj)
+                var fileName = Path.GetFileName(file);
+
+                if (!FilenameLocations.TryGetValue(fileName, out var storedPath))
                 {
-                    if (thisThreadIsInitializing)
-                    {
-                        Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Warning, "Library loader initialization recursion detected");
-                        return;
-                    }
-                    if (FilenameLocations is not null && !force) return;
-
-                    thisThreadIsInitializing = true;
-
-                    var newFilenameLocations = new Dictionary<string, string>();
-
-                    var files = TraverseTree(DoorstopEnvironment.ManagedFolderDir)
-                        .Concat(TraverseTree(LibraryPath, s => s != NativeLibraryPath));
-
-                    foreach (var fileInfo in files)
-                    {
-                        if (!fileInfo.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        if (!newFilenameLocations.TryGetValue(fileInfo.Name, out var storedPath))
-                        {
-                            newFilenameLocations[fileInfo.Name] = fileInfo.FullName;
-                            continue;
-                        }
-
-                        var ignoredPath = fileInfo.FullName;
-
-                        if (GetFileVersion(fileInfo.FullName) > GetFileVersion(storedPath))
-                        {
-                            newFilenameLocations[fileInfo.Name] = fileInfo.FullName;
-                            ignoredPath = storedPath;
-                        }
-
-                        Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {ignoredPath}");
-                    }
-
-                    static Version GetFileVersion(string path)
-                    {
-                        var fileVersion = FileVersionInfo.GetVersionInfo(path).FileVersion;
-                        return fileVersion != null && Version.TryParse(fileVersion, out var version) ? version : new Version(0, 0, 0, 0);
-                    }
-
-                    static void AddDirectoryToPath(string path)
-                    {
-                        Environment.SetEnvironmentVariable("Path", path + Path.PathSeparator + Environment.GetEnvironmentVariable("Path"));
-                    }
-
-                    if (Directory.Exists(NativeLibraryPath))
-                    {
-                        AddDirectoryToPath(NativeLibraryPath);
-                        _ = TraverseTree(NativeLibraryPath, dir =>
-                        { // this is a terrible hack for iterating directories
-                            AddDirectoryToPath(dir); return true;
-                        }).All(f => true); // force it to iterate all
-                    }
-
-                    FilenameLocations = newFilenameLocations;
-
-                    _ = LoadLibrary(new AssemblyName("netstandard, Version=2.0.0.0, Culture=neutral"));
-
-                    thisThreadIsInitializing = false;
+                    FilenameLocations[fileName] = file;
+                    continue;
                 }
+
+                var ignoredPath = file;
+
+                if (GetFileVersion(file) > GetFileVersion(storedPath))
+                {
+                    FilenameLocations[fileName] = file;
+                    ignoredPath = storedPath;
+                }
+
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Notice, $"Multiple instances of {fileName} exist! Ignoring {ignoredPath}");
+            }
+
+            static Version GetFileVersion(string path)
+            {
+                var fileVersion = FileVersionInfo.GetVersionInfo(path).FileVersion;
+                return fileVersion != null && Version.TryParse(fileVersion, out var version) ? version : new Version(0, 0, 0, 0);
             }
         }
 
-        public static Assembly? AssemblyLibLoader(object source, ResolveEventArgs e)
+        private static Assembly? AssemblyLibLoader(object source, ResolveEventArgs e)
         {
             var asmName = new AssemblyName(e.Name);
-            return LoadLibrary(asmName);
-        }
 
-        internal static Assembly? LoadLibrary(AssemblyName asmName)
-        {
             Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Resolving library {asmName}");
-
-            SetupAssemblyFilenames();
 
             var testFile = $"{asmName.Name}.dll";
             Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Looking for file {asmName.Name}.dll");
@@ -155,7 +99,7 @@ namespace IPA.Loader
                 Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyPath}");
                 return LoadSafe(assemblyPath);
             }
-            else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out assemblyPath))
+            if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out assemblyPath))
             {
                 Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyPath}");
                 Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
@@ -207,66 +151,14 @@ namespace IPA.Loader
             var status = MonoImageOpenStatus.Ok;
             var image = monoImageOpenFromDataWithName(memoryStream.GetBuffer(), (uint)memoryStream.Length, true, ref status, false, path);
 
-            if (image == 0)
+            if (image == IntPtr.Zero)
             {
                 throw new BadImageFormatException($"Failed to load image {path}: {status}");
             }
 
-            if (monoAssemblyLoadFromFull(image, path, ref status, false) == 0)
+            if (monoAssemblyLoadFromFull(image, path, ref status, false) == IntPtr.Zero)
             {
                 throw new BadImageFormatException($"Failed to load assembly {path}: {status}");
-            }
-        }
-
-        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
-        private static IEnumerable<FileInfo> TraverseTree(string root, Func<string, bool>? dirValidator = null)
-        {
-            if (dirValidator == null) dirValidator = s => true;
-
-            var dirs = new Stack<string>(32);
-
-            if (!Directory.Exists(root))
-                throw new ArgumentException("Directory does not exist", nameof(root));
-            dirs.Push(root);
-
-            while (dirs.Count > 0)
-            {
-                string currentDir = dirs.Pop();
-                string[] subDirs;
-                try
-                {
-                    subDirs = Directory.GetDirectories(currentDir);
-                }
-                catch (UnauthorizedAccessException)
-                { continue; }
-                catch (DirectoryNotFoundException)
-                { continue; }
-
-                string[] files;
-                try
-                {
-                    files = Directory.GetFiles(currentDir);
-                }
-                catch (UnauthorizedAccessException)
-                { continue; }
-                catch (DirectoryNotFoundException)
-                { continue; }
-
-                foreach (string str in subDirs)
-                    if (dirValidator(str)) dirs.Push(str);
-
-                foreach (string file in files)
-                {
-                    FileInfo nextValue;
-                    try
-                    {
-                        nextValue = new FileInfo(file);
-                    }
-                    catch (FileNotFoundException)
-                    { continue; }
-
-                    yield return nextValue;
-                }
             }
         }
 
@@ -278,12 +170,10 @@ namespace IPA.Loader
             ImageInvalid
         }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate nint MonoImageOpenFromDataWithNameDelegate(byte[] data, uint dataLength, bool needCopy,
+        private delegate IntPtr MonoImageOpenFromDataWithNameDelegate(byte[] data, uint dataLength, bool needCopy,
             ref MonoImageOpenStatus status, bool refOnly, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate nint MonoAssemblyLoadFromFullDelegate(IntPtr image,
+        private delegate IntPtr MonoAssemblyLoadFromFullDelegate(IntPtr image,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string fileName, ref MonoImageOpenStatus status, bool refOnly);
     }
 }
