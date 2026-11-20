@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 using IPA.AntiMalware;
 using IPA.Config;
 using IPA.Logging;
@@ -15,13 +15,15 @@ using System.Runtime.InteropServices;
 
 namespace IPA.Loader
 {
-    internal class CecilLibLoader : BaseAssemblyResolver
+    internal class CecilLibLoader : DefaultAssemblyResolver
     {
         private static readonly string CurrentAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
         private static readonly string CurrentAssemblyPath = Assembly.GetExecutingAssembly().Location;
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
         {
+            parameters.AssemblyResolver ??= this;
+
             LibLoader.SetupAssemblyFilenames();
 
             if (name.Name == CurrentAssemblyName)
