@@ -29,17 +29,16 @@ namespace IPA.Loader
             if (name.Name == CurrentAssemblyName)
                 return AssemblyDefinition.ReadAssembly(CurrentAssemblyPath, parameters);
 
-            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out var assemblyInfo))
+            if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.dll", out var assemblyPath))
             {
-                if (File.Exists(assemblyInfo.Path))
-                    return AssemblyDefinition.ReadAssembly(assemblyInfo.Path, parameters);
+                if (File.Exists(assemblyPath))
+                    return AssemblyDefinition.ReadAssembly(assemblyPath, parameters);
             }
-            else if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out assemblyInfo))
+            else if (LibLoader.FilenameLocations.TryGetValue($"{name.Name}.{name.Version}.dll", out assemblyPath))
             {
-                if (File.Exists(assemblyInfo.Path))
-                    return AssemblyDefinition.ReadAssembly(assemblyInfo.Path, parameters);
+                if (File.Exists(assemblyPath))
+                    return AssemblyDefinition.ReadAssembly(assemblyPath, parameters);
             }
-
 
             return base.Resolve(name, parameters);
         }
@@ -49,7 +48,7 @@ namespace IPA.Loader
     {
         internal static string LibraryPath => Path.Combine(Environment.CurrentDirectory, "Libs");
         internal static string NativeLibraryPath => Path.Combine(LibraryPath, "Native");
-        internal static Dictionary<string, (string Path, Version Version)> FilenameLocations = null!;
+        internal static Dictionary<string, string> FilenameLocations = null!;
 
         internal static void Configure()
         {
@@ -78,7 +77,7 @@ namespace IPA.Loader
 
                     thisThreadIsInitializing = true;
 
-                    var newFilenameLocations = new Dictionary<string, (string, Version Version)>();
+                    var newFilenameLocations = new Dictionary<string, string>();
 
                     var files = TraverseTree(DoorstopEnvironment.ManagedFolderDir)
                         .Concat(TraverseTree(LibraryPath, s => s != NativeLibraryPath));
@@ -90,20 +89,27 @@ namespace IPA.Loader
                             continue;
                         }
 
-                        var versionInfo = FileVersionInfo.GetVersionInfo(fileInfo.FullName).FileVersion;
-                        if (versionInfo == null || !Version.TryParse(versionInfo, out var fileVersion))
+                        if (!newFilenameLocations.TryGetValue(fileInfo.Name, out var storedPath))
                         {
-                            fileVersion = new Version(0, 0, 0, 0);
+                            newFilenameLocations[fileInfo.Name] = fileInfo.FullName;
+                            continue;
                         }
 
-                        if (!newFilenameLocations.TryGetValue(fileInfo.Name, out var assemblyInfo) || fileVersion > assemblyInfo.Version)
+                        var ignoredPath = fileInfo.FullName;
+
+                        if (GetFileVersion(fileInfo.FullName) > GetFileVersion(storedPath))
                         {
-                            newFilenameLocations[fileInfo.Name] = (fileInfo.FullName, fileVersion);
+                            newFilenameLocations[fileInfo.Name] = fileInfo.FullName;
+                            ignoredPath = storedPath;
                         }
-                        else
-                        {
-                            Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {fileInfo.FullName}");
-                        }
+
+                        Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Notice, $"Multiple instances of {fileInfo.Name} exist! Ignoring {ignoredPath}");
+                    }
+
+                    static Version GetFileVersion(string path)
+                    {
+                        var fileVersion = FileVersionInfo.GetVersionInfo(path).FileVersion;
+                        return fileVersion != null && Version.TryParse(fileVersion, out var version) ? version : new Version(0, 0, 0, 0);
                     }
 
                     static void AddDirectoryToPath(string path)
@@ -144,16 +150,16 @@ namespace IPA.Loader
             var testFile = $"{asmName.Name}.dll";
             Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Looking for file {asmName.Name}.dll");
 
-            if (FilenameLocations.TryGetValue(testFile, out var assemblyInfo))
+            if (FilenameLocations.TryGetValue(testFile, out var assemblyPath))
             {
-                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyInfo.Path}");
-                return LoadSafe(assemblyInfo.Path);
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyPath}");
+                return LoadSafe(assemblyPath);
             }
-            else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out assemblyInfo))
+            else if (FilenameLocations.TryGetValue(testFile = $"{asmName.Name}.{asmName.Version}.dll", out assemblyPath))
             {
-                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyInfo.Path}");
+                Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Debug, $"Found file {testFile} as {assemblyPath}");
                 Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Warning, $"File {testFile} should be renamed to just {asmName.Name}.dll");
-                return LoadSafe(assemblyInfo.Path);
+                return LoadSafe(assemblyPath);
             }
 
             Logger.Log(Logger.LoggerId.LibLoader, Logger.Level.Critical, $"No library {asmName} found");
