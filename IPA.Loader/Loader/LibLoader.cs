@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace IPA.Loader
 {
@@ -139,7 +140,7 @@ namespace IPA.Loader
 
         // https://github.com/mono/mono/blob/0f53e9e151d92944cacab3e24ac359410c606df6/mono/metadata/image.c#L2035-L2047
         // https://github.com/mono/mono/blob/0f53e9e151d92944cacab3e24ac359410c606df6/mono/metadata/assembly.c#L2996-L3029
-        internal static void LoadFromMemory(AssemblyDefinition assemblyDefinition, string path)
+        internal static unsafe void LoadFromMemory(AssemblyDefinition assemblyDefinition, string path)
         {
             var monoHandle = DynDll.OpenLibrary(DoorstopEnvironment.MonoLibPath);
             var monoImageOpenFromDataWithName = Marshal.GetDelegateForFunctionPointer<MonoImageOpenFromDataWithNameDelegate>(monoHandle.GetExport("mono_image_open_from_data_with_name"));
@@ -148,17 +149,23 @@ namespace IPA.Loader
             using var memoryStream = new MemoryStream();
             assemblyDefinition.Write(memoryStream);
 
+            var name = Encoding.UTF8.GetBytes(path + "\0");
             var status = MonoImageOpenStatus.Ok;
-            var image = monoImageOpenFromDataWithName(memoryStream.GetBuffer(), (uint)memoryStream.Length, true, ref status, false, path);
 
-            if (image == IntPtr.Zero)
+            fixed (byte* data = memoryStream.GetBuffer())
+            fixed (byte* namePtr = name)
             {
-                throw new BadImageFormatException($"Failed to load image {path}: {status}");
-            }
+                var image = monoImageOpenFromDataWithName(data, (uint)memoryStream.Length, 1, &status, 0, namePtr);
 
-            if (monoAssemblyLoadFromFull(image, path, ref status, false) == IntPtr.Zero)
-            {
-                throw new BadImageFormatException($"Failed to load assembly {path}: {status}");
+                if (image == IntPtr.Zero)
+                {
+                    throw new BadImageFormatException($"Failed to load image {path}: {status}");
+                }
+
+                if (monoAssemblyLoadFromFull(image, namePtr, &status, 0) == IntPtr.Zero)
+                {
+                    throw new BadImageFormatException($"Failed to load assembly {path}: {status}");
+                }
             }
         }
 
@@ -170,10 +177,10 @@ namespace IPA.Loader
             ImageInvalid
         }
 
-        private delegate IntPtr MonoImageOpenFromDataWithNameDelegate(byte[] data, uint dataLength, bool needCopy,
-            ref MonoImageOpenStatus status, bool refOnly, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+        private unsafe delegate IntPtr MonoImageOpenFromDataWithNameDelegate(byte* data, uint dataLength, int needCopy,
+            MonoImageOpenStatus* status, int refOnly, byte* name);
 
-        private delegate IntPtr MonoAssemblyLoadFromFullDelegate(IntPtr image,
-            [MarshalAs(UnmanagedType.LPUTF8Str)] string fileName, ref MonoImageOpenStatus status, bool refOnly);
+        private unsafe delegate IntPtr MonoAssemblyLoadFromFullDelegate(IntPtr image, byte* fileName,
+            MonoImageOpenStatus* status, int refOnly);
     }
 }
