@@ -25,8 +25,6 @@ namespace IPA.Injector
     internal static class Injector
     {
         private static Task? pluginAsyncLoadTask;
-        private static Task? permissionFixTask;
-        //private static string otherNewtonsoftJson = null;
 
         internal static void Inject()
         { // entry point for doorstop
@@ -66,7 +64,6 @@ namespace IPA.Injector
                 AntiMalwareEngine.Initialize();
 
                 pluginAsyncLoadTask = PluginLoader.LoadTask();
-                permissionFixTask = PermissionFix.FixPermissions(new DirectoryInfo(Environment.CurrentDirectory));
             }
             catch (Exception e)
             {
@@ -221,7 +218,6 @@ namespace IPA.Injector
         {
             // wait for plugins to finish loading
             pluginAsyncLoadTask?.Wait();
-            permissionFixTask?.Wait();
 
             Default.Debug("Plugins loaded");
             Default.Debug(string.Join(", ", PluginLoader.PluginsMetadata.ToString()));
