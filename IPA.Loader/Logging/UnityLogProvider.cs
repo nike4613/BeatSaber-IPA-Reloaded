@@ -1,11 +1,28 @@
-﻿using UnityEngine;
+﻿#nullable enable
+using UnityEngine;
 
 namespace IPA.Logging
 {
     internal static class UnityLogProvider
     {
-        internal static Logger Logger;
-        public static Logger UnityLogger => Logger ?? (Logger = new StandardLogger("UnityEngine"));
+        private static readonly StandardLogger UnityLogger = new("UnityEngine");
+
+        public static void RedirectUnityLogging()
+        {
+            StdoutInterceptor.RedirectConsole();
+            Application.logMessageReceivedThreaded += delegate(string logString, string stackTrace, LogType type)
+            {
+                var level = UnityLogRedirector.LogTypeToLevel(type);
+                var message = logString;
+
+                if (!string.IsNullOrEmpty(stackTrace))
+                {
+                    message += $"\n{stackTrace}";
+                }
+
+                UnityLogger.Log(level, message);
+            };
+        }
     }
 
     internal static class UnityLogRedirector

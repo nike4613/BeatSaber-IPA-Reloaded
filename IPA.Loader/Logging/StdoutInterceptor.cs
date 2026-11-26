@@ -189,7 +189,7 @@ namespace IPA.Logging
             {
                 usingInterceptor = true;
 
-                EnsureHarmonyLogging();
+            RedirectHarmonyLogging();
 
                 HarmonyGlobalSettings.DisallowLegacyGlobalUnpatchAll = true;
 #pragma warning disable CA2000 // Dispose() would UnpatchSelf(); the patches must outlive this method
@@ -214,7 +214,7 @@ namespace IPA.Logging
 
         private static int harmonyLoggingInited;
         // I'm not completely sure this is the best place for this, but whatever
-        internal static void EnsureHarmonyLogging()
+        internal static void RedirectHarmonyLogging()
         {
             if (Interlocked.Exchange(ref harmonyLoggingInited, 1) != 0)
                 return;

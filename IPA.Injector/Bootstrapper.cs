@@ -1,17 +1,12 @@
-﻿using System;
-using System.Diagnostics;
+﻿#nullable enable
+using System;
 using UnityEngine;
-using Logger = IPA.Logging.Logger;
 
 namespace IPA.Injector
 {
     internal class Bootstrapper : MonoBehaviour
     {
-        public event Action Destroyed = delegate {};
-
-        public void Awake()
-        {
-        }
+        public event Action Destroyed = null!;
 
         public void Start()
         {

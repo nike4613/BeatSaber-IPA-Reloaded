@@ -3,17 +3,10 @@ using IPA.AntiMalware;
 using IPA.Config;
 using IPA.Loader;
 using IPA.Logging;
-using IPA.Utilities;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using UnityEngine;
-using MethodAttributes = Mono.Cecil.MethodAttributes;
 using static IPA.Logging.Logger;
 
 namespace IPA.Injector
@@ -24,8 +17,6 @@ namespace IPA.Injector
     // ReSharper disable once UnusedMember.Global
     internal static class Injector
     {
-        private static Task? pluginAsyncLoadTask;
-
         internal static void Inject()
         { // entry point for doorstop
           // At this point, literally nothing but mscorlib is loaded,
@@ -57,13 +48,13 @@ namespace IPA.Injector
 
                 Logging.Logger.Injector.Debug("Prepping bootstrapper");
 
-                InstallBootstrapPatch();
+                Bootstrap.InstallPatch();
 
                 GameVersionEarly.Load();
 
                 AntiMalwareEngine.Initialize();
 
-                pluginAsyncLoadTask = PluginLoader.LoadTask();
+                Bootstrap.LoadPlugins();
             }
             catch (Exception e)
             {
@@ -87,141 +78,6 @@ namespace IPA.Injector
                 _ = Directory.CreateDirectory(path);
             if (!Directory.Exists(path = Path.Combine(Environment.CurrentDirectory, "Plugins")))
                 _ = Directory.CreateDirectory(path);
-        }
-
-        private static void InstallBootstrapPatch()
-        {
-            var sw = Stopwatch.StartNew();
-
-            var cAsmName = Assembly.GetExecutingAssembly().GetName();
-
-            var readerParameters = new ReaderParameters
-            {
-                ReadWrite = false,
-                InMemory = true,
-                ReadingMode = ReadingMode.Immediate
-            };
-
-            var unityPath = Path.Combine(DoorstopEnvironment.ManagedFolderDir, "UnityEngine.CoreModule.dll");
-
-            using var unityAsmDef = AssemblyDefinition.ReadAssembly(unityPath, readerParameters);
-            var unityModDef = unityAsmDef.MainModule;
-
-            bool modified = false;
-            foreach (var asmref in unityModDef.AssemblyReferences)
-            {
-                if (asmref.Name == cAsmName.Name)
-                {
-                    if (asmref.Version != cAsmName.Version)
-                    {
-                        asmref.Version = cAsmName.Version;
-                        modified = true;
-                    }
-                }
-            }
-
-            var application = unityModDef.GetType("UnityEngine", "Camera");
-
-            if (application == null)
-            {
-                Logging.Logger.Injector.Critical("UnityEngine.CoreModule doesn't have a definition for UnityEngine.Camera!"
-                    + "Nothing to patch to get ourselves into the Unity run cycle!");
-                goto endPatchCoreModule;
-            }
-
-            MethodDefinition? cctor = null;
-            foreach (var m in application.Methods)
-                if (m.IsRuntimeSpecialName && m.Name == ".cctor")
-                    cctor = m;
-
-            var cbs = unityModDef.ImportReference(((Action)CreateBootstrapper).Method);
-
-            if (cctor == null)
-            {
-                cctor = new MethodDefinition(".cctor",
-                    MethodAttributes.RTSpecialName | MethodAttributes.Static | MethodAttributes.SpecialName,
-                    unityModDef.TypeSystem.Void);
-                application.Methods.Add(cctor);
-                modified = true;
-
-                var ilp = cctor.Body.GetILProcessor();
-                ilp.Emit(OpCodes.Call, cbs);
-                ilp.Emit(OpCodes.Ret);
-            }
-            else
-            {
-                var ilp = cctor.Body.GetILProcessor();
-                for (var i = 0; i < Math.Min(2, cctor.Body.Instructions.Count); i++)
-                {
-                    var ins = cctor.Body.Instructions[i];
-                    switch (i)
-                    {
-                        case 0 when ins.OpCode != OpCodes.Call:
-                            ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                            modified = true;
-                            break;
-
-                        case 0:
-                            {
-                                var methodRef = ins.Operand as MethodReference;
-                                if (methodRef?.FullName != cbs.FullName)
-                                {
-                                    ilp.Replace(ins, ilp.Create(OpCodes.Call, cbs));
-                                    modified = true;
-                                }
-
-                                break;
-                            }
-                        case 1 when ins.OpCode != OpCodes.Ret:
-                            ilp.Replace(ins, ilp.Create(OpCodes.Ret));
-                            modified = true;
-                            break;
-                    }
-                }
-            }
-
-            if (modified)
-            {
-                Logging.Logger.Injector.Info($"Loading {unityModDef.Name} from memory");
-                Loader.LibLoader.LoadFromMemory(unityAsmDef, unityPath);
-            }
-            endPatchCoreModule:
-
-            sw.Stop();
-            Logging.Logger.Injector.Info($"Installing bootstrapper took {sw.Elapsed}");
-        }
-
-        private static bool bootstrapped;
-
-        private static void CreateBootstrapper()
-        {
-            if (bootstrapped) return;
-            bootstrapped = true;
-
-            Application.logMessageReceivedThreaded += delegate (string condition, string stackTrace, LogType type)
-            {
-                var level = UnityLogRedirector.LogTypeToLevel(type);
-                UnityLogProvider.UnityLogger.Log(level, $"{condition}");
-                UnityLogProvider.UnityLogger.Log(level, $"{stackTrace}");
-            };
-
-            StdoutInterceptor.EnsureHarmonyLogging();
-
-            // need to reinit streams singe Unity seems to redirect stdout
-            StdoutInterceptor.RedirectConsole();
-
-            var bootstrapper = new GameObject("NonDestructiveBootstrapper").AddComponent<Bootstrapper>();
-            bootstrapper.Destroyed += Bootstrapper_Destroyed;
-        }
-
-        private static void Bootstrapper_Destroyed()
-        {
-            // wait for plugins to finish loading
-            pluginAsyncLoadTask?.Wait();
-
-            Default.Debug("Plugins loaded");
-            Default.Debug(string.Join(", ", PluginLoader.PluginsMetadata.ToString()));
-            _ = PluginComponent.Create();
         }
     }
 }
